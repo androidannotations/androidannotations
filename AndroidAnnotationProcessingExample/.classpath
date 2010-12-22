@@ -2,11 +2,5 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="src" path="gen">
-		<attributes>
-			<attribute name="optional" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/AndroidAnnotations/AndroidAnnotations.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
