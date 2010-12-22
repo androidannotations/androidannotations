@@ -7,6 +7,8 @@
 	<packaging>jar</packaging>
 	<name>Android Annotations</name>
 	<description>Simplifying Android using annotations and annotation processing tools</description>
+	
+	<properties><my.java.home>${java.home}</my.java.home></properties>
 
 	<build>
 		<plugins>
@@ -15,6 +17,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -22,7 +25,7 @@
 			<extension>
 				<groupId>org.jvnet.wagon-svn</groupId>
 				<artifactId>wagon-svn</artifactId>
-				<version>1.8</version>
+				<version>1.9</version>
 			</extension>
 		</extensions>
 	</build>
@@ -43,4 +46,12 @@
 		</repository>
 	</distributionManagement>
 
+	<repositories>
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/</url>
+		</repository>
+	</repositories>
+	
 </project>
