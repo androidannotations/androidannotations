@@ -6,9 +6,12 @@
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Android Annotations</name>
-	<description>Simplifying Android using annotations and annotation processing tools</description>
-	
-	<properties><my.java.home>${java.home}</my.java.home></properties>
+	<description>Simplifying Android using annotations and annotation
+		processing tools</description>
+
+	<properties>
+		<my.java.home>${java.home}</my.java.home>
+	</properties>
 
 	<build>
 		<plugins>
@@ -42,9 +45,19 @@
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
 			<id>androidannotations-googlecode</id>
-			<url>svn:https://androidannotations.googlecode.com/svn/repository</url>
+			<url>svn:https://androidannotations.googlecode.com/svn/repository
+			</url>
 		</repository>
 	</distributionManagement>
+
+	<scm>
+		<connection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
+		</connection>
+		<developerConnection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
+		</developerConnection>
+		<url>https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
+		</url>
+	</scm>
 
 	<repositories>
 		<repository>
@@ -53,5 +66,5 @@
 			<url>http://download.java.net/maven/2/</url>
 		</repository>
 	</repositories>
-	
+
 </project>
