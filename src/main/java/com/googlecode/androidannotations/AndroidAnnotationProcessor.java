@@ -1,5 +1,6 @@
 package com.googlecode.androidannotations;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -25,7 +25,12 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
-@SupportedAnnotationTypes({ "com.googlecode.androidannotations.Layout", "com.googlecode.androidannotations.UiField" })
+import com.googlecode.androidannotations.generation.ModelGenerator;
+import com.googlecode.androidannotations.model.MetaActivity;
+import com.googlecode.androidannotations.model.MetaModel;
+import com.googlecode.androidannotations.model.MetaView;
+
+@SupportedAnnotationTypes({ "com.googlecode.androidannotations.Layout", "com.googlecode.androidannotations.View" })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
@@ -37,7 +42,6 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	List<VariableElement> uiFieldAnnotatedElements = new ArrayList<VariableElement>();
 
-	Map<Element, GeneratedActivity> activitiesByElement = new HashMap<Element, GeneratedActivity>();
 
 	Map<Integer, String> layoutFieldQualifiedNamesByIds = new HashMap<Integer, String>();
 
@@ -60,118 +64,20 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 				extractLayoutFieldIds(rInnerTypes);
 
 				extractIdFieldIds(rInnerTypes);
+				
+				MetaModel model = new MetaModel();
 
-				for (TypeElement layoutAnnotatedElement : layoutAnnotatedElements) {
-					Layout layoutAnnotation = layoutAnnotatedElement.getAnnotation(Layout.class);
-					int layoutId = layoutAnnotation.value();
+				processLayoutAnnotatedElements(model);
 
-					if (!layoutFieldQualifiedNamesByIds.containsKey(layoutId)) {
-						AnnotationMirror annotationMirror = findAnnotationMirror(layoutAnnotatedElement, Layout.class);
-						processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Layout id value not found in R.layout.*: " + layoutId,
-								layoutAnnotatedElement, annotationMirror);
-					} else {
+				processFieldAnnotatedElements(model, rInnerTypes);
 
-						String layoutFieldQualifiedName = layoutFieldQualifiedNamesByIds.get(layoutId);
-
-						String superClassQualifiedName = layoutAnnotatedElement.getQualifiedName().toString();
-
-						int packageSeparatorIndex = superClassQualifiedName.lastIndexOf('.');
-
-						String packageName = superClassQualifiedName.substring(0, packageSeparatorIndex);
-
-						String classSimpleName = superClassQualifiedName.substring(packageSeparatorIndex + 1)+"_";
-
-						GeneratedActivity activity = new GeneratedActivity();
-
-						activity.setLayoutQualifiedName(layoutFieldQualifiedName);
-						activity.setClassSimpleName(classSimpleName);
-						activity.setPackageName(packageName);
-
-						activity.setSuperClassQualifiedName(superClassQualifiedName);
-
-						activitiesByElement.put(layoutAnnotatedElement, activity);
-
-					}
-				}
-
-				for (VariableElement uiFieldAnnotatedElement : uiFieldAnnotatedElements) {
-
-					Element enclosingElement = uiFieldAnnotatedElement.getEnclosingElement();
-
-					GeneratedActivity generatedActivity = activitiesByElement.get(enclosingElement);
-
-					if (generatedActivity != null) {
-						List<GeneratedField> generatedFields = generatedActivity.getGeneratedFields();
-
-						String name = uiFieldAnnotatedElement.getSimpleName().toString();
-
-						TypeMirror uiFieldTypeMirror = uiFieldAnnotatedElement.asType();
-
-						if (uiFieldTypeMirror instanceof DeclaredType) {
-
-							DeclaredType uiFieldDeclaredType = (DeclaredType) uiFieldTypeMirror;
-							String typeQualifiedName = uiFieldDeclaredType.toString();
-
-							UiField uiFieldAnnotation = uiFieldAnnotatedElement.getAnnotation(UiField.class);
-
-							int id = uiFieldAnnotation.value();
-
-							String viewQualifiedId = null;
-							if (id == -1) {
-								String fieldName = uiFieldAnnotatedElement.getSimpleName().toString();
-
-								TypeElement idType = extractIdInnerType(rInnerTypes);
-
-								String idQualifiedName = idType.getQualifiedName().toString();
-
-								viewQualifiedId = idQualifiedName + "." + fieldName;
-								
-								if (!idFieldQualifiedNamesByIds.containsValue(viewQualifiedId)) {
-									AnnotationMirror annotationMirror = findAnnotationMirror(uiFieldAnnotatedElement, UiField.class);
-									processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-											UiField.class + " field name not found in R.id.* " + Layout.class+ " "+viewQualifiedId, uiFieldAnnotatedElement, annotationMirror);
-									viewQualifiedId = null;
-								}
-
-							} else {
-								if (!idFieldQualifiedNamesByIds.containsKey(id)) {
-									AnnotationMirror annotationMirror = findAnnotationMirror(uiFieldAnnotatedElement, UiField.class);
-									processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-											UiField.class + " value not found in R.id.* " + Layout.class, uiFieldAnnotatedElement, annotationMirror);
-								} else {
-									viewQualifiedId = idFieldQualifiedNamesByIds.get(id);
-								}
-							}
-
-							if (viewQualifiedId != null) {
-								GeneratedField generatedField = new GeneratedField();
-
-								generatedField.setName(name);
-								generatedField.setTypeQualifiedName(typeQualifiedName);
-								generatedField.setViewQualifiedId(viewQualifiedId);
-
-								generatedFields.add(generatedField);
-							}
-						} else {
-							AnnotationMirror annotationMirror = findAnnotationMirror(uiFieldAnnotatedElement, UiField.class);
-							processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-									UiField.class + " should only be used on a field which is a declared type " + Layout.class, uiFieldAnnotatedElement,
-									annotationMirror);
-						}
-
-					}
-
-				}
-
-				Filer filer = processingEnv.getFiler();
-
-				for (GeneratedActivity activity : activitiesByElement.values()) {
-					activity.generateSource(filer);
-				}
+				generateSources(model);
 			}
 
 			clear();
 		} catch (CompilationFailedException e) {
+			Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
+			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Annotation processing exception: " + e.toString(), element);
 			return false;
 		} catch (Exception e) {
 			Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
@@ -179,6 +85,106 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 
 		return false;
+	}
+
+	private void generateSources(MetaModel model) throws IOException {
+		ModelGenerator modelGenerator = new ModelGenerator(processingEnv.getFiler());
+		modelGenerator.generate(model);
+	}
+
+	private void processFieldAnnotatedElements(MetaModel model, List<TypeElement> rInnerTypes) {
+		for (VariableElement uiFieldAnnotatedElement : uiFieldAnnotatedElements) {
+
+			Element enclosingElement = uiFieldAnnotatedElement.getEnclosingElement();
+			
+			MetaActivity metaActivity = model.getMetaActivities().get(enclosingElement);
+
+			if (metaActivity != null) {
+				List<MetaView> metaViews = metaActivity.getMetaViews();
+
+				String name = uiFieldAnnotatedElement.getSimpleName().toString();
+
+				TypeMirror uiFieldTypeMirror = uiFieldAnnotatedElement.asType();
+
+				if (uiFieldTypeMirror instanceof DeclaredType) {
+
+					DeclaredType uiFieldDeclaredType = (DeclaredType) uiFieldTypeMirror;
+					String typeQualifiedName = uiFieldDeclaredType.toString();
+
+					View uiFieldAnnotation = uiFieldAnnotatedElement.getAnnotation(View.class);
+
+					int id = uiFieldAnnotation.value();
+
+					String viewQualifiedId = null;
+					if (id == -1) {
+						String fieldName = uiFieldAnnotatedElement.getSimpleName().toString();
+
+						TypeElement idType = extractIdInnerType(rInnerTypes);
+
+						String idQualifiedName = idType.getQualifiedName().toString();
+
+						viewQualifiedId = idQualifiedName + "." + fieldName;
+						
+						if (!idFieldQualifiedNamesByIds.containsValue(viewQualifiedId)) {
+							AnnotationMirror annotationMirror = findAnnotationMirror(uiFieldAnnotatedElement, View.class);
+							processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+									View.class + " field name not found in R.id.* " + Layout.class+ " "+viewQualifiedId, uiFieldAnnotatedElement, annotationMirror);
+							viewQualifiedId = null;
+						}
+
+					} else {
+						if (!idFieldQualifiedNamesByIds.containsKey(id)) {
+							AnnotationMirror annotationMirror = findAnnotationMirror(uiFieldAnnotatedElement, View.class);
+							processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+									View.class + " value not found in R.id.* " + Layout.class, uiFieldAnnotatedElement, annotationMirror);
+						} else {
+							viewQualifiedId = idFieldQualifiedNamesByIds.get(id);
+						}
+					}
+
+					if (viewQualifiedId != null) {
+						MetaView metaView = new MetaView(name, typeQualifiedName, viewQualifiedId);
+						metaViews.add(metaView);
+					}
+				} else {
+					AnnotationMirror annotationMirror = findAnnotationMirror(uiFieldAnnotatedElement, View.class);
+					processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+							View.class + " should only be used on a field which is a declared type " + Layout.class, uiFieldAnnotatedElement,
+							annotationMirror);
+				}
+
+			}
+
+		}
+	}
+
+	private void processLayoutAnnotatedElements(MetaModel model) {
+		for (TypeElement layoutAnnotatedElement : layoutAnnotatedElements) {
+			
+			Layout layoutAnnotation = layoutAnnotatedElement.getAnnotation(Layout.class);
+			int layoutId = layoutAnnotation.value();
+
+			if (!layoutFieldQualifiedNamesByIds.containsKey(layoutId)) {
+				AnnotationMirror annotationMirror = findAnnotationMirror(layoutAnnotatedElement, Layout.class);
+				processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Layout id value not found in R.layout.*: " + layoutId,
+						layoutAnnotatedElement, annotationMirror);
+			} else {
+
+				String layoutFieldQualifiedName = layoutFieldQualifiedNamesByIds.get(layoutId);
+
+				String superClassQualifiedName = layoutAnnotatedElement.getQualifiedName().toString();
+
+				int packageSeparatorIndex = superClassQualifiedName.lastIndexOf('.');
+
+				String packageName = superClassQualifiedName.substring(0, packageSeparatorIndex);
+
+				String superClassSimpleName = superClassQualifiedName.substring(packageSeparatorIndex + 1);
+
+				MetaActivity activity = new MetaActivity(packageName, superClassSimpleName, layoutFieldQualifiedName);
+				
+				model.getMetaActivities().put(layoutAnnotatedElement, activity);
+			}
+		}
 	}
 
 	private TypeElement findRClassElement() {
@@ -310,7 +316,6 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private void clear() {
 		layoutAnnotatedElements.clear();
 		layoutFieldQualifiedNamesByIds.clear();
-		activitiesByElement.clear();
 		uiFieldAnnotatedElements.clear();
 	}
 
@@ -333,7 +338,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 						processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, Layout.class + " should only be used on Activity subclasses",
 								typeElement, annotationMirror);
 					}
-				} else if (isAnnotation(annotation, UiField.class)) {
+				} else if (isAnnotation(annotation, View.class)) {
 					VariableElement variableElement = (VariableElement) element;
 
 					Element enclosingElement = variableElement.getEnclosingElement();
@@ -346,16 +351,16 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 						if (layoutAnnotation != null) {
 							uiFieldAnnotatedElements.add(variableElement);
 						} else {
-							AnnotationMirror annotationMirror = findAnnotationMirror(variableElement, UiField.class);
+							AnnotationMirror annotationMirror = findAnnotationMirror(variableElement, View.class);
 							processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-									UiField.class + " should only be used on a field from a class annotated with " + Layout.class, variableElement,
+									View.class + " should only be used on a field from a class annotated with " + Layout.class, variableElement,
 									annotationMirror);
 
 						}
 
 					} else {
-						AnnotationMirror annotationMirror = findAnnotationMirror(variableElement, UiField.class);
-						processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, UiField.class + " should only be used on a field from a class",
+						AnnotationMirror annotationMirror = findAnnotationMirror(variableElement, View.class);
+						processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, View.class + " should only be used on a field from a class",
 								variableElement, annotationMirror);
 
 					}
