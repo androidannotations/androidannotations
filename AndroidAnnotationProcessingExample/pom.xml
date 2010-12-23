@@ -15,6 +15,7 @@
 		<maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
 		<com.google.android-version>1.6_r2</com.google.android-version>
 		<androidannotations-version>0.1.2</androidannotations-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<build>
@@ -46,6 +47,11 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>				
+			</plugin>
+			<plugin>
+			  <groupId>org.codehaus.mojo</groupId>
+			  <artifactId>apt-maven-plugin</artifactId>
+			  <version>1.0-alpha-4</version>
 			</plugin>
 		</plugins>
 	</build>
