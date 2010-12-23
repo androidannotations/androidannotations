@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.Layout;
-import com.googlecode.androidannotations.UiField;
+import com.googlecode.androidannotations.View;
 
 @Layout(R.layout.main)
 public class MyActivity extends Activity {
 	
-	@UiField
+	@View
 	TextView myTextView;
 	
     /** Called when the activity is first created. */
