@@ -3,4 +3,4 @@
 .settings/
 gen/
 target/
-
+.factorypath
