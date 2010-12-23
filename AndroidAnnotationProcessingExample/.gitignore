@@ -1,6 +1,4 @@
 .classpath
 .project
-.settings/
 gen/
 target/
-.factorypath
