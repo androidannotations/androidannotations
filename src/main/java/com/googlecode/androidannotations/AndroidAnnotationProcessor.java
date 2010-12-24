@@ -76,12 +76,13 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 			clear();
 		} catch (CompilationFailedException e) {
-			Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
-			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Annotation processing exception: " + e.toString(), element);
 			return false;
 		} catch (Exception e) {
+			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Unexpected annotation processing exception: " + e.toString());
+			e.printStackTrace();
+			
 			Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
-			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Annotation processing exception: " + e.toString(), element);
+			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Unexpected annotation processing exception (not related to this element, but otherwise it wouldn't show up in eclipse) : " + e.toString(), element);
 		}
 
 		return false;
