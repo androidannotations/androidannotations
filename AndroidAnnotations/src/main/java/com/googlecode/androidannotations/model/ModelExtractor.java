@@ -1,9 +1,10 @@
-package com.googlecode.androidannotations;
+package com.googlecode.androidannotations.model;
 
 import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
+
 
 public class ModelExtractor {
 	

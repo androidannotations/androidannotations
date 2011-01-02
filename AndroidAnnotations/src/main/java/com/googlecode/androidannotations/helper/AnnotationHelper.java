@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations;
+package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations;
+package com.googlecode.androidannotations.rclass;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations;
+package com.googlecode.androidannotations.rclass;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,9 +46,13 @@ public class RInnerClass {
 	public String getIdQualifiedName(Integer idValue) {
 		return idQualifiedNamesByIdValues.get(idValue);
 	}
-	
+
 	public boolean containsField(String name) {
-		return idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName+"."+name);
+		return idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + name);
+	}
+
+	public String getIdQualifiedName(String name) {
+		return rInnerQualifiedName + "." + name;
 	}
 
 }

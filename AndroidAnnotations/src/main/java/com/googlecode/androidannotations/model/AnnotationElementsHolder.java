@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations;
+package com.googlecode.androidannotations.model;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+
 
 public class AnnotationElementsHolder implements AnnotationElements {
 

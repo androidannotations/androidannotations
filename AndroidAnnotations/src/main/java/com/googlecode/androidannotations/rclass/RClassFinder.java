@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations;
+package com.googlecode.androidannotations.rclass;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -8,6 +8,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+
+import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.model.AnnotationElements;
 
 public class RClassFinder extends AnnotationHelper {
 

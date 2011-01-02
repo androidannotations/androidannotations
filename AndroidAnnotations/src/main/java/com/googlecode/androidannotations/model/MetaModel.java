@@ -7,7 +7,7 @@ import javax.lang.model.element.Element;
 
 public class MetaModel {
 
-	private Map<Element, MetaActivity> metaActivities = new HashMap<Element, MetaActivity>();
+	private final Map<Element, MetaActivity> metaActivities = new HashMap<Element, MetaActivity>();
 
 	public Map<Element, MetaActivity> getMetaActivities() {
 		return metaActivities;

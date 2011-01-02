@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.googlecode.androidannotations.Layout;
-import com.googlecode.androidannotations.View;
+import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.View;
 
 @Layout(R.layout.main)
 public class MyActivity extends Activity {
+	
+	@View(R.id.myTextView)
+	TextView toto;
 	
 	@View
 	TextView myTextView;
@@ -18,6 +21,6 @@ public class MyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        myTextView.setText("Yep !");
+        toto.setText("Yep !");
     }
 }

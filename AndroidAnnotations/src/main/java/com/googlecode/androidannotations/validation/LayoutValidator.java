@@ -6,13 +6,14 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.AnnotationElements;
-import com.googlecode.androidannotations.Layout;
-import com.googlecode.androidannotations.RClass;
-import com.googlecode.androidannotations.RClass.Res;
-import com.googlecode.androidannotations.RInnerClass;
+import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
+import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.RInnerClass;
+import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class LayoutValidator extends ElementValidatorHelper {
+public class LayoutValidator extends HasTargetAnnotationHelper implements ElementValidator {
 
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
 	private final RClass rClass;
