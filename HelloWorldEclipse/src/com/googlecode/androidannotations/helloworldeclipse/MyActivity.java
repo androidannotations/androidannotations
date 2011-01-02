@@ -13,24 +13,24 @@ import com.googlecode.androidannotations.annotations.UiView;
 
 @Layout(R.layout.main)
 public class MyActivity extends Activity {
-	
+
 	@UiView(R.id.hello)
 	TextView foo;
-	
+
 	@UiView
 	TextView content;
-	
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        foo.setText("Bar !");
-    }
-    
-    @Click(R.id.myButton)
-    public void myButtonWasClicked(View myButton) {
-    	content.setText("Clicked at "+new Date());
-    }
+
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		foo.setText("Bar !");
+	}
+
+	@Click(R.id.myButton)
+	public void myButtonWasClicked(View myButton) {
+		content.setText("Clicked at " + new Date());
+	}
 
 }
