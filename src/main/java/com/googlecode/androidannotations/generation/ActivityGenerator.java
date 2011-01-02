@@ -18,8 +18,8 @@ package com.googlecode.androidannotations.generation;
 import java.io.IOException;
 import java.io.Writer;
 
+import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaView;
 
 public class ActivityGenerator {
 
@@ -39,17 +39,12 @@ public class ActivityGenerator {
 			"    }\n" + //
 			"}\n";
 
-	private final ViewGenerator viewGenerator;
-
-	public ActivityGenerator() {
-		viewGenerator = new ViewGenerator();
-	}
 
 	public void generate(MetaActivity activity, Writer writer) throws IOException {
 		StringBuilder metaViewBuilder = new StringBuilder();
 
-		for (MetaView metaView : activity.getMetaViews()) {
-			metaViewBuilder.append(viewGenerator.generate(metaView));
+		for (Instruction instruction : activity.getOnCreateInstructions()) {
+			metaViewBuilder.append(instruction.generate());
 		}
 
 		String generatedClass = String.format(CLASS_FORMAT, activity.getPackageName(), activity.getClassSimpleName(),

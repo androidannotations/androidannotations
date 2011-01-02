@@ -27,8 +27,8 @@ public class MetaActivity {
 	private final String superClassName;
 
 	private final String layoutQualifiedName;
-
-	private final List<MetaView> metaViews = new ArrayList<MetaView>();
+	
+	private final List<Instruction> onCreateInstructions = new ArrayList<Instruction>();
 
 	public MetaActivity(String packageName, String superClassName, String layoutQualifiedName) {
 		this.packageName = packageName;
@@ -44,8 +44,8 @@ public class MetaActivity {
 		return superClassName + CLASS_SUFFIX;
 	}
 
-	public List<MetaView> getMetaViews() {
-		return metaViews;
+	public List<Instruction> getOnCreateInstructions() {
+		return onCreateInstructions;
 	}
 
 	public String getPackageName() {
