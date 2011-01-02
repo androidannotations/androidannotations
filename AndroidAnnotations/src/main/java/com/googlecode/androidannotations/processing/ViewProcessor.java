@@ -22,9 +22,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.View;
+import com.googlecode.androidannotations.generation.ViewInstruction;
+import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
-import com.googlecode.androidannotations.model.MetaView;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 import com.googlecode.androidannotations.rclass.RInnerClass;
@@ -65,10 +66,10 @@ public class ViewProcessor implements ElementProcessor {
 
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		List<MetaView> metaViews = metaActivity.getMetaViews();
+		 List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 
-		MetaView metaView = new MetaView(name, typeQualifiedName, viewQualifiedId);
-		metaViews.add(metaView);
+		Instruction instruction = new ViewInstruction(name, typeQualifiedName, viewQualifiedId);
+		onCreateInstructions.add(instruction);
 
 	}
 

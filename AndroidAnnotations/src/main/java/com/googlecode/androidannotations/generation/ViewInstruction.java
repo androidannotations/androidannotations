@@ -15,15 +15,27 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.MetaView;
+import com.googlecode.androidannotations.model.Instruction;
 
-public class ViewGenerator {
+public class ViewInstruction implements Instruction {
 
 	private static final String FIELD_FORMAT = "        %s = (%s) findViewById(%s);\n";
 
-	public String generate(MetaView metaView) {
-		return String.format(FIELD_FORMAT, metaView.getFieldName(), metaView.getTypeQualifiedName(),
-				metaView.getViewQualifiedId());
+	private final String fieldName;
+
+	private final String typeQualifiedName;
+
+	private final String viewQualifiedId;
+
+	public ViewInstruction(String fieldName, String typeQualifiedName, String viewQualifiedId) {
+		this.fieldName = fieldName;
+		this.typeQualifiedName = typeQualifiedName;
+		this.viewQualifiedId = viewQualifiedId;
+	}
+
+	@Override
+	public String generate() {
+		return String.format(FIELD_FORMAT, fieldName, typeQualifiedName, viewQualifiedId);
 	}
 
 }
