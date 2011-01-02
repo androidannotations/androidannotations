@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Should be used on View fields in activity classes
  * 
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
 public @interface UiView {
 	public static final int DEFAULT_VALUE = -1;
