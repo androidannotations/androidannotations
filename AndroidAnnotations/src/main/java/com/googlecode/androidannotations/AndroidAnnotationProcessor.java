@@ -33,19 +33,23 @@ import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.model.ModelExtractor;
+import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.googlecode.androidannotations.processing.LayoutProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
 import com.googlecode.androidannotations.processing.ViewProcessor;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClassFinder;
+import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.ElementValidator;
 import com.googlecode.androidannotations.validation.LayoutValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
-@SupportedAnnotationTypes({ "com.googlecode.androidannotations.annotations.Layout",
-		"com.googlecode.androidannotations.annotations.View" })
+@SupportedAnnotationTypes({ "com.googlecode.androidannotations.annotations.Layout", //
+		"com.googlecode.androidannotations.annotations.UiView", //
+		"com.googlecode.androidannotations.annotations.Click", //
+})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 	@Override
@@ -110,10 +114,12 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private ModelValidator buildModelValidator(RClass rClass) {
 		ElementValidator layoutValidator = new LayoutValidator(processingEnv, rClass);
 		ElementValidator viewValidator = new ViewValidator(processingEnv, rClass);
+		ElementValidator clickValidator = new ClickValidator(processingEnv, rClass);
 
 		ModelValidator modelValidator = new ModelValidator();
 		modelValidator.register(layoutValidator);
 		modelValidator.register(viewValidator);
+		modelValidator.register(clickValidator);
 		return modelValidator;
 	}
 
@@ -125,10 +131,12 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private ModelProcessor buildModelProcessor(RClass rClass) {
 		ElementProcessor layoutProcessor = new LayoutProcessor(processingEnv, rClass);
 		ElementProcessor viewProcessor = new ViewProcessor(rClass);
+		ElementProcessor clickProcessor = new ClickProcessor(rClass);
 
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(layoutProcessor);
 		modelProcessor.register(viewProcessor);
+		modelProcessor.register(clickProcessor);
 		return modelProcessor;
 	}
 

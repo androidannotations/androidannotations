@@ -19,10 +19,9 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.UiView;
-import com.googlecode.androidannotations.generation.ViewInstruction;
+import com.googlecode.androidannotations.annotations.Click;
+import com.googlecode.androidannotations.generation.ClickInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
@@ -30,45 +29,35 @@ import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 import com.googlecode.androidannotations.rclass.RInnerClass;
 
-public class ViewProcessor implements ElementProcessor {
+public class ClickProcessor implements ElementProcessor {
 
 	private final RClass rClass;
 
-	public ViewProcessor(RClass rClass) {
+	public ClickProcessor(RClass rClass) {
 		this.rClass = rClass;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return UiView.class;
+		return Click.class;
 	}
 
 	@Override
 	public void process(Element element, MetaModel metaModel) {
 
-		String name = element.getSimpleName().toString();
+		String methodName = element.getSimpleName().toString();
 
-		TypeMirror uiFieldTypeMirror = element.asType();
-		String typeQualifiedName = uiFieldTypeMirror.toString();
-
-		UiView viewAnnotation = element.getAnnotation(UiView.class);
-		int viewIdValue = viewAnnotation.value();
+		Click annotation = element.getAnnotation(Click.class);
+		int idValue = annotation.value();
 
 		RInnerClass rInnerClass = rClass.get(Res.ID);
-		String viewQualifiedId;
-		if (viewIdValue == UiView.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-
-			viewQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-		} else {
-			viewQualifiedId = rInnerClass.getIdQualifiedName(viewIdValue);
-		}
+		String clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
 
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		 List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
+		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 
-		Instruction instruction = new ViewInstruction(name, typeQualifiedName, viewQualifiedId);
+		Instruction instruction = new ClickInstruction(methodName, clickQualifiedId);
 		onCreateInstructions.add(instruction);
 
 	}

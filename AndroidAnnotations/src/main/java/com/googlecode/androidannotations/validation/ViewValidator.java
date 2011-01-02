@@ -24,7 +24,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.annotations.View;
+import com.googlecode.androidannotations.annotations.UiView;
 import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
@@ -45,7 +45,7 @@ public class ViewValidator extends HasTargetAnnotationHelper implements ElementV
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return View.class;
+		return UiView.class;
 	}
 
 	@Override
@@ -62,12 +62,12 @@ public class ViewValidator extends HasTargetAnnotationHelper implements ElementV
 			if (uiFieldTypeMirror instanceof DeclaredType) {
 				if (isSubtype(uiFieldTypeMirror, viewTypeMirror)) {
 
-					View viewAnnotation = element.getAnnotation(View.class);
+					UiView viewAnnotation = element.getAnnotation(UiView.class);
 					int viewIdValue = viewAnnotation.value();
 
 					RInnerClass rInnerClass = rClass.get(Res.ID);
 
-					if (viewIdValue == View.DEFAULT_VALUE) {
+					if (viewIdValue == UiView.DEFAULT_VALUE) {
 						String fieldName = element.getSimpleName().toString();
 						if (rInnerClass.containsField(fieldName)) {
 							return true;
@@ -82,15 +82,15 @@ public class ViewValidator extends HasTargetAnnotationHelper implements ElementV
 						}
 					}
 				} else {
-					printAnnotationError(element, "@" + View.class.getSimpleName()
+					printAnnotationError(element, "@" + UiView.class.getSimpleName()
 							+ " should only be used on a field which type extends android.view.View");
 				}
 			} else {
-				printAnnotationError(element, "@" + View.class.getSimpleName()
+				printAnnotationError(element, "@" + UiView.class.getSimpleName()
 						+ " should only be used on a field which is a declared type");
 			}
 		} else {
-			printAnnotationError(element, "@" + View.class.getSimpleName()
+			printAnnotationError(element, "@" + UiView.class.getSimpleName()
 					+ " should only be used on a field in a class annotated with @" + Layout.class.getSimpleName());
 		}
 		return false;
