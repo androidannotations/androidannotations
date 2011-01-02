@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Should be used on Activity classes
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface Layout {
     int value();

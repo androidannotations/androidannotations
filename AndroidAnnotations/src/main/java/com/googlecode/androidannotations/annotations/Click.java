@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Should be used on click listener methods in activity classes
  * 
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface Click {
 	int value();
