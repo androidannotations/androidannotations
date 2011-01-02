@@ -9,8 +9,8 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.AnnotationElements;
-import com.googlecode.androidannotations.AnnotationElementsHolder;
+import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 
 public class ModelValidator {
 	

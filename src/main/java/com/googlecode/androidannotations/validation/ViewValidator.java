@@ -8,14 +8,15 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.AnnotationElements;
-import com.googlecode.androidannotations.Layout;
-import com.googlecode.androidannotations.RClass;
-import com.googlecode.androidannotations.RClass.Res;
-import com.googlecode.androidannotations.RInnerClass;
-import com.googlecode.androidannotations.View;
+import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.View;
+import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
+import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.RInnerClass;
+import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class ViewValidator extends ElementValidatorHelper {
+public class ViewValidator extends HasTargetAnnotationHelper implements ElementValidator{
 
 	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
 	private final RClass rClass;
@@ -56,13 +57,13 @@ public class ViewValidator extends ElementValidatorHelper {
 						if (rInnerClass.containsField(fieldName)) {
 							return true;
 						} else {
-							printAnnotationError(element, "Field name not found in R.id.* : " + fieldName);
+							printAnnotationError(element, "Id not found: R.id." + fieldName);
 						}
 					} else {
 						if (rInnerClass.containsIdValue(viewIdValue)) {
 							return true;
 						} else {
-							printAnnotationError(element, "View id value not found in R.id.*: " + viewIdValue);
+							printAnnotationError(element, "Id not found: R.id." + viewIdValue);
 						}
 					}
 				} else {

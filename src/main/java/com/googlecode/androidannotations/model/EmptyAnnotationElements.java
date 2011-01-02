@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations;
+package com.googlecode.androidannotations.model;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+
 
 public class EmptyAnnotationElements implements AnnotationElements{
 	

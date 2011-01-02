@@ -1,15 +1,15 @@
-package com.googlecode.androidannotations.validation;
+package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.AnnotationHelper;
 
-public abstract class ElementValidatorHelper extends AnnotationHelper implements ElementValidator {
 
-	public ElementValidatorHelper(ProcessingEnvironment processingEnv) {
+public abstract class HasTargetAnnotationHelper extends AnnotationHelper implements HasTarget {
+
+	public HasTargetAnnotationHelper(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
 	}
 
