@@ -48,7 +48,7 @@ import com.googlecode.androidannotations.validation.ViewValidator;
 
 @SupportedAnnotationTypes({ "com.googlecode.androidannotations.annotations.Layout", //
 		"com.googlecode.androidannotations.annotations.UiView", //
-		"com.googlecode.androidannotations.annotations.Click", //
+		"com.googlecode.androidannotations.annotations.Click" //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AbstractProcessor {
