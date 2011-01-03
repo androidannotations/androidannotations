@@ -23,7 +23,7 @@ public class ClickInstruction implements Instruction {
 	"" + //
 			"        (findViewById(%s)).setOnClickListener(new android.view.View.OnClickListener() {\n" + //
 			"			public void onClick(android.view.View v) {\n" + //
-			"				%s(v);\n" + //
+			"				%s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
 			"\n";
@@ -32,14 +32,18 @@ public class ClickInstruction implements Instruction {
 
 	private final String clickQualifiedId;
 
-	public ClickInstruction(String methodName, String clickQualifiedId) {
+	private final boolean viewParameter;
+
+	public ClickInstruction(String methodName, String clickQualifiedId, boolean viewParameter) {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
+		this.viewParameter = viewParameter;
 	}
 
 	@Override
 	public String generate() {
-		return String.format(LISTENER_FORMAT, clickQualifiedId, methodName);
+		String viewParameterValue = viewParameter ? "v" : "";
+		return String.format(LISTENER_FORMAT, clickQualifiedId, methodName, viewParameterValue);
 	}
 
 }

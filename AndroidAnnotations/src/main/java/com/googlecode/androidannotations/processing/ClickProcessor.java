@@ -19,6 +19,8 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.generation.ClickInstruction;
@@ -57,7 +59,12 @@ public class ClickProcessor implements ElementProcessor {
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 
-		Instruction instruction = new ClickInstruction(methodName, clickQualifiedId);
+		ExecutableElement executableElement = (ExecutableElement) element;
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+
+		boolean viewParameter = parameters.size() == 1;
+
+		Instruction instruction = new ClickInstruction(methodName, clickQualifiedId, viewParameter);
 		onCreateInstructions.add(instruction);
 
 	}
