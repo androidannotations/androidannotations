@@ -18,15 +18,16 @@ package com.googlecode.androidannotations;
 import java.io.IOException;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
+import com.googlecode.androidannotations.annotations.Click;
+import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.UiView;
 import com.googlecode.androidannotations.generation.ModelGenerator;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
@@ -38,6 +39,8 @@ import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.googlecode.androidannotations.processing.LayoutProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
 import com.googlecode.androidannotations.processing.ViewProcessor;
+import com.googlecode.androidannotations.processor.ExtendedAbstractProcessor;
+import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClassFinder;
 import com.googlecode.androidannotations.validation.ClickValidator;
@@ -46,32 +49,25 @@ import com.googlecode.androidannotations.validation.LayoutValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
-@SupportedAnnotationTypes({ "com.googlecode.androidannotations.annotations.Layout", //
-		"com.googlecode.androidannotations.annotations.UiView", //
-		"com.googlecode.androidannotations.annotations.Click" //
-})
+@SupportedAnnotationClasses({ Layout.class, UiView.class, Click.class })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-public class AndroidAnnotationProcessor extends AbstractProcessor {
+public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
+
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
 		try {
 			processThrowing(annotations, roundEnv);
 		} catch (Exception e) {
 			StackTraceElement firstElement = e.getStackTrace()[0];
 			String errorMessage = e.toString() + " " + firstElement.toString();
 
-			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-					"Unexpected annotation processing exception: " + errorMessage);
+			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Unexpected annotation processing exception: " + errorMessage);
 			e.printStackTrace();
 
 			Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
-			processingEnv
-					.getMessager()
-					.printMessage(
-							Diagnostic.Kind.ERROR,
-							"Unexpected annotation processing exception (not related to this element, but otherwise it wouldn't show up in eclipse) : "
-									+ errorMessage, element);
+			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+					"Unexpected annotation processing exception (not related to this element, but otherwise it wouldn't show up in eclipse) : " + errorMessage,
+					element);
 		}
 
 		return false;
