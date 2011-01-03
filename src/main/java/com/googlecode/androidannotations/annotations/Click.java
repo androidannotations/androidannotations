@@ -23,6 +23,8 @@ import java.lang.annotation.Target;
 /**
  * Should be used on click listener methods in activity classes
  * 
+ * The method may have zero or one parameter, that MUST be of type android.view.View
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
