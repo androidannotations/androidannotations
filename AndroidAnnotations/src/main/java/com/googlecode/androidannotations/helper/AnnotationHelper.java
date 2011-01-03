@@ -59,8 +59,7 @@ public class AnnotationHelper {
 		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
 	}
 
-	protected AnnotationMirror findAnnotationMirror(Element annotatedElement,
-			Class<? extends Annotation> annotationClass) {
+	protected AnnotationMirror findAnnotationMirror(Element annotatedElement, Class<? extends Annotation> annotationClass) {
 		List<? extends AnnotationMirror> annotationMirrors = annotatedElement.getAnnotationMirrors();
 
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
@@ -76,12 +75,18 @@ public class AnnotationHelper {
 		return annotation.getQualifiedName().toString().equals(annotationClass.getName());
 	}
 
-	protected void printAnnotationError(Element annotatedElement, Class<? extends Annotation> annotationClass,
-			String message) {
+	protected void printAnnotationError(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+		printAnnotationMessage(Diagnostic.Kind.ERROR, annotatedElement, annotationClass, message);
+	}
+	
+	protected void printAnnotationWarning(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+		printAnnotationMessage(Diagnostic.Kind.WARNING, annotatedElement, annotationClass, message);
+	}
+
+	protected void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
 		AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationClass);
 		if (annotationMirror != null) {
-			processingEnv.getMessager()
-					.printMessage(Diagnostic.Kind.ERROR, message, annotatedElement, annotationMirror);
+			processingEnv.getMessager().printMessage(diagnosticKind, message, annotatedElement, annotationMirror);
 		} else {
 			printError(annotatedElement, message);
 		}

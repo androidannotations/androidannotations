@@ -31,4 +31,9 @@ public abstract class HasTargetAnnotationHelper extends AnnotationHelper impleme
 		printAnnotationError(annotatedElement, annotationClass, message);
 	}
 
+	protected void printAnnotationWarning(Element annotatedElement, String message) {
+		Class<? extends Annotation> annotationClass = getTarget();
+		printAnnotationWarning(annotatedElement, annotationClass, message);
+	}
+
 }
