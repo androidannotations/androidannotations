@@ -23,11 +23,17 @@ import java.lang.annotation.Target;
 /**
  * Should be used on click listener methods in activity classes
  * 
- * The method may have zero or one parameter, that MUST be of type android.view.View
+ * The method may have zero or one parameter, that MUST be of type
+ * android.view.View .
+ * 
+ * The annotation value should be one of R.id.* fields. If not set, the method
+ * name will be used as the R.id.* field name.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface Click {
-	int value();
+	public static final int DEFAULT_VALUE = -1;
+
+	int value() default DEFAULT_VALUE;
 }

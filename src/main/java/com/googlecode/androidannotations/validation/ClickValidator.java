@@ -52,52 +52,62 @@ public class ClickValidator extends HasTargetAnnotationHelper implements Element
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
+		boolean valid = true;
+
 		Element enclosingElement = element.getEnclosingElement();
 
 		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
 
-		if (layoutAnnotatedElements.contains(enclosingElement)) {
-
-			ExecutableElement executableElement = (ExecutableElement) element;
-
-			TypeMirror returnType = executableElement.getReturnType();
-
-			if (returnType.getKind() == TypeKind.VOID) {
-
-				Click annotation = element.getAnnotation(Click.class);
-				int idValue = annotation.value();
-
-				RInnerClass rInnerClass = rClass.get(Res.ID);
-				if (rInnerClass.containsIdValue(idValue)) {
-					List<? extends VariableElement> parameters = executableElement.getParameters();
-
-					if (parameters.size() == 0) {
-						return true;
-					} else if (parameters.size() == 1) {
-						VariableElement parameter = parameters.get(0);
-						TypeMirror parameterType = parameter.asType();
-						if (parameterType.toString().equals(ANDROID_VIEW_QUALIFIED_NAME)) {
-							return true;
-						} else {
-							printAnnotationError(element, "@" + Click.class.getSimpleName()
-									+ " should only be used on a method with a parameter of type android.view.View, not " + parameterType);
-						}
-					} else {
-						printAnnotationError(element, "@" + Click.class.getSimpleName()
-								+ " should only be used on a method with zero or one parameter, instead of " + parameters.size());
-
-					}
-				} else {
-					printAnnotationError(element, "Id not found: R.id." + idValue);
-				}
-
-			} else {
-				printAnnotationError(element, "@" + Click.class.getSimpleName() + " should only be used on a method with a void return type ");
-			}
-		} else {
+		if (!layoutAnnotatedElements.contains(enclosingElement)) {
+			valid = false;
 			printAnnotationError(element,
 					"@" + Click.class.getSimpleName() + " should only be used on a method in a class annotated with @" + Layout.class.getSimpleName());
+
 		}
-		return false;
+
+		ExecutableElement executableElement = (ExecutableElement) element;
+
+		TypeMirror returnType = executableElement.getReturnType();
+
+		if (returnType.getKind() != TypeKind.VOID) {
+			printAnnotationWarning(element, "@" + Click.class.getSimpleName() + " should only be used on a method with a void return type ");
+		}
+
+		Click annotation = element.getAnnotation(Click.class);
+		int idValue = annotation.value();
+
+		RInnerClass rInnerClass = rClass.get(Res.ID);
+		if (idValue == Click.DEFAULT_VALUE) {
+			String methodName = element.getSimpleName().toString();
+			if (!rInnerClass.containsField(methodName)) {
+				valid = false;
+				printAnnotationError(element, "Id not found: R.id." + methodName);
+			}
+		} else {
+			if (!rInnerClass.containsIdValue(idValue)) {
+				valid = false;
+				printAnnotationError(element, "Id not found: R.id." + idValue);
+			}
+		}
+
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+
+		if (parameters.size() != 0 && parameters.size() != 1) {
+			valid = false;
+			printAnnotationError(element, "@" + Click.class.getSimpleName() + " should only be used on a method with zero or one parameter, instead of "
+					+ parameters.size());
+		}
+
+		if (parameters.size() == 1) {
+			VariableElement parameter = parameters.get(0);
+			TypeMirror parameterType = parameter.asType();
+			if (!parameterType.toString().equals(ANDROID_VIEW_QUALIFIED_NAME)) {
+				valid = false;
+				printAnnotationError(element, "@" + Click.class.getSimpleName()
+						+ " should only be used on a method with no parameter or a parameter of type android.view.View, not " + parameterType);
+			}
+		}
+
+		return valid;
 	}
 }

@@ -53,7 +53,14 @@ public class ClickProcessor implements ElementProcessor {
 		int idValue = annotation.value();
 
 		RInnerClass rInnerClass = rClass.get(Res.ID);
-		String clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
+		String clickQualifiedId;
+
+		if (idValue == Click.DEFAULT_VALUE) {
+			String fieldName = element.getSimpleName().toString();
+			clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
+		} else {
+			clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
+		}
 
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
