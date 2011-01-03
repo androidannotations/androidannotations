@@ -1,9 +1,7 @@
 package com.googlecode.androidannotations.helloworldeclipse;
 
-import java.util.Date;
-
 import android.app.Activity;
-import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.Click;
@@ -13,23 +11,16 @@ import com.googlecode.androidannotations.annotations.UiView;
 @Layout(R.layout.main)
 public class MyActivity extends Activity {
 
-	@UiView(R.id.hello)
-	TextView foo;
-
 	@UiView
-	TextView content;
+	EditText myEditText;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		foo.setText("Bar !");
-	}
+	@UiView(R.id.myTextView)
+	TextView textView;
 
 	@Click
-	public void myButton() {
-		content.setText("Clicked at " + new Date());
+	void myButton() {
+		String name = myEditText.getText().toString();
+		textView.setText("Hello " + name);
 	}
 
 }

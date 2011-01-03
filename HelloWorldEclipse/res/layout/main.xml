@@ -4,11 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-	<TextView  
-		android:id="@+id/hello"
+	<EditText  
+		android:id="@+id/myEditText"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
-	    android:text="@string/hello"
 	    />
 	<Button  
 		android:id="@+id/myButton"
@@ -17,9 +16,8 @@
 	    android:text="Click me!"
 	    />        
 	<TextView  
-		android:id="@+id/content"
+		android:id="@+id/myTextView"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
-	    android:text="Content changing on click"
 	    />    
 </LinearLayout>

@@ -28,8 +28,8 @@ import com.googlecode.androidannotations.annotations.UiView;
 import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
-import com.googlecode.androidannotations.rclass.RInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class ViewValidator extends HasTargetAnnotationHelper implements ElementValidator {
 
@@ -51,49 +51,54 @@ public class ViewValidator extends HasTargetAnnotationHelper implements ElementV
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
+		boolean valid = true;
+
 		Element enclosingElement = element.getEnclosingElement();
 
 		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
 
-		if (layoutAnnotatedElements.contains(enclosingElement)) {
+		if (!layoutAnnotatedElements.contains(enclosingElement)) {
+			valid = false;
+			printAnnotationError(element,
+					 annotationName() + " should only be used on a field in a class annotated with " + annotationName(Layout.class));
+		}
 
-			TypeMirror uiFieldTypeMirror = element.asType();
+		TypeMirror uiFieldTypeMirror = element.asType();
 
-			if (uiFieldTypeMirror instanceof DeclaredType) {
-				if (isSubtype(uiFieldTypeMirror, viewTypeMirror)) {
+		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
+			valid = false;
+			printAnnotationError(element, annotationName() + " should only be used on a field which is a declared type");
+		}
 
-					UiView viewAnnotation = element.getAnnotation(UiView.class);
-					int viewIdValue = viewAnnotation.value();
+		if (!isSubtype(uiFieldTypeMirror, viewTypeMirror)) {
+			valid = false;
+			printAnnotationError(element,  annotationName() + " should only be used on a field which type extends android.view.View");
+		}
 
-					RInnerClass rInnerClass = rClass.get(Res.ID);
+		UiView viewAnnotation = element.getAnnotation(UiView.class);
+		int viewIdValue = viewAnnotation.value();
 
-					if (viewIdValue == UiView.DEFAULT_VALUE) {
-						String fieldName = element.getSimpleName().toString();
-						if (rInnerClass.containsField(fieldName)) {
-							return true;
-						} else {
-							printAnnotationError(element, "Id not found: R.id." + fieldName);
-						}
-					} else {
-						if (rInnerClass.containsIdValue(viewIdValue)) {
-							return true;
-						} else {
-							printAnnotationError(element, "Id not found: R.id." + viewIdValue);
-						}
-					}
-				} else {
-					printAnnotationError(element, "@" + UiView.class.getSimpleName()
-							+ " should only be used on a field which type extends android.view.View");
-				}
-			} else {
-				printAnnotationError(element, "@" + UiView.class.getSimpleName()
-						+ " should only be used on a field which is a declared type");
+		RInnerClass rInnerClass = rClass.get(Res.ID);
+
+		if (viewIdValue == UiView.DEFAULT_VALUE) {
+			String fieldName = element.getSimpleName().toString();
+			if (!rInnerClass.containsField(fieldName)) {
+				valid = false;
+				printAnnotationError(element, "Id not found: R.id." + fieldName);
 			}
 		} else {
-			printAnnotationError(element, "@" + UiView.class.getSimpleName()
-					+ " should only be used on a field in a class annotated with @" + Layout.class.getSimpleName());
+			if (!rInnerClass.containsIdValue(viewIdValue)) {
+				valid = false;
+				printAnnotationError(element, "Id not found: R.id." + viewIdValue);
+			}
 		}
-		return false;
+		
+		if (isPrivate(element)) {
+			valid = false;
+			printAnnotationError(element, annotationName() + " should not be used on a private field");
+		}
+
+		return valid;
 	}
 
 }

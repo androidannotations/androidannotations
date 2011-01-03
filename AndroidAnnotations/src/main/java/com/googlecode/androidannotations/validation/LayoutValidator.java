@@ -48,23 +48,35 @@ public class LayoutValidator extends HasTargetAnnotationHelper implements Elemen
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
+		boolean valid = true;
+
 		TypeElement typeElement = (TypeElement) element;
-		if (isSubtype(typeElement, activityTypeElement)) {
-
-			Layout layoutAnnotation = element.getAnnotation(Layout.class);
-			int layoutIdValue = layoutAnnotation.value();
-
-			RInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-
-			if (rInnerClass.containsIdValue(layoutIdValue)) {
-				return true;
-			} else {
-				printAnnotationError(element, "Layout id value not found in R.layout.*: " + layoutIdValue);
-			}
-		} else {
-			printAnnotationError(element, Layout.class + " should only be used on Activity subclasses");
+		if (!isSubtype(typeElement, activityTypeElement)) {
+			valid = false;
+			printAnnotationError(element, annotationName() + " should only be used on Activity subclasses");
 		}
-		return false;
+
+		Layout layoutAnnotation = element.getAnnotation(Layout.class);
+		int layoutIdValue = layoutAnnotation.value();
+
+		RInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+
+		if (!rInnerClass.containsIdValue(layoutIdValue)) {
+			valid = false;
+			printAnnotationError(element, "Layout id value not found in R.layout.*: " + layoutIdValue);
+		}
+
+		if (isAbstract(element)) {
+			valid = false;
+			printAnnotationError(element, annotationName() + " should not be used on an abstract class");
+		}
+
+		if (isFinal(element)) {
+			valid = false;
+			printAnnotationError(element, annotationName() + " should not be used on a final class");
+		}
+
+		return valid;
 	}
 
 }

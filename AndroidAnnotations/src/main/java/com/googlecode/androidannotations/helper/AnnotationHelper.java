@@ -21,6 +21,7 @@ import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
@@ -94,6 +95,22 @@ public class AnnotationHelper {
 
 	protected void printError(Element element, String message) {
 		processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
+	}
+	
+	protected boolean isPrivate(Element element) {
+		return element.getModifiers().contains(Modifier.PRIVATE);
+	}
+	
+	protected boolean isAbstract(Element element) {
+		return element.getModifiers().contains(Modifier.ABSTRACT);
+	}
+	
+	protected boolean isFinal(Element element) {
+		return element.getModifiers().contains(Modifier.FINAL);
+	}
+	
+	protected String annotationName(Class<? extends Annotation> annotationClass) {
+		return "@"+annotationClass.getSimpleName();
 	}
 
 }

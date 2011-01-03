@@ -60,9 +60,7 @@ public class ClickValidator extends HasTargetAnnotationHelper implements Element
 
 		if (!layoutAnnotatedElements.contains(enclosingElement)) {
 			valid = false;
-			printAnnotationError(element,
-					"@" + Click.class.getSimpleName() + " should only be used on a method in a class annotated with @" + Layout.class.getSimpleName());
-
+			printAnnotationError(element, annotationName() + " should only be used on a method in a class annotated with " + annotationName(Layout.class));
 		}
 
 		ExecutableElement executableElement = (ExecutableElement) element;
@@ -70,7 +68,7 @@ public class ClickValidator extends HasTargetAnnotationHelper implements Element
 		TypeMirror returnType = executableElement.getReturnType();
 
 		if (returnType.getKind() != TypeKind.VOID) {
-			printAnnotationWarning(element, "@" + Click.class.getSimpleName() + " should only be used on a method with a void return type ");
+			printAnnotationWarning(element, annotationName() + " should only be used on a method with a void return type ");
 		}
 
 		Click annotation = element.getAnnotation(Click.class);
@@ -94,8 +92,7 @@ public class ClickValidator extends HasTargetAnnotationHelper implements Element
 
 		if (parameters.size() != 0 && parameters.size() != 1) {
 			valid = false;
-			printAnnotationError(element, "@" + Click.class.getSimpleName() + " should only be used on a method with zero or one parameter, instead of "
-					+ parameters.size());
+			printAnnotationError(element, annotationName() + " should only be used on a method with zero or one parameter, instead of " + parameters.size());
 		}
 
 		if (parameters.size() == 1) {
@@ -103,9 +100,14 @@ public class ClickValidator extends HasTargetAnnotationHelper implements Element
 			TypeMirror parameterType = parameter.asType();
 			if (!parameterType.toString().equals(ANDROID_VIEW_QUALIFIED_NAME)) {
 				valid = false;
-				printAnnotationError(element, "@" + Click.class.getSimpleName()
+				printAnnotationError(element, annotationName()
 						+ " should only be used on a method with no parameter or a parameter of type android.view.View, not " + parameterType);
 			}
+		}
+
+		if (isPrivate(element)) {
+			valid = false;
+			printAnnotationError(element, annotationName() + " should not be used on a private method");
 		}
 
 		return valid;
