@@ -16,13 +16,11 @@
 package com.googlecode.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
-import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AndroidValue;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -81,7 +79,7 @@ public class ValueValidator extends ValidatorHelper implements ElementValidator 
 		} else {
 			if (!rInnerClass.containsIdValue(idValue)) {
 				valid.invalidate();
-				printAnnotationError(element, "Id with value "+idValue+" not found in R." + resInnerClass.rName() + ".*");
+				printAnnotationError(element, "Id with value " + idValue + " not found in R." + resInnerClass.rName() + ".*");
 			}
 		}
 	}
@@ -94,17 +92,6 @@ public class ValueValidator extends ValidatorHelper implements ElementValidator 
 			valid.invalidate();
 			printAnnotationError(element, annotationName() + " should only be used on a field which is a " + androidValue.getAllowedTypes().toString()
 					+ ", not " + qualifiedName);
-		}
-	}
-
-	private void validateHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
-		Element enclosingElement = element.getEnclosingElement();
-
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
-
-		if (!layoutAnnotatedElements.contains(enclosingElement)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a field in a class annotated with " + annotationName(Layout.class));
 		}
 	}
 

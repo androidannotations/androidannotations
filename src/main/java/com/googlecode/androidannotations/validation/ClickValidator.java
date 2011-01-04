@@ -17,7 +17,6 @@ package com.googlecode.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -27,7 +26,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
@@ -112,17 +110,6 @@ public class ClickValidator extends ValidatorHelper implements ElementValidator 
 
 		if (returnType.getKind() != TypeKind.VOID) {
 			printAnnotationWarning(element, annotationName() + " should only be used on a method with a void return type ");
-		}
-	}
-
-	private void validateHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
-		Element enclosingElement = element.getEnclosingElement();
-
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
-
-		if (!layoutAnnotatedElements.contains(enclosingElement)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method in a class annotated with " + annotationName(Layout.class));
 		}
 	}
 }

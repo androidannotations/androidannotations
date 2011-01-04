@@ -23,14 +23,14 @@ public class UiThreadInstruction implements Instruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"        @Override\n" + //
-			"        protected void %s(%s) {\n" + //
-			"		 	runOnUiThread(new Runnable() {\n" + //
-			"		      public void run() {\n" + //
-			"               %s.super.%s(%s);\n" + //
-			"		      }\n" + //
-			"           });\n" + //
-			"		 }\n" + //
+			"    @Override\n" + //
+			"    protected void %s(%s) {\n" + //
+			"        runOnUiThread(new Runnable() {\n" + //
+			"            public void run() {\n" + //
+			"                %s.super.%s(%s);\n" + //
+			"            }\n" + //
+			"        });\n" + //
+			"    }\n" + //
 			"\n";
 
 	private final String methodName;

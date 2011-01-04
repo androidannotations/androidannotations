@@ -21,7 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on method that must be run in a background thread
+ * Should be used on method that must be run in a background thread. This method
+ * must belong to an activity annotated with @Layout.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
