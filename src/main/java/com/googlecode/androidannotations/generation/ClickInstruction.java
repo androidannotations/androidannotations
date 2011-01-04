@@ -19,7 +19,7 @@ import com.googlecode.androidannotations.model.Instruction;
 
 public class ClickInstruction implements Instruction {
 
-	private static final String LISTENER_FORMAT = //
+	private static final String FORMAT = //
 	"" + //
 			"        (findViewById(%s)).setOnClickListener(new android.view.View.OnClickListener() {\n" + //
 			"			public void onClick(android.view.View v) {\n" + //
@@ -43,7 +43,7 @@ public class ClickInstruction implements Instruction {
 	@Override
 	public String generate() {
 		String viewParameterValue = viewParameter ? "v" : "";
-		return String.format(LISTENER_FORMAT, clickQualifiedId, methodName, viewParameterValue);
+		return String.format(FORMAT, clickQualifiedId, methodName, viewParameterValue);
 	}
 
 }
