@@ -22,6 +22,16 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 
 public interface ElementValidator extends HasTarget {
 
+	/**
+	 * Method used to filter validated elements from annotated elements
+	 * 
+	 * @param element
+	 *            the element to validate
+	 * @param validatedElements
+	 *            to already validated elements
+	 * @return true if the element should be added to the validatedElements,
+	 *         false otherwise
+	 */
 	boolean validate(Element element, AnnotationElements validatedElements);
 
 }
