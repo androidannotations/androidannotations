@@ -17,22 +17,25 @@ package com.googlecode.androidannotations.generation;
 
 import com.googlecode.androidannotations.model.Instruction;
 
-public class StringValueInstruction implements Instruction {
+public class ValueInstruction implements Instruction {
 
-	private static final String VALUE_FORMAT = "        %s = getString(%s);\n";
+	private static final String VALUE_FORMAT = "        %s = getResources().%s(%s);\n";
 
 	private final String fieldName;
+	
+	private final String methodName;
 
 	private final String qualifiedId;
 
-	public StringValueInstruction(String fieldName, String qualifiedId) {
+	public ValueInstruction(String fieldName, String methodName, String qualifiedId) {
 		this.fieldName = fieldName;
 		this.qualifiedId = qualifiedId;
+		this.methodName = methodName;
 	}
 
 	@Override
 	public String generate() {
-		return String.format(VALUE_FORMAT, fieldName, qualifiedId);
+		return String.format(VALUE_FORMAT, fieldName, methodName, qualifiedId);
 	}
 
 }

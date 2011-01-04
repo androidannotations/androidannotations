@@ -23,9 +23,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.annotations.Value;
-import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
+import com.googlecode.androidannotations.model.AndroidValue;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
@@ -33,20 +32,19 @@ import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class ValueValidator extends HasTargetAnnotationHelper implements ElementValidator {
 
-	private static final String INTEGER_TYPE = "java.lang.Integer";
-	private static final String INT_TYPE = "int";
-	private static final String STRING_TYPE = "java.lang.String";
-	private static final String STRING_ARRAY_TYPE = "java.lang.String[]";
 	private final RClass rClass;
 
-	public ValueValidator(ProcessingEnvironment processingEnv, RClass rClass) {
+	private final AndroidValue androidValue;
+
+	public ValueValidator(AndroidValue androidValue, ProcessingEnvironment processingEnv, RClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
+		this.androidValue = androidValue;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Value.class;
+		return androidValue.getTarget();
 	}
 
 	@Override
@@ -58,9 +56,9 @@ public class ValueValidator extends HasTargetAnnotationHelper implements Element
 
 		TypeMirror fieldTypeMirror = element.asType();
 
-		validateIsStringOrStringArrayOrInt(element, valid, fieldTypeMirror);
+		validateIsAllowedType(element, valid, fieldTypeMirror);
 
-		validateRFieldName(element, valid, fieldTypeMirror);
+		validateRFieldName(element, valid);
 
 		validateIsNotPrivate(element, valid);
 
@@ -74,49 +72,35 @@ public class ValueValidator extends HasTargetAnnotationHelper implements Element
 		}
 	}
 
-	private void validateRFieldName(Element element, IsValid valid, TypeMirror fieldTypeMirror) {
-		Value viewAnnotation = element.getAnnotation(Value.class);
-		int viewIdValue = viewAnnotation.value();
+	private void validateRFieldName(Element element, IsValid valid) {
+		int idValue = androidValue.idFromElement(element);
 
-		String qualifiedName = fieldTypeMirror.toString();
-		Res resInnerClass;
-		if (qualifiedName.equals(STRING_TYPE)) {
-			resInnerClass = Res.STRING;
-		} else if (qualifiedName.equals(INT_TYPE) || qualifiedName.equals(INTEGER_TYPE)) {
-			resInnerClass = Res.COLOR;
-		} else if (qualifiedName.equals(STRING_ARRAY_TYPE)) {
-			resInnerClass = Res.ARRAY;
-		} else {
-			// Should already have been marked invalidate by previous validation
-			valid.invalidate();
-			return;
-		}
+		Res resInnerClass = androidValue.getRInnerClass();
 
 		RInnerClass rInnerClass = rClass.get(resInnerClass);
 
-		if (viewIdValue == ViewById.DEFAULT_VALUE) {
+		if (idValue == AndroidValue.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			if (!rInnerClass.containsField(fieldName)) {
 				valid.invalidate();
 				printAnnotationError(element, "Id not found: R." + resInnerClass.rName() + "." + fieldName);
 			}
 		} else {
-			if (!rInnerClass.containsIdValue(viewIdValue)) {
+			if (!rInnerClass.containsIdValue(idValue)) {
 				valid.invalidate();
-				printAnnotationError(element, "Id not found: R." + resInnerClass.rName() + "." + viewIdValue);
+				printAnnotationError(element, "Id with value "+idValue+" not found in R." + resInnerClass.rName() + ".*");
 			}
 		}
 	}
 
-	private void validateIsStringOrStringArrayOrInt(Element element, IsValid valid, TypeMirror fieldTypeMirror) {
+	private void validateIsAllowedType(Element element, IsValid valid, TypeMirror fieldTypeMirror) {
 
 		String qualifiedName = fieldTypeMirror.toString();
 
-		if (!(qualifiedName.equals(STRING_TYPE) || qualifiedName.equals(STRING_ARRAY_TYPE) || qualifiedName.equals(INT_TYPE) || qualifiedName.equals(INTEGER_TYPE))) {
+		if (!androidValue.getAllowedTypes().contains(qualifiedName)) {
 			valid.invalidate();
-			printAnnotationError(element, annotationName()
-					+ " should only be used on a field which is a String, a String array, an int or an Integer, not "
-					+ qualifiedName);
+			printAnnotationError(element, annotationName() + " should only be used on a field which is a " + androidValue.getAllowedTypes().toString()
+					+ ", not " + qualifiedName);
 		}
 	}
 
@@ -127,8 +111,7 @@ public class ValueValidator extends HasTargetAnnotationHelper implements Element
 
 		if (!layoutAnnotatedElements.contains(enclosingElement)) {
 			valid.invalidate();
-			printAnnotationError(element, annotationName()
-					+ " should only be used on a field in a class annotated with " + annotationName(Layout.class));
+			printAnnotationError(element, annotationName() + " should only be used on a field in a class annotated with " + annotationName(Layout.class));
 		}
 	}
 

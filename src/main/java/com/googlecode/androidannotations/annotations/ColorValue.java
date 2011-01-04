@@ -20,19 +20,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.googlecode.androidannotations.model.AndroidValue;
+
 /**
- * Should be used on fields that should be injected with values from res/values in activity classes
+ * Use on fields in activity classes that should be injected with values from R.color.*
  * 
- * The annotated field should be a String, a String array, an int or an Integer
+ * The annotated field must be an int or an Integer
  * 
- * The annotation value should be one of R.string.*, R.color.* or R.array.* fields. If not set, the field
- * name will be used as the R.*.* field name.
+ * The annotation value must be one of R.color.* fields. If the value is not set, the field
+ * name will be used as the R.color.* field name.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
-public @interface Value {
-	public static final int DEFAULT_VALUE = -1;
-
-	int value() default DEFAULT_VALUE;
+public @interface ColorValue {
+	int value() default AndroidValue.DEFAULT_VALUE;
 }

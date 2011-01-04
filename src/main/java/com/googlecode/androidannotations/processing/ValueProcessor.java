@@ -19,13 +19,9 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Value;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.generation.ColorValueInstruction;
-import com.googlecode.androidannotations.generation.StringArrayValueInstruction;
-import com.googlecode.androidannotations.generation.StringValueInstruction;
+import com.googlecode.androidannotations.generation.ValueInstruction;
+import com.googlecode.androidannotations.model.AndroidValue;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
@@ -35,19 +31,17 @@ import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class ValueProcessor implements ElementProcessor {
 
-	private static final String INTEGER_TYPE = "java.lang.Integer";
-	private static final String INT_TYPE = "int";
-	private static final String STRING_TYPE = "java.lang.String";
-
 	private final RClass rClass;
+	private final AndroidValue androidValue;
 
-	public ValueProcessor(RClass rClass) {
+	public ValueProcessor(AndroidValue androidValue, RClass rClass) {
 		this.rClass = rClass;
+		this.androidValue = androidValue;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Value.class;
+		return androidValue.getTarget();
 	}
 
 	@Override
@@ -55,24 +49,13 @@ public class ValueProcessor implements ElementProcessor {
 
 		String name = element.getSimpleName().toString();
 
-		TypeMirror uiFieldTypeMirror = element.asType();
-		String qualifiedName = uiFieldTypeMirror.toString();
+		int idValue = androidValue.idFromElement(element);
 
-		Value annotation = element.getAnnotation(Value.class);
-		int idValue = annotation.value();
-
-		Res resInnerClass;
-		if (qualifiedName.equals(STRING_TYPE)) {
-			resInnerClass = Res.STRING;
-		} else if (qualifiedName.equals(INT_TYPE) || qualifiedName.equals(INTEGER_TYPE)) {
-			resInnerClass = Res.COLOR;
-		} else {
-			resInnerClass = Res.ARRAY;
-		}
+		Res resInnerClass = androidValue.getRInnerClass();
 
 		RInnerClass rInnerClass = rClass.get(resInnerClass);
 		String qualifiedId;
-		if (idValue == ViewById.DEFAULT_VALUE) {
+		if (idValue == AndroidValue.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			qualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {
@@ -83,17 +66,7 @@ public class ValueProcessor implements ElementProcessor {
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 
-		Instruction instruction;
-		switch (resInnerClass) {
-		case STRING:
-			instruction = new StringValueInstruction(name, qualifiedId);
-			break;
-		case COLOR:
-			instruction = new ColorValueInstruction(name, qualifiedId);
-			break;
-		default:
-			instruction = new StringArrayValueInstruction(name, qualifiedId);
-		}
+		Instruction instruction = new ValueInstruction(name, androidValue.getResourceMethodName(), qualifiedId);
 
 		onCreateInstructions.add(instruction);
 
