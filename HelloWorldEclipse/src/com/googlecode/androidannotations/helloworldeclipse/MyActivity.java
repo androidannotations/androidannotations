@@ -42,10 +42,10 @@ public class MyActivity extends Activity {
 		for (String item : bestFoods) {
 			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
 		}
-		
+
 		someBackgroundWork();
 	}
-	
+
 	@Background
 	void someBackgroundWork() {
 		try {
@@ -54,11 +54,10 @@ public class MyActivity extends Activity {
 		}
 		updateUi();
 	}
-	
+
 	@UiThread
 	void updateUi() {
 		textView.setTextColor(Color.RED);
 	}
-	
 
 }

@@ -22,13 +22,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class LayoutValidator extends HasTargetAnnotationHelper implements ElementValidator {
+public class LayoutValidator extends ValidatorHelper implements ElementValidator {
 
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
 	private final RClass rClass;
@@ -59,20 +59,6 @@ public class LayoutValidator extends HasTargetAnnotationHelper implements Elemen
 		validateIsNotFinal(element, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateIsNotFinal(Element element, IsValid valid) {
-		if (isFinal(element)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should not be used on a final class");
-		}
-	}
-
-	private void validateIsNotAbstract(Element element, IsValid valid) {
-		if (isAbstract(element)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should not be used on an abstract class");
-		}
 	}
 
 	private void validateRFieldName(Element element, IsValid valid) {

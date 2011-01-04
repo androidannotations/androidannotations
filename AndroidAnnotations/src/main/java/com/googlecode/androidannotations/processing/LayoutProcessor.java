@@ -22,14 +22,14 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class LayoutProcessor extends HasTargetAnnotationHelper implements ElementProcessor {
+public class LayoutProcessor extends ValidatorHelper implements ElementProcessor {
 
 	private final RClass rClass;
 
