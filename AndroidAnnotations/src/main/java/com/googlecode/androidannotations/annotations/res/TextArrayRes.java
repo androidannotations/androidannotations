@@ -13,32 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package com.googlecode.androidannotations.annotations.res;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.googlecode.androidannotations.model.AndroidValue;
+import com.googlecode.androidannotations.model.AndroidRes;
 
 /**
- * Use on fields in activity classes that should be injected with values from
- * R.string.*
- * 
- * The annotated field must be a String
- * 
- * The annotation value must be one of R.string.* fields. If the value is not
- * set, the field name will be used as the R.string.* field name.
- * 
- * Notice that we named it @StringResValue instead of @StringValue because the
- * StringValue class already exists in java.lang and does not need any import to
- * be used.
- * 
+ * Use on fields in activity classes that should be injected with this specific resource
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
-public @interface StringResValue {
-
-	int value() default AndroidValue.DEFAULT_VALUE;
+public @interface TextArrayRes {
+	int value() default AndroidRes.DEFAULT_VALUE;
 }

@@ -11,5 +11,7 @@
 		<item>pez espada</item>
 		<item>california maki</item>
 	</string-array>
+	
+	<bool name="someBoolean">true</bool>
 
 </resources>

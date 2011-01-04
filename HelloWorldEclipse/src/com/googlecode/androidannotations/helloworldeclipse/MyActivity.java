@@ -13,13 +13,14 @@ import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.ColorValue;
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.annotations.StringArrayValue;
-import com.googlecode.androidannotations.annotations.StringResValue;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.BooleanRes;
+import com.googlecode.androidannotations.annotations.res.ColorRes;
+import com.googlecode.androidannotations.annotations.res.StringArrayRes;
+import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @Layout(R.layout.my_activity)
 public class MyActivity extends Activity {
@@ -30,14 +31,17 @@ public class MyActivity extends Activity {
 	@ViewById(R.id.myTextView)
 	TextView textView;
 
-	@StringResValue(R.string.hello)
+	@StringRes(R.string.hello)
 	String helloFormat;
 
-	@StringArrayValue
+	@StringArrayRes
 	String[] bestFoods;
 
-	@ColorValue
+	@ColorRes
 	int androidColor;
+	
+	@BooleanRes
+	boolean someBoolean;
 	
 	@SystemService
 	NotificationManager notificationManager;
@@ -49,7 +53,7 @@ public class MyActivity extends Activity {
 		}
 
 		String name = myEditText.getText().toString();
-
+		
 		someBackgroundWork(name, 5000);
 	}
 

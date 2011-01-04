@@ -26,7 +26,7 @@ import javax.lang.model.util.ElementFilter;
 public class RClass {
 
 	public enum Res {
-		LAYOUT, ID, STRING, ARRAY, COLOR;
+		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE;
 		public String rName() {
 			return toString().toLowerCase();
 		}
