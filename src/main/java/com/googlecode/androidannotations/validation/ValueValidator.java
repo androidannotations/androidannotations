@@ -23,14 +23,14 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AndroidValue;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 import com.googlecode.androidannotations.rclass.RInnerClass;
 
-public class ValueValidator extends HasTargetAnnotationHelper implements ElementValidator {
+public class ValueValidator extends ValidatorHelper implements ElementValidator {
 
 	private final RClass rClass;
 
@@ -63,13 +63,6 @@ public class ValueValidator extends HasTargetAnnotationHelper implements Element
 		validateIsNotPrivate(element, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateIsNotPrivate(Element element, IsValid valid) {
-		if (isPrivate(element)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should not be used on a private field");
-		}
 	}
 
 	private void validateRFieldName(Element element, IsValid valid) {

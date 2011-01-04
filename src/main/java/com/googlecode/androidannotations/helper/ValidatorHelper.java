@@ -20,9 +20,11 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-public abstract class HasTargetAnnotationHelper extends AnnotationHelper implements HasTarget {
+import com.googlecode.androidannotations.validation.IsValid;
 
-	public HasTargetAnnotationHelper(ProcessingEnvironment processingEnv) {
+public abstract class ValidatorHelper extends AnnotationHelper implements HasTarget {
+
+	public ValidatorHelper(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
 	}
 
@@ -38,6 +40,27 @@ public abstract class HasTargetAnnotationHelper extends AnnotationHelper impleme
 	
 	protected String annotationName() {
 		return annotationName(getTarget());
+	}
+	
+	protected void validateIsNotFinal(Element element, IsValid valid) {
+		if (isFinal(element)) {
+			valid.invalidate();
+			printAnnotationError(element, annotationName() + " should not be used on a final element");
+		}
+	}
+	
+	protected void validateIsNotAbstract(Element element, IsValid valid) {
+		if (isAbstract(element)) {
+			valid.invalidate();
+			printAnnotationError(element, annotationName() + " should not be used on an abstract element");
+		}
+	}
+	
+	protected void validateIsNotPrivate(Element element, IsValid valid) {
+		if (isPrivate(element)) {
+			valid.invalidate();
+			printAnnotationError(element, annotationName() + " should not be used on a private element");
+		}
 	}
 
 }

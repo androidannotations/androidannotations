@@ -40,9 +40,11 @@ import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.model.ModelExtractor;
+import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.LayoutProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
+import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ValueProcessor;
 import com.googlecode.androidannotations.processing.ViewProcessor;
 import com.googlecode.androidannotations.processor.ExtendedAbstractProcessor;
@@ -52,6 +54,7 @@ import com.googlecode.androidannotations.rclass.RClassFinder;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.LayoutValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
+import com.googlecode.androidannotations.validation.RunnableValidator;
 import com.googlecode.androidannotations.validation.ValueValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
@@ -127,6 +130,8 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelValidator.register(new ValueValidator(AndroidValue.STRING, processingEnv, rClass));
 		modelValidator.register(new ValueValidator(AndroidValue.STRING_ARRAY, processingEnv, rClass));
 		modelValidator.register(new ValueValidator(AndroidValue.COLOR, processingEnv, rClass));
+		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
+		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		return modelValidator;
 	}
 
@@ -143,6 +148,8 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelProcessor.register(new ValueProcessor(AndroidValue.STRING, rClass));
 		modelProcessor.register(new ValueProcessor(AndroidValue.STRING_ARRAY, rClass));
 		modelProcessor.register(new ValueProcessor(AndroidValue.COLOR, rClass));
+		modelProcessor.register(new UiThreadProcessor());
+		modelProcessor.register(new BackgroundProcessor());
 		return modelProcessor;
 	}
 

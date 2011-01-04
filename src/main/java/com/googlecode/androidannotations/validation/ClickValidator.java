@@ -28,13 +28,13 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 import com.googlecode.androidannotations.rclass.RInnerClass;
 
-public class ClickValidator extends HasTargetAnnotationHelper implements ElementValidator {
+public class ClickValidator extends ValidatorHelper implements ElementValidator {
 
 	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
 	private final RClass rClass;
@@ -67,13 +67,6 @@ public class ClickValidator extends HasTargetAnnotationHelper implements Element
 		validateIsNotPrivate(element, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateIsNotPrivate(Element element, IsValid valid) {
-		if (isPrivate(element)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should not be used on a private method");
-		}
 	}
 
 	private void validateParameters(Element element, IsValid valid, ExecutableElement executableElement) {
