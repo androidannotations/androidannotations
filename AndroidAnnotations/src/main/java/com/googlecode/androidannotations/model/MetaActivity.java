@@ -29,6 +29,8 @@ public class MetaActivity {
 	private final String layoutQualifiedName;
 	
 	private final List<Instruction> onCreateInstructions = new ArrayList<Instruction>();
+	
+	private final List<Instruction> memberInstructions = new ArrayList<Instruction>();
 
 	public MetaActivity(String packageName, String superClassName, String layoutQualifiedName) {
 		this.packageName = packageName;
@@ -46,6 +48,10 @@ public class MetaActivity {
 
 	public List<Instruction> getOnCreateInstructions() {
 		return onCreateInstructions;
+	}
+	
+	public List<Instruction> getMemberInstructions() {
+		return memberInstructions;
 	}
 
 	public String getPackageName() {
