@@ -6,8 +6,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.Click;
+import com.googlecode.androidannotations.annotations.ColorValue;
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.annotations.Value;
+import com.googlecode.androidannotations.annotations.StringArrayValue;
+import com.googlecode.androidannotations.annotations.StringResValue;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @Layout(R.layout.main)
@@ -19,13 +21,13 @@ public class MyActivity extends Activity {
 	@ViewById(R.id.myTextView)
 	TextView textView;
 
-	@Value(R.string.hello)
+	@StringResValue(R.string.hello)
 	String helloFormat;
 
-	@Value
+	@StringArrayValue
 	String[] bestFoods;
 
-	@Value
+	@ColorValue
 	int androidColor;
 
 	@Click
@@ -34,7 +36,6 @@ public class MyActivity extends Activity {
 		String message = String.format(helloFormat, name);
 		textView.setText(message);
 		textView.setTextColor(androidColor);
-		
 		for (String item : bestFoods) {
 			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
 		}
