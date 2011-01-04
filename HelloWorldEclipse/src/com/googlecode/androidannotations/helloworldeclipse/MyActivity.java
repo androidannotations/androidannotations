@@ -43,21 +43,21 @@ public class MyActivity extends Activity {
 			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
 		}
 
-		someBackgroundWork();
+		someBackgroundWork("Some string", 5000);
 	}
 
 	@Background
-	void someBackgroundWork() {
+	void someBackgroundWork(String someParameter, long someOtherParameter) {
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(someOtherParameter);
 		} catch (InterruptedException e) {
 		}
-		updateUi();
+		updateUi(Color.RED);
 	}
 
 	@UiThread
-	void updateUi() {
-		textView.setTextColor(Color.RED);
+	void updateUi(int color) {
+		textView.setTextColor(color);
 	}
 
 }
