@@ -22,19 +22,19 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.helper.ValidatorHelper;
-import com.googlecode.androidannotations.model.AndroidValue;
+import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 import com.googlecode.androidannotations.rclass.RInnerClass;
 
-public class ValueValidator extends ValidatorHelper implements ElementValidator {
+public class ResValidator extends ValidatorHelper implements ElementValidator {
 
 	private final RClass rClass;
 
-	private final AndroidValue androidValue;
+	private final AndroidRes androidValue;
 
-	public ValueValidator(AndroidValue androidValue, ProcessingEnvironment processingEnv, RClass rClass) {
+	public ResValidator(AndroidRes androidValue, ProcessingEnvironment processingEnv, RClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 		this.androidValue = androidValue;
@@ -70,7 +70,7 @@ public class ValueValidator extends ValidatorHelper implements ElementValidator 
 
 		RInnerClass rInnerClass = rClass.get(resInnerClass);
 
-		if (idValue == AndroidValue.DEFAULT_VALUE) {
+		if (idValue == AndroidRes.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			if (!rInnerClass.containsField(fieldName)) {
 				valid.invalidate();

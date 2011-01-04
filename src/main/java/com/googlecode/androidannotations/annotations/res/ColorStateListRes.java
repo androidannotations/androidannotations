@@ -13,26 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package com.googlecode.androidannotations.annotations.res;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.googlecode.androidannotations.model.AndroidValue;
+import com.googlecode.androidannotations.model.AndroidRes;
 
 /**
- * Use on fields in activity classes that should be injected with values from R.color.*
- * 
- * The annotated field must be an int or an Integer
- * 
- * The annotation value must be one of R.color.* fields. If the value is not set, the field
- * name will be used as the R.color.* field name.
- * 
+ * Use on fields in activity classes that should be injected with this specific resource
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
-public @interface ColorValue {
-	int value() default AndroidValue.DEFAULT_VALUE;
+public @interface ColorStateListRes {
+	int value() default AndroidRes.DEFAULT_VALUE;
 }
