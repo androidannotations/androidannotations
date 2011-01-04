@@ -27,6 +27,7 @@ import javax.tools.Diagnostic;
 
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Value;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.generation.ModelGenerator;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -38,6 +39,7 @@ import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.googlecode.androidannotations.processing.LayoutProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
+import com.googlecode.androidannotations.processing.ValueProcessor;
 import com.googlecode.androidannotations.processing.ViewProcessor;
 import com.googlecode.androidannotations.processor.ExtendedAbstractProcessor;
 import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
@@ -47,9 +49,10 @@ import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.ElementValidator;
 import com.googlecode.androidannotations.validation.LayoutValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
+import com.googlecode.androidannotations.validation.ValueValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
-@SupportedAnnotationClasses({ Layout.class, ViewById.class, Click.class })
+@SupportedAnnotationClasses({ Layout.class, ViewById.class, Click.class, Value.class })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 
@@ -61,13 +64,17 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 			StackTraceElement firstElement = e.getStackTrace()[0];
 			String errorMessage = e.toString() + " " + firstElement.toString();
 
-			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Unexpected annotation processing exception: " + errorMessage);
+			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+					"Unexpected annotation processing exception: " + errorMessage);
 			e.printStackTrace();
 
 			Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
-			processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-					"Unexpected annotation processing exception (not related to this element, but otherwise it wouldn't show up in eclipse) : " + errorMessage,
-					element);
+			processingEnv
+					.getMessager()
+					.printMessage(
+							Diagnostic.Kind.ERROR,
+							"Unexpected annotation processing exception (not related to this element, but otherwise it wouldn't show up in eclipse) : "
+									+ errorMessage, element);
 		}
 
 		return false;
@@ -111,11 +118,13 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		ElementValidator layoutValidator = new LayoutValidator(processingEnv, rClass);
 		ElementValidator viewValidator = new ViewValidator(processingEnv, rClass);
 		ElementValidator clickValidator = new ClickValidator(processingEnv, rClass);
+		ElementValidator valueValidator = new ValueValidator(processingEnv, rClass);
 
 		ModelValidator modelValidator = new ModelValidator();
 		modelValidator.register(layoutValidator);
 		modelValidator.register(viewValidator);
 		modelValidator.register(clickValidator);
+		modelValidator.register(valueValidator);
 		return modelValidator;
 	}
 
@@ -128,11 +137,15 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		ElementProcessor layoutProcessor = new LayoutProcessor(processingEnv, rClass);
 		ElementProcessor viewProcessor = new ViewProcessor(rClass);
 		ElementProcessor clickProcessor = new ClickProcessor(rClass);
+		ElementProcessor valueProcessor = new ValueProcessor(rClass);
+		
+		
 
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(layoutProcessor);
 		modelProcessor.register(viewProcessor);
 		modelProcessor.register(clickProcessor);
+		modelProcessor.register(valueProcessor);
 		return modelProcessor;
 	}
 

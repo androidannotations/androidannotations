@@ -34,7 +34,7 @@ public class MyActivity extends Activity {
 		String message = String.format(helloFormat, name);
 		textView.setText(message);
 		textView.setTextColor(androidColor);
-
+		
 		for (String item : bestFoods) {
 			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
 		}

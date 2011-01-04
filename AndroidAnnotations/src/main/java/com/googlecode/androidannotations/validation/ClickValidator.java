@@ -64,12 +64,12 @@ public class ClickValidator extends HasTargetAnnotationHelper implements Element
 
 		validateParameters(element, valid, executableElement);
 
-		validateIsPrivate(element, valid);
+		validateIsNotPrivate(element, valid);
 
 		return valid.isValid();
 	}
 
-	private void validateIsPrivate(Element element, IsValid valid) {
+	private void validateIsNotPrivate(Element element, IsValid valid) {
 		if (isPrivate(element)) {
 			valid.invalidate();
 			printAnnotationError(element, annotationName() + " should not be used on a private method");

@@ -46,9 +46,11 @@ public class AnnotationElementsHolder implements AnnotationElements {
 
 	public TypeElement annotationElementfromAnnotationClass(Class<? extends Annotation> annotationClass) {
 		for (Entry<TypeElement, Set<? extends Element>> annotatedElements : annotatedElementsByAnnotation.entrySet()) {
-			TypeElement annotation = annotatedElements.getKey();
-			if (annotation.getQualifiedName().toString().equals(annotationClass.getName())) {
-				return annotation;
+			TypeElement elementAnnotation = annotatedElements.getKey();
+			String elementAnnotationQualifiedName = elementAnnotation.getQualifiedName().toString();
+			String annotationClassName = annotationClass.getName();
+			if (elementAnnotationQualifiedName.equals(annotationClassName)) {
+				return elementAnnotation;
 			}
 		}
 		return null;
