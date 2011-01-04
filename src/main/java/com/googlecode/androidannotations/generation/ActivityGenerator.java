@@ -37,18 +37,24 @@ public class ActivityGenerator {
 			"\n" + //
 			"        super.onCreate(savedInstanceState);\n" + //
 			"    }\n" + //
+			"" + //
+			"%s" + //
 			"}\n";
 
 
 	public void generate(MetaActivity activity, Writer writer) throws IOException {
-		StringBuilder metaViewBuilder = new StringBuilder();
-
+		StringBuilder onCreateInstructionsBuilder = new StringBuilder();
 		for (Instruction instruction : activity.getOnCreateInstructions()) {
-			metaViewBuilder.append(instruction.generate());
+			onCreateInstructionsBuilder.append(instruction.generate());
+		}
+		
+		StringBuilder memberInstructionsBuilder = new StringBuilder();
+		for (Instruction instruction : activity.getMemberInstructions()) {
+			memberInstructionsBuilder.append(instruction.generate());
 		}
 
 		String generatedClass = String.format(CLASS_FORMAT, activity.getPackageName(), activity.getClassSimpleName(),
-				activity.getSuperClassName(), activity.getLayoutQualifiedName(), metaViewBuilder.toString());
+				activity.getSuperClassName(), activity.getLayoutQualifiedName(), onCreateInstructionsBuilder.toString(), memberInstructionsBuilder.toString());
 
 		writer.append(generatedClass);
 

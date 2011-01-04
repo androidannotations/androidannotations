@@ -25,11 +25,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.ColorValue;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.StringArrayValue;
 import com.googlecode.androidannotations.annotations.StringResValue;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.generation.ModelGenerator;
 import com.googlecode.androidannotations.model.AndroidValue;
@@ -53,7 +55,14 @@ import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ValueValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
-@SupportedAnnotationClasses({ Layout.class, ViewById.class, Click.class, StringResValue.class, ColorValue.class, StringArrayValue.class })
+@SupportedAnnotationClasses({ Layout.class, //
+		ViewById.class, //
+		Click.class, //
+		UiThread.class, //
+		Background.class, //		
+		StringResValue.class, //
+		ColorValue.class, //
+		StringArrayValue.class })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 
@@ -78,31 +87,30 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 	}
 
 	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws IOException {
+		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
-		AnnotationElementsHolder extractedModel = extract(annotations, roundEnv);
+		RClass rClass = findAndroidRClass(extractedModel);
 
-		RClass rClass = findRClass(extractedModel);
+		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass);
 
-		AnnotationElements validatedModel = validate(extractedModel, rClass);
+		MetaModel model = processAnnotations(validatedModel, rClass);
 
-		MetaModel model = process(validatedModel, rClass);
-
-		generate(model);
+		generateSources(model);
 	}
 
-	private AnnotationElementsHolder extract(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		ModelExtractor modelExtractor = new ModelExtractor();
 		AnnotationElementsHolder extractedModel = modelExtractor.extract(annotations, roundEnv);
 		return extractedModel;
 	}
 
-	private RClass findRClass(AnnotationElementsHolder extractedModel) {
+	private RClass findAndroidRClass(AnnotationElementsHolder extractedModel) {
 		RClassFinder rClassFinder = new RClassFinder(processingEnv);
 		RClass rClass = rClassFinder.find(extractedModel);
 		return rClass;
 	}
 
-	private AnnotationElements validate(AnnotationElementsHolder extractedModel, RClass rClass) {
+	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, RClass rClass) {
 		if (rClass != null) {
 			ModelValidator modelValidator = buildModelValidator(rClass);
 			return modelValidator.validate(extractedModel);
@@ -122,7 +130,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		return modelValidator;
 	}
 
-	private MetaModel process(AnnotationElements validatedModel, RClass rClass) {
+	private MetaModel processAnnotations(AnnotationElements validatedModel, RClass rClass) {
 		ModelProcessor modelProcessor = buildModelProcessor(rClass);
 		return modelProcessor.process(validatedModel);
 	}
@@ -138,7 +146,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		return modelProcessor;
 	}
 
-	private void generate(MetaModel model) throws IOException {
+	private void generateSources(MetaModel model) throws IOException {
 		ModelGenerator modelGenerator = new ModelGenerator(processingEnv.getFiler());
 		modelGenerator.generate(model);
 	}
