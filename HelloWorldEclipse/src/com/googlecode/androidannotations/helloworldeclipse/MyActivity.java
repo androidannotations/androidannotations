@@ -4,7 +4,6 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +40,7 @@ public class MyActivity extends Activity {
 		for (String item : bestFoods) {
 			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
 		}
-		
+
 		String name = myEditText.getText().toString();
 
 		someBackgroundWork(name, 5000);
@@ -53,9 +52,9 @@ public class MyActivity extends Activity {
 			Thread.sleep(timeToDoSomeLongComputation);
 		} catch (InterruptedException e) {
 		}
-		
+
 		String message = String.format(helloFormat, name);
-		
+
 		updateUi(message, androidColor);
 	}
 
@@ -64,7 +63,7 @@ public class MyActivity extends Activity {
 		textView.setText(message);
 		textView.setTextColor(color);
 	}
-	
+
 	@Click
 	void startExtraActivity() {
 		Intent intent = new Intent(this, ActivityWithExtra.class);
