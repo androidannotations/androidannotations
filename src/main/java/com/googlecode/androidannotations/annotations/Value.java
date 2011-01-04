@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Should be used on fields that should be injected with values from res/values in activity classes
  * 
- * The annotated field should be a String, a String array, or a android.graphics.Color
+ * The annotated field should be a String, a String array, an int or an Integer
  * 
  * The annotation value should be one of R.string.*, R.color.* or R.array.* fields. If not set, the field
  * name will be used as the R.*.* field name.

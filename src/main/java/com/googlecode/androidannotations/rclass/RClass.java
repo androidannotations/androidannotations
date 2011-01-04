@@ -26,7 +26,10 @@ import javax.lang.model.util.ElementFilter;
 public class RClass {
 
 	public enum Res {
-		LAYOUT, ID;
+		LAYOUT, ID, STRING, ARRAY, COLOR;
+		public String rName() {
+			return toString().toLowerCase();
+		}
 	}
 
 	private final Map<String, RInnerClass> rClass = new HashMap<String, RInnerClass>();
@@ -47,7 +50,7 @@ public class RClass {
 
 	public RInnerClass get(Res res) {
 
-		String id = res.toString().toLowerCase();
+		String id = res.rName();
 
 		RInnerClass rInnerClass = rClass.get(id);
 		if (rInnerClass != null) {
@@ -56,5 +59,4 @@ public class RClass {
 			return RInnerClass.EMPTY_R_INNER_CLASS;
 		}
 	}
-
 }
