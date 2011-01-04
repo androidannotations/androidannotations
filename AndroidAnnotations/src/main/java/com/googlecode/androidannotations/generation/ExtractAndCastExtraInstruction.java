@@ -17,25 +17,24 @@ package com.googlecode.androidannotations.generation;
 
 import com.googlecode.androidannotations.model.Instruction;
 
-public class ViewInstruction implements Instruction {
+public class ExtractAndCastExtraInstruction implements Instruction {
 
-	private static final String FIELD_FORMAT = "        %s = (%s) findViewById(%s);\n\n";
-
-	private final String fieldName;
-
-	private final String typeQualifiedName;
-
-	private final String viewQualifiedId;
-
-	public ViewInstruction(String fieldName, String typeQualifiedName, String viewQualifiedId) {
-		this.fieldName = fieldName;
-		this.typeQualifiedName = typeQualifiedName;
-		this.viewQualifiedId = viewQualifiedId;
-	}
+	private static final String CODE = //
+	"" + //
+			"    @SuppressWarnings(\"unchecked\")\n" + //
+			"    private <T> T extractAndCastExtra_(String key) {\n" + //
+			"        return (T) getIntent().getExtras().get(key);\n" + //
+			"    }\n" + //
+			"\n";
 
 	@Override
 	public String generate() {
-		return String.format(FIELD_FORMAT, fieldName, typeQualifiedName, viewQualifiedId);
+		return CODE;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof ExtractAndCastExtraInstruction;
 	}
 
 }

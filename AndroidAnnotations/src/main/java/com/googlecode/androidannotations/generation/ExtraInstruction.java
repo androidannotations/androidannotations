@@ -17,25 +17,34 @@ package com.googlecode.androidannotations.generation;
 
 import com.googlecode.androidannotations.model.Instruction;
 
-public class ViewInstruction implements Instruction {
+public class ExtraInstruction implements Instruction {
 
-	private static final String FIELD_FORMAT = "        %s = (%s) findViewById(%s);\n\n";
+	private static final String FORMAT = //
+	"" + //
+			"        if (getIntent().getExtras().containsKey(\"%s\")) {\n" + //
+			"        	try {\n" + //
+			"        		%s = extractAndCastExtra_(\"%s\");\n" + //
+			"        	} catch (ClassCastException e) {\n" + //
+			"        		android.util.Log.e(\"%s\", \"Could not cast extra to expected type, the field is left to its default value\", e);\n" + //
+			"        	}\n" + //
+			"        }\n" + //
+			"\n";
+
+	private final String className;
 
 	private final String fieldName;
 
-	private final String typeQualifiedName;
+	private final String key;
 
-	private final String viewQualifiedId;
-
-	public ViewInstruction(String fieldName, String typeQualifiedName, String viewQualifiedId) {
+	public ExtraInstruction(String className, String fieldName, String key) {
+		this.className = className;
 		this.fieldName = fieldName;
-		this.typeQualifiedName = typeQualifiedName;
-		this.viewQualifiedId = viewQualifiedId;
+		this.key = key;
 	}
 
 	@Override
 	public String generate() {
-		return String.format(FIELD_FORMAT, fieldName, typeQualifiedName, viewQualifiedId);
+		return String.format(FORMAT, key, fieldName, key, className);
 	}
 
 }

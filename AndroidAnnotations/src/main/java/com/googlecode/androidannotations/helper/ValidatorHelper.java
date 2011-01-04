@@ -16,10 +16,13 @@
 package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
+import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.validation.IsValid;
 
 public abstract class ValidatorHelper extends AnnotationHelper implements HasTarget {
@@ -60,6 +63,18 @@ public abstract class ValidatorHelper extends AnnotationHelper implements HasTar
 		if (isPrivate(element)) {
 			valid.invalidate();
 			printAnnotationError(element, annotationName() + " should not be used on a private element");
+		}
+	}
+	
+	protected void validateHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
+
+		if (!layoutAnnotatedElements.contains(enclosingElement)) {
+			valid.invalidate();
+			printAnnotationError(element,
+					 annotationName() + " should only be used in a class annotated with " + annotationName(Layout.class));
 		}
 	}
 

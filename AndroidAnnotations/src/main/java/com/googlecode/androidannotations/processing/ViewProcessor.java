@@ -51,22 +51,22 @@ public class ViewProcessor implements ElementProcessor {
 		TypeMirror uiFieldTypeMirror = element.asType();
 		String typeQualifiedName = uiFieldTypeMirror.toString();
 
-		ViewById viewAnnotation = element.getAnnotation(ViewById.class);
-		int viewIdValue = viewAnnotation.value();
+		ViewById annotation = element.getAnnotation(ViewById.class);
+		int idValue = annotation.value();
 
 		RInnerClass rInnerClass = rClass.get(Res.ID);
 		String viewQualifiedId;
-		if (viewIdValue == ViewById.DEFAULT_VALUE) {
+		if (idValue == ViewById.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 
 			viewQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {
-			viewQualifiedId = rInnerClass.getIdQualifiedName(viewIdValue);
+			viewQualifiedId = rInnerClass.getIdQualifiedName(idValue);
 		}
 
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		 List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
+		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 
 		Instruction instruction = new ViewInstruction(name, typeQualifiedName, viewQualifiedId);
 		onCreateInstructions.add(instruction);

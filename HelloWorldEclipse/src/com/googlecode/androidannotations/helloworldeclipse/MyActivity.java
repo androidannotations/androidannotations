@@ -1,6 +1,9 @@
 package com.googlecode.androidannotations.helloworldeclipse;
 
+import java.util.Date;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,7 +18,7 @@ import com.googlecode.androidannotations.annotations.StringResValue;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-@Layout(R.layout.main)
+@Layout(R.layout.my_activity)
 public class MyActivity extends Activity {
 
 	@ViewById
@@ -35,29 +38,42 @@ public class MyActivity extends Activity {
 
 	@Click
 	void myButton() {
-		String name = myEditText.getText().toString();
-		String message = String.format(helloFormat, name);
-		textView.setText(message);
-		textView.setTextColor(androidColor);
 		for (String item : bestFoods) {
 			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
 		}
+		
+		String name = myEditText.getText().toString();
 
-		someBackgroundWork("Some string", 5000);
+		someBackgroundWork(name, 5000);
 	}
 
 	@Background
-	void someBackgroundWork(String someParameter, long someOtherParameter) {
+	void someBackgroundWork(String name, long timeToDoSomeLongComputation) {
 		try {
-			Thread.sleep(someOtherParameter);
+			Thread.sleep(timeToDoSomeLongComputation);
 		} catch (InterruptedException e) {
 		}
-		updateUi(Color.RED);
+		
+		String message = String.format(helloFormat, name);
+		
+		updateUi(message, androidColor);
 	}
 
 	@UiThread
-	void updateUi(int color) {
+	void updateUi(String message, int color) {
+		textView.setText(message);
 		textView.setTextColor(color);
+	}
+	
+	@Click
+	void startExtraActivity() {
+		Intent intent = new Intent(this, ActivityWithExtra.class);
+
+		intent.putExtra(ActivityWithExtra.MY_DATE_EXTRA, new Date());
+		intent.putExtra(ActivityWithExtra.MY_STRING_EXTRA, "hello !");
+		intent.putExtra(ActivityWithExtra.MY_INT_EXTRA, 42);
+
+		startActivity(intent);
 	}
 
 }

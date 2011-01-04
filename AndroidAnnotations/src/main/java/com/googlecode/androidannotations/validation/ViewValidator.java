@@ -16,14 +16,12 @@
 package com.googlecode.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
-import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -62,17 +60,10 @@ public class ViewValidator extends ValidatorHelper implements ElementValidator {
 		validateExtendsViewType(element, valid, uiFieldTypeMirror);
 
 		validateRFieldName(element, valid);
-		
-		validateIsPrivate(element, valid);
+
+		validateIsNotPrivate(element, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateIsPrivate(Element element, IsValid valid) {
-		if (isPrivate(element)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should not be used on a private field");
-		}
 	}
 
 	private void validateRFieldName(Element element, IsValid valid) {
@@ -98,7 +89,7 @@ public class ViewValidator extends ValidatorHelper implements ElementValidator {
 	private void validateExtendsViewType(Element element, IsValid valid, TypeMirror uiFieldTypeMirror) {
 		if (!isSubtype(uiFieldTypeMirror, viewTypeMirror)) {
 			valid.invalidate();
-			printAnnotationError(element,  annotationName() + " should only be used on a field which type extends android.view.View");
+			printAnnotationError(element, annotationName() + " should only be used on a field which type extends android.view.View");
 		}
 	}
 
@@ -106,18 +97,6 @@ public class ViewValidator extends ValidatorHelper implements ElementValidator {
 		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
 			valid.invalidate();
 			printAnnotationError(element, annotationName() + " should only be used on a field which is a declared type");
-		}
-	}
-
-	private void validateHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
-		Element enclosingElement = element.getEnclosingElement();
-
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
-
-		if (!layoutAnnotatedElements.contains(enclosingElement)) {
-			valid.invalidate();
-			printAnnotationError(element,
-					 annotationName() + " should only be used on a field in a class annotated with " + annotationName(Layout.class));
 		}
 	}
 

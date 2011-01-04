@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MetaActivity {
 
-	private static final String CLASS_SUFFIX = "_";
+	public static final String CLASS_SUFFIX = "_";
 
 	private final String packageName;
 

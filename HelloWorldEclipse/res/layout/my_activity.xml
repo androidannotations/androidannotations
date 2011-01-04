@@ -20,4 +20,11 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    />    
+	    
+	 <Button  
+		android:id="@+id/startExtraActivity"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="Start extra activity !"
+	    />      
 </LinearLayout>

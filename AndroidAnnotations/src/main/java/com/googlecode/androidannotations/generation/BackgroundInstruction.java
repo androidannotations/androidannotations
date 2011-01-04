@@ -23,14 +23,14 @@ public class BackgroundInstruction implements Instruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"        @Override\n" + //
-			"        protected void %s(%s) {\n" + //
-			"		 	new Thread() {\n" + //
-			"		      public void run() {\n" + //
-			"               %s.super.%s(%s);\n" + //
-			"		      }\n" + //
-			"           }.start();\n" + //
-			"		 }\n" + //
+			"    @Override\n" + //
+			"    protected void %s(%s) {\n" + //
+			"        new Thread() {\n" + //
+			"            public void run() {\n" + //
+			"                %s.super.%s(%s);\n" + //
+			"            }\n" + //
+			"        }.start();\n" + //
+			"    }\n" + //
 			"\n";
 
 	private final String methodName;

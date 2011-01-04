@@ -21,18 +21,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use it on View fields in activity classes
- * 
- * The field MUST be of a type that extends android.view.View.
- * 
- * The annotation value should be one of R.string.* fields. If not set, the field
- * name will be used as the R.id.* field name.
+ * Use on Extra fields in activity classes
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
-public @interface ViewById {
-	public static final int DEFAULT_VALUE = -1;
-
-	int value() default DEFAULT_VALUE;
+public @interface Extra {
+	String value();
 }

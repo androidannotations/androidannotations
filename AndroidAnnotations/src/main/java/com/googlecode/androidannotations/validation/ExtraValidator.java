@@ -19,51 +19,31 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
+import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class RunnableValidator extends ValidatorHelper implements ElementValidator {
+public class ExtraValidator extends ValidatorHelper implements ElementValidator {
 
-	private final Class<? extends Annotation> target;
-
-	public RunnableValidator(Class<? extends Annotation> target, ProcessingEnvironment processingEnv) {
+	public ExtraValidator(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
-		this.target = target;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return target;
+		return Extra.class;
 	}
 
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
-
 		IsValid valid = new IsValid();
 
 		validateHasLayout(element, validatedElements, valid);
 
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		validateHasVoidReturnType(element, executableElement, valid);
-
 		validateIsNotPrivate(element, valid);
-
-		validateIsNotFinal(element, valid);
 
 		return valid.isValid();
 	}
 
-	private void validateHasVoidReturnType(Element element, ExecutableElement executableElement, IsValid valid) {
-		TypeMirror returnType = executableElement.getReturnType();
-
-		if (returnType.getKind() != TypeKind.VOID) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method with a void return type ");
-		}
-	}
 }

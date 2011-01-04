@@ -22,12 +22,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.generation.StartActivityInstruction;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.RClass;
-import com.googlecode.androidannotations.rclass.RInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class LayoutProcessor extends ValidatorHelper implements ElementProcessor {
 
@@ -64,9 +65,10 @@ public class LayoutProcessor extends ValidatorHelper implements ElementProcessor
 		String superClassSimpleName = superClassQualifiedName.substring(packageSeparatorIndex + 1);
 
 		MetaActivity activity = new MetaActivity(packageName, superClassSimpleName, layoutFieldQualifiedName);
+		
+		activity.getMemberInstructions().add(new StartActivityInstruction());
 
 		metaModel.getMetaActivities().put(element, activity);
-
 	}
 
 }
