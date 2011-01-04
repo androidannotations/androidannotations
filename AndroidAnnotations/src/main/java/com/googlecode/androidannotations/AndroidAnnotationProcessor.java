@@ -27,7 +27,7 @@ import javax.tools.Diagnostic;
 
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.annotations.UiView;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.generation.ModelGenerator;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
@@ -49,7 +49,7 @@ import com.googlecode.androidannotations.validation.LayoutValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
-@SupportedAnnotationClasses({ Layout.class, UiView.class, Click.class })
+@SupportedAnnotationClasses({ Layout.class, ViewById.class, Click.class })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 

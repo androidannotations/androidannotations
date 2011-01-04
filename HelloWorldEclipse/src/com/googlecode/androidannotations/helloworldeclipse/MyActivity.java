@@ -6,15 +6,15 @@ import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.annotations.UiView;
+import com.googlecode.androidannotations.annotations.ViewById;
 
 @Layout(R.layout.main)
 public class MyActivity extends Activity {
 
-	@UiView
+	@ViewById
 	EditText myEditText;
 
-	@UiView(R.id.myTextView)
+	@ViewById(R.id.myTextView)
 	TextView textView;
 
 	@Click

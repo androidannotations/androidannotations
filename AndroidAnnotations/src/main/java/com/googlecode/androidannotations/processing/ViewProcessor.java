@@ -21,7 +21,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.UiView;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.generation.ViewInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
@@ -40,7 +40,7 @@ public class ViewProcessor implements ElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return UiView.class;
+		return ViewById.class;
 	}
 
 	@Override
@@ -51,12 +51,12 @@ public class ViewProcessor implements ElementProcessor {
 		TypeMirror uiFieldTypeMirror = element.asType();
 		String typeQualifiedName = uiFieldTypeMirror.toString();
 
-		UiView viewAnnotation = element.getAnnotation(UiView.class);
+		ViewById viewAnnotation = element.getAnnotation(ViewById.class);
 		int viewIdValue = viewAnnotation.value();
 
 		RInnerClass rInnerClass = rClass.get(Res.ID);
 		String viewQualifiedId;
-		if (viewIdValue == UiView.DEFAULT_VALUE) {
+		if (viewIdValue == ViewById.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 
 			viewQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
