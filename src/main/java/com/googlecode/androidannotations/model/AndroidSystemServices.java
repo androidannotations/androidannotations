@@ -25,7 +25,21 @@ public class AndroidSystemServices {
 	private Map<String, String> registeredServices = new HashMap<String, String>();
 
 	public AndroidSystemServices() {
+		registeredServices.put("android.view.WindowManager", "android.content.Context.WINDOW_SERVICE");
+		registeredServices.put("android.view.LayoutInflater", "android.content.Context.LAYOUT_INFLATER_SERVICE");
+		registeredServices.put("android.app.ActivityManager", "android.content.Context.ACTIVITY_SERVICE");
+		registeredServices.put("android.os.PowerManager", "android.content.Context.POWER_SERVICE");
+		registeredServices.put("android.app.AlarmManager", "android.content.Context.ALARM_SERVICE");
 		registeredServices.put("android.app.NotificationManager", "android.content.Context.NOTIFICATION_SERVICE");
+		registeredServices.put("android.app.KeyguardManager", "android.content.Context.KEYGUARD_SERVICE");
+		registeredServices.put("android.location.LocationManager", "android.content.Context.LOCATION_SERVICE");
+		registeredServices.put("android.app.SearchManager", "android.content.Context.SEARCH_SERVICE");
+		registeredServices.put("android.os.Vibrator", "android.content.Context.VIBRATOR_SERVICE");
+		registeredServices.put("android.net.ConnectivityManager", "android.content.Context.CONNECTIVITY_SERVICE");
+		registeredServices.put("android.net.wifi.WifiManager", "android.content.Context.WIFI_SERVICE");
+		registeredServices.put("android.view.inputMethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
+		registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
+		registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
 	}
 
 	public boolean contains(TypeMirror serviceType) {
