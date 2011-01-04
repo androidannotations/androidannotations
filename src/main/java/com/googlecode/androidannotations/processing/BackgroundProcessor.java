@@ -16,9 +16,12 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.generation.BackgroundInstruction;
@@ -43,7 +46,19 @@ public class BackgroundProcessor implements ElementProcessor {
 		String className = metaActivity.getClassSimpleName();
 		List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
 
-		Instruction instruction = new BackgroundInstruction(className, methodName);
+		List<String> methodArguments = new ArrayList<String>();
+		List<String> methodParameters = new ArrayList<String>();
+
+		ExecutableElement executableElement = (ExecutableElement) element;
+
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterName = parameter.getSimpleName().toString();
+			String parameterType = parameter.asType().toString();
+			methodArguments.add(parameterType + " " + parameterName);
+			methodParameters.add(parameterName);
+		}
+
+		Instruction instruction = new BackgroundInstruction(className, methodName, methodArguments, methodParameters);
 		memberInstructions.add(instruction);
 	}
 
