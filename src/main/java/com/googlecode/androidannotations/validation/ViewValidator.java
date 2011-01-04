@@ -24,7 +24,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Layout;
-import com.googlecode.androidannotations.annotations.UiView;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.helper.HasTargetAnnotationHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.RClass;
@@ -45,7 +45,7 @@ public class ViewValidator extends HasTargetAnnotationHelper implements ElementV
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return UiView.class;
+		return ViewById.class;
 	}
 
 	@Override
@@ -75,12 +75,12 @@ public class ViewValidator extends HasTargetAnnotationHelper implements ElementV
 			printAnnotationError(element,  annotationName() + " should only be used on a field which type extends android.view.View");
 		}
 
-		UiView viewAnnotation = element.getAnnotation(UiView.class);
+		ViewById viewAnnotation = element.getAnnotation(ViewById.class);
 		int viewIdValue = viewAnnotation.value();
 
 		RInnerClass rInnerClass = rClass.get(Res.ID);
 
-		if (viewIdValue == UiView.DEFAULT_VALUE) {
+		if (viewIdValue == ViewById.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			if (!rInnerClass.containsField(fieldName)) {
 				valid = false;
