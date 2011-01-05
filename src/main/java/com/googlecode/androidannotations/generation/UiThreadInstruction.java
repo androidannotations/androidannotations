@@ -24,13 +24,13 @@ public class UiThreadInstruction implements Instruction {
 	private static final String FORMAT = //
 	"" + //
 			"    @Override\n" + //
-			"    protected void %s(%s) {\n" + //
+			"    public void %s(%s) {\n" + //
 			"        runOnUiThread(new Runnable() {\n" + //
 			"            public void run() {\n" + //
 			"                try {\n" + //
 			"                    %s.super.%s(%s);\n" + //
 			"                } catch (RuntimeException e) {\n" + //
-			"                    android.util.Log.e(\"%s\", \"\", e);\n" + //
+			"                    android.util.Log.e(\"%s\", \"A runtime exception was thrown while executing code in the ui thread\", e);\n" + //
 			"                }\n" + //
 			"            }\n" + //
 			"        });\n" + //
