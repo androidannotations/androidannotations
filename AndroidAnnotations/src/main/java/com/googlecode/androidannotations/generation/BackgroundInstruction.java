@@ -24,13 +24,13 @@ public class BackgroundInstruction implements Instruction {
 	private static final String FORMAT = //
 	"" + //
 			"    @Override\n" + //
-			"    protected void %s(%s) {\n" + //
+			"    public void %s(%s) {\n" + //
 			"        new Thread() {\n" + //
 			"            public void run() {\n" + //
 			"                try {\n" + //
 			"                    %s.super.%s(%s);\n" + //
 			"                } catch (RuntimeException e) {\n" + //
-			"                    android.util.Log.e(\"%s\", \"\", e);\n" + //
+			"                    android.util.Log.e(\"%s\", \"A runtime exception was thrown while executing code in a background thread\", e);\n" + //
 			"                }\n" + //
 			"            }\n" + //
 			"        }.start();\n" + //
