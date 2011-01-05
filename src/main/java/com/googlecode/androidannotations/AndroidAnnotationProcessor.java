@@ -31,6 +31,7 @@ import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.UiThread;
+import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.AnimationRes;
 import com.googlecode.androidannotations.annotations.res.BooleanRes;
@@ -61,9 +62,10 @@ import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
 import com.googlecode.androidannotations.processing.LayoutProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
-import com.googlecode.androidannotations.processing.SystemServiceProcessor;
-import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
+import com.googlecode.androidannotations.processing.SystemServiceProcessor;
+import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
+import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewProcessor;
 import com.googlecode.androidannotations.processor.ExtendedAbstractProcessor;
 import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
@@ -73,14 +75,15 @@ import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
 import com.googlecode.androidannotations.validation.LayoutValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
+import com.googlecode.androidannotations.validation.ResValidator;
 import com.googlecode.androidannotations.validation.RunnableValidator;
 import com.googlecode.androidannotations.validation.SystemServiceValidator;
-import com.googlecode.androidannotations.validation.ResValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
 @SupportedAnnotationClasses({ Layout.class, //
 		ViewById.class, //
 		Click.class, //
+		UiThreadDelayed.class, //
 		UiThread.class, //
 		Background.class, //
 		StringRes.class, //
@@ -167,6 +170,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			modelValidator.register(new ResValidator(androidRes, processingEnv, rClass));
 		}
+		modelValidator.register(new RunnableValidator(UiThreadDelayed.class, processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new ExtraValidator(processingEnv));
@@ -188,6 +192,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 			modelProcessor.register(new ResProcessor(androidRes, rClass));
 		}
 		modelProcessor.register(new UiThreadProcessor());
+		modelProcessor.register(new UiThreadDelayedProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new ExtraProcessor());
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
