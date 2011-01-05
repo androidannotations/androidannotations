@@ -52,10 +52,21 @@ public class RunnableValidator extends ValidatorHelper implements ElementValidat
 		validateHasVoidReturnType(element, executableElement, valid);
 
 		validateIsNotPrivate(element, valid);
+		
+		validateDoesntThrowException(element, valid);
 
 		validateIsNotFinal(element, valid);
 
 		return valid.isValid();
+	}
+
+	private void validateDoesntThrowException(Element element, IsValid valid) {
+		ExecutableElement executableElement = (ExecutableElement) element;
+		
+		if (executableElement.getThrownTypes().size()>0) {
+			valid.invalidate();
+			printAnnotationError(element, annotationName() + " annotated methods should not declare throwing any exception");
+		}
 	}
 
 	private void validateHasVoidReturnType(Element element, ExecutableElement executableElement, IsValid valid) {
