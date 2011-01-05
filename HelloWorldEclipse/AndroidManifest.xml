@@ -13,6 +13,10 @@
         </activity>
         
         <activity android:name=".ActivityWithExtra_" />
+        
+        <activity android:name=".MyListActivity_" />
+        
+        
 
     </application>
     <uses-sdk android:minSdkVersion="3" />

@@ -10,7 +10,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
@@ -21,7 +20,6 @@ import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.BooleanRes;
 import com.googlecode.androidannotations.annotations.res.ColorRes;
-import com.googlecode.androidannotations.annotations.res.StringArrayRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @Layout(R.layout.my_activity)
@@ -36,32 +34,24 @@ public class MyActivity extends Activity {
 	@StringRes(R.string.hello)
 	String helloFormat;
 
-	@StringArrayRes
-	String[] bestFoods;
-
 	@ColorRes
 	int androidColor;
-	
+
 	@BooleanRes
 	boolean someBoolean;
-	
+
 	@SystemService
 	NotificationManager notificationManager;
 
 	@Click
 	void myButton() {
-		for (String item : bestFoods) {
-			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
-		}
 		String name = myEditText.getText().toString();
-		
 		someBackgroundWork(name, 5);
-		
 	}
-	
+
 	@Background
 	void someBackgroundWork(String name, long timeToDoSomeLongComputation) {
-		
+
 		try {
 			TimeUnit.SECONDS.sleep(timeToDoSomeLongComputation);
 		} catch (InterruptedException e) {
@@ -70,7 +60,7 @@ public class MyActivity extends Activity {
 		String message = String.format(helloFormat, name);
 
 		updateUi(message, androidColor);
-		
+
 		showNotificationsDelayed();
 	}
 
@@ -79,7 +69,7 @@ public class MyActivity extends Activity {
 		textView.setText(message);
 		textView.setTextColor(color);
 	}
-	
+
 	@UiThreadDelayed(2000)
 	void showNotificationsDelayed() {
 		Notification notification = new Notification(R.drawable.icon, "Hello !", 0);
@@ -97,6 +87,11 @@ public class MyActivity extends Activity {
 		intent.putExtra(ActivityWithExtra.MY_INT_EXTRA, 42);
 
 		startActivity(intent);
+	}
+
+	@Click
+	void startListActivity() {
+		startActivity(new Intent(this, MyListActivity.class));
 	}
 
 }
