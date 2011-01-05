@@ -51,7 +51,6 @@ public class MyActivity extends Activity {
 		for (String item : bestFoods) {
 			Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
 		}
-
 		String name = myEditText.getText().toString();
 		
 		someBackgroundWork(name, 5000);
