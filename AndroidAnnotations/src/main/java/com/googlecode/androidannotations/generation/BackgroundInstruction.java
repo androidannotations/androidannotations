@@ -29,7 +29,7 @@ public class BackgroundInstruction implements Instruction {
 			"            public void run() {\n" + //
 			"                try {\n" + //
 			"                    %s.super.%s(%s);\n" + //
-			"                } catch (Exception e) {\n" + //
+			"                } catch (RuntimeException e) {\n" + //
 			"                    android.util.Log.e(\"%s\", \"\", e);\n" + //
 			"                }\n" + //
 			"            }\n" + //
