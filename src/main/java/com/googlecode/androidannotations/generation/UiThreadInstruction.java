@@ -27,7 +27,11 @@ public class UiThreadInstruction implements Instruction {
 			"    protected void %s(%s) {\n" + //
 			"        runOnUiThread(new Runnable() {\n" + //
 			"            public void run() {\n" + //
-			"                %s.super.%s(%s);\n" + //
+			"                try {\n" + //
+			"                    %s.super.%s(%s);\n" + //
+			"                } catch (Exception e) {\n" + //
+			"                    android.util.Log.e(\"%s\", \"\", e);\n" + //
+			"                }\n" + //
 			"            }\n" + //
 			"        });\n" + //
 			"    }\n" + //
@@ -73,7 +77,7 @@ public class UiThreadInstruction implements Instruction {
 			parameters.append(parameter);
 		}
 
-		return String.format(FORMAT, methodName, arguments.toString(), className, methodName, parameters.toString());
+		return String.format(FORMAT, methodName, arguments.toString(), className, methodName, parameters.toString(), className);
 	}
 
 }
