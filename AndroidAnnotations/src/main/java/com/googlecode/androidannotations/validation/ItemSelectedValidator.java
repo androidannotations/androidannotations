@@ -25,7 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.ItemLongClick;
+import com.googlecode.androidannotations.annotations.ItemSelected;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -33,21 +33,20 @@ import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
- * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
  */
-public class ItemLongClickValidator extends ValidatorHelper implements ElementValidator {
+public class ItemSelectedValidator extends ValidatorHelper implements ElementValidator {
 
 	private final IRClass rClass;
 
-	public ItemLongClickValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public ItemSelectedValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return ItemLongClick.class;
+		return ItemSelected.class;
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class ItemLongClickValidator extends ValidatorHelper implements ElementVa
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validateVoidOrBooleanReturnType(element, executableElement, valid);
+		warnNotVoidReturnType(element, executableElement);
 
 		validateRFieldName(element, valid);
 
@@ -73,18 +72,27 @@ public class ItemLongClickValidator extends ValidatorHelper implements ElementVa
 	private void validateParameters(Element element, IsValid valid, ExecutableElement executableElement) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
-		if (parameters.size() > 1) {
+		if (parameters.size()<1 || parameters.size() > 2) {
 			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method with 0 or 1 parameter, instead of " + parameters.size());
+			printAnnotationError(element, annotationName() + " should only be used on a method with 1 or 2 parameter, instead of " + parameters.size());
+		} else {
+			VariableElement firstParameter = parameters.get(0);
+			
+			TypeKind parameterKind = firstParameter.asType().getKind();
+			
+			if (parameterKind != TypeKind.BOOLEAN && !firstParameter.toString().equals("java.lang.Boolean")) {
+				valid.invalidate();
+				printAnnotationError(element, "the first parameter should be a boolean");
+			}
 		}
 	}
 
 	private void validateRFieldName(Element element, IsValid valid) {
-		ItemLongClick annotation = element.getAnnotation(ItemLongClick.class);
+		ItemSelected annotation = element.getAnnotation(ItemSelected.class);
 		int idValue = annotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		if (idValue == ItemLongClick.DEFAULT_VALUE) {
+		if (idValue == ItemSelected.DEFAULT_VALUE) {
 			String methodName = element.getSimpleName().toString();
 			if (!rInnerClass.containsField(methodName)) {
 				valid.invalidate();
@@ -98,14 +106,11 @@ public class ItemLongClickValidator extends ValidatorHelper implements ElementVa
 		}
 	}
 
-	private void validateVoidOrBooleanReturnType(Element element, ExecutableElement executableElement, IsValid valid) {
+	private void warnNotVoidReturnType(Element element, ExecutableElement executableElement) {
 		TypeMirror returnType = executableElement.getReturnType();
 
-		TypeKind returnKind = returnType.getKind();
-		
-		if (returnKind != TypeKind.BOOLEAN && returnKind != TypeKind.VOID && !returnType.toString().equals("java.lang.Boolean")) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method with a boolean or a void return type");
+		if (returnType.getKind() != TypeKind.VOID) {
+			printAnnotationWarning(element, annotationName() + " should only be used on a method with a void return type ");
 		}
 	}
 }

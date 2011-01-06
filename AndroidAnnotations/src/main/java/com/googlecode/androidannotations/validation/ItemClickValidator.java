@@ -25,7 +25,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -85,7 +84,7 @@ public class ItemClickValidator extends ValidatorHelper implements ElementValida
 		int idValue = annotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		if (idValue == Click.DEFAULT_VALUE) {
+		if (idValue == ItemClick.DEFAULT_VALUE) {
 			String methodName = element.getSimpleName().toString();
 			if (!rInnerClass.containsField(methodName)) {
 				valid.invalidate();
