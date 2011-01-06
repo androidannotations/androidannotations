@@ -27,15 +27,15 @@ import com.googlecode.androidannotations.generation.ClickInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
-import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
-import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class ClickProcessor implements ElementProcessor {
 
-	private final RClass rClass;
+	private final IRClass rClass;
 
-	public ClickProcessor(RClass rClass) {
+	public ClickProcessor(IRClass rClass) {
 		this.rClass = rClass;
 	}
 
@@ -52,7 +52,7 @@ public class ClickProcessor implements ElementProcessor {
 		Click annotation = element.getAnnotation(Click.class);
 		int idValue = annotation.value();
 
-		RInnerClass rInnerClass = rClass.get(Res.ID);
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String clickQualifiedId;
 
 		if (idValue == Click.DEFAULT_VALUE) {

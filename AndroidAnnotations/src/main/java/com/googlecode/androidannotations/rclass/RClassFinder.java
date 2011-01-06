@@ -34,7 +34,7 @@ public class RClassFinder extends AnnotationHelper {
 		super(processingEnv);
 	}
 
-	public RClass find(AnnotationElements extractedModel) {
+	public IRClass find(AnnotationElements extractedModel) {
 
 		Elements elementUtils = processingEnv.getElementUtils();
 

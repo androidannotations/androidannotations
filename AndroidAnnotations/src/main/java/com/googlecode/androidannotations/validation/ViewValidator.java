@@ -25,17 +25,17 @@ import javax.lang.model.type.TypeMirror;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
-import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class ViewValidator extends ValidatorHelper implements ElementValidator {
 
 	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
-	private final RClass rClass;
+	private final IRClass rClass;
 	private final TypeMirror viewTypeMirror;
 
-	public ViewValidator(ProcessingEnvironment processingEnv, RClass rClass) {
+	public ViewValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 		viewTypeMirror = typeElementFromQualifiedName(ANDROID_VIEW_QUALIFIED_NAME).asType();
@@ -70,7 +70,7 @@ public class ViewValidator extends ValidatorHelper implements ElementValidator {
 		ViewById viewAnnotation = element.getAnnotation(ViewById.class);
 		int viewIdValue = viewAnnotation.value();
 
-		RInnerClass rInnerClass = rClass.get(Res.ID);
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
 
 		if (viewIdValue == ViewById.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();

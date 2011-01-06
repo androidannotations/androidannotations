@@ -26,15 +26,15 @@ import com.googlecode.androidannotations.generation.ViewInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
-import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
-import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class ViewProcessor implements ElementProcessor {
 
-	private final RClass rClass;
+	private final IRClass rClass;
 
-	public ViewProcessor(RClass rClass) {
+	public ViewProcessor(IRClass rClass) {
 		this.rClass = rClass;
 	}
 
@@ -54,7 +54,7 @@ public class ViewProcessor implements ElementProcessor {
 		ViewById annotation = element.getAnnotation(ViewById.class);
 		int idValue = annotation.value();
 
-		RInnerClass rInnerClass = rClass.get(Res.ID);
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String viewQualifiedId;
 		if (idValue == ViewById.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();

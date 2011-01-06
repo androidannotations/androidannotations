@@ -29,8 +29,8 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.RClass;
-import com.googlecode.androidannotations.rclass.RInnerClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
@@ -39,9 +39,9 @@ import com.googlecode.androidannotations.rclass.RClass.Res;
 public class LongClickValidator extends ValidatorHelper implements ElementValidator {
 
 	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
-	private final RClass rClass;
+	private final IRClass rClass;
 
-	public LongClickValidator(ProcessingEnvironment processingEnv, RClass rClass) {
+	public LongClickValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 	}
@@ -94,7 +94,7 @@ public class LongClickValidator extends ValidatorHelper implements ElementValida
 		LongClick annotation = element.getAnnotation(LongClick.class);
 		int idValue = annotation.value();
 
-		RInnerClass rInnerClass = rClass.get(Res.ID);
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		if (idValue == Click.DEFAULT_VALUE) {
 			String methodName = element.getSimpleName().toString();
 			if (!rInnerClass.containsField(methodName)) {

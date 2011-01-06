@@ -25,16 +25,16 @@ import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
-import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
-import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class ResProcessor implements ElementProcessor {
 
-	private final RClass rClass;
+	private final IRClass rClass;
 	private final AndroidRes androidValue;
 
-	public ResProcessor(AndroidRes androidValue, RClass rClass) {
+	public ResProcessor(AndroidRes androidValue, IRClass rClass) {
 		this.rClass = rClass;
 		this.androidValue = androidValue;
 	}
@@ -53,7 +53,7 @@ public class ResProcessor implements ElementProcessor {
 
 		Res resInnerClass = androidValue.getRInnerClass();
 
-		RInnerClass rInnerClass = rClass.get(resInnerClass);
+		IRInnerClass rInnerClass = rClass.get(resInnerClass);
 		String qualifiedId;
 		if (idValue == AndroidRes.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();

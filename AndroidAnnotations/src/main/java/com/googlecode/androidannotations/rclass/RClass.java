@@ -23,7 +23,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
-public class RClass {
+public class RClass implements IRClass {
 
 	public enum Res {
 		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE;
@@ -48,11 +48,12 @@ public class RClass {
 		return ElementFilter.typesIn(rEnclosedElements);
 	}
 
-	public RInnerClass get(Res res) {
+	@Override
+	public IRInnerClass get(Res res) {
 
 		String id = res.rName();
 
-		RInnerClass rInnerClass = rClass.get(id);
+		IRInnerClass rInnerClass = rClass.get(id);
 		if (rInnerClass != null) {
 			return rInnerClass;
 		} else {

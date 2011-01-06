@@ -25,9 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
-public class RInnerClass {
-
-	public static final RInnerClass EMPTY_R_INNER_CLASS = new RInnerClass(null);
+public class RInnerClass implements IRInnerClass {
 
 	private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<Integer, String>();
 
@@ -54,20 +52,32 @@ public class RInnerClass {
 		}
 	}
 
+	@Override
 	public boolean containsIdValue(Integer idValue) {
 		return idQualifiedNamesByIdValues.containsKey(idValue);
 	}
 
+	@Override
 	public String getIdQualifiedName(Integer idValue) {
 		return idQualifiedNamesByIdValues.get(idValue);
 	}
 
+	@Override
 	public boolean containsField(String name) {
 		return idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + name);
 	}
 
+	@Override
 	public String getIdQualifiedName(String name) {
-		return rInnerQualifiedName + "." + name;
+		String idQualifiedName = rInnerQualifiedName + "." + name;
+		
+		if (idQualifiedNamesByIdValues.containsValue(idQualifiedName)) {
+			return idQualifiedName;
+		} else {
+			return null;
+		}
+		
+		
 	}
 
 }
