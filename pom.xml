@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode.androidannotations</groupId>
 	<artifactId>androidannotations</artifactId>
-	<version>1.0-RC2</version>
+	<version>1.0-RC3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Android Annotations</name>
 	<description>Simplifying Android using annotations and annotation
@@ -62,11 +62,11 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://androidannotations.googlecode.com/svn/tags/androidannotations-1.0-RC2
+		<connection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
 		</connection>
-		<developerConnection>scm:svn:https://androidannotations.googlecode.com/svn/tags/androidannotations-1.0-RC2
+		<developerConnection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
 		</developerConnection>
-		<url>https://androidannotations.googlecode.com/svn/tags/androidannotations-1.0-RC2
+		<url>https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
 		</url>
 	</scm>
 
