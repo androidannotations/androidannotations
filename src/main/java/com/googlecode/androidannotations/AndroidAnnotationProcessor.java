@@ -75,7 +75,9 @@ import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewProcessor;
 import com.googlecode.androidannotations.processor.ExtendedAbstractProcessor;
 import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
-import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
+import com.googlecode.androidannotations.rclass.CoumpoundRClass;
+import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.RClassFinder;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
@@ -115,7 +117,7 @@ import com.googlecode.androidannotations.validation.ViewValidator;
 		StringArrayRes.class, //
 		LongClick.class, //
 		ItemClick.class, //
-		ItemLongClick.class})
+		ItemLongClick.class })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 
@@ -142,7 +144,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws IOException {
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
-		RClass rClass = findAndroidRClass(extractedModel);
+		IRClass rClass = findAndroidRClass(extractedModel);
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
 
@@ -159,13 +161,18 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		return extractedModel;
 	}
 
-	private RClass findAndroidRClass(AnnotationElementsHolder extractedModel) {
+	private IRClass findAndroidRClass(AnnotationElementsHolder extractedModel) {
 		RClassFinder rClassFinder = new RClassFinder(processingEnv);
-		RClass rClass = rClassFinder.find(extractedModel);
-		return rClass;
+		IRClass rClass = rClassFinder.find(extractedModel);
+
+		AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
+
+		IRClass androidRClass = androidRClassFinder.find();
+
+		return new CoumpoundRClass(rClass, androidRClass);
 	}
 
-	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, RClass rClass, AndroidSystemServices androidSystemServices) {
+	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
 		if (rClass != null) {
 			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices);
 			return modelValidator.validate(extractedModel);
@@ -174,7 +181,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		}
 	}
 
-	private ModelValidator buildModelValidator(RClass rClass, AndroidSystemServices androidSystemServices) {
+	private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelValidator modelValidator = new ModelValidator();
 		modelValidator.register(new LayoutValidator(processingEnv, rClass));
 		modelValidator.register(new ViewValidator(processingEnv, rClass));
@@ -193,12 +200,12 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		return modelValidator;
 	}
 
-	private MetaModel processAnnotations(AnnotationElements validatedModel, RClass rClass, AndroidSystemServices androidSystemServices) {
+	private MetaModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
 		return modelProcessor.process(validatedModel);
 	}
 
-	private ModelProcessor buildModelProcessor(RClass rClass, AndroidSystemServices androidSystemServices) {
+	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(new LayoutProcessor(processingEnv, rClass));
 		modelProcessor.register(new ViewProcessor(rClass));

@@ -25,8 +25,8 @@ import com.googlecode.androidannotations.generation.ItemLongClickInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
-import com.googlecode.androidannotations.rclass.RClass;
-import com.googlecode.androidannotations.rclass.RInnerClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
@@ -34,9 +34,9 @@ import com.googlecode.androidannotations.rclass.RClass.Res;
  */
 public class ItemLongClickProcessor implements ElementProcessor {
 
-	private final RClass rClass;
+	private final IRClass rClass;
 
-	public ItemLongClickProcessor(RClass rClass) {
+	public ItemLongClickProcessor(IRClass rClass) {
 		this.rClass = rClass;
 	}
 
@@ -53,7 +53,7 @@ public class ItemLongClickProcessor implements ElementProcessor {
 		ItemLongClick annotation = element.getAnnotation(ItemLongClick.class);
 		int idValue = annotation.value();
 
-		RInnerClass rInnerClass = rClass.get(Res.ID);
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String itemClickQualifiedId;
 
 		if (idValue == ItemLongClick.DEFAULT_VALUE) {

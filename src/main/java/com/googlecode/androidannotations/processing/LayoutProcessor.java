@@ -26,15 +26,15 @@ import com.googlecode.androidannotations.generation.StartActivityInstruction;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
-import com.googlecode.androidannotations.rclass.RClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
-import com.googlecode.androidannotations.rclass.RInnerClass;
 
 public class LayoutProcessor extends ValidatorHelper implements ElementProcessor {
 
-	private final RClass rClass;
+	private final IRClass rClass;
 
-	public LayoutProcessor(ProcessingEnvironment processingEnv, RClass rClass) {
+	public LayoutProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 	}
@@ -52,7 +52,7 @@ public class LayoutProcessor extends ValidatorHelper implements ElementProcessor
 		Layout layoutAnnotation = element.getAnnotation(Layout.class);
 		int layoutIdValue = layoutAnnotation.value();
 
-		RInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+		IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 
 		String layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
 

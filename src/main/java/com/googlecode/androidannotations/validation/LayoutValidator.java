@@ -24,17 +24,17 @@ import javax.lang.model.element.TypeElement;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.RClass;
-import com.googlecode.androidannotations.rclass.RInnerClass;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
 public class LayoutValidator extends ValidatorHelper implements ElementValidator {
 
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
-	private final RClass rClass;
+	private final IRClass rClass;
 	private final TypeElement activityTypeElement;
 
-	public LayoutValidator(ProcessingEnvironment processingEnv, RClass rClass) {
+	public LayoutValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 		activityTypeElement = typeElementFromQualifiedName(ANDROID_ACTIVITY_QUALIFIED_NAME);
@@ -65,7 +65,7 @@ public class LayoutValidator extends ValidatorHelper implements ElementValidator
 		Layout layoutAnnotation = element.getAnnotation(Layout.class);
 		int layoutIdValue = layoutAnnotation.value();
 
-		RInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+		IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 
 		if (!rInnerClass.containsIdValue(layoutIdValue)) {
 			valid.invalidate();
