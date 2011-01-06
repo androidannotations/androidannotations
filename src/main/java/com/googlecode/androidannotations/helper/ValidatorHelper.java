@@ -77,5 +77,10 @@ public abstract class ValidatorHelper extends AnnotationHelper implements HasTar
 					 annotationName() + " should only be used in a class annotated with " + annotationName(Layout.class));
 		}
 	}
+	
+
+	protected String actionName() {
+		return getTarget().getSimpleName()+"ed";
+	}
 
 }

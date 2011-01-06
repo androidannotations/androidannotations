@@ -61,6 +61,10 @@ public class ItemClickProcessor implements ElementProcessor {
 
 		if (idValue == ItemClick.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
+			int lastIndex = fieldName.lastIndexOf("ItemClicked");
+			if (lastIndex != -1) {
+				fieldName = fieldName.substring(0, lastIndex);
+			}
 			itemClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {
 			itemClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);

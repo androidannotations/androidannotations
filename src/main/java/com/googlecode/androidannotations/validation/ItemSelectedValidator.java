@@ -25,7 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.ItemSelected;
+import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -46,7 +46,7 @@ public class ItemSelectedValidator extends ValidatorHelper implements ElementVal
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return ItemSelected.class;
+		return ItemSelect.class;
 	}
 
 	@Override
@@ -88,12 +88,16 @@ public class ItemSelectedValidator extends ValidatorHelper implements ElementVal
 	}
 
 	private void validateRFieldName(Element element, IsValid valid) {
-		ItemSelected annotation = element.getAnnotation(ItemSelected.class);
+		ItemSelect annotation = element.getAnnotation(ItemSelect.class);
 		int idValue = annotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		if (idValue == ItemSelected.DEFAULT_VALUE) {
+		if (idValue == ItemSelect.DEFAULT_VALUE) {
 			String methodName = element.getSimpleName().toString();
+			int lastIndex = methodName.lastIndexOf(actionName());
+			if (lastIndex != -1) {
+				methodName = methodName.substring(0, lastIndex);
+			}
 			if (!rInnerClass.containsField(methodName)) {
 				valid.invalidate();
 				printAnnotationError(element, "Id not found: R.id." + methodName);

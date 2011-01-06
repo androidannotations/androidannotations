@@ -22,7 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.annotations.ItemSelected;
+import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.generation.ItemSelectedInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
@@ -44,7 +44,7 @@ public class ItemSelectedProcessor implements ElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return ItemSelected.class;
+		return ItemSelect.class;
 	}
 
 	@Override
@@ -52,14 +52,18 @@ public class ItemSelectedProcessor implements ElementProcessor {
 
 		String methodName = element.getSimpleName().toString();
 
-		ItemSelected annotation = element.getAnnotation(ItemSelected.class);
+		ItemSelect annotation = element.getAnnotation(ItemSelect.class);
 		int idValue = annotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String itemClickQualifiedId;
 
-		if (idValue == ItemSelected.DEFAULT_VALUE) {
+		if (idValue == ItemSelect.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
+			int lastIndex = fieldName.lastIndexOf("ItemSelected");
+			if (lastIndex != -1) {
+				fieldName = fieldName.substring(0, lastIndex);
+			}
 			itemClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {
 			itemClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);

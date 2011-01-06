@@ -97,6 +97,10 @@ public class LongClickValidator extends ValidatorHelper implements ElementValida
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		if (idValue == LongClick.DEFAULT_VALUE) {
 			String methodName = element.getSimpleName().toString();
+			int lastIndex = methodName.lastIndexOf(actionName());
+			if (lastIndex != -1) {
+				methodName = methodName.substring(0, lastIndex);
+			}
 			if (!rInnerClass.containsField(methodName)) {
 				valid.invalidate();
 				printAnnotationError(element, "Id not found: R.id." + methodName);

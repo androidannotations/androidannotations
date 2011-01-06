@@ -80,8 +80,7 @@ public class ClickValidator extends ValidatorHelper implements ElementValidator 
 			TypeMirror parameterType = parameter.asType();
 			if (!parameterType.toString().equals(ANDROID_VIEW_QUALIFIED_NAME)) {
 				valid.invalidate();
-				printAnnotationError(element, annotationName()
-						+ " should only be used on a method with no parameter or a parameter of type android.view.View, not " + parameterType);
+				printAnnotationError(element, annotationName() + " should only be used on a method with no parameter or a parameter of type android.view.View, not " + parameterType);
 			}
 		}
 	}
@@ -93,6 +92,10 @@ public class ClickValidator extends ValidatorHelper implements ElementValidator 
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		if (idValue == Click.DEFAULT_VALUE) {
 			String methodName = element.getSimpleName().toString();
+			int lastIndex = methodName.lastIndexOf(actionName());
+			if (lastIndex != -1) {
+				methodName = methodName.substring(0, lastIndex);
+			}
 			if (!rInnerClass.containsField(methodName)) {
 				valid.invalidate();
 				printAnnotationError(element, "Id not found: R.id." + methodName);
