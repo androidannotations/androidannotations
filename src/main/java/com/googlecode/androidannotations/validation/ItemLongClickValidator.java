@@ -35,6 +35,7 @@ import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class ItemLongClickValidator extends ValidatorHelper implements ElementValidator {
 
@@ -59,7 +60,7 @@ public class ItemLongClickValidator extends ValidatorHelper implements ElementVa
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		warnVoidReturnType(element, executableElement);
+		validateVoidOrBooleanReturnType(element, executableElement, valid);
 
 		validateRFieldName(element, valid);
 
@@ -118,11 +119,14 @@ public class ItemLongClickValidator extends ValidatorHelper implements ElementVa
 		}
 	}
 
-	private void warnVoidReturnType(Element element, ExecutableElement executableElement) {
+	private void validateVoidOrBooleanReturnType(Element element, ExecutableElement executableElement, IsValid valid) {
 		TypeMirror returnType = executableElement.getReturnType();
 
-		if (returnType.getKind() != TypeKind.BOOLEAN) {
-			printAnnotationWarning(element, annotationName() + " should only be used on a method with a boolean return type ");
+		TypeKind returnKind = returnType.getKind();
+		
+		if (returnKind != TypeKind.BOOLEAN && returnKind != TypeKind.VOID && !returnType.toString().equals("java.lang.Boolean")) {
+			valid.invalidate();
+			printAnnotationError(element, annotationName() + " should only be used on a method with a boolean or a void return type");
 		}
 	}
 }

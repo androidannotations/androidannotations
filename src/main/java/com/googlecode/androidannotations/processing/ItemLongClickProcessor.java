@@ -19,6 +19,9 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.generation.ItemLongClickInstruction;
@@ -31,6 +34,7 @@ import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class ItemLongClickProcessor implements ElementProcessor {
 
@@ -66,10 +70,13 @@ public class ItemLongClickProcessor implements ElementProcessor {
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
+		
+		ExecutableElement executableElement = (ExecutableElement) element;
+		TypeMirror returnType = executableElement.getReturnType();
+		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
 
-		Instruction instruction = new ItemLongClickInstruction(methodName, itemClickQualifiedId);
+		Instruction instruction = new ItemLongClickInstruction(methodName, itemClickQualifiedId, returnMethodResult);
 		onCreateInstructions.add(instruction);
-
 	}
 
 }
