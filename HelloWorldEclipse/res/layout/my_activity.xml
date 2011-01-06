@@ -25,7 +25,7 @@
 		android:id="@+id/startExtraActivity"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
-	    android:text="Start extra activity !"
+	    android:text="Start extra activity, long click !"
 	    />
 	    
 	 <Button  

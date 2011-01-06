@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
@@ -78,8 +79,8 @@ public class MyActivity extends Activity {
 		notificationManager.notify(1, notification);
 	}
 
-	@Click
-	void startExtraActivity() {
+	@LongClick
+	boolean startExtraActivity() {
 		Intent intent = new Intent(this, ActivityWithExtra.class);
 
 		intent.putExtra(ActivityWithExtra.MY_DATE_EXTRA, new Date());
@@ -87,6 +88,7 @@ public class MyActivity extends Activity {
 		intent.putExtra(ActivityWithExtra.MY_INT_EXTRA, 42);
 
 		startActivity(intent);
+		return true;
 	}
 
 	@Click
