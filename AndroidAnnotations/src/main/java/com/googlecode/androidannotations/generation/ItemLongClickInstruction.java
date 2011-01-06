@@ -28,7 +28,7 @@ public class ItemLongClickInstruction implements Instruction {
 			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {\n" + //
 			"			@Override\n" + //
 			"			public boolean onItemLongClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
-			"				%s(parent, view, position, id);\n" + //
+			"				%s(%s);\n" + //
 			"				return true;\n" + //
 			"			}\n" + //
 			"		});\n" + //
@@ -39,7 +39,7 @@ public class ItemLongClickInstruction implements Instruction {
 			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {\n" + //
 			"			@Override\n" + //
 			"			public boolean onItemLongClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
-			"				return %s(parent, view, position, id);\n" + //
+			"				return %s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
 			"\n";
@@ -50,16 +50,26 @@ public class ItemLongClickInstruction implements Instruction {
 
 	private final boolean returnMethodResult;
 
-	public ItemLongClickInstruction(String methodName, String clickQualifiedId, boolean returnMethodResult) {
+	private final String parameterQualifiedName;
+
+	public ItemLongClickInstruction(String methodName, String clickQualifiedId, boolean returnMethodResult, String parameterQualifiedName) {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
 		this.returnMethodResult = returnMethodResult;
+		this.parameterQualifiedName = parameterQualifiedName;
+	}
+
+	public ItemLongClickInstruction(String methodName, String clickQualifiedId, boolean returnMethodResult) {
+		this(methodName, clickQualifiedId, returnMethodResult, null);
 	}
 
 	@Override
 	public String generate() {
 		String format = returnMethodResult ? FORMAT_RETURN_RESULT : FORMAT_RETURN_TRUE;
-		return String.format(format, clickQualifiedId, methodName);
+		
+		String parameterValue = parameterQualifiedName != null ? "(" + parameterQualifiedName + ") parent.getAdapter().getItem(position)" : "";
+		
+		return String.format(format, clickQualifiedId, methodName, parameterValue);
 	}
 
 }

@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
@@ -70,12 +71,22 @@ public class ItemLongClickProcessor implements ElementProcessor {
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
-		
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 		TypeMirror returnType = executableElement.getReturnType();
 		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
 
-		Instruction instruction = new ItemLongClickInstruction(methodName, itemClickQualifiedId, returnMethodResult);
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+
+		Instruction instruction;
+		if (parameters.size() == 1) {
+			VariableElement parameter = parameters.get(0);
+			String parameterQualifiedName = parameter.asType().toString();
+			instruction = new ItemLongClickInstruction(methodName, itemClickQualifiedId, returnMethodResult, parameterQualifiedName);
+		} else {
+			instruction = new ItemLongClickInstruction(methodName, itemClickQualifiedId, returnMethodResult);
+		}
+
 		onCreateInstructions.add(instruction);
 	}
 
