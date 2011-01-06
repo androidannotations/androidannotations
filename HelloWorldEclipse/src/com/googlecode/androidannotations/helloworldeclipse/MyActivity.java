@@ -8,6 +8,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Touch;
+import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -100,6 +102,11 @@ public class MyActivity extends Activity {
 	@Touch
 	void myTextView(MotionEvent event) {
 		Log.d("MyActivity", "myTextView was touched!");
+	}
+
+	@Transactional
+	int transactionalMethod(SQLiteDatabase db) {
+		return 42;
 	}
 
 }
