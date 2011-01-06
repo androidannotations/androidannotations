@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
-import com.googlecode.androidannotations.annotations.ItemSelected;
+import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringArrayRes;
@@ -34,18 +34,18 @@ public class MyListActivity extends Activity {
 		list.setAdapter(adapter);
 	}
 
-	@ItemClick(android.R.id.list)
-	void itemClicked(String food) {
+	@ItemClick
+	void listItemClicked(String food) {
 		Toast.makeText(this, "click: " + food, Toast.LENGTH_SHORT).show();
 	}
 
-	@ItemLongClick(android.R.id.list)
-	void itemLongClicked(String food) {
+	@ItemLongClick
+	void listItemLongClicked(String food) {
 		Toast.makeText(this, "long click: " + food, Toast.LENGTH_SHORT).show();
 	}
 
-	@ItemSelected(android.R.id.list)
-	void itemSelected(boolean somethingSelected, String food) {
+	@ItemSelect
+	void listItemSelected(boolean somethingSelected, String food) {
 		if (somethingSelected) {
 			Toast.makeText(this, "selected: " + food, Toast.LENGTH_SHORT).show();
 		} else {

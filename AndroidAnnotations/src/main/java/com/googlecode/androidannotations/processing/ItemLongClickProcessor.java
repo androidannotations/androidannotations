@@ -63,6 +63,10 @@ public class ItemLongClickProcessor implements ElementProcessor {
 
 		if (idValue == ItemLongClick.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
+			int lastIndex = fieldName.lastIndexOf("ItemLongClicked");
+			if (lastIndex != -1) {
+				fieldName = fieldName.substring(0, lastIndex);
+			}
 			itemClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {
 			itemClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);

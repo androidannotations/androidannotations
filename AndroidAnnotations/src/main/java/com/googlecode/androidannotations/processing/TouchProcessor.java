@@ -62,6 +62,10 @@ public class TouchProcessor implements ElementProcessor {
 
 		if (idValue == Touch.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
+			int lastIndex = fieldName.lastIndexOf("Touched");
+			if (lastIndex != -1) {
+				fieldName = fieldName.substring(0, lastIndex);
+			}
 			longClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {
 			longClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);

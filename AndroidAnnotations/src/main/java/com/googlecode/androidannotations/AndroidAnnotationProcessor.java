@@ -30,7 +30,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
-import com.googlecode.androidannotations.annotations.ItemSelected;
+import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
@@ -104,7 +104,7 @@ import com.googlecode.androidannotations.validation.ViewValidator;
 		ItemClick.class, //
 		ItemLongClick.class, //
 		Touch.class, //
-		ItemSelected.class, //
+		ItemSelect.class, //
 		UiThreadDelayed.class, //
 		UiThread.class, //
 		Background.class, //
