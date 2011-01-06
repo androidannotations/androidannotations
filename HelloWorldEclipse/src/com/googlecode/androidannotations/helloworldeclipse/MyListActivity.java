@@ -43,11 +43,10 @@ public class MyListActivity extends Activity {
 	}
 	
 	@ItemLongClick(android.R.id.list)
-	boolean itemLongSelected(AdapterView<?> av, View v, int i, long l) {
+	void itemLongSelected(AdapterView<?> av, View v, int i, long l) {
 		//It would be nice if food was given as a parameter
 		String food = (String) av.getAdapter().getItem(i);
 		Toast.makeText(this, "long: "+food, Toast.LENGTH_SHORT).show();
-		return true;
 	}
 	
 

@@ -19,10 +19,22 @@ import com.googlecode.androidannotations.model.Instruction;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class ItemLongClickInstruction implements Instruction {
 
-	private static final String FORMAT = //
+	private static final String FORMAT_RETURN_TRUE = //
+	"" + //
+			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {\n" + //
+			"			@Override\n" + //
+			"			public boolean onItemLongClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
+			"				%s(parent, view, position, id);\n" + //
+			"				return true;\n" + //
+			"			}\n" + //
+			"		});\n" + //
+			"\n";
+
+	private static final String FORMAT_RETURN_RESULT = //
 	"" + //
 			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {\n" + //
 			"			@Override\n" + //
@@ -36,14 +48,18 @@ public class ItemLongClickInstruction implements Instruction {
 
 	private final String clickQualifiedId;
 
-	public ItemLongClickInstruction(String methodName, String clickQualifiedId) {
+	private final boolean returnMethodResult;
+
+	public ItemLongClickInstruction(String methodName, String clickQualifiedId, boolean returnMethodResult) {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
+		this.returnMethodResult = returnMethodResult;
 	}
 
 	@Override
 	public String generate() {
-		return String.format(FORMAT, clickQualifiedId, methodName);
+		String format = returnMethodResult ? FORMAT_RETURN_RESULT : FORMAT_RETURN_TRUE;
+		return String.format(format, clickQualifiedId, methodName);
 	}
 
 }
