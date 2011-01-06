@@ -19,6 +19,7 @@ import com.googlecode.androidannotations.model.Instruction;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class ItemClickInstruction implements Instruction {
 
@@ -27,7 +28,7 @@ public class ItemClickInstruction implements Instruction {
 			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {\n" + //
 			"			@Override\n" + //
 			"			public void onItemClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
-			"				%s(parent, view, position, id);\n" + //
+			"				%s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
 			"\n";
@@ -36,14 +37,22 @@ public class ItemClickInstruction implements Instruction {
 
 	private final String clickQualifiedId;
 
-	public ItemClickInstruction(String methodName, String clickQualifiedId) {
+	private final String parameterQualifiedName;
+
+	public ItemClickInstruction(String methodName, String clickQualifiedId, String parameterQualifiedName) {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
+		this.parameterQualifiedName = parameterQualifiedName;
+	}
+
+	public ItemClickInstruction(String methodName, String clickQualifiedId) {
+		this(methodName, clickQualifiedId, null);
 	}
 
 	@Override
 	public String generate() {
-		return String.format(FORMAT, clickQualifiedId, methodName);
+		String parameterValue = parameterQualifiedName != null ? "(" + parameterQualifiedName + ") parent.getAdapter().getItem(position)" : "";
+		return String.format(FORMAT, clickQualifiedId, methodName, parameterValue);
 	}
 
 }

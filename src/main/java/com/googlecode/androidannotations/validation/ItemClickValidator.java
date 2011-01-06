@@ -35,6 +35,7 @@ import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class ItemClickValidator extends ValidatorHelper implements ElementValidator {
 
@@ -73,29 +74,9 @@ public class ItemClickValidator extends ValidatorHelper implements ElementValida
 	private void validateParameters(Element element, IsValid valid, ExecutableElement executableElement) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
-		if (parameters.size() != 4) {
+		if (parameters.size() > 1) {
 			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method with 4 parameters, instead of " + parameters.size() + ". " +
-					"Parameters should be AdapterView<?>, View, int, long and you must respect the order.");
-		}
-
-		if (parameters.size() == 4) {
-			if(!parameters.get(0).asType().toString().equals("android.widget.AdapterView<?>")){
-				valid.invalidate();
-				printAnnotationError(element, annotationName() + " - First parameter must be of type android.widget.AdapterView<?>");
-			}
-			if(!parameters.get(1).asType().toString().equals("android.view.View")){
-				valid.invalidate();
-				printAnnotationError(element, annotationName() + " - Second parameter must be of type android.view.View");
-			}
-			if(!parameters.get(2).asType().getKind().equals(TypeKind.INT)){
-				valid.invalidate();
-				printAnnotationError(element, annotationName() + " - Third parameter must be of type int");
-			}
-			if(!parameters.get(3).asType().getKind().equals(TypeKind.LONG)){
-				valid.invalidate();
-				printAnnotationError(element, annotationName() + " - Fourth parameter must be of type long");
-			}
+			printAnnotationError(element, annotationName() + " should only be used on a method with 0 or 1 parameter, instead of " + parameters.size());
 		}
 	}
 

@@ -19,6 +19,8 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.LongClick;
@@ -32,6 +34,7 @@ import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class ItemClickProcessor implements ElementProcessor {
 
@@ -67,8 +70,18 @@ public class ItemClickProcessor implements ElementProcessor {
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
+		
+		ExecutableElement executableElement = (ExecutableElement) element;
+		List<? extends VariableElement> parameters = executableElement.getParameters();
 
-		Instruction instruction = new ItemClickInstruction(methodName, itemClickQualifiedId);
+		Instruction instruction;
+		if (parameters.size() == 1) {
+			VariableElement parameter = parameters.get(0);
+			String parameterQualifiedName = parameter.asType().toString();
+			instruction = new ItemClickInstruction(methodName, itemClickQualifiedId, parameterQualifiedName);
+		} else {
+			instruction = new ItemClickInstruction(methodName, itemClickQualifiedId);
+		}
 		onCreateInstructions.add(instruction);
 
 	}
