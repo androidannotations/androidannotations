@@ -20,6 +20,7 @@ import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -78,6 +79,14 @@ public abstract class ValidatorHelper extends AnnotationHelper implements HasTar
 		}
 	}
 	
+	protected void validateDoesntThrowException(Element element, IsValid valid) {
+		ExecutableElement executableElement = (ExecutableElement) element;
+		
+		if (executableElement.getThrownTypes().size()>0) {
+			valid.invalidate();
+			printAnnotationError(element, annotationName() + " annotated methods should not declare throwing any exception");
+		}
+	}
 
 	protected String actionName() {
 		return getTarget().getSimpleName()+"ed";

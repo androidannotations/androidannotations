@@ -63,6 +63,8 @@ public class ClickValidator extends ValidatorHelper implements ElementValidator 
 		validateParameters(element, valid, executableElement);
 
 		validateIsNotPrivate(element, valid);
+		
+		validateDoesntThrowException(element, valid);
 
 		return valid.isValid();
 	}
