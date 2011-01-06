@@ -22,8 +22,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.annotations.ItemClick;
-import com.googlecode.androidannotations.generation.ItemClickInstruction;
+import com.googlecode.androidannotations.annotations.ItemSelected;
+import com.googlecode.androidannotations.generation.ItemSelectedInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
@@ -32,20 +32,19 @@ import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
- * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
  */
-public class ItemClickProcessor implements ElementProcessor {
+public class ItemSelectedProcessor implements ElementProcessor {
 
 	private final IRClass rClass;
 
-	public ItemClickProcessor(IRClass rClass) {
+	public ItemSelectedProcessor(IRClass rClass) {
 		this.rClass = rClass;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return ItemClick.class;
+		return ItemSelected.class;
 	}
 
 	@Override
@@ -53,13 +52,13 @@ public class ItemClickProcessor implements ElementProcessor {
 
 		String methodName = element.getSimpleName().toString();
 
-		ItemClick annotation = element.getAnnotation(ItemClick.class);
+		ItemSelected annotation = element.getAnnotation(ItemSelected.class);
 		int idValue = annotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String itemClickQualifiedId;
 
-		if (idValue == ItemClick.DEFAULT_VALUE) {
+		if (idValue == ItemSelected.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			itemClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {
@@ -74,12 +73,12 @@ public class ItemClickProcessor implements ElementProcessor {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
 		Instruction instruction;
-		if (parameters.size() == 1) {
-			VariableElement parameter = parameters.get(0);
+		if (parameters.size() == 2) {
+			VariableElement parameter = parameters.get(1);
 			String parameterQualifiedName = parameter.asType().toString();
-			instruction = new ItemClickInstruction(methodName, itemClickQualifiedId, parameterQualifiedName);
+			instruction = new ItemSelectedInstruction(methodName, itemClickQualifiedId, parameterQualifiedName);
 		} else {
-			instruction = new ItemClickInstruction(methodName, itemClickQualifiedId);
+			instruction = new ItemSelectedInstruction(methodName, itemClickQualifiedId);
 		}
 		onCreateInstructions.add(instruction);
 
