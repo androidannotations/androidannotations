@@ -60,15 +60,6 @@ public class RunnableValidator extends ValidatorHelper implements ElementValidat
 		return valid.isValid();
 	}
 
-	private void validateDoesntThrowException(Element element, IsValid valid) {
-		ExecutableElement executableElement = (ExecutableElement) element;
-		
-		if (executableElement.getThrownTypes().size()>0) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " annotated methods should not declare throwing any exception");
-		}
-	}
-
 	private void validateHasVoidReturnType(Element element, ExecutableElement executableElement, IsValid valid) {
 		TypeMirror returnType = executableElement.getReturnType();
 

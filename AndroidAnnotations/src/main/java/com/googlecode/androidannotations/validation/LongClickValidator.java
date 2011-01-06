@@ -67,6 +67,8 @@ public class LongClickValidator extends ValidatorHelper implements ElementValida
 		validateParameters(element, valid, executableElement);
 
 		validateIsNotPrivate(element, valid);
+		
+		validateDoesntThrowException(element, valid);
 
 		return valid.isValid();
 	}

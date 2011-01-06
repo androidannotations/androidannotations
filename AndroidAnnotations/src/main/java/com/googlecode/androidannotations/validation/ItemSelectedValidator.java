@@ -65,6 +65,8 @@ public class ItemSelectedValidator extends ValidatorHelper implements ElementVal
 		validateParameters(element, valid, executableElement);
 
 		validateIsNotPrivate(element, valid);
+		
+		validateDoesntThrowException(element, valid);
 
 		return valid.isValid();
 	}

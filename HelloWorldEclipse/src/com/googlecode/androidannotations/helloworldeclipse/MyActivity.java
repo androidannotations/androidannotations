@@ -48,7 +48,7 @@ public class MyActivity extends Activity {
 	NotificationManager notificationManager;
 
 	@Click
-	void myButtonClicked() {
+	void myButtonClicked() throws Exception {
 		String name = myEditText.getText().toString();
 		someBackgroundWork(name, 5);
 	}
