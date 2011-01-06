@@ -28,7 +28,10 @@ import javax.tools.Diagnostic;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.ItemClick;
+import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
@@ -60,7 +63,10 @@ import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
+import com.googlecode.androidannotations.processing.ItemClickProcessor;
+import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
 import com.googlecode.androidannotations.processing.LayoutProcessor;
+import com.googlecode.androidannotations.processing.LongClickProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
 import com.googlecode.androidannotations.processing.SystemServiceProcessor;
@@ -73,7 +79,10 @@ import com.googlecode.androidannotations.rclass.RClass;
 import com.googlecode.androidannotations.rclass.RClassFinder;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
+import com.googlecode.androidannotations.validation.ItemClickValidator;
+import com.googlecode.androidannotations.validation.ItemLongClickValidator;
 import com.googlecode.androidannotations.validation.LayoutValidator;
+import com.googlecode.androidannotations.validation.LongClickValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ResValidator;
 import com.googlecode.androidannotations.validation.RunnableValidator;
@@ -103,7 +112,10 @@ import com.googlecode.androidannotations.validation.ViewValidator;
 		MovieRes.class, //
 		TextRes.class, //
 		TextArrayRes.class, //
-		StringArrayRes.class })
+		StringArrayRes.class, //
+		LongClick.class, //
+		ItemClick.class, //
+		ItemLongClick.class})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 
@@ -167,6 +179,9 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelValidator.register(new LayoutValidator(processingEnv, rClass));
 		modelValidator.register(new ViewValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
+		modelValidator.register(new LongClickValidator(processingEnv, rClass));
+		modelValidator.register(new ItemClickValidator(processingEnv, rClass));
+		modelValidator.register(new ItemLongClickValidator(processingEnv, rClass));
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			modelValidator.register(new ResValidator(androidRes, processingEnv, rClass));
 		}
@@ -188,6 +203,9 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelProcessor.register(new LayoutProcessor(processingEnv, rClass));
 		modelProcessor.register(new ViewProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));
+		modelProcessor.register(new LongClickProcessor(rClass));
+		modelProcessor.register(new ItemClickProcessor(rClass));
+		modelProcessor.register(new ItemLongClickProcessor(rClass));
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			modelProcessor.register(new ResProcessor(androidRes, rClass));
 		}
