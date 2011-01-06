@@ -19,10 +19,21 @@ import com.googlecode.androidannotations.model.Instruction;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class LongClickInstruction implements Instruction {
 
-	private static final String FORMAT = //
+	private static final String FORMAT_RETURN_TRUE = //
+	"" + //
+			"        (findViewById(%s)).setOnLongClickListener(new android.view.View.OnLongClickListener() {\n" + //
+			"			public boolean onLongClick(android.view.View v) {\n" + //
+			"				%s(%s);\n" + //
+			"				return true;\n" + //
+			"			}\n" + //
+			"		});\n" + //
+			"\n";
+
+	private static final String FORMAT_RETURN_RESULT = //
 	"" + //
 			"        (findViewById(%s)).setOnLongClickListener(new android.view.View.OnLongClickListener() {\n" + //
 			"			public boolean onLongClick(android.view.View v) {\n" + //
@@ -37,16 +48,20 @@ public class LongClickInstruction implements Instruction {
 
 	private final boolean viewParameter;
 
-	public LongClickInstruction(String methodName, String clickQualifiedId, boolean viewParameter) {
+	private final boolean returnMethodResult;
+
+	public LongClickInstruction(String methodName, String clickQualifiedId, boolean viewParameter, boolean returnMethodResult) {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
 		this.viewParameter = viewParameter;
+		this.returnMethodResult = returnMethodResult;
 	}
 
 	@Override
 	public String generate() {
 		String viewParameterValue = viewParameter ? "v" : "";
-		return String.format(FORMAT, clickQualifiedId, methodName, viewParameterValue);
+		String format = returnMethodResult ? FORMAT_RETURN_RESULT : FORMAT_RETURN_TRUE;
+		return String.format(format, clickQualifiedId, methodName, viewParameterValue);
 	}
 
 }

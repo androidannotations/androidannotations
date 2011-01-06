@@ -21,6 +21,8 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.generation.LongClickInstruction;
@@ -33,6 +35,7 @@ import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 public class LongClickProcessor implements ElementProcessor {
 
@@ -74,9 +77,12 @@ public class LongClickProcessor implements ElementProcessor {
 
 		boolean viewParameter = parameters.size() == 1;
 
-		Instruction instruction = new LongClickInstruction(methodName, longClickQualifiedId, viewParameter);
+		TypeMirror returnType = executableElement.getReturnType();
+
+		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
+		
+		Instruction instruction = new LongClickInstruction(methodName, longClickQualifiedId, viewParameter, returnMethodResult);
 		onCreateInstructions.add(instruction);
 
 	}
-
 }

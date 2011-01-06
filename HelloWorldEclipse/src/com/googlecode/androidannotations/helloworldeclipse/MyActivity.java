@@ -80,7 +80,7 @@ public class MyActivity extends Activity {
 	}
 
 	@LongClick
-	boolean startExtraActivity() {
+	void startExtraActivity() {
 		Intent intent = new Intent(this, ActivityWithExtra.class);
 
 		intent.putExtra(ActivityWithExtra.MY_DATE_EXTRA, new Date());
@@ -88,7 +88,6 @@ public class MyActivity extends Activity {
 		intent.putExtra(ActivityWithExtra.MY_INT_EXTRA, 42);
 
 		startActivity(intent);
-		return true;
 	}
 
 	@Click

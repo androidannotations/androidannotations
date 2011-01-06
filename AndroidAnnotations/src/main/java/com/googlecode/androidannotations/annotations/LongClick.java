@@ -29,7 +29,12 @@ import java.lang.annotation.Target;
  * The annotation value should be one of R.id.* fields. If not set, the method
  * name will be used as the R.id.* field name.
  * 
+ * The method may return a boolean, void, or a java.lang.Boolean. If returning
+ * void, it will be considered as returning true (ie the method has handled the
+ * event).
+ * 
  * @author Benjamin Fellous
+ * @author Pierre-Yves Ricau
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
