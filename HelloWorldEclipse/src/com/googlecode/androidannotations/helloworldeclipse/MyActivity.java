@@ -8,6 +8,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
+import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -52,7 +55,6 @@ public class MyActivity extends Activity {
 
 	@Background
 	void someBackgroundWork(String name, long timeToDoSomeLongComputation) {
-
 		try {
 			TimeUnit.SECONDS.sleep(timeToDoSomeLongComputation);
 		} catch (InterruptedException e) {
@@ -93,6 +95,11 @@ public class MyActivity extends Activity {
 	@Click
 	void startListActivity() {
 		startActivity(new Intent(this, MyListActivity.class));
+	}
+
+	@Touch
+	void myTextView(MotionEvent event) {
+		Log.d("MyActivity", "myTextView was touched!");
 	}
 
 }

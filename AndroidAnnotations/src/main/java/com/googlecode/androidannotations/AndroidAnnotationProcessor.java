@@ -34,6 +34,7 @@ import com.googlecode.androidannotations.annotations.ItemSelected;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
+import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -72,6 +73,7 @@ import com.googlecode.androidannotations.processing.LongClickProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
 import com.googlecode.androidannotations.processing.SystemServiceProcessor;
+import com.googlecode.androidannotations.processing.TouchProcessor;
 import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewProcessor;
@@ -92,6 +94,7 @@ import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ResValidator;
 import com.googlecode.androidannotations.validation.RunnableValidator;
 import com.googlecode.androidannotations.validation.SystemServiceValidator;
+import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
 @SupportedAnnotationClasses({ Layout.class, //
@@ -100,6 +103,7 @@ import com.googlecode.androidannotations.validation.ViewValidator;
 		LongClick.class, //
 		ItemClick.class, //
 		ItemLongClick.class, //
+		Touch.class, //
 		ItemSelected.class, //
 		UiThreadDelayed.class, //
 		UiThread.class, //
@@ -191,6 +195,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelValidator.register(new ViewValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
+		modelValidator.register(new TouchValidator(processingEnv, rClass));
 		modelValidator.register(new ItemClickValidator(processingEnv, rClass));
 		modelValidator.register(new ItemSelectedValidator(processingEnv, rClass));
 		modelValidator.register(new ItemLongClickValidator(processingEnv, rClass));
@@ -216,6 +221,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelProcessor.register(new ViewProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));
 		modelProcessor.register(new LongClickProcessor(rClass));
+		modelProcessor.register(new TouchProcessor(rClass));
 		modelProcessor.register(new ItemClickProcessor(rClass));
 		modelProcessor.register(new ItemSelectedProcessor(rClass));
 		modelProcessor.register(new ItemLongClickProcessor(rClass));
