@@ -55,7 +55,7 @@ public class ItemLongClickValidator extends ValidatorHelper implements ElementVa
 
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validateEnclosingElementHasLayout(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

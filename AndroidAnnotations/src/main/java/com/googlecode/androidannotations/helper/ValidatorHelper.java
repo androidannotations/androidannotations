@@ -67,12 +67,17 @@ public abstract class ValidatorHelper extends AnnotationHelper implements HasTar
 		}
 	}
 	
-	protected void validateHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
+	protected void validateEnclosingElementHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
+
+		validateHasLayout(enclosingElement, validatedElements, valid);
+	}
+	
+	protected void validateHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
 
 		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
 
-		if (!layoutAnnotatedElements.contains(enclosingElement)) {
+		if (!layoutAnnotatedElements.contains(element)) {
 			valid.invalidate();
 			printAnnotationError(element,
 					 annotationName() + " should only be used in a class annotated with " + annotationName(Layout.class));

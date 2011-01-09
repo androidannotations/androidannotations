@@ -45,7 +45,7 @@ public class TransactionalValidator extends ValidatorHelper implements ElementVa
 
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validateEnclosingElementHasLayout(element, validatedElements, valid);
 
 		validateIsNotPrivate(element, valid);
 

@@ -31,6 +31,8 @@ public class MetaActivity {
 	private final List<Instruction> onCreateInstructions = new ArrayList<Instruction>();
 	
 	private final List<Instruction> memberInstructions = new ArrayList<Instruction>();
+	
+	private final List<String> implementedInterfaces = new ArrayList<String>();
 
 	public MetaActivity(String packageName, String superClassName, String layoutQualifiedName) {
 		this.packageName = packageName;
@@ -64,6 +66,11 @@ public class MetaActivity {
 
 	public String getLayoutQualifiedName() {
 		return layoutQualifiedName;
+	}
+	
+
+	public List<String> getImplementedInterfaces() {
+		return implementedInterfaces;
 	}
 
 }

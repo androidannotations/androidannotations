@@ -52,7 +52,7 @@ public class ClickValidator extends ValidatorHelper implements ElementValidator 
 
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validateEnclosingElementHasLayout(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
