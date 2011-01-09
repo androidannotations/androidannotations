@@ -51,7 +51,7 @@ public class ViewValidator extends ValidatorHelper implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validateEnclosingElementHasLayout(element, validatedElements, valid);
 
 		TypeMirror uiFieldTypeMirror = element.asType();
 

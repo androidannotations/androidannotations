@@ -50,7 +50,7 @@ public class ResValidator extends ValidatorHelper implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validateEnclosingElementHasLayout(element, validatedElements, valid);
 
 		TypeMirror fieldTypeMirror = element.asType();
 

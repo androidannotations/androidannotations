@@ -54,7 +54,7 @@ public class ItemSelectedValidator extends ValidatorHelper implements ElementVal
 
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validateEnclosingElementHasLayout(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

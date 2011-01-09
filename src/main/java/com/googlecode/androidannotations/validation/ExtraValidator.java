@@ -39,7 +39,7 @@ public class ExtraValidator extends ValidatorHelper implements ElementValidator 
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validateEnclosingElementHasLayout(element, validatedElements, valid);
 
 		validateIsNotPrivate(element, valid);
 
