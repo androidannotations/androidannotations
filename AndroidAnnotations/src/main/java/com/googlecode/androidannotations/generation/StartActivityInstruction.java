@@ -20,15 +20,15 @@ import com.googlecode.androidannotations.model.MetaActivity;
 
 public class StartActivityInstruction implements Instruction {
 
-	private static final String CODE = //
+	private static final String FORMAT = //
 	"" + //
 			"	@Override\n" + //
-			"	public void startActivity(android.content.Intent intent) {\n" + //
+			"	public %s {\n" + //
 			"		android.content.ComponentName component = intent.getComponent();\n" + //
 			"		if (component != null) {\n" + //
 			"\n" + //
 			"			String className = component.getClassName();\n" + //
-			"			String generatedClassName = className + \""+MetaActivity.CLASS_SUFFIX+"\";\n" + //
+			"			String generatedClassName = className + \"" + MetaActivity.CLASS_SUFFIX + "\";\n" + //
 			"\n" + //
 			"			boolean generatedClassExists = true;\n" + //
 			"			try {\n" + //
@@ -42,12 +42,20 @@ public class StartActivityInstruction implements Instruction {
 			"				intent.setComponent(newComponent);\n" + //
 			"			}\n" + //
 			"		}\n" + //
-			"		super.startActivity(intent);\n" + //
+			"		%s\n" + //
 			"	}\n" + //
 			"\n";
 
 	@Override
 	public String generate() {
-		return CODE;
+
+		StringBuilder startActivityMethods = new StringBuilder();
+
+		startActivityMethods.append(String.format(FORMAT, "void startActivity(android.content.Intent intent)", "super.startActivity(intent);"));
+		startActivityMethods.append(String.format(FORMAT, "void startActivityForResult(android.content.Intent intent, int requestCode)", "super.startActivityForResult(intent, requestCode);"));
+		startActivityMethods.append(String.format(FORMAT, "void startActivityFromChild(android.app.Activity child, android.content.Intent intent, int requestCode)", "super.startActivityFromChild(child, intent, requestCode);"));
+		startActivityMethods.append(String.format(FORMAT, "boolean startActivityIfNeeded(android.content.Intent intent, int requestCode)", "return super.startActivityIfNeeded(intent, requestCode);"));
+
+		return startActivityMethods.toString();
 	}
 }
