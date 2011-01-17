@@ -21,10 +21,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Activity classes
+ * Should be used on Activity classes to enable usage of AndroidAnnotations
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface Layout {
-    int value();
+public @interface Enhance {
+	int value();
 }

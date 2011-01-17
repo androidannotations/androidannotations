@@ -32,7 +32,7 @@ import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
-import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.SystemService;
@@ -106,7 +106,7 @@ import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
-@SupportedAnnotationClasses({ Layout.class, //
+@SupportedAnnotationClasses({ Enhance.class, //
 		BeforeCreate.class, //
 		RoboGuice.class, //
 		ViewById.class, //

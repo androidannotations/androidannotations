@@ -22,7 +22,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.validation.IsValid;
 
@@ -75,12 +75,12 @@ public abstract class ValidatorHelper extends AnnotationHelper implements HasTar
 	
 	protected void validateHasLayout(Element element, AnnotationElements validatedElements, IsValid valid) {
 
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Layout.class);
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Enhance.class);
 
 		if (!layoutAnnotatedElements.contains(element)) {
 			valid.invalidate();
 			printAnnotationError(element,
-					 annotationName() + " should only be used in a class annotated with " + annotationName(Layout.class));
+					 annotationName() + " should only be used in a class annotated with " + annotationName(Enhance.class));
 		}
 	}
 	
