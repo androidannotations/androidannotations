@@ -7,14 +7,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
-import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringArrayRes;
 
-@Layout(R.layout.my_list_activity)
+@Enhance(R.layout.my_list_activity)
 public class MyListActivity extends Activity {
 
 	@StringArrayRes

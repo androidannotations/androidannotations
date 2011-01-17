@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Touch;
@@ -30,7 +30,7 @@ import com.googlecode.androidannotations.annotations.res.BooleanRes;
 import com.googlecode.androidannotations.annotations.res.ColorRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
-@Layout(R.layout.my_activity)
+@Enhance(R.layout.my_activity)
 public class MyActivity extends Activity {
 
 	@ViewById

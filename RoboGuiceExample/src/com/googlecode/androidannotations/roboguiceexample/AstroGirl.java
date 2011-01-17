@@ -5,11 +5,11 @@ import android.widget.EditText;
 
 import com.google.inject.Inject;
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-@Layout(R.layout.main)
+@Enhance(R.layout.main)
 @RoboGuice
 public class AstroGirl extends Activity {
 	

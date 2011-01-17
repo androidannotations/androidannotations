@@ -21,7 +21,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -42,7 +42,7 @@ public class LayoutValidator extends ValidatorHelper implements ElementValidator
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Layout.class;
+		return Enhance.class;
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class LayoutValidator extends ValidatorHelper implements ElementValidator
 	}
 
 	private void validateRFieldName(Element element, IsValid valid) {
-		Layout layoutAnnotation = element.getAnnotation(Layout.class);
+		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
 		int layoutIdValue = layoutAnnotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);

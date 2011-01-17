@@ -24,7 +24,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
-import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
@@ -38,7 +38,7 @@ public class RClassFinder extends AnnotationHelper {
 
 		Elements elementUtils = processingEnv.getElementUtils();
 
-		Set<? extends Element> annotatedElements = extractedModel.getAnnotatedElements(Layout.class);
+		Set<? extends Element> annotatedElements = extractedModel.getAnnotatedElements(Enhance.class);
 
 		Iterator<? extends Element> iterator = annotatedElements.iterator();
 
@@ -53,8 +53,8 @@ public class RClassFinder extends AnnotationHelper {
 			if (rType != null) {
 				return new RClass(rType);
 			} else {
-				printAnnotationError(firstLayoutAnnotatedElement, Layout.class,
-						"In order to find the R class, all Activities annotated with @" + Layout.class.getSimpleName()
+				printAnnotationError(firstLayoutAnnotatedElement, Enhance.class,
+						"In order to find the R class, all Activities annotated with @" + Enhance.class.getSimpleName()
 								+ " should belong to the same package as the R class, which is not the case for: "
 								+ firstLayoutAnnotatedElement);
 				return null;

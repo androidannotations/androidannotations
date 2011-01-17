@@ -21,7 +21,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.Layout;
+import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.generation.StartActivityInstruction;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.MetaActivity;
@@ -41,7 +41,7 @@ public class LayoutProcessor extends ValidatorHelper implements ElementProcessor
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Layout.class;
+		return Enhance.class;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class LayoutProcessor extends ValidatorHelper implements ElementProcessor
 
 		TypeElement typeElement = (TypeElement) element;
 
-		Layout layoutAnnotation = element.getAnnotation(Layout.class);
+		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
 		int layoutIdValue = layoutAnnotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
