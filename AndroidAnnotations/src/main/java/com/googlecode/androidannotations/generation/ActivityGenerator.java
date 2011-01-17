@@ -34,7 +34,7 @@ public class ActivityGenerator {
 			"    public void onCreate(android.os.Bundle savedInstanceState) {\n" + //
 			"\n" + //
 			"%s" + //
-			"        setContentView(%s);\n" + //
+			"       %s\n" + //
 			"\n" + //
 			"%s" + //
 			"        super.onCreate(savedInstanceState);\n" + //
@@ -48,7 +48,7 @@ public class ActivityGenerator {
 		for (Instruction instruction : activity.getOnCreateInstructions()) {
 			onCreateInstructionsBuilder.append(instruction.generate());
 		}
-		
+
 		StringBuilder beforeCreateInstructionsBuilder = new StringBuilder();
 		for (Instruction instruction : activity.getBeforeCreateInstructions()) {
 			beforeCreateInstructionsBuilder.append(instruction.generate());
@@ -71,13 +71,16 @@ public class ActivityGenerator {
 			implementsBuilder.append(implementedInterface);
 		}
 
+		String layoutQualifiedName = activity.getLayoutQualifiedName();
+		String setContentView = layoutQualifiedName != null ? "setContentView(" + layoutQualifiedName + ");" : "";
+
 		String generatedClass = String.format(CLASS_FORMAT, //
 				activity.getPackageName(), //
 				activity.getClassSimpleName(), //
 				activity.getSuperClassName(), //
 				implementsBuilder.toString(), //
 				beforeCreateInstructionsBuilder.toString(), //
-				activity.getLayoutQualifiedName(), //
+				setContentView, //
 				onCreateInstructionsBuilder.toString(), //
 				memberInstructionsBuilder.toString());
 

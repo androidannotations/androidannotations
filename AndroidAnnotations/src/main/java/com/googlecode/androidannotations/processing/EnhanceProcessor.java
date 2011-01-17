@@ -30,11 +30,11 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class LayoutProcessor extends ValidatorHelper implements ElementProcessor {
+public class EnhanceProcessor extends ValidatorHelper implements ElementProcessor {
 
 	private final IRClass rClass;
 
-	public LayoutProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public EnhanceProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 	}
@@ -51,10 +51,14 @@ public class LayoutProcessor extends ValidatorHelper implements ElementProcessor
 
 		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
 		int layoutIdValue = layoutAnnotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-
-		String layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
+		
+		String layoutFieldQualifiedName;
+		if (layoutIdValue != Enhance.DEFAULT_VALUE) {
+			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+			layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
+		} else {
+			layoutFieldQualifiedName = null;
+		}
 
 		String superClassQualifiedName = typeElement.getQualifiedName().toString();
 
@@ -65,7 +69,7 @@ public class LayoutProcessor extends ValidatorHelper implements ElementProcessor
 		String superClassSimpleName = superClassQualifiedName.substring(packageSeparatorIndex + 1);
 
 		MetaActivity activity = new MetaActivity(packageName, superClassSimpleName, layoutFieldQualifiedName);
-		
+
 		activity.getMemberInstructions().add(new StartActivityInstruction());
 
 		metaModel.getMetaActivities().put(element, activity);

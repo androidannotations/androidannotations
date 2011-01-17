@@ -28,13 +28,13 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class LayoutValidator extends ValidatorHelper implements ElementValidator {
+public class EnhanceValidator extends ValidatorHelper implements ElementValidator {
 
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
 	private final IRClass rClass;
 	private final TypeElement activityTypeElement;
 
-	public LayoutValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public EnhanceValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 		activityTypeElement = typeElementFromQualifiedName(ANDROID_ACTIVITY_QUALIFIED_NAME);
@@ -65,11 +65,14 @@ public class LayoutValidator extends ValidatorHelper implements ElementValidator
 		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
 		int layoutIdValue = layoutAnnotation.value();
 
-		IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+		if (layoutIdValue != Enhance.DEFAULT_VALUE) {
 
-		if (!rInnerClass.containsIdValue(layoutIdValue)) {
-			valid.invalidate();
-			printAnnotationError(element, "Layout id value not found in R.layout.*: " + layoutIdValue);
+			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+
+			if (!rInnerClass.containsIdValue(layoutIdValue)) {
+				valid.invalidate();
+				printAnnotationError(element, "Layout id value not found in R.layout.*: " + layoutIdValue);
+			}
 		}
 	}
 

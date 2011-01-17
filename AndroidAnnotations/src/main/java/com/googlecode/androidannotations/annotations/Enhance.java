@@ -23,9 +23,14 @@ import java.lang.annotation.Target;
 /**
  * Should be used on Activity classes to enable usage of AndroidAnnotations
  * 
+ * The annotation value should be one of R.layout.* fields. If not set, no
+ * content view will be set, and you should call the setContentView() method
+ * yourself, from a @BeforeCreate annotated method.
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface Enhance {
-	int value();
+	public static final int DEFAULT_VALUE = -1;
+	int value() default DEFAULT_VALUE;
 }

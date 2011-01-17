@@ -1,37 +1,38 @@
 package com.googlecode.androidannotations.helloworldeclipse;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
-import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringArrayRes;
 
-@Enhance(R.layout.my_list_activity)
-public class MyListActivity extends Activity {
+// The layout is not set : we use the default layout set in ListActivity
+@Enhance
+public class MyListActivity extends ListActivity {
 
 	@StringArrayRes
 	String[] bestFoods;
 
-	@ViewById
-	ListView list;
-
 	private ListAdapter adapter;
+
+	@BeforeCreate
+	void initListActivity(Bundle savedInstanceState) {
+		// Ensure that ListActivity sets its content view before AndroidAnnotation injection
+		getListView();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bestFoods);
-
-		list.setAdapter(adapter);
+		setListAdapter(adapter);
 	}
 
 	@ItemClick

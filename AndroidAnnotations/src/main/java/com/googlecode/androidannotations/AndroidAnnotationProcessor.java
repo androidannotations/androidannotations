@@ -72,7 +72,7 @@ import com.googlecode.androidannotations.processing.ExtraProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
 import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
 import com.googlecode.androidannotations.processing.ItemSelectedProcessor;
-import com.googlecode.androidannotations.processing.LayoutProcessor;
+import com.googlecode.androidannotations.processing.EnhanceProcessor;
 import com.googlecode.androidannotations.processing.LongClickProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
@@ -95,7 +95,7 @@ import com.googlecode.androidannotations.validation.ExtraValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
 import com.googlecode.androidannotations.validation.ItemLongClickValidator;
 import com.googlecode.androidannotations.validation.ItemSelectedValidator;
-import com.googlecode.androidannotations.validation.LayoutValidator;
+import com.googlecode.androidannotations.validation.EnhanceValidator;
 import com.googlecode.androidannotations.validation.LongClickValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ResValidator;
@@ -217,7 +217,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 
 	private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelValidator modelValidator = new ModelValidator();
-		modelValidator.register(new LayoutValidator(processingEnv, rClass));
+		modelValidator.register(new EnhanceValidator(processingEnv, rClass));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
@@ -248,7 +248,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = new ModelProcessor();
-		modelProcessor.register(new LayoutProcessor(processingEnv, rClass));
+		modelProcessor.register(new EnhanceProcessor(processingEnv, rClass));
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));
