@@ -8,8 +8,8 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/androidannotations/target/androidannotations-1.0-RC4-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/guice-2.0-no_aop.jar"/>
 	<classpathentry kind="lib" path="lib/roboguice-1.0.jar"/>
+	<classpathentry kind="lib" path="/androidannotations/target/androidannotations-1.0-RC5-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
