@@ -33,6 +33,8 @@ public class ActivityGenerator {
 			"    @Override\n" + //
 			"    public void onCreate(android.os.Bundle savedInstanceState) {\n" + //
 			"\n" + //
+			"%s" + //
+			"\n" + //
 			"        setContentView(%s);\n" + //
 			"\n" + //
 			"%s" + //
@@ -46,6 +48,11 @@ public class ActivityGenerator {
 		StringBuilder onCreateInstructionsBuilder = new StringBuilder();
 		for (Instruction instruction : activity.getOnCreateInstructions()) {
 			onCreateInstructionsBuilder.append(instruction.generate());
+		}
+		
+		StringBuilder beforeCreateInstructionsBuilder = new StringBuilder();
+		for (Instruction instruction : activity.getBeforeCreateInstructions()) {
+			beforeCreateInstructionsBuilder.append(instruction.generate());
 		}
 
 		StringBuilder memberInstructionsBuilder = new StringBuilder();
@@ -70,6 +77,7 @@ public class ActivityGenerator {
 				activity.getClassSimpleName(), //
 				activity.getSuperClassName(), //
 				implementsBuilder.toString(), //
+				beforeCreateInstructionsBuilder.toString(), //
 				activity.getLayoutQualifiedName(), //
 				onCreateInstructionsBuilder.toString(), //
 				memberInstructionsBuilder.toString());

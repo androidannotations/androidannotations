@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Layout;
 import com.googlecode.androidannotations.annotations.LongClick;
@@ -48,10 +50,16 @@ public class MyActivity extends Activity {
 
 	@SystemService
 	NotificationManager notificationManager;
+	
+	@BeforeCreate
+	void requestIndeterminateProgress() {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+	}
 
 	@Click
 	void myButtonClicked() {
 		String name = myEditText.getText().toString();
+		setProgressBarIndeterminateVisibility(true);
 		someBackgroundWork(name, 5);
 	}
 
@@ -71,6 +79,7 @@ public class MyActivity extends Activity {
 
 	@UiThread
 	void updateUi(String message, int color) {
+		setProgressBarIndeterminateVisibility(false);
 		textView.setText(message);
 		textView.setTextColor(color);
 	}

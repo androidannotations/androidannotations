@@ -26,6 +26,7 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ItemClick;
@@ -65,6 +66,7 @@ import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
+import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
@@ -87,6 +89,7 @@ import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
 import com.googlecode.androidannotations.rclass.CoumpoundRClass;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.RClassFinder;
+import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
@@ -104,6 +107,7 @@ import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewValidator;
 
 @SupportedAnnotationClasses({ Layout.class, //
+		BeforeCreate.class, //
 		RoboGuice.class, //
 		ViewById.class, //
 		Click.class, //
@@ -127,7 +131,7 @@ import com.googlecode.androidannotations.validation.ViewValidator;
 		DimensionPixelOffsetRes.class, //
 		DimensionPixelSizeRes.class, //
 		DrawableRes.class, //
-		IntArrayRes.class, // ;
+		IntArrayRes.class, //
 		IntegerRes.class, //
 		LayoutRes.class, //
 		MovieRes.class, //
@@ -217,6 +221,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
+		modelValidator.register(new BeforeCreateValidator(processingEnv));
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
 		modelValidator.register(new TouchValidator(processingEnv, rClass));
 		modelValidator.register(new ItemClickValidator(processingEnv, rClass));
@@ -247,6 +252,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));
+		modelProcessor.register(new BeforeCreateProcessor());
 		modelProcessor.register(new LongClickProcessor(rClass));
 		modelProcessor.register(new TouchProcessor(rClass));
 		modelProcessor.register(new ItemClickProcessor(rClass));
@@ -268,25 +274,4 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		ModelGenerator modelGenerator = new ModelGenerator(processingEnv.getFiler());
 		modelGenerator.generate(model);
 	}
-
-	/*
-	 * This code should be moved elsewhere. It is kept here as a pastebin code :
-	 * we may want to extract class informations from annotations, which can
-	 * easily be done with the following code.
-	 */
-	// private TypeElement extractRClassElement(Element rLocationElement) {
-	// RClass rLocationAnnotation =
-	// rLocationElement.getAnnotation(RClass.class);
-	// try {
-	// rLocationAnnotation.value();
-	// } catch (MirroredTypeException mte) {
-	// DeclaredType typeMirror = (DeclaredType) mte.getTypeMirror();
-	// return (TypeElement) typeMirror.asElement();
-	// }
-	// processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-	// "Annotation processing error : could not extract MirrorType from class value",
-	// rLocationElement);
-	// throw new IllegalArgumentException();
-	// }
-
 }

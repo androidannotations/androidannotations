@@ -30,6 +30,8 @@ public class MetaActivity {
 	
 	private final List<Instruction> onCreateInstructions = new ArrayList<Instruction>();
 	
+	private final List<Instruction> beforeCreateInstructions = new ArrayList<Instruction>();
+	
 	private final List<Instruction> memberInstructions = new ArrayList<Instruction>();
 	
 	private final List<String> implementedInterfaces = new ArrayList<String>();
@@ -50,6 +52,10 @@ public class MetaActivity {
 
 	public List<Instruction> getOnCreateInstructions() {
 		return onCreateInstructions;
+	}
+	
+	public List<Instruction> getBeforeCreateInstructions() {
+		return beforeCreateInstructions;
 	}
 	
 	public List<Instruction> getMemberInstructions() {

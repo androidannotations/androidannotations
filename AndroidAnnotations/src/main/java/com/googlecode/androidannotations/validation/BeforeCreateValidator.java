@@ -25,26 +25,21 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Click;
+import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
-import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class ClickValidator extends ValidatorHelper implements ElementValidator {
+public class BeforeCreateValidator extends ValidatorHelper implements ElementValidator {
 
-	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
-	private final IRClass rClass;
+	private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
 
-	public ClickValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public BeforeCreateValidator(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
-		this.rClass = rClass;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Click.class;
+		return BeforeCreate.class;
 	}
 
 	@Override
@@ -58,12 +53,10 @@ public class ClickValidator extends ValidatorHelper implements ElementValidator 
 
 		warnNotVoidReturnType(element, executableElement);
 
-		validateRFieldName(element, valid);
-
 		validateParameters(element, valid, executableElement);
 
 		validateIsNotPrivate(element, valid);
-		
+
 		validateDoesntThrowException(element, valid);
 
 		return valid.isValid();
@@ -80,32 +73,9 @@ public class ClickValidator extends ValidatorHelper implements ElementValidator 
 		if (parameters.size() == 1) {
 			VariableElement parameter = parameters.get(0);
 			TypeMirror parameterType = parameter.asType();
-			if (!parameterType.toString().equals(ANDROID_VIEW_QUALIFIED_NAME)) {
+			if (!parameterType.toString().equals(ANDROID_BUNDLE_QUALIFIED_NAME)) {
 				valid.invalidate();
-				printAnnotationError(element, annotationName() + " should only be used on a method with no parameter or a parameter of type android.view.View, not " + parameterType);
-			}
-		}
-	}
-
-	private void validateRFieldName(Element element, IsValid valid) {
-		Click annotation = element.getAnnotation(Click.class);
-		int idValue = annotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		if (idValue == Click.DEFAULT_VALUE) {
-			String methodName = element.getSimpleName().toString();
-			int lastIndex = methodName.lastIndexOf(actionName());
-			if (lastIndex != -1) {
-				methodName = methodName.substring(0, lastIndex);
-			}
-			if (!rInnerClass.containsField(methodName)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id not found: R.id." + methodName);
-			}
-		} else {
-			if (!rInnerClass.containsIdValue(idValue)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id not found: R.id." + idValue);
+				printAnnotationError(element, annotationName() + " should only be used on a method with no parameter or a parameter of type " + ANDROID_BUNDLE_QUALIFIED_NAME + ", not " + parameterType);
 			}
 		}
 	}
