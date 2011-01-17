@@ -21,7 +21,7 @@ public class ExtraInstruction implements Instruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"        if (getIntent().getExtras().containsKey(\"%s\")) {\n" + //
+			"        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(\"%s\")) {\n" + //
 			"        	try {\n" + //
 			"        		%s = extractAndCastExtra_(\"%s\");\n" + //
 			"        	} catch (ClassCastException e) {\n" + //
