@@ -34,7 +34,6 @@ public class ActivityGenerator {
 			"    public void onCreate(android.os.Bundle savedInstanceState) {\n" + //
 			"\n" + //
 			"%s" + //
-			"\n" + //
 			"        setContentView(%s);\n" + //
 			"\n" + //
 			"%s" + //
