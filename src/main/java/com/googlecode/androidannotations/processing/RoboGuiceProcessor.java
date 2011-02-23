@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.RoboGuice;
+import com.googlecode.androidannotations.generation.RoboActivityBeforeCreateInstruction;
 import com.googlecode.androidannotations.generation.RoboActivityBodyInstruction;
 import com.googlecode.androidannotations.generation.RoboActivityOnCreateInstruction;
 import com.googlecode.androidannotations.helper.RoboGuiceConstants;
@@ -47,6 +48,10 @@ public class RoboGuiceProcessor implements ElementProcessor {
 
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(element);
 
+		List<Instruction> onBeforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
+		Instruction onBeforeCreateInstruction = new RoboActivityBeforeCreateInstruction();
+		onBeforeCreateInstructions.add(onBeforeCreateInstruction);
+		
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 		Instruction onCreateInstruction = new RoboActivityOnCreateInstruction();
 		onCreateInstructions.add(onCreateInstruction);

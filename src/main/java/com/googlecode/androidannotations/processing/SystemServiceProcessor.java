@@ -52,10 +52,10 @@ public class SystemServiceProcessor implements ElementProcessor {
 
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
+		List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
 
 		Instruction instruction = new SystemServiceInstruction(fieldName, fieldTypeQualifiedName, serviceConstant);
-		onCreateInstructions.add(instruction);
+		beforeCreateInstructions.add(instruction);
 
 	}
 
