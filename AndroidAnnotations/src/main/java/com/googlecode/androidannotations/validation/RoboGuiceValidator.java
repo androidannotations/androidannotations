@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.RoboGuice;
+import com.googlecode.androidannotations.helper.RoboGuiceConstants;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
@@ -29,7 +30,7 @@ public class RoboGuiceValidator extends ValidatorHelper implements ElementValida
 
 	private static final String GUICE_INJECTOR_CLASS = "com.google.inject.Injector";
 	private static final String ROBOGUICE_INJECTOR_PROVIDER_CLASS = "roboguice.inject.InjectorProvider";
-	private static final String ROBOGUICE_APPLICATION_CLASS = "roboguice.application.GuiceApplication";
+
 
 	public RoboGuiceValidator(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
@@ -62,10 +63,14 @@ public class RoboGuiceValidator extends ValidatorHelper implements ElementValida
 							+ ROBOGUICE_INJECTOR_PROVIDER_CLASS);
 		}
 		
-		if (elementUtils.getTypeElement(ROBOGUICE_APPLICATION_CLASS) == null) {
-			valid.invalidate();
-			printAnnotationError(element,
-					"Could not find the GuiceApplication class in the classpath, are you using RoboGuice 1.0?");
+		if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS) == null) {
+			
+			if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_1_APPLICATION_CLASS) == null) {
+			
+				valid.invalidate();
+				printAnnotationError(element,
+						"Could find neither the GuiceApplication class nor the RoboApplication class in the classpath, are you using RoboGuice 1.0 or 1.1 ?");
+			}
 		}
 
 		try {
