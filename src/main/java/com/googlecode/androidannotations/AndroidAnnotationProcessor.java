@@ -249,7 +249,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(new EnhanceProcessor(processingEnv, rClass));
-		modelProcessor.register(new RoboGuiceProcessor());
+		modelProcessor.register(new RoboGuiceProcessor(processingEnv.getElementUtils()));
 		modelProcessor.register(new ViewProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));
 		modelProcessor.register(new BeforeCreateProcessor());

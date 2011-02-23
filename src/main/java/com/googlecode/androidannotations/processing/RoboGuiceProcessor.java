@@ -19,15 +19,23 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.generation.RoboActivityBodyInstruction;
 import com.googlecode.androidannotations.generation.RoboActivityOnCreateInstruction;
+import com.googlecode.androidannotations.helper.RoboGuiceConstants;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
 
 public class RoboGuiceProcessor implements ElementProcessor {
+
+	private final Elements elementUtils;
+
+	public RoboGuiceProcessor(Elements elementUtils) {
+		this.elementUtils = elementUtils;
+	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -38,15 +46,18 @@ public class RoboGuiceProcessor implements ElementProcessor {
 	public void process(Element element, MetaModel metaModel) {
 
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(element);
-		
+
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 		Instruction onCreateInstruction = new RoboActivityOnCreateInstruction();
 		onCreateInstructions.add(onCreateInstruction);
-		
+
+		boolean roboGuice10 = elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS) != null;
+
 		List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
-		Instruction memberInstruction = new RoboActivityBodyInstruction();
+
+		Instruction memberInstruction = new RoboActivityBodyInstruction(roboGuice10);
 		memberInstructions.add(memberInstruction);
-		
+
 		List<String> implementedInterfaces = metaActivity.getImplementedInterfaces();
 		implementedInterfaces.add("roboguice.inject.InjectorProvider");
 
