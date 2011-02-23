@@ -8,6 +8,6 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/androidannotations/target/androidannotations-1.0-RC5-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/androidannotations/target/androidannotations-1.0-RC5-SNAPSHOT.jar" sourcepath="/androidannotations/target/androidannotations-1.0-RC5-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

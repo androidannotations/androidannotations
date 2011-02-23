@@ -52,10 +52,10 @@ public class ExtraProcessor implements ElementProcessor {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String key = annotation.value();
 
-		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
+		List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
 
 		Instruction instruction = new ExtraInstruction(className, fieldName, key);
-		onCreateInstructions.add(instruction);
+		beforeCreateInstructions.add(instruction);
 
 	}
 

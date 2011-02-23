@@ -17,10 +17,13 @@ package com.googlecode.androidannotations.generation;
 
 import com.googlecode.androidannotations.model.Instruction;
 
-public class RoboActivityOnCreateInstruction implements Instruction {
+public class RoboActivityBeforeCreateInstruction implements Instruction {
 
 	private static final String CODE = "" + //
-			"        scope_.injectViews();\n" + //
+			"        final com.google.inject.Injector injector_ = getInjector();\n" + //
+			"        scope_ = injector_.getInstance(roboguice.inject.ContextScope.class);\n" + //
+			"        scope_.enter(this);\n" + //
+			"        injector_.injectMembers(this);\n" + //
 			"\n";
 
 	@Override

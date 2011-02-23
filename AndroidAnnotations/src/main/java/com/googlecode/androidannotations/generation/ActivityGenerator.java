@@ -34,7 +34,7 @@ public class ActivityGenerator {
 			"    public void onCreate(android.os.Bundle savedInstanceState) {\n" + //
 			"\n" + //
 			"%s" + //
-			"       %s\n" + //
+			"        %s\n" + //
 			"\n" + //
 			"%s" + //
 			"        super.onCreate(savedInstanceState);\n" + //

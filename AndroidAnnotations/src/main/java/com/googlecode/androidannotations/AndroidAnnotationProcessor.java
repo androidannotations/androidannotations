@@ -221,7 +221,6 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
-		modelValidator.register(new BeforeCreateValidator(processingEnv));
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
 		modelValidator.register(new TouchValidator(processingEnv, rClass));
 		modelValidator.register(new ItemClickValidator(processingEnv, rClass));
@@ -236,6 +235,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelValidator.register(new TransactionalValidator(processingEnv));
 		modelValidator.register(new ExtraValidator(processingEnv));
 		modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
+		modelValidator.register(new BeforeCreateValidator(processingEnv));
 
 		return modelValidator;
 	}
@@ -252,7 +252,6 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelProcessor.register(new RoboGuiceProcessor(processingEnv.getElementUtils()));
 		modelProcessor.register(new ViewProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));
-		modelProcessor.register(new BeforeCreateProcessor());
 		modelProcessor.register(new LongClickProcessor(rClass));
 		modelProcessor.register(new TouchProcessor(rClass));
 		modelProcessor.register(new ItemClickProcessor(rClass));
@@ -267,6 +266,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor());
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
+		modelProcessor.register(new BeforeCreateProcessor());
 		return modelProcessor;
 	}
 

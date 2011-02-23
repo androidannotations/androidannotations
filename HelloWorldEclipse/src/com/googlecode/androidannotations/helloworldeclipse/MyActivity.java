@@ -10,8 +10,10 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -50,6 +52,16 @@ public class MyActivity extends Activity {
 
 	@SystemService
 	NotificationManager notificationManager;
+	
+	@SystemService
+	WindowManager windowManager;
+	
+	@BeforeCreate
+	void doStuffWithDisplay() {
+		// windowManager should not be null
+		Display display = windowManager.getDefaultDisplay();
+		
+	}
 	
 	@BeforeCreate
 	void requestIndeterminateProgress() {
