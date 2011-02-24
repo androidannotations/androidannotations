@@ -54,8 +54,6 @@ public class EnhanceValidator extends ValidatorHelper implements ElementValidato
 
 		validateRFieldName(element, valid);
 
-		validateIsNotAbstract(element, valid);
-
 		validateIsNotFinal(element, valid);
 
 		return valid.isValid();
