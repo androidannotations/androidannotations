@@ -15,13 +15,16 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
-
-public class BeforeCreateInstruction implements Instruction {
+public class BeforeCreateInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"        %s(%s);\n" + //
+			"        %s();\n" + //
+			"\n";
+
+	private static final String FORMAT_WITH_BUNDLE = //
+	"" + //
+			"        %s(savedInstanceState);\n" + //
 			"\n";
 
 	private final String methodName;
@@ -35,8 +38,8 @@ public class BeforeCreateInstruction implements Instruction {
 
 	@Override
 	public String generate() {
-		String viewParameterValue = bundleParameter ? "savedInstanceState" : "";
-		return String.format(FORMAT, methodName, viewParameterValue);
+		String format = bundleParameter ? FORMAT_WITH_BUNDLE : FORMAT;
+		return String.format(format, methodName);
 	}
 
 }

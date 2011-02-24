@@ -15,9 +15,8 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class Robo10ActivityOnCreateInstruction implements Instruction {
+public class Robo10ActivityOnCreateInstruction extends AbstractInstruction {
 
 	private static final String CODE = "" + //
 			"        scope_.injectViews();\n" + //

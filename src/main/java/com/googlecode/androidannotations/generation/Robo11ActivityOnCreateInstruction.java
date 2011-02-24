@@ -15,14 +15,17 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class Robo11ActivityOnCreateInstruction implements Instruction {
+public class Robo11ActivityOnCreateInstruction extends AbstractInstruction {
 
 	private static final String CODE = "" + //
 			"        scope_.injectViews();\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnContentViewAvailableEvent());\n" + //
+			"        eventManager_.fire(new OnContentViewAvailableEvent());\n" + //
 			"\n";
+
+	public Robo11ActivityOnCreateInstruction() {
+		addImports("roboguice.activity.event.OnContentViewAvailableEvent");
+	}
 
 	@Override
 	public String generate() {

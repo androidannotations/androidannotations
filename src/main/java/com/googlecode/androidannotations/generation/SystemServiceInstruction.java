@@ -15,9 +15,8 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class SystemServiceInstruction implements Instruction {
+public class SystemServiceInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = "        %s = (%s) getSystemService(%s);\n\n";
 

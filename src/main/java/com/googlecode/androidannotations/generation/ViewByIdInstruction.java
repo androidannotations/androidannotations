@@ -15,9 +15,8 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class ViewInstruction implements Instruction {
+public class ViewByIdInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = "        %s = (%s) findViewById(%s);\n\n";
 
@@ -27,7 +26,7 @@ public class ViewInstruction implements Instruction {
 
 	private final String viewQualifiedId;
 
-	public ViewInstruction(String fieldName, String typeQualifiedName, String viewQualifiedId) {
+	public ViewByIdInstruction(String fieldName, String typeQualifiedName, String viewQualifiedId) {
 		this.fieldName = fieldName;
 		this.typeQualifiedName = typeQualifiedName;
 		this.viewQualifiedId = viewQualifiedId;

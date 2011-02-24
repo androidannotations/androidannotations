@@ -15,23 +15,21 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
-
 /**
  * @author Pierre-Yves Ricau
  */
-public class ItemSelectedInstruction implements Instruction {
+public class ItemSelectedInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {\n" + //
+			"        ((AdapterView<?>) findViewById(%s)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {\n" + //
 			"			@Override\n" + //
-			"			public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
+			"			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {\n" + //
 			"				%s(true, %s);\n" + //
 			"			}\n" + //
 			"\n" + //
 			"			@Override\n" + //
-			"			public void onNothingSelected(android.widget.AdapterView<?> parent) {\n" + //
+			"			public void onNothingSelected(AdapterView<?> parent) {\n" + //
 			"				%s(false, null);\n" + //
 			"			}\n" + //
 			"		});\n" + //
@@ -47,6 +45,7 @@ public class ItemSelectedInstruction implements Instruction {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
 		this.parameterQualifiedName = parameterQualifiedName;
+		addImports("android.widget.AdapterView", "android.view.View");
 	}
 
 	public ItemSelectedInstruction(String methodName, String clickQualifiedId) {

@@ -15,14 +15,13 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class ClickInstruction implements Instruction {
+public class ClickInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"        (findViewById(%s)).setOnClickListener(new android.view.View.OnClickListener() {\n" + //
-			"			public void onClick(android.view.View v) {\n" + //
+			"        findViewById(%s).setOnClickListener(new View.OnClickListener() {\n" + //
+			"			public void onClick(View v) {\n" + //
 			"				%s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
@@ -38,6 +37,7 @@ public class ClickInstruction implements Instruction {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
 		this.viewParameter = viewParameter;
+		addImports("android.view.View");
 	}
 
 	@Override

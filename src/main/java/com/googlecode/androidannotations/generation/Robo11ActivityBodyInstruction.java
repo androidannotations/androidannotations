@@ -17,16 +17,13 @@ package com.googlecode.androidannotations.generation;
 
 import java.util.List;
 
-import com.googlecode.androidannotations.helper.RoboGuiceConstants;
-import com.googlecode.androidannotations.model.Instruction;
-
-public class Robo11ActivityBodyInstruction implements Instruction {
+public class Robo11ActivityBodyInstruction extends AbstractInstruction {
 
 	private static final String LISTENER = "    @java.lang.SuppressWarnings(\"unused\") @com.google.inject.Inject private %s listener%d_;\n";
 
 	private static final String CODE = "" + //
-			"    private roboguice.inject.ContextScope scope_;\n" + //
-			"    private roboguice.event.EventManager eventManager_;\n" + //
+			"    private ContextScope scope_;\n" + //
+			"    private EventManager eventManager_;\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    public Object onRetainNonConfigurationInstance() {\n" + //
@@ -37,70 +34,70 @@ public class Robo11ActivityBodyInstruction implements Instruction {
 			"    protected void onRestart() {\n" + //
 			"        scope_.enter(this);\n" + //
 			"        super.onRestart();\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnRestartEvent());\n" + //
+			"        eventManager_.fire(new OnRestartEvent());\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onStart() {\n" + //
 			"        scope_.enter(this);\n" + //
 			"        super.onStart();\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnStartEvent());\n" + //
+			"        eventManager_.fire(new OnStartEvent());\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onResume() {\n" + //
 			"        scope_.enter(this);\n" + //
 			"        super.onResume();\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnResumeEvent());\n" + //
+			"        eventManager_.fire(new OnResumeEvent());\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onPause() {\n" + //
 			"        super.onPause();\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnPauseEvent());\n" + //
+			"        eventManager_.fire(new OnPauseEvent());\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
-			"    protected void onNewIntent(android.content.Intent intent) {\n" + //
+			"    protected void onNewIntent(Intent intent) {\n" + //
 			"        super.onNewIntent(intent);\n" + //
 			"        scope_.enter(this);\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnNewIntentEvent());\n" + //
+			"        eventManager_.fire(new OnNewIntentEvent());\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onStop() {\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnStopEvent());\n" + //
+			"        eventManager_.fire(new OnStopEvent());\n" + //
 			"        super.onStop();\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onDestroy() {\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnDestroyEvent());\n" + //
+			"        eventManager_.fire(new OnDestroyEvent());\n" + //
 			"        eventManager_.clear(this);\n" + //
 			"        scope_.exit(this);\n" + //
 			"        super.onDestroy();\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
-			"    public void onConfigurationChanged(android.content.res.Configuration newConfig) {\n" + //
+			"    public void onConfigurationChanged(Configuration newConfig) {\n" + //
 			"        super.onConfigurationChanged(newConfig);\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnConfigurationChangedEvent(newConfig));\n" + //
+			"        eventManager_.fire(new OnConfigurationChangedEvent(newConfig));\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    public void onContentChanged() {\n" + //
 			"        super.onContentChanged();\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnContentChangedEvent());\n" + //
+			"        eventManager_.fire(new OnContentChangedEvent());\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
-			"    protected void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {\n" + //
+			"    protected void onActivityResult(int requestCode, int resultCode, Intent data) {\n" + //
 			"        super.onActivityResult(requestCode, resultCode, data);\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnActivityResultEvent(requestCode, resultCode, data));\n" + //
+			"        eventManager_.fire(new OnActivityResultEvent(requestCode, resultCode, data));\n" + //
 			"    }\n" + //
 			"\n" + //
-			"    public com.google.inject.Injector getInjector() {\n" + //
-			"        return ((" + RoboGuiceConstants.ROBOGUICE_1_1_APPLICATION_CLASS + ") getApplication()).getInjector();\n" + //
+			"    public Injector getInjector() {\n" + //
+			"        return ((InjectorProvider) getApplication()).getInjector();\n" + //
 			"    }\n" + //
 			"\n";
 
@@ -108,6 +105,23 @@ public class Robo11ActivityBodyInstruction implements Instruction {
 
 	public Robo11ActivityBodyInstruction(List<String> listenerClasses) {
 		this.listenerClasses = listenerClasses;
+		addImports("roboguice.inject.ContextScope", //
+				"android.content.Intent", //
+				"com.google.inject.Injector", //
+				"roboguice.inject.InjectorProvider", //
+				"roboguice.event.EventManager", //
+				"roboguice.activity.event.OnRestartEvent", //
+				"roboguice.activity.event.OnStartEvent", //
+				"roboguice.activity.event.OnResumeEvent", //
+				"roboguice.activity.event.OnPauseEvent", //
+				"roboguice.activity.event.OnNewIntentEvent", //
+				"roboguice.activity.event.OnStopEvent", //
+				"roboguice.activity.event.OnDestroyEvent", //
+				"android.content.res.Configuration", //
+				"roboguice.activity.event.OnConfigurationChangedEvent", //
+				"roboguice.activity.event.OnContentChangedEvent", //
+				"roboguice.activity.event.OnActivityResultEvent" //
+				);
 	}
 
 	@Override

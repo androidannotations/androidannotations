@@ -15,17 +15,16 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
 /**
  * @author Pierre-Yves Ricau
  */
-public class TouchInstruction implements Instruction {
+public class TouchInstruction extends AbstractInstruction {
 
 	private static final String FORMAT_RETURN_TRUE = //
 	"" + //
-			"        (findViewById(%s)).setOnTouchListener(new android.view.View.OnTouchListener() {\n" + //
-			"			public boolean onTouch(android.view.View view, android.view.MotionEvent event) {\n" + //
+			"		findViewById(%s).setOnTouchListener(new View.OnTouchListener() {\n" + //
+			"			public boolean onTouch(View view, MotionEvent event) {\n" + //
 			"				%s(%s);\n" + //
 			"				return true;\n" + //
 			"			}\n" + //
@@ -34,8 +33,8 @@ public class TouchInstruction implements Instruction {
 
 	private static final String FORMAT_RETURN_RESULT = //
 	"" + //
-			"        (findViewById(%s)).setOnTouchListener(new android.view.View.OnTouchListener() {\n" + //
-			"			public boolean onTouch(android.view.View v, android.view.MotionEvent event) {\n" + //
+			"		findViewById(%s).setOnTouchListener(new View.OnTouchListener() {\n" + //
+			"			public boolean onTouch(View v, MotionEvent event) {\n" + //
 			"				return %s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
@@ -54,6 +53,7 @@ public class TouchInstruction implements Instruction {
 		this.clickQualifiedId = clickQualifiedId;
 		this.viewParameter = viewParameter;
 		this.returnMethodResult = returnMethodResult;
+		addImports("android.view.View", "android.view.MotionEvent");
 	}
 
 	@Override

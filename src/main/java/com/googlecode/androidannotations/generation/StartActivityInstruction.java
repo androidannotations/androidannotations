@@ -15,16 +15,15 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 
-public class StartActivityInstruction implements Instruction {
+public class StartActivityInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
 			"	@Override\n" + //
 			"	public %s {\n" + //
-			"		android.content.ComponentName component = intent.getComponent();\n" + //
+			"		ComponentName component = intent.getComponent();\n" + //
 			"		if (component != null) {\n" + //
 			"\n" + //
 			"			String className = component.getClassName();\n" + //
@@ -38,7 +37,7 @@ public class StartActivityInstruction implements Instruction {
 			"			}\n" + //
 			"\n" + //
 			"			if (generatedClassExists) {\n" + //
-			"				android.content.ComponentName newComponent = new android.content.ComponentName(component.getPackageName(), generatedClassName);\n" + //
+			"				ComponentName newComponent = new ComponentName(component.getPackageName(), generatedClassName);\n" + //
 			"				intent.setComponent(newComponent);\n" + //
 			"			}\n" + //
 			"		}\n" + //
@@ -46,15 +45,19 @@ public class StartActivityInstruction implements Instruction {
 			"	}\n" + //
 			"\n";
 
+	public StartActivityInstruction() {
+		addImports("android.content.ComponentName", "android.content.Intent", "android.app.Activity");
+	}
+
 	@Override
 	public String generate() {
 
 		StringBuilder startActivityMethods = new StringBuilder();
 
-		startActivityMethods.append(String.format(FORMAT, "void startActivity(android.content.Intent intent)", "super.startActivity(intent);"));
-		startActivityMethods.append(String.format(FORMAT, "void startActivityForResult(android.content.Intent intent, int requestCode)", "super.startActivityForResult(intent, requestCode);"));
-		startActivityMethods.append(String.format(FORMAT, "void startActivityFromChild(android.app.Activity child, android.content.Intent intent, int requestCode)", "super.startActivityFromChild(child, intent, requestCode);"));
-		startActivityMethods.append(String.format(FORMAT, "boolean startActivityIfNeeded(android.content.Intent intent, int requestCode)", "return super.startActivityIfNeeded(intent, requestCode);"));
+		startActivityMethods.append(String.format(FORMAT, "void startActivity(Intent intent)", "super.startActivity(intent);"));
+		startActivityMethods.append(String.format(FORMAT, "void startActivityForResult(Intent intent, int requestCode)", "super.startActivityForResult(intent, requestCode);"));
+		startActivityMethods.append(String.format(FORMAT, "void startActivityFromChild(Activity child, Intent intent, int requestCode)", "super.startActivityFromChild(child, intent, requestCode);"));
+		startActivityMethods.append(String.format(FORMAT, "boolean startActivityIfNeeded(Intent intent, int requestCode)", "return super.startActivityIfNeeded(intent, requestCode);"));
 
 		return startActivityMethods.toString();
 	}

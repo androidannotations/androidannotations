@@ -16,11 +16,29 @@
 package com.googlecode.androidannotations.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MetaActivity {
 
 	public static final String CLASS_SUFFIX = "_";
+	
+	private static Set<String> getImports(List<Instruction> instructions) {
+		Set<String> imports = new HashSet<String>();
+		for(Instruction instruction : instructions) {
+			imports.addAll(instruction.getImports());
+		}
+		return imports;
+	}
+	
+	private static Set<String> getStaticImports(List<Instruction> instructions) {
+		Set<String> imports = new HashSet<String>();
+		for(Instruction instruction : instructions) {
+			imports.addAll(instruction.getStaticImports());
+		}
+		return imports;
+	}
 
 	private final String packageName;
 
@@ -40,6 +58,22 @@ public class MetaActivity {
 		this.packageName = packageName;
 		this.superClassName = superClassName;
 		this.layoutQualifiedName = layoutQualifiedName;
+	}
+	
+	public Set<String> getImports() {
+		Set<String> imports = new HashSet<String>();
+		imports.addAll(getImports(onCreateInstructions));
+		imports.addAll(getImports(beforeCreateInstructions));
+		imports.addAll(getImports(memberInstructions));
+		return imports;
+	}
+	
+	public Set<String> getStaticImports() {
+		Set<String> imports = new HashSet<String>();
+		imports.addAll(getStaticImports(onCreateInstructions));
+		imports.addAll(getStaticImports(beforeCreateInstructions));
+		imports.addAll(getStaticImports(memberInstructions));
+		return imports;
 	}
 
 	public String getClassQualifiedName() {

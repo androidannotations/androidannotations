@@ -15,9 +15,8 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class ExtraInstruction implements Instruction {
+public class ExtraInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
@@ -25,7 +24,7 @@ public class ExtraInstruction implements Instruction {
 			"        	try {\n" + //
 			"        		%s = extractAndCastExtra_(\"%s\");\n" + //
 			"        	} catch (ClassCastException e) {\n" + //
-			"        		android.util.Log.e(\"%s\", \"Could not cast extra to expected type, the field is left to its default value\", e);\n" + //
+			"        		Log.e(\"%s\", \"Could not cast extra to expected type, the field is left to its default value\", e);\n" + //
 			"        	}\n" + //
 			"        }\n" + //
 			"\n";
@@ -40,6 +39,7 @@ public class ExtraInstruction implements Instruction {
 		this.className = className;
 		this.fieldName = fieldName;
 		this.key = key;
+		addImports("android.util.Log");
 	}
 
 	@Override

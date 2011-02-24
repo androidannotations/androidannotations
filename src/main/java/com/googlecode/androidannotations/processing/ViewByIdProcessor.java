@@ -22,7 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.generation.ViewInstruction;
+import com.googlecode.androidannotations.generation.ViewByIdInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
@@ -30,11 +30,11 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class ViewProcessor implements ElementProcessor {
+public class ViewByIdProcessor implements ElementProcessor {
 
 	private final IRClass rClass;
 
-	public ViewProcessor(IRClass rClass) {
+	public ViewByIdProcessor(IRClass rClass) {
 		this.rClass = rClass;
 	}
 
@@ -68,7 +68,7 @@ public class ViewProcessor implements ElementProcessor {
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
 		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 
-		Instruction instruction = new ViewInstruction(name, typeQualifiedName, viewQualifiedId);
+		Instruction instruction = new ViewByIdInstruction(name, typeQualifiedName, viewQualifiedId);
 		onCreateInstructions.add(instruction);
 
 	}

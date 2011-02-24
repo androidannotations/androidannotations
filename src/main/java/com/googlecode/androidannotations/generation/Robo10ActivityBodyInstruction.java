@@ -15,14 +15,10 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.helper.RoboGuiceConstants;
-import com.googlecode.androidannotations.model.Instruction;
-
-public class Robo10ActivityBodyInstruction implements Instruction {
-
+public class Robo10ActivityBodyInstruction extends AbstractInstruction {
 
 	private static final String CODE = "" + //
-			"    protected roboguice.inject.ContextScope scope_;\n" + //
+			"    protected ContextScope scope_;\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    public Object onRetainNonConfigurationInstance() {\n" + //
@@ -54,15 +50,22 @@ public class Robo10ActivityBodyInstruction implements Instruction {
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
-			"    protected void onNewIntent(android.content.Intent intent ) {\n" + //
+			"    protected void onNewIntent(Intent intent ) {\n" + //
 			"        super.onNewIntent(intent);\n" + //
 			"        scope_.enter(this);\n" + //
 			"    }\n" + //
 			"\n" + //
-			"    public com.google.inject.Injector getInjector() {\n" + //
-			"        return (("+RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS+") getApplication()).getInjector();\n" + //
+			"    public Injector getInjector() {\n" + //
+			"        return ((InjectorProvider) getApplication()).getInjector();\n" + //
 			"    }\n" + //
 			"\n";
+
+	public Robo10ActivityBodyInstruction() {
+		addImports("roboguice.inject.ContextScope", //
+				"android.content.Intent", //
+				"com.google.inject.Injector", //
+				"roboguice.inject.InjectorProvider");
+	}
 
 	@Override
 	public String generate() {
