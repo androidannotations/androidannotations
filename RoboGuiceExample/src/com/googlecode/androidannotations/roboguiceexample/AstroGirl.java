@@ -10,7 +10,7 @@ import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @Enhance(R.layout.main)
-@RoboGuice
+@RoboGuice(MyListener.class)
 public class AstroGirl extends Activity {
 	
 	@ViewById
