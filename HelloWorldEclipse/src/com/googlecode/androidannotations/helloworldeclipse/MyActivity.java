@@ -10,7 +10,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -59,7 +58,7 @@ public class MyActivity extends Activity {
 	@BeforeCreate
 	void doStuffWithDisplay() {
 		// windowManager should not be null
-		Display display = windowManager.getDefaultDisplay();
+		windowManager.getDefaultDisplay();
 		
 	}
 	
