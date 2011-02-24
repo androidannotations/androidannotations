@@ -59,7 +59,6 @@ public class MyActivity extends Activity {
 	void doStuffWithDisplay() {
 		// windowManager should not be null
 		windowManager.getDefaultDisplay();
-		
 	}
 	
 	@BeforeCreate
