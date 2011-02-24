@@ -15,9 +15,8 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class ExtractAndCastExtraInstruction implements Instruction {
+public class ExtractAndCastExtraInstruction extends AbstractInstruction {
 
 	private static final String CODE = //
 	"" + //

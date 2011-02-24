@@ -44,7 +44,7 @@ public class ModelGenerator {
 			} catch (FilerException e) {
 				// TODO Is this a good idea ? This exception seems to happen
 				// when there is a compilation error not linked to the
-				// annotations but rather Java compilation issue.
+				// annotations but rather a Java compilation issue.
 				return;
 			}
 			Writer writer = sourceFile.openWriter();

@@ -17,9 +17,7 @@ package com.googlecode.androidannotations.generation;
 
 import java.util.List;
 
-import com.googlecode.androidannotations.model.Instruction;
-
-public class BackgroundInstruction implements Instruction {
+public class BackgroundInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
@@ -30,7 +28,7 @@ public class BackgroundInstruction implements Instruction {
 			"                try {\n" + //
 			"                    %s.super.%s(%s);\n" + //
 			"                } catch (RuntimeException e) {\n" + //
-			"                    android.util.Log.e(\"%s\", \"A runtime exception was thrown while executing code in a background thread\", e);\n" + //
+			"                    Log.e(\"%s\", \"A runtime exception was thrown while executing code in a background thread\", e);\n" + //
 			"                }\n" + //
 			"            }\n" + //
 			"        }.start();\n" + //
@@ -50,6 +48,8 @@ public class BackgroundInstruction implements Instruction {
 		this.methodName = methodName;
 		this.methodArguments = methodArguments;
 		this.methodParameters = methodParameters;
+		
+		addImports("android.util.Log");
 	}
 
 	@Override

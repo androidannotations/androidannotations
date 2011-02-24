@@ -17,9 +17,7 @@ package com.googlecode.androidannotations.generation;
 
 import java.util.List;
 
-import com.googlecode.androidannotations.model.Instruction;
-
-public class UiThreadInstruction implements Instruction {
+public class UiThreadInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
@@ -30,7 +28,7 @@ public class UiThreadInstruction implements Instruction {
 			"                try {\n" + //
 			"                    %s.super.%s(%s);\n" + //
 			"                } catch (RuntimeException e) {\n" + //
-			"                    android.util.Log.e(\"%s\", \"A runtime exception was thrown while executing code in the ui thread\", e);\n" + //
+			"                    Log.e(\"%s\", \"A runtime exception was thrown while executing code in the ui thread\", e);\n" + //
 			"                }\n" + //
 			"            }\n" + //
 			"        });\n" + //
@@ -50,6 +48,7 @@ public class UiThreadInstruction implements Instruction {
 		this.methodName = methodName;
 		this.methodArguments = methodArguments;
 		this.methodParameters = methodParameters;
+		addImports("android.util.Log");
 	}
 
 	@Override

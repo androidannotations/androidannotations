@@ -15,14 +15,17 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class HandlerInstruction implements Instruction {
+public class HandlerInstruction extends AbstractInstruction {
 
 	private static final String CODE = //
 	"" + //
-			"	private android.os.Handler handler_ = new android.os.Handler();\n" + //
+			"	private Handler handler_ = new Handler();\n" + //
 			"\n";
+	
+	public HandlerInstruction() {
+		addImports("android.os.Handler");
+	}
 
 	@Override
 	public String generate() {

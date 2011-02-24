@@ -15,19 +15,18 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
 /**
  * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
  */
-public class ItemLongClickInstruction implements Instruction {
+public class ItemLongClickInstruction extends AbstractInstruction {
 
 	private static final String FORMAT_RETURN_TRUE = //
 	"" + //
-			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {\n" + //
+			"        ((AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {\n" + //
 			"			@Override\n" + //
-			"			public boolean onItemLongClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
+			"			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {\n" + //
 			"				%s(%s);\n" + //
 			"				return true;\n" + //
 			"			}\n" + //
@@ -36,9 +35,9 @@ public class ItemLongClickInstruction implements Instruction {
 
 	private static final String FORMAT_RETURN_RESULT = //
 	"" + //
-			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {\n" + //
+			"        ((AdapterView<?>) findViewById(%s)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {\n" + //
 			"			@Override\n" + //
-			"			public boolean onItemLongClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
+			"			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {\n" + //
 			"				return %s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
@@ -57,6 +56,7 @@ public class ItemLongClickInstruction implements Instruction {
 		this.clickQualifiedId = clickQualifiedId;
 		this.returnMethodResult = returnMethodResult;
 		this.parameterQualifiedName = parameterQualifiedName;
+		addImports("android.widget.AdapterView", "android.view.View");
 	}
 
 	public ItemLongClickInstruction(String methodName, String clickQualifiedId, boolean returnMethodResult) {

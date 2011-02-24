@@ -15,9 +15,8 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class ValueInstruction implements Instruction {
+public class ValueInstruction extends AbstractInstruction {
 
 	private static final String VALUE_FORMAT = "        %s = getResources().%s(%s);\n";
 

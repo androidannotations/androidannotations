@@ -15,18 +15,24 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
-public class Robo11ActivityBeforeCreateInstruction implements Instruction {
+public class Robo11ActivityBeforeCreateInstruction extends AbstractInstruction {
 
 	private static final String CODE = "" + //
-			"        final com.google.inject.Injector injector_ = getInjector();\n" + //
-			"        scope_ = injector_.getInstance(roboguice.inject.ContextScope.class);\n" + //
+			"        Injector injector_ = getInjector();\n" + //
+			"        scope_ = injector_.getInstance(ContextScope.class);\n" + //
 			"        scope_.enter(this);\n" + //
 			"        injector_.injectMembers(this);\n" + //
-			"        eventManager_ = injector_.getInstance(roboguice.event.EventManager.class);\n" + //
-			"        eventManager_.fire(new roboguice.activity.event.OnCreateEvent(savedInstanceState));\n" + //
+			"        eventManager_ = injector_.getInstance(EventManager.class);\n" + //
+			"        eventManager_.fire(new OnCreateEvent(savedInstanceState));\n" + //
 			"\n";
+	
+	public Robo11ActivityBeforeCreateInstruction() {
+		addImports("com.google.inject.Injector", //
+				"roboguice.inject.ContextScope", //
+				"roboguice.event.EventManager", //
+				"roboguice.activity.event.OnCreateEvent");
+	}
 
 	@Override
 	public String generate() {

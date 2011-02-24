@@ -15,18 +15,17 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
 /**
  * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
  */
-public class LongClickInstruction implements Instruction {
+public class LongClickInstruction extends AbstractInstruction {
 
 	private static final String FORMAT_RETURN_TRUE = //
 	"" + //
-			"        (findViewById(%s)).setOnLongClickListener(new android.view.View.OnLongClickListener() {\n" + //
-			"			public boolean onLongClick(android.view.View v) {\n" + //
+			"        findViewById(%s).setOnLongClickListener(new View.OnLongClickListener() {\n" + //
+			"			public boolean onLongClick(View v) {\n" + //
 			"				%s(%s);\n" + //
 			"				return true;\n" + //
 			"			}\n" + //
@@ -35,8 +34,8 @@ public class LongClickInstruction implements Instruction {
 
 	private static final String FORMAT_RETURN_RESULT = //
 	"" + //
-			"        (findViewById(%s)).setOnLongClickListener(new android.view.View.OnLongClickListener() {\n" + //
-			"			public boolean onLongClick(android.view.View v) {\n" + //
+			"        findViewById(%s).setOnLongClickListener(new View.OnLongClickListener() {\n" + //
+			"			public boolean onLongClick(View v) {\n" + //
 			"				return %s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
@@ -55,6 +54,7 @@ public class LongClickInstruction implements Instruction {
 		this.clickQualifiedId = clickQualifiedId;
 		this.viewParameter = viewParameter;
 		this.returnMethodResult = returnMethodResult;
+		addImports("android.view.View");
 	}
 
 	@Override

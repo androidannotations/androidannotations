@@ -82,7 +82,7 @@ import com.googlecode.androidannotations.processing.TouchProcessor;
 import com.googlecode.androidannotations.processing.TransactionalProcessor;
 import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
-import com.googlecode.androidannotations.processing.ViewProcessor;
+import com.googlecode.androidannotations.processing.ViewByIdProcessor;
 import com.googlecode.androidannotations.processor.ExtendedAbstractProcessor;
 import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
@@ -104,7 +104,7 @@ import com.googlecode.androidannotations.validation.RunnableValidator;
 import com.googlecode.androidannotations.validation.SystemServiceValidator;
 import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
-import com.googlecode.androidannotations.validation.ViewValidator;
+import com.googlecode.androidannotations.validation.ViewByIdValidator;
 
 @SupportedAnnotationClasses({ Enhance.class, //
 		BeforeCreate.class, //
@@ -219,7 +219,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		ModelValidator modelValidator = new ModelValidator();
 		modelValidator.register(new EnhanceValidator(processingEnv, rClass));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
-		modelValidator.register(new ViewValidator(processingEnv, rClass));
+		modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
 		modelValidator.register(new TouchValidator(processingEnv, rClass));
@@ -250,7 +250,7 @@ public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(new EnhanceProcessor(processingEnv, rClass));
 		modelProcessor.register(new RoboGuiceProcessor(processingEnv.getElementUtils()));
-		modelProcessor.register(new ViewProcessor(rClass));
+		modelProcessor.register(new ViewByIdProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));
 		modelProcessor.register(new LongClickProcessor(rClass));
 		modelProcessor.register(new TouchProcessor(rClass));

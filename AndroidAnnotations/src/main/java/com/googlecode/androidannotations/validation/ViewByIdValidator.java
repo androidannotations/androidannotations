@@ -29,13 +29,13 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class ViewValidator extends ValidatorHelper implements ElementValidator {
+public class ViewByIdValidator extends ValidatorHelper implements ElementValidator {
 
 	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
 	private final IRClass rClass;
 	private final TypeMirror viewTypeMirror;
 
-	public ViewValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public ViewByIdValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 		viewTypeMirror = typeElementFromQualifiedName(ANDROID_VIEW_QUALIFIED_NAME).asType();

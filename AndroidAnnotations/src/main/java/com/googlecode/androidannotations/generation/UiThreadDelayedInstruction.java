@@ -17,24 +17,22 @@ package com.googlecode.androidannotations.generation;
 
 import java.util.List;
 
-import com.googlecode.androidannotations.model.Instruction;
-
-public class UiThreadDelayedInstruction implements Instruction {
+public class UiThreadDelayedInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"    @Override\n" + //
-			"    public void %s(%s) {\n" + //
-			"        handler_.postDelayed(new Runnable() {\n" + //
-			"            public void run() {\n" + //
-			"                try {\n" + //
-			"                    %s.super.%s(%s);\n" + //
-			"                } catch (RuntimeException e) {\n" + //
-			"                    android.util.Log.e(\"%s\", \"A runtime exception was thrown while executing code in the ui thread\", e);\n" + //
-			"                }\n" + //
-			"            }\n" + //
-			"        }, %d);\n" + //
-			"    }\n" + //
+			"	@Override\n" + //
+			"	public void %s(%s) {\n" + //
+			"		handler_.postDelayed(new Runnable() {\n" + //
+			"			public void run() {\n" + //
+			"				try {\n" + //
+			"					%s.super.%s(%s);\n" + //
+			"				} catch (RuntimeException e) {\n" + //
+			"					Log.e(\"%s\", \"A runtime exception was thrown while executing code in the ui thread\", e);\n" + //
+			"				}\n" + //
+			"			}\n" + //
+			"		}, %d);\n" + //
+			"	}\n" + //
 			"\n";
 
 	private final String methodName;
@@ -53,6 +51,7 @@ public class UiThreadDelayedInstruction implements Instruction {
 		this.methodArguments = methodArguments;
 		this.methodParameters = methodParameters;
 		this.delay = delay;
+		addImports("android.util.Log");
 	}
 
 

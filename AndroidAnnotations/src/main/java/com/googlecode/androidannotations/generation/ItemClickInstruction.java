@@ -15,19 +15,18 @@
  */
 package com.googlecode.androidannotations.generation;
 
-import com.googlecode.androidannotations.model.Instruction;
 
 /**
  * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
  */
-public class ItemClickInstruction implements Instruction {
+public class ItemClickInstruction extends AbstractInstruction {
 
 	private static final String FORMAT = //
 	"" + //
-			"        ((android.widget.AdapterView<?>) findViewById(%s)).setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {\n" + //
+			"        ((AdapterView<?>) findViewById(%s)).setOnItemClickListener(new AdapterView.OnItemClickListener() {\n" + //
 			"			@Override\n" + //
-			"			public void onItemClick(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {\n" + //
+			"			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {\n" + //
 			"				%s(%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
@@ -43,6 +42,8 @@ public class ItemClickInstruction implements Instruction {
 		this.methodName = methodName;
 		this.clickQualifiedId = clickQualifiedId;
 		this.parameterQualifiedName = parameterQualifiedName;
+		
+		addImports("android.widget.AdapterView", "android.view.View");
 	}
 
 	public ItemClickInstruction(String methodName, String clickQualifiedId) {
