@@ -31,7 +31,6 @@ public class RoboGuiceValidator extends ValidatorHelper implements ElementValida
 	private static final String GUICE_INJECTOR_CLASS = "com.google.inject.Injector";
 	private static final String ROBOGUICE_INJECTOR_PROVIDER_CLASS = "roboguice.inject.InjectorProvider";
 
-
 	public RoboGuiceValidator(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
 	}
@@ -58,35 +57,26 @@ public class RoboGuiceValidator extends ValidatorHelper implements ElementValida
 
 		if (elementUtils.getTypeElement(ROBOGUICE_INJECTOR_PROVIDER_CLASS) == null) {
 			valid.invalidate();
-			printAnnotationError(element,
-					"Could not find the RoboGuice framework in the classpath, the following class is missing: "
-							+ ROBOGUICE_INJECTOR_PROVIDER_CLASS);
+			printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + ROBOGUICE_INJECTOR_PROVIDER_CLASS);
 		}
-		
+
 		if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS) == null) {
-			
+
 			if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_1_APPLICATION_CLASS) == null) {
-			
+
 				valid.invalidate();
-				printAnnotationError(element,
-						"Could find neither the GuiceApplication class nor the RoboApplication class in the classpath, are you using RoboGuice 1.0 or 1.1 ?");
+				printAnnotationError(element, "Could find neither the GuiceApplication class nor the RoboApplication class in the classpath, are you using RoboGuice 1.0 or 1.1 ?");
 			}
 		}
 
 		try {
 			if (elementUtils.getTypeElement(GUICE_INJECTOR_CLASS) == null) {
 				valid.invalidate();
-				printAnnotationError(element,
-						"Could not find the Guice framework in the classpath, the following class is missing: "
-								+ GUICE_INJECTOR_CLASS);
+				printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + GUICE_INJECTOR_CLASS);
 			}
 		} catch (RuntimeException e) {
 			valid.invalidate();
-			printAnnotationError(element,
-					"Could not find the Guice framework in the classpath, the following class is missing: "
-							+ GUICE_INJECTOR_CLASS);
+			printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + GUICE_INJECTOR_CLASS);
 		}
-
 	}
-
 }

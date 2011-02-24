@@ -18,7 +18,7 @@ package com.googlecode.androidannotations.generation;
 import com.googlecode.androidannotations.helper.RoboGuiceConstants;
 import com.googlecode.androidannotations.model.Instruction;
 
-public class RoboActivityBodyInstruction implements Instruction {
+public class Robo10ActivityBodyInstruction implements Instruction {
 
 
 	private static final String CODE = "" + //
@@ -60,20 +60,13 @@ public class RoboActivityBodyInstruction implements Instruction {
 			"    }\n" + //
 			"\n" + //
 			"    public com.google.inject.Injector getInjector() {\n" + //
-			"        return ((%s) getApplication()).getInjector();\n" + //
+			"        return (("+RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS+") getApplication()).getInjector();\n" + //
 			"    }\n" + //
 			"\n";
 
-	private final boolean roboGuice10;
-	
-	public RoboActivityBodyInstruction(boolean roboGuice10) {
-		this.roboGuice10 = roboGuice10;
-	}
-
 	@Override
 	public String generate() {
-		String roboApplicationClass = roboGuice10 ? RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS : RoboGuiceConstants.ROBOGUICE_1_1_APPLICATION_CLASS;
-		return String.format(CODE, roboApplicationClass);
+		return CODE;
 	}
 
 }

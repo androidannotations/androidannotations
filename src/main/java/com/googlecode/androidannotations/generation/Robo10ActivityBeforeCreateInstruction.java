@@ -13,22 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package com.googlecode.androidannotations.generation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.googlecode.androidannotations.model.Instruction;
 
-/**
- * Should be used on Activity classes that use the RoboGuice framework
- */
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.TYPE)
-public @interface RoboGuice {
-	/**
-	 * The RoboGuice listener classes to bind to this activity. Will add an
-	 * injected listener field to the subclass.
-	 */
-	Class<?>[] value() default {};
+public class Robo10ActivityBeforeCreateInstruction implements Instruction {
+
+	private static final String CODE = "" + //
+			"        final com.google.inject.Injector injector_ = getInjector();\n" + //
+			"        scope_ = injector_.getInstance(roboguice.inject.ContextScope.class);\n" + //
+			"        scope_.enter(this);\n" + //
+			"        injector_.injectMembers(this);\n" + //
+			"\n";
+
+	@Override
+	public String generate() {
+		return CODE;
+	}
+
 }
