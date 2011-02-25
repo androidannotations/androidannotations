@@ -21,11 +21,6 @@ public class Robo10ActivityBodyInstruction extends AbstractInstruction {
 			"    protected ContextScope scope_;\n" + //
 			"\n" + //
 			"    @Override\n" + //
-			"    public Object onRetainNonConfigurationInstance() {\n" + //
-			"        return this;\n" + //
-			"    }\n" + //
-			"\n" + //
-			"    @Override\n" + //
 			"    protected void onRestart() {\n" + //
 			"        scope_.enter(this);\n" + //
 			"        super.onRestart();\n" + //
