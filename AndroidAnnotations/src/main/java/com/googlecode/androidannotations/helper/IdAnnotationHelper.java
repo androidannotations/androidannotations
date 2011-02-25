@@ -20,7 +20,7 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 	}
 	
 	public String extractAnnotationQualifiedId(Element element) {
-		int idValue = extractAnnotationValue(element);
+		int idValue = this.<Integer>extractAnnotationValue(element);
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String clickQualifiedId;
 
