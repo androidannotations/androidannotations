@@ -83,7 +83,7 @@ import com.googlecode.androidannotations.processing.TransactionalProcessor;
 import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewByIdProcessor;
-import com.googlecode.androidannotations.processor.ExtendedAbstractProcessor;
+import com.googlecode.androidannotations.processor.AnnotatedAbstractProcessor;
 import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
 import com.googlecode.androidannotations.rclass.CoumpoundRClass;
@@ -139,7 +139,7 @@ import com.googlecode.androidannotations.validation.ViewByIdValidator;
 		TextArrayRes.class, //
 		StringArrayRes.class })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-public class AndroidAnnotationProcessor extends ExtendedAbstractProcessor {
+public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

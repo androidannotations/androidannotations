@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 /**
  * An annotation used to indicate what annotation classes an annotation
  * processor supports. The
- * {@link ExtendedAbstractProcessor#getSupportedAnnotationTypes} method can
+ * {@link AnnotatedAbstractProcessor#getSupportedAnnotationTypes} method can
  * construct its result from the value of this annotation.
  * 
  * Its main purpose is to be safe from renaming annotations targeted by an

@@ -31,7 +31,7 @@ import javax.tools.Diagnostic;
  * 
  * @author Pierre-Yves Ricau
  */
-public abstract class ExtendedAbstractProcessor extends AbstractProcessor {
+public abstract class AnnotatedAbstractProcessor extends AbstractProcessor {
 
 	/**
 	 * If the processor class is annotated with
