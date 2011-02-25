@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 
+import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.generation.ValueInstruction;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.Instruction;
@@ -55,7 +56,7 @@ public class ResProcessor implements ElementProcessor {
 
 		IRInnerClass rInnerClass = rClass.get(resInnerClass);
 		String qualifiedId;
-		if (idValue == AndroidRes.DEFAULT_VALUE) {
+		if (idValue == Id.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			qualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 		} else {

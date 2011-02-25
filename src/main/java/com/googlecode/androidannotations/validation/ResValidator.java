@@ -21,23 +21,21 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.helper.ValidatorHelper;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
-import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class ResValidator extends ValidatorHelper implements ElementValidator {
-
-	private final IRClass rClass;
+public class ResValidator implements ElementValidator {
 
 	private final AndroidRes androidValue;
+	private IdValidatorHelper validatorHelper;
 
 	public ResValidator(AndroidRes androidValue, ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
-		this.rClass = rClass;
 		this.androidValue = androidValue;
+		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -50,49 +48,18 @@ public class ResValidator extends ValidatorHelper implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validateEnclosingElementHasLayout(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
 
 		TypeMirror fieldTypeMirror = element.asType();
 
-		validateIsAllowedType(element, valid, fieldTypeMirror);
+		validatorHelper.allowedType(element, valid, fieldTypeMirror, androidValue.getAllowedTypes());
 
-		validateRFieldName(element, valid);
+		validatorHelper.idExists(element, androidValue.getRInnerClass(), valid);
 
-		validateIsNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, valid);
 
 		return valid.isValid();
 	}
 
-	private void validateRFieldName(Element element, IsValid valid) {
-		int idValue = androidValue.idFromElement(element);
-
-		Res resInnerClass = androidValue.getRInnerClass();
-
-		IRInnerClass rInnerClass = rClass.get(resInnerClass);
-
-		if (idValue == AndroidRes.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-			if (!rInnerClass.containsField(fieldName)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id not found: R." + resInnerClass.rName() + "." + fieldName);
-			}
-		} else {
-			if (!rInnerClass.containsIdValue(idValue)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id with value " + idValue + " not found in R." + resInnerClass.rName() + ".*");
-			}
-		}
-	}
-
-	private void validateIsAllowedType(Element element, IsValid valid, TypeMirror fieldTypeMirror) {
-
-		String qualifiedName = fieldTypeMirror.toString();
-
-		if (!androidValue.getAllowedTypes().contains(qualifiedName)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a field which is a " + androidValue.getAllowedTypes().toString()
-					+ ", not " + qualifiedName);
-		}
-	}
 
 }

@@ -23,6 +23,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Click;
+import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.generation.ClickInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
@@ -49,23 +50,8 @@ public class ClickProcessor implements ElementProcessor {
 
 		String methodName = element.getSimpleName().toString();
 
-		Click annotation = element.getAnnotation(Click.class);
-		int idValue = annotation.value();
 
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		String clickQualifiedId;
-
-		if (idValue == Click.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-			int lastIndex = fieldName.lastIndexOf("Clicked");
-			if (lastIndex != -1) {
-				fieldName = fieldName.substring(0, lastIndex);
-			}
-			clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-			
-		} else {
-			clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
-		}
+		String clickQualifiedId = extractClickQualifiedId(element);
 
 		Element enclosingElement = element.getEnclosingElement();
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
@@ -79,6 +65,26 @@ public class ClickProcessor implements ElementProcessor {
 		Instruction instruction = new ClickInstruction(methodName, clickQualifiedId, viewParameter);
 		onCreateInstructions.add(instruction);
 
+	}
+
+	private String extractClickQualifiedId(Element element) {
+		Click annotation = element.getAnnotation(Click.class);
+		int idValue = annotation.value();
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
+		String clickQualifiedId;
+
+		if (idValue == Id.DEFAULT_VALUE) {
+			String fieldName = element.getSimpleName().toString();
+			int lastIndex = fieldName.lastIndexOf("Clicked");
+			if (lastIndex != -1) {
+				fieldName = fieldName.substring(0, lastIndex);
+			}
+			clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
+			
+		} else {
+			clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
+		}
+		return clickQualifiedId;
 	}
 
 }

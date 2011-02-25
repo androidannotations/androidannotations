@@ -32,7 +32,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
 public @interface ViewById {
-	public static final int DEFAULT_VALUE = -1;
-
-	int value() default DEFAULT_VALUE;
+	int value() default Id.DEFAULT_VALUE;
 }

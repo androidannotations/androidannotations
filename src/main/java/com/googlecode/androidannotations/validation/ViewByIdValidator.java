@@ -19,26 +19,22 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class ViewByIdValidator extends ValidatorHelper implements ElementValidator {
+public class ViewByIdValidator implements ElementValidator {
 
-	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
-	private final IRClass rClass;
-	private final TypeMirror viewTypeMirror;
-
+	private IdValidatorHelper validatorHelper;
+	
 	public ViewByIdValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
-		this.rClass = rClass;
-		viewTypeMirror = typeElementFromQualifiedName(ANDROID_VIEW_QUALIFIED_NAME).asType();
+		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -51,53 +47,19 @@ public class ViewByIdValidator extends ValidatorHelper implements ElementValidat
 
 		IsValid valid = new IsValid();
 
-		validateEnclosingElementHasLayout(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
 
 		TypeMirror uiFieldTypeMirror = element.asType();
 
-		validateIsDeclaredType(element, valid, uiFieldTypeMirror);
+		validatorHelper.isDeclaredType(element, valid, uiFieldTypeMirror);
 
-		validateExtendsViewType(element, valid, uiFieldTypeMirror);
+		validatorHelper.extendsView(element, valid);
 
-		validateRFieldName(element, valid);
+		validatorHelper.idExists(element, Res.ID, valid);
 
-		validateIsNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateRFieldName(Element element, IsValid valid) {
-		ViewById viewAnnotation = element.getAnnotation(ViewById.class);
-		int viewIdValue = viewAnnotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-
-		if (viewIdValue == ViewById.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-			if (!rInnerClass.containsField(fieldName)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id not found: R.id." + fieldName);
-			}
-		} else {
-			if (!rInnerClass.containsIdValue(viewIdValue)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id not found: R.id." + viewIdValue);
-			}
-		}
-	}
-
-	private void validateExtendsViewType(Element element, IsValid valid, TypeMirror uiFieldTypeMirror) {
-		if (!isSubtype(uiFieldTypeMirror, viewTypeMirror)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a field which type extends android.view.View");
-		}
-	}
-
-	private void validateIsDeclaredType(Element element, IsValid valid, TypeMirror uiFieldTypeMirror) {
-		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a field which is a declared type");
-		}
 	}
 
 }

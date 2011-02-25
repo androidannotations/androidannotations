@@ -44,8 +44,6 @@ public enum AndroidRes {
 	TEXT_ARRAY(Res.ARRAY, TextArrayRes.class, "getTextArray", "java.lang.CharSequence"), //
 	COLOR(Res.COLOR, ColorRes.class, "getColor", "int", "java.lang.Integer");
 
-	public static final int DEFAULT_VALUE = -1;
-
 	private final Class<? extends Annotation> target;
 	private final String resourceMethodName;
 	private final List<String> allowedTypes;

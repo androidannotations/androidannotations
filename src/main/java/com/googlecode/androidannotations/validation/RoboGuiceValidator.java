@@ -19,20 +19,19 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.RoboGuice;
-import com.googlecode.androidannotations.helper.RoboGuiceConstants;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class RoboGuiceValidator extends ValidatorHelper implements ElementValidator {
+public class RoboGuiceValidator  implements ElementValidator {
 
-	private static final String GUICE_INJECTOR_CLASS = "com.google.inject.Injector";
-	private static final String ROBOGUICE_INJECTOR_PROVIDER_CLASS = "roboguice.inject.InjectorProvider";
-
+	private ValidatorHelper validatorHelper;
+	
 	public RoboGuiceValidator(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -45,38 +44,11 @@ public class RoboGuiceValidator extends ValidatorHelper implements ElementValida
 
 		IsValid valid = new IsValid();
 
-		validateHasLayout(element, validatedElements, valid);
+		validatorHelper.hasEnhance(element, validatedElements, valid);
 
-		validateHasJars(element, valid);
+		validatorHelper.hasRoboGuiceJars(element, valid);
 
 		return valid.isValid();
 	}
 
-	private void validateHasJars(Element element, IsValid valid) {
-		Elements elementUtils = processingEnv.getElementUtils();
-
-		if (elementUtils.getTypeElement(ROBOGUICE_INJECTOR_PROVIDER_CLASS) == null) {
-			valid.invalidate();
-			printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + ROBOGUICE_INJECTOR_PROVIDER_CLASS);
-		}
-
-		if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS) == null) {
-
-			if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_1_APPLICATION_CLASS) == null) {
-
-				valid.invalidate();
-				printAnnotationError(element, "Could find neither the GuiceApplication class nor the RoboApplication class in the classpath, are you using RoboGuice 1.0 or 1.1 ?");
-			}
-		}
-
-		try {
-			if (elementUtils.getTypeElement(GUICE_INJECTOR_CLASS) == null) {
-				valid.invalidate();
-				printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + GUICE_INJECTOR_CLASS);
-			}
-		} catch (RuntimeException e) {
-			valid.invalidate();
-			printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + GUICE_INJECTOR_CLASS);
-		}
-	}
 }
