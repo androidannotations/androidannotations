@@ -24,9 +24,9 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 	public void idExists(Element element, Res res, boolean defaultUseName, IsValid valid) {
 
-		int idValue = annotationHelper.extractAnnotationValue(element);
+		Integer idValue = annotationHelper.extractAnnotationValue(element);
 
-		if (idValue == Id.DEFAULT_VALUE) {
+		if (idValue.equals(Id.DEFAULT_VALUE)) {
 			if (defaultUseName) {
 				String methodName = element.getSimpleName().toString();
 				int lastIndex = methodName.lastIndexOf(annotationHelper.actionName());
