@@ -16,25 +16,23 @@
 package com.googlecode.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class BeforeCreateValidator extends ValidatorHelper implements ElementValidator {
+public class BeforeCreateValidator implements ElementValidator {
 
-	private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
+	private ValidatorHelper validatorHelper;
 
 	public BeforeCreateValidator(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -47,44 +45,19 @@ public class BeforeCreateValidator extends ValidatorHelper implements ElementVal
 
 		IsValid valid = new IsValid();
 
-		validateEnclosingElementHasLayout(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		warnNotVoidReturnType(element, executableElement);
+		validatorHelper.voidReturnType(executableElement, valid);
+		
+		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
+		
+		validatorHelper.isNotPrivate(element, valid);
 
-		validateParameters(element, valid, executableElement);
-
-		validateIsNotPrivate(element, valid);
-
-		validateDoesntThrowException(element, valid);
+		validatorHelper.doesntThrowException(element, valid);
 
 		return valid.isValid();
 	}
 
-	private void validateParameters(Element element, IsValid valid, ExecutableElement executableElement) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() != 0 && parameters.size() != 1) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method with zero or one parameter, instead of " + parameters.size());
-		}
-
-		if (parameters.size() == 1) {
-			VariableElement parameter = parameters.get(0);
-			TypeMirror parameterType = parameter.asType();
-			if (!parameterType.toString().equals(ANDROID_BUNDLE_QUALIFIED_NAME)) {
-				valid.invalidate();
-				printAnnotationError(element, annotationName() + " should only be used on a method with no parameter or a parameter of type " + ANDROID_BUNDLE_QUALIFIED_NAME + ", not " + parameterType);
-			}
-		}
-	}
-
-	private void warnNotVoidReturnType(Element element, ExecutableElement executableElement) {
-		TypeMirror returnType = executableElement.getReturnType();
-
-		if (returnType.getKind() != TypeKind.VOID) {
-			printAnnotationWarning(element, annotationName() + " should only be used on a method with a void return type");
-		}
-	}
 }

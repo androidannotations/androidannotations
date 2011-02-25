@@ -22,15 +22,16 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.generation.StartActivityInstruction;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
+import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class EnhanceProcessor extends ValidatorHelper implements ElementProcessor {
+public class EnhanceProcessor extends AnnotationHelper implements ElementProcessor {
 
 	private final IRClass rClass;
 
@@ -53,7 +54,7 @@ public class EnhanceProcessor extends ValidatorHelper implements ElementProcesso
 		int layoutIdValue = layoutAnnotation.value();
 		
 		String layoutFieldQualifiedName;
-		if (layoutIdValue != Enhance.DEFAULT_VALUE) {
+		if (layoutIdValue != Id.DEFAULT_VALUE) {
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 			layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
 		} else {

@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
+import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.generation.ItemClickInstruction;
 import com.googlecode.androidannotations.model.Instruction;
@@ -59,7 +60,7 @@ public class ItemClickProcessor implements ElementProcessor {
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String itemClickQualifiedId;
 
-		if (idValue == ItemClick.DEFAULT_VALUE) {
+		if (idValue == Id.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			int lastIndex = fieldName.lastIndexOf("ItemClicked");
 			if (lastIndex != -1) {

@@ -16,33 +16,28 @@
 package com.googlecode.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemLongClick;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
-import com.googlecode.androidannotations.rclass.RClass.Res;
 
 /**
  * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
  */
-public class ItemLongClickValidator extends ValidatorHelper implements ElementValidator {
-
-	private final IRClass rClass;
+public class ItemLongClickValidator implements ElementValidator {
+	
+	private IdValidatorHelper validatorHelper;
 
 	public ItemLongClickValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
-		this.rClass = rClass;
+		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -54,64 +49,15 @@ public class ItemLongClickValidator extends ValidatorHelper implements ElementVa
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-
-		validateEnclosingElementHasLayout(element, validatedElements, valid);
+		
+		validatorHelper.idListenerMethod(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validateVoidOrBooleanReturnType(element, executableElement, valid);
+		validatorHelper.voidOrBooleanReturnType(executableElement, valid);
 
-		validateRFieldName(element, valid);
-
-		validateParameters(element, valid, executableElement);
-
-		validateIsNotPrivate(element, valid);
-		
-		validateDoesntThrowException(element, valid);
+		validatorHelper.zeroOrOneParameter(executableElement, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateParameters(Element element, IsValid valid, ExecutableElement executableElement) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() > 1) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method with 0 or 1 parameter, instead of " + parameters.size());
-		}
-	}
-
-	private void validateRFieldName(Element element, IsValid valid) {
-		ItemLongClick annotation = element.getAnnotation(ItemLongClick.class);
-		int idValue = annotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		if (idValue == ItemLongClick.DEFAULT_VALUE) {
-			String methodName = element.getSimpleName().toString();
-			int lastIndex = methodName.lastIndexOf(actionName());
-			if (lastIndex != -1) {
-				methodName = methodName.substring(0, lastIndex);
-			}
-			if (!rInnerClass.containsField(methodName)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id not found: R.id." + methodName);
-			}
-		} else {
-			if (!rInnerClass.containsIdValue(idValue)) {
-				valid.invalidate();
-				printAnnotationError(element, "Id not found: R.id." + idValue);
-			}
-		}
-	}
-
-	private void validateVoidOrBooleanReturnType(Element element, ExecutableElement executableElement, IsValid valid) {
-		TypeMirror returnType = executableElement.getReturnType();
-
-		TypeKind returnKind = returnType.getKind();
-		
-		if (returnKind != TypeKind.BOOLEAN && returnKind != TypeKind.VOID && !returnType.toString().equals("java.lang.Boolean")) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on a method with a boolean or a void return type");
-		}
 	}
 }

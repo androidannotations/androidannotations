@@ -22,22 +22,20 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Enhance;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 
-public class EnhanceValidator extends ValidatorHelper implements ElementValidator {
+public class EnhanceValidator implements ElementValidator {
 
-	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
-	private final IRClass rClass;
-	private final TypeElement activityTypeElement;
+	private IdValidatorHelper validatorHelper;
 
 	public EnhanceValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
-		this.rClass = rClass;
-		activityTypeElement = typeElementFromQualifiedName(ANDROID_ACTIVITY_QUALIFIED_NAME);
+		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		validatorHelper = new IdValidatorHelper(annotationHelper);
+		
 	}
 
 	@Override
@@ -50,36 +48,13 @@ public class EnhanceValidator extends ValidatorHelper implements ElementValidato
 
 		IsValid valid = new IsValid();
 
-		validateIsActivity(element, valid);
+		validatorHelper.extendsActivity((TypeElement)element, valid);
 
-		validateRFieldName(element, valid);
+		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 
-		validateIsNotFinal(element, valid);
+		validatorHelper.isNotFinal(element, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateRFieldName(Element element, IsValid valid) {
-		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
-		int layoutIdValue = layoutAnnotation.value();
-
-		if (layoutIdValue != Enhance.DEFAULT_VALUE) {
-
-			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-
-			if (!rInnerClass.containsIdValue(layoutIdValue)) {
-				valid.invalidate();
-				printAnnotationError(element, "Layout id value not found in R.layout.*: " + layoutIdValue);
-			}
-		}
-	}
-
-	private void validateIsActivity(Element element, IsValid valid) {
-		TypeElement typeElement = (TypeElement) element;
-		if (!isSubtype(typeElement, activityTypeElement)) {
-			valid.invalidate();
-			printAnnotationError(element, annotationName() + " should only be used on Activity subclasses");
-		}
 	}
 
 }

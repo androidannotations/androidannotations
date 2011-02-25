@@ -24,6 +24,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
@@ -48,19 +49,19 @@ public class AnnotationHelper {
 	 *             if given an executable or package type
 	 * @see Types#isSubtype(TypeMirror, TypeMirror)
 	 */
-	protected boolean isSubtype(TypeMirror t1, TypeMirror t2) {
+	public boolean isSubtype(TypeMirror t1, TypeMirror t2) {
 		return processingEnv.getTypeUtils().isSubtype(t1, t2);
 	}
 
-	protected boolean isSubtype(TypeElement t1, TypeElement t2) {
+	public boolean isSubtype(TypeElement t1, TypeElement t2) {
 		return isSubtype(t1.asType(), t2.asType());
 	}
 
-	protected TypeElement typeElementFromQualifiedName(String qualifiedName) {
+	public TypeElement typeElementFromQualifiedName(String qualifiedName) {
 		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
 	}
 
-	protected AnnotationMirror findAnnotationMirror(Element annotatedElement, Class<? extends Annotation> annotationClass) {
+	public AnnotationMirror findAnnotationMirror(Element annotatedElement, Class<? extends Annotation> annotationClass) {
 		List<? extends AnnotationMirror> annotationMirrors = annotatedElement.getAnnotationMirrors();
 
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
@@ -72,19 +73,19 @@ public class AnnotationHelper {
 		return null;
 	}
 
-	private boolean isAnnotation(TypeElement annotation, Class<? extends Annotation> annotationClass) {
+	public boolean isAnnotation(TypeElement annotation, Class<? extends Annotation> annotationClass) {
 		return annotation.getQualifiedName().toString().equals(annotationClass.getName());
 	}
-
-	protected void printAnnotationError(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+	
+	public void printAnnotationError(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
 		printAnnotationMessage(Diagnostic.Kind.ERROR, annotatedElement, annotationClass, message);
 	}
 	
-	protected void printAnnotationWarning(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+	public void printAnnotationWarning(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
 		printAnnotationMessage(Diagnostic.Kind.WARNING, annotatedElement, annotationClass, message);
 	}
 
-	protected void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+	public void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
 		AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationClass);
 		if (annotationMirror != null) {
 			processingEnv.getMessager().printMessage(diagnosticKind, message, annotatedElement, annotationMirror);
@@ -93,24 +94,24 @@ public class AnnotationHelper {
 		}
 	}
 
-	protected void printError(Element element, String message) {
+	public void printError(Element element, String message) {
 		processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
 	}
 	
-	protected boolean isPrivate(Element element) {
+	public boolean isPrivate(Element element) {
 		return element.getModifiers().contains(Modifier.PRIVATE);
 	}
 	
-	protected boolean isAbstract(Element element) {
+	public boolean isAbstract(Element element) {
 		return element.getModifiers().contains(Modifier.ABSTRACT);
 	}
 	
-	protected boolean isFinal(Element element) {
+	public boolean isFinal(Element element) {
 		return element.getModifiers().contains(Modifier.FINAL);
 	}
 	
-	protected String annotationName(Class<? extends Annotation> annotationClass) {
-		return "@"+annotationClass.getSimpleName();
+	public Elements getElementUtils() {
+		return processingEnv.getElementUtils();
 	}
 
 }

@@ -21,13 +21,17 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class ExtraValidator extends ValidatorHelper implements ElementValidator {
+public class ExtraValidator implements ElementValidator {
 
+	private ValidatorHelper validatorHelper;
+	
 	public ExtraValidator(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -39,9 +43,9 @@ public class ExtraValidator extends ValidatorHelper implements ElementValidator 
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 		IsValid valid = new IsValid();
 
-		validateEnclosingElementHasLayout(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
 
-		validateIsNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, valid);
 
 		return valid.isValid();
 	}

@@ -24,6 +24,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.generation.ItemLongClickInstruction;
 import com.googlecode.androidannotations.model.Instruction;
@@ -61,7 +62,7 @@ public class ItemLongClickProcessor implements ElementProcessor {
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String itemClickQualifiedId;
 
-		if (idValue == ItemLongClick.DEFAULT_VALUE) {
+		if (idValue == Id.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			int lastIndex = fieldName.lastIndexOf("ItemLongClicked");
 			if (lastIndex != -1) {

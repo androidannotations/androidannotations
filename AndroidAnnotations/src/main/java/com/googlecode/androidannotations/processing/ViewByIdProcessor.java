@@ -21,6 +21,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.generation.ViewByIdInstruction;
 import com.googlecode.androidannotations.model.Instruction;
@@ -56,7 +57,7 @@ public class ViewByIdProcessor implements ElementProcessor {
 
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String viewQualifiedId;
-		if (idValue == ViewById.DEFAULT_VALUE) {
+		if (idValue == Id.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 
 			viewQualifiedId = rInnerClass.getIdQualifiedName(fieldName);

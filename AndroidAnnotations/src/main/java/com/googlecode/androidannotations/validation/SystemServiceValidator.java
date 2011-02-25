@@ -19,19 +19,21 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.SystemService;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class SystemServiceValidator extends ValidatorHelper implements ElementValidator {
+public class SystemServiceValidator implements ElementValidator {
 
 	private final AndroidSystemServices androidSystemServices;
+	private ValidatorHelper validatorHelper;
 
 	public SystemServiceValidator(ProcessingEnvironment processingEnv, AndroidSystemServices androidSystemServices) {
-		super(processingEnv);
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
 		this.androidSystemServices = androidSystemServices;
 	}
 
@@ -45,21 +47,13 @@ public class SystemServiceValidator extends ValidatorHelper implements ElementVa
 
 		IsValid valid = new IsValid();
 
-		validateEnclosingElementHasLayout(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
 
-		validateIsKnownService(element, valid);
+		validatorHelper.androidService(androidSystemServices, element, valid);
 
-		validateIsNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, valid);
 
 		return valid.isValid();
-	}
-
-	private void validateIsKnownService(Element element, IsValid valid) {
-		TypeMirror serviceType = element.asType();
-		if (!androidSystemServices.contains(serviceType)) {
-			valid.invalidate();
-			printAnnotationError(element, "Unknown service type: " + serviceType.toString());
-		}
 	}
 
 }
