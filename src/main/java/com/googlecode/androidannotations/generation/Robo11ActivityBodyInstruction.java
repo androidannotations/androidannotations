@@ -26,11 +26,6 @@ public class Robo11ActivityBodyInstruction extends AbstractInstruction {
 			"    private EventManager eventManager_;\n" + //
 			"\n" + //
 			"    @Override\n" + //
-			"    public Object onRetainNonConfigurationInstance() {\n" + //
-			"        return this;\n" + //
-			"    }\n" + //
-			"\n" + //
-			"    @Override\n" + //
 			"    protected void onRestart() {\n" + //
 			"        scope_.enter(this);\n" + //
 			"        super.onRestart();\n" + //
