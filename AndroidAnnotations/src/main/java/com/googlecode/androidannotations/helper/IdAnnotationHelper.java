@@ -20,11 +20,11 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 	}
 	
 	public String extractAnnotationQualifiedId(Element element) {
-		int idValue = this.<Integer>extractAnnotationValue(element);
+		Integer idValue = extractAnnotationValue(element);
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		String clickQualifiedId;
 
-		if (idValue == Id.DEFAULT_VALUE) {
+		if (idValue.equals(Id.DEFAULT_VALUE)) {
 			String fieldName = element.getSimpleName().toString();
 			int lastIndex = fieldName.lastIndexOf(actionName());
 			if (lastIndex != -1) {
