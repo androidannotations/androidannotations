@@ -203,13 +203,9 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME);
 		}
 
-		if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS) == null) {
-
-			if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_1_APPLICATION_CLASS) == null) {
-
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "Could find neither the GuiceApplication class nor the RoboApplication class in the classpath, are you using RoboGuice 1.0 or 1.1 ?");
-			}
+		if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_APPLICATION_CLASS) == null) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Could not find the RoboApplication class in the classpath, are you using RoboGuice 1.1.1 ?");
 		}
 
 		try {

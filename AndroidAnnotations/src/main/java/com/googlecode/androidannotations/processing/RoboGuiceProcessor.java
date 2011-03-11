@@ -24,27 +24,15 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.RoboGuice;
-import com.googlecode.androidannotations.generation.Robo10ActivityBeforeCreateInstruction;
-import com.googlecode.androidannotations.generation.Robo10ActivityBodyInstruction;
-import com.googlecode.androidannotations.generation.Robo10ActivityOnCreateInstruction;
-import com.googlecode.androidannotations.generation.Robo11ActivityBeforeCreateInstruction;
-import com.googlecode.androidannotations.generation.Robo11ActivityBodyInstruction;
-import com.googlecode.androidannotations.generation.Robo11ActivityOnCreateInstruction;
-import com.googlecode.androidannotations.helper.RoboGuiceConstants;
+import com.googlecode.androidannotations.generation.RoboActivityBeforeCreateInstruction;
+import com.googlecode.androidannotations.generation.RoboActivityBodyInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
 
 public class RoboGuiceProcessor implements ElementProcessor {
-
-	private final Elements elementUtils;
-
-	public RoboGuiceProcessor(Elements elementUtils) {
-		this.elementUtils = elementUtils;
-	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -56,28 +44,13 @@ public class RoboGuiceProcessor implements ElementProcessor {
 
 		MetaActivity metaActivity = metaModel.getMetaActivities().get(element);
 
-		boolean roboGuice10 = elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_1_0_APPLICATION_CLASS) != null;
+		Instruction onBeforeCreateInstruction = new RoboActivityBeforeCreateInstruction();
 
-		Instruction onBeforeCreateInstruction;
-		Instruction onCreateInstruction;
-		Instruction memberInstruction;
-		if (roboGuice10) {
-			onBeforeCreateInstruction = new Robo10ActivityBeforeCreateInstruction();
-			onCreateInstruction = new Robo10ActivityOnCreateInstruction();
-			memberInstruction = new Robo10ActivityBodyInstruction();
-		} else {
-			onBeforeCreateInstruction = new Robo11ActivityBeforeCreateInstruction();
-			onCreateInstruction = new Robo11ActivityOnCreateInstruction();
-
-			List<String> listenerClasses = extractListenerClasses(element);
-			memberInstruction = new Robo11ActivityBodyInstruction(listenerClasses);
-		}
+		List<String> listenerClasses = extractListenerClasses(element);
+		Instruction memberInstruction = new RoboActivityBodyInstruction(listenerClasses);
 
 		List<Instruction> onBeforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
 		onBeforeCreateInstructions.add(onBeforeCreateInstruction);
-
-		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
-		onCreateInstructions.add(onCreateInstruction);
 
 		List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
 		memberInstructions.add(memberInstruction);
@@ -85,10 +58,9 @@ public class RoboGuiceProcessor implements ElementProcessor {
 		List<String> implementedInterfaces = metaActivity.getImplementedInterfaces();
 		implementedInterfaces.add("roboguice.inject.InjectorProvider");
 	}
-	
 
 	private List<String> extractListenerClasses(Element activityElement) {
-		
+
 		List<? extends AnnotationMirror> annotationMirrors = activityElement.getAnnotationMirrors();
 
 		String annotationName = RoboGuice.class.getName();
@@ -98,13 +70,13 @@ public class RoboGuiceProcessor implements ElementProcessor {
 				for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
 					if ("value".equals(entry.getKey().getSimpleName().toString())) {
 						action = entry.getValue();
-						
+
 						@SuppressWarnings("unchecked")
 						List<Object> values = (List<Object>) action.getValue();
-						
+
 						List<String> listenerClasses = new ArrayList<String>();
-						
-						for(Object value : values) {
+
+						for (Object value : values) {
 							listenerClasses.add(value.toString());
 						}
 						return listenerClasses;
@@ -114,7 +86,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
 				}
 			}
 		}
-		
+
 		return new ArrayList<String>(0);
 
 	}

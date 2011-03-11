@@ -10,6 +10,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/guice-2.0-no_aop.jar"/>
 	<classpathentry kind="lib" path="/androidannotations/target/androidannotations-1.0.2-SNAPSHOT.jar" sourcepath="/androidannotations/target/androidannotations-1.0.2-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="lib" path="lib/roboguice-1.1.jar" sourcepath="/home/pyricau/.m2/repository/org/roboguice/roboguice/1.1/roboguice-1.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/roboguice-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

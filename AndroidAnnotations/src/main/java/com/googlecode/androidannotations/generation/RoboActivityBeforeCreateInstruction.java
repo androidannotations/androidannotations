@@ -16,7 +16,7 @@
 package com.googlecode.androidannotations.generation;
 
 
-public class Robo11ActivityBeforeCreateInstruction extends AbstractInstruction {
+public class RoboActivityBeforeCreateInstruction extends AbstractInstruction {
 
 	private static final String CODE = "" + //
 			"        Injector injector_ = getInjector();\n" + //
@@ -27,7 +27,7 @@ public class Robo11ActivityBeforeCreateInstruction extends AbstractInstruction {
 			"        eventManager_.fire(new OnCreateEvent(savedInstanceState));\n" + //
 			"\n";
 	
-	public Robo11ActivityBeforeCreateInstruction() {
+	public RoboActivityBeforeCreateInstruction() {
 		addImports("com.google.inject.Injector", //
 				"roboguice.inject.ContextScope", //
 				"roboguice.event.EventManager", //
