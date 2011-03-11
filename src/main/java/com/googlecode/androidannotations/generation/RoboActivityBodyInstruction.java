@@ -17,13 +17,34 @@ package com.googlecode.androidannotations.generation;
 
 import java.util.List;
 
-public class Robo11ActivityBodyInstruction extends AbstractInstruction {
+public class RoboActivityBodyInstruction extends AbstractInstruction {
 
-	private static final String LISTENER = "    @java.lang.SuppressWarnings(\"unused\") @com.google.inject.Inject private %s listener%d_;\n";
+	private static final String LISTENER = "    @SuppressWarnings(\"unused\") @Inject private %s listener%d_;\n";
 
 	private static final String CODE = "" + //
 			"    private ContextScope scope_;\n" + //
 			"    private EventManager eventManager_;\n" + //
+			"\n" + //
+			"    @Override\n" + //
+			"    public void setContentView(int layoutResID) {\n" + //
+			"        super.setContentView(layoutResID);\n" + //
+			"        scope_.injectViews();\n" + //
+			"        eventManager_.fire(new OnContentViewAvailableEvent());\n" + //
+			"    }\n" + //
+			"\n" + //
+			"    @Override\n" + //
+			"    public void setContentView(View view, LayoutParams params) {\n" + //
+			"        super.setContentView(view, params);\n" + //
+			"        scope_.injectViews();\n" + //
+			"        eventManager_.fire(new OnContentViewAvailableEvent());\n" + //
+			"    }\n" + //
+			"\n" + //
+			"    @Override\n" + //
+			"    public void setContentView(View view) {\n" + //
+			"        super.setContentView(view);\n" + //
+			"        scope_.injectViews();\n" + //
+			"        eventManager_.fire(new OnContentViewAvailableEvent());\n" + //
+			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onRestart() {\n" + //
@@ -61,22 +82,33 @@ public class Robo11ActivityBodyInstruction extends AbstractInstruction {
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onStop() {\n" + //
-			"        eventManager_.fire(new OnStopEvent());\n" + //
-			"        super.onStop();\n" + //
+			"        scope_.enter(this);\n" + //
+			"        try {\n" + //
+			"            eventManager_.fire(new OnStopEvent());\n" + //
+			"        } finally {\n" + //
+			"            scope_.exit(this);\n" + //
+			"            super.onStop();\n" + //
+			"        }\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    protected void onDestroy() {\n" + //
-			"        eventManager_.fire(new OnDestroyEvent());\n" + //
-			"        eventManager_.clear(this);\n" + //
-			"        scope_.exit(this);\n" + //
-			"        super.onDestroy();\n" + //
+			"       scope_.enter(this);\n" + //
+			"       try {\n" + //
+			"           eventManager_.fire(new OnDestroyEvent());\n" + //
+			"       } finally {\n" + //
+			"           eventManager_.clear(this);\n" + //
+			"           scope_.exit(this);\n" + //
+			"           scope_.dispose(this);\n" + //
+			"           super.onDestroy();\n" + //
+			"       }\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
 			"    public void onConfigurationChanged(Configuration newConfig) {\n" + //
+			"        final Configuration currentConfig = getResources().getConfiguration();\n" + //
 			"        super.onConfigurationChanged(newConfig);\n" + //
-			"        eventManager_.fire(new OnConfigurationChangedEvent(newConfig));\n" + //
+			"        eventManager_.fire(new OnConfigurationChangedEvent(currentConfig, newConfig));\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    @Override\n" + //
@@ -88,7 +120,12 @@ public class Robo11ActivityBodyInstruction extends AbstractInstruction {
 			"    @Override\n" + //
 			"    protected void onActivityResult(int requestCode, int resultCode, Intent data) {\n" + //
 			"        super.onActivityResult(requestCode, resultCode, data);\n" + //
-			"        eventManager_.fire(new OnActivityResultEvent(requestCode, resultCode, data));\n" + //
+			"        scope_.enter(this);\n" + //
+			"        try {\n" + //
+			"            eventManager_.fire(new OnActivityResultEvent(requestCode, resultCode, data));\n" + //
+			"        } finally {\n" + //
+			"            scope_.exit(this);\n" + //
+			"        }\n" + //
 			"    }\n" + //
 			"\n" + //
 			"    public Injector getInjector() {\n" + //
@@ -98,7 +135,7 @@ public class Robo11ActivityBodyInstruction extends AbstractInstruction {
 
 	private final List<String> listenerClasses;
 
-	public Robo11ActivityBodyInstruction(List<String> listenerClasses) {
+	public RoboActivityBodyInstruction(List<String> listenerClasses) {
 		this.listenerClasses = listenerClasses;
 		addImports("roboguice.inject.ContextScope", //
 				"android.content.Intent", //
@@ -115,7 +152,10 @@ public class Robo11ActivityBodyInstruction extends AbstractInstruction {
 				"android.content.res.Configuration", //
 				"roboguice.activity.event.OnConfigurationChangedEvent", //
 				"roboguice.activity.event.OnContentChangedEvent", //
-				"roboguice.activity.event.OnActivityResultEvent" //
+				"roboguice.activity.event.OnActivityResultEvent", //
+				"roboguice.activity.event.OnContentViewAvailableEvent", //
+				"android.view.ViewGroup.LayoutParams", //
+				"com.google.inject.Inject" //
 				);
 	}
 
