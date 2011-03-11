@@ -53,6 +53,13 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s should not be used on a final element");
 		}
 	}
+	
+	public void isNotSynchronized(Element element, IsValid valid) {
+		if (annotationHelper.isSynchronized(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s should not be used on a synchronized element. If you think you shall need to use the synchronized keyword for a specific use case, please post on the mailing list.");
+		}
+	}
 
 	public void isNotAbstract(Element element, IsValid valid) {
 		if (annotationHelper.isAbstract(element)) {

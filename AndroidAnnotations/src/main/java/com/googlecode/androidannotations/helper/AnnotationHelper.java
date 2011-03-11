@@ -110,6 +110,10 @@ public class AnnotationHelper {
 		return element.getModifiers().contains(Modifier.FINAL);
 	}
 	
+	public boolean isSynchronized(Element element) {
+		return element.getModifiers().contains(Modifier.SYNCHRONIZED);
+	}
+	
 	public Elements getElementUtils() {
 		return processingEnv.getElementUtils();
 	}

@@ -31,9 +31,9 @@ public class RunnableValidator implements ElementValidator {
 	private ValidatorHelper validatorHelper;
 
 	public RunnableValidator(Class<? extends Annotation> target, ProcessingEnvironment processingEnv) {
+		this.target = target;
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
-		this.target = target;
 	}
 
 	@Override
@@ -57,6 +57,8 @@ public class RunnableValidator implements ElementValidator {
 		validatorHelper.doesntThrowException(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
+		
+		validatorHelper.isNotSynchronized(element, valid);
 
 		return valid.isValid();
 	}
