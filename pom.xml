@@ -76,7 +76,6 @@
 			</extension>
 		</extensions>
 	</build>
-	
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.codemodel</groupId>

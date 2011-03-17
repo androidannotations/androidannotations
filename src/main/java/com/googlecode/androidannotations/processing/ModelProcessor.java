@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
@@ -33,7 +34,7 @@ public class ModelProcessor {
 		processors.add(processor);
 	}
 
-	public JCodeModel process(AnnotationElements validatedModel) {
+	public JCodeModel processToCodeModel(AnnotationElements validatedModel) {
 
 		JCodeModel codeModel = new JCodeModel();
 
@@ -53,5 +54,25 @@ public class ModelProcessor {
 
 		return codeModel;
 	}
+	
+
+    public MetaModel processToStringModel(AnnotationElements validatedModel) {
+
+            MetaModel metaModel = new MetaModel();
+
+            for (ElementProcessor processor : processors) {
+                    Class<? extends Annotation> target = processor.getTarget();
+
+                    Set<? extends Element> annotatedElements = validatedModel.getAnnotatedElements(target);
+
+                    for (Element annotatedElement : annotatedElements) {
+                            processor.process(annotatedElement, metaModel);
+                    }
+            }
+
+            return metaModel;
+    }
+
+
 
 }

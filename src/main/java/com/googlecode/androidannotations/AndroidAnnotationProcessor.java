@@ -58,12 +58,14 @@ import com.googlecode.androidannotations.annotations.res.StringArrayRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.annotations.res.TextArrayRes;
 import com.googlecode.androidannotations.annotations.res.TextRes;
-import com.googlecode.androidannotations.generation.ModelGenerator;
+import com.googlecode.androidannotations.generation.CodeModelGenerator;
+import com.googlecode.androidannotations.generation.StringModelGenerator;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 import com.googlecode.androidannotations.model.EmptyAnnotationElements;
+import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
@@ -178,9 +180,12 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices);
 
-		JCodeModel model = processAnnotations(validatedModel, rClass, androidSystemServices);
+		JCodeModel codeModel = processAnnotationsToCodeModel(validatedModel, rClass, androidSystemServices);
 
-		generateSources(model);
+		MetaModel stringModel = processAnnotationsToStringModel(validatedModel, rClass, androidSystemServices);
+		
+		generateStringModelSources(stringModel);
+		generateCodeModelSources(codeModel);
 	}
 
 	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -234,10 +239,17 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return modelValidator;
 	}
 
-	private JCodeModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
+	private JCodeModel processAnnotationsToCodeModel(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
-		return modelProcessor.process(validatedModel);
+		return modelProcessor.processToCodeModel(validatedModel);
 	}
+	
+
+    private MetaModel processAnnotationsToStringModel(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
+            ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
+            return modelProcessor.processToStringModel(validatedModel);
+    }
+
 
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = new ModelProcessor();
@@ -263,8 +275,15 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return modelProcessor;
 	}
 
-	private void generateSources(JCodeModel model) throws IOException {
-		ModelGenerator modelGenerator = new ModelGenerator(processingEnv.getFiler());
+
+    private void generateStringModelSources(MetaModel model) throws IOException {
+            StringModelGenerator modelGenerator = new StringModelGenerator(processingEnv.getFiler());
+            modelGenerator.generate(model);
+    }
+
+	
+	private void generateCodeModelSources(JCodeModel model) throws IOException {
+		CodeModelGenerator modelGenerator = new CodeModelGenerator(processingEnv.getFiler());
 		modelGenerator.generate(model);
 	}
 }

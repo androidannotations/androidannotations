@@ -22,11 +22,11 @@ import javax.annotation.processing.Filer;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.writer.PrologCodeWriter;
 
-public class ModelGenerator {
+public class CodeModelGenerator {
 
 	private final Filer filer;
 
-	public ModelGenerator(Filer filer) {
+	public CodeModelGenerator(Filer filer) {
 		this.filer = filer;
 	}
 	
