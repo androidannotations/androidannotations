@@ -1,9 +1,12 @@
 package com.googlecode.androidannotations.maveneclipse;
 
+import com.googlecode.androidannotations.annotations.Enhance;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
+@Enhance
 public class HelloAndroidActivity extends Activity {
 
     private static String TAG = "maveneclipse";
