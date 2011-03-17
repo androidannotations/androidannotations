@@ -19,9 +19,12 @@ import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.helper.HasTarget;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JCodeModel;
 
 public interface ElementProcessor extends HasTarget {
 
+	void process(Element element, JCodeModel codeModel) throws Exception;
+	
 	void process(Element element, MetaModel metaModel);
 
 }

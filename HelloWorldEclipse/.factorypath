@@ -1,4 +1,5 @@
 <factorypath>
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="WKSPJAR" id="/androidannotations/target/androidannotations-1.0.3-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/HelloWorldEclipse/lib/codemodel-2.4.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>
