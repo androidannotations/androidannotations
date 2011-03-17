@@ -31,6 +31,7 @@ import com.googlecode.androidannotations.generation.RoboActivityBodyInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JCodeModel;
 
 public class RoboGuiceProcessor implements ElementProcessor {
 
@@ -89,6 +90,12 @@ public class RoboGuiceProcessor implements ElementProcessor {
 
 		return new ArrayList<String>(0);
 
+	}
+
+	@Override
+	public void process(Element element, JCodeModel codeModel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

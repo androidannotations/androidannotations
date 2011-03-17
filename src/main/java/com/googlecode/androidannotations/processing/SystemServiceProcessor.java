@@ -27,6 +27,7 @@ import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JCodeModel;
 
 public class SystemServiceProcessor implements ElementProcessor {
 
@@ -57,6 +58,12 @@ public class SystemServiceProcessor implements ElementProcessor {
 		Instruction instruction = new SystemServiceInstruction(fieldName, fieldTypeQualifiedName, serviceConstant);
 		beforeCreateInstructions.add(instruction);
 
+	}
+
+	@Override
+	public void process(Element element, JCodeModel codeModel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

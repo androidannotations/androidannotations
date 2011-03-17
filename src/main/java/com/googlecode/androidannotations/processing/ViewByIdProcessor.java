@@ -30,6 +30,7 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.sun.codemodel.JCodeModel;
 
 public class ViewByIdProcessor implements ElementProcessor {
 
@@ -72,6 +73,12 @@ public class ViewByIdProcessor implements ElementProcessor {
 		Instruction instruction = new ViewByIdInstruction(name, typeQualifiedName, viewQualifiedId);
 		onCreateInstructions.add(instruction);
 
+	}
+
+	@Override
+	public void process(Element element, JCodeModel codeModel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

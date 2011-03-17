@@ -64,7 +64,6 @@ import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 import com.googlecode.androidannotations.model.EmptyAnnotationElements;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
@@ -106,6 +105,7 @@ import com.googlecode.androidannotations.validation.SystemServiceValidator;
 import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewByIdValidator;
+import com.sun.codemodel.JCodeModel;
 
 @SupportedAnnotationClasses({ Enhance.class, //
 		BeforeCreate.class, //
@@ -178,7 +178,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices);
 
-		MetaModel model = processAnnotations(validatedModel, rClass, androidSystemServices);
+		JCodeModel model = processAnnotations(validatedModel, rClass, androidSystemServices);
 
 		generateSources(model);
 	}
@@ -234,7 +234,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return modelValidator;
 	}
 
-	private MetaModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
+	private JCodeModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
 		return modelProcessor.process(validatedModel);
 	}
@@ -263,7 +263,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return modelProcessor;
 	}
 
-	private void generateSources(MetaModel model) throws IOException {
+	private void generateSources(JCodeModel model) throws IOException {
 		ModelGenerator modelGenerator = new ModelGenerator(processingEnv.getFiler());
 		modelGenerator.generate(model);
 	}

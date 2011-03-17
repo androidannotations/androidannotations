@@ -26,6 +26,7 @@ import com.googlecode.androidannotations.generation.ExtractAndCastExtraInstructi
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JCodeModel;
 
 public class ExtraProcessor implements ElementProcessor {
 
@@ -57,6 +58,12 @@ public class ExtraProcessor implements ElementProcessor {
 		Instruction instruction = new ExtraInstruction(className, fieldName, key);
 		beforeCreateInstructions.add(instruction);
 
+	}
+
+	@Override
+	public void process(Element element, JCodeModel codeModel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

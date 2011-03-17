@@ -30,6 +30,17 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class EnhanceProcessor extends AnnotationHelper implements ElementProcessor {
 
@@ -52,7 +63,7 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
 		int layoutIdValue = layoutAnnotation.value();
-		
+
 		String layoutFieldQualifiedName;
 		if (layoutIdValue != Id.DEFAULT_VALUE) {
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
@@ -74,6 +85,62 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 		activity.getMemberInstructions().add(new StartActivityInstruction());
 
 		metaModel.getMetaActivities().put(element, activity);
+	}
+
+	public static final String CLASS_SUFFIX = "_";
+
+	@Override
+	public void process(Element element, JCodeModel codeModel) throws Exception {
+
+		TypeElement typeElement = (TypeElement) element;
+
+		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
+		int layoutIdValue = layoutAnnotation.value();
+
+		String layoutFieldQualifiedName;
+		if (layoutIdValue != Id.DEFAULT_VALUE) {
+			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+			layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
+		} else {
+			layoutFieldQualifiedName = null;
+		}
+
+		String activityQualifiedName = typeElement.getQualifiedName().toString();
+
+		String subActivityQualifiedName = activityQualifiedName + CLASS_SUFFIX;
+		JDefinedClass subActivity = codeModel._class(subActivityQualifiedName);
+
+		JClass activity = codeModel.directClass(activityQualifiedName);
+
+		subActivity._extends(activity);
+
+		JMethod onCreate = subActivity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
+		onCreate.annotate(Override.class);
+		JClass bundleClass = codeModel.directClass("android.os.Bundle");
+		JVar savedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
+		JBlock onCreateBody = onCreate.body();
+
+		JMethod beforeSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
+		beforeSetContentView.param(bundleClass, "savedInstanceState");
+		onCreateBody.invoke(beforeSetContentView).arg(savedInstanceState);
+
+		if (layoutFieldQualifiedName != null) {
+			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
+			
+			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix+1);
+			String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
+			
+			JFieldRef contentViewId = codeModel.directClass(rInnerClassName).staticRef(fieldName);
+			
+			onCreateBody.invoke("setContentView").arg(contentViewId);
+		}
+
+		JMethod afterSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
+		afterSetContentView.param(bundleClass, "savedInstanceState");
+		onCreateBody.invoke(afterSetContentView).arg(savedInstanceState);
+
+		onCreateBody.invoke(JExpr._super(), "onCreate").arg(savedInstanceState);
+
 	}
 
 }

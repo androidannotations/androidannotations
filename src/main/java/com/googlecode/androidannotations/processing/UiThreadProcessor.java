@@ -28,6 +28,7 @@ import com.googlecode.androidannotations.generation.UiThreadInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JCodeModel;
 
 public class UiThreadProcessor implements ElementProcessor {
 
@@ -60,6 +61,12 @@ public class UiThreadProcessor implements ElementProcessor {
 		
 		Instruction instruction = new UiThreadInstruction(className, methodName, methodArguments, methodParameters);
 		memberInstructions.add(instruction);
+	}
+
+	@Override
+	public void process(Element element, JCodeModel codeModel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

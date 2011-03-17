@@ -33,6 +33,7 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.sun.codemodel.JCodeModel;
 
 /**
  * @author Benjamin Fellous
@@ -89,5 +90,11 @@ public class LongClickProcessor implements ElementProcessor {
 		Instruction instruction = new LongClickInstruction(methodName, longClickQualifiedId, viewParameter, returnMethodResult);
 		onCreateInstructions.add(instruction);
 
+	}
+
+	@Override
+	public void process(Element element, JCodeModel codeModel) {
+		// TODO Auto-generated method stub
+		
 	}
 }
