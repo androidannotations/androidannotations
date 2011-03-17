@@ -57,14 +57,10 @@ public class RClassFinder extends AnnotationHelper {
 						"In order to find the R class, all Activities annotated with @" + Enhance.class.getSimpleName()
 								+ " should belong to the same package as the R class, which is not the case for: "
 								+ firstLayoutAnnotatedElement);
-				return null;
+				return RClass.EMPTY_R_CLASS;
 			}
 		} else {
-			/*
-			 * If no element is annotated with Layout, then we do not care about
-			 * finding the R class or not.
-			 */
-			return null;
+			return RClass.EMPTY_R_CLASS;
 		}
 	}
 
