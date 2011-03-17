@@ -32,14 +32,10 @@ import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 public class EnhanceProcessor extends AnnotationHelper implements ElementProcessor {
@@ -87,7 +83,7 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 		metaModel.getMetaActivities().put(element, activity);
 	}
 
-	public static final String CLASS_SUFFIX = "_";
+	public static final String NEW_CLASS_SUFFIX = "__";
 
 	@Override
 	public void process(Element element, JCodeModel codeModel) throws Exception {
@@ -107,23 +103,27 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		String activityQualifiedName = typeElement.getQualifiedName().toString();
 
-		String subActivityQualifiedName = activityQualifiedName + CLASS_SUFFIX;
+		String subActivityQualifiedName = activityQualifiedName + NEW_CLASS_SUFFIX;
 		JDefinedClass subActivity = codeModel._class(subActivityQualifiedName);
+		
+		ActivityHelper activityHelper = new ActivityHelper(subActivity);
 
 		JClass activity = codeModel.directClass(activityQualifiedName);
 
 		subActivity._extends(activity);
+		
+		activityHelper.beforeSetContentView();
+		activityHelper.afterSetContentView();
+		
+		JMethod onCreate = activityHelper.onCreate();
 
-		JMethod onCreate = subActivity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
-		onCreate.annotate(Override.class);
-		JClass bundleClass = codeModel.directClass("android.os.Bundle");
-		JVar savedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
+		JVar onCreateSavedInstanceState = activityHelper.savedInstanceState(onCreate);
 		JBlock onCreateBody = onCreate.body();
-
-		JMethod beforeSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
-		beforeSetContentView.param(bundleClass, "savedInstanceState");
-		onCreateBody.invoke(beforeSetContentView).arg(savedInstanceState);
-
+		
+		OnCreateHelper onCreateHelper = new OnCreateHelper(activityHelper, onCreateBody);
+		
+		onCreateHelper.beforeSetContentView(onCreateSavedInstanceState);
+		
 		if (layoutFieldQualifiedName != null) {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
 			
@@ -132,15 +132,16 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 			
 			JFieldRef contentViewId = codeModel.directClass(rInnerClassName).staticRef(fieldName);
 			
-			onCreateBody.invoke("setContentView").arg(contentViewId);
+			onCreateHelper.setContentView(contentViewId);
 		}
 
-		JMethod afterSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
-		afterSetContentView.param(bundleClass, "savedInstanceState");
-		onCreateBody.invoke(afterSetContentView).arg(savedInstanceState);
-
-		onCreateBody.invoke(JExpr._super(), "onCreate").arg(savedInstanceState);
-
+		onCreateHelper.afterSetContentView(onCreateSavedInstanceState);
+		onCreateHelper.superOnCreate(onCreateSavedInstanceState);
+		
 	}
+
+
+
+
 
 }
