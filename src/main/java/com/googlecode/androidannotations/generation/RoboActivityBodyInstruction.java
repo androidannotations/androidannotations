@@ -155,7 +155,8 @@ public class RoboActivityBodyInstruction extends AbstractInstruction {
 				"roboguice.activity.event.OnActivityResultEvent", //
 				"roboguice.activity.event.OnContentViewAvailableEvent", //
 				"android.view.ViewGroup.LayoutParams", //
-				"com.google.inject.Inject" //
+				"com.google.inject.Inject", //
+				"android.view.View" //
 				);
 	}
 
