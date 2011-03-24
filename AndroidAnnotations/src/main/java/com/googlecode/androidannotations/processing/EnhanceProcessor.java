@@ -23,7 +23,6 @@ import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.annotations.Id;
-import com.googlecode.androidannotations.generation.StartActivityInstruction;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
@@ -80,8 +79,6 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		MetaActivity activity = new MetaActivity(packageName, superClassSimpleName, layoutFieldQualifiedName);
 
-		activity.getMemberInstructions().add(new StartActivityInstruction());
-
 		metaModel.getMetaActivities().put(element, activity);
 	}
 
@@ -92,17 +89,7 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		TypeElement typeElement = (TypeElement) element;
 
-		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
-		int layoutIdValue = layoutAnnotation.value();
-
-		String layoutFieldQualifiedName;
-		if (layoutIdValue != Id.DEFAULT_VALUE) {
-			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-			layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
-		} else {
-			layoutFieldQualifiedName = null;
-		}
-
+		// Activity
 		String activityQualifiedName = typeElement.getQualifiedName().toString();
 
 		String subActivityQualifiedName = activityQualifiedName + NEW_CLASS_SUFFIX;
@@ -111,15 +98,18 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 		JClass activity = codeModel.directClass(activityQualifiedName);
 
 		subActivity._extends(activity);
-		
-		JMethod beforeSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
+
 		JClass bundleClass = codeModel.directClass("android.os.Bundle");
-		JVar beforeSetContentViewSavedInstanceState = beforeSetContentView.param(bundleClass, "savedInstanceState");
 		
+		// beforeSetContentView
+		JMethod beforeSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
+		beforeSetContentView.param(bundleClass, "savedInstanceState");
+		
+		// afterSetContentView
 		JMethod afterSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
-		JVar afterSetContentViewSavedInstanceState = afterSetContentView.param(bundleClass, "savedInstanceState");
+		afterSetContentView.param(bundleClass, "savedInstanceState");
 		
-		
+		// onCreate
 		JMethod onCreate =	subActivity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
@@ -127,6 +117,17 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 		JBlock onCreateBody = onCreate.body();
 		
 		onCreateBody.invoke(beforeSetContentView).arg(onCreateSavedInstanceState);
+		
+		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
+		int layoutIdValue = layoutAnnotation.value();
+		
+		String layoutFieldQualifiedName;
+		if (layoutIdValue != Id.DEFAULT_VALUE) {
+			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+			layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
+		} else {
+			layoutFieldQualifiedName = null;
+		}
 		
 		if (layoutFieldQualifiedName != null) {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
