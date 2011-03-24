@@ -34,8 +34,10 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 public class EnhanceProcessor extends AnnotationHelper implements ElementProcessor {
@@ -106,23 +108,25 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 		String subActivityQualifiedName = activityQualifiedName + NEW_CLASS_SUFFIX;
 		JDefinedClass subActivity = codeModel._class(subActivityQualifiedName);
 		
-		ActivityHelper activityHelper = new ActivityHelper(subActivity);
-
 		JClass activity = codeModel.directClass(activityQualifiedName);
 
 		subActivity._extends(activity);
 		
-		activityHelper.beforeSetContentView();
-		activityHelper.afterSetContentView();
+		JMethod beforeSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
+		JClass bundleClass = codeModel.directClass("android.os.Bundle");
+		JVar beforeSetContentViewSavedInstanceState = beforeSetContentView.param(bundleClass, "savedInstanceState");
 		
-		JMethod onCreate = activityHelper.onCreate();
+		JMethod afterSetContentView = subActivity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
+		JVar afterSetContentViewSavedInstanceState = afterSetContentView.param(bundleClass, "savedInstanceState");
+		
+		
+		JMethod onCreate =	subActivity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
+		onCreate.annotate(Override.class);
 
-		JVar onCreateSavedInstanceState = activityHelper.savedInstanceState(onCreate);
+		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
 		
-		OnCreateHelper onCreateHelper = new OnCreateHelper(activityHelper, onCreateBody);
-		
-		onCreateHelper.beforeSetContentView(onCreateSavedInstanceState);
+		onCreateBody.invoke(beforeSetContentView).arg(onCreateSavedInstanceState);
 		
 		if (layoutFieldQualifiedName != null) {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
@@ -132,11 +136,12 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 			
 			JFieldRef contentViewId = codeModel.directClass(rInnerClassName).staticRef(fieldName);
 			
-			onCreateHelper.setContentView(contentViewId);
+			onCreateBody.invoke("setContentView").arg(contentViewId);
 		}
+		
+		onCreateBody.invoke(afterSetContentView).arg(onCreateSavedInstanceState);
 
-		onCreateHelper.afterSetContentView(onCreateSavedInstanceState);
-		onCreateHelper.superOnCreate(onCreateSavedInstanceState);
+		onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 		
 	}
 
