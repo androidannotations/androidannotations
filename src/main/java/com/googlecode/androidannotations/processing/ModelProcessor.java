@@ -17,7 +17,9 @@ package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -45,7 +47,7 @@ public class ModelProcessor {
 
 			for (Element annotatedElement : annotatedElements) {
 				try {
-					processor.process(annotatedElement, codeModel);
+					processor.process(annotatedElement, codeModel, null);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
@@ -60,6 +62,7 @@ public class ModelProcessor {
 
             MetaModel metaModel = new MetaModel();
 
+            Map<Element, ActivityHolder> activityHolders = new HashMap<Element, ActivityHolder>();
             for (ElementProcessor processor : processors) {
                     Class<? extends Annotation> target = processor.getTarget();
 

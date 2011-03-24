@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
+import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -85,8 +86,12 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 	public static final String NEW_CLASS_SUFFIX = "__";
 
 	@Override
-	public void process(Element element, JCodeModel codeModel) throws Exception {
+	public void process(Element element, JCodeModel codeModel, Map<Element, ActivityHolder> activityHolders) throws Exception {
 
+		ActivityHolder holder = new ActivityHolder();
+		
+		activityHolders.put(element, holder);
+		
 		TypeElement typeElement = (TypeElement) element;
 
 		// Activity
@@ -94,6 +99,8 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		String subActivityQualifiedName = activityQualifiedName + NEW_CLASS_SUFFIX;
 		JDefinedClass subActivity = codeModel._class(subActivityQualifiedName);
+		
+		
 		
 		JClass activity = codeModel.directClass(activityQualifiedName);
 

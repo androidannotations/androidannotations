@@ -15,6 +15,8 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import java.util.Map;
+
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.helper.HasTarget;
@@ -23,7 +25,7 @@ import com.sun.codemodel.JCodeModel;
 
 public interface ElementProcessor extends HasTarget {
 
-	void process(Element element, JCodeModel codeModel) throws Exception;
+	void process(Element element, JCodeModel codeModel, Map<Element, ActivityHolder> activityHolders) throws Exception;
 	
 	void process(Element element, MetaModel metaModel);
 
