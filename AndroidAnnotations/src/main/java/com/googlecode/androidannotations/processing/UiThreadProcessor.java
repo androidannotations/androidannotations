@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -64,7 +65,7 @@ public class UiThreadProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel) {
+	public void process(Element element, JCodeModel codeModel, Map<Element, ActivityHolder> activityHolders) {
 		// TODO Auto-generated method stub
 		
 	}

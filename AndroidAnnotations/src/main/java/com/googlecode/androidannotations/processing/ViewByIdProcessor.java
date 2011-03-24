@@ -17,6 +17,7 @@ package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -76,7 +77,7 @@ public class ViewByIdProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel) {
+	public void process(Element element, JCodeModel codeModel, Map<Element, ActivityHolder> activityHolders) {
 		// TODO Auto-generated method stub
 		
 	}
