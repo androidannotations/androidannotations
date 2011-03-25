@@ -31,7 +31,16 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 /**
  * @author Benjamin Fellous
@@ -93,8 +102,57 @@ public class ItemClickProcessor implements ElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		// TODO Auto-generated method stub
+		ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+
+		String methodName = element.getSimpleName().toString();
+
+		ExecutableElement executableElement = (ExecutableElement) element;
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+
+		boolean hasItemParameter = parameters.size() == 1;
 		
+		JFieldRef idRef = extractClickQualifiedId(element, codeModel);
+
+		JDefinedClass onItemClickListenerClass = codeModel.anonymousClass(codeModel.ref("android.widget.AdapterView.OnItemClickListener"));
+		JMethod onItemClickMethod = onItemClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onItemClick");
+		JClass adapterViewClass = codeModel.ref("android.widget.AdapterView");
+		JClass viewClass = codeModel.ref("android.view.View");
+		
+		JClass narrowAdapterViewClass = adapterViewClass.narrow(codeModel.wildcard());
+		JVar onItemClickParentParam = onItemClickMethod.param(narrowAdapterViewClass, "parent");
+		onItemClickMethod.param(viewClass, "view");
+		JVar onItemClickPositionParam = onItemClickMethod.param(codeModel.INT, "position");
+		onItemClickMethod.param(codeModel.LONG, "id");
+		
+		JInvocation itemClickCall = onItemClickMethod.body().invoke(methodName);
+
+		if (hasItemParameter) {
+			VariableElement parameter = parameters.get(0);
+			String parameterQualifiedName = parameter.asType().toString();
+			itemClickCall.arg(JExpr.cast(codeModel.ref(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+		}
+
+		JBlock body = holder.afterSetContentView.body();
+
+		body.add(JExpr.invoke(JExpr.cast(narrowAdapterViewClass, JExpr.invoke("findViewById").arg(idRef)),"setOnItemClickListener").arg(JExpr._new(onItemClickListenerClass)));
 	}
+	
+	private JFieldRef extractClickQualifiedId(Element element, JCodeModel codeModel) {
+		ItemClick annotation = element.getAnnotation(ItemClick.class);
+		int idValue = annotation.value();
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
+		if (idValue == Id.DEFAULT_VALUE) {
+			String fieldName = element.getSimpleName().toString();
+			int lastIndex = fieldName.lastIndexOf("ItemClicked");
+			if (lastIndex != -1) {
+				fieldName = fieldName.substring(0, lastIndex);
+			}
+			return rInnerClass.getIdStaticRef(fieldName, codeModel);
+
+		} else {
+			return rInnerClass.getIdStaticRef(idValue, codeModel);
+		}
+	}
+
 
 }
