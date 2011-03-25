@@ -183,7 +183,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		JCodeModel codeModel = processAnnotationsToCodeModel(validatedModel, rClass, androidSystemServices);
 
 		MetaModel stringModel = processAnnotationsToStringModel(validatedModel, rClass, androidSystemServices);
-		
+
 		generateStringModelSources(stringModel);
 		generateCodeModelSources(codeModel);
 	}
@@ -243,13 +243,11 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
 		return modelProcessor.processToCodeModel(validatedModel);
 	}
-	
 
-    private MetaModel processAnnotationsToStringModel(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
-            ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
-            return modelProcessor.processToStringModel(validatedModel);
-    }
-
+	private MetaModel processAnnotationsToStringModel(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
+		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
+		return modelProcessor.processToStringModel(validatedModel);
+	}
 
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices) {
 		ModelProcessor modelProcessor = new ModelProcessor();
@@ -275,13 +273,11 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return modelProcessor;
 	}
 
+	private void generateStringModelSources(MetaModel model) throws IOException {
+		StringModelGenerator modelGenerator = new StringModelGenerator(processingEnv.getFiler());
+		modelGenerator.generate(model);
+	}
 
-    private void generateStringModelSources(MetaModel model) throws IOException {
-            StringModelGenerator modelGenerator = new StringModelGenerator(processingEnv.getFiler());
-            modelGenerator.generate(model);
-    }
-
-	
 	private void generateCodeModelSources(JCodeModel model) throws IOException {
 		CodeModelGenerator modelGenerator = new CodeModelGenerator(processingEnv.getFiler());
 		modelGenerator.generate(model);
