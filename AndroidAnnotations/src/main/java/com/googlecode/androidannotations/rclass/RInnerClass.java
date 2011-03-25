@@ -25,6 +25,9 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JFieldRef;
+
 public class RInnerClass implements IRInnerClass {
 
 	private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<Integer, String>();
@@ -70,14 +73,37 @@ public class RInnerClass implements IRInnerClass {
 	@Override
 	public String getIdQualifiedName(String name) {
 		String idQualifiedName = rInnerQualifiedName + "." + name;
-		
+
 		if (idQualifiedNamesByIdValues.containsValue(idQualifiedName)) {
 			return idQualifiedName;
 		} else {
 			return null;
 		}
-		
-		
+
+	}
+
+	@Override
+	public JFieldRef getIdStaticRef(Integer idValue, JCodeModel codeModel) {
+		String layoutFieldQualifiedName = getIdQualifiedName(idValue);
+		return extractIdStaticRef(codeModel, layoutFieldQualifiedName);
+	}
+
+	@Override
+	public JFieldRef getIdStaticRef(String name, JCodeModel codeModel) {
+		String layoutFieldQualifiedName = getIdQualifiedName(name);
+		return extractIdStaticRef(codeModel, layoutFieldQualifiedName);
+	}
+
+	private JFieldRef extractIdStaticRef(JCodeModel codeModel, String layoutFieldQualifiedName) {
+		if (layoutFieldQualifiedName != null) {
+			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
+			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
+			String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
+
+			return codeModel.ref(rInnerClassName).staticRef(fieldName);
+		} else {
+			return null;
+		}
 	}
 
 }

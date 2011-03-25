@@ -9,5 +9,6 @@ public class ActivityHolder {
 	public JDefinedClass activity;
 	public JMethod beforeSetContentView;
 	public JVar beforeSetContentViewSavedInstanceStateParam;
+	public JMethod afterSetContentView;
 
 }

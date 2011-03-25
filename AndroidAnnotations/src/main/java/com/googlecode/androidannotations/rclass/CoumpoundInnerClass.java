@@ -15,6 +15,9 @@
  */
 package com.googlecode.androidannotations.rclass;
 
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JFieldRef;
+
 public class CoumpoundInnerClass implements IRInnerClass {
 	
 	private final IRInnerClass rInnerClass;
@@ -51,5 +54,23 @@ public class CoumpoundInnerClass implements IRInnerClass {
 			idQualifiedName =  androidRInnerClass.getIdQualifiedName(name);
 		}
 		return idQualifiedName;
+	}
+
+	@Override
+	public JFieldRef getIdStaticRef(Integer idValue, JCodeModel codeModel) {
+		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, codeModel);
+		if (idStaticRef==null) {
+			idStaticRef =  androidRInnerClass.getIdStaticRef(idValue, codeModel);
+		}
+		return idStaticRef;
+	}
+
+	@Override
+	public JFieldRef getIdStaticRef(String name, JCodeModel codeModel) {
+		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, codeModel);
+		if (idStaticRef==null) {
+			idStaticRef =  androidRInnerClass.getIdStaticRef(name, codeModel);
+		}
+		return idStaticRef;
 	}
 }
