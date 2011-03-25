@@ -28,7 +28,6 @@ import com.googlecode.androidannotations.generation.BackgroundInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
-import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -36,7 +35,7 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -92,55 +91,23 @@ public class BackgroundProcessor implements ElementProcessor {
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterName = parameter.getSimpleName().toString();
 			JClass parameterClass = codeModel.ref(parameter.asType().toString());
-			JVar param = backgroundMethod.param(parameterClass, parameterName);
+			JVar param = backgroundMethod.param(JMod.FINAL, parameterClass, parameterName);
 			parameters.add(param);
 		}
 
-		/*
-		 * Method delegating calls to super. Cannot use anonymous classes, due
-		 * to CODEMODEL-1. This hack clearly sucks.
-		 */
-		JMethod superBackgroundMethod = holder.activity.method(JMod.NONE, codeModel.VOID, "super_" + backgroundMethodName + "_");
-		List<JVar> superParameters = new ArrayList<JVar>();
-		JBlock superBackgroundBody = superBackgroundMethod.body();
-		JInvocation superInvoke = JExpr._super().invoke(backgroundMethod);
-		for (JVar param : parameters) {
-			JVar superParam = superBackgroundMethod.param(param.type(), param.name());
-			superParameters.add(superParam);
-			superInvoke.arg(superParam);
-		}
-		superBackgroundBody.add(superInvoke);
+		JDefinedClass anonymousThreadClass = codeModel.anonymousClass(Thread.class);
 
-		// Class extending Thread
-		JDefinedClass threadClass = codeModel._class(JMod.NONE, holder.activity.fullName() + backgroundMethod.name() + "_Thread", ClassType.CLASS);
-		threadClass._extends(Thread.class);
-
-		JFieldVar threadActivityField = threadClass.field(JMod.PRIVATE | JMod.FINAL, holder.activity, "activity");
-
-		// Constructor
-		JMethod threadConstructor = threadClass.constructor(JMod.NONE);
-		JVar threadActivityParam = threadConstructor.param(holder.activity, "activity");
-		threadConstructor.body().assign(JExpr._this().ref(threadActivityField), threadActivityParam);
-
-		List<JFieldVar> threadParamFields = new ArrayList<JFieldVar>();
-		for (JVar param : parameters) {
-			JVar threadParameter = threadConstructor.param(param.type(), param.name());
-			JFieldVar threadParamField = threadClass.field(JMod.PRIVATE | JMod.FINAL, param.type(), param.name());
-			threadParamFields.add(threadParamField);
-			threadConstructor.body().assign(JExpr._this().ref(threadParamField), threadParameter);
-		}
-
-		JMethod runMethod = threadClass.method(JMod.PUBLIC, codeModel.VOID, "run");
+		JMethod runMethod = anonymousThreadClass.method(JMod.PUBLIC, codeModel.VOID, "run");
 		runMethod.annotate(Override.class);
 
 		JBlock runMethodBody = runMethod.body();
-
 		JTryBlock runTry = runMethodBody._try();
-
-		JInvocation superBackgroundMethodInvoke = runTry.body().invoke(threadActivityField, superBackgroundMethod);
-
-		for (JFieldVar paramField : threadParamFields) {
-			superBackgroundMethodInvoke.arg(paramField);
+		
+		JExpression activitySuper = holder.activity.staticRef("super");
+		
+		JInvocation superCall = runTry.body().invoke(activitySuper, backgroundMethod);
+		for (JVar param : parameters) {
+			superCall.arg(param);
 		}
 
 		JCatchBlock runCatch = runTry._catch(codeModel.ref(RuntimeException.class));
@@ -157,13 +124,8 @@ public class BackgroundProcessor implements ElementProcessor {
 		runCatch.body().add(errorInvoke);
 
 		JBlock backgroundBody = backgroundMethod.body();
-		JInvocation newThread = JExpr._new(threadClass).arg(JExpr._this());
-		for (JVar param : parameters) {
-			newThread.arg(param);
-		}
 
-		backgroundBody.add(newThread.invoke("start"));
+		backgroundBody.add(JExpr._new(anonymousThreadClass).invoke("start"));
 
 	}
-
 }
