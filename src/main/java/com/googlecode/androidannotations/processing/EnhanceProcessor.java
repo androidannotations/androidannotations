@@ -100,21 +100,21 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		holder.activity._extends(annotatedActivity);
 
-		JClass bundleClass = codeModel.ref("android.os.Bundle");
+		holder.bundleClass = codeModel.ref("android.os.Bundle");
 
 		// beforeSetContentView
 		holder.beforeSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
-		holder.beforeSetContentViewSavedInstanceStateParam = holder.beforeSetContentView.param(bundleClass, "savedInstanceState");
+		holder.beforeSetContentViewSavedInstanceStateParam = holder.beforeSetContentView.param(holder.bundleClass, "savedInstanceState");
 
 		// afterSetContentView
 		holder.afterSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
-		holder.afterSetContentView.param(bundleClass, "savedInstanceState");
+		holder.afterSetContentView.param(holder.bundleClass, "savedInstanceState");
 
 		// onCreate
 		JMethod onCreate = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
-		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
+		JVar onCreateSavedInstanceState = onCreate.param(holder.bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
 
 		onCreateBody.invoke(holder.beforeSetContentView).arg(onCreateSavedInstanceState);

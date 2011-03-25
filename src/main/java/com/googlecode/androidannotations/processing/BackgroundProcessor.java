@@ -117,8 +117,8 @@ public class BackgroundProcessor implements ElementProcessor {
 
 		JInvocation errorInvoke = logClass.staticInvoke("e");
 
-		errorInvoke.arg(JExpr.lit(holder.activity.name()));
-		errorInvoke.arg(JExpr.lit("A runtime exception was thrown while executing code in a background thread"));
+		errorInvoke.arg(holder.activity.name());
+		errorInvoke.arg("A runtime exception was thrown while executing code in a background thread");
 		errorInvoke.arg(exceptionParam);
 
 		runCatch.body().add(errorInvoke);
