@@ -97,7 +97,7 @@ public class ClickProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
 
-		ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
 		String methodName = element.getSimpleName().toString();
 
