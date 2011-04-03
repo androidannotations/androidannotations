@@ -48,7 +48,6 @@ public class BackgroundInstruction extends AbstractInstruction {
 		this.methodName = methodName;
 		this.methodArguments = methodArguments;
 		this.methodParameters = methodParameters;
-		
 		addImports("android.util.Log");
 	}
 

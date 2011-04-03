@@ -28,45 +28,102 @@ import com.googlecode.androidannotations.generation.UiThreadInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JVar;
 
 public class UiThreadProcessor implements ElementProcessor {
 
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return UiThread.class;
-	}
+    @Override
+    public Class<? extends Annotation> getTarget() {
+        return UiThread.class;
+    }
 
-	@Override
-	public void process(Element element, MetaModel metaModel) {
+    @Override
+    public void process(Element element, MetaModel metaModel) {
 
-		String methodName = element.getSimpleName().toString();
+        String methodName = element.getSimpleName().toString();
 
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		String className = metaActivity.getClassSimpleName();
-		List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
+        Element enclosingElement = element.getEnclosingElement();
+        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
+        String className = metaActivity.getClassSimpleName();
+        List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
 
-		List<String> methodArguments = new ArrayList<String>();
-		List<String> methodParameters =  new ArrayList<String>();
-		
-		ExecutableElement executableElement = (ExecutableElement) element;
-		
-		for(VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			String parameterType = parameter.asType().toString();
-			methodArguments.add(parameterType+" "+parameterName);
-			methodParameters.add(parameterName);
-		}
-		
-		Instruction instruction = new UiThreadInstruction(className, methodName, methodArguments, methodParameters);
-		memberInstructions.add(instruction);
-	}
+        List<String> methodArguments = new ArrayList<String>();
+        List<String> methodParameters = new ArrayList<String>();
 
-	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		// TODO Auto-generated method stub
-		
-	}
+        ExecutableElement executableElement = (ExecutableElement) element;
+
+        for (VariableElement parameter : executableElement.getParameters()) {
+            String parameterName = parameter.getSimpleName().toString();
+            String parameterType = parameter.asType().toString();
+            methodArguments.add(parameterType + " " + parameterName);
+            methodParameters.add(parameterName);
+        }
+
+        Instruction instruction = new UiThreadInstruction(className, methodName, methodArguments, methodParameters);
+        memberInstructions.add(instruction);
+    }
+
+    @Override
+    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws JClassAlreadyExistsException {
+
+        ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+
+        // Method
+        String backgroundMethodName = element.getSimpleName().toString();
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, backgroundMethodName);
+        method.annotate(Override.class);
+
+        // Method parameters
+        List<JVar> parameters = new ArrayList<JVar>();
+        ExecutableElement executableElement = (ExecutableElement) element;
+        for (VariableElement parameter : executableElement.getParameters()) {
+            String parameterName = parameter.getSimpleName().toString();
+            JClass parameterClass = holder.refClass(parameter.asType().toString());
+            JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
+            parameters.add(param);
+        }
+
+        JDefinedClass anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
+
+        JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
+        runMethod.annotate(Override.class);
+
+        JBlock runMethodBody = runMethod.body();
+        JTryBlock runTry = runMethodBody._try();
+
+        JExpression activitySuper = holder.activity.staticRef("super");
+
+        JInvocation superCall = runTry.body().invoke(activitySuper, method);
+        for (JVar param : parameters) {
+            superCall.arg(param);
+        }
+        JCatchBlock runCatch = runTry._catch(holder.refClass(RuntimeException.class));
+        JVar exceptionParam = runCatch.param("e");
+
+        JClass logClass = holder.refClass("android.util.Log");
+
+        JInvocation errorInvoke = logClass.staticInvoke("e");
+
+        errorInvoke.arg(holder.activity.name());
+        errorInvoke.arg("A runtime exception was thrown while executing code in the ui thread");
+        errorInvoke.arg(exceptionParam);
+
+        runCatch.body().add(errorInvoke);
+
+        method.body().invoke("runOnUiThread").arg(JExpr._new(anonymousRunnableClass));
+
+    }
 
 }

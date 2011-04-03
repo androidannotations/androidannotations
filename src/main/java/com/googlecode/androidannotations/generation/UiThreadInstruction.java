@@ -19,64 +19,63 @@ import java.util.List;
 
 public class UiThreadInstruction extends AbstractInstruction {
 
-	private static final String FORMAT = //
-	"" + //
-			"    @Override\n" + //
-			"    public void %s(%s) {\n" + //
-			"        runOnUiThread(new Runnable() {\n" + //
-			"            public void run() {\n" + //
-			"                try {\n" + //
-			"                    %s.super.%s(%s);\n" + //
-			"                } catch (RuntimeException e) {\n" + //
-			"                    Log.e(\"%s\", \"A runtime exception was thrown while executing code in the ui thread\", e);\n" + //
-			"                }\n" + //
-			"            }\n" + //
-			"        });\n" + //
-			"    }\n" + //
-			"\n";
+    private static final String FORMAT = //
+    "" + //
+            "    @Override\n" + //
+            "    public void %s(%s) {\n" + //
+            "        runOnUiThread(new Runnable() {\n" + //
+            "            public void run() {\n" + //
+            "                try {\n" + //
+            "                    %s.super.%s(%s);\n" + //
+            "                } catch (RuntimeException e) {\n" + //
+            "                    Log.e(\"%s\", \"A runtime exception was thrown while executing code in the ui thread\", e);\n" + //
+            "                }\n" + //
+            "            }\n" + //
+            "        });\n" + //
+            "    }\n" + //
+            "\n";
 
-	private final String methodName;
+    private final String methodName;
 
-	private final String className;
+    private final String className;
 
-	private final List<String> methodArguments;
+    private final List<String> methodArguments;
 
-	private final List<String> methodParameters;
+    private final List<String> methodParameters;
 
-	public UiThreadInstruction(String className, String methodName, List<String> methodArguments, List<String> methodParameters) {
-		this.className = className;
-		this.methodName = methodName;
-		this.methodArguments = methodArguments;
-		this.methodParameters = methodParameters;
-		addImports("android.util.Log");
-	}
+    public UiThreadInstruction(String className, String methodName, List<String> methodArguments, List<String> methodParameters) {
+        this.className = className;
+        this.methodName = methodName;
+        this.methodArguments = methodArguments;
+        this.methodParameters = methodParameters;
+        addImports("android.util.Log");
+    }
 
-	@Override
-	public String generate() {
+    @Override
+    public String generate() {
+        StringBuilder arguments = new StringBuilder();
+        boolean first = true;
+        for (String argument : methodArguments) {
+            if (first) {
+                first = false;
+            } else {
+                arguments.append(", ");
+            }
+            arguments.append("final ").append(argument);
+        }
 
-		StringBuilder arguments = new StringBuilder();
-		boolean first = true;
-		for(String argument : methodArguments) {
-			if (first) {
-				first = false;
-			} else {
-				arguments.append(", ");
-			}
-			arguments.append("final ").append(argument);
-		}
-		
-		first = true;
-		StringBuilder parameters = new StringBuilder();
-		for(String parameter : methodParameters) {
-			if (first) {
-				first = false;
-			} else {
-				parameters.append(", ");
-			}
-			parameters.append(parameter);
-		}
+        first = true;
+        StringBuilder parameters = new StringBuilder();
+        for (String parameter : methodParameters) {
+            if (first) {
+                first = false;
+            } else {
+                parameters.append(", ");
+            }
+            parameters.append(parameter);
+        }
 
-		return String.format(FORMAT, methodName, arguments.toString(), className, methodName, parameters.toString(), className);
-	}
+        return String.format(FORMAT, methodName, arguments.toString(), className, methodName, parameters.toString(), className);
+    }
 
 }
