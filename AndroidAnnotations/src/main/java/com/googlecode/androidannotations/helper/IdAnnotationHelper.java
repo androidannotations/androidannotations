@@ -7,8 +7,8 @@ import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
-import com.googlecode.androidannotations.rclass.RClass.Res;
 
 public class IdAnnotationHelper extends TargetAnnotationHelper {
 	

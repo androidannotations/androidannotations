@@ -6,7 +6,7 @@ import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.validation.IsValid;
 
 public class IdValidatorHelper extends ValidatorHelper {

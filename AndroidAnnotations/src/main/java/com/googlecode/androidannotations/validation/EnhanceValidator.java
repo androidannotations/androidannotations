@@ -26,7 +26,7 @@ import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 
 public class EnhanceValidator implements ElementValidator {
 

@@ -18,8 +18,6 @@ package com.googlecode.androidannotations.rclass;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.googlecode.androidannotations.rclass.RClass.Res;
-
 public class CoumpoundRClass implements IRClass {
 
 	private final Map<String, IRInnerClass> rInnerClasses = new HashMap<String, IRInnerClass>();

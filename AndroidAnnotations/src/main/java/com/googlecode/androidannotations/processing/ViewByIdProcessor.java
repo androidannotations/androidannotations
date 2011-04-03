@@ -28,8 +28,8 @@ import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
-import com.googlecode.androidannotations.rclass.RClass.Res;
 import com.sun.codemodel.JCodeModel;
 
 public class ViewByIdProcessor implements ElementProcessor {
