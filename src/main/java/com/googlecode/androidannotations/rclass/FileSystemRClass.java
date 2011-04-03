@@ -15,30 +15,36 @@
  */
 package com.googlecode.androidannotations.rclass;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.ElementFilter;
-
-public class RClass implements IRClass {
+public class FileSystemRClass implements IRClass {
 	
 	private final Map<String, RInnerClass> rClass = new HashMap<String, RInnerClass>();
 
-	public RClass(TypeElement rClassElement) {
-		List<TypeElement> rInnerTypeElements = extractRInnerTypeElements(rClassElement);
+	public FileSystemRClass(File resFolder, String rClassPackage) throws IOException {
+        File layoutFolder = new File(resFolder, "layout");
 
-		for (TypeElement rInnerTypeElement : rInnerTypeElements) {
-			RInnerClass rInnerClass = new RInnerClass(rInnerTypeElement);
-			rClass.put(rInnerTypeElement.getSimpleName().toString(), rInnerClass);
-		}
-	}
+        File[] layoutFiles = layoutFolder.listFiles();
+        File layout = layoutFiles[0];
+        FileReader reader = new FileReader(layout);
 
-	private List<TypeElement> extractRInnerTypeElements(TypeElement rClassElement) {
-		List<? extends Element> rEnclosedElements = rClassElement.getEnclosedElements();
-		return ElementFilter.typesIn(rEnclosedElements);
+        BufferedReader br = new BufferedReader(reader);
+
+        String line;
+        String id = "nothing";
+        while ((line = br.readLine()) != null) {
+            int idIndex = line.indexOf("android:id=\"@+id");
+            if (idIndex != -1) {
+                int endOfId = line.lastIndexOf("\"");
+                id = line.substring(idIndex + "android:id=\"@+id".length() + 1, endOfId);
+                break;
+            }
+        }
 	}
 
 	@Override

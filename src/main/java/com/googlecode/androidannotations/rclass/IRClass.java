@@ -1,10 +1,16 @@
 package com.googlecode.androidannotations.rclass;
 
-import com.googlecode.androidannotations.rclass.RClass.Res;
 
 public interface IRClass {
 
-	IRInnerClass get(Res res);
+	public enum Res {
+    	LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE;
+    	public String rName() {
+    		return toString().toLowerCase();
+    	}
+    }
+
+    IRInnerClass get(Res res);
 
 	final IRClass EMPTY_R_CLASS = new IRClass() {
 		@Override

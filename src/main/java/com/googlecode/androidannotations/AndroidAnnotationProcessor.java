@@ -196,7 +196,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private IRClass findAndroidRClass(AnnotationElementsHolder extractedModel) {
 		RClassFinder rClassFinder = new RClassFinder(processingEnv);
-		IRClass rClass = rClassFinder.find(extractedModel);
+		IRClass rClass = rClassFinder.findFromAnnotationElements(extractedModel);
 
 		AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
 
