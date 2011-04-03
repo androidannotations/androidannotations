@@ -15,6 +15,7 @@ public class ActivityHolder {
 	public JBlock extrasNotNullBlock;
 	public JVar extras;
 	public JClass bundleClass;
+    public JVar resources;
 	
 
 }
