@@ -33,7 +33,16 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 /**
  * @author Benjamin Fellous
@@ -92,9 +101,63 @@ public class LongClickProcessor implements ElementProcessor {
 
 	}
 
-	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		// TODO Auto-generated method stub
-		
-	}
+
+    @Override
+    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+        ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+
+        String methodName = element.getSimpleName().toString();
+
+        ExecutableElement executableElement = (ExecutableElement) element;
+        List<? extends VariableElement> parameters = executableElement.getParameters();
+        TypeMirror returnType = executableElement.getReturnType();
+        boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
+
+        boolean hasItemParameter = parameters.size() == 1;
+        
+        JFieldRef idRef = extractClickQualifiedId(element, codeModel);
+
+        JDefinedClass listenerClass = codeModel.anonymousClass(codeModel.ref("android.view.View.OnLongClickListener"));
+        JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");
+        JClass viewClass = codeModel.ref("android.view.View");
+        
+        JVar viewParam = listenerMethod.param(viewClass, "view");
+        
+        JBlock listenerMethodBody = listenerMethod.body();
+        
+        JInvocation call = JExpr.invoke(methodName);
+        
+        if (returnMethodResult) {
+            listenerMethodBody._return(call);
+        } else {
+            listenerMethodBody.add(call);
+            listenerMethodBody._return(JExpr.TRUE);
+        }
+
+        if (hasItemParameter) {
+            call.arg(viewParam);
+        }
+
+        JBlock body = holder.afterSetContentView.body();
+
+        body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef),"setOnLongClickListener").arg(JExpr._new(listenerClass)));
+    }
+    
+    private JFieldRef extractClickQualifiedId(Element element, JCodeModel codeModel) {
+        LongClick annotation = element.getAnnotation(LongClick.class);
+        int idValue = annotation.value();
+        IRInnerClass rInnerClass = rClass.get(Res.ID);
+        if (idValue == Id.DEFAULT_VALUE) {
+            String fieldName = element.getSimpleName().toString();
+            int lastIndex = fieldName.lastIndexOf("LongClicked");
+            if (lastIndex != -1) {
+                fieldName = fieldName.substring(0, lastIndex);
+            }
+            return rInnerClass.getIdStaticRef(fieldName, codeModel);
+
+        } else {
+            return rInnerClass.getIdStaticRef(idValue, codeModel);
+        }
+    }
+
 }
