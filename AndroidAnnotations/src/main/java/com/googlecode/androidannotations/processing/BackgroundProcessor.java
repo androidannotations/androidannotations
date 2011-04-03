@@ -78,7 +78,7 @@ public class BackgroundProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws JClassAlreadyExistsException {
 
-		ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
 		// Method
 		String backgroundMethodName = element.getSimpleName().toString();

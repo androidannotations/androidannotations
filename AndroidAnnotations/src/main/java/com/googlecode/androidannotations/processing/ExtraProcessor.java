@@ -73,7 +73,7 @@ public class ExtraProcessor implements ElementProcessor {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
-		ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 		JClass fieldType = holder.refClass(element.asType().toString());
 
 
