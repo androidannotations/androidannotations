@@ -6,6 +6,7 @@ import java.util.Map;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
@@ -21,6 +22,7 @@ public class ActivityHolder {
     public JVar resources;
 
     private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
+    public JFieldVar handler;
 
     public JClass refClass(String fullyQualifiedClassName) {
 
