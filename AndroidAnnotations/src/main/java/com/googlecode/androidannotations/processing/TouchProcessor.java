@@ -112,12 +112,12 @@ public class TouchProcessor implements ElementProcessor {
 
         boolean hasItemParameter = parameters.size() == 2;
 
-        JFieldRef idRef = extractClickQualifiedId(element, codeModel);
+        JFieldRef idRef = extractClickQualifiedId(element, holder);
 
-        JDefinedClass listenerClass = codeModel.anonymousClass(codeModel.ref("android.view.View.OnTouchListener"));
+        JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnTouchListener"));
         JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");
-        JClass viewClass = codeModel.ref("android.view.View");
-        JClass motionEventClass = codeModel.ref("android.view.MotionEvent");
+        JClass viewClass = holder.refClass("android.view.View");
+        JClass motionEventClass = holder.refClass("android.view.MotionEvent");
 
         JVar viewParam = listenerMethod.param(viewClass, "view");
         JVar eventParam = listenerMethod.param(motionEventClass, "event");
@@ -144,7 +144,7 @@ public class TouchProcessor implements ElementProcessor {
         body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef), "setOnTouchListener").arg(JExpr._new(listenerClass)));
     }
 
-    private JFieldRef extractClickQualifiedId(Element element, JCodeModel codeModel) {
+    private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
         Touch annotation = element.getAnnotation(Touch.class);
         int idValue = annotation.value();
         IRInnerClass rInnerClass = rClass.get(Res.ID);
@@ -154,9 +154,9 @@ public class TouchProcessor implements ElementProcessor {
             if (lastIndex != -1) {
                 fieldName = fieldName.substring(0, lastIndex);
             }
-            return rInnerClass.getIdStaticRef(fieldName, codeModel);
+            return rInnerClass.getIdStaticRef(fieldName, holder);
         } else {
-            return rInnerClass.getIdStaticRef(idValue, codeModel);
+            return rInnerClass.getIdStaticRef(idValue, holder);
         }
     }
 

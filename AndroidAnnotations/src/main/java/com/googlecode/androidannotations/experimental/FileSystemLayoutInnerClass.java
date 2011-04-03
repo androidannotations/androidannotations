@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.googlecode.androidannotations.processing.ActivityHolder;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
+@SuppressWarnings("all")
 public class FileSystemLayoutInnerClass implements IRInnerClass{
     
     private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<Integer, String>();
@@ -58,24 +60,24 @@ public class FileSystemLayoutInnerClass implements IRInnerClass{
     }
 
     @Override
-    public JFieldRef getIdStaticRef(Integer idValue, JCodeModel codeModel) {
+    public JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder) {
         String layoutFieldQualifiedName = getIdQualifiedName(idValue);
-        return extractIdStaticRef(codeModel, layoutFieldQualifiedName);
+        return extractIdStaticRef(holder, layoutFieldQualifiedName);
     }
 
     @Override
-    public JFieldRef getIdStaticRef(String name, JCodeModel codeModel) {
+    public JFieldRef getIdStaticRef(String name, ActivityHolder holder) {
         String layoutFieldQualifiedName = getIdQualifiedName(name);
-        return extractIdStaticRef(codeModel, layoutFieldQualifiedName);
+        return extractIdStaticRef(holder, layoutFieldQualifiedName);
     }
 
-    private JFieldRef extractIdStaticRef(JCodeModel codeModel, String layoutFieldQualifiedName) {
+    private JFieldRef extractIdStaticRef(ActivityHolder holder, String layoutFieldQualifiedName) {
         if (layoutFieldQualifiedName != null) {
             int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
             String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
             String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
 
-            return codeModel.ref(rInnerClassName).staticRef(fieldName);
+            return holder.refClass(rInnerClassName).staticRef(fieldName);
         } else {
             return null;
         }

@@ -73,9 +73,9 @@ public class ExtraProcessor implements ElementProcessor {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
-		JClass fieldType = codeModel.ref(element.asType().toString());
-
 		ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+		JClass fieldType = holder.refClass(element.asType().toString());
+
 
 		JBlock methodBody = holder.beforeSetContentView.body();
 
@@ -94,10 +94,10 @@ public class ExtraProcessor implements ElementProcessor {
 
 		containsKeyTry.body().assign(extraField, JExpr.cast(fieldType, holder.extras.invoke("get").arg(extraKey)));
 		
-		JCatchBlock containsKeyCatch = containsKeyTry._catch(codeModel.ref(ClassCastException.class));
+		JCatchBlock containsKeyCatch = containsKeyTry._catch(holder.refClass(ClassCastException.class));
 		JVar exceptionParam = containsKeyCatch.param("e");
 
-		JInvocation errorInvoke = codeModel.ref("android.util.Log").staticInvoke("e");
+		JInvocation errorInvoke = holder.refClass("android.util.Log").staticInvoke("e");
 
 		errorInvoke.arg(holder.activity.name());
 		errorInvoke.arg("Could not cast extra to expected type, the field is left to its default value");

@@ -1,6 +1,6 @@
 package com.googlecode.androidannotations.rclass;
 
-import com.sun.codemodel.JCodeModel;
+import com.googlecode.androidannotations.processing.ActivityHolder;
 import com.sun.codemodel.JFieldRef;
 
 public interface IRInnerClass {
@@ -12,9 +12,9 @@ public interface IRInnerClass {
 	
 	String getIdQualifiedName(String name);
 	
-	JFieldRef getIdStaticRef(Integer idValue, JCodeModel codeModel);
+	JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder);
 
-	JFieldRef getIdStaticRef(String name, JCodeModel codeModel);
+	JFieldRef getIdStaticRef(String name, ActivityHolder holder);
 	
 	final IRInnerClass EMPTY_R_INNER_CLASS = new RInnerClass(null);
 

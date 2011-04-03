@@ -100,7 +100,7 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		holder.activity._extends(annotatedActivity);
 
-		holder.bundleClass = codeModel.ref("android.os.Bundle");
+		holder.bundleClass = holder.refClass("android.os.Bundle");
 
 		// beforeSetContentView
 		holder.beforeSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
@@ -125,7 +125,7 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 		JFieldRef contentViewId;
 		if (layoutIdValue != Id.DEFAULT_VALUE) {
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, codeModel);
+			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
 		} else {
 			contentViewId = null;
 		}

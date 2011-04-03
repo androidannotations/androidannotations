@@ -115,11 +115,11 @@ public class LongClickProcessor implements ElementProcessor {
 
         boolean hasItemParameter = parameters.size() == 1;
         
-        JFieldRef idRef = extractClickQualifiedId(element, codeModel);
+        JFieldRef idRef = extractClickQualifiedId(element, holder);
 
-        JDefinedClass listenerClass = codeModel.anonymousClass(codeModel.ref("android.view.View.OnLongClickListener"));
+        JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnLongClickListener"));
         JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");
-        JClass viewClass = codeModel.ref("android.view.View");
+        JClass viewClass = holder.refClass("android.view.View");
         
         JVar viewParam = listenerMethod.param(viewClass, "view");
         
@@ -143,7 +143,7 @@ public class LongClickProcessor implements ElementProcessor {
         body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef),"setOnLongClickListener").arg(JExpr._new(listenerClass)));
     }
     
-    private JFieldRef extractClickQualifiedId(Element element, JCodeModel codeModel) {
+    private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
         LongClick annotation = element.getAnnotation(LongClick.class);
         int idValue = annotation.value();
         IRInnerClass rInnerClass = rClass.get(Res.ID);
@@ -153,10 +153,10 @@ public class LongClickProcessor implements ElementProcessor {
             if (lastIndex != -1) {
                 fieldName = fieldName.substring(0, lastIndex);
             }
-            return rInnerClass.getIdStaticRef(fieldName, codeModel);
+            return rInnerClass.getIdStaticRef(fieldName, holder);
 
         } else {
-            return rInnerClass.getIdStaticRef(idValue, codeModel);
+            return rInnerClass.getIdStaticRef(idValue, holder);
         }
     }
 

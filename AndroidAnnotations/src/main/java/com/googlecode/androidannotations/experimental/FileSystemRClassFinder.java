@@ -30,6 +30,7 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.RClassFinder;
 
+@SuppressWarnings("all")
 public class FileSystemRClassFinder extends AnnotationHelper implements RClassFinder {
 
     public FileSystemRClassFinder(ProcessingEnvironment processingEnv) {

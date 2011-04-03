@@ -90,15 +90,15 @@ public class ResProcessor implements ElementProcessor {
         IRInnerClass rInnerClass = rClass.get(resInnerClass);
         JFieldRef idRef;
         if (idValue == Id.DEFAULT_VALUE) {
-            idRef = rInnerClass.getIdStaticRef(fieldName, codeModel);
+            idRef = rInnerClass.getIdStaticRef(fieldName, holder);
         } else {
-            idRef = rInnerClass.getIdStaticRef(idValue, codeModel);
+            idRef = rInnerClass.getIdStaticRef(idValue, holder);
         }
 
         JBlock methodBody = holder.beforeSetContentView.body();
-
+        
         if (holder.resources == null) {
-            holder.resources = methodBody.decl(codeModel.ref("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
+            holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
         }
         
         String resourceMethodName = androidValue.getResourceMethodName();

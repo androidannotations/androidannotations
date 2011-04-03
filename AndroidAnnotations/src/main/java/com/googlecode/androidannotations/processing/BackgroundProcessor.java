@@ -90,7 +90,7 @@ public class BackgroundProcessor implements ElementProcessor {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = codeModel.ref(parameter.asType().toString());
+			JClass parameterClass = holder.refClass(parameter.asType().toString());
 			JVar param = backgroundMethod.param(JMod.FINAL, parameterClass, parameterName);
 			parameters.add(param);
 		}
@@ -109,11 +109,10 @@ public class BackgroundProcessor implements ElementProcessor {
 		for (JVar param : parameters) {
 			superCall.arg(param);
 		}
-
-		JCatchBlock runCatch = runTry._catch(codeModel.ref(RuntimeException.class));
+		JCatchBlock runCatch = runTry._catch(holder.refClass(RuntimeException.class));
 		JVar exceptionParam = runCatch.param("e");
 
-		JClass logClass = codeModel.ref("android.util.Log");
+		JClass logClass = holder.refClass("android.util.Log");
 
 		JInvocation errorInvoke = logClass.staticInvoke("e");
 

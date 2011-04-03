@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.lang.model.type.TypeMirror;
 
-import com.sun.codemodel.JCodeModel;
+import com.googlecode.androidannotations.processing.ActivityHolder;
 import com.sun.codemodel.JFieldRef;
 
 public class AndroidSystemServices {
@@ -53,17 +53,17 @@ public class AndroidSystemServices {
         return registeredServices.get(serviceType.toString());
     }
 
-    public JFieldRef getServiceConstant(TypeMirror serviceType, JCodeModel codeModel) {
-        return extractIdStaticRef(codeModel, registeredServices.get(serviceType.toString()));
+    public JFieldRef getServiceConstant(TypeMirror serviceType, ActivityHolder holder) {
+        return extractIdStaticRef(holder, registeredServices.get(serviceType.toString()));
     }
 
-    private JFieldRef extractIdStaticRef(JCodeModel codeModel, String staticFieldQualifiedName) {
+    private JFieldRef extractIdStaticRef(ActivityHolder holder, String staticFieldQualifiedName) {
         if (staticFieldQualifiedName != null) {
             int fieldSuffix = staticFieldQualifiedName.lastIndexOf('.');
             String fieldName = staticFieldQualifiedName.substring(fieldSuffix + 1);
             String className = staticFieldQualifiedName.substring(0, fieldSuffix);
 
-            return codeModel.ref(className).staticRef(fieldName);
+            return holder.refClass(className).staticRef(fieldName);
         } else {
             return null;
         }
