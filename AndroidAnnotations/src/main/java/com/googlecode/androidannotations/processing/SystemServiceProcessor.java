@@ -27,43 +27,57 @@ import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
 
 public class SystemServiceProcessor implements ElementProcessor {
 
-	private final AndroidSystemServices androidSystemServices;
+    private final AndroidSystemServices androidSystemServices;
 
-	public SystemServiceProcessor(AndroidSystemServices androidSystemServices) {
-		this.androidSystemServices = androidSystemServices;
-	}
+    public SystemServiceProcessor(AndroidSystemServices androidSystemServices) {
+        this.androidSystemServices = androidSystemServices;
+    }
 
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SystemService.class;
-	}
+    @Override
+    public Class<? extends Annotation> getTarget() {
+        return SystemService.class;
+    }
 
-	@Override
-	public void process(Element element, MetaModel metaModel) {
-		String fieldName = element.getSimpleName().toString();
+    @Override
+    public void process(Element element, MetaModel metaModel) {
+        String fieldName = element.getSimpleName().toString();
 
-		TypeMirror serviceType = element.asType();
-		String fieldTypeQualifiedName = serviceType.toString();
+        TypeMirror serviceType = element.asType();
+        String fieldTypeQualifiedName = serviceType.toString();
 
-		String serviceConstant = androidSystemServices.getServiceConstant(serviceType);
+        String serviceConstant = androidSystemServices.getServiceConstant(serviceType);
 
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
+        Element enclosingElement = element.getEnclosingElement();
+        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
+        List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
 
-		Instruction instruction = new SystemServiceInstruction(fieldName, fieldTypeQualifiedName, serviceConstant);
-		beforeCreateInstructions.add(instruction);
+        Instruction instruction = new SystemServiceInstruction(fieldName, fieldTypeQualifiedName, serviceConstant);
+        beforeCreateInstructions.add(instruction);
 
-	}
+    }
 
-	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+
+        ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+
+        String fieldName = element.getSimpleName().toString();
+
+        TypeMirror serviceType = element.asType();
+        String fieldTypeQualifiedName = serviceType.toString();
+
+        JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, codeModel);
+
+        JBlock methodBody = holder.beforeSetContentView.body();
+
+        methodBody.assign(JExpr.ref(fieldName), JExpr.cast(codeModel.ref(fieldTypeQualifiedName), JExpr.invoke("getSystemService").arg(serviceRef)));
+    }
 
 }
