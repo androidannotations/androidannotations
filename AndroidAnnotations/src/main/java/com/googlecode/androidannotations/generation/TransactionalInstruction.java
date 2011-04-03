@@ -25,7 +25,7 @@ public class TransactionalInstruction extends AbstractInstruction {
 			"    public %s %s(%s) {\n" + //
 			"        %s.beginTransaction();\n" + //
 			"        try {\n" + //
-			"            %s%s(%s);\n" + //
+			"            %ssuper.%s(%s);\n" + //
 			"            %s.setTransactionSuccessful();\n" + //
 			"            return%s;\n" + //
 			"        } catch (RuntimeException e) {\n" + //
