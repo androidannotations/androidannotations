@@ -16,6 +16,8 @@
 package com.googlecode.androidannotations;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Set;
 
 import javax.annotation.processing.Messager;
@@ -88,9 +90,9 @@ import com.googlecode.androidannotations.processing.ViewByIdProcessor;
 import com.googlecode.androidannotations.processor.AnnotatedAbstractProcessor;
 import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
+import com.googlecode.androidannotations.rclass.CompiledRClassFinder;
 import com.googlecode.androidannotations.rclass.CoumpoundRClass;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.CompiledRClassFinder;
 import com.googlecode.androidannotations.rclass.RClassFinder;
 import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
@@ -152,24 +154,26 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         try {
             processThrowing(annotations, roundEnv);
         } catch (Exception e) {
+            
+            String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations, with the following content: " + stackTraceToString(e);
+            messager.printMessage(Diagnostic.Kind.ERROR, errorMessage);
 
-            Throwable rootCause = e;
-            while (rootCause.getCause() != null) {
-                rootCause = rootCause.getCause();
-            }
-
-            StackTraceElement firstElement = e.getStackTrace()[0];
-            StackTraceElement rootFirstElement = rootCause.getStackTrace()[0];
-            String errorMessage = e.toString() + " " + firstElement.toString() + " root: " + rootCause.toString() + " " + rootFirstElement.toString();
-
-            messager.printMessage(Diagnostic.Kind.ERROR, "Unexpected annotation processing exception: " + errorMessage);
-            e.printStackTrace();
-
+            /*
+             * Printing exception as an error on a random element. The exception is not related to this element, but otherwise it wouldn't show up in eclipse.
+             */
+           
             Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
-            messager.printMessage(Diagnostic.Kind.ERROR, "Unexpected annotation processing exception (not related to this element, but otherwise it wouldn't show up in eclipse) : " + errorMessage, element);
+            messager.printMessage(Diagnostic.Kind.ERROR, errorMessage, element);
         }
 
         return false;
+    }
+
+    private String stackTraceToString(Throwable e) {
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        e.printStackTrace(pw);
+        return writer.toString();
     }
 
     private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws IOException {
