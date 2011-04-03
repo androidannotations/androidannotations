@@ -125,7 +125,7 @@ public class MyActivity extends Activity {
 	}
 
 	@Transactional
-	int transactionalMethod(SQLiteDatabase db) {
+	int transactionalMethod(SQLiteDatabase db, int someParam) {
 		return 42;
 	}
 
