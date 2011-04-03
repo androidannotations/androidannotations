@@ -28,47 +28,114 @@ import com.googlecode.androidannotations.generation.TransactionalInstruction;
 import com.googlecode.androidannotations.model.Instruction;
 import com.googlecode.androidannotations.model.MetaActivity;
 import com.googlecode.androidannotations.model.MetaModel;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JVar;
 
 public class TransactionalProcessor implements ElementProcessor {
 
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Transactional.class;
-	}
+    @Override
+    public Class<? extends Annotation> getTarget() {
+        return Transactional.class;
+    }
 
-	@Override
-	public void process(Element element, MetaModel metaModel) {
+    @Override
+    public void process(Element element, MetaModel metaModel) {
 
-		String methodName = element.getSimpleName().toString();
+        String methodName = element.getSimpleName().toString();
 
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		String className = metaActivity.getClassSimpleName();
-		List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
+        Element enclosingElement = element.getEnclosingElement();
+        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
+        String className = metaActivity.getClassSimpleName();
+        List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
 
-		List<String> methodArguments = new ArrayList<String>();
-		List<String> methodParameters = new ArrayList<String>();
+        List<String> methodArguments = new ArrayList<String>();
+        List<String> methodParameters = new ArrayList<String>();
 
-		ExecutableElement executableElement = (ExecutableElement) element;
+        ExecutableElement executableElement = (ExecutableElement) element;
 
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			String parameterType = parameter.asType().toString();
-			methodArguments.add(parameterType + " " + parameterName);
-			methodParameters.add(parameterName);
-		}
+        for (VariableElement parameter : executableElement.getParameters()) {
+            String parameterName = parameter.getSimpleName().toString();
+            String parameterType = parameter.asType().toString();
+            methodArguments.add(parameterType + " " + parameterName);
+            methodParameters.add(parameterName);
+        }
 
-		String returnType = executableElement.getReturnType().toString();
+        String returnType = executableElement.getReturnType().toString();
 
-		Instruction instruction = new TransactionalInstruction(methodName, className, methodArguments, methodParameters, returnType);
-		memberInstructions.add(instruction);
-	}
+        Instruction instruction = new TransactionalInstruction(methodName, className, methodArguments, methodParameters, returnType);
+        memberInstructions.add(instruction);
+    }
 
-	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+        ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+
+        String methodName = element.getSimpleName().toString();
+        ExecutableElement executableElement = (ExecutableElement) element;
+
+        String returnTypeName = executableElement.getReturnType().toString();
+        JClass returnType = holder.refClass(returnTypeName);
+
+        JMethod method = holder.activity.method(JMod.PUBLIC, returnType, methodName);
+        method.annotate(Override.class);
+
+        List<JVar> params = new ArrayList<JVar>();
+        for (VariableElement parameter : executableElement.getParameters()) {
+            String parameterName = parameter.getSimpleName().toString();
+            String parameterType = parameter.asType().toString();
+            JVar param = method.param(holder.refClass(parameterType), parameterName);
+            params.add(param);
+        }
+        
+        JVar db = params.get(0);
+        
+        JBlock body = method.body();
+        
+        body.invoke(db, "beginTransaction");
+        
+        JTryBlock tryBlock = body._try();
+        
+        JInvocation superCall = JExpr.invoke(JExpr._super(), method);
+        for(JVar param : params) {
+            superCall.arg(param);
+        }
+        JBlock tryBody = tryBlock.body();
+        if (returnTypeName.equals("void")) {
+            tryBody.add(superCall);
+            tryBody.invoke(db, "setTransactionSuccessful");
+            tryBody._return();
+        } else {
+            JVar result = tryBody.decl(returnType, "result_", superCall);
+            tryBody.invoke(db, "setTransactionSuccessful");
+            tryBody._return(result);
+        }
+        
+        JCatchBlock catchBlock = tryBlock._catch(codeModel.ref(RuntimeException.class));
+        
+        JVar exceptionParam = catchBlock.param("e");
+        
+        JBlock catchBody = catchBlock.body();
+        
+        JClass logClass = holder.refClass("android.util.Log");
+        JInvocation errorInvoke = catchBody.staticInvoke(logClass, "e");
+
+        errorInvoke.arg(holder.activity.name());
+        errorInvoke.arg("Error in transaction");
+        errorInvoke.arg(exceptionParam);
+
+        catchBody._throw(exceptionParam);
+        
+        tryBlock._finally().invoke(db, "endTransaction");        
+        
+
+    }
 
 }
