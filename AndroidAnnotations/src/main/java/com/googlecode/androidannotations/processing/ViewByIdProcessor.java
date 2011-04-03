@@ -30,7 +30,10 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
 
 public class ViewByIdProcessor implements ElementProcessor {
 
@@ -77,8 +80,28 @@ public class ViewByIdProcessor implements ElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		// TODO Auto-generated method stub
-		
+	    
+	    ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+	    
+        String fieldName = element.getSimpleName().toString();
+
+        TypeMirror uiFieldTypeMirror = element.asType();
+        String typeQualifiedName = uiFieldTypeMirror.toString();
+
+        ViewById annotation = element.getAnnotation(ViewById.class);
+        int idValue = annotation.value();
+
+        IRInnerClass rInnerClass = rClass.get(Res.ID);
+        JFieldRef idRef;
+        if (idValue == Id.DEFAULT_VALUE) {
+            idRef = rInnerClass.getIdStaticRef(fieldName, holder);
+        } else {
+            idRef = rInnerClass.getIdStaticRef(idValue, holder);
+        }
+        
+        JBlock methodBody = holder.afterSetContentView.body();
+	    
+        methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(typeQualifiedName), JExpr.invoke("findViewById").arg(idRef)));
 	}
 
 }
