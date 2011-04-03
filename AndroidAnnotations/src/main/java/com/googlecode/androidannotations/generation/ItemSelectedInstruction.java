@@ -25,12 +25,12 @@ public class ItemSelectedInstruction extends AbstractInstruction {
 			"        ((AdapterView<?>) findViewById(%s)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {\n" + //
 			"			@Override\n" + //
 			"			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {\n" + //
-			"				%s(true, %s);\n" + //
+			"				%s(true%s);\n" + //
 			"			}\n" + //
 			"\n" + //
 			"			@Override\n" + //
 			"			public void onNothingSelected(AdapterView<?> parent) {\n" + //
-			"				%s(false, null);\n" + //
+			"				%s(false%s);\n" + //
 			"			}\n" + //
 			"		});\n" + //
 			"\n";
@@ -54,8 +54,9 @@ public class ItemSelectedInstruction extends AbstractInstruction {
 
 	@Override
 	public String generate() {
-		String parameterValue = parameterQualifiedName != null ? "(" + parameterQualifiedName + ") parent.getAdapter().getItem(position)" : "";
-		return String.format(FORMAT, clickQualifiedId, methodName, parameterValue, methodName);
+		String parameterValue = parameterQualifiedName != null ? ", (" + parameterQualifiedName + ") parent.getAdapter().getItem(position)" : "";
+		String nullParameterValue = parameterQualifiedName!= null ? ", null" : "";
+		return String.format(FORMAT, clickQualifiedId, methodName, parameterValue, methodName, nullParameterValue);
 	}
 
 }
