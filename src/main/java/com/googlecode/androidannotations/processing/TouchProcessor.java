@@ -33,66 +33,131 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RClass.Res;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 /**
  * @author Pierre-Yves Ricau
  */
 public class TouchProcessor implements ElementProcessor {
 
-	private final IRClass rClass;
+    private final IRClass rClass;
 
-	public TouchProcessor(IRClass rClass) {
-		this.rClass = rClass;
-	}
+    public TouchProcessor(IRClass rClass) {
+        this.rClass = rClass;
+    }
 
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Touch.class;
-	}
+    @Override
+    public Class<? extends Annotation> getTarget() {
+        return Touch.class;
+    }
 
-	@Override
-	public void process(Element element, MetaModel metaModel) {
+    @Override
+    public void process(Element element, MetaModel metaModel) {
 
-		String methodName = element.getSimpleName().toString();
+        String methodName = element.getSimpleName().toString();
 
-		Touch annotation = element.getAnnotation(Touch.class);
-		int idValue = annotation.value();
+        Touch annotation = element.getAnnotation(Touch.class);
+        int idValue = annotation.value();
 
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		String longClickQualifiedId;
+        IRInnerClass rInnerClass = rClass.get(Res.ID);
+        String longClickQualifiedId;
 
-		if (idValue == Id.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-			int lastIndex = fieldName.lastIndexOf("Touched");
-			if (lastIndex != -1) {
-				fieldName = fieldName.substring(0, lastIndex);
-			}
-			longClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-		} else {
-			longClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
-		}
+        if (idValue == Id.DEFAULT_VALUE) {
+            String fieldName = element.getSimpleName().toString();
+            int lastIndex = fieldName.lastIndexOf("Touched");
+            if (lastIndex != -1) {
+                fieldName = fieldName.substring(0, lastIndex);
+            }
+            longClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
+        } else {
+            longClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
+        }
 
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
+        Element enclosingElement = element.getEnclosingElement();
+        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
+        List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
 
-		ExecutableElement executableElement = (ExecutableElement) element;
-		List<? extends VariableElement> parameters = executableElement.getParameters();
+        ExecutableElement executableElement = (ExecutableElement) element;
+        List<? extends VariableElement> parameters = executableElement.getParameters();
 
-		boolean viewParameter = parameters.size() == 2;
+        boolean viewParameter = parameters.size() == 2;
 
-		TypeMirror returnType = executableElement.getReturnType();
+        TypeMirror returnType = executableElement.getReturnType();
 
-		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
+        boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
 
-		Instruction instruction = new TouchInstruction(methodName, longClickQualifiedId, viewParameter, returnMethodResult);
-		onCreateInstructions.add(instruction);
-	}
+        Instruction instruction = new TouchInstruction(methodName, longClickQualifiedId, viewParameter, returnMethodResult);
+        onCreateInstructions.add(instruction);
+    }
 
-	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+        ActivityHolder holder = activitiesHolder.getActivityHolder(element);
+
+        String methodName = element.getSimpleName().toString();
+
+        ExecutableElement executableElement = (ExecutableElement) element;
+        List<? extends VariableElement> parameters = executableElement.getParameters();
+        TypeMirror returnType = executableElement.getReturnType();
+        boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
+
+        boolean hasItemParameter = parameters.size() == 2;
+
+        JFieldRef idRef = extractClickQualifiedId(element, codeModel);
+
+        JDefinedClass listenerClass = codeModel.anonymousClass(codeModel.ref("android.view.View.OnTouchListener"));
+        JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");
+        JClass viewClass = codeModel.ref("android.view.View");
+        JClass motionEventClass = codeModel.ref("android.view.MotionEvent");
+
+        JVar viewParam = listenerMethod.param(viewClass, "view");
+        JVar eventParam = listenerMethod.param(motionEventClass, "event");
+
+        JBlock listenerMethodBody = listenerMethod.body();
+
+        JInvocation call = JExpr.invoke(methodName);
+
+        if (returnMethodResult) {
+            listenerMethodBody._return(call);
+        } else {
+            listenerMethodBody.add(call);
+            listenerMethodBody._return(JExpr.TRUE);
+        }
+
+        call.arg(eventParam);
+
+        if (hasItemParameter) {
+            call.arg(viewParam);
+        }
+
+        JBlock body = holder.afterSetContentView.body();
+
+        body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef), "setOnTouchListener").arg(JExpr._new(listenerClass)));
+    }
+
+    private JFieldRef extractClickQualifiedId(Element element, JCodeModel codeModel) {
+        Touch annotation = element.getAnnotation(Touch.class);
+        int idValue = annotation.value();
+        IRInnerClass rInnerClass = rClass.get(Res.ID);
+        if (idValue == Id.DEFAULT_VALUE) {
+            String fieldName = element.getSimpleName().toString();
+            int lastIndex = fieldName.lastIndexOf("Touch");
+            if (lastIndex != -1) {
+                fieldName = fieldName.substring(0, lastIndex);
+            }
+            return rInnerClass.getIdStaticRef(fieldName, codeModel);
+        } else {
+            return rInnerClass.getIdStaticRef(idValue, codeModel);
+        }
+    }
+
 }
