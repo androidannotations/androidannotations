@@ -15,16 +15,21 @@
  */
 package com.googlecode.androidannotations.rclass;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
 
-import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
@@ -34,31 +39,55 @@ public class CompiledRClassFinder extends AnnotationHelper implements RClassFind
         super(processingEnv);
     }
 
-    public IRClass find(AnnotationElements extractedModel) {
+    public IRClass find(AnnotationElements extractedModel) throws IOException {
 
-        Elements elementUtils = processingEnv.getElementUtils();
+        File manifestFile = findManifestFile();
 
-        Set<? extends Element> annotatedElements = extractedModel.getAnnotatedElements(Enhance.class);
+        String rClassPackage = extractPackage(manifestFile);
 
-        Iterator<? extends Element> iterator = annotatedElements.iterator();
-
-        if (iterator.hasNext()) {
-            TypeElement firstLayoutAnnotatedElement = (TypeElement) iterator.next();
-
-            // TODO better handling at finding R class
-            PackageElement firstActivityPackage = elementUtils.getPackageOf(firstLayoutAnnotatedElement);
-
-            TypeElement rType = elementUtils.getTypeElement(firstActivityPackage.getQualifiedName() + "." + "R");
-
-            if (rType != null) {
-                return new RClass(rType);
-            } else {
-                printAnnotationError(firstLayoutAnnotatedElement, Enhance.class, "In order to find the R class, all Activities annotated with @" + Enhance.class.getSimpleName() + " should belong to the same package as the R class, which is not the case for: " + firstLayoutAnnotatedElement);
-                return IRClass.EMPTY_R_CLASS;
-            }
-        } else {
+        if (rClassPackage == null) {
+            Messager messager = processingEnv.getMessager();
+            messager.printMessage(Kind.WARNING, "Could not find the AndroidManifest.xml file in " + manifestFile.getAbsolutePath());
             return IRClass.EMPTY_R_CLASS;
         }
+
+        Elements elementUtils = processingEnv.getElementUtils();
+        String rClass = rClassPackage + ".R";
+        TypeElement rType = elementUtils.getTypeElement(rClass);
+
+        if (rType == null) {
+            Messager messager = processingEnv.getMessager();
+            messager.printMessage(Kind.WARNING, "The AndroidManifest.xml file was found, but not the compiled R class: " + rClass);
+            return IRClass.EMPTY_R_CLASS;
+        }
+
+        return new RClass(rType);
+    }
+
+    private String extractPackage(File manifestFile) throws FileNotFoundException, IOException {
+        FileReader reader = new FileReader(manifestFile);
+        BufferedReader br = new BufferedReader(reader);
+
+        String line;
+        while ((line = br.readLine()) != null) {
+
+            ManifestPackageExtractor extractor = new ManifestPackageExtractor(line);
+
+            if (extractor.matches()) {
+                return extractor.extract();
+            }
+        }
+        return null;
+    }
+
+    private File findManifestFile() throws IOException {
+        Filer filer = processingEnv.getFiler();
+
+        FileObject res = filer.getResource(StandardLocation.CLASS_OUTPUT, "", "");
+        File projectRoot = new File(res.toUri()).getParentFile();
+
+        File androidManifestFile = new File(projectRoot, "AndroidManifest.xml");
+        return androidManifestFile;
     }
 
 }
