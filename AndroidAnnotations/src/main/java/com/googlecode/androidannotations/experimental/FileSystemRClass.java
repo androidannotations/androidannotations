@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.rclass;
+package com.googlecode.androidannotations.experimental;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +21,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
+import com.googlecode.androidannotations.rclass.RInnerClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 
 public class FileSystemRClass implements IRClass {
 	

@@ -1,10 +1,11 @@
-package com.googlecode.androidannotations.rclass;
+package com.googlecode.androidannotations.experimental;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
