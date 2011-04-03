@@ -106,11 +106,11 @@ public class ClickProcessor implements ElementProcessor {
 
 		boolean hasViewParameter = parameters.size() == 1;
 
-		JFieldRef idRef = extractClickQualifiedId(element, codeModel);
+		JFieldRef idRef = extractClickQualifiedId(element, holder);
 
-		JDefinedClass onClickListenerClass = codeModel.anonymousClass(codeModel.ref("android.view.View.OnClickListener"));
+		JDefinedClass onClickListenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnClickListener"));
 		JMethod onClickMethod = onClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");
-		JClass viewClass = codeModel.ref("android.view.View");
+		JClass viewClass = holder.refClass("android.view.View");
 		JVar onClickViewParam = onClickMethod.param(viewClass, "view");
 
 		JInvocation clickCall = onClickMethod.body().invoke(methodName);
@@ -126,7 +126,7 @@ public class ClickProcessor implements ElementProcessor {
 
 	}
 
-	private JFieldRef extractClickQualifiedId(Element element, JCodeModel codeModel) {
+	private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
 		Click annotation = element.getAnnotation(Click.class);
 		int idValue = annotation.value();
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
@@ -136,10 +136,10 @@ public class ClickProcessor implements ElementProcessor {
 			if (lastIndex != -1) {
 				fieldName = fieldName.substring(0, lastIndex);
 			}
-			return rInnerClass.getIdStaticRef(fieldName, codeModel);
+			return rInnerClass.getIdStaticRef(fieldName, holder);
 
 		} else {
-			return rInnerClass.getIdStaticRef(idValue, codeModel);
+			return rInnerClass.getIdStaticRef(idValue, holder);
 		}
 	}
 

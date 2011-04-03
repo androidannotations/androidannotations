@@ -27,6 +27,7 @@ import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.googlecode.androidannotations.rclass.RInnerClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 
+@SuppressWarnings("all")
 public class FileSystemRClass implements IRClass {
 	
 	private final Map<String, RInnerClass> rClass = new HashMap<String, RInnerClass>();

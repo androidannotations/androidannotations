@@ -15,62 +15,62 @@
  */
 package com.googlecode.androidannotations.rclass;
 
-import com.sun.codemodel.JCodeModel;
+import com.googlecode.androidannotations.processing.ActivityHolder;
 import com.sun.codemodel.JFieldRef;
 
 public class CoumpoundInnerClass implements IRInnerClass {
-	
-	private final IRInnerClass rInnerClass;
-	private final IRInnerClass androidRInnerClass;
-	
-	public CoumpoundInnerClass(IRInnerClass rInnerClass, IRInnerClass androidRInnerClass) {
-		this.rInnerClass = rInnerClass;
-		this.androidRInnerClass = androidRInnerClass;
-	}
 
-	@Override
-	public boolean containsIdValue(Integer idValue) {
-		return rInnerClass.containsIdValue(idValue) ||  androidRInnerClass.containsIdValue(idValue) ;
-	}
+    private final IRInnerClass rInnerClass;
+    private final IRInnerClass androidRInnerClass;
 
-	@Override
-	public String getIdQualifiedName(Integer idValue) {
-		String idQualifiedName = rInnerClass.getIdQualifiedName(idValue);
-		if (idQualifiedName==null) {
-			idQualifiedName =  androidRInnerClass.getIdQualifiedName(idValue);
-		}
-		return idQualifiedName;
-	}
+    public CoumpoundInnerClass(IRInnerClass rInnerClass, IRInnerClass androidRInnerClass) {
+        this.rInnerClass = rInnerClass;
+        this.androidRInnerClass = androidRInnerClass;
+    }
 
-	@Override
-	public boolean containsField(String name) {
-		return rInnerClass.containsField(name) ||  androidRInnerClass.containsField(name) ;
-	}
+    @Override
+    public boolean containsIdValue(Integer idValue) {
+        return rInnerClass.containsIdValue(idValue) || androidRInnerClass.containsIdValue(idValue);
+    }
 
-	@Override
-	public String getIdQualifiedName(String name) {
-		String idQualifiedName = rInnerClass.getIdQualifiedName(name);
-		if (idQualifiedName==null) {
-			idQualifiedName =  androidRInnerClass.getIdQualifiedName(name);
-		}
-		return idQualifiedName;
-	}
+    @Override
+    public String getIdQualifiedName(Integer idValue) {
+        String idQualifiedName = rInnerClass.getIdQualifiedName(idValue);
+        if (idQualifiedName == null) {
+            idQualifiedName = androidRInnerClass.getIdQualifiedName(idValue);
+        }
+        return idQualifiedName;
+    }
 
-	@Override
-	public JFieldRef getIdStaticRef(Integer idValue, JCodeModel codeModel) {
-		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, codeModel);
-		if (idStaticRef==null) {
-			idStaticRef =  androidRInnerClass.getIdStaticRef(idValue, codeModel);
-		}
-		return idStaticRef;
-	}
+    @Override
+    public boolean containsField(String name) {
+        return rInnerClass.containsField(name) || androidRInnerClass.containsField(name);
+    }
 
-	@Override
-	public JFieldRef getIdStaticRef(String name, JCodeModel codeModel) {
-		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, codeModel);
-		if (idStaticRef==null) {
-			idStaticRef =  androidRInnerClass.getIdStaticRef(name, codeModel);
-		}
-		return idStaticRef;
-	}
+    @Override
+    public String getIdQualifiedName(String name) {
+        String idQualifiedName = rInnerClass.getIdQualifiedName(name);
+        if (idQualifiedName == null) {
+            idQualifiedName = androidRInnerClass.getIdQualifiedName(name);
+        }
+        return idQualifiedName;
+    }
+
+    @Override
+    public JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder) {
+        JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, holder);
+        if (idStaticRef == null) {
+            idStaticRef = androidRInnerClass.getIdStaticRef(idValue, holder);
+        }
+        return idStaticRef;
+    }
+
+    @Override
+    public JFieldRef getIdStaticRef(String name, ActivityHolder holder) {
+        JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, holder);
+        if (idStaticRef == null) {
+            idStaticRef = androidRInnerClass.getIdStaticRef(name, holder);
+        }
+        return idStaticRef;
+    }
 }

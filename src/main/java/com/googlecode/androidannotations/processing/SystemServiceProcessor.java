@@ -73,11 +73,11 @@ public class SystemServiceProcessor implements ElementProcessor {
         TypeMirror serviceType = element.asType();
         String fieldTypeQualifiedName = serviceType.toString();
 
-        JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, codeModel);
+        JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
 
         JBlock methodBody = holder.beforeSetContentView.body();
 
-        methodBody.assign(JExpr.ref(fieldName), JExpr.cast(codeModel.ref(fieldTypeQualifiedName), JExpr.invoke("getSystemService").arg(serviceRef)));
+        methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(fieldTypeQualifiedName), JExpr.invoke("getSystemService").arg(serviceRef)));
     }
 
 }
