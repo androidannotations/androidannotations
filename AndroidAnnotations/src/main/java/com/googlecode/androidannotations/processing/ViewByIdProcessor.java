@@ -16,17 +16,12 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.generation.ViewByIdInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -46,36 +41,6 @@ public class ViewByIdProcessor implements ElementProcessor {
 	@Override
 	public Class<? extends Annotation> getTarget() {
 		return ViewById.class;
-	}
-
-	@Override
-	public void process(Element element, MetaModel metaModel) {
-
-		String name = element.getSimpleName().toString();
-
-		TypeMirror uiFieldTypeMirror = element.asType();
-		String typeQualifiedName = uiFieldTypeMirror.toString();
-
-		ViewById annotation = element.getAnnotation(ViewById.class);
-		int idValue = annotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		String viewQualifiedId;
-		if (idValue == Id.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-
-			viewQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-		} else {
-			viewQualifiedId = rInnerClass.getIdQualifiedName(idValue);
-		}
-
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
-
-		Instruction instruction = new ViewByIdInstruction(name, typeQualifiedName, viewQualifiedId);
-		onCreateInstructions.add(instruction);
-
 	}
 
 	@Override

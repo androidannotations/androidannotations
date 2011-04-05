@@ -26,10 +26,6 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
-import com.googlecode.androidannotations.generation.ItemLongClickInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -60,51 +56,6 @@ public class ItemLongClickProcessor implements ElementProcessor {
 	public Class<? extends Annotation> getTarget() {
 		return ItemLongClick.class;
 	}
-
-	@Override
-	public void process(Element element, MetaModel metaModel) {
-
-		String methodName = element.getSimpleName().toString();
-
-		ItemLongClick annotation = element.getAnnotation(ItemLongClick.class);
-		int idValue = annotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		String itemClickQualifiedId;
-
-		if (idValue == Id.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-			int lastIndex = fieldName.lastIndexOf("ItemLongClicked");
-			if (lastIndex != -1) {
-				fieldName = fieldName.substring(0, lastIndex);
-			}
-			itemClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-		} else {
-			itemClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
-		}
-
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
-
-		ExecutableElement executableElement = (ExecutableElement) element;
-		TypeMirror returnType = executableElement.getReturnType();
-		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
-
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		Instruction instruction;
-		if (parameters.size() == 1) {
-			VariableElement parameter = parameters.get(0);
-			String parameterQualifiedName = parameter.asType().toString();
-			instruction = new ItemLongClickInstruction(methodName, itemClickQualifiedId, returnMethodResult, parameterQualifiedName);
-		} else {
-			instruction = new ItemLongClickInstruction(methodName, itemClickQualifiedId, returnMethodResult);
-		}
-
-		onCreateInstructions.add(instruction);
-	}
-
 
     @Override
     public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {

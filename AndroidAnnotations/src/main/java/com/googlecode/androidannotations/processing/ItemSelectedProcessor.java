@@ -24,10 +24,6 @@ import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ItemSelect;
-import com.googlecode.androidannotations.generation.ItemSelectedInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -56,48 +52,6 @@ public class ItemSelectedProcessor implements ElementProcessor {
     @Override
     public Class<? extends Annotation> getTarget() {
         return ItemSelect.class;
-    }
-
-    @Override
-    public void process(Element element, MetaModel metaModel) {
-
-        String methodName = element.getSimpleName().toString();
-
-        ItemSelect annotation = element.getAnnotation(ItemSelect.class);
-
-        int idValue = annotation.value();
-
-        IRInnerClass rInnerClass = rClass.get(Res.ID);
-        String itemClickQualifiedId;
-
-        if (idValue == Id.DEFAULT_VALUE) {
-            String fieldName = element.getSimpleName().toString();
-            int lastIndex = fieldName.lastIndexOf("ItemSelected");
-            if (lastIndex != -1) {
-                fieldName = fieldName.substring(0, lastIndex);
-            }
-            itemClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-        } else {
-            itemClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
-        }
-
-        Element enclosingElement = element.getEnclosingElement();
-        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-        List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
-
-        ExecutableElement executableElement = (ExecutableElement) element;
-        List<? extends VariableElement> parameters = executableElement.getParameters();
-
-        Instruction instruction;
-        if (parameters.size() == 2) {
-            VariableElement parameter = parameters.get(1);
-            String parameterQualifiedName = parameter.asType().toString();
-            instruction = new ItemSelectedInstruction(methodName, itemClickQualifiedId, parameterQualifiedName);
-        } else {
-            instruction = new ItemSelectedInstruction(methodName, itemClickQualifiedId);
-        }
-        onCreateInstructions.add(instruction);
-
     }
 
     @Override

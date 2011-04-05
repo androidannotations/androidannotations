@@ -23,10 +23,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.BeforeCreate;
-import com.googlecode.androidannotations.generation.BeforeCreateInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JInvocation;
 
@@ -35,25 +31,6 @@ public class BeforeCreateProcessor implements ElementProcessor {
 	@Override
 	public Class<? extends Annotation> getTarget() {
 		return BeforeCreate.class;
-	}
-
-	@Override
-	public void process(Element element, MetaModel metaModel) {
-
-		String methodName = element.getSimpleName().toString();
-
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-		List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
-
-		ExecutableElement executableElement = (ExecutableElement) element;
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		boolean bundleParameter = parameters.size() == 1;
-
-		Instruction instruction = new BeforeCreateInstruction(methodName, bundleParameter);
-		beforeCreateInstructions.add(instruction);
-
 	}
 
 	@Override

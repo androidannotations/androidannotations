@@ -16,16 +16,10 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.generation.ExtraInstruction;
-import com.googlecode.androidannotations.generation.ExtractAndCastExtraInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -41,31 +35,6 @@ public class ExtraProcessor implements ElementProcessor {
 	@Override
 	public Class<? extends Annotation> getTarget() {
 		return Extra.class;
-	}
-
-	@Override
-	public void process(Element element, MetaModel metaModel) {
-		Element enclosingElement = element.getEnclosingElement();
-		MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-
-		List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
-
-		Instruction extractAndCastExtraInstruction = new ExtractAndCastExtraInstruction();
-		if (!memberInstructions.contains(extractAndCastExtraInstruction)) {
-			memberInstructions.add(extractAndCastExtraInstruction);
-		}
-
-		String className = metaActivity.getClassSimpleName();
-		String fieldName = element.getSimpleName().toString();
-
-		Extra annotation = element.getAnnotation(Extra.class);
-		String key = annotation.value();
-
-		List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
-
-		Instruction instruction = new ExtraInstruction(className, fieldName, key);
-		beforeCreateInstructions.add(instruction);
-
 	}
 
 	@Override

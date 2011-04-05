@@ -24,8 +24,6 @@ import javax.lang.model.element.TypeElement;
 import com.googlecode.androidannotations.annotations.Enhance;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -52,36 +50,7 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 		return Enhance.class;
 	}
 
-	@Override
-	public void process(Element element, MetaModel metaModel) {
-
-		TypeElement typeElement = (TypeElement) element;
-
-		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
-		int layoutIdValue = layoutAnnotation.value();
-
-		String layoutFieldQualifiedName;
-		if (layoutIdValue != Id.DEFAULT_VALUE) {
-			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-			layoutFieldQualifiedName = rInnerClass.getIdQualifiedName(layoutIdValue);
-		} else {
-			layoutFieldQualifiedName = null;
-		}
-
-		String superClassQualifiedName = typeElement.getQualifiedName().toString();
-
-		int packageSeparatorIndex = superClassQualifiedName.lastIndexOf('.');
-
-		String packageName = superClassQualifiedName.substring(0, packageSeparatorIndex);
-
-		String superClassSimpleName = superClassQualifiedName.substring(packageSeparatorIndex + 1);
-
-		MetaActivity activity = new MetaActivity(packageName, superClassSimpleName, layoutFieldQualifiedName);
-
-		metaModel.getMetaActivities().put(element, activity);
-	}
-
-	public static final String NEW_CLASS_SUFFIX = "__";
+	public static final String NEW_CLASS_SUFFIX = "_";
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {

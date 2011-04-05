@@ -24,11 +24,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
-import com.googlecode.androidannotations.generation.HandlerInstruction;
-import com.googlecode.androidannotations.generation.UiThreadDelayedInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -48,40 +43,6 @@ public class UiThreadDelayedProcessor implements ElementProcessor {
     @Override
     public Class<? extends Annotation> getTarget() {
         return UiThreadDelayed.class;
-    }
-
-    @Override
-    public void process(Element element, MetaModel metaModel) {
-
-        String methodName = element.getSimpleName().toString();
-
-        Element enclosingElement = element.getEnclosingElement();
-        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-        String className = metaActivity.getClassSimpleName();
-        List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
-
-        List<String> methodArguments = new ArrayList<String>();
-        List<String> methodParameters = new ArrayList<String>();
-
-        ExecutableElement executableElement = (ExecutableElement) element;
-
-        for (VariableElement parameter : executableElement.getParameters()) {
-            String parameterName = parameter.getSimpleName().toString();
-            String parameterType = parameter.asType().toString();
-            methodArguments.add(parameterType + " " + parameterName);
-            methodParameters.add(parameterName);
-        }
-
-        UiThreadDelayed annotation = element.getAnnotation(UiThreadDelayed.class);
-        long delay = annotation.value();
-
-        Instruction instruction = new UiThreadDelayedInstruction(methodName, className, methodArguments, methodParameters, delay);
-        memberInstructions.add(instruction);
-
-        Instruction handlerInstruction = new HandlerInstruction();
-        if (!memberInstructions.contains(handlerInstruction)) {
-            memberInstructions.add(handlerInstruction);
-        }
     }
 
     @Override
