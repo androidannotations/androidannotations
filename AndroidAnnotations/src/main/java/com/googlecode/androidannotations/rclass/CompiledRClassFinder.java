@@ -27,67 +27,101 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
+import javax.tools.JavaFileObject;
 
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
 public class CompiledRClassFinder extends AnnotationHelper implements RClassFinder {
 
-    public CompiledRClassFinder(ProcessingEnvironment processingEnv) {
-        super(processingEnv);
-    }
+	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
 
-    public IRClass find(AnnotationElements extractedModel) throws IOException {
+	public CompiledRClassFinder(ProcessingEnvironment processingEnv) {
+		super(processingEnv);
+	}
 
-        File manifestFile = findManifestFile();
+	public IRClass find(AnnotationElements extractedModel) throws IOException {
 
-        String rClassPackage = extractPackage(manifestFile);
+		File manifestFile = findManifestFile();
 
-        if (rClassPackage == null) {
-            Messager messager = processingEnv.getMessager();
-            messager.printMessage(Kind.WARNING, "Could not find the AndroidManifest.xml file in " + manifestFile.getAbsolutePath());
-            return IRClass.EMPTY_R_CLASS;
-        }
+		String rClassPackage = extractPackage(manifestFile);
 
-        Elements elementUtils = processingEnv.getElementUtils();
-        String rClass = rClassPackage + ".R";
-        TypeElement rType = elementUtils.getTypeElement(rClass);
+		if (rClassPackage == null) {
+			Messager messager = processingEnv.getMessager();
+			messager.printMessage(Kind.WARNING, "Could not find the AndroidManifest.xml file in " + manifestFile.getAbsolutePath());
+			return IRClass.EMPTY_R_CLASS;
+		}
 
-        if (rType == null) {
-            Messager messager = processingEnv.getMessager();
-            messager.printMessage(Kind.WARNING, "The AndroidManifest.xml file was found, but not the compiled R class: " + rClass);
-            return IRClass.EMPTY_R_CLASS;
-        }
+		Elements elementUtils = processingEnv.getElementUtils();
+		String rClass = rClassPackage + ".R";
+		TypeElement rType = elementUtils.getTypeElement(rClass);
 
-        return new RClass(rType);
-    }
+		// processingEnv.getFiler().getResource(StandardLocation.SOURCE_OUTPUT,
+		// rClassPackage, "R.java");
 
-    private String extractPackage(File manifestFile) throws FileNotFoundException, IOException {
-        FileReader reader = new FileReader(manifestFile);
-        BufferedReader br = new BufferedReader(reader);
+		if (rType == null) {
+			Messager messager = processingEnv.getMessager();
+			messager.printMessage(Kind.WARNING, "The AndroidManifest.xml file was found, but not the compiled R class: " + rClass);
+			return IRClass.EMPTY_R_CLASS;
+		}
 
-        String line;
-        while ((line = br.readLine()) != null) {
+		return new RClass(rType);
+	}
 
-            ManifestPackageExtractor extractor = new ManifestPackageExtractor(line);
+	private String extractPackage(File manifestFile) throws FileNotFoundException, IOException {
+		FileReader reader = new FileReader(manifestFile);
+		BufferedReader br = new BufferedReader(reader);
 
-            if (extractor.matches()) {
-                return extractor.extract();
-            }
-        }
-        return null;
-    }
+		String line;
+		while ((line = br.readLine()) != null) {
 
-    private File findManifestFile() throws IOException {
-        Filer filer = processingEnv.getFiler();
+			ManifestPackageExtractor extractor = new ManifestPackageExtractor(line);
 
-        FileObject res = filer.getResource(StandardLocation.CLASS_OUTPUT, "", "");
-        File projectRoot = new File(res.toUri()).getParentFile();
+			if (extractor.matches()) {
+				return extractor.extract();
+			}
+		}
+		return null;
+	}
 
-        File androidManifestFile = new File(projectRoot, "AndroidManifest.xml");
-        return androidManifestFile;
-    }
+	private File findManifestFile() throws IOException {
+		Filer filer = processingEnv.getFiler();
+
+		JavaFileObject dummySourceFile = filer.createSourceFile("dummy" + System.currentTimeMillis());
+		String dummySourceFilePath = dummySourceFile.toUri().toString();
+
+		if (dummySourceFilePath.startsWith("file:")) {
+			dummySourceFilePath = dummySourceFilePath.substring("file:".length());
+		}
+
+		Messager messager = processingEnv.getMessager();
+		messager.printMessage(Kind.NOTE, "Dummy source file: " + dummySourceFilePath);
+
+		File sourcesGenerationFolder = new File(dummySourceFilePath).getParentFile();
+
+		File projectRoot = sourcesGenerationFolder.getParentFile();
+
+		File androidManifestFile = new File(projectRoot, "AndroidManifest.xml");
+		for (int i = 0; i < MAX_PARENTS_FROM_SOURCE_FOLDER; i++) {
+			if (androidManifestFile.exists()) {
+				break;
+			} else {
+				if (projectRoot.getParentFile() != null) {
+					projectRoot = projectRoot.getParentFile();
+					androidManifestFile = new File(projectRoot, "AndroidManifest.xml");
+				} else {
+					break;
+				}
+			}
+		}
+
+		if (!androidManifestFile.exists()) {
+			throw new IllegalStateException("Could not find the AndroidManifest.xml file, going up from path " + sourcesGenerationFolder.getAbsolutePath() + " found using dummy file [" + dummySourceFilePath + "] (max atempts: " + MAX_PARENTS_FROM_SOURCE_FOLDER + ")");
+		} else {
+			messager.printMessage(Kind.NOTE, "AndroidManifest.xml file found: " + androidManifestFile.toString());
+		}
+
+		return androidManifestFile;
+	}
 
 }
