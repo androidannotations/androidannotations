@@ -26,10 +26,6 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.Touch;
-import com.googlecode.androidannotations.generation.TouchInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -58,45 +54,6 @@ public class TouchProcessor implements ElementProcessor {
     @Override
     public Class<? extends Annotation> getTarget() {
         return Touch.class;
-    }
-
-    @Override
-    public void process(Element element, MetaModel metaModel) {
-
-        String methodName = element.getSimpleName().toString();
-
-        Touch annotation = element.getAnnotation(Touch.class);
-        int idValue = annotation.value();
-
-        IRInnerClass rInnerClass = rClass.get(Res.ID);
-        String longClickQualifiedId;
-
-        if (idValue == Id.DEFAULT_VALUE) {
-            String fieldName = element.getSimpleName().toString();
-            int lastIndex = fieldName.lastIndexOf("Touched");
-            if (lastIndex != -1) {
-                fieldName = fieldName.substring(0, lastIndex);
-            }
-            longClickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-        } else {
-            longClickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
-        }
-
-        Element enclosingElement = element.getEnclosingElement();
-        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-        List<Instruction> onCreateInstructions = metaActivity.getOnCreateInstructions();
-
-        ExecutableElement executableElement = (ExecutableElement) element;
-        List<? extends VariableElement> parameters = executableElement.getParameters();
-
-        boolean viewParameter = parameters.size() == 2;
-
-        TypeMirror returnType = executableElement.getReturnType();
-
-        boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
-
-        Instruction instruction = new TouchInstruction(methodName, longClickQualifiedId, viewParameter, returnMethodResult);
-        onCreateInstructions.add(instruction);
     }
 
     @Override

@@ -32,11 +32,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import com.googlecode.androidannotations.annotations.RoboGuice;
-import com.googlecode.androidannotations.generation.RoboActivityBeforeCreateInstruction;
-import com.googlecode.androidannotations.generation.RoboActivityBodyInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -55,26 +50,6 @@ public class RoboGuiceProcessor implements ElementProcessor {
     @Override
     public Class<? extends Annotation> getTarget() {
         return RoboGuice.class;
-    }
-
-    @Override
-    public void process(Element element, MetaModel metaModel) {
-
-        MetaActivity metaActivity = metaModel.getMetaActivities().get(element);
-
-        Instruction onBeforeCreateInstruction = new RoboActivityBeforeCreateInstruction();
-
-        List<String> listenerClasses = extractListenerClasses(element);
-        Instruction memberInstruction = new RoboActivityBodyInstruction(listenerClasses);
-
-        List<Instruction> onBeforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
-        onBeforeCreateInstructions.add(onBeforeCreateInstruction);
-
-        List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
-        memberInstructions.add(memberInstruction);
-
-        List<String> implementedInterfaces = metaActivity.getImplementedInterfaces();
-        implementedInterfaces.add("roboguice.inject.InjectorProvider");
     }
 
     @Override

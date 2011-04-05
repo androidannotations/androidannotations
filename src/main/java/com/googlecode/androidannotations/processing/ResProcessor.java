@@ -16,16 +16,11 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.Id;
-import com.googlecode.androidannotations.generation.ValueInstruction;
 import com.googlecode.androidannotations.model.AndroidRes;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -47,34 +42,6 @@ public class ResProcessor implements ElementProcessor {
     @Override
     public Class<? extends Annotation> getTarget() {
         return androidValue.getTarget();
-    }
-
-    @Override
-    public void process(Element element, MetaModel metaModel) {
-
-        String name = element.getSimpleName().toString();
-
-        int idValue = androidValue.idFromElement(element);
-
-        Res resInnerClass = androidValue.getRInnerClass();
-
-        IRInnerClass rInnerClass = rClass.get(resInnerClass);
-        String qualifiedId;
-        if (idValue == Id.DEFAULT_VALUE) {
-            String fieldName = element.getSimpleName().toString();
-            qualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-        } else {
-            qualifiedId = rInnerClass.getIdQualifiedName(idValue);
-        }
-
-        Element enclosingElement = element.getEnclosingElement();
-        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-        List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
-
-        Instruction instruction = new ValueInstruction(name, androidValue.getResourceMethodName(), qualifiedId);
-
-        beforeCreateInstructions.add(instruction);
-
     }
 
     @Override

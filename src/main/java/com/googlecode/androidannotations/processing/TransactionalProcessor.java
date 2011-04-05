@@ -24,10 +24,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Transactional;
-import com.googlecode.androidannotations.generation.TransactionalInstruction;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -44,34 +40,6 @@ public class TransactionalProcessor implements ElementProcessor {
     @Override
     public Class<? extends Annotation> getTarget() {
         return Transactional.class;
-    }
-
-    @Override
-    public void process(Element element, MetaModel metaModel) {
-
-        String methodName = element.getSimpleName().toString();
-
-        Element enclosingElement = element.getEnclosingElement();
-        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-        String className = metaActivity.getClassSimpleName();
-        List<Instruction> memberInstructions = metaActivity.getMemberInstructions();
-
-        List<String> methodArguments = new ArrayList<String>();
-        List<String> methodParameters = new ArrayList<String>();
-
-        ExecutableElement executableElement = (ExecutableElement) element;
-
-        for (VariableElement parameter : executableElement.getParameters()) {
-            String parameterName = parameter.getSimpleName().toString();
-            String parameterType = parameter.asType().toString();
-            methodArguments.add(parameterType + " " + parameterName);
-            methodParameters.add(parameterName);
-        }
-
-        String returnType = executableElement.getReturnType().toString();
-
-        Instruction instruction = new TransactionalInstruction(methodName, className, methodArguments, methodParameters, returnType);
-        memberInstructions.add(instruction);
     }
 
     @Override

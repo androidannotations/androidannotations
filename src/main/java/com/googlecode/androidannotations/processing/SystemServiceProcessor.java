@@ -16,17 +16,12 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.generation.SystemServiceInstruction;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
-import com.googlecode.androidannotations.model.Instruction;
-import com.googlecode.androidannotations.model.MetaActivity;
-import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
@@ -43,24 +38,6 @@ public class SystemServiceProcessor implements ElementProcessor {
     @Override
     public Class<? extends Annotation> getTarget() {
         return SystemService.class;
-    }
-
-    @Override
-    public void process(Element element, MetaModel metaModel) {
-        String fieldName = element.getSimpleName().toString();
-
-        TypeMirror serviceType = element.asType();
-        String fieldTypeQualifiedName = serviceType.toString();
-
-        String serviceConstant = androidSystemServices.getServiceConstant(serviceType);
-
-        Element enclosingElement = element.getEnclosingElement();
-        MetaActivity metaActivity = metaModel.getMetaActivities().get(enclosingElement);
-        List<Instruction> beforeCreateInstructions = metaActivity.getBeforeCreateInstructions();
-
-        Instruction instruction = new SystemServiceInstruction(fieldName, fieldTypeQualifiedName, serviceConstant);
-        beforeCreateInstructions.add(instruction);
-
     }
 
     @Override
