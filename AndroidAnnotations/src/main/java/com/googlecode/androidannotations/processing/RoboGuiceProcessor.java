@@ -40,11 +40,13 @@ import com.googlecode.androidannotations.model.MetaModel;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
@@ -94,20 +96,11 @@ public class RoboGuiceProcessor implements ElementProcessor {
         onResumeMethod(codeModel, holder, scope, eventManager);
         onPauseMethod(codeModel, holder, scope, eventManager);
         onNewIntentMethod(codeModel, holder, scope, eventManager);
-
-        /*
-         * TODO Missing methods:
-         * 
-         * onStop
-         * 
-         * onDestroy
-         * 
-         * onConfigurationChanged
-         * 
-         * onContentChanged
-         * 
-         * onActivityResult
-         */
+        onStopMethod(codeModel, holder, scope, eventManager);
+        onDestroyMethod(codeModel, holder, scope, eventManager);
+        onConfigurationChangedMethod(codeModel, holder, scope, eventManager);
+        onContentChangedMethod(codeModel, holder, scope, eventManager);
+        onActivityResultMethod(codeModel, holder, scope, eventManager);
 
         JMethod getInjectorMethod = getInjectorMethod(holder);
 
@@ -177,6 +170,77 @@ public class RoboGuiceProcessor implements ElementProcessor {
             newEvent.arg(eventArgument);
         }
         body.invoke(eventManager, "fire").arg(newEvent);
+    }
+    
+    private void onStopMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onStop");
+        method.annotate(Override.class);
+        JBlock body = method.body();
+        body.invoke(scope, "enter").arg(_this());
+        
+        JTryBlock tryBlock = body._try();
+        fireEvent(holder, eventManager, tryBlock.body(), "roboguice.activity.event.OnStopEvent");
+        JBlock finallyBody = tryBlock._finally();
+        
+        finallyBody.invoke(scope, "exit").arg(_this());
+        finallyBody.invoke(_super(), method);
+    }
+    
+    private void onDestroyMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onDestroy");
+        method.annotate(Override.class);
+        JBlock body = method.body();
+        body.invoke(scope, "enter").arg(_this());
+        
+        JTryBlock tryBlock = body._try();
+        fireEvent(holder, eventManager, tryBlock.body(), "roboguice.activity.event.OnDestroyEvent");
+        JBlock finallyBody = tryBlock._finally();
+        
+        finallyBody.invoke(eventManager, "clear").arg(_this());
+        finallyBody.invoke(scope, "exit").arg(_this());
+        finallyBody.invoke(scope, "dispose").arg(_this());
+        finallyBody.invoke(_super(), method);
+    }
+    
+    private void onConfigurationChangedMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onConfigurationChanged");
+        method.annotate(Override.class);
+        JClass configurationClass = holder.refClass("android.content.res.Configuration");
+		JVar newConfig = method.param(configurationClass, "newConfig");
+        
+        JBlock body = method.body();
+        JVar currentConfig = body.decl(configurationClass, "currentConfig", JExpr.invoke("getResources").invoke("getConfiguration"));
+        
+        body.invoke(_super(), method).arg(newConfig);
+        fireEvent(holder, eventManager, body, "roboguice.activity.event.OnConfigurationChangedEvent", currentConfig, newConfig);
+    }
+    
+    private void onContentChangedMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onContentChanged");
+        method.annotate(Override.class);
+        JBlock body = method.body();
+        body.invoke(_super(), method);
+        fireEvent(holder, eventManager, body, "roboguice.activity.event.OnContentChangedEvent");
+    }
+    
+    private void onActivityResultMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onActivityResult");
+        method.annotate(Override.class);
+        JVar requestCode = method.param(codeModel.INT, "requestCode");
+        JVar resultCode = method.param(codeModel.INT, "resultCode");
+        JVar data = method.param(holder.refClass("android.content.Intent"), "data");
+        
+        JBlock body = method.body();
+        
+        body.invoke(_super(), method).arg(requestCode).arg(resultCode).arg(data);
+        
+        body.invoke(scope, "enter").arg(_this());
+        
+        JTryBlock tryBlock = body._try();
+        fireEvent(holder, eventManager, tryBlock.body(), "roboguice.activity.event.OnActivityResultEvent", requestCode, resultCode, data);
+
+        JBlock finallyBody = tryBlock._finally();
+        finallyBody.invoke(scope, "exit").arg(_this());
     }
 
     private void setContentViewMethods(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
