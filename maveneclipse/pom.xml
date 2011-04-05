@@ -8,6 +8,10 @@
 	<packaging>apk</packaging>
 	<name>maveneclipse</name>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
@@ -18,14 +22,14 @@
 		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>
 			<artifactId>androidannotations</artifactId>
-			<version>1.0.3</version>
+			<version>2.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>
 			<artifactId>androidannotations</artifactId>
 			<classifier>api</classifier>
-			<version>1.0.3</version>
+			<version>2.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -54,29 +58,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.bsc.maven</groupId>
-				<artifactId>maven-processor-plugin</artifactId>
-				<version>1.3.4</version>
-				<executions>
-					<execution>
-						<id>process</id>
-						<goals>
-							<goal>process</goal>
-						</goals>
-						<phase>generate-sources</phase>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.googlecode.androidannotations</groupId>
-						<artifactId>androidannotations</artifactId>
-						<version>1.0.3</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -85,20 +67,8 @@
 		<repository>
 			<id>androidannotations-repository</id>
 			<name>androidannotations Maven2 repository</name>
-			<url>http://androidannotations.googlecode.com/svn/repository/</url>
+			<url>http://androidannotations.googlecode.com/svn/repository/snapshots</url>
 		</repository>
 	</repositories>
 
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven-annotation-plugin-repo</id>
-			<url>http://maven-annotation-plugin.googlecode.com/svn/trunk/mavenrepo</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>androidannotations-repository</id>
-			<name>androidannotations Maven2 repository</name>
-			<url>http://androidannotations.googlecode.com/svn/repository/</url>
-		</pluginRepository>
-	</pluginRepositories>
 </project>

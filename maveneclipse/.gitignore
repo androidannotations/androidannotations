@@ -1,5 +1,7 @@
 target
 gen
 .classpath
-.settings
+.apt_generated
 .project
+org.eclipse.jdt.core.prefs
+org.maven.ide.eclipse.prefs
