@@ -7,8 +7,7 @@
 	<version>1.0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Android Annotations</name>
-	<description>Simplifying Android using annotations and annotation
-		processing tools</description>
+	<description>Simplifying Android using annotations and annotation processing tools</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -93,20 +92,19 @@
 
 	<distributionManagement>
 		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>androidannotations-googlecode</id>
-			<url>svn:https://androidannotations.googlecode.com/svn/repository
-			</url>
+			<id>release-repo</id>
+			<url>svn:https://androidannotations.googlecode.com/svn/repository/releases</url>
 		</repository>
+		<snapshotRepository>
+			<id>snapshot-repo</id>
+			<url>svn:https://androidannotations.googlecode.com/svn/repository/snapshots</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
-		</connection>
-		<developerConnection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
-		</developerConnection>
-		<url>https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations
-		</url>
+		<connection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations</connection>
+		<developerConnection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations</developerConnection>
+		<url>https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations</url>
 	</scm>
 
 	<repositories>
