@@ -169,7 +169,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
 
-		JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices);
+		JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
 
 		generateSources(codeModel);
 	}
@@ -230,12 +230,12 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return modelValidator;
 	}
 
-	private JCodeModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
-		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices);
+	private JCodeModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices, androidManifest);
 		return modelProcessor.process(validatedModel);
 	}
 
-	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices) {
+	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(new EnhanceProcessor(processingEnv, rClass));
 		modelProcessor.register(new RoboGuiceProcessor());
@@ -251,7 +251,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		}
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new UiThreadDelayedProcessor());
-		modelProcessor.register(new BackgroundProcessor());
+		modelProcessor.register(new BackgroundProcessor(androidManifest));
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor());
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
