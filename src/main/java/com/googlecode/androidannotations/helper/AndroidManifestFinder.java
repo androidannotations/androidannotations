@@ -19,28 +19,35 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class AndroidManifestFinder {
-	
+
 	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
-	
+
 	private ProcessingEnvironment processingEnv;
-	
+
 	public AndroidManifestFinder(ProcessingEnvironment processingEnv) {
 		this.processingEnv = processingEnv;
 	}
-	
-	public AndroidManifest extractAndroidManifest(){
+
+	public AndroidManifest extractAndroidManifest() {
 		try {
 			return extractAndroidManifestThrowing();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	private AndroidManifest extractAndroidManifestThrowing() throws Exception{
+
+	private AndroidManifest extractAndroidManifestThrowing() throws Exception {
 		File androidManifestFile = findManifestFileThrowing();
 		return parseThrowing(androidManifestFile);
 	}
 
+	/**
+	 * We use a dirty trick to find the AndroidManifest.xml file, since it's not
+	 * available in the classpath. The idea is quite simple : create a fake
+	 * class file, retrieve its URI, and start going up in parent folders to
+	 * find the AndroidManifest.xml file. Any better solution will be
+	 * appreciated.
+	 */
 	private File findManifestFileThrowing() throws IOException {
 		Filer filer = processingEnv.getFiler();
 
@@ -119,5 +126,4 @@ public class AndroidManifestFinder {
 		return new AndroidManifest(applicationPackage, activityQualifiedNames);
 	}
 
-	
 }

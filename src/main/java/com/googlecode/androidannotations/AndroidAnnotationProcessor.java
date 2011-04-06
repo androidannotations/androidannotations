@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.util.Set;
 
 import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
@@ -145,24 +146,43 @@ import com.sun.codemodel.JCodeModel;
 		StringArrayRes.class })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
+	
+	@Override
+	public synchronized void init(ProcessingEnvironment processingEnv) {
+		super.init(processingEnv);
+		
+		Messager messager = processingEnv.getMessager();
+		messager.printMessage(Diagnostic.Kind.NOTE, "Starting AndroidAnnotations compile time annotation processing");
+	}
+
+	/**
+	 * We do not need multiple round processing, since the generated classes do
+	 * not need to be processed.
+	 */
+	private boolean alreadyProcessed = false;
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-		Messager messager = processingEnv.getMessager();
-		messager.printMessage(Diagnostic.Kind.NOTE, "AndroidAnnotations compile time annotation processing");
 		try {
 			processThrowing(annotations, roundEnv);
 		} catch (Exception e) {
 			handleException(annotations, roundEnv, e);
 		}
-		return false;
+		return true;
 	}
 
 	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws IOException {
+
+		if (roundEnv.processingOver() || annotations.size() == 0 || alreadyProcessed) {
+			return;
+		} else {
+			alreadyProcessed = true;
+		}
+		
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
 		AndroidManifest androidManifest = extractAndroidManifest();
-		
+
 		IRClass rClass = findRClasses(androidManifest);
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
