@@ -44,7 +44,7 @@ public class RoboGuiceValidator  implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.hasEnhance(element, validatedElements, valid);
+		validatorHelper.hasEActivity(element, validatedElements, valid);
 
 		validatorHelper.hasRoboGuiceJars(element, valid);
 

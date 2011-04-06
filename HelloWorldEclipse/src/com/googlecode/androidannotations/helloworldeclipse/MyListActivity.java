@@ -7,14 +7,14 @@ import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.BeforeCreate;
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.res.StringArrayRes;
 
 // The layout is not set : we use the default layout set in ListActivity
-@Enhance
+@EActivity
 public class MyListActivity extends ListActivity {
 
 	@StringArrayRes

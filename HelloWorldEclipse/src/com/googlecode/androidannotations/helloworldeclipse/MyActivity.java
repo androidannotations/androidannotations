@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Touch;
@@ -32,7 +32,7 @@ import com.googlecode.androidannotations.annotations.res.BooleanRes;
 import com.googlecode.androidannotations.annotations.res.ColorRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
-@Enhance(R.layout.my_activity)
+@EActivity(R.layout.my_activity)
 public class MyActivity extends Activity {
 
 	@ViewById
@@ -105,7 +105,7 @@ public class MyActivity extends Activity {
 
 	@LongClick
 	void startExtraActivity() {
-		Intent intent = new Intent(this, ActivityWithExtra.class);
+		Intent intent = new Intent(this, ActivityWithExtra_.class);
 
 		intent.putExtra(ActivityWithExtra.MY_DATE_EXTRA, new Date());
 		intent.putExtra(ActivityWithExtra.MY_STRING_EXTRA, "hello !");
@@ -116,7 +116,7 @@ public class MyActivity extends Activity {
 
 	@Click
 	void startListActivity(View v) {
-		startActivity(new Intent(this, MyListActivity.class));
+		startActivity(new Intent(this, MyListActivity_.class));
 	}
 
 	@Touch

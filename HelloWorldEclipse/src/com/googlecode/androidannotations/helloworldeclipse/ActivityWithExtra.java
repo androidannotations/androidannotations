@@ -6,11 +6,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-@Enhance(R.layout.activity_with_extra)
+@EActivity(R.layout.activity_with_extra)
 public class ActivityWithExtra extends Activity {
 
 	public static final String MY_STRING_EXTRA = "myStringExtra";

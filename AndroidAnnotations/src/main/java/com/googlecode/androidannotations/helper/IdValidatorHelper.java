@@ -8,7 +8,7 @@ import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.processing.EnhanceProcessor;
+import com.googlecode.androidannotations.processing.EActivityProcessor;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.validation.IsValid;
 
@@ -71,7 +71,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 	}
 
 	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
-		enclosingElementHasEnhance(element, validatedElements, valid);
+		enclosingElementHasEActivity(element, validatedElements, valid);
 
 		idExists(element, Res.ID, valid);
 
@@ -86,12 +86,12 @@ public class IdValidatorHelper extends ValidatorHelper {
 		TypeElement typeElement = (TypeElement) element;
 
 		String activityQualifiedName = typeElement.getQualifiedName().toString();
-		String generatedActivityQualifiedName = activityQualifiedName + EnhanceProcessor.NEW_CLASS_SUFFIX;
+		String generatedActivityQualifiedName = activityQualifiedName + EActivityProcessor.NEW_CLASS_SUFFIX;
 
 		List<String> activityQualifiedNames = androidManifest.getActivityQualifiedNames();
 		if (!activityQualifiedNames.contains(generatedActivityQualifiedName)) {
 			String simpleName = typeElement.getSimpleName().toString();
-			String generatedSimpleName = simpleName + EnhanceProcessor.NEW_CLASS_SUFFIX;
+			String generatedSimpleName = simpleName + EActivityProcessor.NEW_CLASS_SUFFIX;
 			if (activityQualifiedNames.contains(activityQualifiedName)) {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original activity, and not the AndroidAnnotations generated activity. Please register " + generatedSimpleName + " instead of " + simpleName);

@@ -48,7 +48,7 @@ public class ResValidator implements ElementValidator {
 
         IsValid valid = new IsValid();
 
-        validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
+        validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
         TypeMirror fieldTypeMirror = element.asType();
 

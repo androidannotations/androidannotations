@@ -43,7 +43,7 @@ public class ExtraValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

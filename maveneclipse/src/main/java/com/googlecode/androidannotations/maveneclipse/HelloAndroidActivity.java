@@ -6,11 +6,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
-@Enhance(R.layout.main)
+@EActivity(R.layout.main)
 public class HelloAndroidActivity extends Activity {
 	
 	@StringRes

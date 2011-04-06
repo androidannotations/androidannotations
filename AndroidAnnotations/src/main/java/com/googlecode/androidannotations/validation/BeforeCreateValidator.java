@@ -45,13 +45,13 @@ public class BeforeCreateValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.voidReturnType(executableElement, valid);
 		
-		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 		
 		validatorHelper.isNotPrivate(element, valid);
 

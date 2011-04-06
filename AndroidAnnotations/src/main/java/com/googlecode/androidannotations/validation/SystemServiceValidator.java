@@ -47,7 +47,7 @@ public class SystemServiceValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhance(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.androidService(androidSystemServices, element, valid);
 

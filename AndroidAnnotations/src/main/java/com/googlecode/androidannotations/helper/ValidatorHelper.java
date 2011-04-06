@@ -26,7 +26,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.validation.IsValid;
@@ -75,23 +75,23 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void enclosingElementHasEnhance(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void enclosingElementHasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
-		hasEnhance(element, enclosingElement, validatedElements, valid);
+		hasEActivity(element, enclosingElement, validatedElements, valid);
 	}
 
-	public void hasEnhance(Element element, AnnotationElements validatedElements, IsValid valid) {
-		hasEnhance(element, element, validatedElements, valid);
+	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
+		hasEActivity(element, element, validatedElements, valid);
 	}
 
-	public void hasEnhance(Element reportElement, Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void hasEActivity(Element reportElement, Element element, AnnotationElements validatedElements, IsValid valid) {
 
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Enhance.class);
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(EActivity.class);
 
 		if (!layoutAnnotatedElements.contains(element)) {
 			valid.invalidate();
-			if (element.getAnnotation(Enhance.class) == null) {
-				annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with " + TargetAnnotationHelper.annotationName(Enhance.class));
+			if (element.getAnnotation(EActivity.class) == null) {
+				annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with " + TargetAnnotationHelper.annotationName(EActivity.class));
 			}
 		}
 	}

@@ -30,6 +30,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface Enhance {
+public @interface EActivity {
 	int value() default Id.DEFAULT_VALUE;
 }
