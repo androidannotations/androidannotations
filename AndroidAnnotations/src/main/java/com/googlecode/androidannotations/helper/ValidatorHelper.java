@@ -50,28 +50,28 @@ public class ValidatorHelper {
 	public void isNotFinal(Element element, IsValid valid) {
 		if (annotationHelper.isFinal(element)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s should not be used on a final element");
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a final element");
 		}
 	}
-	
+
 	public void isNotSynchronized(Element element, IsValid valid) {
 		if (annotationHelper.isSynchronized(element)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s should not be used on a synchronized element. If you think you shall need to use the synchronized keyword for a specific use case, please post on the mailing list.");
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a synchronized element. If you think you shall need to use the synchronized keyword for a specific use case, please post on the mailing list.");
 		}
 	}
 
 	public void isNotAbstract(Element element, IsValid valid) {
 		if (annotationHelper.isAbstract(element)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s should not be used on an abstract element");
+			annotationHelper.printAnnotationError(element, "%s cannot be used on an abstract element");
 		}
 	}
 
 	public void isNotPrivate(Element element, IsValid valid) {
 		if (annotationHelper.isPrivate(element)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s should not be used on a private element");
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a private element");
 		}
 	}
 
@@ -90,7 +90,9 @@ public class ValidatorHelper {
 
 		if (!layoutAnnotatedElements.contains(element)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(reportElement, "%s should only be used in a class annotated with " + TargetAnnotationHelper.annotationName(Enhance.class));
+			if (element.getAnnotation(Enhance.class) == null) {
+				annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with " + TargetAnnotationHelper.annotationName(Enhance.class));
+			}
 		}
 	}
 
@@ -110,7 +112,7 @@ public class ValidatorHelper {
 
 		if (returnKind != TypeKind.BOOLEAN && returnKind != TypeKind.VOID && !returnType.toString().equals("java.lang.Boolean")) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s should only be used on a method with a boolean or a void return type");
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with a boolean or a void return type");
 		}
 	}
 
@@ -119,7 +121,7 @@ public class ValidatorHelper {
 
 		if (returnType.getKind() != TypeKind.VOID) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s should only be used on a method with a void return type");
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with a void return type");
 		}
 	}
 
@@ -128,7 +130,7 @@ public class ValidatorHelper {
 
 		if (parameters.size() > 1) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s should only be used on a method with zero or one parameter, instead of " + parameters.size());
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with zero or one parameter, instead of " + parameters.size());
 		}
 	}
 
@@ -147,7 +149,7 @@ public class ValidatorHelper {
 			TypeMirror parameterType = parameter.asType();
 			if (!parameterType.toString().equals(parameterTypeQualifiedName)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "%s should only be used on a method with no parameter or a parameter of type " + parameterTypeQualifiedName + ", not " + parameterType);
+				annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with no parameter or a parameter of type " + parameterTypeQualifiedName + ", not " + parameterType);
 			}
 		}
 	}
@@ -170,7 +172,7 @@ public class ValidatorHelper {
 		TypeMirror expectedType = annotationHelper.typeElementFromQualifiedName(typeQualifiedName).asType();
 		if (!annotationHelper.isSubtype(elementType, expectedType)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s should only be an element that extends " + typeQualifiedName);
+			annotationHelper.printAnnotationError(element, "%s can only be an element that extends " + typeQualifiedName);
 		}
 	}
 
@@ -179,7 +181,7 @@ public class ValidatorHelper {
 
 		if (parameters.size() < 1 || parameters.size() > 2) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s should only be used on a method with 1 or 2 parameter, instead of " + parameters.size());
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with 1 or 2 parameter, instead of " + parameters.size());
 		} else {
 			VariableElement firstParameter = parameters.get(0);
 
@@ -198,7 +200,7 @@ public class ValidatorHelper {
 
 		if (!allowedTypes.contains(qualifiedName)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s should only be used on a field which is a " + allowedTypes.toString() + ", not " + qualifiedName);
+			annotationHelper.printAnnotationError(element, "%s can only be used on a field which is a " + allowedTypes.toString() + ", not " + qualifiedName);
 		}
 	}
 
@@ -239,7 +241,7 @@ public class ValidatorHelper {
 
 		if (parameters.size() < 1 || parameters.size() > 2) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s should only be used on a method with 1 (MotionEvent) or 2 (MotionEvent, View) parameters, instead of " + parameters.size());
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with 1 (MotionEvent) or 2 (MotionEvent, View) parameters, instead of " + parameters.size());
 		} else {
 			VariableElement firstParameter = parameters.get(0);
 			String firstParameterType = firstParameter.asType().toString();
@@ -277,7 +279,7 @@ public class ValidatorHelper {
 	public void isDeclaredType(Element element, IsValid valid, TypeMirror uiFieldTypeMirror) {
 		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s should only be used on a field which is a declared type");
+			annotationHelper.printAnnotationError(element, "%s can only be used on a field which is a declared type");
 		}
 	}
 
