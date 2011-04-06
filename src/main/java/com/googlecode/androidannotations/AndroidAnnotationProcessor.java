@@ -61,6 +61,8 @@ import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.annotations.res.TextArrayRes;
 import com.googlecode.androidannotations.annotations.res.TextRes;
 import com.googlecode.androidannotations.generation.CodeModelGenerator;
+import com.googlecode.androidannotations.helper.AndroidManifest;
+import com.googlecode.androidannotations.helper.AndroidManifestFinder;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -88,10 +90,9 @@ import com.googlecode.androidannotations.processing.ViewByIdProcessor;
 import com.googlecode.androidannotations.processor.AnnotatedAbstractProcessor;
 import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
-import com.googlecode.androidannotations.rclass.CompiledRClassFinder;
 import com.googlecode.androidannotations.rclass.CoumpoundRClass;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.RClassFinder;
+import com.googlecode.androidannotations.rclass.ProjectRClassFinder;
 import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EnhanceValidator;
@@ -160,15 +161,22 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws IOException {
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
-		IRClass rClass = findAndroidRClass(extractedModel);
+		AndroidManifest androidManifest = extractAndroidManifest();
+		
+		IRClass rClass = findRClasses(androidManifest);
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
 
-		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices);
+		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
 
 		JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices);
 
 		generateSources(codeModel);
+	}
+
+	private AndroidManifest extractAndroidManifest() {
+		AndroidManifestFinder finder = new AndroidManifestFinder(processingEnv);
+		return finder.extractAndroidManifest();
 	}
 
 	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -177,9 +185,9 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return extractedModel;
 	}
 
-	private IRClass findAndroidRClass(AnnotationElementsHolder extractedModel) throws IOException {
-		RClassFinder rClassFinder = new CompiledRClassFinder(processingEnv);
-		IRClass rClass = rClassFinder.find(extractedModel);
+	private IRClass findRClasses(AndroidManifest androidManifest) throws IOException {
+		ProjectRClassFinder rClassFinder = new ProjectRClassFinder(processingEnv);
+		IRClass rClass = rClassFinder.find(androidManifest);
 
 		AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
 
@@ -188,18 +196,18 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return new CoumpoundRClass(rClass, androidRClass);
 	}
 
-	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices) {
+	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		if (rClass != null) {
-			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices);
+			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
 			return modelValidator.validate(extractedModel);
 		} else {
 			return EmptyAnnotationElements.INSTANCE;
 		}
 	}
 
-	private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices) {
+	private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		ModelValidator modelValidator = new ModelValidator();
-		modelValidator.register(new EnhanceValidator(processingEnv, rClass));
+		modelValidator.register(new EnhanceValidator(processingEnv, rClass, androidManifest));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));

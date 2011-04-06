@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -30,12 +31,13 @@ import com.googlecode.androidannotations.rclass.IRClass.Res;
 
 public class EnhanceValidator implements ElementValidator {
 
-	private IdValidatorHelper validatorHelper;
+	private final IdValidatorHelper validatorHelper;
+	private final AndroidManifest androidManifest;
 
-	public EnhanceValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public EnhanceValidator(ProcessingEnvironment processingEnv, IRClass rClass, AndroidManifest androidManifest) {
+		this.androidManifest = androidManifest;
 		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
-		
 	}
 
 	@Override
@@ -53,6 +55,8 @@ public class EnhanceValidator implements ElementValidator {
 		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 
 		validatorHelper.isNotFinal(element, valid);
+		
+		validatorHelper.activityRegistered(element, androidManifest, valid);
 
 		return valid.isValid();
 	}
