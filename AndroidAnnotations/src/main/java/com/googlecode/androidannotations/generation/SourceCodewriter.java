@@ -30,7 +30,6 @@ public class SourceCodewriter extends CodeWriter {
 	@Override
 	public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
-
 		try {
 			JavaFileObject sourceFile = filer.createSourceFile(qualifiedClassName);
 			return sourceFile.openOutputStream();
@@ -40,7 +39,9 @@ public class SourceCodewriter extends CodeWriter {
 			 * cannot delete existing files, unless using a dirty hack. Files a
 			 * created twice when the same file is created from different
 			 * annotation rounds. Happens when renaming classes, and for
-			 * Background executor.
+			 * Background executor. It also probably means I didn't fully
+			 * understand how annotation processing works. If anyone can point
+			 * me out...
 			 */
 			return VOID_OUTPUT_STREAM;
 		}
