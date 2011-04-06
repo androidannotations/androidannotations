@@ -21,7 +21,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
@@ -29,12 +29,12 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class EnhanceValidator implements ElementValidator {
+public class EActivityValidator implements ElementValidator {
 
 	private final IdValidatorHelper validatorHelper;
 	private final AndroidManifest androidManifest;
 
-	public EnhanceValidator(ProcessingEnvironment processingEnv, IRClass rClass, AndroidManifest androidManifest) {
+	public EActivityValidator(ProcessingEnvironment processingEnv, IRClass rClass, AndroidManifest androidManifest) {
 		this.androidManifest = androidManifest;
 		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
@@ -42,7 +42,7 @@ public class EnhanceValidator implements ElementValidator {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Enhance.class;
+		return EActivity.class;
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import javax.tools.Diagnostic;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
@@ -73,7 +73,7 @@ import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
-import com.googlecode.androidannotations.processing.EnhanceProcessor;
+import com.googlecode.androidannotations.processing.EActivityProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
 import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
@@ -96,7 +96,7 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.ProjectRClassFinder;
 import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
-import com.googlecode.androidannotations.validation.EnhanceValidator;
+import com.googlecode.androidannotations.validation.EActivityValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
 import com.googlecode.androidannotations.validation.ItemLongClickValidator;
@@ -112,7 +112,7 @@ import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewByIdValidator;
 import com.sun.codemodel.JCodeModel;
 
-@SupportedAnnotationClasses({ Enhance.class, //
+@SupportedAnnotationClasses({ EActivity.class, //
 		BeforeCreate.class, //
 		RoboGuice.class, //
 		ViewById.class, //
@@ -227,7 +227,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		ModelValidator modelValidator = new ModelValidator();
-		modelValidator.register(new EnhanceValidator(processingEnv, rClass, androidManifest));
+		modelValidator.register(new EActivityValidator(processingEnv, rClass, androidManifest));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
@@ -257,7 +257,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		ModelProcessor modelProcessor = new ModelProcessor();
-		modelProcessor.register(new EnhanceProcessor(processingEnv, rClass));
+		modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewByIdProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(rClass));

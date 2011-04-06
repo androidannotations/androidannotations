@@ -21,7 +21,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.Enhance;
+import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -36,18 +36,18 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class EnhanceProcessor extends AnnotationHelper implements ElementProcessor {
+public class EActivityProcessor extends AnnotationHelper implements ElementProcessor {
 
 	private final IRClass rClass;
 
-	public EnhanceProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Enhance.class;
+		return EActivity.class;
 	}
 
 	public static final String NEW_CLASS_SUFFIX = "_";
@@ -88,7 +88,7 @@ public class EnhanceProcessor extends AnnotationHelper implements ElementProcess
 
 		onCreateBody.invoke(holder.beforeSetContentView).arg(onCreateSavedInstanceState);
 
-		Enhance layoutAnnotation = element.getAnnotation(Enhance.class);
+		EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
 		int layoutIdValue = layoutAnnotation.value();
 
 		JFieldRef contentViewId;
