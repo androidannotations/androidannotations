@@ -31,12 +31,6 @@
 			<version>1.5_r4</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>android.support</groupId>
-			<artifactId>V4</artifactId>
-			<version>4</version>
-			<scope>compile</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
