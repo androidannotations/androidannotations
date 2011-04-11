@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.BeforeViews;
@@ -52,16 +53,24 @@ public class MyActivity extends Activity {
 
 	@SystemService
 	NotificationManager notificationManager;
-	
+
 	@SystemService
 	WindowManager windowManager;
-	
+
 	@BeforeViews
 	void doStuffWithDisplay() {
 		// windowManager should not be null
 		windowManager.getDefaultDisplay();
 	}
-	
+
+	/**
+	 * AndroidAnnotations gracefully handles support for onBackPressed, whether
+	 * you use ECLAIR (2.0), or pre ECLAIR android version.
+	 */
+	public void onBackPressed() {
+		Toast.makeText(this, "Back key pressed!", Toast.LENGTH_SHORT).show();
+	}
+
 	@BeforeViews
 	void requestIndeterminateProgress() {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);

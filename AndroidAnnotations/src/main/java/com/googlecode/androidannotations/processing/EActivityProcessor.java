@@ -16,13 +16,19 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.api.SdkVersionHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -32,6 +38,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
@@ -107,6 +114,56 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 
+		// onBackPressed
+		if (hasOnBackPressedMethod(typeElement)) {
+			JMethod onKeyDownMethod = holder.activity.method(JMod.PUBLIC, codeModel.BOOLEAN, "onKeyDown");
+			onKeyDownMethod.annotate(Override.class);
+			JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
+			JClass keyEventClass = holder.refClass("android.view.KeyEvent");
+			JVar eventParam = onKeyDownMethod.param(keyEventClass, "event");
+
+			JClass versionHelperClass = codeModel.ref(SdkVersionHelper.class);
+
+			JInvocation sdkInt = versionHelperClass.staticInvoke("getSdkInt");
+
+			JBlock onKeyDownBody = onKeyDownMethod.body();
+
+			onKeyDownBody._if( //
+					sdkInt.lt(JExpr.lit(5)) //
+							.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
+							.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
+					._then() //
+					.invoke("onBackPressed");
+
+			onKeyDownBody._return( //
+					JExpr._super().invoke(onKeyDownMethod) //
+							.arg(keyCodeParam) //
+							.arg(eventParam));
+
+		}
+	}
+
+	private boolean hasOnBackPressedMethod(TypeElement activityElement) {
+
+		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
+
+		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
+
+		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
+			if (isOnBackPressedMethod(activityInheritedMethod)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isOnBackPressedMethod(ExecutableElement method) {
+		return method.getSimpleName().toString().equals("onBackPressed") //
+				&& method.getThrownTypes().size() == 0 //
+				&& method.getModifiers().contains(Modifier.PUBLIC) //
+				&& method.getReturnType().getKind().equals(TypeKind.VOID) //
+				&& method.getParameters().size() == 0 //
+		;
 	}
 
 }
