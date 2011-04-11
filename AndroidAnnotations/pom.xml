@@ -100,6 +100,7 @@
 							<classifier>api</classifier>
 							<includes>
 								<include>com/googlecode/androidannotations/annotations/**</include>
+								<include>com/googlecode/androidannotations/api/**</include>
 							</includes>
 						</configuration>
 					</execution>

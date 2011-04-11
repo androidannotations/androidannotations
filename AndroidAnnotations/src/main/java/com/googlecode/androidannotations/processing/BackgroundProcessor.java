@@ -18,15 +18,13 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.helper.AndroidManifest;
+import com.googlecode.androidannotations.api.BackgroundExecutor_;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -35,7 +33,6 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -43,12 +40,6 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class BackgroundProcessor implements ElementProcessor {
-
-	private final AndroidManifest androidManifest;
-
-	public BackgroundProcessor(AndroidManifest androidManifest) {
-		this.androidManifest = androidManifest;
-	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -59,17 +50,6 @@ public class BackgroundProcessor implements ElementProcessor {
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws JClassAlreadyExistsException {
 
 		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-
-		if (activitiesHolder.backgroundExecutor == null) {
-			activitiesHolder.backgroundExecutor = codeModel._class(androidManifest.getApplicationPackage() + ".BackgroundExecutor_");
-
-			JInvocation newCachedThreadPool = codeModel.ref(Executors.class).staticInvoke("newCachedThreadPool");
-
-			JFieldVar executorStaticField = activitiesHolder.backgroundExecutor.field(JMod.STATIC | JMod.PRIVATE | JMod.FINAL, codeModel.ref(Executor.class), "executor", newCachedThreadPool);
-			activitiesHolder.executorMethod = activitiesHolder.backgroundExecutor.method(JMod.PUBLIC | JMod.STATIC, codeModel.VOID, "execute");
-			JVar runnableParam = activitiesHolder.executorMethod.param(Runnable.class, "runnable");
-			activitiesHolder.executorMethod.body().invoke(executorStaticField, "execute").arg(runnableParam);
-		}
 
 		// Method
 		String backgroundMethodName = element.getSimpleName().toString();
@@ -115,7 +95,9 @@ public class BackgroundProcessor implements ElementProcessor {
 
 		JBlock backgroundBody = backgroundMethod.body();
 		
-		JInvocation executeCall = activitiesHolder.backgroundExecutor.staticInvoke(activitiesHolder.executorMethod).arg(JExpr._new(anonymousRunnableClass));
+		JClass backgroundExecutorClass = codeModel.ref(BackgroundExecutor_.class);
+		
+		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(JExpr._new(anonymousRunnableClass));
 		
 		backgroundBody.add(executeCall);
 	}
