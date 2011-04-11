@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
-import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
@@ -22,7 +22,7 @@ public class MyListActivity extends ListActivity {
 
 	private ListAdapter adapter;
 
-	@BeforeCreate
+	@BeforeViews
 	void initListActivity(Bundle savedInstanceState) {
 		// Ensure that ListActivity sets its content view before AndroidAnnotation injection
 		getListView();

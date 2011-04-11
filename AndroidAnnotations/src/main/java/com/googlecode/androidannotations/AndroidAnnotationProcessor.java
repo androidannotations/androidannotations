@@ -30,7 +30,7 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
@@ -113,7 +113,7 @@ import com.googlecode.androidannotations.validation.ViewByIdValidator;
 import com.sun.codemodel.JCodeModel;
 
 @SupportedAnnotationClasses({ EActivity.class, //
-		BeforeCreate.class, //
+		BeforeViews.class, //
 		RoboGuice.class, //
 		ViewById.class, //
 		Click.class, //

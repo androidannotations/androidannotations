@@ -21,7 +21,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -37,7 +37,7 @@ public class BeforeCreateValidator implements ElementValidator {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return BeforeCreate.class;
+		return BeforeViews.class;
 	}
 
 	@Override

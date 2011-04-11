@@ -22,7 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JInvocation;
 
@@ -30,7 +30,7 @@ public class BeforeCreateProcessor implements ElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return BeforeCreate.class;
+		return BeforeViews.class;
 	}
 
 	@Override

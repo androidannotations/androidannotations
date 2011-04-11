@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.LongClick;
@@ -56,13 +56,13 @@ public class MyActivity extends Activity {
 	@SystemService
 	WindowManager windowManager;
 	
-	@BeforeCreate
+	@BeforeViews
 	void doStuffWithDisplay() {
 		// windowManager should not be null
 		windowManager.getDefaultDisplay();
 	}
 	
-	@BeforeCreate
+	@BeforeViews
 	void requestIndeterminateProgress() {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 	}
