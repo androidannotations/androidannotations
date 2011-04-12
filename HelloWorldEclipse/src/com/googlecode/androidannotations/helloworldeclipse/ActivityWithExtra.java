@@ -4,7 +4,6 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.EActivity;
