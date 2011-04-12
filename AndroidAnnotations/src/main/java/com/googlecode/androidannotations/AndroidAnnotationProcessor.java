@@ -61,6 +61,7 @@ import com.googlecode.androidannotations.annotations.res.StringArrayRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.annotations.res.TextArrayRes;
 import com.googlecode.androidannotations.annotations.res.TextRes;
+import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
 import com.googlecode.androidannotations.generation.CodeModelGenerator;
 import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.AndroidManifestFinder;
@@ -106,6 +107,7 @@ import com.googlecode.androidannotations.validation.ModelValidator;
 import com.googlecode.androidannotations.validation.ResValidator;
 import com.googlecode.androidannotations.validation.RoboGuiceValidator;
 import com.googlecode.androidannotations.validation.RunnableValidator;
+import com.googlecode.androidannotations.validation.SharedPrefValidator;
 import com.googlecode.androidannotations.validation.SystemServiceValidator;
 import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
@@ -128,6 +130,7 @@ import com.sun.codemodel.JCodeModel;
 		Background.class, //
 		Extra.class, //
 		SystemService.class, //
+		SharedPref.class, //
 		StringRes.class, //
 		ColorRes.class, //
 		AnimationRes.class, //
@@ -246,7 +249,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new ExtraValidator(processingEnv));
 		modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
 		modelValidator.register(new BeforeCreateValidator(processingEnv));
-
+		modelValidator.register(new SharedPrefValidator(processingEnv));
 		return modelValidator;
 	}
 

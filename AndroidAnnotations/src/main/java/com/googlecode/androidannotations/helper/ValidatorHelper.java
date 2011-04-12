@@ -15,11 +15,14 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -40,6 +43,8 @@ public class ValidatorHelper {
 	private static final String ANDROID_SQLITE_DB_QUALIFIED_NAME = "android.database.sqlite.SQLiteDatabase";
 	private static final String GUICE_INJECTOR_QUALIFIED_NAME = "com.google.inject.Injector";
 	private static final String ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME = "roboguice.inject.InjectorProvider";
+
+	private static final List<String> validPrefReturnTypes = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -65,6 +70,13 @@ public class ValidatorHelper {
 		if (annotationHelper.isAbstract(element)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on an abstract element");
+		}
+	}
+
+	public void isInterface(TypeElement element, IsValid valid) {
+		if (!annotationHelper.isInterface(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on an interface");
 		}
 	}
 
@@ -280,6 +292,22 @@ public class ValidatorHelper {
 		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s can only be used on a field which is a declared type");
+		}
+	}
+
+	public void isPrefMethod(Element element) {
+		if (!element.getKind().equals(ElementKind.METHOD)) {
+			annotationHelper.printError(element, "Only methods are allowed in an " + annotationHelper.annotationName() + " annotated interface");
+		} else {
+			ExecutableElement executableElement = (ExecutableElement) element;
+			if (executableElement.getParameters().size() > 0) {
+				annotationHelper.printError(element, "Methods should have no parameters in an " + annotationHelper.annotationName() + " annotated interface");
+			} else {
+				String returnType = executableElement.getReturnType().toString();
+				if (!validPrefReturnTypes.contains(returnType)) {
+					annotationHelper.printError(element, "Methods should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
+				}
+			}
 		}
 	}
 
