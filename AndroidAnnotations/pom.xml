@@ -1,118 +1,84 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.googlecode.androidannotations</groupId>
-	<artifactId>androidannotations</artifactId>
+	<artifactId>androidannotations-parent</artifactId>
 	<version>2.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>Android Annotations</name>
+	<packaging>pom</packaging>
+
+	<name>Android Annotations Parent</name>
 	<description>Simplifying Android using annotations and annotation processing tools</description>
+	<url>http://androidannotations.googlecode.com</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.sun.codemodel</groupId>
-			<artifactId>codemodel</artifactId>
-			<version>2.5-FROZEN-AA</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>android</groupId>
-			<artifactId>android</artifactId>
-			<version>1.6_r3</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>androidannotations</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.googlecode.androidannotations</groupId>
+				<artifactId>androidannotations</artifactId>
+				<version>${project.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.androidannotations</groupId>
+				<artifactId>androidannotations</artifactId>
+				<version>${project.version}</version>
+				<classifier>api</classifier>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.codemodel</groupId>
+				<artifactId>codemodel</artifactId>
+				<version>2.5-FROZEN-AA</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.1</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>jarjar-maven-plugin</artifactId>
-				<version>1.3</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jarjar</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>com.sun.codemodel:codemodel</include>
-							</includes>
-							<rules>
-								<rule>
-									<pattern>com.sun.codemodel.**</pattern>
-									<result>com.googlecode.androidannotations.internal.codemodel.@1</result>
-								</rule>
-								<keep>
-									<pattern>com.googlecode.androidannotations.**</pattern>
-								</keep>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<compilerArgument>-proc:none</compilerArgument>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>package</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<classifier>api</classifier>
-							<includes>
-								<include>com/googlecode/androidannotations/annotations/**</include>
-								<include>com/googlecode/androidannotations/api/**</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>jarjar-maven-plugin</artifactId>
+					<version>1.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
