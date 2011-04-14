@@ -16,12 +16,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android</artifactId>
-			<version>1.5_r4</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>
 			<artifactId>androidannotations</artifactId>
 		</dependency>
@@ -30,10 +24,36 @@
 			<artifactId>androidannotations</artifactId>
 			<classifier>api</classifier>
 		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>1.5_r4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android-test</artifactId>
+			<version>1.5_r4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.pivotallabs</groupId>
+			<artifactId>robolectric</artifactId>
+			<version>1.0-RC1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-assert</artifactId>
+			<version>1.4</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- TODO remove conf if default is OK -->
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>
