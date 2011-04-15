@@ -47,7 +47,7 @@ public class ViewByIdValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		validatorHelper.viewMayExist(element, validatedElements, valid);
 
 		TypeMirror uiFieldTypeMirror = element.asType();
 

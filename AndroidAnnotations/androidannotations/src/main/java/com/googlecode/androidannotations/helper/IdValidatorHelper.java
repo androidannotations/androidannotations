@@ -71,7 +71,8 @@ public class IdValidatorHelper extends ValidatorHelper {
 	}
 
 	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
-		enclosingElementHasEActivity(element, validatedElements, valid);
+		
+		viewMayExist(element, validatedElements, valid);
 
 		idExists(element, Res.ID, valid);
 
