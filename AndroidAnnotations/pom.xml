@@ -12,6 +12,28 @@
 	<description>Simplifying Android using annotations and annotation processing tools</description>
 	<url>http://androidannotations.googlecode.com</url>
 
+	<inceptionYear>2010</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>pierre-yves.ricau</id>
+			<name>Pierre-Yves Ricau</name>
+			<email>py.ricau at gmail</email>
+			<url>http://about.me/piwai</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -77,6 +99,18 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>2.3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.7</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.1.2</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
