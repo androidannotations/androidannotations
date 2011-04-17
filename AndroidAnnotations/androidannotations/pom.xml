@@ -26,9 +26,9 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>android</groupId>
+			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>1.6_r3</version>
+			<version>1.6_r2</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
