@@ -45,125 +45,125 @@ import com.sun.codemodel.JVar;
 
 public class EActivityProcessor extends AnnotationHelper implements ElementProcessor {
 
-	private final IRClass rClass;
+    private final IRClass rClass;
 
-	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
-		this.rClass = rClass;
-	}
+    public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+        super(processingEnv);
+        this.rClass = rClass;
+    }
 
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EActivity.class;
-	}
+    @Override
+    public Class<? extends Annotation> getTarget() {
+        return EActivity.class;
+    }
 
-	public static final String NEW_CLASS_SUFFIX = "_";
+    public static final String NEW_CLASS_SUFFIX = "_";
 
-	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
+    @Override
+    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
 
-		ActivityHolder holder = activitiesHolder.create(element);
+        ActivityHolder holder = activitiesHolder.create(element);
 
-		TypeElement typeElement = (TypeElement) element;
+        TypeElement typeElement = (TypeElement) element;
 
-		// Activity
-		String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
+        // Activity
+        String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
 
-		String subActivityQualifiedName = annotatedActivityQualifiedName + NEW_CLASS_SUFFIX;
-		holder.activity = codeModel._class(subActivityQualifiedName);
+        String subActivityQualifiedName = annotatedActivityQualifiedName + NEW_CLASS_SUFFIX;
+        holder.activity = codeModel._class(subActivityQualifiedName);
 
-		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
+        JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
-		holder.activity._extends(annotatedActivity);
+        holder.activity._extends(annotatedActivity);
 
-		holder.bundleClass = holder.refClass("android.os.Bundle");
+        holder.bundleClass = holder.refClass("android.os.Bundle");
 
-		// beforeSetContentView
-		holder.beforeSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
-		holder.beforeSetContentViewSavedInstanceStateParam = holder.beforeSetContentView.param(holder.bundleClass, "savedInstanceState");
+        // beforeSetContentView
+        holder.beforeSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
+        holder.beforeSetContentViewSavedInstanceStateParam = holder.beforeSetContentView.param(holder.bundleClass, "savedInstanceState");
 
-		// afterSetContentView
-		holder.afterSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
-		holder.afterSetContentView.param(holder.bundleClass, "savedInstanceState");
+        // afterSetContentView
+        holder.afterSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
+        holder.afterSetContentView.param(holder.bundleClass, "savedInstanceState");
 
-		// onCreate
-		JMethod onCreate = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
-		onCreate.annotate(Override.class);
+        // onCreate
+        JMethod onCreate = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
+        onCreate.annotate(Override.class);
 
-		JVar onCreateSavedInstanceState = onCreate.param(holder.bundleClass, "savedInstanceState");
-		JBlock onCreateBody = onCreate.body();
+        JVar onCreateSavedInstanceState = onCreate.param(holder.bundleClass, "savedInstanceState");
+        JBlock onCreateBody = onCreate.body();
 
-		onCreateBody.invoke(holder.beforeSetContentView).arg(onCreateSavedInstanceState);
+        onCreateBody.invoke(holder.beforeSetContentView).arg(onCreateSavedInstanceState);
 
-		EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
-		int layoutIdValue = layoutAnnotation.value();
+        EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
+        int layoutIdValue = layoutAnnotation.value();
 
-		JFieldRef contentViewId;
-		if (layoutIdValue != Id.DEFAULT_VALUE) {
-			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
-		} else {
-			contentViewId = null;
-		}
+        JFieldRef contentViewId;
+        if (layoutIdValue != Id.DEFAULT_VALUE) {
+            IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+            contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
+        } else {
+            contentViewId = null;
+        }
 
-		if (contentViewId != null) {
-			onCreateBody.invoke("setContentView").arg(contentViewId);
-		}
+        if (contentViewId != null) {
+            onCreateBody.invoke("setContentView").arg(contentViewId);
+        }
 
-		onCreateBody.invoke(holder.afterSetContentView).arg(onCreateSavedInstanceState);
+        onCreateBody.invoke(holder.afterSetContentView).arg(onCreateSavedInstanceState);
 
-		onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
+        onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 
-		// onBackPressed
-		if (hasOnBackPressedMethod(typeElement)) {
-			JMethod onKeyDownMethod = holder.activity.method(JMod.PUBLIC, codeModel.BOOLEAN, "onKeyDown");
-			onKeyDownMethod.annotate(Override.class);
-			JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
-			JClass keyEventClass = holder.refClass("android.view.KeyEvent");
-			JVar eventParam = onKeyDownMethod.param(keyEventClass, "event");
+        // onBackPressed
+        if (hasOnBackPressedMethod(typeElement)) {
+            JMethod onKeyDownMethod = holder.activity.method(JMod.PUBLIC, codeModel.BOOLEAN, "onKeyDown");
+            onKeyDownMethod.annotate(Override.class);
+            JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
+            JClass keyEventClass = holder.refClass("android.view.KeyEvent");
+            JVar eventParam = onKeyDownMethod.param(keyEventClass, "event");
 
-			JClass versionHelperClass = codeModel.ref(SdkVersionHelper.class);
+            JClass versionHelperClass = codeModel.ref(SdkVersionHelper.class);
 
-			JInvocation sdkInt = versionHelperClass.staticInvoke("getSdkInt");
+            JInvocation sdkInt = versionHelperClass.staticInvoke("getSdkInt");
 
-			JBlock onKeyDownBody = onKeyDownMethod.body();
+            JBlock onKeyDownBody = onKeyDownMethod.body();
 
-			onKeyDownBody._if( //
-					sdkInt.lt(JExpr.lit(5)) //
-							.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
-							.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
-					._then() //
-					.invoke("onBackPressed");
+            onKeyDownBody._if( //
+                    sdkInt.lt(JExpr.lit(5)) //
+                            .cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
+                            .cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
+                    ._then() //
+                    .invoke("onBackPressed");
 
-			onKeyDownBody._return( //
-					JExpr._super().invoke(onKeyDownMethod) //
-							.arg(keyCodeParam) //
-							.arg(eventParam));
+            onKeyDownBody._return( //
+                    JExpr._super().invoke(onKeyDownMethod) //
+                            .arg(keyCodeParam) //
+                            .arg(eventParam));
 
-		}
-	}
+        }
+    }
 
-	private boolean hasOnBackPressedMethod(TypeElement activityElement) {
+    private boolean hasOnBackPressedMethod(TypeElement activityElement) {
 
-		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
+        List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
 
-		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
+        List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
 
-		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
-			if (isOnBackPressedMethod(activityInheritedMethod)) {
-				return true;
-			}
-		}
-		return false;
-	}
+        for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
+            if (isOnBackPressedMethod(activityInheritedMethod)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private boolean isOnBackPressedMethod(ExecutableElement method) {
-		return method.getSimpleName().toString().equals("onBackPressed") //
-				&& method.getThrownTypes().size() == 0 //
-				&& method.getModifiers().contains(Modifier.PUBLIC) //
-				&& method.getReturnType().getKind().equals(TypeKind.VOID) //
-				&& method.getParameters().size() == 0 //
-		;
-	}
+    private boolean isOnBackPressedMethod(ExecutableElement method) {
+        return method.getSimpleName().toString().equals("onBackPressed") //
+                && method.getThrownTypes().size() == 0 //
+                && method.getModifiers().contains(Modifier.PUBLIC) //
+                && method.getReturnType().getKind().equals(TypeKind.VOID) //
+                && method.getParameters().size() == 0 //
+        ;
+    }
 
 }
