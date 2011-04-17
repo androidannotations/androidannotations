@@ -1,0 +1,3 @@
+To get started with AndroidAnnotations... read the GettingStarted wiki page!
+
+http://code.google.com/p/androidannotations/wiki/GettingStarted

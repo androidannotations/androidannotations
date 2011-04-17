@@ -12,6 +12,7 @@
 			<outputDirectory>/</outputDirectory>
 			<includes>
 				<include>LICENSE.txt</include>
+				<include>HOW-TO.txt</include>
 			</includes>
 		</fileSet>
 		<fileSet>
@@ -19,12 +20,6 @@
 			<outputDirectory>/</outputDirectory>
 			<includes>
 				<include>${project.build.finalName}.jar</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>${project.build.directory}</directory>
-			<outputDirectory>/</outputDirectory>
-			<includes>
 				<include>${project.build.finalName}-api.jar</include>
 			</includes>
 		</fileSet>
