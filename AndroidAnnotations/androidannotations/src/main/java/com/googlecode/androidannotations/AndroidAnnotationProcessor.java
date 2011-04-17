@@ -29,6 +29,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
+import com.googlecode.androidannotations.annotationprocessor.AnnotatedAbstractProcessor;
+import com.googlecode.androidannotations.annotationprocessor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.Click;
@@ -89,8 +91,6 @@ import com.googlecode.androidannotations.processing.TransactionalProcessor;
 import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewByIdProcessor;
-import com.googlecode.androidannotations.processor.AnnotatedAbstractProcessor;
-import com.googlecode.androidannotations.processor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
 import com.googlecode.androidannotations.rclass.CoumpoundRClass;
 import com.googlecode.androidannotations.rclass.IRClass;
