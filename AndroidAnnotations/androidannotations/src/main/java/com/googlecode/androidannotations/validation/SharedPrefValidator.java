@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
@@ -56,8 +57,10 @@ public class SharedPrefValidator implements ElementValidator {
 		List<? extends Element> inheritedMembers = elements.getAllMembers(typeElement);
 
 		for(Element memberElement : inheritedMembers) {
-			validatorHelper.isPrefMethod(memberElement);
-			// TODO check that the default value, if set, has the right type.
+			boolean isPrefMethod = validatorHelper.isPrefMethod(memberElement);
+			if (isPrefMethod) {
+			    validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) element);
+			}
 		}
 		
 		return valid.isValid();
