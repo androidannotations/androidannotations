@@ -13,21 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.model;
+package com.googlecode.androidannotations.annotations.rest;
 
-import java.lang.annotation.Annotation;
-import java.util.Set;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
-public interface AnnotationElements {
-	
-	Set<? extends Element> getAllElements();
-
-	Set<? extends Element> getAnnotatedElements(Class<? extends Annotation> annotationClass);
-
-	TypeElement annotationElementfromAnnotationClass(Class<? extends Annotation> annotationClass);
-	
-
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
+public @interface Rest {
+	String value() default "";
 }

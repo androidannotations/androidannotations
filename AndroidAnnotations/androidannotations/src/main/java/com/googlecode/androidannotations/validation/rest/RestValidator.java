@@ -13,50 +13,52 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package com.googlecode.androidannotations.validation.rest;
 
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.BeforeViews;
+import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.validation.ElementValidator;
+import com.googlecode.androidannotations.validation.IsValid;
 
-public class BeforeCreateValidator implements ElementValidator {
+public class RestValidator implements ElementValidator {
 
-	private ValidatorHelper validatorHelper;
+	private final ValidatorHelper validatorHelper;
 
-	public BeforeCreateValidator(ProcessingEnvironment processingEnv) {
+	public RestValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return BeforeViews.class;
+		return Rest.class;
 	}
 
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
-
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		validatorHelper.voidReturnType(executableElement, valid);
 		
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		TypeElement typeElement = (TypeElement) element;
 		
-		validatorHelper.isNotPrivate(element, valid);
-
-		validatorHelper.doesntThrowException(executableElement, valid);
-
+		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
+		
+		validatorHelper.hasStringAndroidJars(element, valid);
+		
+		validatorHelper.isInterface(typeElement, valid);
+		
+		validatorHelper.doesNotExtendOtherInterfaces(typeElement, valid);
+		
+		validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, valid);
+		
 		return valid.isValid();
 	}
 

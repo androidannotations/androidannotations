@@ -10,9 +10,9 @@
 	</parent>
 
 	<groupId>com.googlecode.androidannotations</groupId>
-	<artifactId>android-functional-test-1-5</artifactId>
+	<artifactId>functional-test-1-5</artifactId>
 	<packaging>apk</packaging>
-	<name>android-functional-test-1-5</name>
+	<name>functional-test-1-5</name>
 
 	<dependencies>
 		<dependency>

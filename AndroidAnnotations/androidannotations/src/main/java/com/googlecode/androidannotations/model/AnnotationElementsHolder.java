@@ -19,8 +19,8 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -56,6 +56,17 @@ public class AnnotationElementsHolder implements AnnotationElements {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Set<Element> getAllElements() {
+		Set<Element> allElements = new HashSet<Element>();
+		
+		for (Set<? extends Element> annotatedElements : annotatedElementsByAnnotation.values()) {
+			allElements.addAll(annotatedElements);
+		}
+		
+		return allElements;
 	}
 
 }

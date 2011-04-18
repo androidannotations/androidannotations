@@ -15,6 +15,8 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,13 @@ import javax.lang.model.util.Elements;
 import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.annotations.rest.Delete;
+import com.googlecode.androidannotations.annotations.rest.Get;
+import com.googlecode.androidannotations.annotations.rest.Head;
+import com.googlecode.androidannotations.annotations.rest.Options;
+import com.googlecode.androidannotations.annotations.rest.Post;
+import com.googlecode.androidannotations.annotations.rest.Put;
+import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.validation.IsValid;
@@ -82,6 +91,13 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s can only be used on an interface");
 		}
 	}
+	
+	public void doesNotExtendOtherInterfaces(TypeElement element, IsValid valid) {
+		if (element.getInterfaces().size()>0) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on an interface that does not extend other interfaces");
+		}
+	}
 
 	public void isNotPrivate(Element element, IsValid valid) {
 		if (annotationHelper.isPrivate(element)) {
@@ -91,8 +107,7 @@ public class ValidatorHelper {
 	}
 
 	public void enclosingElementHasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
-		Element enclosingElement = element.getEnclosingElement();
-		hasEActivity(element, enclosingElement, validatedElements, valid);
+		hasEActivity(element, element.getEnclosingElement(), validatedElements, valid);
 	}
 
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
@@ -117,7 +132,7 @@ public class ValidatorHelper {
 		hasEActivity(element, enclosingElement, validatedElements, valid);
 
 		if (valid.isValid()) {
-			
+
 			EActivity eActivity = enclosingElement.getAnnotation(EActivity.class);
 			if (eActivity.value() == Id.DEFAULT_VALUE) {
 				List<ExecutableElement> methods = ElementFilter.methodsIn(enclosingElement.getEnclosedElements());
@@ -136,12 +151,117 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void doesntThrowException(Element element, IsValid valid) {
-		ExecutableElement executableElement = (ExecutableElement) element;
+	public void enclosingElementHasRest(Element element, AnnotationElements validatedElements, IsValid valid) {
 
-		if (executableElement.getThrownTypes().size() > 0) {
+		Element enclosingElement = element.getEnclosingElement();
+
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Rest.class);
+
+		if (!layoutAnnotatedElements.contains(enclosingElement)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s annotated methods should not declare throwing any exception");
+			if (enclosingElement.getAnnotation(Rest.class) == null) {
+				annotationHelper.printAnnotationError(element, "%s can only be used in an interface annotated with " + TargetAnnotationHelper.annotationName(Rest.class));
+			}
+		}
+	}
+
+	public void throwsOnlyRestClientException(ExecutableElement element, IsValid valid) {
+		List<? extends TypeMirror> thrownTypes = element.getThrownTypes();
+		if (thrownTypes.size() > 0) {
+			if (thrownTypes.size() > 1 || !thrownTypes.get(0).toString().equals("org.springframework.web.client.RestClientException")) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s annotated methods can only declare throwing a RestClientException");
+			}
+		}
+	}
+
+	public void returnTypeNotGenericUnlessResponseEntity(ExecutableElement element, IsValid valid) {
+		TypeMirror returnType = element.getReturnType();
+		TypeKind returnKind = returnType.getKind();
+		if (returnKind == TypeKind.DECLARED) {
+			DeclaredType declaredReturnType = (DeclaredType) returnType;
+			if (!declaredReturnType.toString().startsWith("org.springframework.http.ResponseEntity<") && declaredReturnType.getTypeArguments().size() > 0) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s annotated methods cannot return parameterized types, except for ResponseEntity");
+			}
+		}
+	}
+
+	public void hasHttpHeadersReturnType(ExecutableElement element, IsValid valid) {
+		String returnType = element.getReturnType().toString();
+		if (!returnType.equals("org.springframework.http.HttpHeaders")) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s annotated methods can only return a HttpHeaders, not " + returnType);
+		}
+	}
+
+	public void hasSetOfHttpMethodReturnType(ExecutableElement element, IsValid valid) {
+		TypeMirror returnType = element.getReturnType();
+		String returnTypeString = returnType.toString();
+		if (!returnTypeString.equals("java.util.Set<org.springframework.http.HttpMethod>")) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s annotated methods can only return a Set of HttpMethod, not " + returnTypeString);
+		} else {
+			DeclaredType declaredType = (DeclaredType) returnType;
+			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+			if (typeArguments.size() != 1) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s annotated methods can only return a parameterized Set (with HttpMethod)");
+			} else {
+				TypeMirror typeArgument = typeArguments.get(0);
+				if (!typeArgument.toString().equals("org.springframework.http.HttpMethod")) {
+					valid.invalidate();
+					annotationHelper.printAnnotationError(element, "%s annotated methods can only return a parameterized Set of HttpMethod, not " + typeArgument.toString());
+				}
+			}
+		}
+	}
+
+	public void urlVariableNamesExistInParameters(ExecutableElement element, IsValid valid) {
+		if (valid.isValid()) {
+			List<String> variableNames = annotationHelper.extractUrlVariableNames(element);
+			urlVariableNamesExistInParameters(element, variableNames, valid);
+		}
+	}
+
+	public void urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(ExecutableElement element, IsValid valid) {
+		if (valid.isValid()) {
+			List<String> variableNames = annotationHelper.extractUrlVariableNames(element);
+			urlVariableNamesExistInParameters(element, variableNames, valid);
+			if (valid.isValid()) {
+				List<? extends VariableElement> parameters = element.getParameters();
+
+				if (parameters.size() > variableNames.size() + 1) {
+					valid.invalidate();
+					annotationHelper.printAnnotationError(element, "%s annotated method has more than one entity parameter");
+				}
+			}
+		}
+	}
+
+	public void urlVariableNamesExistInParameters(ExecutableElement element, List<String> variableNames, IsValid valid) {
+
+		List<? extends VariableElement> parameters = element.getParameters();
+
+		List<String> parametersName = new ArrayList<String>();
+		for (VariableElement parameter : parameters) {
+			parametersName.add(parameter.getSimpleName().toString());
+		}
+
+		for (String variableName : variableNames) {
+			if (!parametersName.contains(variableName)) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s annotated method has an url variable which name could not be found in the method parameters: " + variableName);
+				return;
+			}
+		}
+	}
+
+	public void doesntThrowException(ExecutableElement element, IsValid valid) {
+
+		if (element.getThrownTypes().size() > 0) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s annotated methods cannot declare throwing any exception");
 		}
 	}
 
@@ -267,6 +387,15 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + GUICE_INJECTOR_QUALIFIED_NAME);
 		}
 	}
+	
+	public void hasStringAndroidJars(Element element, IsValid valid) {
+		Elements elementUtils = annotationHelper.getElementUtils();
+
+		if (elementUtils.getTypeElement("org.springframework.web.client.RestTemplate") == null) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Could not find the SpringAndroid framework in the classpath, the following class is missing: org.springframework.web.client.RestTemplate");
+		}
+	}
 
 	public void androidService(AndroidSystemServices androidSystemServices, Element element, IsValid valid) {
 		TypeMirror serviceType = element.asType();
@@ -336,6 +465,62 @@ public class ValidatorHelper {
 					annotationHelper.printError(element, "Methods should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
 				}
 			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static final List<Class<? extends Annotation>> REST_ANNOTATION_CLASSES = Arrays.asList(Get.class, Head.class, Options.class, Post.class, Put.class, Delete.class);
+
+	public void unannotatedMethodReturnsRestTemplate(TypeElement typeElement, IsValid valid) {
+		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
+		boolean foundRestTemplateMethod = false;
+		for (Element enclosedElement : enclosedElements) {
+			if (enclosedElement.getKind() != ElementKind.METHOD) {
+				valid.invalidate();
+				annotationHelper.printError(enclosedElement, "Only methods are allowed in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+			} else {
+
+				boolean hasRestAnnotation = false;
+				for (Class<? extends Annotation> annotationClass : REST_ANNOTATION_CLASSES) {
+					if (enclosedElement.getAnnotation(annotationClass) != null) {
+						hasRestAnnotation = true;
+						break;
+					}
+				}
+
+				if (!hasRestAnnotation) {
+					ExecutableElement executableElement = (ExecutableElement) enclosedElement;
+					TypeMirror returnType = executableElement.getReturnType();
+					if (returnType.toString().equals("org.springframework.web.client.RestTemplate")) {
+						if (executableElement.getThrownTypes().size() > 0) {
+							valid.invalidate();
+							annotationHelper.printError(enclosedElement, "The method returning a RestTemplate should not declaring throwing any exception in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+						} else {
+							if (executableElement.getParameters().size() > 0) {
+								valid.invalidate();
+								annotationHelper.printError(enclosedElement, "The method returning a RestTemplate should not declare any parameter in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+							} else {
+								if (foundRestTemplateMethod) {
+									valid.invalidate();
+									annotationHelper.printError(enclosedElement, "Only one method should declare returning a RestTemplate in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+								} else {
+									foundRestTemplateMethod = true;
+								}
+							}
+						}
+					} else {
+						valid.invalidate();
+						annotationHelper.printError(enclosedElement, "All methods should be annotated in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface, except the one that returns a RestTemplate");
+					}
+				}
+			}
+		}
+	}
+
+	public void notAlreadyValidated(Element element, AnnotationElements validatedElements, IsValid valid) {
+		if (validatedElements.getAllElements().contains(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s annotated element cannot be used with the other annotations used on this element.");
 		}
 	}
 

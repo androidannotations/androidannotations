@@ -17,9 +17,16 @@ package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
+import com.googlecode.androidannotations.annotations.rest.Rest;
 
 public class TargetAnnotationHelper extends AnnotationHelper implements HasTarget{
 	
@@ -72,5 +79,28 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 	 */
 	public void printAnnotationWarning(Element annotatedElement, String message) {
 		printAnnotationWarning(annotatedElement, target, String.format(message, annotationName()));
+	}
+
+	
+	/** Captures URI template variable names. */
+	private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
+	
+	public List<String> extractUrlVariableNames(ExecutableElement element) {
+		
+		Element enclosingElement = element.getEnclosingElement();
+
+		String urlPrefix = enclosingElement.getAnnotation(Rest.class).value();
+
+		String urlSuffix = extractAnnotationValue(element);
+
+		String uriTemplate = urlPrefix + urlSuffix;
+
+		Matcher m = NAMES_PATTERN.matcher(uriTemplate);
+		List<String> variableNames = new ArrayList<String>();
+		while (m.find()) {
+			variableNames.add(m.group(1));
+		}
+		
+		return variableNames;
 	}
 }

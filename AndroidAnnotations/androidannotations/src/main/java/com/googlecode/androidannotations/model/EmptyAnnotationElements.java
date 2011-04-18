@@ -41,4 +41,9 @@ public class EmptyAnnotationElements implements AnnotationElements {
 		return null;
 	}
 
+	@Override
+	public Set<? extends Element> getAllElements() {
+		return emptySet;
+	}
+
 }

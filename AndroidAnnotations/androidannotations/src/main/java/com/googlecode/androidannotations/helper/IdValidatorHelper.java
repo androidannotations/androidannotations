@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Id;
@@ -78,7 +79,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 		isNotPrivate(element, valid);
 
-		doesntThrowException(element, valid);
+		doesntThrowException((ExecutableElement) element, valid);
 
 		uniqueId(element, validatedElements, valid);
 	}

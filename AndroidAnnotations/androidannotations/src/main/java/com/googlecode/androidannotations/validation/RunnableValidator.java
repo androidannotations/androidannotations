@@ -54,7 +54,7 @@ public class RunnableValidator implements ElementValidator {
 
 		validatorHelper.isNotPrivate(element, valid);
 		
-		validatorHelper.doesntThrowException(element, valid);
+		validatorHelper.doesntThrowException(executableElement, valid);
 
 		validatorHelper.isNotFinal(element, valid);
 		
