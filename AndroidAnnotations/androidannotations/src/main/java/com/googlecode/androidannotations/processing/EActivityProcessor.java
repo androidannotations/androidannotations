@@ -30,6 +30,7 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -58,8 +59,6 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
         return EActivity.class;
     }
 
-    public static final String NEW_CLASS_SUFFIX = "_";
-
     @Override
     public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
 
@@ -70,7 +69,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
         // Activity
         String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
 
-        String subActivityQualifiedName = annotatedActivityQualifiedName + NEW_CLASS_SUFFIX;
+        String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
         holder.activity = codeModel._class(JMod.PUBLIC | JMod.FINAL, subActivityQualifiedName, ClassType.CLASS);
 
         JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
