@@ -768,7 +768,7 @@ public class ValidatorHelper {
             } else {
                 String returnType = executableElement.getReturnType().toString();
                 if (!validPrefReturnTypes.contains(returnType)) {
-                    annotationHelper.printError(element, "Methods should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
+                    annotationHelper.printError(element, "Method " + executableElement.getSimpleName().toString() + " should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
                 } else {
                     return true;
                 }
