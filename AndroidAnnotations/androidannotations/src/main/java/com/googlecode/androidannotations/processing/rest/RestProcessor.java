@@ -24,6 +24,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.rest.Rest;
+import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.sun.codemodel.ClassType;
@@ -58,8 +59,7 @@ public class RestProcessor implements ElementProcessor {
 
 		String interfaceName = typeElement.getQualifiedName().toString();
 
-		// TODO replace "_" with the right constant
-		String implementationName = interfaceName + "_";
+		String implementationName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
 		holder.restImplementationClass = codeModel._class(JMod.PUBLIC | JMod.ABSTRACT, implementationName, ClassType.CLASS);
 		JClass interfaceClass = holder.refClass(interfaceName);
