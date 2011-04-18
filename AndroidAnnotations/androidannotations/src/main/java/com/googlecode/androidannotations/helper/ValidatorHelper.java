@@ -482,7 +482,9 @@ public class ValidatorHelper {
     private static final String GUICE_INJECTOR_QUALIFIED_NAME = "com.google.inject.Injector";
     private static final String ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME = "roboguice.inject.InjectorProvider";
 
-    private static final List<String> validPrefReturnTypes = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
+    private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
+
+    private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
     protected final TargetAnnotationHelper annotationHelper;
 
@@ -763,14 +765,20 @@ public class ValidatorHelper {
             annotationHelper.printError(element, "Only methods are allowed in an " + annotationHelper.annotationName() + " annotated interface");
         } else {
             ExecutableElement executableElement = (ExecutableElement) element;
+            String methodName = executableElement.getSimpleName().toString();
             if (executableElement.getParameters().size() > 0) {
-                annotationHelper.printError(element, "Methods should have no parameters in an " + annotationHelper.annotationName() + " annotated interface");
+                annotationHelper.printError(element, "Method " + methodName + " should have no parameters in an " + annotationHelper.annotationName() + " annotated interface");
             } else {
+
                 String returnType = executableElement.getReturnType().toString();
-                if (!validPrefReturnTypes.contains(returnType)) {
-                    annotationHelper.printError(element, "Method " + executableElement.getSimpleName().toString() + " should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
+                if (!VALID_PREF_RETURN_TYPES.contains(returnType)) {
+                    annotationHelper.printError(element, "Method " + methodName + " should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
                 } else {
-                    return true;
+                    if (INVALID_PREF_METHOD_NAMES.contains(methodName)) {
+                        annotationHelper.printError(element, "The method name " + methodName + " is forbidden in an " + annotationHelper.annotationName() + " annotated interface");
+                    } else {
+                        return true;
+                    }
                 }
             }
         }
@@ -804,7 +812,7 @@ public class ValidatorHelper {
 
         @Override
         public boolean correctReturnType(TypeMirror returnType) {
-            return returnType.getKind() != typeKind;
+            return returnType.getKind() == typeKind;
         }
 
     }
@@ -812,8 +820,8 @@ public class ValidatorHelper {
     private <T extends Annotation> void checkDefaultAnnotation(ExecutableElement method, Class<T> annotationClass, String expectedReturnType, DefaultAnnotationCondition condition) {
         T defaultAnnotation = method.getAnnotation(annotationClass);
         if (defaultAnnotation != null) {
-            if (condition.correctReturnType(method.getReturnType())) {
-                annotationHelper.printAnnotationError(method, annotationClass, annotationHelper.annotationName() + " can only be used on a method that returns a " + expectedReturnType);
+            if (!condition.correctReturnType(method.getReturnType())) {
+                annotationHelper.printAnnotationError(method, annotationClass, TargetAnnotationHelper.annotationName(annotationClass) + " can only be used on a method that returns a " + expectedReturnType);
             }
         }
     }

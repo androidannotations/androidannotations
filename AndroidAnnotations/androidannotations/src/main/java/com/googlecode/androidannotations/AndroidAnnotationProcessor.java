@@ -91,6 +91,7 @@ import com.googlecode.androidannotations.processing.LongClickProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
 import com.googlecode.androidannotations.processing.RoboGuiceProcessor;
+import com.googlecode.androidannotations.processing.SharedPrefProcessor;
 import com.googlecode.androidannotations.processing.SystemServiceProcessor;
 import com.googlecode.androidannotations.processing.TouchProcessor;
 import com.googlecode.androidannotations.processing.TransactionalProcessor;
@@ -347,5 +348,168 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		e.printStackTrace(pw);
 		return writer.toString();
 	}
+
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+
+        Messager messager = processingEnv.getMessager();
+        messager.printMessage(Diagnostic.Kind.NOTE, "Starting AndroidAnnotations compile time annotation processing");
+    }
+
+    /**
+     * We do not need multiple round processing, since the generated classes do
+     * not need to be processed.
+     */
+    private boolean alreadyProcessed = false;
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        try {
+            processThrowing(annotations, roundEnv);
+        } catch (Exception e) {
+            handleException(annotations, roundEnv, e);
+        }
+        return true;
+    }
+
+    private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws IOException {
+
+        if (roundEnv.processingOver() || annotations.size() == 0 || alreadyProcessed) {
+            return;
+        } else {
+            alreadyProcessed = true;
+        }
+
+        AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
+
+        AndroidManifest androidManifest = extractAndroidManifest();
+
+        IRClass rClass = findRClasses(androidManifest);
+
+        AndroidSystemServices androidSystemServices = new AndroidSystemServices();
+
+        AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
+
+        JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
+
+        generateSources(codeModel);
+    }
+
+    private AndroidManifest extractAndroidManifest() {
+        AndroidManifestFinder finder = new AndroidManifestFinder(processingEnv);
+        return finder.extractAndroidManifest();
+    }
+
+    private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        ModelExtractor modelExtractor = new ModelExtractor();
+        AnnotationElementsHolder extractedModel = modelExtractor.extract(annotations, roundEnv);
+        return extractedModel;
+    }
+
+    private IRClass findRClasses(AndroidManifest androidManifest) throws IOException {
+        ProjectRClassFinder rClassFinder = new ProjectRClassFinder(processingEnv);
+        IRClass rClass = rClassFinder.find(androidManifest);
+
+        AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
+
+        IRClass androidRClass = androidRClassFinder.find();
+
+        return new CoumpoundRClass(rClass, androidRClass);
+    }
+
+    private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+        if (rClass != null) {
+            ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
+            return modelValidator.validate(extractedModel);
+        } else {
+            return EmptyAnnotationElements.INSTANCE;
+        }
+    }
+
+    private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+        ModelValidator modelValidator = new ModelValidator();
+        modelValidator.register(new EActivityValidator(processingEnv, rClass, androidManifest));
+        modelValidator.register(new RoboGuiceValidator(processingEnv));
+        modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
+        modelValidator.register(new ClickValidator(processingEnv, rClass));
+        modelValidator.register(new LongClickValidator(processingEnv, rClass));
+        modelValidator.register(new TouchValidator(processingEnv, rClass));
+        modelValidator.register(new ItemClickValidator(processingEnv, rClass));
+        modelValidator.register(new ItemSelectedValidator(processingEnv, rClass));
+        modelValidator.register(new ItemLongClickValidator(processingEnv, rClass));
+        for (AndroidRes androidRes : AndroidRes.values()) {
+            modelValidator.register(new ResValidator(androidRes, processingEnv, rClass));
+        }
+        modelValidator.register(new RunnableValidator(UiThreadDelayed.class, processingEnv));
+        modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
+        modelValidator.register(new RunnableValidator(Background.class, processingEnv));
+        modelValidator.register(new TransactionalValidator(processingEnv));
+        modelValidator.register(new ExtraValidator(processingEnv));
+        modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
+        modelValidator.register(new BeforeCreateValidator(processingEnv));
+        modelValidator.register(new SharedPrefValidator(processingEnv));
+        return modelValidator;
+    }
+
+    private JCodeModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+        ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices, androidManifest);
+        return modelProcessor.process(validatedModel);
+    }
+
+    private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+        ModelProcessor modelProcessor = new ModelProcessor();
+        modelProcessor.register(new SharedPrefProcessor(processingEnv));
+        modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
+        modelProcessor.register(new RoboGuiceProcessor());
+        modelProcessor.register(new ViewByIdProcessor(rClass));
+        modelProcessor.register(new ClickProcessor(rClass));
+        modelProcessor.register(new LongClickProcessor(rClass));
+        modelProcessor.register(new TouchProcessor(rClass));
+        modelProcessor.register(new ItemClickProcessor(rClass));
+        modelProcessor.register(new ItemSelectedProcessor(rClass));
+        modelProcessor.register(new ItemLongClickProcessor(rClass));
+        for (AndroidRes androidRes : AndroidRes.values()) {
+            modelProcessor.register(new ResProcessor(androidRes, rClass));
+        }
+        modelProcessor.register(new UiThreadProcessor());
+        modelProcessor.register(new UiThreadDelayedProcessor());
+        modelProcessor.register(new BackgroundProcessor());
+        modelProcessor.register(new TransactionalProcessor());
+        modelProcessor.register(new ExtraProcessor());
+        modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
+        modelProcessor.register(new BeforeCreateProcessor());
+        return modelProcessor;
+    }
+
+    private void generateSources(JCodeModel model) throws IOException {
+        Messager messager = processingEnv.getMessager();
+        messager.printMessage(Diagnostic.Kind.NOTE, "Number of files generated by AndroidAnnotations: " + model.countArtifacts());
+        CodeModelGenerator modelGenerator = new CodeModelGenerator(processingEnv.getFiler(), messager);
+        modelGenerator.generate(model);
+    }
+
+    private void handleException(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, Exception e) {
+        String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations, with the following content: " + stackTraceToString(e);
+
+        Messager messager = processingEnv.getMessager();
+        messager.printMessage(Diagnostic.Kind.ERROR, errorMessage);
+
+        /*
+         * Printing exception as an error on a random element. The exception is
+         * not related to this element, but otherwise it wouldn't show up in
+         * eclipse.
+         */
+
+        Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
+        messager.printMessage(Diagnostic.Kind.ERROR, errorMessage, element);
+    }
+
+    private String stackTraceToString(Throwable e) {
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        e.printStackTrace(pw);
+        return writer.toString();
+    }
 
 }

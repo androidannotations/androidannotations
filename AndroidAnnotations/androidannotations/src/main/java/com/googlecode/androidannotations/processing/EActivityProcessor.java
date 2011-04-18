@@ -23,7 +23,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -141,6 +143,18 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
                             .arg(eventParam));
 
         }
+        
+        // SharedPref injection
+        List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
+        List<VariableElement> activityFields = ElementFilter.fieldsIn(enclosedElements);
+        for(VariableElement activityField : activityFields) {
+            TypeMirror sharedPreferencesHelperType = processingEnv.getElementUtils().getTypeElement("com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper").asType();
+           if (processingEnv.getTypeUtils().isSubtype(activityField.asType(), sharedPreferencesHelperType)) {
+               
+           }
+        }
+        
+        
     }
 
     private boolean hasOnBackPressedMethod(TypeElement activityElement) {

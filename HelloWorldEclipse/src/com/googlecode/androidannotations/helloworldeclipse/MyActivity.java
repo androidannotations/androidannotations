@@ -36,106 +36,121 @@ import com.googlecode.androidannotations.annotations.res.StringRes;
 @EActivity(R.layout.my_activity)
 public class MyActivity extends Activity {
 
-	@ViewById
-	EditText myEditText;
+    @ViewById
+    EditText myEditText;
 
-	@ViewById(R.id.myTextView)
-	TextView textView;
+    @ViewById(R.id.myTextView)
+    TextView textView;
 
-	@StringRes(R.string.hello)
-	String helloFormat;
+    @StringRes(R.string.hello)
+    String helloFormat;
 
-	@ColorRes
-	int androidColor;
+    @ColorRes
+    int androidColor;
 
-	@BooleanRes
-	boolean someBoolean;
+    @BooleanRes
+    boolean someBoolean;
 
-	@SystemService
-	NotificationManager notificationManager;
+    @SystemService
+    NotificationManager notificationManager;
 
-	@SystemService
-	WindowManager windowManager;
+    @SystemService
+    WindowManager windowManager;
 
-	@BeforeViews
-	void doStuffWithDisplay() {
-		// windowManager should not be null
-		windowManager.getDefaultDisplay();
-	}
+    @BeforeViews
+    void doStuffWithDisplay() {
+        // windowManager should not be null
+        windowManager.getDefaultDisplay();
+    }
 
-	/**
-	 * AndroidAnnotations gracefully handles support for onBackPressed, whether
-	 * you use ECLAIR (2.0), or pre ECLAIR android version.
-	 */
-	public void onBackPressed() {
-		Toast.makeText(this, "Back key pressed!", Toast.LENGTH_SHORT).show();
-	}
+    /**
+     * AndroidAnnotations gracefully handles support for onBackPressed, whether
+     * you use ECLAIR (2.0), or pre ECLAIR android version.
+     */
+    public void onBackPressed() {
+        Toast.makeText(this, "Back key pressed!", Toast.LENGTH_SHORT).show();
+    }
 
-	@BeforeViews
-	void requestIndeterminateProgress() {
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-	}
+    @BeforeViews
+    void requestIndeterminateProgress() {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    }
 
-	@Click
-	void myButtonClicked() {
-		String name = myEditText.getText().toString();
-		setProgressBarIndeterminateVisibility(true);
-		someBackgroundWork(name, 5);
-	}
+    @Click
+    void myButtonClicked() {
+        String name = myEditText.getText().toString();
+        setProgressBarIndeterminateVisibility(true);
+        someBackgroundWork(name, 5);
+    }
 
-	@Background
-	void someBackgroundWork(String name, long timeToDoSomeLongComputation) {
-		try {
-			TimeUnit.SECONDS.sleep(timeToDoSomeLongComputation);
-		} catch (InterruptedException e) {
-		}
+    @Background
+    void someBackgroundWork(String name, long timeToDoSomeLongComputation) {
+        try {
+            TimeUnit.SECONDS.sleep(timeToDoSomeLongComputation);
+        } catch (InterruptedException e) {
+        }
 
-		String message = String.format(helloFormat, name);
+        String message = String.format(helloFormat, name);
 
-		updateUi(message, androidColor);
+        updateUi(message, androidColor);
 
-		showNotificationsDelayed();
-	}
+        showNotificationsDelayed();
+    }
 
-	@UiThread
-	void updateUi(String message, int color) {
-		setProgressBarIndeterminateVisibility(false);
-		textView.setText(message);
-		textView.setTextColor(color);
-	}
+    @UiThread
+    void updateUi(String message, int color) {
+        setProgressBarIndeterminateVisibility(false);
+        textView.setText(message);
+        textView.setTextColor(color);
+    }
 
-	@UiThreadDelayed(2000)
-	void showNotificationsDelayed() {
-		Notification notification = new Notification(R.drawable.icon, "Hello !", 0);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
-		notification.setLatestEventInfo(getApplicationContext(), "My notification", "Hello World!", contentIntent);
-		notificationManager.notify(1, notification);
-	}
+    @UiThreadDelayed(2000)
+    void showNotificationsDelayed() {
+        Notification notification = new Notification(R.drawable.icon, "Hello !", 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
+        notification.setLatestEventInfo(getApplicationContext(), "My notification", "Hello World!", contentIntent);
+        notificationManager.notify(1, notification);
+    }
 
-	@LongClick
-	void startExtraActivity() {
-		Intent intent = new Intent(this, ActivityWithExtra_.class);
+    @LongClick
+    void startExtraActivity() {
+        Intent intent = new Intent(this, ActivityWithExtra_.class);
 
-		intent.putExtra(ActivityWithExtra.MY_DATE_EXTRA, new Date());
-		intent.putExtra(ActivityWithExtra.MY_STRING_EXTRA, "hello !");
-		intent.putExtra(ActivityWithExtra.MY_INT_EXTRA, 42);
+        intent.putExtra(ActivityWithExtra.MY_DATE_EXTRA, new Date());
+        intent.putExtra(ActivityWithExtra.MY_STRING_EXTRA, "hello !");
+        intent.putExtra(ActivityWithExtra.MY_INT_EXTRA, 42);
 
-		startActivity(intent);
-	}
+        startActivity(intent);
+    }
 
-	@Click
-	void startListActivity(View v) {
-		startActivity(new Intent(this, MyListActivity_.class));
-	}
+    @Click
+    void startListActivity(View v) {
+        startActivity(new Intent(this, MyListActivity_.class));
+    }
 
-	@Touch
-	void myTextView(MotionEvent event) {
-		Log.d("MyActivity", "myTextView was touched!");
-	}
+    @Touch
+    void myTextView(MotionEvent event) {
+        Log.d("MyActivity", "myTextView was touched!");
+    }
 
-	@Transactional
-	int transactionalMethod(SQLiteDatabase db, int someParam) {
-		return 42;
-	}
+    @Transactional
+    int transactionalMethod(SQLiteDatabase db, int someParam) {
+        return 42;
+    }
+
+    void prefUsageExample() {
+        MyPrefs_ prefs = new MyPrefs_(this);
+
+        prefs.edit() //
+                .clear() //
+                .age().put(36) //
+                .apply();
+
+        int age = prefs.age().get(12);
+
+        String name = prefs.name().get();
+
+        Log.d("TAG", "age: " + age + " name " + name);
+    }
 
 }
