@@ -28,6 +28,7 @@ public class ServiceInjectionTest {
     	assertThat(activity.connectivityManager).isNotNull();
     	assertThat(activity.wifiManager).isNotNull();
     	assertThat(activity.inputMethodManager).isNotNull();
+    	assertThat(activity.sensorManager).isNotNull();
     }
     
     

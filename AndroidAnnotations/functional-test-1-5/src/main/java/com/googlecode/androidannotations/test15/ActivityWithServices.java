@@ -7,6 +7,7 @@ import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.app.SearchManager;
+import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
@@ -60,6 +61,9 @@ public class ActivityWithServices extends Activity {
     
     @SystemService
     InputMethodManager inputMethodManager;
+    
+    @SystemService
+    SensorManager sensorManager;
 
     // TODO Test those for > 1.5 Android versions
     // UiModeManager uiModeManager;

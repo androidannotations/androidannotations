@@ -43,6 +43,7 @@ public class AndroidSystemServices {
         registeredServices.put("android.view.inputmethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
         registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
         registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
+        registeredServices.put("android.hardware.SensorManager", "android.content.Context.SENSOR_SERVICE");
     }
 
     public boolean contains(TypeMirror serviceType) {
