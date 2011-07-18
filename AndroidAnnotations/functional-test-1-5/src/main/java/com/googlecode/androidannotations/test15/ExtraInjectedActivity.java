@@ -11,17 +11,11 @@ import com.googlecode.androidannotations.annotations.Extra;
 @EActivity
 public class ExtraInjectedActivity extends Activity{
     
-    public static class CustomData implements Serializable {
-
-        private static final long serialVersionUID = 1L;
-        
-    }
-    
     @Extra("stringExtra")
-    String simpleExtra;
+    String stringExtra;
     
-//    @Extra("arrayExtra")
-//    CustomData[] arrayExtra;
+    @Extra("arrayExtra")
+    CustomData[] arrayExtra;
 //    
 //    @Extra("listExtra")
 //    List<String> listExtra;

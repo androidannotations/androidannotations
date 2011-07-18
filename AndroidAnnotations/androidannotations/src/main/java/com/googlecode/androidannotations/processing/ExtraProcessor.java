@@ -18,6 +18,8 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Extra;
 import com.sun.codemodel.JBlock;
@@ -36,15 +38,26 @@ public class ExtraProcessor implements ElementProcessor {
 	public Class<? extends Annotation> getTarget() {
 		return Extra.class;
 	}
-
+	
+	
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
 		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-		JClass fieldType = holder.refClass(element.asType().toString());
-
+		
+		TypeMirror elementType = element.asType();
+		
+		JClass fieldType;
+		if (elementType instanceof ArrayType) {
+		    TypeMirror realTypeMirror = ((ArrayType) elementType).getComponentType();
+            JClass realType = holder.refClass(realTypeMirror.toString());
+	        fieldType = realType.array();
+		} else {
+		    fieldType = holder.refClass(elementType.toString());
+		}
+		
 
 		JBlock methodBody = holder.beforeSetContentView.body();
 
