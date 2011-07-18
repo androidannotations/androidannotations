@@ -10,6 +10,7 @@
 		<activity android:name=".ViewsInjectedActivity_" />
 		<activity android:name=".ClicksHandledActivity_" />
 		<activity android:name=".ActivityWithServices_" />
+        <activity android:name=".ExtraInjectedActivity_" />
 
 	</application>
 
