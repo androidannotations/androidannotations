@@ -18,18 +18,19 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Extra;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class ExtraProcessor implements ElementProcessor {
@@ -47,15 +48,16 @@ public class ExtraProcessor implements ElementProcessor {
 		String fieldName = element.getSimpleName().toString();
 		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 		
-		TypeMirror elementType = element.asType();
-		
-		JClass fieldType;
-		if (elementType instanceof ArrayType) {
-		    TypeMirror realTypeMirror = ((ArrayType) elementType).getComponentType();
-            JClass realType = holder.refClass(realTypeMirror.toString());
-	        fieldType = realType.array();
-		} else {
-		    fieldType = holder.refClass(elementType.toString());
+		if (holder.cast == null) {
+		    JType objectType = codeModel._ref(Object.class);
+		    JMethod method = holder.activity.method(JMod.PRIVATE, objectType, "cast_");
+		    JTypeVar genericType = method.generify("T");
+		    method.type(genericType);
+		    JVar objectParam = method.param(objectType, "object");
+		    method.annotate(SuppressWarnings.class).param("value", "unchecked");
+		    method.body()._return(JExpr.cast(genericType, objectParam));
+		    
+		    holder.cast = method;
 		}
 		
 
@@ -73,9 +75,9 @@ public class ExtraProcessor implements ElementProcessor {
 		JTryBlock containsKeyTry = ifContainsKey._try();
 		
 		JFieldRef extraField = JExpr.ref(fieldName);
-
-		containsKeyTry.body().assign(extraField, JExpr.cast(fieldType, holder.extras.invoke("get").arg(extraKey)));
 		
+		containsKeyTry.body().assign(extraField, JExpr.invoke(holder.cast).arg(holder.extras.invoke("get").arg(extraKey)));
+
 		JCatchBlock containsKeyCatch = containsKeyTry._catch(holder.refClass(ClassCastException.class));
 		JVar exceptionParam = containsKeyCatch.param("e");
 

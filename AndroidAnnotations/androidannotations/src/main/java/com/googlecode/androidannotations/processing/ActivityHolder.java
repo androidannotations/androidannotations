@@ -20,6 +20,8 @@ public class ActivityHolder {
     public JVar extras;
     public JClass bundleClass;
     public JVar resources;
+    
+    public JMethod cast;
 
     private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
     public JFieldVar handler;
@@ -35,7 +37,7 @@ public class ActivityHolder {
 
         return refClass;
     }
-
+    
     public JClass refClass(Class<?> clazz) {
         return activity.owner().ref(clazz);
     }

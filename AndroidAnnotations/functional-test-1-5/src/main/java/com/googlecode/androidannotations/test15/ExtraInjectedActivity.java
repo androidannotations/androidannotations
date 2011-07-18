@@ -1,6 +1,5 @@
 package com.googlecode.androidannotations.test15;
 
-import java.io.Serializable;
 import java.util.List;
 
 import android.app.Activity;
@@ -16,8 +15,8 @@ public class ExtraInjectedActivity extends Activity{
     
     @Extra("arrayExtra")
     CustomData[] arrayExtra;
-//    
-//    @Extra("listExtra")
-//    List<String> listExtra;
+    
+    @Extra("listExtra")
+    List<String> listExtra;
 
 }

@@ -3,6 +3,8 @@ package com.googlecode.androidannotations.test15;
 
 import static org.fest.assertions.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +39,15 @@ public class InjectExtraTest {
         intent.putExtra("arrayExtra", customData);
         activity.onCreate(null);
         assertThat(activity.arrayExtra).isEqualTo(customData);
+    }
+    
+    @Test
+    public void list_extra_injected() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("Hello !");
+        intent.putExtra("listExtra", list);
+        activity.onCreate(null);
+        assertThat(activity.listExtra).isEqualTo(list);
     }
     
     
