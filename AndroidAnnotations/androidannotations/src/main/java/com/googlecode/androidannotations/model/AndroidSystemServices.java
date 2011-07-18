@@ -40,7 +40,7 @@ public class AndroidSystemServices {
         registeredServices.put("android.os.Vibrator", "android.content.Context.VIBRATOR_SERVICE");
         registeredServices.put("android.net.ConnectivityManager", "android.content.Context.CONNECTIVITY_SERVICE");
         registeredServices.put("android.net.wifi.WifiManager", "android.content.Context.WIFI_SERVICE");
-        registeredServices.put("android.view.inputMethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
+        registeredServices.put("android.view.inputmethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
         registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
         registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
     }
