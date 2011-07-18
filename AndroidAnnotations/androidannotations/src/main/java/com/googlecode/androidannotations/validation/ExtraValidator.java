@@ -46,6 +46,8 @@ public class ExtraValidator implements ElementValidator {
 		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
+		
+		validatorHelper.hasExtraValue(element, valid);
 
 		return valid.isValid();
 	}

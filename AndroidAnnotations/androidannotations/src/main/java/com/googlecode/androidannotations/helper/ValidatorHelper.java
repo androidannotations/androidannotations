@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.IncompleteAnnotationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,7 @@ import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.rest.Delete;
 import com.googlecode.androidannotations.annotations.rest.Get;
@@ -131,6 +133,22 @@ public class ValidatorHelper {
             if (element.getAnnotation(EActivity.class) == null) {
                 annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with " + TargetAnnotationHelper.annotationName(EActivity.class));
             }
+        }
+    }
+
+    public void hasExtraValue(Element element, IsValid valid) {
+        boolean error = false;
+        try {
+            Extra extra = element.getAnnotation(Extra.class);
+            if (extra.value() == null) {
+                error = true;
+            }
+        } catch (IncompleteAnnotationException e) {
+            error = true;
+        }
+        if (error) {
+            valid.invalidate();
+            annotationHelper.printAnnotationError(element, "%s must have a value, which is the extra name used when sending the intent");
         }
     }
 
