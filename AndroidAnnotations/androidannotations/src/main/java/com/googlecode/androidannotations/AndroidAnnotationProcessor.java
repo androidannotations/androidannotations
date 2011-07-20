@@ -18,7 +18,6 @@ package com.googlecode.androidannotations;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.Messager;
@@ -28,17 +27,16 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
 import com.googlecode.androidannotations.annotationprocessor.AnnotatedAbstractProcessor;
 import com.googlecode.androidannotations.annotationprocessor.SupportedAnnotationClasses;
+import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
@@ -82,6 +80,7 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.ModelExtractor;
+import com.googlecode.androidannotations.processing.AppProcessor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
@@ -108,6 +107,7 @@ import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
 import com.googlecode.androidannotations.rclass.CoumpoundRClass;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.ProjectRClassFinder;
+import com.googlecode.androidannotations.validation.AppValidator;
 import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EActivityValidator;
@@ -135,7 +135,7 @@ import com.googlecode.androidannotations.validation.rest.RestValidator;
 import com.sun.codemodel.JCodeModel;
 
 @SupportedAnnotationClasses({ EActivity.class, //
-        Inject.class, //
+        App.class, //
         BeforeViews.class, //
         RoboGuice.class, //
         ViewById.class, //
@@ -284,6 +284,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new OptionsValidator(processingEnv));
         modelValidator.register(new PostValidator(processingEnv));
         modelValidator.register(new PutValidator(processingEnv));
+        modelValidator.register(new AppValidator(processingEnv, androidManifest));
         return modelValidator;
     }
 
@@ -318,6 +319,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
         modelProcessor.register(new RestProcessor(restImplementationHolder));
         modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
+        modelProcessor.register(new AppProcessor());
 
         return modelProcessor;
     }

@@ -113,20 +113,20 @@ public class AndroidManifestFinder {
 
         NodeList applicationNodes = documentElement.getElementsByTagName("application");
 
-        List<String> applicationQualifiedNames = new ArrayList<String>();
+        String applicationQualifiedName = null;
 
-        for (int i = 0; i < applicationNodes.getLength(); i++) {
-            Node applicationNode = applicationNodes.item(i);
+        if (applicationNodes.getLength() > 0) {
+            Node applicationNode = applicationNodes.item(0);
             Node nameAttribute = applicationNode.getAttributes().getNamedItem("android:name");
 
             String qualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
 
             if (qualifiedName != null) {
-                applicationQualifiedNames.add(qualifiedName);
+                applicationQualifiedName = qualifiedName;
             } else {
                 Messager messager = processingEnv.getMessager();
                 if (nameAttribute != null) {
-                    messager.printMessage(Kind.NOTE, String.format("A class application declared in the AndroidManifest.xml cannot be found in the compile path: [%s]", nameAttribute.getNodeValue()));
+                    messager.printMessage(Kind.NOTE, String.format("The class application declared in the AndroidManifest.xml cannot be found in the compile path: [%s]", nameAttribute.getNodeValue()));
                 }
             }
         }
@@ -153,7 +153,7 @@ public class AndroidManifestFinder {
             }
         }
 
-        return new AndroidManifest(applicationPackage, applicationQualifiedNames, activityQualifiedNames);
+        return new AndroidManifest(applicationPackage, applicationQualifiedName, activityQualifiedNames);
     }
 
     private String manifestNameToValidQualifiedName(String applicationPackage, Node nameAttribute) {

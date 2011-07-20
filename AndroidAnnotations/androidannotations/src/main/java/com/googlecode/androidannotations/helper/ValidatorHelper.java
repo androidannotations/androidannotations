@@ -56,6 +56,7 @@ import com.googlecode.androidannotations.validation.IsValid;
 public class ValidatorHelper {
 
     private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
+    private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
     private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
     private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
     private static final String ANDROID_MOTION_EVENT_QUALIFIED_NAME = "android.view.MotionEvent";
@@ -352,6 +353,27 @@ public class ValidatorHelper {
     public void extendsView(Element element, IsValid valid) {
         extendsType(element, ANDROID_VIEW_QUALIFIED_NAME, valid);
     }
+    
+    
+    public void extendsApplication(Element element, IsValid valid) {
+        extendsType(element, ANDROID_APPLICATION_QUALIFIED_NAME, valid);
+    }
+    
+    public void registeredInManifest(Element element, AndroidManifest manifest, IsValid valid) {
+        String applicationClassName = manifest.getApplicationClassName();
+        if (applicationClassName != null) {
+            TypeMirror elementType = element.asType();
+            TypeMirror manifestType = annotationHelper.typeElementFromQualifiedName(applicationClassName).asType();
+            if (!annotationHelper.isSubtype(manifestType, elementType)) {
+                valid.invalidate();
+                annotationHelper.printAnnotationError(element, "%s can only be used on an element that is an instance of the following class (or one of it's superclass): " + applicationClassName);
+            }
+        } else {
+            valid.invalidate();
+            annotationHelper.printAnnotationError(element, "No application class is registered in the AndroidManifest.xml");
+        }
+        
+    }
 
     public void extendsType(Element element, String typeQualifiedName, IsValid valid) {
         TypeMirror elementType = element.asType();
@@ -359,7 +381,7 @@ public class ValidatorHelper {
         TypeMirror expectedType = annotationHelper.typeElementFromQualifiedName(typeQualifiedName).asType();
         if (!annotationHelper.isSubtype(elementType, expectedType)) {
             valid.invalidate();
-            annotationHelper.printAnnotationError(element, "%s can only be an element that extends " + typeQualifiedName);
+            annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
         }
     }
 

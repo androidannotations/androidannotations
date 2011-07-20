@@ -7,11 +7,11 @@ public class AndroidManifest {
 
     private final String applicationPackage;
     private final List<String> activityQualifiedNames;
-    private final List<String> applicationClassNames;
+    private final String applicationClassName;
 
-    public AndroidManifest(String applicationPackage, List<String> applicationClassNames, List<String> activityQualifiedNames) {
+    public AndroidManifest(String applicationPackage, String applicationClassName, List<String> activityQualifiedNames) {
         this.applicationPackage = applicationPackage;
-        this.applicationClassNames = applicationClassNames;
+        this.applicationClassName = applicationClassName;
         this.activityQualifiedNames = activityQualifiedNames;
     }
 
@@ -23,8 +23,8 @@ public class AndroidManifest {
         return Collections.unmodifiableList(activityQualifiedNames);
     }
 
-    public List<String> getApplicationClassNames() {
-        return Collections.unmodifiableList(applicationClassNames);
+    public String getApplicationClassName() {
+        return applicationClassName;
     }
 
 }
