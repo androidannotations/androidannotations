@@ -21,11 +21,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use on Extra fields in activity classes
+ * Use on Extra fields in activity classes. This String value field correspond
+ * to the Android extra name.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
 public @interface Extra {
-	String value();
+    String value();
 }
