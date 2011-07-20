@@ -36,6 +36,7 @@ import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
@@ -132,6 +133,7 @@ import com.googlecode.androidannotations.validation.rest.RestValidator;
 import com.sun.codemodel.JCodeModel;
 
 @SupportedAnnotationClasses({ EActivity.class, //
+        Inject.class, //
         BeforeViews.class, //
         RoboGuice.class, //
         ViewById.class, //

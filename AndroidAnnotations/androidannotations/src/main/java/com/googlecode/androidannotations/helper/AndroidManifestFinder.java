@@ -3,6 +3,7 @@ package com.googlecode.androidannotations.helper;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.processing.Filer;
@@ -110,6 +111,16 @@ public class AndroidManifestFinder {
 
         String applicationPackage = documentElement.getAttribute("package");
 
+        NodeList applicationNodes = documentElement.getElementsByTagName("application");
+
+        List<String> applicationValidQualifiedNames = new ArrayList<String>();
+        
+        for (int i = 0; i < applicationNodes.getLength(); i++) {
+            Node applicationNode = applicationNodes.item(i);
+            Node nameAttribute = applicationNode.getAttributes().getNamedItem("android:name");
+            applicationValidQualifiedNames.addAll(manifestNameToValidQualifiedNames(applicationPackage, nameAttribute));
+        }
+        
         NodeList activityNodes = documentElement.getElementsByTagName("activity");
 
         List<String> activityQualifiedNames = new ArrayList<String>();
@@ -117,25 +128,37 @@ public class AndroidManifestFinder {
         for (int i = 0; i < activityNodes.getLength(); i++) {
             Node activityNode = activityNodes.item(i);
             Node nameAttribute = activityNode.getAttributes().getNamedItem("android:name");
-            if (nameAttribute != null) {
-
-                String activityName = nameAttribute.getNodeValue();
-                String activityQualifiedName;
-                if (activityName.startsWith(applicationPackage)) {
-                    activityQualifiedName = activityName;
-                } else {
-                    if (activityName.startsWith(".")) {
-                        activityQualifiedName = applicationPackage + activityName;
-                    } else {
-                        activityQualifiedName = applicationPackage + "." + activityName;
-                        activityQualifiedNames.add(activityName);
-                    }
-                }
-                activityQualifiedNames.add(activityQualifiedName);
-            }
+            activityQualifiedNames.addAll(manifestNameToValidQualifiedNames(applicationPackage, nameAttribute));
+            
         }
 
-        return new AndroidManifest(applicationPackage, activityQualifiedNames);
+        return new AndroidManifest(applicationPackage, applicationValidQualifiedNames, activityQualifiedNames);
+    }
+
+    private List<String> manifestNameToValidQualifiedNames(String applicationPackage, Node nameAttribute) {
+        if (nameAttribute != null) {
+            List<String> activityValidQualifiedNames = new ArrayList<String>();
+            String activityName = nameAttribute.getNodeValue();
+            String activityQualifiedName;
+            if (activityName.startsWith(applicationPackage)) {
+                activityQualifiedName = activityName;
+            } else {
+                if (activityName.startsWith(".")) {
+                    activityQualifiedName = applicationPackage + activityName;
+                } else {
+                    // Sometimes it's a full name, sometimes a relative
+                    // name. So we must add both, just in case.
+                    // relative name
+                    activityQualifiedName = applicationPackage + "." + activityName;
+                    // full name
+                    activityValidQualifiedNames.add(activityName);
+                }
+            }
+            activityValidQualifiedNames.add(activityQualifiedName);
+            return activityValidQualifiedNames;
+        } else {
+            return Collections.emptyList();
+        }
     }
 
 }
