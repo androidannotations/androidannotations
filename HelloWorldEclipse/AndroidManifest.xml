@@ -16,9 +16,7 @@
         
         <activity android:name=".MyListActivity_" />
         
-        
-
     </application>
     <uses-sdk android:minSdkVersion="3" />
 
-</manifest> 
+</manifest>
