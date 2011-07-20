@@ -89,7 +89,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 		String activityQualifiedName = typeElement.getQualifiedName().toString();
 		String generatedActivityQualifiedName = activityQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
-		List<String> activityQualifiedNames = androidManifest.getActivityValidQualifiedNames();
+		List<String> activityQualifiedNames = androidManifest.getActivityQualifiedNames();
 		if (!activityQualifiedNames.contains(generatedActivityQualifiedName)) {
 			String simpleName = typeElement.getSimpleName().toString();
 			String generatedSimpleName = simpleName + ModelConstants.GENERATION_SUFFIX;
