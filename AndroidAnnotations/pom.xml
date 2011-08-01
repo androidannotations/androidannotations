@@ -111,11 +111,31 @@
 			</plugins>
 		</pluginManagement>
 		<extensions>
-			<extension>
-				<groupId>org.jvnet.wagon-svn</groupId>
-				<artifactId>wagon-svn</artifactId>
-				<version>1.9</version>
-			</extension>
+    
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-scm</artifactId>
+        <version>1.0</version>
+      </extension>
+      
+      <extension>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-manager-plexus</artifactId>
+        <version>1.5</version>
+      </extension>
+      
+      <extension>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-git-commons</artifactId>
+        <version>1.5</version>
+      </extension>
+      
+      <extension>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-gitexe</artifactId>
+        <version>1.5</version>
+      </extension>
+      
 		</extensions>
 	</build>
 
@@ -126,14 +146,15 @@
 		</repository>
 		<snapshotRepository>
 			<id>snapshot-repo</id>
-			<url>svn:https://androidannotations.googlecode.com/svn/repository/snapshots</url>
+<!-- 			<url>git:https://maven-snapshots.androidannotations.googlecode.com/</url> -->
+            <url>git:git@github.com/tomjones/my-project.git</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations</connection>
-		<developerConnection>scm:svn:https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations</developerConnection>
-		<url>https://androidannotations.googlecode.com/svn/trunk/AndroidAnnotations</url>
+		<connection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</connection>
+		<developerConnection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</developerConnection>
+		<url>http://androidannotations.googlecode.com/git</url>
 	</scm>
 
 	<repositories>
@@ -144,7 +165,7 @@
 		</repository>
 		<repository>
 			<id>custom-codemodel-releases</id>
-			<url>http://androidannotations.googlecode.com/svn/repository/releases</url>
+			<url>http://maven-releases.androidannotations.googlecode.com/git</url>
 		</repository>
 	</repositories>
 
