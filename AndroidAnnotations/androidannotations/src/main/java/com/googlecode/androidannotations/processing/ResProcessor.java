@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.model.AndroidRes;
@@ -25,6 +26,7 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
@@ -63,14 +65,23 @@ public class ResProcessor implements ElementProcessor {
         }
 
         JBlock methodBody = holder.beforeSetContentView.body();
-        
-        if (holder.resources == null) {
-            holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
+
+        TypeMirror fieldTypeMirror = element.asType();
+        String fieldType = fieldTypeMirror.toString();
+
+        // Special case for loading animations
+        if ("android.view.animation.Animation".equals(fieldType)) {
+            JClass animationUtils = holder.refClass("android.view.animation.AnimationUtils");
+            methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(JExpr._this()).arg(idRef));
+        } else {
+            if (holder.resources == null) {
+                holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
+            }
+
+            String resourceMethodName = androidValue.getResourceMethodName();
+
+            methodBody.assign(JExpr.ref(fieldName), JExpr.invoke(holder.resources, resourceMethodName).arg(idRef));
         }
-        
-        String resourceMethodName = androidValue.getResourceMethodName();
-        
-        methodBody.assign(JExpr.ref(fieldName), JExpr.invoke(holder.resources, resourceMethodName).arg(idRef));
 
     }
 
