@@ -2,7 +2,7 @@ package com.googlecode.androidannotations.api;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class BackgroundExecutor_ {
+public class BackgroundExecutor {
 
     private final static Executor executor = Executors.newCachedThreadPool();
 

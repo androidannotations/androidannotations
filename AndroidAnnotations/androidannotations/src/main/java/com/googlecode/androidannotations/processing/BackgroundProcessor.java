@@ -24,7 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.api.BackgroundExecutor_;
+import com.googlecode.androidannotations.api.BackgroundExecutor;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -95,7 +95,7 @@ public class BackgroundProcessor implements ElementProcessor {
 
 		JBlock backgroundBody = backgroundMethod.body();
 		
-		JClass backgroundExecutorClass = codeModel.ref(BackgroundExecutor_.class);
+		JClass backgroundExecutorClass = codeModel.ref(BackgroundExecutor.class);
 		
 		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(JExpr._new(anonymousRunnableClass));
 		
