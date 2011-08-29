@@ -125,7 +125,7 @@
             <exclude>HOW-TO.txt</exclude>
             <exclude>LICENSE.txt</exclude>
             <exclude>.gitignore</exclude>
-            <exclude>R.java</exclude>
+            <exclude>**/R.java</exclude>
             <exclude>**/*_.java</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
