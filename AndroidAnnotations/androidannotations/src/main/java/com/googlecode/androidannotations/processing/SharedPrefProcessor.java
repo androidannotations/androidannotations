@@ -26,7 +26,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultFloat;
