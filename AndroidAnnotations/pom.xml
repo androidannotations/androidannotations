@@ -1,172 +1,174 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.googlecode.androidannotations</groupId>
-	<artifactId>androidannotations-parent</artifactId>
-	<version>2.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
+  <groupId>com.googlecode.androidannotations</groupId>
+  <artifactId>androidannotations-parent</artifactId>
+  <version>2.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-	<name>Android Annotations Parent</name>
-	<description>Simplifying Android using annotations and annotation processing tools</description>
-	<url>http://androidannotations.googlecode.com</url>
+  <name>Android Annotations Parent</name>
+  <description>Simplifying Android using annotations and annotation processing tools</description>
+  <url>http://androidannotations.googlecode.com</url>
 
-	<inceptionYear>2010</inceptionYear>
+  <inceptionYear>2010</inceptionYear>
 
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<distribution>repo</distribution>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <distribution>repo</distribution>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
-	<developers>
-		<developer>
-			<id>pierre-yves.ricau</id>
-			<name>Pierre-Yves Ricau</name>
-			<email>py.ricau at gmail</email>
-			<url>http://about.me/piwai</url>
-			<roles>
-				<role>developer</role>
-			</roles>
-		</developer>
-	</developers>
+  <developers>
+    <developer>
+      <id>pierre-yves.ricau</id>
+      <name>Pierre-Yves Ricau</name>
+      <email>py.ricau at gmail</email>
+      <url>http://about.me/piwai</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-	<modules>
-		<module>androidannotations</module>
-		<module>functional-test-1-5</module>
-		<module>rest-api-test-1-5</module>
-	</modules>
+  <modules>
+    <module>androidannotations</module>
+    <module>functional-test-1-5</module>
+    <module>rest-api-test-1-5</module>
+  </modules>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
-				<artifactId>androidannotations</artifactId>
-				<version>${project.version}</version>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
-				<artifactId>androidannotations</artifactId>
-				<version>${project.version}</version>
-				<classifier>api</classifier>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.codemodel</groupId>
-				<artifactId>codemodel</artifactId>
-				<version>2.5-FROZEN-AA</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.8.1</version>
-				<scope>test</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.googlecode.androidannotations</groupId>
+        <artifactId>androidannotations</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.googlecode.androidannotations</groupId>
+        <artifactId>androidannotations</artifactId>
+        <version>${project.version}</version>
+        <classifier>api</classifier>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.codemodel</groupId>
+        <artifactId>codemodel</artifactId>
+        <version>2.5-FROZEN-AA</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.1</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>jarjar-maven-plugin</artifactId>
-					<version>1.3</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.3.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.2.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.7</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>2.1.2</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<extensions>
-    
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>jarjar-maven-plugin</artifactId>
+          <version>1.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.3.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.7</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.1.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <extensions>
+
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-scm</artifactId>
         <version>1.0</version>
       </extension>
-      
+
       <extension>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-manager-plexus</artifactId>
         <version>1.5</version>
       </extension>
-      
+
       <extension>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-git-commons</artifactId>
         <version>1.5</version>
       </extension>
-      
+
       <extension>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-gitexe</artifactId>
         <version>1.5</version>
       </extension>
-      
-		</extensions>
-	</build>
 
-	<distributionManagement>
-		<repository>
-			<id>release-repo</id>
-			<url>svn:https://androidannotations.googlecode.com/svn/repository/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshot-repo</id>
+    </extensions>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>release-repo</id>
+      <url>svn:https://androidannotations.googlecode.com/svn/repository/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshot-repo</id>
 <!-- 			<url>git:https://maven-snapshots.androidannotations.googlecode.com/</url> -->
-            <url>git:git@github.com/tomjones/my-project.git</url>
-		</snapshotRepository>
-	</distributionManagement>
+      <url>git:git@github.com/tomjones/my-project.git</url>
+    </snapshotRepository>
+  </distributionManagement>
 
-	<scm>
-		<connection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</connection>
-		<developerConnection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</developerConnection>
-		<url>http://androidannotations.googlecode.com/git</url>
-	</scm>
+  <scm>
+    <connection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</connection>
+    <developerConnection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</developerConnection>
+    <url>http://androidannotations.googlecode.com/git</url>
+  </scm>
 
-	<repositories>
-		<repository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>http://download.java.net/maven/2/</url>
-		</repository>
-		<repository>
-			<id>custom-codemodel-releases</id>
-			<url>http://maven-releases.androidannotations.googlecode.com/git</url>
-		</repository>
-	</repositories>
+  <repositories>
+    <repository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://download.java.net/maven/2/</url>
+    </repository>
+    <repository>
+      <id>custom-codemodel-releases</id>
+      <url>http://maven-releases.androidannotations.googlecode.com/git</url>
+    </repository>
+  </repositories>
 
 </project>
