@@ -9,6 +9,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.LongClick;
@@ -57,12 +57,6 @@ public class MyActivity extends Activity {
     @SystemService
     WindowManager windowManager;
 
-    @BeforeViews
-    void doStuffWithDisplay() {
-        // windowManager should not be null
-        windowManager.getDefaultDisplay();
-    }
-
     /**
      * AndroidAnnotations gracefully handles support for onBackPressed, whether
      * you use ECLAIR (2.0), or pre ECLAIR android version.
@@ -70,11 +64,15 @@ public class MyActivity extends Activity {
     public void onBackPressed() {
         Toast.makeText(this, "Back key pressed!", Toast.LENGTH_SHORT).show();
     }
-
-    @BeforeViews
-    void requestIndeterminateProgress() {
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // windowManager should not be null
+        windowManager.getDefaultDisplay();
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     }
+
 
     @Click
     void myButtonClicked() {
@@ -136,21 +134,6 @@ public class MyActivity extends Activity {
     @Transactional
     int transactionalMethod(SQLiteDatabase db, int someParam) {
         return 42;
-    }
-
-    void prefUsageExample() {
-        MyPrefs_ prefs = new MyPrefs_(this);
-
-        prefs.edit() //
-                .clear() //
-                .age().put(36) //
-                .apply();
-
-        int age = prefs.age().get(12);
-
-        String name = prefs.name().get();
-
-        Log.d("TAG", "age: " + age + " name " + name);
     }
 
 }

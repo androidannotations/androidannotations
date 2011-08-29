@@ -28,8 +28,9 @@ import com.sun.codemodel.JVar;
 public class ActivityHolder {
 
     public JDefinedClass activity;
-    public JMethod beforeSetContentView;
-    public JVar beforeSetContentViewSavedInstanceStateParam;
+    public JMethod beforeCreate;
+    public JVar beforeCreateSavedInstanceStateParam;
+    public JVar afterSetContentViewSavedInstanceStateParam;
     public JMethod afterSetContentView;
     public JBlock extrasNotNullBlock;
     public JVar extras;
@@ -40,6 +41,7 @@ public class ActivityHolder {
 
     private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
     public JFieldVar handler;
+
 
     public JClass refClass(String fullyQualifiedClassName) {
 

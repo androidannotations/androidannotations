@@ -23,30 +23,20 @@ import java.lang.annotation.Target;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.googlecode.androidannotations.annotations.res.StringRes;
-
 /**
- * Methods annotated with @{@link BeforeViews} will be called before
+ * Methods annotated with @{@link AfterViews} will be called after
  * {@link Activity#setContentView(int)} is called by the generated activity.
  * 
- * When the onCreate() method of your activity is called,
- * {@link Activity#setContentView(int)} has already been called, the views have
- * been injected and the listeners are bound. Sometimes, you might want to
- * execute code before {@link Activity#setContentView(int)} is called. For
- * instance, if you need to call {@link Activity#requestWindowFeature(int)}.
- * 
- * When methods annotated with @{@link BeforeViews} are called,
- * {@link SystemService}s, Resources (e.g. {@link StringRes}) and {@link Extra}s
- * are already injected. However views are not injected yet, so beware of
- * {@link NullPointerException}s.
+ * This occurs after <b>super.onCreate() is called</b>. Any view depending code
+ * should be done in an {@link AfterViews} annotated method.
  * 
  * The method may have zero or one parameter, that must be a {@link Bundle}.
  * 
- * There may be several methods annotated with @{@link BeforeViews} in the same
+ * There may be several methods annotated with @{@link AfterViews} in the same
  * activity.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
-public @interface BeforeViews {
+public @interface AfterViews {
 }

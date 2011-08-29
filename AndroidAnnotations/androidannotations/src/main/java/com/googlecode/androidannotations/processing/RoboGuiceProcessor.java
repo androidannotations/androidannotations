@@ -79,7 +79,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
 
         JMethod getInjectorMethod = getInjectorMethod(holder);
 
-        beforeSetContentViewMethod(holder, scope, eventManager, getInjectorMethod);
+        beforeCreateMethod(holder, scope, eventManager, getInjectorMethod);
 
     }
 
@@ -304,18 +304,18 @@ public class RoboGuiceProcessor implements ElementProcessor {
         return new ArrayList<String>(0);
     }
 
-    private void beforeSetContentViewMethod(ActivityHolder holder, JFieldVar scope, JFieldVar eventManager, JMethod getInjector) {
+    private void beforeCreateMethod(ActivityHolder holder, JFieldVar scope, JFieldVar eventManager, JMethod getInjector) {
         JClass contextScopeClass = holder.refClass("roboguice.inject.ContextScope");
         JClass injectorClass = holder.refClass("com.google.inject.Injector");
         JClass eventManagerClass = holder.refClass("roboguice.event.EventManager");
 
-        JBlock body = holder.beforeSetContentView.body();
+        JBlock body = holder.beforeCreate.body();
         JVar injector = body.decl(injectorClass, "injector_", invoke(getInjector));
         body.assign(scope, invoke(injector, "getInstance").arg(contextScopeClass.dotclass()));
         body.invoke(scope, "enter").arg(_this());
         body.invoke(injector, "injectMembers").arg(_this());
         body.assign(eventManager, invoke(injector, "getInstance").arg(eventManagerClass.dotclass()));
-        fireEvent(holder, eventManager, body, "roboguice.activity.event.OnCreateEvent", holder.beforeSetContentViewSavedInstanceStateParam);
+        fireEvent(holder, eventManager, body, "roboguice.activity.event.OnCreateEvent", holder.beforeCreateSavedInstanceStateParam);
     }
 
 }

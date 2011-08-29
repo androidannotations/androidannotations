@@ -43,7 +43,7 @@ public class PrefProcessor implements ElementProcessor {
         TypeMirror fieldTypeMirror = element.asType();
         String fieldType = fieldTypeMirror.toString();
 		
-		JBlock methodBody = holder.beforeSetContentView.body();
+		JBlock methodBody = holder.beforeCreate.body();
 		
 		JFieldRef field = JExpr.ref(fieldName);
 		

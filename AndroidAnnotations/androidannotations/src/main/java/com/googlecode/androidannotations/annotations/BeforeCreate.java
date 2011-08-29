@@ -20,19 +20,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.os.Bundle;
+
 /**
- * Should be used on Activity classes to enable usage of AndroidAnnotations
+ * Methods annotated with @{@link BeforeCreate} will be called before
+ * <b>super.onCreate()</b> is called by the generated activity.
  * 
- * Any view related code should happen in an {@link AfterViews} annotated
- * method.
+ * The method may have zero or one parameter, that must be a {@link Bundle}.
  * 
- * The annotation value should be one of R.layout.* fields. If not set, no
- * content view will be set, and you should call the setContentView() method
- * yourself, in <b>onCreate()</b>
+ * There may be several methods annotated with @{@link BeforeCreate} in the same
+ * activity.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.TYPE)
-public @interface EActivity {
-    int value() default Id.DEFAULT_VALUE;
+@Target(ElementType.METHOD)
+public @interface BeforeCreate {
 }

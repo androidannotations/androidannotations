@@ -22,15 +22,15 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JInvocation;
 
-public class BeforeCreateProcessor implements ElementProcessor {
+public class AfterViewsProcessor implements ElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return BeforeCreate.class;
+		return AfterViews.class;
 	}
 
 	@Override
@@ -44,10 +44,10 @@ public class BeforeCreateProcessor implements ElementProcessor {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		boolean hasBundleParameter = parameters.size() == 1;
 
-		JInvocation methodCall = holder.beforeCreate.body().invoke(methodName);
+		JInvocation methodCall = holder.afterSetContentView.body().invoke(methodName);
 		
 		if (hasBundleParameter) {
-			methodCall.arg(holder.beforeCreateSavedInstanceStateParam);
+			methodCall.arg(holder.afterSetContentViewSavedInstanceStateParam);
 		}
 	}
 

@@ -19,27 +19,25 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
+import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
-import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class ViewByIdValidator implements ElementValidator {
+public class AfterViewsValidator implements ElementValidator {
 
-	private IdValidatorHelper validatorHelper;
-	
-	public ViewByIdValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
-		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-		validatorHelper = new IdValidatorHelper(annotationHelper);
+	private ValidatorHelper validatorHelper;
+
+	public AfterViewsValidator(ProcessingEnvironment processingEnv) {
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return ViewById.class;
+		return AfterViews.class;
 	}
 
 	@Override
@@ -49,15 +47,15 @@ public class ViewByIdValidator implements ElementValidator {
 
 		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
-		TypeMirror uiFieldTypeMirror = element.asType();
+		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.isDeclaredType(element, valid, uiFieldTypeMirror);
-
-		validatorHelper.extendsView(element, valid);
-
-		validatorHelper.idExists(element, Res.ID, valid);
-
+		validatorHelper.voidReturnType(executableElement, valid);
+		
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		
 		validatorHelper.isNotPrivate(element, valid);
+
+		validatorHelper.doesntThrowException(executableElement, valid);
 
 		return valid.isValid();
 	}

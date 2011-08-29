@@ -52,7 +52,7 @@ public class SystemServiceProcessor implements ElementProcessor {
 
         JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
 
-        JBlock methodBody = holder.beforeSetContentView.body();
+        JBlock methodBody = holder.beforeCreate.body();
 
         methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(fieldTypeQualifiedName), JExpr.invoke("getSystemService").arg(serviceRef)));
     }

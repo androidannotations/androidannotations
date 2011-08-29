@@ -64,7 +64,7 @@ public class ResProcessor implements ElementProcessor {
             idRef = rInnerClass.getIdStaticRef(idValue, holder);
         }
 
-        JBlock methodBody = holder.beforeSetContentView.body();
+        JBlock methodBody = holder.beforeCreate.body();
 
         TypeMirror fieldTypeMirror = element.asType();
         String fieldType = fieldTypeMirror.toString();

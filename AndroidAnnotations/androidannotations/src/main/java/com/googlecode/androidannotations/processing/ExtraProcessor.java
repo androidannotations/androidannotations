@@ -61,7 +61,7 @@ public class ExtraProcessor implements ElementProcessor {
 		}
 		
 
-		JBlock methodBody = holder.beforeSetContentView.body();
+		JBlock methodBody = holder.beforeCreate.body();
 
 		if (holder.extras == null) {
 			holder.extras = methodBody.decl(holder.bundleClass, "extras_");

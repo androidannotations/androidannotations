@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
-import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
@@ -21,12 +20,6 @@ public class MyListActivity extends ListActivity {
 	String[] bestFoods;
 
 	private ListAdapter adapter;
-
-	@BeforeViews
-	void initListActivity(Bundle savedInstanceState) {
-		// Ensure that ListActivity sets its content view before AndroidAnnotation injection
-		getListView();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

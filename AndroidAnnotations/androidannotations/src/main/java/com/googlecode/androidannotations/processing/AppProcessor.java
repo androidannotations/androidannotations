@@ -46,7 +46,7 @@ public class AppProcessor implements ElementProcessor {
         TypeMirror elementType = element.asType();
         
         
-        JBlock methodBody = holder.beforeSetContentView.body();
+        JBlock methodBody = holder.beforeCreate.body();
         
         JInvocation getApplication = invoke("getApplication");
         

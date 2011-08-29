@@ -30,13 +30,10 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
-import com.googlecode.androidannotations.annotations.BeforeViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.rest.Delete;
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Head;
@@ -150,31 +147,6 @@ public class ValidatorHelper {
         if (error) {
             valid.invalidate();
             annotationHelper.printAnnotationError(element, "%s must have a value, which is the extra name used when sending the intent");
-        }
-    }
-
-    public void viewMayExist(Element element, AnnotationElements validatedElements, IsValid valid) {
-
-        Element enclosingElement = element.getEnclosingElement();
-        hasEActivity(element, enclosingElement, validatedElements, valid);
-
-        if (valid.isValid()) {
-
-            EActivity eActivity = enclosingElement.getAnnotation(EActivity.class);
-            if (eActivity.value() == Id.DEFAULT_VALUE) {
-                List<ExecutableElement> methods = ElementFilter.methodsIn(enclosingElement.getEnclosedElements());
-                boolean hasBeforeMethod = false;
-                for (ExecutableElement method : methods) {
-                    if (method.getAnnotation(BeforeViews.class) != null) {
-                        hasBeforeMethod = true;
-                        break;
-                    }
-                }
-                if (!hasBeforeMethod) {
-                    valid.invalidate();
-                    annotationHelper.printAnnotationError(element, "%s cannot be used if " + TargetAnnotationHelper.annotationName(EActivity.class) + " has no layout id and there is no " + TargetAnnotationHelper.annotationName(BeforeViews.class) + " method to call setContentView(), because findViewById() will obviously always return null");
-                }
-            }
         }
     }
 

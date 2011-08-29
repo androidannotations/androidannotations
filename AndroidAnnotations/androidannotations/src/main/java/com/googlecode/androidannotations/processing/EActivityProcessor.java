@@ -80,22 +80,25 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
         holder.bundleClass = holder.refClass("android.os.Bundle");
 
-        // beforeSetContentView
-        holder.beforeSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "beforeSetContentView_");
-        holder.beforeSetContentViewSavedInstanceStateParam = holder.beforeSetContentView.param(holder.bundleClass, "savedInstanceState");
-
-        // afterSetContentView
-        holder.afterSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
-        holder.afterSetContentView.param(holder.bundleClass, "savedInstanceState");
-
         // onCreate
         JMethod onCreate = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onCreate");
         onCreate.annotate(Override.class);
+        
+        // beforeSetContentView
+        holder.beforeCreate = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "beforeCreate_");
+        holder.beforeCreateSavedInstanceStateParam = holder.beforeCreate.param(holder.bundleClass, "savedInstanceState");
+
+        // afterSetContentView
+        holder.afterSetContentView = holder.activity.method(JMod.PRIVATE, codeModel.VOID, "afterSetContentView_");
+        holder.afterSetContentViewSavedInstanceStateParam = holder.afterSetContentView.param(holder.bundleClass, "savedInstanceState");
+
 
         JVar onCreateSavedInstanceState = onCreate.param(holder.bundleClass, "savedInstanceState");
         JBlock onCreateBody = onCreate.body();
 
-        onCreateBody.invoke(holder.beforeSetContentView).arg(onCreateSavedInstanceState);
+        onCreateBody.invoke(holder.beforeCreate).arg(onCreateSavedInstanceState);
+        
+        onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 
         EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
         int layoutIdValue = layoutAnnotation.value();
@@ -113,8 +116,6 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
         }
 
         onCreateBody.invoke(holder.afterSetContentView).arg(onCreateSavedInstanceState);
-
-        onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 
         // onBackPressed
         if (hasOnBackPressedMethod(typeElement)) {

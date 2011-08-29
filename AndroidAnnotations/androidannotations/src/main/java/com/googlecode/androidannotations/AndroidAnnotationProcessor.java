@@ -31,9 +31,10 @@ import javax.tools.Diagnostic;
 
 import com.googlecode.androidannotations.annotationprocessor.AnnotatedAbstractProcessor;
 import com.googlecode.androidannotations.annotationprocessor.SupportedAnnotationClasses;
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.BeforeViews;
+import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
@@ -81,6 +82,7 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.ModelExtractor;
+import com.googlecode.androidannotations.processing.AfterViewsProcessor;
 import com.googlecode.androidannotations.processing.AppProcessor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
@@ -109,6 +111,7 @@ import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
 import com.googlecode.androidannotations.rclass.CoumpoundRClass;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.ProjectRClassFinder;
+import com.googlecode.androidannotations.validation.AfterViewsValidator;
 import com.googlecode.androidannotations.validation.AppValidator;
 import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
@@ -139,7 +142,8 @@ import com.sun.codemodel.JCodeModel;
 
 @SupportedAnnotationClasses({ EActivity.class, //
         App.class, //
-        BeforeViews.class, //
+        BeforeCreate.class, //
+        AfterViews.class, //
         RoboGuice.class, //
         ViewById.class, //
         Click.class, //
@@ -280,6 +284,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new ExtraValidator(processingEnv));
         modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
         modelValidator.register(new BeforeCreateValidator(processingEnv));
+        modelValidator.register(new AfterViewsValidator(processingEnv));
         modelValidator.register(new SharedPrefValidator(processingEnv));
         modelValidator.register(new PrefValidator(processingEnv));
         modelValidator.register(new RestValidator(processingEnv));
@@ -321,7 +326,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelProcessor.register(new ExtraProcessor());
         modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
         modelProcessor.register(new BeforeCreateProcessor());
-
+        modelProcessor.register(new AfterViewsProcessor());
         RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
         modelProcessor.register(new RestProcessor(restImplementationHolder));
         modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
