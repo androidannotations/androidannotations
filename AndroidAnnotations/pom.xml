@@ -169,8 +169,8 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</connection>
-    <developerConnection>scm:git:https://androidannotations.googlecode.com/git/AndroidAnnotations</developerConnection>
+    <connection>scm:git:https://py.ricau@code.google.com/p/androidannotations/</connection>
+    <developerConnection>scm:git:https://py.ricau@code.google.com/p/androidannotations/</developerConnection>
     <url>http://androidannotations.googlecode.com/git</url>
   </scm>
 
