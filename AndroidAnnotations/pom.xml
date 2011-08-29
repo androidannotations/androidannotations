@@ -143,18 +143,6 @@
     <extensions>
 
       <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-scm</artifactId>
-        <version>1.0</version>
-      </extension>
-
-      <extension>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-manager-plexus</artifactId>
-        <version>1.5</version>
-      </extension>
-
-      <extension>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-git-commons</artifactId>
         <version>1.5</version>
