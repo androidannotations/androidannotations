@@ -127,6 +127,7 @@
             <exclude>.gitignore</exclude>
             <exclude>**/R.java</exclude>
             <exclude>**/*_.java</exclude>
+            <exclude>**/.factorypath</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
         </configuration>
