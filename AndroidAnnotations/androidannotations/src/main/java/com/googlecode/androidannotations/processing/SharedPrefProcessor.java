@@ -103,14 +103,11 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
         helperClass._extends(SharedPreferencesHelper.class);
 
         // Extracting valid methods
-        Elements elements = processingEnv.getElementUtils();
-        List<? extends Element> inheritedMembers = elements.getAllMembers(typeElement);
-        List<ExecutableElement> inheritedMethods = ElementFilter.methodsIn(inheritedMembers);
+        List<? extends Element> members = typeElement.getEnclosedElements();
+        List<ExecutableElement> methods = ElementFilter.methodsIn(members);
         List<ExecutableElement> validMethods = new ArrayList<ExecutableElement>();
-        for (ExecutableElement method : inheritedMethods) {
-            if (!method.getEnclosingElement().asType().toString().equals("java.lang.Object")) {
-                validMethods.add(method);
-            }
+        for (ExecutableElement method : methods) {
+            validMethods.add(method);
         }
 
         // Static editor class

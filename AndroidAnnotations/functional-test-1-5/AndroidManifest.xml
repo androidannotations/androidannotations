@@ -12,7 +12,7 @@
 		<activity android:name=".ActivityWithServices_" />
         <activity android:name=".ExtraInjectedActivity_" />
         <activity android:name=".ApplicationInjectedActivity_" />
-        
+        <activity android:name=".prefs.PrefsActivity_" />
 
 	</application>
 

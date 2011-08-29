@@ -30,96 +30,100 @@ import javax.tools.Diagnostic;
 
 public class AnnotationHelper {
 
-	protected final ProcessingEnvironment processingEnv;
+    protected final ProcessingEnvironment processingEnv;
 
-	public AnnotationHelper(ProcessingEnvironment processingEnv) {
-		this.processingEnv = processingEnv;
-	}
+    public AnnotationHelper(ProcessingEnvironment processingEnv) {
+        this.processingEnv = processingEnv;
+    }
 
-	/**
-	 * Tests whether one type is a subtype of another. Any type is considered to
-	 * be a subtype of itself.
-	 * 
-	 * @param t1
-	 *            the first type
-	 * @param t2
-	 *            the second type
-	 * @return true if and only if the first type is a subtype of the second
-	 * @throws IllegalArgumentException
-	 *             if given an executable or package type
-	 * @see Types#isSubtype(TypeMirror, TypeMirror)
-	 */
-	public boolean isSubtype(TypeMirror t1, TypeMirror t2) {
-		return processingEnv.getTypeUtils().isSubtype(t1, t2);
-	}
+    /**
+     * Tests whether one type is a subtype of another. Any type is considered to
+     * be a subtype of itself.
+     * 
+     * @param t1
+     *            the first type
+     * @param t2
+     *            the second type
+     * @return true if and only if the first type is a subtype of the second
+     * @throws IllegalArgumentException
+     *             if given an executable or package type
+     * @see Types#isSubtype(TypeMirror, TypeMirror)
+     */
+    public boolean isSubtype(TypeMirror t1, TypeMirror t2) {
+        return processingEnv.getTypeUtils().isSubtype(t1, t2);
+    }
 
-	public boolean isSubtype(TypeElement t1, TypeElement t2) {
-		return isSubtype(t1.asType(), t2.asType());
-	}
+    public boolean isSubtype(TypeElement t1, TypeElement t2) {
+        return isSubtype(t1.asType(), t2.asType());
+    }
 
-	public TypeElement typeElementFromQualifiedName(String qualifiedName) {
-		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
-	}
+    public TypeElement typeElementFromQualifiedName(String qualifiedName) {
+        return processingEnv.getElementUtils().getTypeElement(qualifiedName);
+    }
 
-	public AnnotationMirror findAnnotationMirror(Element annotatedElement, Class<? extends Annotation> annotationClass) {
-		List<? extends AnnotationMirror> annotationMirrors = annotatedElement.getAnnotationMirrors();
+    public AnnotationMirror findAnnotationMirror(Element annotatedElement, Class<? extends Annotation> annotationClass) {
+        List<? extends AnnotationMirror> annotationMirrors = annotatedElement.getAnnotationMirrors();
 
-		for (AnnotationMirror annotationMirror : annotationMirrors) {
-			TypeElement annotationElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
-			if (isAnnotation(annotationElement, annotationClass)) {
-				return annotationMirror;
-			}
-		}
-		return null;
-	}
+        for (AnnotationMirror annotationMirror : annotationMirrors) {
+            TypeElement annotationElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
+            if (isAnnotation(annotationElement, annotationClass)) {
+                return annotationMirror;
+            }
+        }
+        return null;
+    }
 
-	public boolean isAnnotation(TypeElement annotation, Class<? extends Annotation> annotationClass) {
-		return annotation.getQualifiedName().toString().equals(annotationClass.getName());
-	}
-	
-	public void printAnnotationError(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
-		printAnnotationMessage(Diagnostic.Kind.ERROR, annotatedElement, annotationClass, message);
-	}
-	
-	public void printAnnotationWarning(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
-		printAnnotationMessage(Diagnostic.Kind.WARNING, annotatedElement, annotationClass, message);
-	}
+    public boolean isAnnotation(TypeElement annotation, Class<? extends Annotation> annotationClass) {
+        return annotation.getQualifiedName().toString().equals(annotationClass.getName());
+    }
 
-	public void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
-		AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationClass);
-		if (annotationMirror != null) {
-			processingEnv.getMessager().printMessage(diagnosticKind, message, annotatedElement, annotationMirror);
-		} else {
-			printError(annotatedElement, message);
-		}
-	}
+    public void printAnnotationError(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+        printAnnotationMessage(Diagnostic.Kind.ERROR, annotatedElement, annotationClass, message);
+    }
 
-	public void printError(Element element, String message) {
-		processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
-	}
-	
-	public boolean isPrivate(Element element) {
-		return element.getModifiers().contains(Modifier.PRIVATE);
-	}
-	
-	public boolean isAbstract(Element element) {
-		return element.getModifiers().contains(Modifier.ABSTRACT);
-	}
-	
-	public boolean isInterface(TypeElement element) {
-		return element.getKind().isInterface();
-	}
-	
-	public boolean isFinal(Element element) {
-		return element.getModifiers().contains(Modifier.FINAL);
-	}
-	
-	public boolean isSynchronized(Element element) {
-		return element.getModifiers().contains(Modifier.SYNCHRONIZED);
-	}
-	
-	public Elements getElementUtils() {
-		return processingEnv.getElementUtils();
-	}
+    public void printAnnotationWarning(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+        printAnnotationMessage(Diagnostic.Kind.WARNING, annotatedElement, annotationClass, message);
+    }
+
+    public void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
+        AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationClass);
+        if (annotationMirror != null) {
+            processingEnv.getMessager().printMessage(diagnosticKind, message, annotatedElement, annotationMirror);
+        } else {
+            printError(annotatedElement, message);
+        }
+    }
+
+    public void printError(Element element, String message) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
+    }
+
+    public boolean isPrivate(Element element) {
+        return element.getModifiers().contains(Modifier.PRIVATE);
+    }
+
+    public boolean isAbstract(Element element) {
+        return element.getModifiers().contains(Modifier.ABSTRACT);
+    }
+
+    public boolean isInterface(TypeElement element) {
+        return element.getKind().isInterface();
+    }
+
+    public boolean isFinal(Element element) {
+        return element.getModifiers().contains(Modifier.FINAL);
+    }
+
+    public boolean isSynchronized(Element element) {
+        return element.getModifiers().contains(Modifier.SYNCHRONIZED);
+    }
+
+    public Elements getElementUtils() {
+        return processingEnv.getElementUtils();
+    }
+
+    public Types getTypeUtils() {
+        return processingEnv.getTypeUtils();
+    }
 
 }

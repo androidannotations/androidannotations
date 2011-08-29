@@ -339,6 +339,18 @@ public class ValidatorHelper {
                 valid.invalidate();
                 annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with no parameter or a parameter of type " + parameterTypeQualifiedName + ", not " + parameterType);
             }
+// Tests for StackOverflow question.            
+//            Types typeUtils = annotationHelper.getTypeUtils();
+//            TypeElement typeElement = (TypeElement) typeUtils.asElement(parameterType);
+//            Elements elementUtils = annotationHelper.getElementUtils();
+//            List<? extends Element> elementMembers = elementUtils.getAllMembers(typeElement);
+//            List<ExecutableElement> elementMethods = ElementFilter.methodsIn(elementMembers);
+//            for(ExecutableElement methodElement : elementMethods) {
+//                if (methodElement.getParameters().size()==0 && methodElement.getSimpleName().toString().startsWith("get")) {
+//                    annotationHelper.printAnnotationWarning(executableElement, "Method name: "+methodElement.getSimpleName());
+//                }
+//            }
+
         }
     }
 

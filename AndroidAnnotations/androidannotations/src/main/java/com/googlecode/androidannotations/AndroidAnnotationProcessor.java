@@ -70,6 +70,7 @@ import com.googlecode.androidannotations.annotations.rest.Options;
 import com.googlecode.androidannotations.annotations.rest.Post;
 import com.googlecode.androidannotations.annotations.rest.Put;
 import com.googlecode.androidannotations.annotations.rest.Rest;
+import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
 import com.googlecode.androidannotations.generation.CodeModelGenerator;
 import com.googlecode.androidannotations.helper.AndroidManifest;
@@ -91,6 +92,7 @@ import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
 import com.googlecode.androidannotations.processing.ItemSelectedProcessor;
 import com.googlecode.androidannotations.processing.LongClickProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
+import com.googlecode.androidannotations.processing.PrefProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
 import com.googlecode.androidannotations.processing.RoboGuiceProcessor;
 import com.googlecode.androidannotations.processing.SharedPrefProcessor;
@@ -117,6 +119,7 @@ import com.googlecode.androidannotations.validation.ItemLongClickValidator;
 import com.googlecode.androidannotations.validation.ItemSelectedValidator;
 import com.googlecode.androidannotations.validation.LongClickValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
+import com.googlecode.androidannotations.validation.PrefValidator;
 import com.googlecode.androidannotations.validation.ResValidator;
 import com.googlecode.androidannotations.validation.RoboGuiceValidator;
 import com.googlecode.androidannotations.validation.RunnableValidator;
@@ -152,6 +155,7 @@ import com.sun.codemodel.JCodeModel;
         Extra.class, //
         SystemService.class, //
         SharedPref.class, //
+        Pref.class, //
         StringRes.class, //
         ColorRes.class, //
         AnimationRes.class, //
@@ -277,6 +281,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
         modelValidator.register(new BeforeCreateValidator(processingEnv));
         modelValidator.register(new SharedPrefValidator(processingEnv));
+        modelValidator.register(new PrefValidator(processingEnv));
         modelValidator.register(new RestValidator(processingEnv));
         modelValidator.register(new DeleteValidator(processingEnv));
         modelValidator.register(new GetValidator(processingEnv));
@@ -295,8 +300,9 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
     private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
         ModelProcessor modelProcessor = new ModelProcessor();
-        modelProcessor.register(new SharedPrefProcessor(processingEnv));
         modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
+        modelProcessor.register(new SharedPrefProcessor(processingEnv));
+        modelProcessor.register(new PrefProcessor());
         modelProcessor.register(new RoboGuiceProcessor());
         modelProcessor.register(new ViewByIdProcessor(rClass));
         modelProcessor.register(new ClickProcessor(rClass));
