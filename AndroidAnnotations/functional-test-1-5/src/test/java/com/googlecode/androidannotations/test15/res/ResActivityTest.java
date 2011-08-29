@@ -16,21 +16,15 @@
 package com.googlecode.androidannotations.test15.res;
 
 import static org.fest.assertions.Assertions.*;
-
-import org.junit.Before;
-import org.junit.runner.RunWith;
-
 import android.content.res.Resources;
 import android.view.animation.AnimationUtils;
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
-@RunWith(RobolectricTestRunner.class)
+//@RunWith(RobolectricTestRunner.class)
 public class ResActivityTest {
 
     private ResActivity_ activity;
 
-    @Before
+//    @Before
     public void setup() {
         activity = new ResActivity_();
         activity.onCreate(null);
@@ -40,7 +34,7 @@ public class ResActivityTest {
      * Cannot be tested right now, because there is no Robolectric shadow class
      * for {@link AnimationUtils}.
      */
-    // @Test
+//     @Test
     public void animNotNull() {
         assertThat(activity.fadein).isNotNull();
     }
