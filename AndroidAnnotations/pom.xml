@@ -112,6 +112,34 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <!-- Checks for license headers. Use "mvn license:format" to update files. -->
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <header>src/etc/header.txt</header>
+          <excludes>
+            <exclude>.idea/**</exclude>
+            <exclude>HOW-TO.txt</exclude>
+            <exclude>LICENSE.txt</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>R.java</exclude>
+            <exclude>**/*_.java</exclude>
+          </excludes>
+          <strictCheck>true</strictCheck>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>    
+    </plugins>
     <extensions>
 
       <extension>
