@@ -22,11 +22,6 @@
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
 
-		<activity android:name=".EmptyActivityWithLayout_" />
-		<activity android:name=".EmptyActivityWithoutLayout_" />
-		<activity android:name=".ViewsInjectedActivity_" />
-		<activity android:name=".ClicksHandledActivity_" />
-
 	</application>
 
 </manifest>
