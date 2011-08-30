@@ -26,8 +26,8 @@ import com.googlecode.androidannotations.test15.R;
 @EActivity(R.layout.main)
 public class ResActivity extends Activity {
 
-    @AnimationRes(R.anim.fadein)
-    XmlResourceParser xmlResAnim;
+    @AnimationRes
+    XmlResourceParser fade_in;
     
     @AnimationRes
     Animation fadein;

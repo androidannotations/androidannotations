@@ -45,7 +45,7 @@ public class ResActivityTest {
      */
     // @Test
     public void xmlResAnimNotNull() {
-        assertThat(activity.xmlResAnim).isNotNull();
+        assertThat(activity.fade_in).isNotNull();
     }
 
 }
