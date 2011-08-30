@@ -28,6 +28,8 @@
 		<activity android:name=".ClicksHandledActivity_" />
 		<activity android:name=".ActivityWithServices_" />
         <activity android:name=".ExtraInjectedActivity_" />
+        <activity android:name=".BackpressedActivity_" />
+        <activity android:name=".TransactionalActivity_" />
         <activity android:name=".ApplicationInjectedActivity_" />
         <activity android:name=".prefs.PrefsActivity_" />
         <activity android:name=".res.ResActivity_" />
