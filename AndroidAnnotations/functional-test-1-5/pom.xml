@@ -29,6 +29,12 @@
 			<version>1.5_r4</version>
 			<scope>provided</scope>
 		</dependency>
+           <dependency>
+              <groupId>com.google.android.maps</groupId>
+              <artifactId>maps</artifactId>
+              <version>3_r3</version>
+              <scope>provided</scope>
+          </dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>
