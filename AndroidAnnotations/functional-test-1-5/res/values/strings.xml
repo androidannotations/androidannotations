@@ -19,4 +19,5 @@
 <resources>
     <string name="hello">Hello android-functional-test-1-5!</string>
     <string name="app_name">android-functional-test-1-5</string>
+    <string name="injected_activity_caption">Roboguice Activity tested with Robolectric</string>    
 </resources>

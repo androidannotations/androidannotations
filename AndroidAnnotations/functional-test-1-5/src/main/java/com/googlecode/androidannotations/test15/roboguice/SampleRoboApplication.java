@@ -13,10 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.roboguice;
 
-import android.app.Application;
+import java.util.List;
 
-public class CustomApplication extends Application {
+import roboguice.application.RoboApplication;
+
+import com.google.inject.Module;
+
+public class SampleRoboApplication extends RoboApplication {
     
+    private Module module = new RobolectricSampleModule();
+
+    @Override
+    protected void addApplicationModules(List<Module> modules) {
+        modules.add(module);
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
+    }
 }
