@@ -77,7 +77,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.0</version>
+          <version>2.2.1</version>
         </plugin>
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
@@ -137,21 +137,6 @@
         </executions>
       </plugin>
     </plugins>
-    <extensions>
-
-      <extension>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-git-commons</artifactId>
-        <version>1.5</version>
-      </extension>
-
-      <extension>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-gitexe</artifactId>
-        <version>1.5</version>
-      </extension>
-
-    </extensions>
   </build>
 
   <distributionManagement>
@@ -166,8 +151,8 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:git:https://py.ricau@code.google.com/p/androidannotations/</connection>
-    <developerConnection>scm:git:https://py.ricau@code.google.com/p/androidannotations/</developerConnection>
+    <connection>scm:git:https://py.ricau@code.google.com/p/androidannotations</connection>
+    <developerConnection>scm:git:https://py.ricau@code.google.com/p/androidannotations</developerConnection>
     <url>http://androidannotations.googlecode.com/git</url>
   </scm>
 
