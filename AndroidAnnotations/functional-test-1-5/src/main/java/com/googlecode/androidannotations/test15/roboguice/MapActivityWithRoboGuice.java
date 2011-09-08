@@ -15,15 +15,17 @@
  */
 package com.googlecode.androidannotations.test15.roboguice;
 
-import com.google.android.maps.MapActivity;
+import android.app.Activity;
+
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 
+//Commented because Maps is not Open Source
 @RoboGuice
 @EActivity
-public class MapActivityWithRoboGuice extends MapActivity {
+public class MapActivityWithRoboGuice extends Activity { // MapActivity {
 
-    @Override
+//    @Override
     protected boolean isRouteDisplayed() {
         return false;
     }
