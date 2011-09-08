@@ -94,7 +94,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
 
     private void onRestartMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onRestart");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onRestart");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -103,7 +103,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
 
     private void onStartMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onStart");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onStart");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -112,7 +112,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
 
     private void onResumeMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onResume");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onResume");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -121,7 +121,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
 
     private void onPauseMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onPause");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onPause");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(_super(), method);
@@ -129,7 +129,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
 
     private void onNewIntentMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onNewIntent");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onNewIntent");
         method.annotate(Override.class);
         JVar intent = method.param(holder.refClass("android.content.Intent"), "intent");
         JBlock body = method.body();
@@ -148,7 +148,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
     
     private void onStopMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onStop");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onStop");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -162,7 +162,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
     
     private void onDestroyMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onDestroy");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onDestroy");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -199,7 +199,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
     
     private void onActivityResultMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PROTECTED, codeModel.VOID, "onActivityResult");
+        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
         method.annotate(Override.class);
         JVar requestCode = method.param(codeModel.INT, "requestCode");
         JVar resultCode = method.param(codeModel.INT, "resultCode");
