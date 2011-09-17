@@ -76,6 +76,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPre
 import com.googlecode.androidannotations.generation.CodeModelGenerator;
 import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.AndroidManifestFinder;
+import com.googlecode.androidannotations.helper.TimeStats;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -185,37 +186,46 @@ import com.sun.codemodel.JCodeModel;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-
-        Messager messager = processingEnv.getMessager();
-        messager.printMessage(Diagnostic.Kind.NOTE, "Starting AndroidAnnotations annotation processing");
-    }
-
     /**
      * We do not need multiple round processing, since the generated classes do
      * not need to be processed.
      */
     private boolean alreadyProcessed = false;
+    
+    private final TimeStats timeStats = new TimeStats();	
+	
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+
+        Messager messager = processingEnv.getMessager();
+        
+        timeStats.setMessager(messager);
+        
+        messager.printMessage(Diagnostic.Kind.NOTE, "Starting AndroidAnnotations annotation processing");
+    }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    	timeStats.clear();
+    	timeStats.start("whole");
         try {
             processThrowing(annotations, roundEnv);
         } catch (Exception e) {
             handleException(annotations, roundEnv, e);
         }
+        timeStats.stop("whole");
+        timeStats.logStats();
         return true;
     }
 
     private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws IOException {
 
-        if (roundEnv.processingOver() || annotations.size() == 0 || alreadyProcessed) {
+        if (nothingToDo(annotations, roundEnv)) {
             return;
-        } else {
-            alreadyProcessed = true;
         }
+        
+        alreadyProcessed = true;
 
         AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
@@ -232,18 +242,28 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         generateSources(codeModel);
     }
 
-    private AndroidManifest extractAndroidManifest() {
-        AndroidManifestFinder finder = new AndroidManifestFinder(processingEnv);
-        return finder.extractAndroidManifest();
-    }
+	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+		return roundEnv.processingOver() || annotations.size() == 0 || alreadyProcessed;
+	}
 
     private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ModelExtractor modelExtractor = new ModelExtractor();
+    	timeStats.start("Extract Annotations");
+    	ModelExtractor modelExtractor = new ModelExtractor();
         AnnotationElementsHolder extractedModel = modelExtractor.extract(annotations, roundEnv);
+        timeStats.stop("Extract Annotations");
         return extractedModel;
+    }
+    
+    private AndroidManifest extractAndroidManifest() {
+    	timeStats.start("Extract Manifest");
+        AndroidManifestFinder finder = new AndroidManifestFinder(processingEnv);
+        AndroidManifest manifest = finder.extractAndroidManifest();
+        timeStats.stop("Extract Manifest");
+		return manifest;
     }
 
     private IRClass findRClasses(AndroidManifest androidManifest) throws IOException {
+    	timeStats.start("Find R Classes");
         ProjectRClassFinder rClassFinder = new ProjectRClassFinder(processingEnv);
         IRClass rClass = rClassFinder.find(androidManifest);
 
@@ -251,16 +271,24 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
         IRClass androidRClass = androidRClassFinder.find();
 
-        return new CoumpoundRClass(rClass, androidRClass);
+        CoumpoundRClass coumpoundRClass = new CoumpoundRClass(rClass, androidRClass);
+        
+        timeStats.stop("Find R Classes");
+        
+		return coumpoundRClass;
     }
 
     private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-        if (rClass != null) {
+    	timeStats.start("Validate Annotations");
+    	AnnotationElements validatedAnnotations;
+    	if (rClass != null) {
             ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
-            return modelValidator.validate(extractedModel);
+            validatedAnnotations = modelValidator.validate(extractedModel);
         } else {
-            return EmptyAnnotationElements.INSTANCE;
+        	validatedAnnotations = EmptyAnnotationElements.INSTANCE;
         }
+    	timeStats.stop("Validate Annotations");
+    	return validatedAnnotations;
     }
 
     private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
@@ -299,8 +327,11 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
     }
 
     private JCodeModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-        ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices, androidManifest);
-        return modelProcessor.process(validatedModel);
+    	timeStats.start("Process Annotations");
+    	ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices, androidManifest);
+        JCodeModel codeModel = modelProcessor.process(validatedModel);
+        timeStats.stop("Process Annotations");
+		return codeModel;
     }
 
     private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
@@ -336,10 +367,12 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
     }
 
     private void generateSources(JCodeModel model) throws IOException {
+    	timeStats.start("Generate Sources");
         Messager messager = processingEnv.getMessager();
         messager.printMessage(Diagnostic.Kind.NOTE, "Number of files generated by AndroidAnnotations: " + model.countArtifacts());
         CodeModelGenerator modelGenerator = new CodeModelGenerator(processingEnv.getFiler(), messager);
         modelGenerator.generate(model);
+        timeStats.stop("Generate Sources");
     }
 
     private void handleException(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, Exception e) {
