@@ -31,7 +31,7 @@
         <activity android:name=".ApplicationInjectedActivity_" />
         <activity android:name=".prefs.PrefsActivity_" />
         <activity android:name=".res.ResActivity_" />
-        
+        <activity android:name=".ThreadActivity_" />
 
 	</application>
 
