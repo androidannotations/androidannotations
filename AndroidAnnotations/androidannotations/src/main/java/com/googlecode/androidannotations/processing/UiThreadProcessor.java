@@ -24,6 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.UiThread;
+import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -39,6 +40,8 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class UiThreadProcessor implements ElementProcessor {
+	
+	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
     @Override
     public Class<? extends Annotation> getTarget() {
@@ -60,7 +63,7 @@ public class UiThreadProcessor implements ElementProcessor {
         ExecutableElement executableElement = (ExecutableElement) element;
         for (VariableElement parameter : executableElement.getParameters()) {
             String parameterName = parameter.getSimpleName().toString();
-            JClass parameterClass = holder.refClass(parameter.asType().toString());
+            JClass parameterClass = helper.typeMirrorToJClass(parameter.asType(), holder);
             JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
             parameters.add(param);
         }

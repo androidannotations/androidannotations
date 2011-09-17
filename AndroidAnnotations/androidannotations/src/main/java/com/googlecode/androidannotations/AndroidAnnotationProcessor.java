@@ -208,13 +208,13 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     	timeStats.clear();
-    	timeStats.start("whole");
+    	timeStats.start("Whole Processing");
         try {
             processThrowing(annotations, roundEnv);
         } catch (Exception e) {
             handleException(annotations, roundEnv, e);
         }
-        timeStats.stop("whole");
+        timeStats.stop("Whole Processing");
         timeStats.logStats();
         return true;
     }
