@@ -68,11 +68,21 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
         TypeElement typeElement = (TypeElement) element;
 
+        EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
+        
         // Activity
         String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
 
         String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
-        holder.activity = codeModel._class(JMod.PUBLIC | JMod.FINAL, subActivityQualifiedName, ClassType.CLASS);
+        
+        int modifiers;
+        if (layoutAnnotation.isFinal()) {
+        	modifiers = JMod.PUBLIC | JMod.FINAL;
+        } else {
+        	modifiers = JMod.PUBLIC;
+        }
+        
+		holder.activity = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
 
         JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
@@ -100,7 +110,6 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
         
         onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 
-        EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
         int layoutIdValue = layoutAnnotation.value();
 
         JFieldRef contentViewId;
