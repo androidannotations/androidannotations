@@ -15,31 +15,9 @@
  */
 package com.googlecode.androidannotations.test15;
 
-import static org.fest.assertions.Assertions.assertThat;
+import android.app.Activity;
 
-import java.lang.reflect.Modifier;
+import com.googlecode.androidannotations.annotations.EActivity;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
-@RunWith(RobolectricTestRunner.class)
-public class NotFinalActivityTest {
-
-    @Test
-    public void notFinalActivityShouldNotBeFinal() {
-    	int modifiers = NotFinalActivity_.class.getModifiers();
-    	
-    	assertThat(Modifier.isFinal(modifiers)).isFalse();
-    }
-    
-    @Test
-    public void finalActivityShouldfinal() {
-    	int modifiers = EmptyActivityWithoutLayout_.class.getModifiers();
-    	
-    	assertThat(Modifier.isFinal(modifiers)).isTrue();
-    }
-    
-    
-}
+@EActivity
+public abstract class AbstractActivity extends Activity {}

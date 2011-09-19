@@ -30,10 +30,19 @@ import java.lang.annotation.Target;
  * content view will be set, and you should call the setContentView() method
  * yourself, in <b>onCreate()</b>
  * 
+ * If the activity is abstract, the generated activity will not be final.
+ * Otherwise, it will be final. You can use AndroidAnnotations to create
+ * Abstract classes that handle common code, but we want you to make a clear
+ * decision on that subject.
+ * 
+ * The main reason is that the generated code should not be considered a public
+ * API, and may change between releases. So if you extend some generated
+ * activity, you may have to adapt your code when you upgrade
+ * AndroidAnnotations.
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface EActivity {
-    int value() default Id.DEFAULT_VALUE;
-    boolean isFinal() default true;
+	int value() default Id.DEFAULT_VALUE;
 }

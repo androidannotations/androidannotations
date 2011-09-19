@@ -30,7 +30,7 @@
         <activity android:name=".ExtraInjectedActivity_" />
         <activity android:name=".BackpressedActivity_" />
         <activity android:name=".TransactionalActivity_" />
-        <activity android:name=".NotFinalActivity_" />        
+        <activity android:name=".AbstractActivity_" />        
         <activity android:name=".roboguice.MapActivityWithRoboGuice_" />        
         <activity android:name=".roboguice.ActivityWithRoboGuice_" />        
         <activity android:name=".ApplicationInjectedActivity_" />
