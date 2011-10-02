@@ -44,6 +44,7 @@ public class AndroidSystemServices {
         registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
         registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
         registeredServices.put("android.hardware.SensorManager", "android.content.Context.SENSOR_SERVICE");
+        registeredServices.put("android.text.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE");        
     }
 
     public boolean contains(TypeMirror serviceType) {

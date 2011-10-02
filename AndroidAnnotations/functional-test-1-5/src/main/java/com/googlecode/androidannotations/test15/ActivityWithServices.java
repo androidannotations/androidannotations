@@ -28,6 +28,7 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.text.ClipboardManager;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -79,6 +80,9 @@ public class ActivityWithServices extends Activity {
     
     @SystemService
     SensorManager sensorManager;
+    
+    @SystemService
+    ClipboardManager clipboardManager;
 
     // TODO Test those for > 1.5 Android versions
     // UiModeManager uiModeManager;
