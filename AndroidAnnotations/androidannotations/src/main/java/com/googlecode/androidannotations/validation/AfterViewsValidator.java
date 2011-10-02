@@ -56,6 +56,8 @@ public class AfterViewsValidator implements ElementValidator {
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.doesntThrowException(executableElement, valid);
+		
+		validatorHelper.zeroParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

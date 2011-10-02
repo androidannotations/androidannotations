@@ -30,7 +30,6 @@ public class ActivityHolder {
     public JDefinedClass activity;
     public JMethod beforeCreate;
     public JVar beforeCreateSavedInstanceStateParam;
-    public JVar afterSetContentViewSavedInstanceStateParam;
     public JMethod afterSetContentView;
     public JBlock extrasNotNullBlock;
     public JVar extras;

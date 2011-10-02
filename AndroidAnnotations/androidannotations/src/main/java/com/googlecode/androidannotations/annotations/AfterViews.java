@@ -21,7 +21,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import android.app.Activity;
-import android.os.Bundle;
 
 /**
  * Methods annotated with @{@link AfterViews} will be called after
@@ -30,7 +29,7 @@ import android.os.Bundle;
  * This occurs after <b>super.onCreate() is called</b>. Any view depending code
  * should be done in an {@link AfterViews} annotated method.
  * 
- * The method may have zero or one parameter, that must be a {@link Bundle}.
+ * The method must have zero parameters.
  * 
  * There may be several methods annotated with @{@link AfterViews} in the same
  * activity.

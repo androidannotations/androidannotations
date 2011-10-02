@@ -16,15 +16,11 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JInvocation;
 
 public class AfterViewsProcessor implements ElementProcessor {
 
@@ -35,20 +31,11 @@ public class AfterViewsProcessor implements ElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		
 		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 		
 		String methodName = element.getSimpleName().toString();
 		
-		ExecutableElement executableElement = (ExecutableElement) element;
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-		boolean hasBundleParameter = parameters.size() == 1;
-
-		JInvocation methodCall = holder.afterSetContentView.body().invoke(methodName);
-		
-		if (hasBundleParameter) {
-			methodCall.arg(holder.afterSetContentViewSavedInstanceStateParam);
-		}
+		holder.afterSetContentView.body().invoke(methodName);
 	}
 
 }

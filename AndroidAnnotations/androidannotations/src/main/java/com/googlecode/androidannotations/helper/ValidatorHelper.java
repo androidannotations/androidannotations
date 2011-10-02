@@ -293,11 +293,20 @@ public class ValidatorHelper {
             annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with zero or one parameter, instead of " + parameters.size());
         }
     }
+    
+    public void zeroParameter(ExecutableElement executableElement, IsValid valid) {
+        List<? extends VariableElement> parameters = executableElement.getParameters();
+
+        if (parameters.size() > 0) {
+            valid.invalidate();
+            annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with zero parameter, instead of " + parameters.size());
+        }
+    }
 
     public void zeroOrOneViewParameters(ExecutableElement executableElement, IsValid valid) {
         zeroOrOneSpecificParameter(executableElement, ANDROID_VIEW_QUALIFIED_NAME, valid);
     }
-
+    
     public void zeroOrOneSpecificParameter(ExecutableElement executableElement, String parameterTypeQualifiedName, IsValid valid) {
 
         zeroOrOneParameter(executableElement, valid);
@@ -311,18 +320,6 @@ public class ValidatorHelper {
                 valid.invalidate();
                 annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with no parameter or a parameter of type " + parameterTypeQualifiedName + ", not " + parameterType);
             }
-// Tests for StackOverflow question.            
-//            Types typeUtils = annotationHelper.getTypeUtils();
-//            TypeElement typeElement = (TypeElement) typeUtils.asElement(parameterType);
-//            Elements elementUtils = annotationHelper.getElementUtils();
-//            List<? extends Element> elementMembers = elementUtils.getAllMembers(typeElement);
-//            List<ExecutableElement> elementMethods = ElementFilter.methodsIn(elementMembers);
-//            for(ExecutableElement methodElement : elementMethods) {
-//                if (methodElement.getParameters().size()==0 && methodElement.getSimpleName().toString().startsWith("get")) {
-//                    annotationHelper.printAnnotationWarning(executableElement, "Method name: "+methodElement.getSimpleName());
-//                }
-//            }
-
         }
     }
 

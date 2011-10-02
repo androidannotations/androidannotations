@@ -42,7 +42,6 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public class RoboGuiceProcessor implements ElementProcessor {
@@ -65,7 +64,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
         listenerFields(element, holder);
 
         // Methods
-        setContentViewMethods(codeModel, holder, scope, eventManager);
+        afterSetContentView(codeModel, holder, scope, eventManager);
         onRestartMethod(codeModel, holder, scope, eventManager);
         onStartMethod(codeModel, holder, scope, eventManager);
         onResumeMethod(codeModel, holder, scope, eventManager);
@@ -217,34 +216,11 @@ public class RoboGuiceProcessor implements ElementProcessor {
         JBlock finallyBody = tryBlock._finally();
         finallyBody.invoke(scope, "exit").arg(_this());
     }
-
-    private void setContentViewMethods(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-
-        JClass viewClass = holder.refClass("android.view.View");
-        JClass layoutParamsClass = holder.refClass("android.view.ViewGroup.LayoutParams");
-
-        setContentViewMethod(codeModel, holder, scope, eventManager, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
-        setContentViewMethod(codeModel, holder, scope, eventManager, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
-        setContentViewMethod(codeModel, holder, scope, eventManager, new JType[] { viewClass }, new String[] { "view" });
-    }
-
-    private void setContentViewMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager, JType[] paramTypes, String[] paramNames) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "setContentView");
-
-        method.annotate(Override.class);
-
-        ArrayList<JVar> params = new ArrayList<JVar>();
-        for (int i = 0; i < paramTypes.length; i++) {
-            JVar param = method.param(paramTypes[i], paramNames[i]);
-            params.add(param);
-        }
-        JBlock body = method.body();
-        JInvocation superCall = body.invoke(_super(), method);
-        for (JVar arg : params) {
-            superCall.arg(arg);
-        }
-        body.invoke(scope, "injectViews");
-        fireEvent(holder, eventManager, body, "roboguice.activity.event.OnContentViewAvailableEvent");
+    
+    private void afterSetContentView(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
+    	JBlock afterSetContentViewBody = holder.afterSetContentView.body();
+		afterSetContentViewBody.invoke(scope, "injectViews");
+		fireEvent(holder, eventManager, afterSetContentViewBody, "roboguice.activity.event.OnContentViewAvailableEvent");
     }
 
     private JFieldVar eventManagerField(ActivityHolder holder) {

@@ -56,6 +56,8 @@ public class BeforeCreateValidator implements ElementValidator {
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.doesntThrowException(executableElement, valid);
+		
+		validatorHelper.zeroOrOneBundleParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

@@ -20,21 +20,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.views_injected)
-public class ViewsInjectedActivity extends Activity{
-	
+public class ViewsInjectedActivity extends Activity {
+
+	int counter;
+
 	View unboundView;
-	
+
 	@ViewById
 	Button myButton;
-	
+
 	@ViewById(R.id.myTextView)
 	TextView someView;
-	
+
 	@ViewById
 	TextView myTextView;
+
+	@AfterViews
+	void incrementCounter() {
+		counter++;
+	}
 
 }

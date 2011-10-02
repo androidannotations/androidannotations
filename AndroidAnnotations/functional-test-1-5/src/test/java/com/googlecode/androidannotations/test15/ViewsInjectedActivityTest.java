@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.test15;
 //import static org.fest.assertions.Assertions.assertThat;
 import static com.googlecode.androidannotations.test15.MyAssertions.assertThat;
 
+import org.fest.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,13 @@ public class ViewsInjectedActivityTest {
 	@Test
 	public void unannotatedViewIsNull() {
 		assertThat(activity.unboundView).isNull();
+	}
+	
+	@Test
+	public void countAfterSetContentViewCalls() {
+		Assertions.assertThat(activity.counter).isEqualTo(1);
+		activity.setContentView(R.layout.views_injected);
+		Assertions.assertThat(activity.counter).isEqualTo(2);
 	}
 
 }
