@@ -46,14 +46,22 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 		if (idValue.equals(Id.DEFAULT_VALUE)) {
 			if (defaultUseName) {
-				String methodName = element.getSimpleName().toString();
-				int lastIndex = methodName.lastIndexOf(annotationHelper.actionName());
+				String elementName = element.getSimpleName().toString();
+				int lastIndex = elementName.lastIndexOf(annotationHelper.actionName());
 				if (lastIndex != -1) {
-					methodName = methodName.substring(0, lastIndex);
+					elementName = elementName.substring(0, lastIndex);
 				}
-				if (!idAnnotationHelper.containsField(methodName, res)) {
+				if (!idAnnotationHelper.containsField(elementName, res)) {
 					valid.invalidate();
-					annotationHelper.printAnnotationError(element, "Id not found: R." + res.rName() + "." + methodName);
+					String message;
+					String snakeCaseName = CaseHelper.camelCaseToSnakeCase(elementName);
+					String rQualifiedPrefix = String.format("R.%s.", res.rName());
+					if (snakeCaseName.equals(elementName)) {
+						message = "Id not found: " + rQualifiedPrefix + elementName;
+					} else {
+						message = "Id not found: " + rQualifiedPrefix + elementName + " or " + rQualifiedPrefix + snakeCaseName;
+					}
+					annotationHelper.printAnnotationError(element, message);
 				}
 			}
 		} else {
@@ -86,8 +94,8 @@ public class IdValidatorHelper extends ValidatorHelper {
 	}
 
 	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
-		
-	    enclosingElementHasEActivity(element, validatedElements, valid);
+
+		enclosingElementHasEActivity(element, validatedElements, valid);
 
 		idExists(element, Res.ID, valid);
 

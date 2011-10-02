@@ -43,7 +43,7 @@ public class ViewsInjectedActivityTest {
 	
 	@Test
 	public void injectionWithConfigurationOverridesConvention() {
-		assertThat(activity.someView).hasId(R.id.myTextView);
+		assertThat(activity.someView).hasId(R.id.my_text_view);
 	}
 	
 	@Test

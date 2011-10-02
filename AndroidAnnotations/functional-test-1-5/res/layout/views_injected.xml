@@ -22,7 +22,7 @@
     android:layout_height="fill_parent"
     >
 	<TextView  
-		android:id="@+id/myTextView"
+		android:id="@+id/my_text_view"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    />

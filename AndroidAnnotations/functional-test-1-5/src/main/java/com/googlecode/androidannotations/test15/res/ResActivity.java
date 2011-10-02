@@ -20,15 +20,21 @@ import android.content.res.XmlResourceParser;
 import android.view.animation.Animation;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.res.AnimationRes;
+import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.test15.R;
 
 @EActivity(R.layout.main)
 public class ResActivity extends Activity {
 
-    @AnimationRes
-    XmlResourceParser fade_in;
-    
-    @AnimationRes
-    Animation fadein;
+//	@AnimationRes
+	XmlResourceParser fade_in;
+
+//	@AnimationRes
+	Animation fadein;
+
+	@StringRes
+	String injected_string;
+
+	@StringRes
+	String injectedString;
 }

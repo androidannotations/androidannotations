@@ -27,6 +27,7 @@ public class ClicksHandledActivity extends Activity{
 	View viewArgument;
 	
 	boolean conventionButtonClicked;
+	boolean snakeCaseButtonClicked;
 	boolean extendedConventionButtonClicked;
 	boolean overridenConventionButtonClicked;
 	boolean unboundButtonClicked;
@@ -35,6 +36,11 @@ public class ClicksHandledActivity extends Activity{
 	public void conventionButton() {
 		conventionButtonClicked = true;
 	}
+	
+	@Click
+	public void snakeCaseButton() {
+		snakeCaseButtonClicked = true;
+	}	
 
 	@Click
 	public void extendedConventionButtonClicked() {

@@ -34,12 +34,12 @@ public class ViewsInjectedActivity extends Activity {
 	@ViewById
 	Button myButton;
 
-	@ViewById(R.id.myTextView)
+	@ViewById(R.id.my_text_view)
 	TextView someView;
 
 	@ViewById
 	TextView myTextView;
-
+	
 	@AfterViews
 	void incrementCounter() {
 		counter++;

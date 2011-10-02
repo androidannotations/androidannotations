@@ -45,6 +45,16 @@ public class ClicksHandledActivityTest {
 	}
 	
 	@Test
+	public void handlingWithSnakeCase() {
+		assertThat(activity.snakeCaseButtonClicked).isFalse();
+		
+		activity.findViewById(R.id.snake_case_button).performClick();
+		
+		assertThat(activity.snakeCaseButtonClicked).isTrue();
+	}
+	
+	
+	@Test
 	public void handlingWithExtendedConvention() {
 		assertThat(activity.extendedConventionButtonClicked).isFalse();
 		

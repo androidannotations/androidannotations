@@ -15,20 +15,38 @@
  */
 package com.googlecode.androidannotations.test15.res;
 
-import static org.fest.assertions.Assertions.*;
+import static org.fest.assertions.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import android.content.res.Resources;
 import android.view.animation.AnimationUtils;
 
-//@RunWith(RobolectricTestRunner.class)
+import com.xtremelabs.robolectric.RobolectricTestRunner;
+
+@RunWith(RobolectricTestRunner.class)
 public class ResActivityTest {
 
     private ResActivity_ activity;
 
-//    @Before
+    @Before
     public void setup() {
         activity = new ResActivity_();
         activity.onCreate(null);
     }
+    
+    @Test
+    public void string_snake_case_injected() {
+    	assertThat(activity.injected_string).isEqualTo("test");
+    }
+    
+    @Test
+    public void string_camel_case_injected() {
+    	assertThat(activity.injectedString).isEqualTo("test");
+    }
+    
 
     /**
      * Cannot be tested right now, because there is no Robolectric shadow class

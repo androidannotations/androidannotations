@@ -25,87 +25,100 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
+import com.googlecode.androidannotations.helper.CaseHelper;
 import com.googlecode.androidannotations.processing.ActivityHolder;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldRef;
 
 public class RInnerClass implements IRInnerClass {
 
-    private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<Integer, String>();
+	private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<Integer, String>();
 
-    private final String rInnerQualifiedName;
+	private final String rInnerQualifiedName;
 
-    public RInnerClass(TypeElement rInnerTypeElement) {
-        if (rInnerTypeElement != null) {
+	public RInnerClass(TypeElement rInnerTypeElement) {
+		if (rInnerTypeElement != null) {
 
-            rInnerQualifiedName = rInnerTypeElement.getQualifiedName().toString();
+			rInnerQualifiedName = rInnerTypeElement.getQualifiedName().toString();
 
-            List<? extends Element> idEnclosedElements = rInnerTypeElement.getEnclosedElements();
+			List<? extends Element> idEnclosedElements = rInnerTypeElement.getEnclosedElements();
 
-            List<VariableElement> idFields = ElementFilter.fieldsIn(idEnclosedElements);
+			List<VariableElement> idFields = ElementFilter.fieldsIn(idEnclosedElements);
 
-            for (VariableElement idField : idFields) {
-                TypeKind fieldType = idField.asType().getKind();
-                if (fieldType.isPrimitive() && fieldType.equals(TypeKind.INT)) {
-                    Integer idFieldId = (Integer) idField.getConstantValue();
-                    idQualifiedNamesByIdValues.put(idFieldId, rInnerQualifiedName + "." + idField.getSimpleName());
-                }
-            }
-        } else {
-            rInnerQualifiedName = "";
-        }
-    }
+			for (VariableElement idField : idFields) {
+				TypeKind fieldType = idField.asType().getKind();
+				if (fieldType.isPrimitive() && fieldType.equals(TypeKind.INT)) {
+					Integer idFieldId = (Integer) idField.getConstantValue();
+					idQualifiedNamesByIdValues.put(idFieldId, rInnerQualifiedName + "." + idField.getSimpleName());
+				}
+			}
+		} else {
+			rInnerQualifiedName = "";
+		}
+	}
 
-    @Override
-    public boolean containsIdValue(Integer idValue) {
-        return idQualifiedNamesByIdValues.containsKey(idValue);
-    }
+	@Override
+	public boolean containsIdValue(Integer idValue) {
+		return idQualifiedNamesByIdValues.containsKey(idValue);
+	}
 
-    @Override
-    public String getIdQualifiedName(Integer idValue) {
-        return idQualifiedNamesByIdValues.get(idValue);
-    }
+	@Override
+	public String getIdQualifiedName(Integer idValue) {
+		return idQualifiedNamesByIdValues.get(idValue);
+	}
 
-    @Override
-    public boolean containsField(String name) {
-        return idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + name);
-    }
+	@Override
+	public boolean containsField(String name) {
+		boolean containsField = idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + name);
+		
+		if (!containsField) {
+			String snakeCaseName = CaseHelper.camelCaseToSnakeCase(name);
+			containsField = idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + snakeCaseName);
+		}
+		
+		return containsField;
+	}
 
-    @Override
-    public String getIdQualifiedName(String name) {
-        String idQualifiedName = rInnerQualifiedName + "." + name;
+	@Override
+	public String getIdQualifiedName(String name) {
+		String idQualifiedName = rInnerQualifiedName + "." + name;
 
-        if (idQualifiedNamesByIdValues.containsValue(idQualifiedName)) {
-            return idQualifiedName;
-        } else {
-            return null;
-        }
+		if (idQualifiedNamesByIdValues.containsValue(idQualifiedName)) {
+			return idQualifiedName;
+		} else {
+			String snakeCaseName = CaseHelper.camelCaseToSnakeCase(name);
+			idQualifiedName = rInnerQualifiedName + "." + snakeCaseName;
+			if (idQualifiedNamesByIdValues.containsValue(idQualifiedName)) {
+				return idQualifiedName;
+			} else {
+				return null;
+			}
+		}
+	}
 
-    }
+	@Override
+	public JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder) {
+		String layoutFieldQualifiedName = getIdQualifiedName(idValue);
+		return extractIdStaticRef(holder, layoutFieldQualifiedName);
+	}
 
-    @Override
-    public JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder) {
-        String layoutFieldQualifiedName = getIdQualifiedName(idValue);
-        return extractIdStaticRef(holder, layoutFieldQualifiedName);
-    }
+	@Override
+	public JFieldRef getIdStaticRef(String name, ActivityHolder holder) {
+		String layoutFieldQualifiedName = getIdQualifiedName(name);
+		return extractIdStaticRef(holder, layoutFieldQualifiedName);
+	}
 
-    @Override
-    public JFieldRef getIdStaticRef(String name, ActivityHolder holder) {
-        String layoutFieldQualifiedName = getIdQualifiedName(name);
-        return extractIdStaticRef(holder, layoutFieldQualifiedName);
-    }
+	private JFieldRef extractIdStaticRef(ActivityHolder holder, String layoutFieldQualifiedName) {
+		if (layoutFieldQualifiedName != null) {
+			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
+			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
+			String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
 
-    private JFieldRef extractIdStaticRef(ActivityHolder holder, String layoutFieldQualifiedName) {
-        if (layoutFieldQualifiedName != null) {
-            int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
-            String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
-            String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
-
-            JClass refClass = holder.refClass(rInnerClassName);
-            return refClass.staticRef(fieldName);
-        } else {
-            return null;
-        }
-    }
+			JClass refClass = holder.refClass(rInnerClassName);
+			return refClass.staticRef(fieldName);
+		} else {
+			return null;
+		}
+	}
 
 }
