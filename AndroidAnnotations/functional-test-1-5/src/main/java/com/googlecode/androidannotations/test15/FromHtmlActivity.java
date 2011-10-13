@@ -13,4 +13,8 @@ public class FromHtmlActivity extends Activity {
 	@ViewById(R.id.my_text_view)
 	@FromHtml(R.string.hello_html)
 	TextView textView;
+	
+	@ViewById
+	@FromHtml
+	TextView someView;
 }

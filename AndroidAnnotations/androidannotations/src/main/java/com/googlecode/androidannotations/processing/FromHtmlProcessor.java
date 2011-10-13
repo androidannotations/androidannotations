@@ -39,8 +39,7 @@ public class FromHtmlProcessor implements ElementProcessor {
 		IRInnerClass rInnerClass = rClass.get(Res.STRING);
 		JFieldRef idRef;
 		if (idValue == Id.DEFAULT_VALUE) {
-			// TODO: Implement a default value behavior
-			throw new UnsupportedOperationException("The default value support for FromHtml is not supported yet");
+			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
 		} else {
 			idRef = rInnerClass.getIdStaticRef(idValue, holder);
 		}

@@ -31,4 +31,10 @@ public class FromHtmlActivityTest {
 		assertNotNull(activity.textView);
 		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.textView.getText());
 	}
+	
+	@Test
+	public void injectionOfHtmlWithDefaultName() {
+		assertNotNull(activity.someView);
+		assertEquals(Html.fromHtml(activity.getString(R.string.someView)), activity.someView.getText());
+	}
 }
