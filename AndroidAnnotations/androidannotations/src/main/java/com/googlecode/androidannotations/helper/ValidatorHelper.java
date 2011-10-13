@@ -34,6 +34,7 @@ import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.rest.Delete;
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Head;
@@ -53,6 +54,7 @@ import com.googlecode.androidannotations.validation.IsValid;
 public class ValidatorHelper {
 
     private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
+    private static final String ANDROID_TEXT_VIEW_QUALIFIED_NAME = "android.widget.TextView";
     private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
     private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
     private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
@@ -147,6 +149,17 @@ public class ValidatorHelper {
         if (error) {
             valid.invalidate();
             annotationHelper.printAnnotationError(element, "%s must have a value, which is the extra name used when sending the intent");
+        }
+    }
+    
+    public void hasViewByIdAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+    	Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(ViewById.class);
+
+        if (!layoutAnnotatedElements.contains(element)) {
+            valid.invalidate();
+            if (element.getAnnotation(ViewById.class) == null) {
+                annotationHelper.printAnnotationError(element, "%s can only be used with annotation " + TargetAnnotationHelper.annotationName(ViewById.class));
+            }
         }
     }
 
@@ -333,6 +346,10 @@ public class ValidatorHelper {
 
     public void extendsView(Element element, IsValid valid) {
         extendsType(element, ANDROID_VIEW_QUALIFIED_NAME, valid);
+    }
+    
+    public void extendsTextView(Element element, IsValid valid) {
+    	extendsType(element, ANDROID_TEXT_VIEW_QUALIFIED_NAME, valid);
     }
     
     

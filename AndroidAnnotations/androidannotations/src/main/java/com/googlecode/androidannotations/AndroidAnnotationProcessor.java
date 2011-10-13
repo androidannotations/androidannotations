@@ -38,6 +38,7 @@ import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
@@ -90,6 +91,7 @@ import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.EActivityProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
+import com.googlecode.androidannotations.processing.FromHtmlProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
 import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
 import com.googlecode.androidannotations.processing.ItemSelectedProcessor;
@@ -118,6 +120,7 @@ import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EActivityValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
+import com.googlecode.androidannotations.validation.FromHtmlValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
 import com.googlecode.androidannotations.validation.ItemLongClickValidator;
 import com.googlecode.androidannotations.validation.ItemSelectedValidator;
@@ -182,7 +185,8 @@ import com.sun.codemodel.JCodeModel;
         Head.class, //
         Options.class, //
         Post.class, //
-        Put.class })
+        Put.class,
+        FromHtml.class})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
@@ -296,6 +300,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new EActivityValidator(processingEnv, rClass, androidManifest));
         modelValidator.register(new RoboGuiceValidator(processingEnv));
         modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
+        modelValidator.register(new FromHtmlValidator(processingEnv, rClass));
         modelValidator.register(new ClickValidator(processingEnv, rClass));
         modelValidator.register(new LongClickValidator(processingEnv, rClass));
         modelValidator.register(new TouchValidator(processingEnv, rClass));
@@ -341,6 +346,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelProcessor.register(new PrefProcessor());
         modelProcessor.register(new RoboGuiceProcessor());
         modelProcessor.register(new ViewByIdProcessor(rClass));
+        modelProcessor.register(new FromHtmlProcessor(rClass));
         modelProcessor.register(new ClickProcessor(rClass));
         modelProcessor.register(new LongClickProcessor(rClass));
         modelProcessor.register(new TouchProcessor(rClass));
