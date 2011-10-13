@@ -11,7 +11,6 @@
     <version>2.2-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.googlecode.androidannotations</groupId>
   <artifactId>functional-test-1-5</artifactId>
   <packaging>apk</packaging>
   <name>functional-test-1-5</name>

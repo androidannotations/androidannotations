@@ -8,7 +8,6 @@
 		<version>2.2-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.googlecode.androidannotations</groupId>
 	<artifactId>androidannotations</artifactId>
 
 	<name>Android Annotations</name>
