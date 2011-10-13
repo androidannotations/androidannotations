@@ -27,10 +27,10 @@ public final class LongPrefField extends AbstractPrefField {
 	}
 
 	public long get() {
-		return get(defaultValue);
+		return getOr(defaultValue);
 	}
 
-	public long get(long defaultValue) {
+	public long getOr(long defaultValue) {
 		return sharedPreferences.getLong(key, defaultValue);
 	}
 

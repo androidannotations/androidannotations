@@ -130,7 +130,7 @@ public class PrefsActivityTest {
 
     @Test
     public void overridenDefaultValue() {
-        assertThat(somePrefs.name().get("Smith")).isEqualTo("Smith");
+        assertThat(somePrefs.name().getOr("Smith")).isEqualTo("Smith");
     }
 
     @Test

@@ -27,10 +27,10 @@ public final class IntPrefField extends AbstractPrefField {
 	}
 
 	public int get() {
-		return get(defaultValue);
+		return getOr(defaultValue);
 	}
 
-	public int get(int defaultValue) {
+	public int getOr(int defaultValue) {
 		return sharedPreferences.getInt(key, defaultValue);
 	}
 

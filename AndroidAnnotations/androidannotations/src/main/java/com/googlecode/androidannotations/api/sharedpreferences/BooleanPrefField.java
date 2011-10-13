@@ -27,10 +27,10 @@ public final class BooleanPrefField extends AbstractPrefField {
 	}
 
 	public boolean get() {
-		return get(defaultValue);
+		return getOr(defaultValue);
 	}
 
-	public boolean get(boolean defaultValue) {
+	public boolean getOr(boolean defaultValue) {
 		return sharedPreferences.getBoolean(key, defaultValue);
 	}
 
