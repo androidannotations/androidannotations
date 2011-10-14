@@ -15,6 +15,8 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.IncompleteAnnotationException;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.EComponent;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.rest.Delete;
@@ -55,6 +58,7 @@ public class ValidatorHelper {
 
     private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
     private static final String ANDROID_TEXT_VIEW_QUALIFIED_NAME = "android.widget.TextView";
+    private static final String ANDROID_VIEWGROUP_QUALIFIED_NAME = "android.view.ViewGroup";
     private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
     private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
     private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
@@ -120,20 +124,61 @@ public class ValidatorHelper {
         hasEActivity(element, enclosingElement, validatedElements, valid);
     }
 
-    public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
-        hasEActivity(element, element, validatedElements, valid);
-    }
+	public void enclosingElementHasEActivityOrEComponent(Element element,
+			AnnotationElements validatedElements, IsValid valid) {
+        Element enclosingElement = element.getEnclosingElement();
+        hasEActivityOrEComponent(element, enclosingElement, validatedElements, valid);
+	}
 
-    public void hasEActivity(Element reportElement, Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void hasEActivity(Element element,
+			AnnotationElements validatedElements, IsValid valid) {
+		hasEActivity(element, element, validatedElements, valid);
+	}
 
-        Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(EActivity.class);
+	public void hasEActivityOrEComponent(Element element,
+			AnnotationElements validatedElements, IsValid valid) {
+		hasEActivityOrEComponent(element, element, validatedElements, valid);
+	}
 
-        if (!layoutAnnotatedElements.contains(element)) {
-            valid.invalidate();
-            if (element.getAnnotation(EActivity.class) == null) {
-                annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with " + TargetAnnotationHelper.annotationName(EActivity.class));
-            }
-        }
+	public void hasEActivity(Element reportElement, Element element,
+			AnnotationElements validatedElements, IsValid valid) {
+
+		Set<? extends Element> layoutAnnotatedElements = validatedElements
+				.getAnnotatedElements(EActivity.class);
+
+		if (!layoutAnnotatedElements.contains(element)) {
+			valid.invalidate();
+			if (element.getAnnotation(EActivity.class) == null) {
+				annotationHelper.printAnnotationError(
+						reportElement,
+						"%s can only be used in a class annotated with "
+								+ TargetAnnotationHelper
+										.annotationName(EActivity.class));
+			}
+		}
+	}
+
+	public void hasEActivityOrEComponent(Element reportElement,
+			Element element, AnnotationElements validatedElements, IsValid valid) {
+
+		Set<? extends Element> layoutAnnotatedElements = validatedElements
+				.getAnnotatedElements(EActivity.class);
+
+		if (!layoutAnnotatedElements.contains(element)) {
+			if (element.getAnnotation(EActivity.class) == null
+					&& element.getAnnotation(EComponent.class) == null) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(
+						reportElement,
+						"%s can only be used in a class annotated with "
+								+ //
+								TargetAnnotationHelper
+										.annotationName(EActivity.class)
+								+ " or "
+								+ TargetAnnotationHelper
+										.annotationName(EComponent.class));
+			}
+		}
     }
 
     public void hasExtraValue(Element element, IsValid valid) {
@@ -351,7 +396,10 @@ public class ValidatorHelper {
     public void extendsTextView(Element element, IsValid valid) {
     	extendsType(element, ANDROID_TEXT_VIEW_QUALIFIED_NAME, valid);
     }
-    
+
+    public void extendsViewGroup(Element element, IsValid valid) {
+        extendsType(element, ANDROID_VIEWGROUP_QUALIFIED_NAME, valid);
+    }
     
     public void extendsApplication(Element element, IsValid valid) {
         extendsType(element, ANDROID_APPLICATION_QUALIFIED_NAME, valid);
@@ -620,5 +668,32 @@ public class ValidatorHelper {
             annotationHelper.printAnnotationError(element, "%s annotated element cannot be used with the other annotations used on this element.");
         }
     }
+
+	public void hasOneConstructorWithContextAndAttributSet(Element element,
+			IsValid valid) {
+		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
+		for (Element e : element.getEnclosedElements()) {
+			if (e.getKind() == CONSTRUCTOR) {
+				constructors.add((ExecutableElement) e);
+			}
+		}
+
+		for (ExecutableElement e : constructors) {
+			List<? extends VariableElement> typeParameters = e.getParameters();
+
+			if (!(typeParameters.size() == 2
+					&& typeParameters.get(0).asType().toString()
+							.equals("android.content.Context") && typeParameters
+					.get(1).asType().toString()
+					.equals("android.util.AttributeSet"))) {
+				annotationHelper
+						.printError(
+								e,
+								"You should have only one constructor with Context and AttributeSet parameters.");
+				valid.invalidate();
+			}
+		}
+
+	}
 
 }
