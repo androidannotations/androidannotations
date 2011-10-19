@@ -93,9 +93,12 @@ public class LongClickProcessor implements ElementProcessor {
             call.arg(viewParam);
         }
 
-        JBlock body = holder.afterSetContentView.body();
+        JBlock block = holder.afterSetContentView.body().block();
 
-        body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef),"setOnLongClickListener").arg(JExpr._new(listenerClass)));
+        JInvocation findViewById = JExpr.invoke("findViewById");
+        
+        JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+		block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnLongClickListener").arg(JExpr._new(listenerClass));
     }
     
     private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {

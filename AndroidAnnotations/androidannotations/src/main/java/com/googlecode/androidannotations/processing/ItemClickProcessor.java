@@ -87,9 +87,12 @@ public class ItemClickProcessor implements ElementProcessor {
 			itemClickCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 		}
 
-		JBlock body = holder.afterSetContentView.body();
-
-		body.add(JExpr.invoke(JExpr.cast(narrowAdapterViewClass, JExpr.invoke("findViewById").arg(idRef)),"setOnItemClickListener").arg(JExpr._new(onItemClickListenerClass)));
+		JBlock block = holder.afterSetContentView.body().block();
+		
+        JInvocation findViewById = JExpr.invoke("findViewById");
+		
+		JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)));
+		block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(JExpr._new(onItemClickListenerClass));
 	}
 	
 	private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
