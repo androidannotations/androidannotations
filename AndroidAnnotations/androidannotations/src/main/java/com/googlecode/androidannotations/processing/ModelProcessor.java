@@ -37,7 +37,7 @@ public class ModelProcessor {
 
 		JCodeModel codeModel = new JCodeModel();
 
-		ActivitiesHolder activitiesHolder = new ActivitiesHolder();
+		EBeansHolder eBeansHolder = new EBeansHolder();
 		for (ElementProcessor processor : processors) {
 			Class<? extends Annotation> target = processor.getTarget();
 
@@ -45,7 +45,7 @@ public class ModelProcessor {
 
 			for (Element annotatedElement : annotatedElements) {
 				try {
-					processor.process(annotatedElement, codeModel, activitiesHolder);
+					processor.process(annotatedElement, codeModel, eBeansHolder);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

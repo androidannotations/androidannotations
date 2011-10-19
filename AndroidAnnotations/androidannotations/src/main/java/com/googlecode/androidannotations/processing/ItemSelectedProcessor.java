@@ -55,8 +55,8 @@ public class ItemSelectedProcessor implements ElementProcessor {
     }
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-        ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
         String methodName = element.getSimpleName().toString();
 
@@ -105,7 +105,7 @@ public class ItemSelectedProcessor implements ElementProcessor {
         body.add(JExpr.invoke(JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)), "setOnItemSelectedListener").arg(JExpr._new(onItemSelectedListenerClass)));
     }
 
-    private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
+    private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {
         ItemSelect annotation = element.getAnnotation(ItemSelect.class);
         int idValue = annotation.value();
         IRInnerClass rInnerClass = rClass.get(Res.ID);

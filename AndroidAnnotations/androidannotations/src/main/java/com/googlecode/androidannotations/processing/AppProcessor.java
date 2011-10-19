@@ -38,8 +38,8 @@ public class AppProcessor implements ElementProcessor {
     }
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-        ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
         String fieldName = element.getSimpleName().toString();
         

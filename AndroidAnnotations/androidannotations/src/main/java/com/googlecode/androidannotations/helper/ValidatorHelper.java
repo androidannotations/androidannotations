@@ -35,7 +35,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.EComponent;
+import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.rest.Delete;
@@ -71,6 +71,9 @@ public class ValidatorHelper {
 
     private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
+	@SuppressWarnings("unchecked")
+	private static final List<Class<? extends Annotation>> VALID_EBEAN_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class);
+	
     protected final TargetAnnotationHelper annotationHelper;
 
     public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
@@ -124,20 +127,9 @@ public class ValidatorHelper {
         hasEActivity(element, enclosingElement, validatedElements, valid);
     }
 
-	public void enclosingElementHasEActivityOrEComponent(Element element,
-			AnnotationElements validatedElements, IsValid valid) {
-        Element enclosingElement = element.getEnclosingElement();
-        hasEActivityOrEComponent(element, enclosingElement, validatedElements, valid);
-	}
-
 	public void hasEActivity(Element element,
 			AnnotationElements validatedElements, IsValid valid) {
 		hasEActivity(element, element, validatedElements, valid);
-	}
-
-	public void hasEActivityOrEComponent(Element element,
-			AnnotationElements validatedElements, IsValid valid) {
-		hasEActivityOrEComponent(element, element, validatedElements, valid);
 	}
 
 	public void hasEActivity(Element reportElement, Element element,
@@ -157,29 +149,47 @@ public class ValidatorHelper {
 			}
 		}
 	}
+	
+	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasEBeanAnnotation(element, enclosingElement, validatedElements, valid);
+	}
 
-	public void hasEActivityOrEComponent(Element reportElement,
-			Element element, AnnotationElements validatedElements, IsValid valid) {
 
-		Set<? extends Element> layoutAnnotatedElements = validatedElements
-				.getAnnotatedElements(EActivity.class);
 
-		if (!layoutAnnotatedElements.contains(element)) {
-			if (element.getAnnotation(EActivity.class) == null
-					&& element.getAnnotation(EComponent.class) == null) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(
-						reportElement,
-						"%s can only be used in a class annotated with "
-								+ //
-								TargetAnnotationHelper
-										.annotationName(EActivity.class)
-								+ " or "
-								+ TargetAnnotationHelper
-										.annotationName(EComponent.class));
+	public void hasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+		hasEBeanAnnotation(element, element, validatedElements, valid);
+	}
+
+	public void hasEBeanAnnotation(Element reportElement, Element element, AnnotationElements validatedElements, IsValid valid) {
+
+		boolean ok = false;
+		for (Class<? extends Annotation> a : VALID_EBEAN_ANNOTATIONS) {
+			if (element.getAnnotation(a) != null) {
+				ok = true;
 			}
 		}
-    }
+
+		if (!ok) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with "
+			        + getFormattedValidEnhancedBeanAnnotationTypes() + ".");
+		}
+	}
+
+	private StringBuilder getFormattedValidEnhancedBeanAnnotationTypes() {
+		StringBuilder sb = new StringBuilder();
+		if (VALID_EBEAN_ANNOTATIONS.isEmpty())
+			return sb;
+
+		sb.append(TargetAnnotationHelper.annotationName(VALID_EBEAN_ANNOTATIONS.get(0)));
+
+		for (int i = 1; i < VALID_EBEAN_ANNOTATIONS.size(); i++) {
+			sb.append(TargetAnnotationHelper.annotationName(VALID_EBEAN_ANNOTATIONS.get(i)));
+		}
+
+		return sb;
+	}
 
     public void hasExtraValue(Element element, IsValid valid) {
         boolean error = false;

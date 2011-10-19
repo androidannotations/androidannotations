@@ -25,7 +25,7 @@ import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.helper.ModelConstants;
-import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;
@@ -49,7 +49,7 @@ public class RestProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
 		RestImplentationHolder holder = restImplementationHolder.create(element);
 

@@ -67,9 +67,9 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		ActivityHolder holder = activitiesHolder.create(element);
+		EBeanHolder holder = activitiesHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -85,24 +85,24 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 			modifiers = JMod.PUBLIC | JMod.FINAL;
 		}
 
-		holder.activity = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
+		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
 
 		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
-		holder.activity._extends(annotatedActivity);
+		holder.eBean._extends(annotatedActivity);
 
 		holder.bundleClass = holder.refClass("android.os.Bundle");
 
 		// onCreate
-		JMethod onCreate = holder.activity.method(PUBLIC, codeModel.VOID, "onCreate");
+		JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
 		// beforeSetContentView
-		holder.beforeCreate = holder.activity.method(PRIVATE, codeModel.VOID, "beforeCreate_");
+		holder.beforeCreate = holder.eBean.method(PRIVATE, codeModel.VOID, "beforeCreate_");
 		holder.beforeCreateSavedInstanceStateParam = holder.beforeCreate.param(holder.bundleClass, "savedInstanceState");
 
 		// afterSetContentView
-		holder.afterSetContentView = holder.activity.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 
 		JVar onCreateSavedInstanceState = onCreate.param(holder.bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
@@ -136,7 +136,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		// Handling onBackPressed
 		if (hasOnBackPressedMethod(typeElement)) {
-			JMethod onKeyDownMethod = holder.activity.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
+			JMethod onKeyDownMethod = holder.eBean.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
 			onKeyDownMethod.annotate(Override.class);
 			JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
 			JClass keyEventClass = holder.refClass("android.view.KeyEvent");
@@ -174,8 +174,8 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 	}
 
-	private void setContentViewMethod(JCodeModel codeModel, ActivityHolder holder, JType[] paramTypes, String[] paramNames) {
-		JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "setContentView");
+	private void setContentViewMethod(JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
+		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "setContentView");
 		method.annotate(Override.class);
 
 		ArrayList<JVar> params = new ArrayList<JVar>();

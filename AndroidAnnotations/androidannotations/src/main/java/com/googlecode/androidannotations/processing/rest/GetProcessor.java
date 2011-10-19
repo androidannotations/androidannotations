@@ -29,7 +29,7 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
-import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -56,7 +56,7 @@ public class GetProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
 		RestImplentationHolder holder = restImplementationHolder.getEnclosingHolder(element);
 

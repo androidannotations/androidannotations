@@ -45,7 +45,7 @@ public class AfterViewsValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEActivityOrEComponent(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

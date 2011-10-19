@@ -21,19 +21,19 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.EComponent;
+import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class EComponentValidator implements ElementValidator {
+public class EViewGroupValidator implements ElementValidator {
 
 	private final IdValidatorHelper validatorHelper;
 	private IdAnnotationHelper annotationHelper;
 
-	public EComponentValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public EViewGroupValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(
 				processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
@@ -41,7 +41,7 @@ public class EComponentValidator implements ElementValidator {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return EComponent.class;
+		return EViewGroup.class;
 	}
 
 	@Override

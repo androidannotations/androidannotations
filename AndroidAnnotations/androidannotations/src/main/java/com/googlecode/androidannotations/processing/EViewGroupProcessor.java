@@ -30,7 +30,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.annotations.EComponent;
+import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
@@ -45,14 +45,13 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
 
-public class EComponentProcessor extends AnnotationHelper implements
+public class EViewGroupProcessor extends AnnotationHelper implements
 		ElementProcessor {
 
 	private final IRClass rClass;
 
-	public EComponentProcessor(ProcessingEnvironment processingEnv,
+	public EViewGroupProcessor(ProcessingEnvironment processingEnv,
 			IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
@@ -60,17 +59,17 @@ public class EComponentProcessor extends AnnotationHelper implements
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return EComponent.class;
+		return EViewGroup.class;
 	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel,
-			ActivitiesHolder activitiesHolder) throws Exception {
+			EBeansHolder activitiesHolder) throws Exception {
 
-		ActivityHolder holder = activitiesHolder.create(element);
+		EBeanHolder holder = activitiesHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
-		
+
 		String annotatedActivityQualifiedName = typeElement.getQualifiedName()
 				.toString();
 
@@ -84,53 +83,49 @@ public class EComponentProcessor extends AnnotationHelper implements
 			modifiers = JMod.PUBLIC | JMod.FINAL;
 		}
 
-		holder.activity = codeModel._class(modifiers, subActivityQualifiedName,
+		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName,
 				ClassType.CLASS);
 
 		JClass annotatedActivity = codeModel
 				.directClass(annotatedActivityQualifiedName);
 
-		holder.activity._extends(annotatedActivity);
-
+		holder.eBean._extends(annotatedActivity);
+		
 		holder.bundleClass = holder.refClass("android.os.Bundle");
 
 		// afterSetContentView
-		holder.afterSetContentView = holder.activity.method(PRIVATE,
+		holder.afterSetContentView = holder.eBean.method(PRIVATE,
 				codeModel.VOID, "afterSetContentView_");
 
-		// setcontentview
-		JMethod setContentView = holder.activity.method(PRIVATE,
-				codeModel.VOID, "setContentView_");
-		JVar context = setContentView.param(
-				holder.refClass("android.content.Context"), "context");
+		// onFinishInflate
+		JMethod onFinishInflate = holder.eBean.method(PUBLIC,
+				codeModel.VOID, "onFinishInflate");
+		onFinishInflate.annotate(Override.class);
 
 		// inflate layout if ID is given on annotation
-		EComponent layoutAnnotation = element.getAnnotation(EComponent.class);
+		EViewGroup layoutAnnotation = element.getAnnotation(EViewGroup.class);
 		int layoutIdValue = layoutAnnotation.value();
 		JFieldRef contentViewId;
 		if (layoutIdValue != Id.DEFAULT_VALUE) {
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
-			JClass layoutInflaterClass = holder
-					.refClass("android.view.LayoutInflater");
-			
-			JVar inflater = setContentView.body().decl( //
-					layoutInflaterClass,
-					"inflater_",
-					layoutInflaterClass.staticInvoke("from").arg(context));
-			
-			setContentView.body().invoke(inflater, "inflate")
-					.arg(contentViewId).arg(JExpr._this());
+
+			onFinishInflate.body().invoke("inflate")
+					.arg(JExpr.invoke("getContext")).arg(contentViewId)
+					.arg(JExpr._this());
 		}
 
 		// finally
-		setContentView.body().invoke(holder.afterSetContentView);
+		onFinishInflate.body().invoke(holder.afterSetContentView);
+		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 		
-		copyConstructorsWithCallToAfterSetContentView(element, holder, setContentView);
+		copyConstructors(element, holder,
+				onFinishInflate);
 
 	}
 
-	private void copyConstructorsWithCallToAfterSetContentView(Element element, ActivityHolder holder, JMethod setContentViewMethod) {
+	private void copyConstructors(Element element,
+			EBeanHolder holder, JMethod setContentViewMethod) {
 		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
 		for (Element e : element.getEnclosedElements()) {
 			if (e.getKind() == CONSTRUCTOR) {
@@ -139,19 +134,14 @@ public class EComponentProcessor extends AnnotationHelper implements
 		}
 
 		for (ExecutableElement userConstructor : constructors) {
-			JMethod copy = holder.activity.constructor(PUBLIC);
+			JMethod copy = holder.eBean.constructor(PUBLIC);
 			JInvocation superCall = copy.body().invoke("super");
-			String contextParamName = null;
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
 				String paramType = param.asType().toString();
-				if (paramType.equals("android.content.Context")) {
-					contextParamName = paramName;
-				}
 				copy.param(holder.refClass(paramType), paramName);
 				superCall.arg(JExpr.ref(paramName));
 			}
-			copy.body().invoke(setContentViewMethod).arg(JExpr.ref(contextParamName));
 		}
 	}
 

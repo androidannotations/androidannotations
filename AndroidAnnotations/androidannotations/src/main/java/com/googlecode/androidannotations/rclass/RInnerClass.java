@@ -26,7 +26,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.helper.CaseHelper;
-import com.googlecode.androidannotations.processing.ActivityHolder;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldRef;
 
@@ -97,18 +97,18 @@ public class RInnerClass implements IRInnerClass {
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder) {
+	public JFieldRef getIdStaticRef(Integer idValue, EBeanHolder holder) {
 		String layoutFieldQualifiedName = getIdQualifiedName(idValue);
 		return extractIdStaticRef(holder, layoutFieldQualifiedName);
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(String name, ActivityHolder holder) {
+	public JFieldRef getIdStaticRef(String name, EBeanHolder holder) {
 		String layoutFieldQualifiedName = getIdQualifiedName(name);
 		return extractIdStaticRef(holder, layoutFieldQualifiedName);
 	}
 
-	private JFieldRef extractIdStaticRef(ActivityHolder holder, String layoutFieldQualifiedName) {
+	private JFieldRef extractIdStaticRef(EBeanHolder holder, String layoutFieldQualifiedName) {
 		if (layoutFieldQualifiedName != null) {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
 			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);

@@ -21,18 +21,31 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Custom Component classes to enable usage of AndroidAnnotations
+ * Should be used on custom component classes to enable usage of AndroidAnnotations
  * 
  * A custom component should extends ViewGroup.
  * 
  * Any view related code should happen in an {@link AfterViews} annotated
- * method.
+ * method.<br><br>
+ * 
+ * Supported annotations in @EViewGroup :
+ * 
+ * <ul>
+ * <li>ViewById</li>
+ * <li>AfterViews</li>
+ * <li>Click</li>
+ * <li>ItemClick</li>
+ * <li>ItemLongClick</li>
+ * <li>ItemSelected</li>
+ * <li>LongClick</li>
+ * <li>Touch</li>
+ * </ul>
  * 
  * @see <a href="http://developer.android.com/guide/topics/ui/custom-components.html">How to build a custom component.</a>
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface EComponent {
+public @interface EViewGroup {
 	int value() default Id.DEFAULT_VALUE;
 }

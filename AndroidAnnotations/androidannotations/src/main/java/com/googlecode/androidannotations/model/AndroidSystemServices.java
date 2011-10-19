@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.processing.ActivityHolder;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JFieldRef;
 
 public class AndroidSystemServices {
@@ -55,11 +55,11 @@ public class AndroidSystemServices {
         return registeredServices.get(serviceType.toString());
     }
 
-    public JFieldRef getServiceConstant(TypeMirror serviceType, ActivityHolder holder) {
+    public JFieldRef getServiceConstant(TypeMirror serviceType, EBeanHolder holder) {
         return extractIdStaticRef(holder, registeredServices.get(serviceType.toString()));
     }
 
-    private JFieldRef extractIdStaticRef(ActivityHolder holder, String staticFieldQualifiedName) {
+    private JFieldRef extractIdStaticRef(EBeanHolder holder, String staticFieldQualifiedName) {
         if (staticFieldQualifiedName != null) {
             int fieldSuffix = staticFieldQualifiedName.lastIndexOf('.');
             String fieldName = staticFieldQualifiedName.substring(fieldSuffix + 1);

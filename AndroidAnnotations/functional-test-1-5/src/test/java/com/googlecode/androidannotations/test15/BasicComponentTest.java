@@ -13,16 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package com.googlecode.androidannotations.test15;
 
+import static org.fest.assertions.Assertions.assertThat;
 
-import javax.lang.model.element.Element;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import com.googlecode.androidannotations.helper.HasTarget;
-import com.sun.codemodel.JCodeModel;
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
-public interface ElementProcessor extends HasTarget {
+@RunWith(RobolectricTestRunner.class)
+public class BasicComponentTest {
 
-	void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception;
-	
+    @Test
+    public void shouldHaveLayoutAfterCreate() {
+        EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
+        BasicComponent component = new BasicComponent_(activity, 0);
+
+        assertThat(component.subtitle).isNotNull();
+        assertThat(component.tv).isNotNull();
+    }
+
 }
