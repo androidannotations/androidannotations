@@ -44,9 +44,9 @@ public class ViewByIdProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 	    
-	    ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+	    EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 	    
         String fieldName = element.getSimpleName().toString();
 

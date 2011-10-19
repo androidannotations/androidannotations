@@ -58,8 +58,8 @@ public class LongClickProcessor implements ElementProcessor {
 	}
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-        ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
         String methodName = element.getSimpleName().toString();
 
@@ -101,7 +101,7 @@ public class LongClickProcessor implements ElementProcessor {
 		block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnLongClickListener").arg(JExpr._new(listenerClass));
     }
     
-    private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
+    private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {
         LongClick annotation = element.getAnnotation(LongClick.class);
         int idValue = annotation.value();
         IRInnerClass rInnerClass = rClass.get(Res.ID);

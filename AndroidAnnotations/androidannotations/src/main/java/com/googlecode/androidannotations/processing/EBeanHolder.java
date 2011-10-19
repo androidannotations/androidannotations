@@ -25,9 +25,9 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class ActivityHolder {
+public class EBeanHolder {
 
-    public JDefinedClass activity;
+    public JDefinedClass eBean;
     public JMethod beforeCreate;
     public JVar beforeCreateSavedInstanceStateParam;
     public JMethod afterSetContentView;
@@ -41,13 +41,12 @@ public class ActivityHolder {
     private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
     public JFieldVar handler;
 
-
     public JClass refClass(String fullyQualifiedClassName) {
 
         JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
         if (refClass == null) {
-            refClass = activity.owner().ref(fullyQualifiedClassName);
+            refClass = eBean.owner().ref(fullyQualifiedClassName);
             loadedClasses.put(fullyQualifiedClassName, refClass);
         }
 
@@ -55,7 +54,7 @@ public class ActivityHolder {
     }
     
     public JClass refClass(Class<?> clazz) {
-        return activity.owner().ref(clazz);
+        return eBean.owner().ref(clazz);
     }
 
 }

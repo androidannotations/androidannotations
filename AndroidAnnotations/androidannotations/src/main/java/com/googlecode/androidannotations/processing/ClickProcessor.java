@@ -52,9 +52,9 @@ public class ClickProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
-		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
 		String methodName = element.getSimpleName().toString();
 
@@ -85,7 +85,7 @@ public class ClickProcessor implements ElementProcessor {
 		
 	}
 
-	private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
+	private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {
 		Click annotation = element.getAnnotation(Click.class);
 		int idValue = annotation.value();
 		IRInnerClass rInnerClass = rClass.get(Res.ID);

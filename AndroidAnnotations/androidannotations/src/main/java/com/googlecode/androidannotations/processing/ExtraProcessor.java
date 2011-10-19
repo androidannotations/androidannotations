@@ -42,15 +42,15 @@ public class ExtraProcessor implements ElementProcessor {
 	
 	
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
-		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 		
 		if (holder.cast == null) {
 		    JType objectType = codeModel._ref(Object.class);
-		    JMethod method = holder.activity.method(JMod.PRIVATE, objectType, "cast_");
+		    JMethod method = holder.eBean.method(JMod.PRIVATE, objectType, "cast_");
 		    JTypeVar genericType = method.generify("T");
 		    method.type(genericType);
 		    JVar objectParam = method.param(objectType, "object");
@@ -83,7 +83,7 @@ public class ExtraProcessor implements ElementProcessor {
 
 		JInvocation errorInvoke = holder.refClass("android.util.Log").staticInvoke("e");
 
-		errorInvoke.arg(holder.activity.name());
+		errorInvoke.arg(holder.eBean.name());
 		errorInvoke.arg("Could not cast extra to expected type, the field is left to its default value");
 		errorInvoke.arg(exceptionParam);
 

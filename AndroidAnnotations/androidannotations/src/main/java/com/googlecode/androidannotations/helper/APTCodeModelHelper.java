@@ -21,12 +21,12 @@ import java.util.List;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.processing.ActivityHolder;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JClass;
 
 public class APTCodeModelHelper {
 	
-	public JClass typeMirrorToJClass(TypeMirror type, ActivityHolder holder) {
+	public JClass typeMirrorToJClass(TypeMirror type, EBeanHolder holder) {
 		
 		if (type instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) type;

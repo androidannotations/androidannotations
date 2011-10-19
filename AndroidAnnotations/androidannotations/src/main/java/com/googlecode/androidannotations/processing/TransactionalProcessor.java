@@ -43,8 +43,8 @@ public class TransactionalProcessor implements ElementProcessor {
     }
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-        ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
         String methodName = element.getSimpleName().toString();
         ExecutableElement executableElement = (ExecutableElement) element;
@@ -52,7 +52,7 @@ public class TransactionalProcessor implements ElementProcessor {
         String returnTypeName = executableElement.getReturnType().toString();
         JClass returnType = holder.refClass(returnTypeName);
 
-        JMethod method = holder.activity.method(JMod.PUBLIC, returnType, methodName);
+        JMethod method = holder.eBean.method(JMod.PUBLIC, returnType, methodName);
         method.annotate(Override.class);
 
         List<JVar> params = new ArrayList<JVar>();
@@ -95,7 +95,7 @@ public class TransactionalProcessor implements ElementProcessor {
         JClass logClass = holder.refClass("android.util.Log");
         JInvocation errorInvoke = catchBody.staticInvoke(logClass, "e");
 
-        errorInvoke.arg(holder.activity.name());
+        errorInvoke.arg(holder.eBean.name());
         errorInvoke.arg("Error in transaction");
         errorInvoke.arg(exceptionParam);
 

@@ -40,26 +40,33 @@ public class IdValidatorHelper extends ValidatorHelper {
 		idExists(element, res, true, valid);
 	}
 
-	public void idExists(Element element, Res res, boolean defaultUseName, IsValid valid) {
+	public void idExists(Element element, Res res, boolean defaultUseName,
+			IsValid valid) {
 
 		Integer idValue = annotationHelper.extractAnnotationValue(element);
 
 		if (idValue.equals(Id.DEFAULT_VALUE)) {
 			if (defaultUseName) {
 				String elementName = element.getSimpleName().toString();
-				int lastIndex = elementName.lastIndexOf(annotationHelper.actionName());
+				int lastIndex = elementName.lastIndexOf(annotationHelper
+						.actionName());
 				if (lastIndex != -1) {
 					elementName = elementName.substring(0, lastIndex);
 				}
 				if (!idAnnotationHelper.containsField(elementName, res)) {
 					valid.invalidate();
 					String message;
-					String snakeCaseName = CaseHelper.camelCaseToSnakeCase(elementName);
-					String rQualifiedPrefix = String.format("R.%s.", res.rName());
+					String snakeCaseName = CaseHelper
+							.camelCaseToSnakeCase(elementName);
+					String rQualifiedPrefix = String.format("R.%s.",
+							res.rName());
 					if (snakeCaseName.equals(elementName)) {
-						message = "Id not found: " + rQualifiedPrefix + elementName;
+						message = "Id not found: " + rQualifiedPrefix
+								+ elementName;
 					} else {
-						message = "Id not found: " + rQualifiedPrefix + elementName + " or " + rQualifiedPrefix + snakeCaseName;
+						message = "Id not found: " + rQualifiedPrefix
+								+ elementName + " or " + rQualifiedPrefix
+								+ snakeCaseName;
 					}
 					annotationHelper.printAnnotationError(element, message);
 				}
@@ -67,25 +74,38 @@ public class IdValidatorHelper extends ValidatorHelper {
 		} else {
 			if (!idAnnotationHelper.containsIdValue(idValue, res)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "Id value not found in R." + res.rName() + ": " + idValue);
+				annotationHelper.printAnnotationError(element,
+						"Id value not found in R." + res.rName() + ": "
+								+ idValue);
 			}
 		}
 	}
 
-	public void uniqueId(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void uniqueId(Element element, AnnotationElements validatedElements,
+			IsValid valid) {
 		if (valid.isValid()) {
 			Element layoutElement = element.getEnclosingElement();
-			String annotationQualifiedId = idAnnotationHelper.extractAnnotationQualifiedId(element);
+			String annotationQualifiedId = idAnnotationHelper
+					.extractAnnotationQualifiedId(element);
 
-			Set<? extends Element> annotatedElements = validatedElements.getAnnotatedElements(annotationHelper.getTarget());
+			Set<? extends Element> annotatedElements = validatedElements
+					.getAnnotatedElements(annotationHelper.getTarget());
 			for (Element uniqueCheckElement : annotatedElements) {
-				Element enclosingElement = uniqueCheckElement.getEnclosingElement();
+				Element enclosingElement = uniqueCheckElement
+						.getEnclosingElement();
 				if (layoutElement.equals(enclosingElement)) {
-					String checkQualifiedId = idAnnotationHelper.extractAnnotationQualifiedId(uniqueCheckElement);
+					String checkQualifiedId = idAnnotationHelper
+							.extractAnnotationQualifiedId(uniqueCheckElement);
 					if (annotationQualifiedId.equals(checkQualifiedId)) {
 						valid.invalidate();
-						String annotationSimpleId = annotationQualifiedId.substring(annotationQualifiedId.lastIndexOf('.') + 1);
-						annotationHelper.printAnnotationError(element, "The id " + annotationSimpleId + " is already used on the following " + annotationHelper.annotationName() + " method: " + uniqueCheckElement);
+						String annotationSimpleId = annotationQualifiedId
+								.substring(annotationQualifiedId
+										.lastIndexOf('.') + 1);
+						annotationHelper.printAnnotationError(element,
+								"The id " + annotationSimpleId
+										+ " is already used on the following "
+										+ annotationHelper.annotationName()
+										+ " method: " + uniqueCheckElement);
 						return;
 					}
 				}
@@ -93,10 +113,12 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void idListenerMethod(Element element,
+			AnnotationElements validatedElements, IsValid valid) {
 
-		enclosingElementHasEActivity(element, validatedElements, valid);
 
+        enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
+        
 		idExists(element, Res.ID, valid);
 
 		isNotPrivate(element, valid);
@@ -106,23 +128,40 @@ public class IdValidatorHelper extends ValidatorHelper {
 		uniqueId(element, validatedElements, valid);
 	}
 
-	public void activityRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
+	public void activityRegistered(Element element,
+			AndroidManifest androidManifest, IsValid valid) {
 		TypeElement typeElement = (TypeElement) element;
 
-		String activityQualifiedName = typeElement.getQualifiedName().toString();
-		String generatedActivityQualifiedName = activityQualifiedName + ModelConstants.GENERATION_SUFFIX;
+		String activityQualifiedName = typeElement.getQualifiedName()
+				.toString();
+		String generatedActivityQualifiedName = activityQualifiedName
+				+ ModelConstants.GENERATION_SUFFIX;
 
-		List<String> activityQualifiedNames = androidManifest.getActivityQualifiedNames();
+		List<String> activityQualifiedNames = androidManifest
+				.getActivityQualifiedNames();
 		if (!activityQualifiedNames.contains(generatedActivityQualifiedName)) {
 			String simpleName = typeElement.getSimpleName().toString();
-			String generatedSimpleName = simpleName + ModelConstants.GENERATION_SUFFIX;
+			String generatedSimpleName = simpleName
+					+ ModelConstants.GENERATION_SUFFIX;
 			if (activityQualifiedNames.contains(activityQualifiedName)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original activity, and not the AndroidAnnotations generated activity. Please register " + generatedSimpleName + " instead of " + simpleName);
+				annotationHelper
+						.printAnnotationError(
+								element,
+								"The AndroidManifest.xml file contains the original activity, and not the AndroidAnnotations generated activity. Please register "
+										+ generatedSimpleName
+										+ " instead of "
+										+ simpleName);
 			} else {
-				annotationHelper.printAnnotationWarning(element, "The activity " + generatedSimpleName + " is not registered in the AndroidManifest.xml file.");
+				annotationHelper
+						.printAnnotationWarning(
+								element,
+								"The activity "
+										+ generatedSimpleName
+										+ " is not registered in the AndroidManifest.xml file.");
 			}
 		}
 
 	}
+
 }

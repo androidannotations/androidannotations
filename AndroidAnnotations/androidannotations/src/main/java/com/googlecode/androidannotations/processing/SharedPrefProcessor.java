@@ -89,7 +89,7 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
     }
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
         TypeElement typeElement = (TypeElement) element;
 

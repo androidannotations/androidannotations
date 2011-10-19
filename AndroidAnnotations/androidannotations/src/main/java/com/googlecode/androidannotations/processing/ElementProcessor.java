@@ -23,6 +23,6 @@ import com.sun.codemodel.JCodeModel;
 
 public interface ElementProcessor extends HasTarget {
 
-	void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception;
+	void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception;
 	
 }

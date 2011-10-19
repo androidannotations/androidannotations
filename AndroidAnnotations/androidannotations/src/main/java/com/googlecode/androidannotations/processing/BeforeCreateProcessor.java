@@ -34,9 +34,9 @@ public class BeforeCreateProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		
-		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 		
 		String methodName = element.getSimpleName().toString();
 		

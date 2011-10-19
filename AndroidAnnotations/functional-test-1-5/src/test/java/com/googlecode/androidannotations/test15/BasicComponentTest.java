@@ -15,29 +15,23 @@
  */
 package com.googlecode.androidannotations.test15;
 
-import static org.fest.assertions.Assertions.*;
-import android.os.Build;
-import android.view.KeyEvent;
+import static org.fest.assertions.Assertions.assertThat;
 
-//@RunWith(RobolectricTestRunner.class)
-public class BackpressedActivityTest {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-    /**
-     * Test skipped because {@link Build.VERSION#RELEASE} is set to null in robolectric
-     */
-	// @Test
-	public void backKeyHandled() {
-	    
-	       BackpressedActivity_ activity = new BackpressedActivity_();
-	       activity.onCreate(null);
-	       
-	       assertThat(activity.backPressed).isFalse();
-	       
-	       activity.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(null));
-	       
-	       assertThat(activity.backPressed).isTrue();
-	        
-	        
-	}
+import com.xtremelabs.robolectric.RobolectricTestRunner;
+
+@RunWith(RobolectricTestRunner.class)
+public class BasicComponentTest {
+
+    @Test
+    public void shouldHaveLayoutAfterCreate() {
+        EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
+        BasicComponent component = new BasicComponent_(activity, 0);
+        component.onFinishInflate();
+        assertThat(component.subtitle).isNotNull();
+        assertThat(component.tv).isNotNull();
+    }
 
 }
