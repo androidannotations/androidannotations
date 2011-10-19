@@ -76,11 +76,13 @@ public class ClickProcessor implements ElementProcessor {
 			clickCall.arg(onClickViewParam);
 		}
 
-		JBlock body = holder.afterSetContentView.body();
+		JBlock block = holder.afterSetContentView.body().block();
 
-		body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef),"setOnClickListener").arg(JExpr._new(onClickListenerClass)));
-
-
+        JInvocation findViewById = JExpr.invoke("findViewById");
+        
+		JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+		block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnClickListener").arg(JExpr._new(onClickListenerClass));
+		
 	}
 
 	private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
