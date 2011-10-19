@@ -29,7 +29,7 @@ public class BasicComponentTest {
     public void shouldHaveLayoutAfterCreate() {
         EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
         BasicComponent component = new BasicComponent_(activity, 0);
-
+        component.onFinishInflate();
         assertThat(component.subtitle).isNotNull();
         assertThat(component.tv).isNotNull();
     }

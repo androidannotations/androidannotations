@@ -20,7 +20,7 @@ import android.os.Build;
 import android.view.KeyEvent;
 
 //@RunWith(RobolectricTestRunner.class)
-public class BackpressedActivityTest {
+public class BackpressedActivityTestSkipped {
 
     /**
      * Test skipped because {@link Build.VERSION#RELEASE} is set to null in robolectric

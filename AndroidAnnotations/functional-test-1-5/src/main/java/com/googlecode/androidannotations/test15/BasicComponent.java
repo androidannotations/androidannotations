@@ -2,7 +2,7 @@ package com.googlecode.androidannotations.test15;
 
 import android.content.Context;
 import android.view.MotionEvent;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.googlecode.androidannotations.annotations.Click;
@@ -12,7 +12,7 @@ import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.component)
-public class BasicComponent extends RelativeLayout {
+public class BasicComponent extends FrameLayout {
 
     @ViewById(R.id.title)
     TextView tv;
@@ -40,7 +40,6 @@ public class BasicComponent extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-
     }
 
 }
