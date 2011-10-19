@@ -96,9 +96,12 @@ public class TouchProcessor implements ElementProcessor {
             call.arg(viewParam);
         }
 
-        JBlock body = holder.afterSetContentView.body();
-
-        body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef), "setOnTouchListener").arg(JExpr._new(listenerClass)));
+        JBlock block = holder.afterSetContentView.body().block();
+        
+        JInvocation findViewById = JExpr.invoke("findViewById");
+        
+        JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+        block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnTouchListener").arg(JExpr._new(listenerClass));
     }
 
     private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {
