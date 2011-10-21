@@ -42,18 +42,27 @@ public interface MyService {
   // The response can be a ResponseEntity<T>
   @Get("/events/{year}/{location}")
   ResponseEntity<EventList> getEvents2(String location, int year) throws RestClientException; // You may (or may not) declare throwing RestClientException (as a reminder, since it's a RuntimeException), but nothing else.
-
+  
   // There should be max 1 parameter that is not mapped to an attribute. This parameter will be used as the post entity.
-  @Post("/events/{year}/{location}")
-  EventList addEvent(String location, Event event, int year);
+  @Post("/events/")
+  Event addEvent(Event event);  
+  
+  @Post("/events/{year}/")
+  Event addEvent(Event event, int year);
+  
+  @Post("/events/")
+  ResponseEntity<Event> addEvent2(Event event);  
+  
+  @Post("/events/{year}/")
+  ResponseEntity<Event> addEvent2(Event event, int year);
 
-  @Put("/events/{year}/{location}")
-  EventList updateEvent(String location, Event event, int year);
+  @Put("/events/{id}")
+  void updateEvent(Event event, int id);
 
   // url variables are mapped to method parameter names. 
   @Delete("/events/{id}")
   void removeEvent(long id);
-
+  
   @Head("/events/{year}/{location}")
   HttpHeaders getEventheaders(String location, int year);
 

@@ -15,28 +15,29 @@
  */
 package com.googlecode.androidannotations.processing.rest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-public class RestImplementationsHolder {
+import com.googlecode.androidannotations.annotations.rest.Accept;
+import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.sun.codemodel.JCodeModel;
 
-    private Map<Element, RestImplementationHolder> holders = new HashMap<Element, RestImplementationHolder>();
-
-    public RestImplementationHolder create(Element element) {
-    	RestImplementationHolder holder = new RestImplementationHolder();
-        holders.put(element, holder);
-        return holder;
+public class AcceptProcessor extends MethodProcessor {
+	
+	public AcceptProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
+	    super(processingEnv, restImplementationHolder);
     }
 
-    public RestImplementationHolder getEnclosingHolder(Element enclosedElement) {
-        Element activityElement = enclosedElement.getEnclosingElement();
-        return holders.get(activityElement);
+	@Override
+    public Class<? extends Annotation> getTarget() {
+	    return Accept.class;
     }
 
-    public RestImplementationHolder getRelativeHolder(Element element) {
-        return holders.get(element);
-    }
+	@Override
+	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+		
+	}
 
 }

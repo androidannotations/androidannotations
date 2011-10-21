@@ -153,28 +153,67 @@ public class ValidatorHelper {
     }
     
     public void hasViewByIdAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
-    	Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(ViewById.class);
+    	String error = "can only be used with annotation";
+    	elementHasAnnotation(ViewById.class, element, validatedElements, valid, error);
+    }
+    
+    public void elementHasRestAnnotationOrEnclosingElementHasRestAnnotationAndElementHasMethodRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+	  	String error = "can only be used in an interface annotated with";
+    	elementHasAnnotation(Rest.class, element, validatedElements, valid, error);
+    	
+    	if (!valid.isValid()) {
+        	enclosingElementHasRestAnnotation(element, validatedElements, valid);
+        	elementHasMethodRestAnnotation(element, validatedElements, valid);
+        }
+    	
+    }
+    
+    public void elementHasMethodRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+	  	String error = "can only be used on a method annotated with Rest methods.";
+    	elementHasAnnotationContainsIn(REST_ANNOTATION_CLASSES, element, validatedElements, valid, error);
+    	
+    }
 
+    public void enclosingElementHasRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+    	String error = "can only be used in an interface annotated with";
+    	enclosingElementHasAnnotation(Rest.class, element, validatedElements, valid, error);
+    }
+    
+    public void enclosingElementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, IsValid valid, String error) {
+    	Element enclosingElement = element.getEnclosingElement();
+    	elementHasAnnotation(annotation, enclosingElement, validatedElements, valid, error);
+    }
+
+    public void elementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, IsValid valid, String error) {
+     
+    	Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(annotation);
+     
         if (!layoutAnnotatedElements.contains(element)) {
             valid.invalidate();
-            if (element.getAnnotation(ViewById.class) == null) {
-                annotationHelper.printAnnotationError(element, "%s can only be used with annotation " + TargetAnnotationHelper.annotationName(ViewById.class));
+            if (element.getAnnotation(annotation) == null) {
+                annotationHelper.printAnnotationError(element, "%s " + error + " " + TargetAnnotationHelper.annotationName(annotation));
             }
         }
     }
 
-    public void enclosingElementHasRest(Element element, AnnotationElements validatedElements, IsValid valid) {
-
-        Element enclosingElement = element.getEnclosingElement();
-
-        Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Rest.class);
-
-        if (!layoutAnnotatedElements.contains(enclosingElement)) {
-            valid.invalidate();
-            if (enclosingElement.getAnnotation(Rest.class) == null) {
-                annotationHelper.printAnnotationError(element, "%s can only be used in an interface annotated with " + TargetAnnotationHelper.annotationName(Rest.class));
+    public void elementHasAnnotationContainsIn(List <Class<? extends Annotation>> annotations, Element element, AnnotationElements validatedElements, IsValid valid, String error) {
+    	boolean isAnnoted = false;
+    	for (Class<? extends Annotation> annotation : annotations) {
+    		if (elementHasAnnotation(annotation, element, validatedElements)) {
+               isAnnoted = true;
+               break;
             }
         }
+    	
+    	if (!isAnnoted) {
+    		valid.invalidate();
+            annotationHelper.printAnnotationError(element, "%s " + error);
+        }
+    }
+    
+    public boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements) {
+    	Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(annotation);
+        return layoutAnnotatedElements.contains(element);
     }
 
     public void throwsOnlyRestClientException(ExecutableElement element, IsValid valid) {
@@ -224,28 +263,6 @@ public class ValidatorHelper {
                 if (!typeArgument.toString().equals("org.springframework.http.HttpMethod")) {
                     valid.invalidate();
                     annotationHelper.printAnnotationError(element, "%s annotated methods can only return a parameterized Set of HttpMethod, not " + typeArgument.toString());
-                }
-            }
-        }
-    }
-
-    public void urlVariableNamesExistInParameters(ExecutableElement element, IsValid valid) {
-        if (valid.isValid()) {
-            List<String> variableNames = annotationHelper.extractUrlVariableNames(element);
-            urlVariableNamesExistInParameters(element, variableNames, valid);
-        }
-    }
-
-    public void urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(ExecutableElement element, IsValid valid) {
-        if (valid.isValid()) {
-            List<String> variableNames = annotationHelper.extractUrlVariableNames(element);
-            urlVariableNamesExistInParameters(element, variableNames, valid);
-            if (valid.isValid()) {
-                List<? extends VariableElement> parameters = element.getParameters();
-
-                if (parameters.size() > variableNames.size() + 1) {
-                    valid.invalidate();
-                    annotationHelper.printAnnotationError(element, "%s annotated method has more than one entity parameter");
                 }
             }
         }
@@ -435,7 +452,7 @@ public class ValidatorHelper {
         }
     }
 
-    public void hasStringAndroidJars(Element element, IsValid valid) {
+    public void hasSpringAndroidJars(Element element, IsValid valid) {
         Elements elementUtils = annotationHelper.getElementUtils();
 
         if (elementUtils.getTypeElement("org.springframework.web.client.RestTemplate") == null) {

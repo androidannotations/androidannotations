@@ -66,6 +66,8 @@ import com.googlecode.androidannotations.annotations.res.StringArrayRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.annotations.res.TextArrayRes;
 import com.googlecode.androidannotations.annotations.res.TextRes;
+import com.googlecode.androidannotations.annotations.rest.Accept;
+import com.googlecode.androidannotations.annotations.rest.Delete;
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Head;
 import com.googlecode.androidannotations.annotations.rest.Options;
@@ -107,7 +109,12 @@ import com.googlecode.androidannotations.processing.TransactionalProcessor;
 import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewByIdProcessor;
+import com.googlecode.androidannotations.processing.rest.DeleteProcessor;
 import com.googlecode.androidannotations.processing.rest.GetProcessor;
+import com.googlecode.androidannotations.processing.rest.HeadProcessor;
+import com.googlecode.androidannotations.processing.rest.OptionsProcessor;
+import com.googlecode.androidannotations.processing.rest.PostProcessor;
+import com.googlecode.androidannotations.processing.rest.PutProcessor;
 import com.googlecode.androidannotations.processing.rest.RestImplementationsHolder;
 import com.googlecode.androidannotations.processing.rest.RestProcessor;
 import com.googlecode.androidannotations.rclass.AndroidRClassFinder;
@@ -135,6 +142,7 @@ import com.googlecode.androidannotations.validation.SystemServiceValidator;
 import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewByIdValidator;
+import com.googlecode.androidannotations.validation.rest.AcceptValidator;
 import com.googlecode.androidannotations.validation.rest.DeleteValidator;
 import com.googlecode.androidannotations.validation.rest.GetValidator;
 import com.googlecode.androidannotations.validation.rest.HeadValidator;
@@ -185,7 +193,9 @@ import com.sun.codemodel.JCodeModel;
         Head.class, //
         Options.class, //
         Post.class, //
-        Put.class,
+        Put.class, //
+        Delete.class, //
+        Accept.class,
         FromHtml.class})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
@@ -327,6 +337,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new OptionsValidator(processingEnv));
         modelValidator.register(new PostValidator(processingEnv));
         modelValidator.register(new PutValidator(processingEnv));
+        modelValidator.register(new AcceptValidator(processingEnv));
         modelValidator.register(new AppValidator(processingEnv, androidManifest));
         return modelValidator;
     }
@@ -367,6 +378,11 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
         modelProcessor.register(new RestProcessor(restImplementationHolder));
         modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
+        modelProcessor.register(new PostProcessor(processingEnv, restImplementationHolder));
+        modelProcessor.register(new PutProcessor(processingEnv, restImplementationHolder));
+        modelProcessor.register(new DeleteProcessor(processingEnv, restImplementationHolder));
+        modelProcessor.register(new HeadProcessor(processingEnv, restImplementationHolder));
+        modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationHolder));
         modelProcessor.register(new AppProcessor());
 
         return modelProcessor;

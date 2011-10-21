@@ -22,7 +22,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;
 
-public class RestImplentationHolder {
+public class RestImplementationHolder {
 
     public JDefinedClass restImplementationClass;
 

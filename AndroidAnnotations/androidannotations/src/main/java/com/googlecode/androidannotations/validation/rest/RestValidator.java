@@ -51,7 +51,7 @@ public class RestValidator implements ElementValidator {
 		
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 		
-		validatorHelper.hasStringAndroidJars(element, valid);
+		validatorHelper.hasSpringAndroidJars(element, valid);
 		
 		validatorHelper.isInterface(typeElement, valid);
 		

@@ -21,7 +21,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.rest.Get;
+import com.googlecode.androidannotations.annotations.rest.Accept;
 import com.googlecode.androidannotations.helper.RestAnnotationHelper;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
@@ -29,12 +29,12 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.validation.ElementValidator;
 import com.googlecode.androidannotations.validation.IsValid;
 
-public class GetValidator implements ElementValidator {
+public class AcceptValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
 	private RestAnnotationHelper restAnnotationHelper;
 	
-	public GetValidator(ProcessingEnvironment processingEnv) {
+	public AcceptValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
@@ -42,7 +42,7 @@ public class GetValidator implements ElementValidator {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Get.class;
+		return Accept.class;
 	}
 
 	@Override
@@ -50,9 +50,9 @@ public class GetValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 		
-		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
+		//validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
-		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, valid);
+		validatorHelper.elementHasRestAnnotationOrEnclosingElementHasRestAnnotationAndElementHasMethodRestAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		
@@ -61,6 +61,8 @@ public class GetValidator implements ElementValidator {
 		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
 		
 		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
+		
+		//TODO Check if has JSON Parser API  
 
 		return valid.isValid();
 	}

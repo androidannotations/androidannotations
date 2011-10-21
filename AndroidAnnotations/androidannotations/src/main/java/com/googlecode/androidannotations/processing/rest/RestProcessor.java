@@ -51,7 +51,7 @@ public class RestProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
 
-		RestImplentationHolder holder = restImplementationHolder.create(element);
+		RestImplementationHolder holder = restImplementationHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -61,7 +61,8 @@ public class RestProcessor implements ElementProcessor {
 
 		String implementationName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
-		holder.restImplementationClass = codeModel._class(JMod.PUBLIC | JMod.ABSTRACT, implementationName, ClassType.CLASS);
+//		holder.restImplementationClass = codeModel._class(JMod.PUBLIC | JMod.ABSTRACT, implementationName, ClassType.CLASS);
+		holder.restImplementationClass = codeModel._class(JMod.PUBLIC, implementationName, ClassType.CLASS);
 		JClass interfaceClass = holder.refClass(interfaceName);
 		holder.restImplementationClass._implements(interfaceClass);
 
