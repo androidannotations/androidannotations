@@ -34,4 +34,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Click {
 	int value() default Id.DEFAULT_VALUE;
+	int [] ids() default {};
 }

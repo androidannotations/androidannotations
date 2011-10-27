@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Element;
@@ -63,7 +64,7 @@ public class ClickProcessor implements ElementProcessor {
 
 		boolean hasViewParameter = parameters.size() == 1;
 
-		JFieldRef idRef = extractClickQualifiedId(element, holder);
+		List<JFieldRef> idRefs = extractClickQualifiedIds(element, holder);
 
 		JDefinedClass onClickListenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnClickListener"));
 		JMethod onClickMethod = onClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");
@@ -77,29 +78,50 @@ public class ClickProcessor implements ElementProcessor {
 		}
 
 		JBlock block = holder.afterSetContentView.body().block();
+		        
+        for (int i = 0 ; i < idRefs.size() ; i++) {
+        	JFieldRef idRef = idRefs.get(i);
 
-        JInvocation findViewById = JExpr.invoke("findViewById");
-        
-		JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
-		block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnClickListener").arg(JExpr._new(onClickListenerClass));
+            JInvocation findViewById = JExpr.invoke("findViewById");
+        	JVar view = block.decl(viewClass, "view" + i, findViewById.arg(idRef));
+        	block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnClickListener").arg(JExpr._new(onClickListenerClass));
+        }
 		
 	}
 
-	private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {
+	private List<JFieldRef> extractClickQualifiedIds(Element element, EBeanHolder holder) {
+		
+		List<JFieldRef> idRefs = new ArrayList<JFieldRef>();
 		Click annotation = element.getAnnotation(Click.class);
+		
 		int idValue = annotation.value();
+		int [] idsValues = annotation.ids();
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		if (idValue == Id.DEFAULT_VALUE) {
+		
+		if (idsValues.length != 0) {
+			
+			for(int id : idsValues) {
+				JFieldRef idRef = rInnerClass.getIdStaticRef(id, holder);
+				idRefs.add(idRef);
+			}
+			
+		} else if (idValue == Id.DEFAULT_VALUE) {
+			
 			String fieldName = element.getSimpleName().toString();
 			int lastIndex = fieldName.lastIndexOf("Clicked");
+			
 			if (lastIndex != -1) {
 				fieldName = fieldName.substring(0, lastIndex);
 			}
-			return rInnerClass.getIdStaticRef(fieldName, holder);
+			
+			idRefs.add(rInnerClass.getIdStaticRef(fieldName, holder));
 
 		} else {
-			return rInnerClass.getIdStaticRef(idValue, holder);
+
+			idRefs.add(rInnerClass.getIdStaticRef(idValue, holder));
+
 		}
+		return idRefs;
 	}
 
 }
