@@ -59,6 +59,7 @@ import com.googlecode.androidannotations.annotations.res.DimensionPixelOffsetRes
 import com.googlecode.androidannotations.annotations.res.DimensionPixelSizeRes;
 import com.googlecode.androidannotations.annotations.res.DimensionRes;
 import com.googlecode.androidannotations.annotations.res.DrawableRes;
+import com.googlecode.androidannotations.annotations.res.HtmlRes;
 import com.googlecode.androidannotations.annotations.res.IntArrayRes;
 import com.googlecode.androidannotations.annotations.res.IntegerRes;
 import com.googlecode.androidannotations.annotations.res.LayoutRes;
@@ -190,7 +191,8 @@ import com.sun.codemodel.JCodeModel;
         Options.class, //
         Post.class, //
         Put.class,
-        FromHtml.class})
+        FromHtml.class,
+        HtmlRes.class})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 

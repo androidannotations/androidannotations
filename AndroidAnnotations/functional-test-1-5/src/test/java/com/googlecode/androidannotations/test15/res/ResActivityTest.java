@@ -16,15 +16,21 @@
 package com.googlecode.androidannotations.test15.res;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.res.Resources;
+import android.text.Html;
 import android.view.animation.AnimationUtils;
 
+import com.googlecode.androidannotations.test15.R;
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowHtml;
 
 @RunWith(RobolectricTestRunner.class)
 public class ResActivityTest {
@@ -33,26 +39,26 @@ public class ResActivityTest {
 
     @Before
     public void setup() {
+        Robolectric.bindShadowClass(ShadowHtml.class);
         activity = new ResActivity_();
         activity.onCreate(null);
     }
-    
+
     @Test
     public void string_snake_case_injected() {
-    	assertThat(activity.injected_string).isEqualTo("test");
+        assertThat(activity.injected_string).isEqualTo("test");
     }
-    
+
     @Test
     public void string_camel_case_injected() {
-    	assertThat(activity.injectedString).isEqualTo("test");
+        assertThat(activity.injectedString).isEqualTo("test");
     }
-    
 
     /**
      * Cannot be tested right now, because there is no Robolectric shadow class
      * for {@link AnimationUtils}.
      */
-//     @Test
+    // @Test
     public void animNotNull() {
         assertThat(activity.fadein).isNotNull();
     }
@@ -66,4 +72,13 @@ public class ResActivityTest {
         assertThat(activity.fade_in).isNotNull();
     }
 
+    @Test
+    public void htmlResNotNull() {
+        assertNotNull(activity.helloHtml);
+    }
+
+    @Test
+    public void htmlResCorrectlySet() {
+        assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.helloHtml);
+    }
 }

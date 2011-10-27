@@ -21,6 +21,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.annotations.res.HtmlRes;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -74,13 +75,18 @@ public class ResProcessor implements ElementProcessor {
             JClass animationUtils = holder.refClass("android.view.animation.AnimationUtils");
             methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(JExpr._this()).arg(idRef));
         } else {
-            if (holder.resources == null) {
+            if (holder.resources == null)
                 holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
-            }
 
             String resourceMethodName = androidValue.getResourceMethodName();
 
-            methodBody.assign(JExpr.ref(fieldName), JExpr.invoke(holder.resources, resourceMethodName).arg(idRef));
+            // Special case for @HtmlRes
+            if (element.getAnnotation(HtmlRes.class) != null) {
+                JClass html = holder.refClass("android.text.Html");
+                methodBody.assign(JExpr.ref(fieldName), html.staticInvoke("fromHtml").arg(JExpr.invoke(holder.resources, resourceMethodName).arg(idRef)));
+            } else {
+                methodBody.assign(JExpr.ref(fieldName), JExpr.invoke(holder.resources, resourceMethodName).arg(idRef));
+            }
         }
 
     }
