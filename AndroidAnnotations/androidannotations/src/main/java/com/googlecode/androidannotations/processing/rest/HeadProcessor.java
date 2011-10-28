@@ -8,6 +8,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Head;
+import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -33,13 +34,11 @@ public class HeadProcessor extends MethodProcessor {
 		
 		JClass expectedClass = holder.refClass(returnType.toString());
 		
-		String restMethodName = "headForHeaders";
-
 		Head headAnnotation = element.getAnnotation(Head.class);
 		String urlSuffix = headAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 		
-		createGeneratedRestCallBlock(executableElement, url, restMethodName, codeModel, expectedClass);
+		createGeneratedRestCallBlock(executableElement, url, Method.HEAD, expectedClass, expectedClass, codeModel);
 	}
 
 }

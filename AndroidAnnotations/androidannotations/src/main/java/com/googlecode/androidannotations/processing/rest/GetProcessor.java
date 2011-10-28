@@ -24,53 +24,50 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Get;
+import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 
 public class GetProcessor extends MethodProcessor {
-	
+
 	public GetProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
-	    super(processingEnv, restImplementationHolder);
-    }
+		super(processingEnv, restImplementationHolder);
+	}
 
 	@Override
-    public Class<? extends Annotation> getTarget() {
-	    return Get.class;
-    }
+	public Class<? extends Annotation> getTarget() {
+		return Get.class;
+	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-		
+
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
 		ExecutableElement executableElement = (ExecutableElement) element;
-		
+
 		TypeMirror returnType = executableElement.getReturnType();
 
 		JClass generatedReturnType;
 		String returnTypeString = returnType.toString();
-		String restMethodName;
 		JClass expectedClass;
-		
+
 		if (returnTypeString.startsWith(ProcessorConstants.RESPONSE_ENTITY)) {
-			restMethodName = "getForEntity";
 			DeclaredType declaredReturnedType = (DeclaredType) returnType;
 			TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
 			expectedClass = holder.refClass(typeParameter.toString());
 			generatedReturnType = holder.refClass(ProcessorConstants.RESPONSE_ENTITY).narrow(expectedClass);
 		} else {
-			restMethodName = "getForObject";
 			generatedReturnType = holder.refClass(returnTypeString);
 			expectedClass = generatedReturnType;
 		}
-		
+
 		Get getAnnotation = element.getAnnotation(Get.class);
 		String urlSuffix = getAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 
-		createGeneratedRestCallBlock(element, url, restMethodName, expectedClass, generatedReturnType, codeModel);
-		
+		createGeneratedRestCallBlock(element, url, Method.GET, expectedClass, generatedReturnType, codeModel);
 	}
 
 }

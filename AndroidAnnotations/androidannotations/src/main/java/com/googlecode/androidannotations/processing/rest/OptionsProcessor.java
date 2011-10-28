@@ -9,6 +9,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Options;
+import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
 import com.sun.codemodel.JClass;
@@ -41,13 +42,11 @@ public class OptionsProcessor extends MethodProcessor {
 		
 		JClass generatedReturnType = holder.refClass(ProcessorConstants.SET).narrow(expectedClass);
 		
-		String restMethodName = "optionsForAllow";
-
 		Options optionsAnnotation = element.getAnnotation(Options.class);
 		String urlSuffix = optionsAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 		
-		createGeneratedRestCallBlock(executableElement, url, restMethodName, codeModel, generatedReturnType);
+		createGeneratedRestCallBlock(executableElement, url, Method.OPTIONS, expectedClass, generatedReturnType, codeModel);
 	}
 
 }

@@ -109,6 +109,7 @@ import com.googlecode.androidannotations.processing.TransactionalProcessor;
 import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewByIdProcessor;
+import com.googlecode.androidannotations.processing.rest.AcceptProcessor;
 import com.googlecode.androidannotations.processing.rest.DeleteProcessor;
 import com.googlecode.androidannotations.processing.rest.GetProcessor;
 import com.googlecode.androidannotations.processing.rest.HeadProcessor;
@@ -377,6 +378,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelProcessor.register(new AfterViewsProcessor());
         RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
         modelProcessor.register(new RestProcessor(restImplementationHolder));
+        modelProcessor.register(new AcceptProcessor(processingEnv, restImplementationHolder));
         modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
         modelProcessor.register(new PostProcessor(processingEnv, restImplementationHolder));
         modelProcessor.register(new PutProcessor(processingEnv, restImplementationHolder));

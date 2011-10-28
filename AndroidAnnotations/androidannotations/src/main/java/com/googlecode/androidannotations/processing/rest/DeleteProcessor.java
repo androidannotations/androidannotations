@@ -7,6 +7,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import com.googlecode.androidannotations.annotations.rest.Delete;
+import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
 import com.sun.codemodel.JCodeModel;
 
@@ -27,13 +28,11 @@ public class DeleteProcessor extends MethodProcessor {
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		String restMethodName = "delete";
-
 		Delete deleteAnnotation = element.getAnnotation(Delete.class);
 		String urlSuffix = deleteAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 
-		createGeneratedRestCallBlock(executableElement, url, restMethodName, codeModel);
+		createGeneratedRestCallBlock(executableElement, url, Method.DELETE, null, null, codeModel);
 	}
 
 }

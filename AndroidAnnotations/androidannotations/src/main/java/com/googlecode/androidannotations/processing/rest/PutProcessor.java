@@ -7,6 +7,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import com.googlecode.androidannotations.annotations.rest.Put;
+import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
 import com.sun.codemodel.JCodeModel;
 
@@ -27,13 +28,13 @@ public class PutProcessor extends MethodProcessor {
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		String restMethodName = "put";
-
 		Put putAnnotation = element.getAnnotation(Put.class);
 		String urlSuffix = putAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 
-		createGeneratedRestCallBlock(executableElement, url, restMethodName, codeModel);
+		
+		//TODO A tester impérativement !!
+		createGeneratedRestCallBlock(executableElement, url, Method.PUT, null, null, codeModel);
 		
 	}
 

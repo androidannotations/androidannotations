@@ -20,9 +20,9 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.rest.Accept;
-import com.googlecode.androidannotations.helper.RestAnnotationHelper;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -32,12 +32,10 @@ import com.googlecode.androidannotations.validation.IsValid;
 public class AcceptValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
-	private RestAnnotationHelper restAnnotationHelper;
-	
+
 	public AcceptValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
-		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
 	}
 
 	@Override
@@ -49,20 +47,27 @@ public class AcceptValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
-		//validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
-		validatorHelper.elementHasRestAnnotationOrEnclosingElementHasRestAnnotationAndElementHasMethodRestAnnotation(element, validatedElements, valid);
+//		 validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
-		ExecutableElement executableElement = (ExecutableElement) element;
-		
-		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
-		
-		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
-		
-		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
-		
-		//TODO Check if has JSON Parser API  
+		// Interface annotated
+		if (element instanceof TypeElement) {
+
+			validatorHelper.elementHasRestAnnotation(element, validatedElements, valid);
+			
+		// Method Annotated
+		} else {
+			ExecutableElement executableElement = (ExecutableElement) element;
+
+			validatorHelper.enclosingElementHasRestAnnotation(executableElement, validatedElements, valid);
+			
+			validatorHelper.elementHasGetOrPostAnnotation(executableElement, validatedElements, valid);
+			
+			validatorHelper.throwsOnlyRestClientException(executableElement, valid);
+
+		}
+
+		// TODO Check if has JSON Parser API (Jackson, GSon ...)
 
 		return valid.isValid();
 	}

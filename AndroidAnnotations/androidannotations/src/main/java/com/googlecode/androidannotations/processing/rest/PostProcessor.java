@@ -9,6 +9,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Post;
+import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
 import com.sun.codemodel.JClass;
@@ -35,23 +36,19 @@ public class PostProcessor extends MethodProcessor {
 		
 		JClass generatedReturnType;
 		String returnTypeString = returnType.toString();
-		String restMethodName;
 		JClass expectedClass;
 		
 		if (returnTypeString.startsWith(ProcessorConstants.URI)) {
-			restMethodName = "postForLocation";
 			DeclaredType declaredReturnedType = (DeclaredType) returnType;
 			TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
 			expectedClass = holder.refClass(typeParameter.toString());
 			generatedReturnType = holder.refClass(ProcessorConstants.URI);
 		} else if (returnTypeString.startsWith(ProcessorConstants.RESPONSE_ENTITY)) {
-			restMethodName = "postForEntity";
 			DeclaredType declaredReturnedType = (DeclaredType) returnType;
 			TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
 			expectedClass = holder.refClass(typeParameter.toString());
 			generatedReturnType = holder.refClass(ProcessorConstants.RESPONSE_ENTITY).narrow(expectedClass);
 		} else {
-			restMethodName = "postForObject";
 			generatedReturnType = holder.refClass(returnTypeString);
 			expectedClass = generatedReturnType;
 		}
@@ -60,7 +57,7 @@ public class PostProcessor extends MethodProcessor {
 		String urlSuffix = postAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 		
-		createGeneratedRestCallBlock(executableElement, url, restMethodName, expectedClass, generatedReturnType, codeModel);
+		createGeneratedRestCallBlock(executableElement, url, Method.POST, expectedClass, generatedReturnType, codeModel);
 
 	}
 

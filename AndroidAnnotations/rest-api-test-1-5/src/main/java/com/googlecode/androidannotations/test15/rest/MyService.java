@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.googlecode.androidannotations.annotations.rest.Accept;
 import com.googlecode.androidannotations.annotations.rest.Delete;
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Head;
@@ -30,13 +31,14 @@ import com.googlecode.androidannotations.annotations.rest.Options;
 import com.googlecode.androidannotations.annotations.rest.Post;
 import com.googlecode.androidannotations.annotations.rest.Put;
 import com.googlecode.androidannotations.annotations.rest.Rest;
-
+import com.googlecode.androidannotations.api.rest.MediaType;
 
 @Rest("http://company.com/ajax/services") // if defined, the url will be added as a prefix to every request
 public interface MyService {
 
   // url variables are mapped to method parameter names. 
   @Get("/events/{year}/{location}")
+  @Accept(MediaType.APPLICATION_JSON)
   EventList getEvents(String location, int year);
 
   // The response can be a ResponseEntity<T>
@@ -45,6 +47,7 @@ public interface MyService {
   
   // There should be max 1 parameter that is not mapped to an attribute. This parameter will be used as the post entity.
   @Post("/events/")
+  @Accept(MediaType.APPLICATION_JSON)
   Event addEvent(Event event);  
   
   @Post("/events/{year}/")
@@ -54,6 +57,7 @@ public interface MyService {
   ResponseEntity<Event> addEvent2(Event event);  
   
   @Post("/events/{year}/")
+  @Accept(MediaType.APPLICATION_JSON)
   ResponseEntity<Event> addEvent2(Event event, int year);
 
   @Put("/events/{id}")
@@ -64,7 +68,7 @@ public interface MyService {
   void removeEvent(long id);
   
   @Head("/events/{year}/{location}")
-  HttpHeaders getEventheaders(String location, int year);
+  HttpHeaders getEventHeaders(String location, int year);
 
   @Options("/events/{year}/{location}")
   Set<HttpMethod> getEventOptions(String location, int year);
