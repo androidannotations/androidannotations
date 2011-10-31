@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -96,9 +96,12 @@ public class TouchProcessor implements ElementProcessor {
             call.arg(viewParam);
         }
 
-        JBlock body = holder.afterSetContentView.body();
-
-        body.add(JExpr.invoke(JExpr.invoke("findViewById").arg(idRef), "setOnTouchListener").arg(JExpr._new(listenerClass)));
+        JBlock block = holder.afterSetContentView.body().block();
+        
+        JInvocation findViewById = JExpr.invoke("findViewById");
+        
+        JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+        block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnTouchListener").arg(JExpr._new(listenerClass));
     }
 
     private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {

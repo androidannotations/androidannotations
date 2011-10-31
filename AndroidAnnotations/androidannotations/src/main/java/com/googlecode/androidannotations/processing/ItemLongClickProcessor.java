@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -100,9 +100,13 @@ public class ItemLongClickProcessor implements ElementProcessor {
             itemClickCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
         }
 
-        JBlock body = holder.afterSetContentView.body();
+     //   JBlock body = holder.afterSetContentView.body();
 
-        body.add(JExpr.invoke(JExpr.cast(narrowAdapterViewClass, JExpr.invoke("findViewById").arg(idRef)),"setOnItemLongClickListener").arg(JExpr._new(onItemClickListenerClass)));
+       // body.add(JExpr.invoke(JExpr.cast(narrowAdapterViewClass, JExpr.invoke("findViewById").arg(idRef)),"setOnItemLongClickListener").arg(JExpr._new(onItemClickListenerClass)));
+
+		JBlock block = holder.afterSetContentView.body().block();
+		JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, JExpr.invoke("findViewById").arg(idRef)));
+		block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemLongClickListener").arg(JExpr._new(onItemClickListenerClass));
     }
     
     private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {
