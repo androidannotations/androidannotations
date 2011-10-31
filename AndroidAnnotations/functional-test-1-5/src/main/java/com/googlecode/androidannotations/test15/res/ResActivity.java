@@ -42,4 +42,7 @@ public class ResActivity extends Activity {
 
     @HtmlRes
     Spanned helloHtml;
+    
+    @HtmlRes(R.string.hello_html)
+    CharSequence htmlInjected;
 }

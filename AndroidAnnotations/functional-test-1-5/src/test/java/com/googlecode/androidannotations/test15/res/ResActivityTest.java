@@ -76,9 +76,19 @@ public class ResActivityTest {
     public void htmlResNotNull() {
         assertNotNull(activity.helloHtml);
     }
+    
+    @Test
+    public void htmlInjectedNotNull() {
+        assertNotNull(activity.htmlInjected);
+    }
 
     @Test
     public void htmlResCorrectlySet() {
         assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.helloHtml);
+    }
+    
+    @Test
+    public void htmlInjectedCorrectlySet() {
+        assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.htmlInjected);
     }
 }
