@@ -16,6 +16,8 @@
 package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -34,23 +36,27 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 		this.rClass = rClass;
 	}
 	
-	public String extractAnnotationQualifiedId(Element element) {
-		Integer idValue = extractAnnotationValue(element);
+	public List<String> extractAnnotationQualifiedIds(Element element) {
+		int [] idsValues = extractAnnotationValue(element);
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		String clickQualifiedId;
-
-		if (idValue.equals(Id.DEFAULT_VALUE)) {
+		List<String> clickQualifiedIds = new ArrayList<String>();
+		
+		if (idsValues.length == 1 && idsValues[0] == Id.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			int lastIndex = fieldName.lastIndexOf(actionName());
 			if (lastIndex != -1) {
 				fieldName = fieldName.substring(0, lastIndex);
 			}
-			clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
+			String clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName); 
+			clickQualifiedIds.add(clickQualifiedId);
 
 		} else {
-			clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
+			for (int idValue : idsValues) {
+				String clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
+				clickQualifiedIds.add(clickQualifiedId);
+			}
 		}
-		return clickQualifiedId;
+		return clickQualifiedIds;
 	}
 	
 	boolean containsIdValue(Integer idValue, Res res) {

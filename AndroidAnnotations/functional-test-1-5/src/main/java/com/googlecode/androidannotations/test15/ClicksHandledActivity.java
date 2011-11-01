@@ -31,6 +31,7 @@ public class ClicksHandledActivity extends Activity{
 	boolean extendedConventionButtonClicked;
 	boolean overridenConventionButtonClicked;
 	boolean unboundButtonClicked;
+	boolean multipleButtonsClicked;
 
 	@Click
 	public void conventionButton() {
@@ -59,6 +60,12 @@ public class ClicksHandledActivity extends Activity{
 	@Click
 	public void buttonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
+	}
+
+	@Click({R.id.button1, R.id.button2})
+	public void multpleButtonWithViewArgument(View viewArgument) {
+		this.viewArgument = viewArgument;
+		multipleButtonsClicked = true;
 	}
 	
 }

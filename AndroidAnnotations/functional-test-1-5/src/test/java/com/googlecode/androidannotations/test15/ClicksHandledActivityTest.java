@@ -88,5 +88,20 @@ public class ClicksHandledActivityTest {
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
 	}
 	
+	@Test
+	public void multipleButtonsClicked() {
+		assertThat(activity.multipleButtonsClicked).isFalse();
+
+		activity.findViewById(R.id.button1).performClick();		
+		assertThat(activity.multipleButtonsClicked).isTrue();
+		assertThat(activity.viewArgument).hasId(R.id.button1);
+		
+		activity.multipleButtonsClicked = false;
+		
+		activity.findViewById(R.id.button2).performClick();
+		assertThat(activity.multipleButtonsClicked).isTrue();
+		assertThat(activity.viewArgument).hasId(R.id.button2);
+	}
+	
 
 }

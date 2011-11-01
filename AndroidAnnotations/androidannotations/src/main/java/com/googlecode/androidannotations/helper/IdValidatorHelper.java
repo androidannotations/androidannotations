@@ -40,11 +40,27 @@ public class IdValidatorHelper extends ValidatorHelper {
 		idExists(element, res, true, valid);
 	}
 
-	public void idExists(Element element, Res res, boolean defaultUseName,
-			IsValid valid) {
+	public void idExists(Element element, Res res, boolean defaultUseName, IsValid valid) {
 
 		Integer idValue = annotationHelper.extractAnnotationValue(element);
 
+		idExists(element, res, defaultUseName, valid, idValue);
+	}
+	
+	public void idsExists(Element element, Res res, IsValid valid) {
+
+		int [] idsValues = annotationHelper.extractAnnotationValue(element);
+		if (idsValues[0] == Id.DEFAULT_VALUE) {
+			idExists(element, res, true, valid, idsValues[0]);
+		} else {
+			for (int idValue : idsValues) {
+				idExists(element, res, false, valid, idValue);
+			}
+		}
+	}
+
+	private void idExists(Element element, Res res, boolean defaultUseName,
+			IsValid valid, Integer idValue) {
 		if (idValue.equals(Id.DEFAULT_VALUE)) {
 			if (defaultUseName) {
 				String elementName = element.getSimpleName().toString();
@@ -81,45 +97,47 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void uniqueId(Element element, AnnotationElements validatedElements,
-			IsValid valid) {
+	public void uniqueId(Element element, AnnotationElements validatedElements, IsValid valid) {
+		
 		if (valid.isValid()) {
 			Element layoutElement = element.getEnclosingElement();
-			String annotationQualifiedId = idAnnotationHelper
-					.extractAnnotationQualifiedId(element);
+			List<String> annotationQualifiedIds = idAnnotationHelper.extractAnnotationQualifiedIds(element);
 
 			Set<? extends Element> annotatedElements = validatedElements
 					.getAnnotatedElements(annotationHelper.getTarget());
+			
 			for (Element uniqueCheckElement : annotatedElements) {
-				Element enclosingElement = uniqueCheckElement
-						.getEnclosingElement();
+				Element enclosingElement = uniqueCheckElement.getEnclosingElement();
+				
 				if (layoutElement.equals(enclosingElement)) {
-					String checkQualifiedId = idAnnotationHelper
-							.extractAnnotationQualifiedId(uniqueCheckElement);
-					if (annotationQualifiedId.equals(checkQualifiedId)) {
-						valid.invalidate();
-						String annotationSimpleId = annotationQualifiedId
-								.substring(annotationQualifiedId
-										.lastIndexOf('.') + 1);
-						annotationHelper.printAnnotationError(element,
-								"The id " + annotationSimpleId
-										+ " is already used on the following "
-										+ annotationHelper.annotationName()
-										+ " method: " + uniqueCheckElement);
-						return;
-					}
+					List<String> checkQualifiedIds = idAnnotationHelper.extractAnnotationQualifiedIds(uniqueCheckElement);
+					
+					for (String checkQualifiedId : checkQualifiedIds) {
+						for (String annotationQualifiedId : annotationQualifiedIds) {
+							
+							if (annotationQualifiedId.equals(checkQualifiedId)) {
+								valid.invalidate();
+								String annotationSimpleId = annotationQualifiedId
+										.substring(annotationQualifiedId.lastIndexOf('.') + 1);
+								annotationHelper.printAnnotationError(element,
+												"The id " + annotationSimpleId
+												+ " is already used on the following "
+												+ annotationHelper.annotationName()
+												+ " method: " + uniqueCheckElement);
+								return;
+							}
+						}
+					}					
 				}
 			}
 		}
 	}
 
-	public void idListenerMethod(Element element,
-			AnnotationElements validatedElements, IsValid valid) {
-
+	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
 
         enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
         
-		idExists(element, Res.ID, valid);
+		idsExists(element, Res.ID, valid);
 
 		isNotPrivate(element, valid);
 
