@@ -30,6 +30,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -50,6 +51,8 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultFl
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultInt;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultLong;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
+import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
+import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.validation.IsValid;
@@ -431,6 +434,44 @@ public class ValidatorHelper {
         
     }
 
+	public void isSharedPreference(Element element, AnnotationElements validatedElements, IsValid valid) {
+
+		TypeMirror type = element.asType();
+
+		/*
+		 * The type is not available yet because it has just been generated
+		 */
+		if (type instanceof ErrorType) {
+			String elementTypeName = type.toString();
+
+			boolean sharedPrefValidatedInRound = false;
+			if (elementTypeName.endsWith("_")) {
+				String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - 1);
+
+				Set<? extends Element> sharedPrefElements = validatedElements.getAnnotatedElements(SharedPref.class);
+
+				for (Element sharedPrefElement : sharedPrefElements) {
+					TypeElement sharedPrefTypeElement = (TypeElement) sharedPrefElement;
+
+					String sharedPrefQualifiedName = sharedPrefTypeElement.getQualifiedName().toString();
+
+					if (sharedPrefQualifiedName.endsWith(prefTypeName)) {
+						sharedPrefValidatedInRound = true;
+						break;
+					}
+				}
+			}
+
+			if (!sharedPrefValidatedInRound) {
+				valid.invalidate();
+			}
+
+		} else {
+			extendsType(element, SharedPreferencesHelper.class.getName(), valid);
+		}
+
+	}
+    
     public void extendsType(Element element, String typeQualifiedName, IsValid valid) {
         TypeMirror elementType = element.asType();
 
