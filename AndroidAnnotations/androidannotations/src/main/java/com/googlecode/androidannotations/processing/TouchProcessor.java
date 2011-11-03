@@ -24,11 +24,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -42,13 +39,12 @@ import com.sun.codemodel.JVar;
 
 /**
  * @author Pierre-Yves Ricau
+ * @author Mathieu Boniface
  */
-public class TouchProcessor implements ElementProcessor {
-
-    private final IRClass rClass;
+public class TouchProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
 
     public TouchProcessor(IRClass rClass) {
-        this.rClass = rClass;
+    	super(rClass);
     }
 
     @Override
@@ -69,7 +65,8 @@ public class TouchProcessor implements ElementProcessor {
 
         boolean hasItemParameter = parameters.size() == 2;
 
-        JFieldRef idRef = extractClickQualifiedId(element, holder);
+        Touch annotation = element.getAnnotation(Touch.class);
+        List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "Touched", holder);
 
         JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnTouchListener"));
         JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");
@@ -95,28 +92,13 @@ public class TouchProcessor implements ElementProcessor {
         if (hasItemParameter) {
             call.arg(viewParam);
         }
-
-        JBlock block = holder.afterSetContentView.body().block();
         
-        JInvocation findViewById = JExpr.invoke("findViewById");
+        for(JFieldRef idRef : idsRefs) {
+        	JBlock block = holder.afterSetContentView.body().block();
+        	JInvocation findViewById = JExpr.invoke("findViewById");
         
-        JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
-        block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnTouchListener").arg(JExpr._new(listenerClass));
-    }
-
-    private JFieldRef extractClickQualifiedId(Element element, EBeanHolder holder) {
-        Touch annotation = element.getAnnotation(Touch.class);
-        int idValue = annotation.value();
-        IRInnerClass rInnerClass = rClass.get(Res.ID);
-        if (idValue == Id.DEFAULT_VALUE) {
-            String fieldName = element.getSimpleName().toString();
-            int lastIndex = fieldName.lastIndexOf("Touch");
-            if (lastIndex != -1) {
-                fieldName = fieldName.substring(0, lastIndex);
-            }
-            return rInnerClass.getIdStaticRef(fieldName, holder);
-        } else {
-            return rInnerClass.getIdStaticRef(idValue, holder);
+        	JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+        	block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnTouchListener").arg(JExpr._new(listenerClass));
         }
     }
 
