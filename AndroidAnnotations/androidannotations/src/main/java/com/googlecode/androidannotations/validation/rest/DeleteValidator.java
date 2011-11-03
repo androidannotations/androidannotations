@@ -58,7 +58,7 @@ public class DeleteValidator implements ElementValidator {
 		
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
 		
-		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 		
 		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
 

@@ -27,7 +27,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.rest.Accept;
-import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.helper.RestAnnotationHelper;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
@@ -43,43 +42,88 @@ import com.sun.codemodel.JVar;
 
 public abstract class MethodProcessor implements ElementProcessor {
 
-	protected final RestImplementationsHolder restImplementationsHolder;
-	protected final RestAnnotationHelper restAnnotationHelper;
+	protected final RestImplementationsHolder	restImplementationsHolder;
+	protected final RestAnnotationHelper		restAnnotationHelper;
 
 	public MethodProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		this.restImplementationsHolder = restImplementationHolder;
 		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
 	}
 
-	protected void createGeneratedRestCallBlock(Element element, String url, Method restMethod, JClass expectedClass, JClass generatedReturnType, JCodeModel codeModel) {
+	protected void generateRestTemplateCallBlock(MethodProcessorHolder methodHolder) {
 
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
-		ExecutableElement executableElement = (ExecutableElement) element;
-		String methodName = executableElement.getSimpleName().toString();
+		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
+		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
+		
+		JClass expectedClass = methodHolder.getExpectedClass();
+		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
 
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		// create code model class
 		JMethod method;
-
-		if (generatedReturnType == null) {
+		String methodName = executableElement.getSimpleName().toString();
+		if (generatedReturnType == null && expectedClass == null) {
 			method = holder.restImplementationClass.method(JMod.PUBLIC, void.class, methodName);
 		} else {
-			method = holder.restImplementationClass.method(JMod.PUBLIC, generatedReturnType, methodName);
+			method = holder.restImplementationClass.method(JMod.PUBLIC, methodHolder.getGeneratedReturnType(), methodName);
 		}
-
 		method.annotate(Override.class);
 
 		JBlock body = method.body();
+
+		// exchange method call
 		JInvocation restCall = JExpr.invoke(holder.restTemplateField, "exchange");
 
-		// retrieve url place holder
-		List<String> urlVariables = restAnnotationHelper.extractUrlVariableNames(executableElement);
+		// add url param
+		restCall.arg(methodHolder.getUrl());
 
-		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) createGeneratedMethodParameters(method, parameters, holder);
+		JClass httpMethod = holder.refClass(ProcessorConstants.HTTP_METHOD);
+		// add method type param
+		restCall.arg(httpMethod.staticRef(getTarget().getSimpleName().toUpperCase()));
 
-		JClass hashMapClass = codeModel.ref(HashMap.class).narrow(String.class, Object.class);
+		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParametersVar(method, executableElement, holder);
+
+		// update method holder
+		methodHolder.setBody(body);
+		methodHolder.setMethodParams(methodParams);
+
+		JVar hashMapVar = generateHashMapVar(methodHolder);
+
+		restCall = addHttpEntityVar(restCall, methodHolder);
+		restCall = addResponseEntityArg(restCall, methodHolder);
+
+		// add hashMap param containing url variables
+		if (hashMapVar != null) {
+			restCall.arg(hashMapVar);
+		}
+		
+		restCall = addResultCallMethod(restCall, methodHolder);
+
+		boolean returnResult = generatedReturnType == null && expectedClass == null;
+		insertRestCallInBody(body, restCall, returnResult);
+	}
+
+	protected abstract JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder);
+
+	protected abstract JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder);
+
+	protected abstract JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder);
+	
+	private void insertRestCallInBody(JBlock body, JInvocation restCall, boolean returnResult) {
+		if (returnResult)
+			body.add(restCall);
+		else
+			body._return(restCall);
+	}
+	
+	private JVar generateHashMapVar(MethodProcessorHolder methodHolder) {
+		ExecutableElement element = (ExecutableElement) methodHolder.getElement();
+		JCodeModel codeModel = methodHolder.getCodeModel();
+		JBlock body = methodHolder.getBody();
+		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
 		JVar hashMapVar = null;
+		
+		// retrieve url place holder
+		List<String> urlVariables = restAnnotationHelper.extractUrlVariableNames(element);
+		JClass hashMapClass = codeModel.ref(HashMap.class).narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
 			hashMapVar = body.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
 
@@ -88,88 +132,82 @@ public abstract class MethodProcessor implements ElementProcessor {
 				methodParams.remove(urlVariable);
 			}
 		}
-
-		JClass httpEntity = holder.refClass(ProcessorConstants.HTTP_ENTITY);
-		JVar httpEntityVar;
-
-		JVar httpHeadersVar = null;
-		
-		
-		// Prepare Accept only for POST & GET 
-		if (restMethod.equals(Method.GET) || restMethod.equals(Method.POST)) {
-    		if (executableElement.getAnnotation(Accept.class) != null) {
-    			JClass httpHeaders = holder.refClass(ProcessorConstants.HTTP_HEADERS);
-    
-    			httpHeadersVar = body.decl(httpHeaders, "httpHeaders", JExpr._new(httpHeaders));
-    
-    			JClass collections = holder.refClass(ProcessorConstants.COLLECTIONS);
-    			JClass mediaType = holder.refClass(ProcessorConstants.MEDIA_TYPE);
-    
-    			JInvocation mediaTypeListParam = collections.staticInvoke("singletonList").arg(mediaType.staticRef("APPLICATION_JSON"));
-    			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
-    		}
-		}
-		
-
-        // order is important
-        restCall.arg(url);
-
-        JClass httpMethod = holder.refClass(ProcessorConstants.HTTP_METHOD);
-        restCall.arg(httpMethod.staticRef(restMethod.getValue()));
-
-		if (expectedClass != null) {
-
-		    if (httpHeadersVar != null) {
-    			// Object to send
-    			if (!methodParams.isEmpty()) {
-    				httpEntityVar = body.decl(httpEntity.narrow(expectedClass), "requestEntity", JExpr._new(httpEntity.narrow(expectedClass)).arg(methodParams.firstEntry().getValue()).arg(httpHeadersVar));
-    			} else {
-    				httpEntityVar = body.decl(httpEntity.narrow(expectedClass), "requestEntity", JExpr._new(httpEntity.narrow(expectedClass)).arg(httpHeadersVar));
-    			}
-    		} else {
-    			if (!methodParams.isEmpty()) {
-    				httpEntityVar = body.decl(httpEntity.narrow(Object.class), "requestEntity", JExpr._new(httpEntity.narrow(Object.class)).arg(methodParams.firstEntry().getValue()));
-    			} else {
-    				httpEntityVar = body.decl(httpEntity.narrow(Object.class), "requestEntity", JExpr._new(httpEntity.narrow(Object.class)).arg(JExpr._null()));
-    			}
-    		}
-            restCall.arg(httpEntityVar);
-            
-		} else {
-		    
-		    restCall.arg(JExpr._null());
-		    
-		}
-
-		if (expectedClass != null) {
-			restCall.arg(expectedClass.dotclass());
-		} else {
-			restCall.arg(JExpr._null());
-		}
-
-		if (hashMapVar != null) {
-			restCall.arg(hashMapVar);
-		}
-
-		if (restMethod.equals(Method.HEAD) || restMethod.equals(Method.OPTIONS)) {
-			restCall = JExpr.invoke(restCall, "getHeaders");
-			
-			if (restMethod.equals(Method.OPTIONS)) {
-	            restCall = JExpr.invoke(restCall, "getAllow");
-	        }
-		
-		} else if (expectedClass == generatedReturnType) {
-			restCall = JExpr.invoke(restCall, "getBody");
-		}
-
-		// Return or not
-		if (generatedReturnType == null && expectedClass == null)
-			body.add(restCall);
-		else
-			body._return(restCall);
+		return hashMapVar;
 	}
 
-	private Map<String, JVar> createGeneratedMethodParameters(JMethod method, List<? extends VariableElement> parameters, RestImplementationHolder holder) {
+	protected JVar generateHttpEntityVar(MethodProcessorHolder methodHolder) {
+		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
+		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
+		JClass httpEntity = holder.refClass(ProcessorConstants.HTTP_ENTITY);
+		JInvocation newHttpEntityVarCall;
+		JClass expectedClass = methodHolder.getExpectedClass();
+		
+		boolean hasEntitySentToServer = expectedClass != null;
+		if (hasEntitySentToServer) {
+			newHttpEntityVarCall = JExpr._new(httpEntity.narrow(expectedClass));
+		} else {
+			newHttpEntityVarCall = JExpr._new(httpEntity.narrow(Object.class));
+		}
+
+		JBlock body = methodHolder.getBody();
+		JVar httpHeadersVar = generateHttpHeadersVar(body, executableElement);
+		
+		boolean hasHeaders = httpHeadersVar != null;
+		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
+		if (hasHeaders) {
+			if (!methodParams.isEmpty()) {
+				newHttpEntityVarCall.arg(methodParams.firstEntry().getValue());
+			}
+			newHttpEntityVarCall.arg(httpHeadersVar);
+
+		} else {
+			if (!methodParams.isEmpty()) {
+				newHttpEntityVarCall.arg(methodParams.firstEntry().getValue());
+			} else {
+				newHttpEntityVarCall.arg(JExpr._null());
+			}
+		}
+
+		JVar httpEntityVar;
+		String httpEntityVarName = "requestEntity";
+		if (hasEntitySentToServer) {
+			httpEntityVar = body.decl(httpEntity.narrow(expectedClass), httpEntityVarName, newHttpEntityVarCall);
+		} else {
+			httpEntityVar = body.decl(httpEntity.narrow(Object.class), httpEntityVarName, newHttpEntityVarCall);
+		}
+
+		return httpEntityVar;
+	}
+	
+	protected abstract JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement);
+
+	protected JVar generateHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
+		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
+		JVar httpHeadersVar = null;
+
+		JClass httpHeadersClass = holder.refClass(ProcessorConstants.HTTP_HEADERS);
+		httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
+
+		JClass collectionsClass = holder.refClass(ProcessorConstants.COLLECTIONS);
+		JClass mediaTypeClass = holder.refClass(ProcessorConstants.MEDIA_TYPE);
+		String mediaType = retrieveAcceptAnnotationValue(executableElement);
+
+		JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticRef(mediaType));
+		body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
+
+		return httpHeadersVar;
+	}
+
+	private String retrieveAcceptAnnotationValue(ExecutableElement executableElement) {
+		Accept acceptAnnotation = executableElement.getAnnotation(Accept.class);
+		if (acceptAnnotation == null) {
+			acceptAnnotation = executableElement.getEnclosingElement().getAnnotation(Accept.class);
+		}
+		return acceptAnnotation.value().name();
+	}
+
+	private Map<String, JVar> generateMethodParametersVar(JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
 		TreeMap<String, JVar> methodParams = new TreeMap<String, JVar>();
 		for (VariableElement parameter : parameters) {
 			String paramName = parameter.getSimpleName().toString();

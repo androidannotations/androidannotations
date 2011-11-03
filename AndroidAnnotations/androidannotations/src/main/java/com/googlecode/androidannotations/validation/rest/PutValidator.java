@@ -58,7 +58,7 @@ public class PutValidator implements ElementValidator {
 		
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
 		
-		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 		
 		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);
 

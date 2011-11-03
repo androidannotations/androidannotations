@@ -9,11 +9,14 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Options;
-import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 
 public class OptionsProcessor extends MethodProcessor {
 
@@ -46,7 +49,30 @@ public class OptionsProcessor extends MethodProcessor {
 		String urlSuffix = optionsAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 		
-		createGeneratedRestCallBlock(executableElement, url, Method.OPTIONS, expectedClass, generatedReturnType, codeModel);
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
+	}
+
+	@Override
+	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		restCall = JExpr.invoke(restCall, "getHeaders");
+		restCall = JExpr.invoke(restCall, "getAllow");
+		
+		return restCall;
+	}
+
+	@Override
+	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall;
+	}
+
+	@Override
+	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall;
+	}
+
+	@Override
+	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
+		return generateHttpHeadersVar(body, executableElement);
 	}
 
 }

@@ -8,10 +8,13 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Head;
-import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 
 public class HeadProcessor extends MethodProcessor {
 
@@ -38,7 +41,27 @@ public class HeadProcessor extends MethodProcessor {
 		String urlSuffix = headAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 		
-		createGeneratedRestCallBlock(executableElement, url, Method.HEAD, expectedClass, expectedClass, codeModel);
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, expectedClass, codeModel));
+	}
+
+	@Override
+	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return JExpr.invoke(restCall, "getHeaders");
+	}
+
+	@Override
+	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall;
+	}
+
+	@Override
+	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall;
+	}
+
+	@Override
+	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
+		return generateHttpHeadersVar(body, executableElement);
 	}
 
 }

@@ -21,14 +21,18 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Get;
-import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 
 public class GetProcessor extends MethodProcessor {
 
@@ -49,25 +53,60 @@ public class GetProcessor extends MethodProcessor {
 
 		TypeMirror returnType = executableElement.getReturnType();
 
-		JClass generatedReturnType;
+		JClass generatedReturnType = null;
 		String returnTypeString = returnType.toString();
-		JClass expectedClass;
+		JClass expectedClass = null;
 
-		if (returnTypeString.startsWith(ProcessorConstants.RESPONSE_ENTITY)) {
-			DeclaredType declaredReturnedType = (DeclaredType) returnType;
-			TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
-			expectedClass = holder.refClass(typeParameter.toString());
-			generatedReturnType = holder.refClass(ProcessorConstants.RESPONSE_ENTITY).narrow(expectedClass);
-		} else {
-			generatedReturnType = holder.refClass(returnTypeString);
-			expectedClass = generatedReturnType;
+		if (returnType.getKind() != TypeKind.VOID) {
+			if (returnTypeString.startsWith(ProcessorConstants.RESPONSE_ENTITY)) {
+				DeclaredType declaredReturnedType = (DeclaredType) returnType;
+				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
+				expectedClass = holder.refClass(typeParameter.toString());
+				generatedReturnType = holder.refClass(ProcessorConstants.RESPONSE_ENTITY).narrow(expectedClass);
+			} else {
+				generatedReturnType = holder.refClass(returnTypeString);
+				expectedClass = generatedReturnType;
+			}
 		}
 
 		Get getAnnotation = element.getAnnotation(Get.class);
 		String urlSuffix = getAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
 
-		createGeneratedRestCallBlock(element, url, Method.GET, expectedClass, generatedReturnType, codeModel);
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
+	}
+
+	@Override
+	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		JClass expectedClass = methodHolder.getExpectedClass();
+		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
+		
+		if (expectedClass == generatedReturnType) {
+			restCall = JExpr.invoke(restCall, "getBody");
+		}
+
+		return restCall;
+	}
+
+	@Override
+	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall.arg(generateHttpEntityVar(methodHolder));
+	}
+
+	@Override
+	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		JClass expectedClass = methodHolder.getExpectedClass();
+		
+		if (expectedClass != null) {
+			return restCall.arg(expectedClass.dotclass());
+		} else {
+			return restCall.arg(JExpr._null());
+		}
+	}
+
+	@Override
+	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
+		return generateHttpHeadersVar(body, executableElement);
 	}
 
 }

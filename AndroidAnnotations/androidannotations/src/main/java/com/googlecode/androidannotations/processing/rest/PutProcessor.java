@@ -7,9 +7,12 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import com.googlecode.androidannotations.annotations.rest.Put;
-import com.googlecode.androidannotations.api.rest.Method;
 import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 
 public class PutProcessor extends MethodProcessor {
 
@@ -31,11 +34,30 @@ public class PutProcessor extends MethodProcessor {
 		Put putAnnotation = element.getAnnotation(Put.class);
 		String urlSuffix = putAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
-
 		
 		//TODO A tester impérativement !!
-		createGeneratedRestCallBlock(executableElement, url, Method.PUT, null, null, codeModel);
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, null, null, codeModel));
 		
 	}
 
+	@Override
+	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall;
+	}
+
+	@Override
+	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall.arg(generateHttpEntityVar(methodHolder));
+	}
+
+	@Override
+	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall.arg(JExpr._null());
+	}
+
+	@Override
+	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
+		return generateHttpHeadersVar(body, executableElement);
+	}
+	
 }
