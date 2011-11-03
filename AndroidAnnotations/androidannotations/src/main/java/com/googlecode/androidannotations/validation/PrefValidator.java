@@ -21,7 +21,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
-import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -49,7 +48,7 @@ public class PrefValidator implements ElementValidator {
 		
 	    validatorHelper.isNotPrivate(element, valid);
 	    
-	    validatorHelper.extendsType(element, SharedPreferencesHelper.class.getName(), valid);
+	    validatorHelper.isSharedPreference(element, validatedElements, valid);
 	    
 		return valid.isValid();
 	}
