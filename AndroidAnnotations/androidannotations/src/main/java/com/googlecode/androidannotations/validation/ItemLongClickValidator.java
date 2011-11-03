@@ -54,7 +54,7 @@ public class ItemLongClickValidator implements ElementValidator {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.voidOrBooleanReturnType(executableElement, valid);
+		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
 		validatorHelper.zeroOrOneParameter(executableElement, valid);
 

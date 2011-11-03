@@ -53,7 +53,7 @@ public class ItemSelectedValidator implements ElementValidator {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.voidReturnType(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.hasOneOrTwoParametersAndFirstIsBoolean(executableElement, valid);
 		

@@ -50,7 +50,7 @@ public class RunnableValidator implements ElementValidator {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.voidReturnType(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 		

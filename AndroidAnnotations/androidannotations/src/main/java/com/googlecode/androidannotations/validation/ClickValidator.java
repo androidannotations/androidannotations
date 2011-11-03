@@ -49,7 +49,7 @@ public class ClickValidator implements ElementValidator {
 		validatorHelper.idListenerMethod(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		validatorHelper.voidReturnType(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.zeroOrOneViewParameters(executableElement, valid);
 

@@ -295,7 +295,7 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void voidOrBooleanReturnType(ExecutableElement executableElement, IsValid valid) {
+	public void returnTypeIsVoidOrBoolean(ExecutableElement executableElement, IsValid valid) {
 		TypeMirror returnType = executableElement.getReturnType();
 
 		TypeKind returnKind = returnType.getKind();
@@ -306,7 +306,7 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void voidReturnType(ExecutableElement executableElement, IsValid valid) {
+	public void returnTypeIsVoid(ExecutableElement executableElement, IsValid valid) {
 		TypeMirror returnType = executableElement.getReturnType();
 
 		if (returnType.getKind() != TypeKind.VOID) {
