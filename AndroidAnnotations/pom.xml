@@ -133,6 +133,7 @@
             <exclude>**/R.java</exclude>
             <exclude>**/*_.java</exclude>
             <exclude>**/.factorypath</exclude>
+            <exclude>**/project.properties</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
         </configuration>
