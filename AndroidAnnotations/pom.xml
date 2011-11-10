@@ -2,6 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
   <groupId>com.googlecode.androidannotations</groupId>
   <artifactId>androidannotations-parent</artifactId>
   <version>2.2-SNAPSHOT</version>
@@ -23,14 +29,57 @@
 
   <developers>
     <developer>
-      <id>pierre-yves.ricau</id>
+      <id>py.ricau</id>
       <name>Pierre-Yves Ricau</name>
-      <email>py.ricau at gmail</email>
-      <url>http://cv.piwai.info</url>
+      <email>py.ricau@gmail.com</email>
+      <url>http://blog.piwai.info</url>
+      <organization>Siine Ltd</organization>
+      <organizationUrl>http://www.siine.com</organizationUrl>
       <roles>
-        <role>developer</role>
+        <role>Owner</role>
       </roles>
     </developer>
+    <developer>
+      <id>athomas.nc</id>
+      <name>Alexandre Thomas</name>
+      <email>athomas.nc@gmail.com</email>
+      <url>http://twitter.com/twikeuk</url>
+      <organization>eBusiness Information</organization>
+      <organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>      
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jzapata</id>
+      <name>Joan Zapata</name>
+      <email>jzapata@excilys.com</email>
+      <organization>eBusiness Information</organization>
+      <organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>      
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>bluepyth</id>
+      <name>Romain Sertelon</name>
+      <email>bluepyth@gmail.com</email>
+      <organization>eBusiness Information</organization>
+      <organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>mat.boniface</id>
+      <name>Mathieu Boniface	</name>
+      <email>mat.boniface@gmail.com</email>
+      <organization>eBusiness Information</organization>
+      <organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>    
   </developers>
 
   <properties>
@@ -141,21 +190,41 @@
     </plugins>
   </build>
 
-  <distributionManagement>
-    <repository>
-      <id>excilys-release</id>
-      <url>http://repository.excilys.com/content/repositories/releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>excilys-snapshot</id>
-      <url>http://repository.excilys.com/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <scm>
     <connection>scm:git:https://py.ricau@code.google.com/p/androidannotations</connection>
     <developerConnection>scm:git:https://py.ricau@code.google.com/p/androidannotations</developerConnection>
     <url>http://androidannotations.googlecode.com/git</url>
   </scm>
+  
+  <profiles>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
 
 </project>
