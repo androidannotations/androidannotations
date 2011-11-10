@@ -28,4 +28,7 @@ public interface SomePrefs {
 	
 	@DefaultInt(42)
 	int age();
+	
+	long lastUpdated();
+	
 }
