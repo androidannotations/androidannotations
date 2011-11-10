@@ -63,7 +63,7 @@ public class ClicksHandledActivity extends Activity{
 	}
 
 	@Click({R.id.button1, R.id.button2})
-	public void multpleButtonWithViewArgument(View viewArgument) {
+	public void multipleButtonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
 		multipleButtonsClicked = true;
 	}
