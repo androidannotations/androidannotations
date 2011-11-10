@@ -61,6 +61,8 @@ public class SharedPrefValidator implements ElementValidator {
                 boolean isPrefMethod = validatorHelper.isPrefMethod(memberElement);
                 if (isPrefMethod) {
                     validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement);
+                } else {
+                	valid.invalidate();
                 }
             }
         }
