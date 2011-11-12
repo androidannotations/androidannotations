@@ -28,6 +28,7 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.telephony.TelephonyManager;
 import android.text.ClipboardManager;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
@@ -83,6 +84,9 @@ public class ActivityWithServices extends Activity {
     
     @SystemService
     ClipboardManager clipboardManager;
+    
+    @SystemService
+    TelephonyManager telephonyManager;
 
     // TODO Test those for > 1.5 Android versions
     // UiModeManager uiModeManager;
