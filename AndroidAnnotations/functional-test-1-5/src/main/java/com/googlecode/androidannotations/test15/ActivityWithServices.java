@@ -24,6 +24,7 @@ import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
@@ -87,7 +88,40 @@ public class ActivityWithServices extends Activity {
     
     @SystemService
     TelephonyManager telephonyManager;
+    
+    @SystemService
+    AudioManager audioManager;
 
+    // API level 4
+    //@SystemService
+    //AccessibilityManager accessibilityManager;
+    
+    // API Level 5
+    //@SystemService
+    //AccountManager accountManager;
+    
+    //@SystemService
+    //WallpaperManager wallpaperManager;
+    
+    // API level 8
+    //@SystemService
+    //DropBoxManager dropBoxManager;
+    
+    //@SystemService
+    //DevicePolicyManager devicePolicyManager;
+    
+    // API level 9
+    //@SystemService
+    //StorageManager storageManager;
+    
+    // API level 10
+    //@SystemService
+    //NfcManager nfcManager;    
+    
+    // API level 12
+    //@SystemService
+    //UsbManager usbManager;
+    
     // TODO Test those for > 1.5 Android versions
     // UiModeManager uiModeManager;
     // DownloadManager downloadManager;

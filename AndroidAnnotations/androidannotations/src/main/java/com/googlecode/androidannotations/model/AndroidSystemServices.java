@@ -46,6 +46,15 @@ public class AndroidSystemServices {
         registeredServices.put("android.hardware.SensorManager", "android.content.Context.SENSOR_SERVICE");
         registeredServices.put("android.text.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE"); 
         registeredServices.put("android.telephony.TelephonyManager", "android.content.Context.TELEPHONY_SERVICE");        
+        registeredServices.put("android.media.AudioManager", "android.content.Context.AUDIO_SERVICE");
+        registeredServices.put("android.view.accessibility.AccessibilityManager", "android.content.Context.ACCESSIBILITY_SERVICE");
+        registeredServices.put("android.accounts.AccountManager", "android.content.Context.ACCOUNT_SERVICE");
+        registeredServices.put("android.app.WallpaperManager", "android.content.Context.WALLPAPER_SERVICE");
+        registeredServices.put("android.os.DropBoxManager", "android.content.Context.DROPBOX_SERVICE");
+        registeredServices.put("android.app.admin.DevicePolicyManager", "android.content.Context.DEVICE_POLICY_SERVICE");
+        registeredServices.put("android.os.storage.StorageManager", "android.content.Context.STORAGE_SERVICE");
+        registeredServices.put("android.nfc.NfcManager", "android.content.Context.NFC_SERVICE");
+        registeredServices.put("android.hardware.usb.UsbManager", "android.content.Context.USB_SERVICE");
     }
 
     public boolean contains(TypeMirror serviceType) {
