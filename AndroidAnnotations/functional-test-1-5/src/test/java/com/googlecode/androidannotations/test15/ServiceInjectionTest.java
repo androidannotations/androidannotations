@@ -45,6 +45,7 @@ public class ServiceInjectionTest {
     	assertThat(activity.inputMethodManager).isNotNull();
     	assertThat(activity.sensorManager).isNotNull();
     	assertThat(activity.telephonyManager).isNotNull();
+    	assertThat(activity.audioManager).isNotNull();
     }
     
     
