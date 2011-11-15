@@ -49,11 +49,13 @@ public class AndroidSystemServices {
         registeredServices.put("android.hardware.SensorManager", "android.content.Context.SENSOR_SERVICE");
         registeredServices.put("android.os.storage.StorageManager", "android.content.Context.STORAGE_SERVICE");
         registeredServices.put("android.telephony.TelephonyManager", "android.content.Context.TELEPHONY_SERVICE");        
+        registeredServices.put("android.view.textservice.TextServicesManager", "android.content.Context.TEXT_SERVICES_MANAGER_SERVICE");
         registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
         registeredServices.put("android.hardware.usb.UsbManager", "android.content.Context.USB_SERVICE");
         registeredServices.put("android.os.Vibrator", "android.content.Context.VIBRATOR_SERVICE");
         registeredServices.put("android.app.WallpaperManager", "android.content.Context.WALLPAPER_SERVICE");
         registeredServices.put("android.net.wifi.WifiManager", "android.content.Context.WIFI_SERVICE");
+        registeredServices.put("android.net.wifi.p2p.WifiP2pManager", "android.content.Context.WIFI_P2P_SERVICE");
         registeredServices.put("android.view.WindowManager", "android.content.Context.WINDOW_SERVICE");
     }
 

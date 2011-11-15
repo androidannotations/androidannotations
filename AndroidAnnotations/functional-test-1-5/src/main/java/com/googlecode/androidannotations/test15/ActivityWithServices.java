@@ -122,6 +122,13 @@ public class ActivityWithServices extends Activity {
     //@SystemService
     //UsbManager usbManager;
     
+    // API level 14
+    //@SystemService
+    //TextServicesManager textServicesManager;
+    
+    //@SystemService
+    //WifiP2pManager wifiP2pManager;
+    
     // TODO Test those for > 1.5 Android versions
     // UiModeManager uiModeManager;
     // DownloadManager downloadManager;
