@@ -28,33 +28,33 @@ public class AndroidSystemServices {
     private Map<String, String> registeredServices = new HashMap<String, String>();
 
     public AndroidSystemServices() {
-        registeredServices.put("android.view.WindowManager", "android.content.Context.WINDOW_SERVICE");
-        registeredServices.put("android.view.LayoutInflater", "android.content.Context.LAYOUT_INFLATER_SERVICE");
-        registeredServices.put("android.app.ActivityManager", "android.content.Context.ACTIVITY_SERVICE");
-        registeredServices.put("android.os.PowerManager", "android.content.Context.POWER_SERVICE");
-        registeredServices.put("android.app.AlarmManager", "android.content.Context.ALARM_SERVICE");
-        registeredServices.put("android.app.NotificationManager", "android.content.Context.NOTIFICATION_SERVICE");
-        registeredServices.put("android.app.KeyguardManager", "android.content.Context.KEYGUARD_SERVICE");
-        registeredServices.put("android.location.LocationManager", "android.content.Context.LOCATION_SERVICE");
-        registeredServices.put("android.app.SearchManager", "android.content.Context.SEARCH_SERVICE");
-        registeredServices.put("android.os.Vibrator", "android.content.Context.VIBRATOR_SERVICE");
-        registeredServices.put("android.net.ConnectivityManager", "android.content.Context.CONNECTIVITY_SERVICE");
-        registeredServices.put("android.net.wifi.WifiManager", "android.content.Context.WIFI_SERVICE");
-        registeredServices.put("android.view.inputmethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
-        registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
-        registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
+    	registeredServices.put("android.view.accessibility.AccessibilityManager", "android.content.Context.ACCESSIBILITY_SERVICE");
+    	registeredServices.put("android.accounts.AccountManager", "android.content.Context.ACCOUNT_SERVICE");
+    	registeredServices.put("android.app.ActivityManager", "android.content.Context.ACTIVITY_SERVICE");
+    	registeredServices.put("android.app.AlarmManager", "android.content.Context.ALARM_SERVICE");
+    	registeredServices.put("android.media.AudioManager", "android.content.Context.AUDIO_SERVICE");
+    	registeredServices.put("android.text.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE"); 
+    	registeredServices.put("android.net.ConnectivityManager", "android.content.Context.CONNECTIVITY_SERVICE");
+    	registeredServices.put("android.app.admin.DevicePolicyManager", "android.content.Context.DEVICE_POLICY_SERVICE");
+    	registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
+    	registeredServices.put("android.os.DropBoxManager", "android.content.Context.DROPBOX_SERVICE");
+    	registeredServices.put("android.view.inputmethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
+    	registeredServices.put("android.app.KeyguardManager", "android.content.Context.KEYGUARD_SERVICE");
+    	registeredServices.put("android.view.LayoutInflater", "android.content.Context.LAYOUT_INFLATER_SERVICE");
+    	registeredServices.put("android.location.LocationManager", "android.content.Context.LOCATION_SERVICE");
+    	registeredServices.put("android.nfc.NfcManager", "android.content.Context.NFC_SERVICE");
+    	registeredServices.put("android.app.NotificationManager", "android.content.Context.NOTIFICATION_SERVICE");
+    	registeredServices.put("android.os.PowerManager", "android.content.Context.POWER_SERVICE");
+    	registeredServices.put("android.app.SearchManager", "android.content.Context.SEARCH_SERVICE");
         registeredServices.put("android.hardware.SensorManager", "android.content.Context.SENSOR_SERVICE");
-        registeredServices.put("android.text.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE"); 
-        registeredServices.put("android.telephony.TelephonyManager", "android.content.Context.TELEPHONY_SERVICE");        
-        registeredServices.put("android.media.AudioManager", "android.content.Context.AUDIO_SERVICE");
-        registeredServices.put("android.view.accessibility.AccessibilityManager", "android.content.Context.ACCESSIBILITY_SERVICE");
-        registeredServices.put("android.accounts.AccountManager", "android.content.Context.ACCOUNT_SERVICE");
-        registeredServices.put("android.app.WallpaperManager", "android.content.Context.WALLPAPER_SERVICE");
-        registeredServices.put("android.os.DropBoxManager", "android.content.Context.DROPBOX_SERVICE");
-        registeredServices.put("android.app.admin.DevicePolicyManager", "android.content.Context.DEVICE_POLICY_SERVICE");
         registeredServices.put("android.os.storage.StorageManager", "android.content.Context.STORAGE_SERVICE");
-        registeredServices.put("android.nfc.NfcManager", "android.content.Context.NFC_SERVICE");
+        registeredServices.put("android.telephony.TelephonyManager", "android.content.Context.TELEPHONY_SERVICE");        
+        registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
         registeredServices.put("android.hardware.usb.UsbManager", "android.content.Context.USB_SERVICE");
+        registeredServices.put("android.os.Vibrator", "android.content.Context.VIBRATOR_SERVICE");
+        registeredServices.put("android.app.WallpaperManager", "android.content.Context.WALLPAPER_SERVICE");
+        registeredServices.put("android.net.wifi.WifiManager", "android.content.Context.WIFI_SERVICE");
+        registeredServices.put("android.view.WindowManager", "android.content.Context.WINDOW_SERVICE");
     }
 
     public boolean contains(TypeMirror serviceType) {
