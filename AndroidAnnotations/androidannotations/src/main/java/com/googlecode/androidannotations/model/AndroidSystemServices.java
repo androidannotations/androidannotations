@@ -35,6 +35,7 @@ public class AndroidSystemServices {
     	registeredServices.put("android.media.AudioManager", "android.content.Context.AUDIO_SERVICE");
     	registeredServices.put("android.text.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE"); 
     	registeredServices.put("android.net.ConnectivityManager", "android.content.Context.CONNECTIVITY_SERVICE");
+    	registeredServices.put("android.location.CountryDetector", "android.content.Context.COUNTRY_DETECTOR");
     	registeredServices.put("android.app.admin.DevicePolicyManager", "android.content.Context.DEVICE_POLICY_SERVICE");
     	registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
     	registeredServices.put("android.os.DropBoxManager", "android.content.Context.DROPBOX_SERVICE");
@@ -42,14 +43,19 @@ public class AndroidSystemServices {
     	registeredServices.put("android.app.KeyguardManager", "android.content.Context.KEYGUARD_SERVICE");
     	registeredServices.put("android.view.LayoutInflater", "android.content.Context.LAYOUT_INFLATER_SERVICE");
     	registeredServices.put("android.location.LocationManager", "android.content.Context.LOCATION_SERVICE");
+    	registeredServices.put("android.net.NetworkManagementService", "android.content.Context.NETWORKMANAGEMENT_SERVICE");
+    	registeredServices.put("android.net.NetworkPolicyManager", "android.content.Context.NETWORK_POLICY_SERVICE");
     	registeredServices.put("android.nfc.NfcManager", "android.content.Context.NFC_SERVICE");
     	registeredServices.put("android.app.NotificationManager", "android.content.Context.NOTIFICATION_SERVICE");
     	registeredServices.put("android.os.PowerManager", "android.content.Context.POWER_SERVICE");
     	registeredServices.put("android.app.SearchManager", "android.content.Context.SEARCH_SERVICE");
+    	registeredServices.put("android.appwidget.AppWidgetManager", "android.content.Context.APPWIDGET_SERVICE");
         registeredServices.put("android.hardware.SensorManager", "android.content.Context.SENSOR_SERVICE");
+        registeredServices.put("android.app.StatusBarManager", "android.content.Context.STATUS_BAR_SERVICE");
         registeredServices.put("android.os.storage.StorageManager", "android.content.Context.STORAGE_SERVICE");
         registeredServices.put("android.telephony.TelephonyManager", "android.content.Context.TELEPHONY_SERVICE");        
         registeredServices.put("android.view.textservice.TextServicesManager", "android.content.Context.TEXT_SERVICES_MANAGER_SERVICE");
+        registeredServices.put("android.net.ThrottleManager", "android.content.Context.THROTTLE_SERVICE");
         registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
         registeredServices.put("android.hardware.usb.UsbManager", "android.content.Context.USB_SERVICE");
         registeredServices.put("android.os.Vibrator", "android.content.Context.VIBRATOR_SERVICE");
