@@ -23,6 +23,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
 public class EBeanHolder {
@@ -40,6 +41,9 @@ public class EBeanHolder {
 
     private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
     public JFieldVar handler;
+    
+	public JSwitch onOptionsItemSelectedSwitch;
+	public JVar onOptionsItemSelectedItem;
 
     public JClass refClass(String fullyQualifiedClassName) {
 

@@ -28,4 +28,9 @@
     <item android:id="@+id/menu_share"
         android:title="Share"
       />
+    
+    <item android:id="@+id/menu_add"
+        android:title="Add"
+      />
+        
 </menu>

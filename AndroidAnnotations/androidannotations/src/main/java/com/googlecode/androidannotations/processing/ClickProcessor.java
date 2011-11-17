@@ -37,6 +37,7 @@ import com.sun.codemodel.JVar;
 
 /** 
  * @author Mathieu Boniface
+ * @author Pierre-Yves
  */
 public class ClickProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
 
