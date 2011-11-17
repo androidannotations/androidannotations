@@ -13,25 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.rclass;
+package com.googlecode.androidannotations.test15.menu;
 
+import android.app.Activity;
 
-public interface IRClass {
+import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.OptionsMenu;
+import com.googlecode.androidannotations.test15.R;
 
-	public enum Res {
-    	LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU;
-    	public String rName() {
-    		return toString().toLowerCase();
-    	}
-    }
-
-    IRInnerClass get(Res res);
-
-	final IRClass EMPTY_R_CLASS = new IRClass() {
-		@Override
-		public IRInnerClass get(Res res) {
-			return IRInnerClass.EMPTY_R_INNER_CLASS;
-		}
-	};
+@EActivity
+@OptionsMenu(R.menu.main)
+public class OptionsMenuActivity extends Activity {
+	
 
 }

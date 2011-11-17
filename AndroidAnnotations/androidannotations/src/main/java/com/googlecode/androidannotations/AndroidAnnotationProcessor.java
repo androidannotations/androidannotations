@@ -44,6 +44,7 @@ import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.LongClick;
+import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Touch;
@@ -100,6 +101,7 @@ import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
 import com.googlecode.androidannotations.processing.ItemSelectedProcessor;
 import com.googlecode.androidannotations.processing.LongClickProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
+import com.googlecode.androidannotations.processing.OptionsMenuProcessor;
 import com.googlecode.androidannotations.processing.PrefProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
 import com.googlecode.androidannotations.processing.RoboGuiceProcessor;
@@ -130,6 +132,7 @@ import com.googlecode.androidannotations.validation.ItemLongClickValidator;
 import com.googlecode.androidannotations.validation.ItemSelectedValidator;
 import com.googlecode.androidannotations.validation.LongClickValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
+import com.googlecode.androidannotations.validation.OptionsMenuValidator;
 import com.googlecode.androidannotations.validation.PrefValidator;
 import com.googlecode.androidannotations.validation.ResValidator;
 import com.googlecode.androidannotations.validation.RoboGuiceValidator;
@@ -191,7 +194,8 @@ import com.sun.codemodel.JCodeModel;
         Options.class, //
         Post.class, //
         Put.class,
-        FromHtml.class,
+        FromHtml.class, //
+        OptionsMenu.class, //
         HtmlRes.class})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
@@ -349,6 +353,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new PostValidator(processingEnv));
         modelValidator.register(new PutValidator(processingEnv));
         modelValidator.register(new AppValidator(processingEnv, androidManifest));
+        modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
         return modelValidator;
     }
 
@@ -390,7 +395,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelProcessor.register(new RestProcessor(restImplementationHolder));
         modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
         modelProcessor.register(new AppProcessor());
-
+        modelProcessor.register(new OptionsMenuProcessor(rClass));
         return modelProcessor;
     }
 
