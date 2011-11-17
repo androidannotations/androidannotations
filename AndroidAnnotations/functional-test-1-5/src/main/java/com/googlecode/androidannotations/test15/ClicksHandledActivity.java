@@ -42,7 +42,7 @@ public class ClicksHandledActivity extends Activity{
 	public void snakeCaseButton() {
 		snakeCaseButtonClicked = true;
 	}	
-
+	
 	@Click
 	public void extendedConventionButtonClicked() {
 		extendedConventionButtonClicked = true;

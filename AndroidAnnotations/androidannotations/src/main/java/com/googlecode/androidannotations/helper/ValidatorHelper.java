@@ -60,6 +60,7 @@ import com.googlecode.androidannotations.validation.IsValid;
 public class ValidatorHelper {
 
     private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
+    private static final String ANDROID_MENU_ITEM_QUALIFIED_NAME = "android.view.MenuItem";
     private static final String ANDROID_TEXT_VIEW_QUALIFIED_NAME = "android.widget.TextView";
     private static final String ANDROID_VIEWGROUP_QUALIFIED_NAME = "android.view.ViewGroup";
     private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
@@ -377,6 +378,11 @@ public class ValidatorHelper {
     public void zeroOrOneViewParameters(ExecutableElement executableElement, IsValid valid) {
         zeroOrOneSpecificParameter(executableElement, ANDROID_VIEW_QUALIFIED_NAME, valid);
     }
+    
+    public void zeroOrOneMenuItemParameters(ExecutableElement executableElement, IsValid valid) {
+        zeroOrOneSpecificParameter(executableElement, ANDROID_MENU_ITEM_QUALIFIED_NAME, valid);
+    }
+    
     
     public void zeroOrOneSpecificParameter(ExecutableElement executableElement, String parameterTypeQualifiedName, IsValid valid) {
 

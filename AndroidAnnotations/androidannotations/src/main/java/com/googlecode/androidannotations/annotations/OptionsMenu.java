@@ -13,25 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.rclass;
+package com.googlecode.androidannotations.annotations;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface IRClass {
-
-	public enum Res {
-    	LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU;
-    	public String rName() {
-    		return toString().toLowerCase();
-    	}
-    }
-
-    IRInnerClass get(Res res);
-
-	final IRClass EMPTY_R_CLASS = new IRClass() {
-		@Override
-		public IRInnerClass get(Res res) {
-			return IRInnerClass.EMPTY_R_INNER_CLASS;
-		}
-	};
-
+/**
+ * Should be used on Activity classes to set the id of the options menu.
+ * 
+ * The activity must be annotated with {@link EActivity}.
+ * 
+ * The annotation value should be one of R.menu.* fields.
+ * 
+ */
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
+public @interface OptionsMenu {
+	int value();
 }

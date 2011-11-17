@@ -39,29 +39,33 @@ public class IdValidatorHelper extends ValidatorHelper {
 	public void idExists(Element element, Res res, IsValid valid) {
 		idExists(element, res, true, valid);
 	}
-
+	
 	public void idExists(Element element, Res res, boolean defaultUseName, IsValid valid) {
+		idExists(element, res, defaultUseName, true, valid);
+	}
+
+	public void idExists(Element element, Res res, boolean defaultUseName, boolean allowDefault, IsValid valid) {
 
 		Integer idValue = annotationHelper.extractAnnotationValue(element);
 
-		idExists(element, res, defaultUseName, valid, idValue);
+		idExists(element, res, defaultUseName, allowDefault, valid, idValue);
 	}
 	
 	public void idsExists(Element element, Res res, IsValid valid) {
 
 		int [] idsValues = annotationHelper.extractAnnotationValue(element);
 		if (idsValues[0] == Id.DEFAULT_VALUE) {
-			idExists(element, res, true, valid, idsValues[0]);
+			idExists(element, res, true, true, valid, idsValues[0]);
 		} else {
 			for (int idValue : idsValues) {
-				idExists(element, res, false, valid, idValue);
+				idExists(element, res, false, true, valid, idValue);
 			}
 		}
 	}
 
-	private void idExists(Element element, Res res, boolean defaultUseName,
+	private void idExists(Element element, Res res, boolean defaultUseName, boolean allowDefault,
 			IsValid valid, Integer idValue) {
-		if (idValue.equals(Id.DEFAULT_VALUE)) {
+		if (allowDefault && idValue.equals(Id.DEFAULT_VALUE)) {
 			if (defaultUseName) {
 				String elementName = element.getSimpleName().toString();
 				int lastIndex = elementName.lastIndexOf(annotationHelper
