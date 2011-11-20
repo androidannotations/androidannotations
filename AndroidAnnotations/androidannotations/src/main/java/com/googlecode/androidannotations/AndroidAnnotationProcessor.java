@@ -49,6 +49,7 @@ import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Touch;
+import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
@@ -110,6 +111,7 @@ import com.googlecode.androidannotations.processing.RoboGuiceProcessor;
 import com.googlecode.androidannotations.processing.SharedPrefProcessor;
 import com.googlecode.androidannotations.processing.SystemServiceProcessor;
 import com.googlecode.androidannotations.processing.TouchProcessor;
+import com.googlecode.androidannotations.processing.TraceProcessor;
 import com.googlecode.androidannotations.processing.TransactionalProcessor;
 import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
@@ -143,6 +145,7 @@ import com.googlecode.androidannotations.validation.RunnableValidator;
 import com.googlecode.androidannotations.validation.SharedPrefValidator;
 import com.googlecode.androidannotations.validation.SystemServiceValidator;
 import com.googlecode.androidannotations.validation.TouchValidator;
+import com.googlecode.androidannotations.validation.TraceValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewByIdValidator;
 import com.googlecode.androidannotations.validation.rest.DeleteValidator;
@@ -196,11 +199,12 @@ import com.sun.codemodel.JCodeModel;
         Head.class, //
         Options.class, //
         Post.class, //
-        Put.class,
+        Put.class, //
         FromHtml.class, //
         OptionsMenu.class, //
         OptionsItem.class, //
-        HtmlRes.class})
+        HtmlRes.class, //
+        Trace.class})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
@@ -359,6 +363,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new AppValidator(processingEnv, androidManifest));
         modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
         modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
+        modelValidator.register(new TraceValidator(processingEnv));
         return modelValidator;
     }
 
@@ -402,6 +407,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelProcessor.register(new AppProcessor());
         modelProcessor.register(new OptionsMenuProcessor(rClass));
         modelProcessor.register(new OptionsItemProcessor(rClass));
+        modelProcessor.register(new TraceProcessor());
         return modelProcessor;
     }
 
