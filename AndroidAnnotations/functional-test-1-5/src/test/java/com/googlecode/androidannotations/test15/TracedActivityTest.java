@@ -35,30 +35,38 @@ public class TracedActivityTest {
     	assertThat(activity.tracedMethodCalled).isFalse();
     	activity.tracedMethod(null, null);
     	assertThat(activity.tracedMethodCalled).isTrue();
-    	
+
     	assertThat(activity.voidTracedMethodCalled).isFalse();
     	activity.voidTracedMethod(null, null);
     	assertThat(activity.voidTracedMethodCalled).isTrue();
-    	
+
     	assertThat(activity.voidTracedMethodDebugCalled).isFalse();
     	activity.voidTracedMethodDebug();
     	assertThat(activity.voidTracedMethodDebugCalled).isTrue();
-    	
+
     	assertThat(activity.voidTracedMethodErrorCalled).isFalse();
     	activity.voidTracedMethodError();
     	assertThat(activity.voidTracedMethodErrorCalled).isTrue();
-    	
+
     	assertThat(activity.voidTracedMethodInfoCalled).isFalse();
     	activity.voidTracedMethodInfo();
     	assertThat(activity.voidTracedMethodInfoCalled).isTrue();
-    	
+
     	assertThat(activity.voidTracedMethodVerboseCalled).isFalse();
     	activity.voidTracedMethodVerbose();
     	assertThat(activity.voidTracedMethodVerboseCalled).isTrue();
-    	
+
     	assertThat(activity.voidTracedMethodWarnCalled).isFalse();
     	activity.voidTracedMethodWarn();
     	assertThat(activity.voidTracedMethodWarnCalled).isTrue();
+
+        assertThat(activity.overLoaddedMethodInt).isFalse();
+        activity.overLoaddedMethod(0);
+        assertThat(activity.overLoaddedMethodInt).isTrue();
+
+        assertThat(activity.overLoaddedMethodIntFLoat).isFalse();
+        activity.overLoaddedMethod(0, 0f);
+        assertThat(activity.overLoaddedMethodIntFLoat).isTrue();
     }
     
     

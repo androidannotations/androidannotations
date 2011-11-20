@@ -36,6 +36,9 @@ public class TracedActivity extends Activity {
 	public boolean voidTracedMethodWarnCalled = false;
 	public boolean voidTracedMethodErrorCalled = false;
 	public boolean voidTracedMethodInfoCalled = false;
+	public boolean overLoaddedMethodInt = false;
+	public boolean overLoaddedMethodIntFLoat = false;
+
 	
 	@Trace
 	Object tracedMethod(List<Map<String, List<Set<Void>>>> param1, Void param2) throws IOException {
@@ -73,4 +76,13 @@ public class TracedActivity extends Activity {
 		voidTracedMethodInfoCalled = true;
 	}
 
+	@Trace
+	void overLoaddedMethod(int x) {
+		overLoaddedMethodInt = true;
+	}
+
+	@Trace
+	void overLoaddedMethod(int x, float f) {
+		overLoaddedMethodIntFLoat = true;
+	}
 }
