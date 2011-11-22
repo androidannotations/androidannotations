@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.helper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;
@@ -25,7 +26,7 @@ import javax.tools.Diagnostic;
 public class TimeStats {
 
 	private final Map<String, Long> measures = new HashMap<String, Long>();
-	private final Map<String, Long> durations = new HashMap<String, Long>();
+	private final Map<Long, String> durations = new TreeMap<Long, String>();
 	
 	private Messager messager;
 
@@ -39,7 +40,7 @@ public class TimeStats {
 		if (start != null) {
 			long end = System.currentTimeMillis();
 			Long duration = end - start;
-			durations.put(key, duration);
+			durations.put(duration, key);
 		}
 	}
 
@@ -48,11 +49,11 @@ public class TimeStats {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Time measurements: ");
-		for (Entry<String, Long> entry : durations.entrySet()) {
+		for (Entry<Long, String> entry : durations.entrySet()) {
 			sb.append("[") //
-					.append(entry.getKey()) //
-					.append(" = ") //
 					.append(entry.getValue()) //
+					.append(" = ") //
+					.append(entry.getKey()) //
 					.append(" ms], ");
 		}
 
