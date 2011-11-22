@@ -40,10 +40,12 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.FromHtml;
+import com.googlecode.androidannotations.annotations.Fullscreen;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.LongClick;
+import com.googlecode.androidannotations.annotations.NoTitle;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.RoboGuice;
@@ -97,11 +99,13 @@ import com.googlecode.androidannotations.processing.EActivityProcessor;
 import com.googlecode.androidannotations.processing.EViewGroupProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
 import com.googlecode.androidannotations.processing.FromHtmlProcessor;
+import com.googlecode.androidannotations.processing.FullscreenProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
 import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
 import com.googlecode.androidannotations.processing.ItemSelectedProcessor;
 import com.googlecode.androidannotations.processing.LongClickProcessor;
 import com.googlecode.androidannotations.processing.ModelProcessor;
+import com.googlecode.androidannotations.processing.NoTitleProcessor;
 import com.googlecode.androidannotations.processing.OptionsItemProcessor;
 import com.googlecode.androidannotations.processing.OptionsMenuProcessor;
 import com.googlecode.androidannotations.processing.PrefProcessor;
@@ -129,11 +133,13 @@ import com.googlecode.androidannotations.validation.EActivityValidator;
 import com.googlecode.androidannotations.validation.EViewGroupValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
 import com.googlecode.androidannotations.validation.FromHtmlValidator;
+import com.googlecode.androidannotations.validation.FullscreenValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
 import com.googlecode.androidannotations.validation.ItemLongClickValidator;
 import com.googlecode.androidannotations.validation.ItemSelectedValidator;
 import com.googlecode.androidannotations.validation.LongClickValidator;
 import com.googlecode.androidannotations.validation.ModelValidator;
+import com.googlecode.androidannotations.validation.NoTitleValidator;
 import com.googlecode.androidannotations.validation.OptionsItemValidator;
 import com.googlecode.androidannotations.validation.OptionsMenuValidator;
 import com.googlecode.androidannotations.validation.PrefValidator;
@@ -200,7 +206,10 @@ import com.sun.codemodel.JCodeModel;
         FromHtml.class, //
         OptionsMenu.class, //
         OptionsItem.class, //
-        HtmlRes.class})
+        HtmlRes.class, //
+        NoTitle.class, //
+        Fullscreen.class //
+})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
@@ -359,6 +368,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelValidator.register(new AppValidator(processingEnv, androidManifest));
         modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
         modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
+        modelValidator.register(new NoTitleValidator(processingEnv));
+        modelValidator.register(new FullscreenValidator(processingEnv));
         return modelValidator;
     }
 
@@ -402,6 +413,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
         modelProcessor.register(new AppProcessor());
         modelProcessor.register(new OptionsMenuProcessor(rClass));
         modelProcessor.register(new OptionsItemProcessor(rClass));
+        modelProcessor.register(new NoTitleProcessor());
+        modelProcessor.register(new FullscreenProcessor());
         return modelProcessor;
     }
 
