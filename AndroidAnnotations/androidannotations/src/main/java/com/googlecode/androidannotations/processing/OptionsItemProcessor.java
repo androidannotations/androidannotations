@@ -34,7 +34,6 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
