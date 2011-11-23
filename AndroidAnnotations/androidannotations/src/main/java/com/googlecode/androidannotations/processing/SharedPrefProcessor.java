@@ -60,184 +60,184 @@ import com.sun.codemodel.JVar;
 
 public class SharedPrefProcessor extends AnnotationHelper implements ElementProcessor {
 
-    private static class EditorFieldHolder {
-        public final Class<?> fieldClass;
-        public final String fieldMethodName;
+	private static class EditorFieldHolder {
+		public final Class<?> fieldClass;
+		public final String fieldMethodName;
 
-        public EditorFieldHolder(Class<?> fieldClass, String fieldMethodName) {
-            this.fieldClass = fieldClass;
-            this.fieldMethodName = fieldMethodName;
-        }
-    }
+		public EditorFieldHolder(Class<?> fieldClass, String fieldMethodName) {
+			this.fieldClass = fieldClass;
+			this.fieldMethodName = fieldMethodName;
+		}
+	}
 
-    private static final Map<String, EditorFieldHolder> EDITOR_FIELD_BY_TYPE = new HashMap<String, EditorFieldHolder>() {
-        private static final long serialVersionUID = 1L;
-        {
-            put("boolean", new EditorFieldHolder(BooleanPrefEditorField.class, "booleanField"));
-            put("float", new EditorFieldHolder(FloatPrefEditorField.class, "floatField"));
-            put("int", new EditorFieldHolder(IntPrefEditorField.class, "intField"));
-            put("long", new EditorFieldHolder(LongPrefEditorField.class, "longField"));
-            put("java.lang.String", new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
-        }
-    };
+	private static final Map<String, EditorFieldHolder> EDITOR_FIELD_BY_TYPE = new HashMap<String, EditorFieldHolder>() {
+		private static final long serialVersionUID = 1L;
+		{
+			put("boolean", new EditorFieldHolder(BooleanPrefEditorField.class, "booleanField"));
+			put("float", new EditorFieldHolder(FloatPrefEditorField.class, "floatField"));
+			put("int", new EditorFieldHolder(IntPrefEditorField.class, "intField"));
+			put("long", new EditorFieldHolder(LongPrefEditorField.class, "longField"));
+			put("java.lang.String", new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
+		}
+	};
 
-    public SharedPrefProcessor(ProcessingEnvironment processingEnv) {
-        super(processingEnv);
-    }
+	public SharedPrefProcessor(ProcessingEnvironment processingEnv) {
+		super(processingEnv);
+	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return SharedPref.class;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return SharedPref.class;
+	}
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-        TypeElement typeElement = (TypeElement) element;
+		TypeElement typeElement = (TypeElement) element;
 
-        String interfaceQualifiedName = typeElement.getQualifiedName().toString();
-        String interfaceSimpleName = typeElement.getSimpleName().toString();
+		String interfaceQualifiedName = typeElement.getQualifiedName().toString();
+		String interfaceSimpleName = typeElement.getSimpleName().toString();
 
-        String helperQualifiedName = interfaceQualifiedName + ModelConstants.GENERATION_SUFFIX;
-        JDefinedClass helperClass = codeModel._class(JMod.PUBLIC | JMod.FINAL, helperQualifiedName, ClassType.CLASS);
+		String helperQualifiedName = interfaceQualifiedName + ModelConstants.GENERATION_SUFFIX;
+		JDefinedClass helperClass = codeModel._class(JMod.PUBLIC | JMod.FINAL, helperQualifiedName, ClassType.CLASS);
 
-        helperClass._extends(SharedPreferencesHelper.class);
+		helperClass._extends(SharedPreferencesHelper.class);
 
-        // Extracting valid methods
-        List<? extends Element> members = typeElement.getEnclosedElements();
-        List<ExecutableElement> methods = ElementFilter.methodsIn(members);
-        List<ExecutableElement> validMethods = new ArrayList<ExecutableElement>();
-        for (ExecutableElement method : methods) {
-            validMethods.add(method);
-        }
+		// Extracting valid methods
+		List<? extends Element> members = typeElement.getEnclosedElements();
+		List<ExecutableElement> methods = ElementFilter.methodsIn(members);
+		List<ExecutableElement> validMethods = new ArrayList<ExecutableElement>();
+		for (ExecutableElement method : methods) {
+			validMethods.add(method);
+		}
 
-        // Static editor class
-        JDefinedClass editorClass = helperClass._class(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
+		// Static editor class
+		JDefinedClass editorClass = helperClass._class(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
 
-        editorClass._extends(codeModel.ref(EditorHelper.class).narrow(editorClass));
+		editorClass._extends(codeModel.ref(EditorHelper.class).narrow(editorClass));
 
-        // Editor constructor
-        JMethod editorConstructor = editorClass.constructor(JMod.NONE);
-        JClass sharedPreferencesClass = codeModel.ref("android.content.SharedPreferences");
-        JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
-        editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
+		// Editor constructor
+		JMethod editorConstructor = editorClass.constructor(JMod.NONE);
+		JClass sharedPreferencesClass = codeModel.ref("android.content.SharedPreferences");
+		JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
+		editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
 
-        // Editor field methods
-        for (ExecutableElement method : validMethods) {
-            String returnType = method.getReturnType().toString();
-            EditorFieldHolder editorFieldHolder = EDITOR_FIELD_BY_TYPE.get(returnType);
-            JClass editorFieldClass = codeModel.ref(editorFieldHolder.fieldClass);
-            String fieldName = method.getSimpleName().toString();
-            JMethod editorFieldMethod = editorClass.method(JMod.PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
-            editorFieldMethod.body()._return(JExpr.invoke(editorFieldHolder.fieldMethodName).arg(fieldName));
-        }
+		// Editor field methods
+		for (ExecutableElement method : validMethods) {
+			String returnType = method.getReturnType().toString();
+			EditorFieldHolder editorFieldHolder = EDITOR_FIELD_BY_TYPE.get(returnType);
+			JClass editorFieldClass = codeModel.ref(editorFieldHolder.fieldClass);
+			String fieldName = method.getSimpleName().toString();
+			JMethod editorFieldMethod = editorClass.method(JMod.PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
+			editorFieldMethod.body()._return(JExpr.invoke(editorFieldHolder.fieldMethodName).arg(fieldName));
+		}
 
-        // Helper constructor
-        JClass activityClass = codeModel.ref("android.app.Activity");
-        JClass contextClass = codeModel.ref("android.content.Context");
+		// Helper constructor
+		JClass activityClass = codeModel.ref("android.app.Activity");
+		JClass contextClass = codeModel.ref("android.content.Context");
 
-        SharedPref sharedPrefAnnotation = typeElement.getAnnotation(SharedPref.class);
-        Scope scope = sharedPrefAnnotation.value();
-        int mode = sharedPrefAnnotation.mode();
-        JMethod constructor = helperClass.constructor(JMod.PUBLIC);
-        switch (scope) {
-        case ACTIVITY_DEFAULT: {
-            JVar activityParam = constructor.param(activityClass, "activity");
-            constructor.body() //
-                    .invoke("super") //
-                    .arg(activityParam.invoke("getPreferences") //
-                            .arg(JExpr.lit(mode)));
-            break;
-        }
-        case ACTIVITY: {
-            JVar activityParam = constructor.param(activityClass, "activity");
-            constructor.body().invoke("super") //
-                    .arg(activityParam.invoke("getSharedPreferences") //
-                            .arg(activityParam.invoke("getLocalClassName") //
-                                    .plus(JExpr.lit("_" + interfaceSimpleName))) //
-                            .arg(JExpr.lit(mode)));
-            break;
-        }
-        case UNIQUE: {
-            JVar contextParam = constructor.param(contextClass, "context");
-            constructor.body() //
-                    .invoke("super") //
-                    .arg(contextParam.invoke("getSharedPreferences") //
-                            .arg(JExpr.lit(interfaceSimpleName)) //
-                            .arg(JExpr.lit(mode)));
-            break;
-        }
-        case APPLICATION_DEFAULT: {
-            JClass preferenceManagerClass = codeModel.ref("android.preference.PreferenceManager");
-            JVar contextParam = constructor.param(contextClass, "context");
-            constructor.body() //
-                    .invoke("super") //
-                    .arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
-                            .arg(contextParam));
-            break;
-        }
-        }
+		SharedPref sharedPrefAnnotation = typeElement.getAnnotation(SharedPref.class);
+		Scope scope = sharedPrefAnnotation.value();
+		int mode = sharedPrefAnnotation.mode();
+		JMethod constructor = helperClass.constructor(JMod.PUBLIC);
+		switch (scope) {
+		case ACTIVITY_DEFAULT: {
+			JVar activityParam = constructor.param(activityClass, "activity");
+			constructor.body() //
+					.invoke("super") //
+					.arg(activityParam.invoke("getPreferences") //
+							.arg(JExpr.lit(mode)));
+			break;
+		}
+		case ACTIVITY: {
+			JVar activityParam = constructor.param(activityClass, "activity");
+			constructor.body().invoke("super") //
+					.arg(activityParam.invoke("getSharedPreferences") //
+							.arg(activityParam.invoke("getLocalClassName") //
+									.plus(JExpr.lit("_" + interfaceSimpleName))) //
+							.arg(JExpr.lit(mode)));
+			break;
+		}
+		case UNIQUE: {
+			JVar contextParam = constructor.param(contextClass, "context");
+			constructor.body() //
+					.invoke("super") //
+					.arg(contextParam.invoke("getSharedPreferences") //
+							.arg(JExpr.lit(interfaceSimpleName)) //
+							.arg(JExpr.lit(mode)));
+			break;
+		}
+		case APPLICATION_DEFAULT: {
+			JClass preferenceManagerClass = codeModel.ref("android.preference.PreferenceManager");
+			JVar contextParam = constructor.param(contextClass, "context");
+			constructor.body() //
+					.invoke("super") //
+					.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
+							.arg(contextParam));
+			break;
+		}
+		}
 
-        // Helper edit method
-        JMethod editMethod = helperClass.method(JMod.PUBLIC, editorClass, "edit");
-        editMethod.body()._return(JExpr._new(editorClass).arg(JExpr.invoke("getSharedPreferences")));
+		// Helper edit method
+		JMethod editMethod = helperClass.method(JMod.PUBLIC, editorClass, "edit");
+		editMethod.body()._return(JExpr._new(editorClass).arg(JExpr.invoke("getSharedPreferences")));
 
-        // Helper field methods
-        for (ExecutableElement method : validMethods) {
-            String returnType = method.getReturnType().toString();
-            String fieldName = method.getSimpleName().toString();
-            if ("boolean".equals(returnType)) {
-                JExpression defaultValue;
-                DefaultBoolean defaultAnnotation = method.getAnnotation(DefaultBoolean.class);
-                if (defaultAnnotation != null) {
-                    defaultValue = JExpr.lit(defaultAnnotation.value());
-                } else {
-                    defaultValue = JExpr.lit(false);
-                }
-                addFieldHelperMethod(helperClass, fieldName, defaultValue, BooleanPrefField.class, "booleanField");
-            } else if ("float".equals(returnType)) {
-                JExpression defaultValue;
-                DefaultFloat defaultAnnotation = method.getAnnotation(DefaultFloat.class);
-                if (defaultAnnotation != null) {
-                    defaultValue = JExpr.lit(defaultAnnotation.value());
-                } else {
-                    defaultValue = JExpr.lit(0f);
-                }
-                addFieldHelperMethod(helperClass, fieldName, defaultValue, FloatPrefField.class, "floatField");
-            } else if ("int".equals(returnType)) {
-                JExpression defaultValue;
-                DefaultInt defaultAnnotation = method.getAnnotation(DefaultInt.class);
-                if (defaultAnnotation != null) {
-                    defaultValue = JExpr.lit(defaultAnnotation.value());
-                } else {
-                    defaultValue = JExpr.lit(0);
-                }
-                addFieldHelperMethod(helperClass, fieldName, defaultValue, IntPrefField.class, "intField");
-            } else if ("long".equals(returnType)) {
-                JExpression defaultValue;
-                DefaultLong defaultAnnotation = method.getAnnotation(DefaultLong.class);
-                if (defaultAnnotation != null) {
-                    defaultValue = JExpr.lit(defaultAnnotation.value());
-                } else {
-                    defaultValue = JExpr.lit(0l);
-                }
-                addFieldHelperMethod(helperClass, fieldName, defaultValue, LongPrefField.class, "longField");
-            } else if ("java.lang.String".equals(returnType)) {
-                JExpression defaultValue;
-                DefaultString defaultAnnotation = method.getAnnotation(DefaultString.class);
-                if (defaultAnnotation != null) {
-                    defaultValue = JExpr.lit(defaultAnnotation.value());
-                } else {
-                    defaultValue = JExpr.lit("");
-                }
-                addFieldHelperMethod(helperClass, fieldName, defaultValue, StringPrefField.class, "stringField");
-            }
-        }
+		// Helper field methods
+		for (ExecutableElement method : validMethods) {
+			String returnType = method.getReturnType().toString();
+			String fieldName = method.getSimpleName().toString();
+			if ("boolean".equals(returnType)) {
+				JExpression defaultValue;
+				DefaultBoolean defaultAnnotation = method.getAnnotation(DefaultBoolean.class);
+				if (defaultAnnotation != null) {
+					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else {
+					defaultValue = JExpr.lit(false);
+				}
+				addFieldHelperMethod(helperClass, fieldName, defaultValue, BooleanPrefField.class, "booleanField");
+			} else if ("float".equals(returnType)) {
+				JExpression defaultValue;
+				DefaultFloat defaultAnnotation = method.getAnnotation(DefaultFloat.class);
+				if (defaultAnnotation != null) {
+					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else {
+					defaultValue = JExpr.lit(0f);
+				}
+				addFieldHelperMethod(helperClass, fieldName, defaultValue, FloatPrefField.class, "floatField");
+			} else if ("int".equals(returnType)) {
+				JExpression defaultValue;
+				DefaultInt defaultAnnotation = method.getAnnotation(DefaultInt.class);
+				if (defaultAnnotation != null) {
+					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else {
+					defaultValue = JExpr.lit(0);
+				}
+				addFieldHelperMethod(helperClass, fieldName, defaultValue, IntPrefField.class, "intField");
+			} else if ("long".equals(returnType)) {
+				JExpression defaultValue;
+				DefaultLong defaultAnnotation = method.getAnnotation(DefaultLong.class);
+				if (defaultAnnotation != null) {
+					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else {
+					defaultValue = JExpr.lit(0l);
+				}
+				addFieldHelperMethod(helperClass, fieldName, defaultValue, LongPrefField.class, "longField");
+			} else if ("java.lang.String".equals(returnType)) {
+				JExpression defaultValue;
+				DefaultString defaultAnnotation = method.getAnnotation(DefaultString.class);
+				if (defaultAnnotation != null) {
+					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else {
+					defaultValue = JExpr.lit("");
+				}
+				addFieldHelperMethod(helperClass, fieldName, defaultValue, StringPrefField.class, "stringField");
+			}
+		}
 
-    }
+	}
 
-    private void addFieldHelperMethod(JDefinedClass helperClass, String fieldName, JExpression defaultValue, Class<?> prefFieldHelperClass, String fieldHelperMethodName) {
-        JMethod fieldMethod = helperClass.method(JMod.PUBLIC, prefFieldHelperClass, fieldName);
-        fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(fieldName).arg(defaultValue));
-    }
+	private void addFieldHelperMethod(JDefinedClass helperClass, String fieldName, JExpression defaultValue, Class<?> prefFieldHelperClass, String fieldHelperMethodName) {
+		JMethod fieldMethod = helperClass.method(JMod.PUBLIC, prefFieldHelperClass, fieldName);
+		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(fieldName).arg(defaultValue));
+	}
 }

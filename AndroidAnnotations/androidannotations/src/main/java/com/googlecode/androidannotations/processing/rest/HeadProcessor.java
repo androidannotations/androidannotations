@@ -49,13 +49,13 @@ public class HeadProcessor extends MethodProcessor {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
-		
+
 		JClass expectedClass = holder.refClass(returnType.toString());
-		
+
 		Head headAnnotation = element.getAnnotation(Head.class);
 		String urlSuffix = headAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
-		
+
 		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, expectedClass, codeModel));
 	}
 

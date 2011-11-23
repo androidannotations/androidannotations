@@ -49,10 +49,10 @@ public class PutProcessor extends MethodProcessor {
 		Put putAnnotation = element.getAnnotation(Put.class);
 		String urlSuffix = putAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
-		
-		//TODO A tester impérativement !!
+
+		// TODO A tester impérativement !!
 		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, null, null, codeModel));
-		
+
 	}
 
 	@Override
@@ -74,5 +74,5 @@ public class PutProcessor extends MethodProcessor {
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
 		return generateHttpHeadersVar(body, executableElement);
 	}
-	
+
 }

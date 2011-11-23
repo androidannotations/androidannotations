@@ -24,11 +24,11 @@ import com.googlecode.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.views_injected)
 public class FromHtmlActivity extends Activity {
-	
+
 	@ViewById(R.id.my_text_view)
 	@FromHtml(R.string.hello_html)
 	TextView textView;
-	
+
 	@ViewById
 	@FromHtml
 	TextView someView;

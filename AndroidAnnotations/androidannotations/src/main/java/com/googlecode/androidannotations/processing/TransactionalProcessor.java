@@ -37,73 +37,72 @@ import com.sun.codemodel.JVar;
 
 public class TransactionalProcessor implements ElementProcessor {
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return Transactional.class;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return Transactional.class;
+	}
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-        String methodName = element.getSimpleName().toString();
-        ExecutableElement executableElement = (ExecutableElement) element;
+		String methodName = element.getSimpleName().toString();
+		ExecutableElement executableElement = (ExecutableElement) element;
 
-        String returnTypeName = executableElement.getReturnType().toString();
-        JClass returnType = holder.refClass(returnTypeName);
+		String returnTypeName = executableElement.getReturnType().toString();
+		JClass returnType = holder.refClass(returnTypeName);
 
-        JMethod method = holder.eBean.method(JMod.PUBLIC, returnType, methodName);
-        method.annotate(Override.class);
+		JMethod method = holder.eBean.method(JMod.PUBLIC, returnType, methodName);
+		method.annotate(Override.class);
 
-        List<JVar> params = new ArrayList<JVar>();
-        for (VariableElement parameter : executableElement.getParameters()) {
-            String parameterName = parameter.getSimpleName().toString();
-            String parameterType = parameter.asType().toString();
-            JVar param = method.param(holder.refClass(parameterType), parameterName);
-            params.add(param);
-        }
-        
-        JVar db = params.get(0);
-        
-        JBlock body = method.body();
-        
-        body.invoke(db, "beginTransaction");
-        
-        JTryBlock tryBlock = body._try();
-        
-        JInvocation superCall = JExpr.invoke(JExpr._super(), method);
-        for(JVar param : params) {
-            superCall.arg(param);
-        }
-        JBlock tryBody = tryBlock.body();
-        if (returnTypeName.equals("void")) {
-            tryBody.add(superCall);
-            tryBody.invoke(db, "setTransactionSuccessful");
-            tryBody._return();
-        } else {
-            JVar result = tryBody.decl(returnType, "result_", superCall);
-            tryBody.invoke(db, "setTransactionSuccessful");
-            tryBody._return(result);
-        }
-        
-        JCatchBlock catchBlock = tryBlock._catch(codeModel.ref(RuntimeException.class));
-        
-        JVar exceptionParam = catchBlock.param("e");
-        
-        JBlock catchBody = catchBlock.body();
-        
-        JClass logClass = holder.refClass("android.util.Log");
-        JInvocation errorInvoke = catchBody.staticInvoke(logClass, "e");
+		List<JVar> params = new ArrayList<JVar>();
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterName = parameter.getSimpleName().toString();
+			String parameterType = parameter.asType().toString();
+			JVar param = method.param(holder.refClass(parameterType), parameterName);
+			params.add(param);
+		}
 
-        errorInvoke.arg(holder.eBean.name());
-        errorInvoke.arg("Error in transaction");
-        errorInvoke.arg(exceptionParam);
+		JVar db = params.get(0);
 
-        catchBody._throw(exceptionParam);
-        
-        tryBlock._finally().invoke(db, "endTransaction");        
-        
+		JBlock body = method.body();
 
-    }
+		body.invoke(db, "beginTransaction");
+
+		JTryBlock tryBlock = body._try();
+
+		JInvocation superCall = JExpr.invoke(JExpr._super(), method);
+		for (JVar param : params) {
+			superCall.arg(param);
+		}
+		JBlock tryBody = tryBlock.body();
+		if (returnTypeName.equals("void")) {
+			tryBody.add(superCall);
+			tryBody.invoke(db, "setTransactionSuccessful");
+			tryBody._return();
+		} else {
+			JVar result = tryBody.decl(returnType, "result_", superCall);
+			tryBody.invoke(db, "setTransactionSuccessful");
+			tryBody._return(result);
+		}
+
+		JCatchBlock catchBlock = tryBlock._catch(codeModel.ref(RuntimeException.class));
+
+		JVar exceptionParam = catchBlock.param("e");
+
+		JBlock catchBody = catchBlock.body();
+
+		JClass logClass = holder.refClass("android.util.Log");
+		JInvocation errorInvoke = catchBody.staticInvoke(logClass, "e");
+
+		errorInvoke.arg(holder.eBean.name());
+		errorInvoke.arg("Error in transaction");
+		errorInvoke.arg(exceptionParam);
+
+		catchBody._throw(exceptionParam);
+
+		tryBlock._finally().invoke(db, "endTransaction");
+
+	}
 
 }

@@ -19,10 +19,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public abstract class AbstractPrefField {
-	
+
 	protected final SharedPreferences sharedPreferences;
 	protected final String key;
-	
+
 	public AbstractPrefField(SharedPreferences sharedPreferences, String key) {
 		this.sharedPreferences = sharedPreferences;
 		this.key = key;
@@ -31,18 +31,17 @@ public abstract class AbstractPrefField {
 	public final boolean exists() {
 		return sharedPreferences.contains(key);
 	}
-	
+
 	public final void remove() {
 		apply(edit().remove(key));
 	}
-	
+
 	protected Editor edit() {
 		return sharedPreferences.edit();
 	}
-	
+
 	protected final void apply(Editor editor) {
 		SharedPreferencesCompat.apply(editor);
 	}
-
 
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
     Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,26 +13,25 @@
     WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     License for the specific language governing permissions and limitations under
     the License.
-
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-	<TextView  
-		android:id="@+id/myTextView"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />
-	<TextView  
-		android:id="@+id/someView"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />
-	<Button  
-		android:id="@+id/myButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />	    
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/myTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/someView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/myButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

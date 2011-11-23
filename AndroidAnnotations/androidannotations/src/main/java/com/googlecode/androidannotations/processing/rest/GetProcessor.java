@@ -80,7 +80,7 @@ public class GetProcessor extends MethodProcessor {
 	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		JClass expectedClass = methodHolder.getExpectedClass();
 		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
-		
+
 		if (expectedClass == generatedReturnType) {
 			restCall = JExpr.invoke(restCall, "getBody");
 		}
@@ -96,7 +96,7 @@ public class GetProcessor extends MethodProcessor {
 	@Override
 	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		JClass expectedClass = methodHolder.getExpectedClass();
-		
+
 		if (expectedClass != null) {
 			return restCall.arg(expectedClass.dotclass());
 		} else {

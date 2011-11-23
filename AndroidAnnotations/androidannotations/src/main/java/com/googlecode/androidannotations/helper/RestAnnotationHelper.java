@@ -79,12 +79,13 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	public List<String> extractUrlVariableNames(ExecutableElement element) {
 
 		// extract variables name from root url isn't really useful
-		
-//		Element enclosingElement = element.getEnclosingElement();
-//		String urlPrefix = enclosingElement.getAnnotation(Rest.class).value();
-//		String urlSuffix = extractAnnotationValue(element);
-//		String uriTemplate = urlPrefix + urlSuffix;
-		
+
+		// Element enclosingElement = element.getEnclosingElement();
+		// String urlPrefix =
+		// enclosingElement.getAnnotation(Rest.class).value();
+		// String urlSuffix = extractAnnotationValue(element);
+		// String uriTemplate = urlPrefix + urlSuffix;
+
 		String uriTemplate = extractAnnotationValue(element);
 
 		Matcher m = NAMES_PATTERN.matcher(uriTemplate);

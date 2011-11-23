@@ -21,12 +21,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on custom component classes to enable usage of AndroidAnnotations
+ * Should be used on custom component classes to enable usage of
+ * AndroidAnnotations
  * 
  * A custom component should extends ViewGroup.
  * 
  * Any view related code should happen in an {@link AfterViews} annotated
- * method.<br><br>
+ * method.<br>
+ * <br>
  * 
  * Supported annotations in @EViewGroup :
  * 
@@ -41,7 +43,9 @@ import java.lang.annotation.Target;
  * <li>Touch</li>
  * </ul>
  * 
- * @see <a href="http://developer.android.com/guide/topics/ui/custom-components.html">How to build a custom component.</a>
+ * @see <a
+ *      href="http://developer.android.com/guide/topics/ui/custom-components.html">How
+ *      to build a custom component.</a>
  * 
  */
 @Retention(RetentionPolicy.SOURCE)

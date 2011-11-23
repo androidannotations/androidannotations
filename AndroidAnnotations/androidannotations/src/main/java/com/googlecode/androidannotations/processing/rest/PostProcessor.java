@@ -50,14 +50,14 @@ public class PostProcessor extends MethodProcessor {
 
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
 		ExecutableElement executableElement = (ExecutableElement) element;
-		
+
 		TypeMirror returnType = executableElement.getReturnType();
-		
+
 		JClass generatedReturnType = null;
 		String returnTypeString = returnType.toString();
 		JClass expectedClass = null;
 
-		if (returnType.getKind() != TypeKind.VOID) { 
+		if (returnType.getKind() != TypeKind.VOID) {
 			if (returnTypeString.startsWith(ProcessorConstants.URI)) {
 				DeclaredType declaredReturnedType = (DeclaredType) returnType;
 				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
@@ -77,7 +77,7 @@ public class PostProcessor extends MethodProcessor {
 		Post postAnnotation = element.getAnnotation(Post.class);
 		String urlSuffix = postAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
-		
+
 		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
 	}
 
@@ -89,13 +89,13 @@ public class PostProcessor extends MethodProcessor {
 	@Override
 	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		JClass expectedClass = methodHolder.getExpectedClass();
-		
+
 		if (expectedClass != null) {
 			restCall.arg(expectedClass.dotclass());
 		} else {
 			restCall.arg(JExpr._null());
 		}
-		
+
 		return restCall;
 	}
 
@@ -103,11 +103,11 @@ public class PostProcessor extends MethodProcessor {
 	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		JClass expectedClass = methodHolder.getExpectedClass();
 		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
-		
+
 		if (expectedClass == generatedReturnType && expectedClass != null) {
 			restCall = JExpr.invoke(restCall, "getBody");
 		}
-		
+
 		return restCall;
 	}
 

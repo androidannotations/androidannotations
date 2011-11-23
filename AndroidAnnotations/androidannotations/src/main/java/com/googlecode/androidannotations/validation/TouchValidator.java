@@ -51,7 +51,7 @@ public class TouchValidator implements ElementValidator {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
-		
+
 		validatorHelper.hasOneMotionEventOrTwoMotionEventViewParameters(executableElement, valid);
 
 		return valid.isValid();

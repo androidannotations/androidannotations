@@ -23,7 +23,8 @@ import java.lang.annotation.Target;
 import com.googlecode.androidannotations.annotations.Id;
 
 /**
- * Use on fields in activity classes that should be injected with this specific resource
+ * Use on fields in activity classes that should be injected with this specific
+ * resource
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)

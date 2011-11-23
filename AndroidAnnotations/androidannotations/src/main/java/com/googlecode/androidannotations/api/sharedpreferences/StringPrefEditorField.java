@@ -16,7 +16,7 @@
 package com.googlecode.androidannotations.api.sharedpreferences;
 
 public final class StringPrefEditorField<T extends EditorHelper<T>> extends AbstractPrefEditorField<T> {
-	
+
 	StringPrefEditorField(T editorHelper, String key) {
 		super(editorHelper, key);
 	}

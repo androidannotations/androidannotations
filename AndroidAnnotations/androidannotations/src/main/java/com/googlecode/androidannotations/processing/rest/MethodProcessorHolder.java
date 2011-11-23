@@ -31,10 +31,10 @@ public class MethodProcessorHolder {
 	private JClass expectedClass;
 	private JClass generatedReturnType;
 	private JCodeModel codeModel;
-	
+
 	private JBlock body;
 	private TreeMap<String, JVar> methodParams;
-	
+
 	public MethodProcessorHolder(Element element, String url, JClass expectedClass, JClass generatedReturnType, JCodeModel codeModel) {
 		this.element = element;
 		this.url = url;
@@ -46,19 +46,19 @@ public class MethodProcessorHolder {
 	public Element getElement() {
 		return element;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}
-	
+
 	public JClass getExpectedClass() {
 		return expectedClass;
 	}
-	
+
 	public JClass getGeneratedReturnType() {
 		return generatedReturnType;
 	}
-	
+
 	public JCodeModel getCodeModel() {
 		return codeModel;
 	}
@@ -78,5 +78,5 @@ public class MethodProcessorHolder {
 	public void setMethodParams(TreeMap<String, JVar> methodParams) {
 		this.methodParams = methodParams;
 	}
-	
+
 }

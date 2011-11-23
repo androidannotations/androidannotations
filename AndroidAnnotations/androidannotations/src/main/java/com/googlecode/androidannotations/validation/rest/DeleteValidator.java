@@ -33,7 +33,7 @@ public class DeleteValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
 	private RestAnnotationHelper restAnnotationHelper;
-	
+
 	public DeleteValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
@@ -49,17 +49,17 @@ public class DeleteValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
+
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
 		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		
+
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
-		
+
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
-		
+
 		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
 
 		return valid.isValid();

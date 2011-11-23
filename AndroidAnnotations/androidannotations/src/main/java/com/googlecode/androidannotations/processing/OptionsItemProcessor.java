@@ -100,11 +100,10 @@ public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implement
 			itemCaseBody.add(methodCall);
 			itemCaseBody._return(TRUE);
 		}
-		
+
 		if (hasItemParameter) {
 			methodCall.arg(holder.onOptionsItemSelectedItem);
 		}
-
 
 	}
 

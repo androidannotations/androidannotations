@@ -28,37 +28,37 @@ import com.sun.codemodel.JVar;
 
 public class EBeanHolder {
 
-    public JDefinedClass eBean;
-    public JMethod beforeCreate;
-    public JVar beforeCreateSavedInstanceStateParam;
-    public JMethod afterSetContentView;
-    public JBlock extrasNotNullBlock;
-    public JVar extras;
-    public JClass bundleClass;
-    public JVar resources;
-    
-    public JMethod cast;
+	public JDefinedClass eBean;
+	public JMethod beforeCreate;
+	public JVar beforeCreateSavedInstanceStateParam;
+	public JMethod afterSetContentView;
+	public JBlock extrasNotNullBlock;
+	public JVar extras;
+	public JClass bundleClass;
+	public JVar resources;
 
-    private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
-    public JFieldVar handler;
-    
+	public JMethod cast;
+
+	private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
+	public JFieldVar handler;
+
 	public JSwitch onOptionsItemSelectedSwitch;
 	public JVar onOptionsItemSelectedItem;
 
-    public JClass refClass(String fullyQualifiedClassName) {
+	public JClass refClass(String fullyQualifiedClassName) {
 
-        JClass refClass = loadedClasses.get(fullyQualifiedClassName);
+		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
-        if (refClass == null) {
-            refClass = eBean.owner().ref(fullyQualifiedClassName);
-            loadedClasses.put(fullyQualifiedClassName, refClass);
-        }
+		if (refClass == null) {
+			refClass = eBean.owner().ref(fullyQualifiedClassName);
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
 
-        return refClass;
-    }
-    
-    public JClass refClass(Class<?> clazz) {
-        return eBean.owner().ref(clazz);
-    }
+		return refClass;
+	}
+
+	public JClass refClass(Class<?> clazz) {
+		return eBean.owner().ref(clazz);
+	}
 
 }

@@ -22,15 +22,15 @@ import roboguice.application.RoboApplication;
 import com.google.inject.Module;
 
 public class SampleRoboApplication extends RoboApplication {
-    
-    private Module module = new RobolectricSampleModule();
 
-    @Override
-    protected void addApplicationModules(List<Module> modules) {
-        modules.add(module);
-    }
+	private Module module = new RobolectricSampleModule();
 
-    public void setModule(Module module) {
-        this.module = module;
-    }
+	@Override
+	protected void addApplicationModules(List<Module> modules) {
+		modules.add(module);
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
 }

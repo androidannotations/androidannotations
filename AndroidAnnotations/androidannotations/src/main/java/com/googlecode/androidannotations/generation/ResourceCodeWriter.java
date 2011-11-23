@@ -26,9 +26,9 @@ import com.sun.codemodel.CodeWriter;
 import com.sun.codemodel.JPackage;
 
 public class ResourceCodeWriter extends CodeWriter {
-	
+
 	private final Filer filer;
-	
+
 	public ResourceCodeWriter(Filer filer) {
 		this.filer = filer;
 	}
@@ -39,7 +39,7 @@ public class ResourceCodeWriter extends CodeWriter {
 		return resource.openOutputStream();
 	}
 
-
 	@Override
-	public void close() throws IOException {}
+	public void close() throws IOException {
+	}
 }

@@ -61,11 +61,11 @@ public class AnnotationElementsHolder implements AnnotationElements {
 	@Override
 	public Set<Element> getAllElements() {
 		Set<Element> allElements = new HashSet<Element>();
-		
+
 		for (Set<? extends Element> annotatedElements : annotatedElementsByAnnotation.values()) {
 			allElements.addAll(annotatedElements);
 		}
-		
+
 		return allElements;
 	}
 

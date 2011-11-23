@@ -26,11 +26,11 @@ import com.googlecode.androidannotations.test15.R;
 @EActivity
 @OptionsMenu(R.menu.my_menu)
 public class OptionsMenuActivity extends Activity {
-	
+
 	boolean menuRefreshSelected;
 	boolean multipleMenuItems;
 	boolean menu_add;
-	
+
 	@OptionsItem
 	void menuRefreshSelected() {
 		menuRefreshSelected = true;

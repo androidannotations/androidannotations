@@ -39,27 +39,25 @@ public class ExtraProcessor implements ElementProcessor {
 	public Class<? extends Annotation> getTarget() {
 		return Extra.class;
 	}
-	
-	
+
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
 		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-		
+
 		if (holder.cast == null) {
-		    JType objectType = codeModel._ref(Object.class);
-		    JMethod method = holder.eBean.method(JMod.PRIVATE, objectType, "cast_");
-		    JTypeVar genericType = method.generify("T");
-		    method.type(genericType);
-		    JVar objectParam = method.param(objectType, "object");
-		    method.annotate(SuppressWarnings.class).param("value", "unchecked");
-		    method.body()._return(JExpr.cast(genericType, objectParam));
-		    
-		    holder.cast = method;
+			JType objectType = codeModel._ref(Object.class);
+			JMethod method = holder.eBean.method(JMod.PRIVATE, objectType, "cast_");
+			JTypeVar genericType = method.generify("T");
+			method.type(genericType);
+			JVar objectParam = method.param(objectType, "object");
+			method.annotate(SuppressWarnings.class).param("value", "unchecked");
+			method.body()._return(JExpr.cast(genericType, objectParam));
+
+			holder.cast = method;
 		}
-		
 
 		JBlock methodBody = holder.beforeCreate.body();
 
@@ -73,9 +71,9 @@ public class ExtraProcessor implements ElementProcessor {
 		JBlock ifContainsKey = holder.extrasNotNullBlock._if(JExpr.invoke(holder.extras, "containsKey").arg(extraKey))._then();
 
 		JTryBlock containsKeyTry = ifContainsKey._try();
-		
+
 		JFieldRef extraField = JExpr.ref(fieldName);
-		
+
 		containsKeyTry.body().assign(extraField, JExpr.invoke(holder.cast).arg(holder.extras.invoke("get").arg(extraKey)));
 
 		JCatchBlock containsKeyCatch = containsKeyTry._catch(holder.refClass(ClassCastException.class));

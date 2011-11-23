@@ -35,60 +35,60 @@ import com.xtremelabs.robolectric.shadows.ShadowHtml;
 @RunWith(RobolectricTestRunner.class)
 public class ResActivityTest {
 
-    private ResActivity_ activity;
+	private ResActivity_ activity;
 
-    @Before
-    public void setup() {
-        Robolectric.bindShadowClass(ShadowHtml.class);
-        activity = new ResActivity_();
-        activity.onCreate(null);
-    }
+	@Before
+	public void setup() {
+		Robolectric.bindShadowClass(ShadowHtml.class);
+		activity = new ResActivity_();
+		activity.onCreate(null);
+	}
 
-    @Test
-    public void string_snake_case_injected() {
-        assertThat(activity.injected_string).isEqualTo("test");
-    }
+	@Test
+	public void string_snake_case_injected() {
+		assertThat(activity.injected_string).isEqualTo("test");
+	}
 
-    @Test
-    public void string_camel_case_injected() {
-        assertThat(activity.injectedString).isEqualTo("test");
-    }
+	@Test
+	public void string_camel_case_injected() {
+		assertThat(activity.injectedString).isEqualTo("test");
+	}
 
-    /**
-     * Cannot be tested right now, because there is no Robolectric shadow class
-     * for {@link AnimationUtils}.
-     */
-    // @Test
-    public void animNotNull() {
-        assertThat(activity.fadein).isNotNull();
-    }
+	/**
+	 * Cannot be tested right now, because there is no Robolectric shadow class
+	 * for {@link AnimationUtils}.
+	 */
+	// @Test
+	public void animNotNull() {
+		assertThat(activity.fadein).isNotNull();
+	}
 
-    /**
-     * Cannot be tested right now, because the Robolectric shadow class for
-     * {@link Resources} doesn't implement {@link Resources#getAnimation(int)}
-     */
-    // @Test
-    public void xmlResAnimNotNull() {
-        assertThat(activity.fade_in).isNotNull();
-    }
+	/**
+	 * Cannot be tested right now, because the Robolectric shadow class for
+	 * {@link Resources} doesn't implement {@link Resources#getAnimation(int)}
+	 */
+	// @Test
+	public void xmlResAnimNotNull() {
+		assertThat(activity.fade_in).isNotNull();
+	}
 
-    @Test
-    public void htmlResNotNull() {
-        assertNotNull(activity.helloHtml);
-    }
-    
-    @Test
-    public void htmlInjectedNotNull() {
-        assertNotNull(activity.htmlInjected);
-    }
+	@Test
+	public void htmlResNotNull() {
+		assertNotNull(activity.helloHtml);
+	}
 
-    @Test
-    public void htmlResCorrectlySet() {
-        assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.helloHtml);
-    }
-    
-    @Test
-    public void htmlInjectedCorrectlySet() {
-        assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.htmlInjected);
-    }
+	@Test
+	public void htmlInjectedNotNull() {
+		assertNotNull(activity.htmlInjected);
+	}
+
+	@Test
+	public void htmlResCorrectlySet() {
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.helloHtml);
+	}
+
+	@Test
+	public void htmlInjectedCorrectlySet() {
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.htmlInjected);
+	}
 }

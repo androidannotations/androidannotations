@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
     Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,63 +13,55 @@
     WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     License for the specific language governing permissions and limitations under
     the License.
-
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-	<Button  
-		android:id="@+id/conventionButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />
+    android:orientation="vertical" >
 
-	<Button  
-		android:id="@+id/snake_case_button"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />
-	    
-	<Button  
-		android:id="@+id/extendedConventionButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />	   
-	     
-	<Button  
-		android:id="@+id/overridenConventionButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />	  	
-	    
-	<Button  
-		android:id="@+id/configurationOverConventionButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />	  
-	    
-	<Button  
-		android:id="@+id/unboundButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />	  
-	    
-	<Button  
-		android:id="@+id/buttonWithViewArgument"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />		    
-	    	    
-	<Button  
-		android:id="@+id/button1"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-    	/>		
-    <Button  
-		android:id="@+id/button2"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />		
+    <Button
+        android:id="@+id/conventionButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/snake_case_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/extendedConventionButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/overridenConventionButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/configurationOverConventionButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/unboundButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonWithViewArgument"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

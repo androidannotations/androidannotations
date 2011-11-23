@@ -65,7 +65,7 @@ public class TimeStats {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Time measurements: ");
-		
+
 		Collections.sort(durations);
 		for (Duration duration : durations) {
 			sb.append("[") //

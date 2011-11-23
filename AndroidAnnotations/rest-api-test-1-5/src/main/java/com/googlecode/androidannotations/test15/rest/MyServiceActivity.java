@@ -23,5 +23,5 @@ import android.app.Activity;
 public class MyServiceActivity extends Activity {
 
 	MyService myService;
-	
+
 }

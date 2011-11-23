@@ -42,8 +42,8 @@ import com.sun.codemodel.JVar;
 
 public abstract class MethodProcessor implements ElementProcessor {
 
-	protected final RestImplementationsHolder	restImplementationsHolder;
-	protected final RestAnnotationHelper		restAnnotationHelper;
+	protected final RestImplementationsHolder restImplementationsHolder;
+	protected final RestAnnotationHelper restAnnotationHelper;
 
 	public MethodProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		this.restImplementationsHolder = restImplementationHolder;
@@ -54,7 +54,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
 		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
-		
+
 		JClass expectedClass = methodHolder.getExpectedClass();
 		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
 
@@ -94,7 +94,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 		if (hashMapVar != null) {
 			restCall.arg(hashMapVar);
 		}
-		
+
 		restCall = addResultCallMethod(restCall, methodHolder);
 
 		boolean returnResult = generatedReturnType == null && expectedClass == null;
@@ -106,21 +106,21 @@ public abstract class MethodProcessor implements ElementProcessor {
 	protected abstract JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder);
 
 	protected abstract JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder);
-	
+
 	private void insertRestCallInBody(JBlock body, JInvocation restCall, boolean returnResult) {
 		if (returnResult)
 			body.add(restCall);
 		else
 			body._return(restCall);
 	}
-	
+
 	private JVar generateHashMapVar(MethodProcessorHolder methodHolder) {
 		ExecutableElement element = (ExecutableElement) methodHolder.getElement();
 		JCodeModel codeModel = methodHolder.getCodeModel();
 		JBlock body = methodHolder.getBody();
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
 		JVar hashMapVar = null;
-		
+
 		// retrieve url place holder
 		List<String> urlVariables = restAnnotationHelper.extractUrlVariableNames(element);
 		JClass hashMapClass = codeModel.ref(HashMap.class).narrow(String.class, Object.class);
@@ -141,7 +141,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 		JClass httpEntity = holder.refClass(ProcessorConstants.HTTP_ENTITY);
 		JInvocation newHttpEntityVarCall;
 		JClass expectedClass = methodHolder.getExpectedClass();
-		
+
 		boolean hasEntitySentToServer = expectedClass != null;
 		if (hasEntitySentToServer) {
 			newHttpEntityVarCall = JExpr._new(httpEntity.narrow(expectedClass));
@@ -151,7 +151,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 		JBlock body = methodHolder.getBody();
 		JVar httpHeadersVar = generateHttpHeadersVar(body, executableElement);
-		
+
 		boolean hasHeaders = httpHeadersVar != null;
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
 		if (hasHeaders) {
@@ -178,7 +178,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 		return httpEntityVar;
 	}
-	
+
 	protected abstract JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement);
 
 	protected JVar generateHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
@@ -192,11 +192,11 @@ public abstract class MethodProcessor implements ElementProcessor {
 		if (mediaType != null) {
 			JClass collectionsClass = holder.refClass(ProcessorConstants.COLLECTIONS);
 			JClass mediaTypeClass = holder.refClass(ProcessorConstants.MEDIA_TYPE);
-	
+
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticRef(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
 		}
-		
+
 		return httpHeadersVar;
 	}
 

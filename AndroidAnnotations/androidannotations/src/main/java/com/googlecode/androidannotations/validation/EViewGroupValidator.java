@@ -34,8 +34,7 @@ public class EViewGroupValidator implements ElementValidator {
 	private IdAnnotationHelper annotationHelper;
 
 	public EViewGroupValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
-		annotationHelper = new IdAnnotationHelper(
-				processingEnv, getTarget(), rClass);
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
@@ -45,8 +44,7 @@ public class EViewGroupValidator implements ElementValidator {
 	}
 
 	@Override
-	public boolean validate(Element element,
-			AnnotationElements validatedElements) {
+	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
 
@@ -55,7 +53,7 @@ public class EViewGroupValidator implements ElementValidator {
 		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-	
+
 		return valid.isValid();
 	}
 

@@ -32,21 +32,20 @@ public class PrefProcessor implements ElementProcessor {
 	public Class<? extends Annotation> getTarget() {
 		return Pref.class;
 	}
-	
-	
+
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-		
-	    String fieldName = element.getSimpleName().toString();
-	    
-        TypeMirror fieldTypeMirror = element.asType();
-        String fieldType = fieldTypeMirror.toString();
-		
+
+		String fieldName = element.getSimpleName().toString();
+
+		TypeMirror fieldTypeMirror = element.asType();
+		String fieldType = fieldTypeMirror.toString();
+
 		JBlock methodBody = holder.beforeCreate.body();
-		
+
 		JFieldRef field = JExpr.ref(fieldName);
-		
+
 		methodBody.assign(field, JExpr._new(holder.refClass(fieldType)).arg(JExpr._this()));
 	}
 

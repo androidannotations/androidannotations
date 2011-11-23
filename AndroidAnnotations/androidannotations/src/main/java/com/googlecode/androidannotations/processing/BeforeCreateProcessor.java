@@ -35,17 +35,17 @@ public class BeforeCreateProcessor implements ElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		
+
 		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-		
+
 		String methodName = element.getSimpleName().toString();
-		
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		boolean hasBundleParameter = parameters.size() == 1;
 
 		JInvocation methodCall = holder.beforeCreate.body().invoke(methodName);
-		
+
 		if (hasBundleParameter) {
 			methodCall.arg(holder.beforeCreateSavedInstanceStateParam);
 		}

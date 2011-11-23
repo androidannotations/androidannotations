@@ -32,11 +32,11 @@ public class NoTitleProcessor implements ElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		
+
 		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
-		
+
 		JFieldRef noTitle = holder.refClass("android.view.Window").staticRef("FEATURE_NO_TITLE");
-		
+
 		holder.beforeCreate.body().invoke("requestWindowFeature").arg(noTitle);
 	}
 

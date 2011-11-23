@@ -25,8 +25,8 @@ import com.googlecode.androidannotations.annotations.RoboGuice;
 @EActivity
 public class MapActivityWithRoboGuice extends Activity { // MapActivity {
 
-//    @Override
-    protected boolean isRouteDisplayed() {
-        return false;
-    }
+	// @Override
+	protected boolean isRouteDisplayed() {
+		return false;
+	}
 }

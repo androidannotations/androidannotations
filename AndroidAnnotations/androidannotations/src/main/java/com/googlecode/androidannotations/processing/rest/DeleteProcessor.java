@@ -61,7 +61,7 @@ public class DeleteProcessor extends MethodProcessor {
 	@Override
 	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		return restCall.arg(JExpr._null());
-		
+
 	}
 
 	@Override

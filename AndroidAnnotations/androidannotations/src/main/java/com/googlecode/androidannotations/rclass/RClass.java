@@ -24,7 +24,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
 public class RClass implements IRClass {
-	
+
 	private final Map<String, RInnerClass> rClass = new HashMap<String, RInnerClass>();
 
 	public RClass(TypeElement rClassElement) {

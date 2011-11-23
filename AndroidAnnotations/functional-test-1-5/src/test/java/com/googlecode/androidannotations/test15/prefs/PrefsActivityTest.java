@@ -28,142 +28,142 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
 
-    private PrefsActivity_ activity;
-    private SharedPreferences sharedPref;
+	private PrefsActivity_ activity;
+	private SharedPreferences sharedPref;
 
-    private SomePrefs_ somePrefs;
+	private SomePrefs_ somePrefs;
 
-    @Before
-    public void setup() {
-        activity = new PrefsActivity_();
-        activity.onCreate(null);
-        somePrefs = activity.somePrefs;
-        sharedPref = somePrefs.getSharedPreferences();
-    }
+	@Before
+	public void setup() {
+		activity = new PrefsActivity_();
+		activity.onCreate(null);
+		somePrefs = activity.somePrefs;
+		sharedPref = somePrefs.getSharedPreferences();
+	}
 
-    @Test
-    public void prefsNotNull() {
-        assertThat(somePrefs).isNotNull();
-    }
+	@Test
+	public void prefsNotNull() {
+		assertThat(somePrefs).isNotNull();
+	}
 
-    @Test
-    public void sharedPrefsNotNull() {
-        assertThat(sharedPref).isNotNull();
-    }
+	@Test
+	public void sharedPrefsNotNull() {
+		assertThat(sharedPref).isNotNull();
+	}
 
-    @Test
-    public void putString() {
-        somePrefs.name().put("John");
-        assertThat(sharedPref.getString("name", null)).isEqualTo("John");
-    }
+	@Test
+	public void putString() {
+		somePrefs.name().put("John");
+		assertThat(sharedPref.getString("name", null)).isEqualTo("John");
+	}
 
-    @Test
-    public void putInt() {
-        somePrefs.age().put(42);
-        assertThat(sharedPref.getInt("age", 0)).isEqualTo(42);
-    }
-    
-    @Test
-    public void putLong() {
-        long now = System.currentTimeMillis();
+	@Test
+	public void putInt() {
+		somePrefs.age().put(42);
+		assertThat(sharedPref.getInt("age", 0)).isEqualTo(42);
+	}
+
+	@Test
+	public void putLong() {
+		long now = System.currentTimeMillis();
 		somePrefs.lastUpdated().put(now);
-        assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
-    }
-    
-    @Test
-    public void editLong() {
-        long now = System.currentTimeMillis();
-        
-        somePrefs.edit().lastUpdated().put(now).apply();
+		assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
+	}
 
-        assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
-    }    
+	@Test
+	public void editLong() {
+		long now = System.currentTimeMillis();
 
-    @Test
-    public void putTwoValuesChained() {
-        somePrefs.edit() //
-                .name() //
-                .put("John") //
-                .age() //
-                .put(42) //
-                .apply();
-        assertThat(sharedPref.getString("name", null)).isEqualTo("John");
-        assertThat(sharedPref.getInt("age", 0)).isEqualTo(42);
-    }
+		somePrefs.edit().lastUpdated().put(now).apply();
 
-    @Test
-    public void clear() {
-        somePrefs.edit() //
-                .name() //
-                .put("John") //
-                .age() //
-                .put(42) //
-                .apply();
+		assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
+	}
 
-        somePrefs.clear();
+	@Test
+	public void putTwoValuesChained() {
+		somePrefs.edit() //
+				.name() //
+				.put("John") //
+				.age() //
+				.put(42) //
+				.apply();
+		assertThat(sharedPref.getString("name", null)).isEqualTo("John");
+		assertThat(sharedPref.getInt("age", 0)).isEqualTo(42);
+	}
 
-        assertThat(sharedPref.contains("name")).isFalse();
-        assertThat(sharedPref.contains("age")).isFalse();
-    }
+	@Test
+	public void clear() {
+		somePrefs.edit() //
+				.name() //
+				.put("John") //
+				.age() //
+				.put(42) //
+				.apply();
 
-    @Test
-    public void remove() {
-        somePrefs.edit() //
-                .name() //
-                .put("John") //
-                .age() //
-                .put(42) //
-                .apply();
+		somePrefs.clear();
 
-        somePrefs.name().remove();
+		assertThat(sharedPref.contains("name")).isFalse();
+		assertThat(sharedPref.contains("age")).isFalse();
+	}
 
-        assertThat(sharedPref.contains("name")).isFalse();
-        assertThat(sharedPref.contains("age")).isTrue();
-    }
+	@Test
+	public void remove() {
+		somePrefs.edit() //
+				.name() //
+				.put("John") //
+				.age() //
+				.put(42) //
+				.apply();
 
-    @Test
-    public void exists() {
-        assertThat(somePrefs.name().exists()).isFalse();
+		somePrefs.name().remove();
 
-        sharedPref.edit().putString("name", "Something").commit();
+		assertThat(sharedPref.contains("name")).isFalse();
+		assertThat(sharedPref.contains("age")).isTrue();
+	}
 
-        assertThat(somePrefs.name().exists()).isTrue();
-    }
+	@Test
+	public void exists() {
+		assertThat(somePrefs.name().exists()).isFalse();
 
-    @Test
-    public void getString() {
-        assertThat(somePrefs.name().exists()).isFalse();
+		sharedPref.edit().putString("name", "Something").commit();
 
-        sharedPref.edit().putString("name", "Something").commit();
+		assertThat(somePrefs.name().exists()).isTrue();
+	}
 
-        assertThat(somePrefs.name().get()).isEqualTo("Something");
-    }
-    
-    @Test
-    public void getLong() {
-        long now = System.currentTimeMillis();
+	@Test
+	public void getString() {
+		assertThat(somePrefs.name().exists()).isFalse();
 
-        sharedPref.edit().putLong("lastUpdated", now).commit();
+		sharedPref.edit().putString("name", "Something").commit();
 
-        assertThat(somePrefs.lastUpdated().get()).isEqualTo(now);
-    }
+		assertThat(somePrefs.name().get()).isEqualTo("Something");
+	}
 
-    @Test
-    public void defaultValue() {
-        assertThat(somePrefs.name().get()).isEqualTo("John");
-    }
+	@Test
+	public void getLong() {
+		long now = System.currentTimeMillis();
 
-    @Test
-    public void overridenDefaultValue() {
-        assertThat(somePrefs.name().getOr("Smith")).isEqualTo("Smith");
-    }
+		sharedPref.edit().putLong("lastUpdated", now).commit();
 
-    @Test
-    public void changesNotApplied() {
-        somePrefs.edit() //
-                .name() //
-                .put("John");
-        assertThat(sharedPref.contains("name")).isFalse();
-    }
-    
+		assertThat(somePrefs.lastUpdated().get()).isEqualTo(now);
+	}
+
+	@Test
+	public void defaultValue() {
+		assertThat(somePrefs.name().get()).isEqualTo("John");
+	}
+
+	@Test
+	public void overridenDefaultValue() {
+		assertThat(somePrefs.name().getOr("Smith")).isEqualTo("Smith");
+	}
+
+	@Test
+	public void changesNotApplied() {
+		somePrefs.edit() //
+				.name() //
+				.put("John");
+		assertThat(sharedPref.contains("name")).isFalse();
+	}
+
 }

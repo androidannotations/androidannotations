@@ -45,7 +45,7 @@ public class ClickValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
+
 		validatorHelper.idListenerMethod(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
@@ -55,6 +55,5 @@ public class ClickValidator implements ElementValidator {
 
 		return valid.isValid();
 	}
-
 
 }

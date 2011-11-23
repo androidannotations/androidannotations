@@ -28,21 +28,21 @@ import com.googlecode.androidannotations.test15.R;
 @EActivity(R.layout.main)
 public class ResActivity extends Activity {
 
-    // @AnimationRes
-    XmlResourceParser fade_in;
+	// @AnimationRes
+	XmlResourceParser fade_in;
 
-    // @AnimationRes
-    Animation fadein;
+	// @AnimationRes
+	Animation fadein;
 
-    @StringRes
-    String injected_string;
+	@StringRes
+	String injected_string;
 
-    @StringRes
-    String injectedString;
+	@StringRes
+	String injectedString;
 
-    @HtmlRes
-    Spanned helloHtml;
-    
-    @HtmlRes(R.string.hello_html)
-    CharSequence htmlInjected;
+	@HtmlRes
+	Spanned helloHtml;
+
+	@HtmlRes(R.string.hello_html)
+	CharSequence htmlInjected;
 }

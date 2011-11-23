@@ -27,35 +27,35 @@ import com.googlecode.androidannotations.annotations.UiThread;
 
 @EActivity
 public class ThreadActivity extends Activity {
-    
+
 	@UiThread
 	void emptyUiMethod() {
-		
+
 	}
-	
+
 	@Background
 	void emptyBackgroundMethod() {
-		
+
 	}
-	
+
 	@UiThread
 	void objectUiMethod(Object param) {
-		
+
 	}
-	
+
 	@Background
 	void objectBackgroundMethod(Object param) {
-		
+
 	}
-	
+
 	@UiThread
 	void genericUiMethod(List<Map<String, List<Set<Void>>>> param) {
-		
+
 	}
-	
+
 	@Background
 	void genericBackgroundMethod(List<Map<String, List<Set<Void>>>> param) {
-		
+
 	}
-	
+
 }

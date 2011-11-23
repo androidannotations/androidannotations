@@ -21,7 +21,7 @@ import java.util.Map;
 public class CoumpoundRClass implements IRClass {
 
 	private final Map<String, IRInnerClass> rInnerClasses = new HashMap<String, IRInnerClass>();
-	
+
 	public CoumpoundRClass(IRClass rClass, IRClass androidRclass) {
 		for (Res res : Res.values()) {
 			IRInnerClass rInnerClass = rClass.get(res);

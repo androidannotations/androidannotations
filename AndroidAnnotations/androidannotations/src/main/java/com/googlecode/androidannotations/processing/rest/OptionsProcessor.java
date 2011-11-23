@@ -51,19 +51,19 @@ public class OptionsProcessor extends MethodProcessor {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
-		
+
 		DeclaredType declaredReturnType = (DeclaredType) returnType;
 
 		TypeMirror typeParameter = declaredReturnType.getTypeArguments().get(0);
 
 		JClass expectedClass = holder.refClass(typeParameter.toString());
-		
+
 		JClass generatedReturnType = holder.refClass(ProcessorConstants.SET).narrow(expectedClass);
-		
+
 		Options optionsAnnotation = element.getAnnotation(Options.class);
 		String urlSuffix = optionsAnnotation.value();
 		String url = holder.urlPrefix + urlSuffix;
-		
+
 		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
 	}
 
@@ -71,7 +71,7 @@ public class OptionsProcessor extends MethodProcessor {
 	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		restCall = JExpr.invoke(restCall, "getHeaders");
 		restCall = JExpr.invoke(restCall, "getAllow");
-		
+
 		return restCall;
 	}
 
