@@ -51,12 +51,12 @@ public class HeadProcessor extends MethodProcessor {
 
 	@Override
 	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall;
+		return restCall.arg(JExpr._null());
 	}
 
 	@Override
 	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall;
+		return restCall.arg(JExpr._null());
 	}
 
 	@Override
