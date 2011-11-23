@@ -60,13 +60,13 @@ public class TracedActivityTest {
     	activity.voidTracedMethodWarn();
     	assertThat(activity.voidTracedMethodWarnCalled).isTrue();
 
-        assertThat(activity.overLoaddedMethodInt).isFalse();
-        activity.overLoaddedMethod(0);
-        assertThat(activity.overLoaddedMethodInt).isTrue();
+        assertThat(activity.overloadedMethodInt).isFalse();
+        activity.overloadedMethod(0);
+        assertThat(activity.overloadedMethodInt).isTrue();
 
-        assertThat(activity.overLoaddedMethodIntFLoat).isFalse();
-        activity.overLoaddedMethod(0, 0f);
-        assertThat(activity.overLoaddedMethodIntFLoat).isTrue();
+        assertThat(activity.overloadedMethodIntFLoat).isFalse();
+        activity.overloadedMethod(0, 0f);
+        assertThat(activity.overloadedMethodIntFLoat).isTrue();
     }
     
     

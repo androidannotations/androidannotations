@@ -53,6 +53,8 @@ public class BackgroundProcessor implements ElementProcessor {
 		// Method
 		ExecutableElement executableElement = (ExecutableElement) element;
 		JMethod backgroundMethod = helper.overrideAnnotatedMethod(executableElement, holder);
+		
+		JBlock previousMethodBody = helper.removeBody(backgroundMethod);
 
 		JDefinedClass anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
 
@@ -61,8 +63,8 @@ public class BackgroundProcessor implements ElementProcessor {
 
 		JBlock runMethodBody = runMethod.body();
 		JTryBlock runTry = runMethodBody._try();
-
-		helper.callSuperMethod(backgroundMethod, codeModel, holder, runTry.body());
+		
+		runTry.body().add(previousMethodBody);
 
 		JCatchBlock runCatch = runTry._catch(holder.refClass(RuntimeException.class));
 		JVar exceptionParam = runCatch.param("e");

@@ -348,9 +348,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			modelValidator.register(new ResValidator(androidRes, processingEnv, rClass));
 		}
-		modelValidator.register(new RunnableValidator(UiThreadDelayed.class, processingEnv));
-		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
-		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new TransactionalValidator(processingEnv));
 		modelValidator.register(new ExtraValidator(processingEnv));
 		modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
@@ -371,6 +368,9 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
 		modelValidator.register(new FullscreenValidator(processingEnv));
+		modelValidator.register(new RunnableValidator(UiThreadDelayed.class, processingEnv));
+		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
+		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new TraceValidator(processingEnv));
 		return modelValidator;
 	}
@@ -401,9 +401,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			modelProcessor.register(new ResProcessor(androidRes, rClass));
 		}
-		modelProcessor.register(new UiThreadProcessor());
-		modelProcessor.register(new UiThreadDelayedProcessor());
-		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor());
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
@@ -423,6 +420,9 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new TraceProcessor());
+		modelProcessor.register(new UiThreadProcessor());
+		modelProcessor.register(new UiThreadDelayedProcessor());
+		modelProcessor.register(new BackgroundProcessor());
 		return modelProcessor;
 	}
 
