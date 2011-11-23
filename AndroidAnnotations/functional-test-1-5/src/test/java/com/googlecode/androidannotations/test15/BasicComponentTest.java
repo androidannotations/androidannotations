@@ -25,13 +25,13 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class BasicComponentTest {
 
-    @Test
-    public void shouldHaveLayoutAfterCreate() {
-        EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
-        BasicComponent component = new BasicComponent_(activity, 0);
-        component.onFinishInflate();
-        assertThat(component.subtitle).isNotNull();
-        assertThat(component.tv).isNotNull();
-    }
+	@Test
+	public void shouldHaveLayoutAfterCreate() {
+		EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
+		BasicComponent component = new BasicComponent_(activity, 0);
+		component.onFinishInflate();
+		assertThat(component.subtitle).isNotNull();
+		assertThat(component.tv).isNotNull();
+	}
 
 }

@@ -26,26 +26,27 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 public class InjectedTestRunner extends RobolectricTestRunner {
 
-    public InjectedTestRunner(Class<?> testClass) throws InitializationError {
-        super(testClass);
-    }
+	public InjectedTestRunner(Class<?> testClass) throws InitializationError {
+		super(testClass);
+	}
 
-    @Override
-    protected Application createApplication() {
-        SampleRoboApplication application = (SampleRoboApplication)super.createApplication();
-        application.setModule(new RobolectricSampleTestModule());
-        return application;
-    }
+	@Override
+	protected Application createApplication() {
+		SampleRoboApplication application = (SampleRoboApplication) super.createApplication();
+		application.setModule(new RobolectricSampleTestModule());
+		return application;
+	}
 
-    @Override
-    public void prepareTest(Object test) {
-        SampleRoboApplication application = (SampleRoboApplication) Robolectric.application;
+	@Override
+	public void prepareTest(Object test) {
+		SampleRoboApplication application = (SampleRoboApplication) Robolectric.application;
 
-        //This project's application does not extend GuiceInjectableApplication therefore we need to enter the ContextScope manually.
-        Injector injector = application.getInjector();
-        ContextScope scope = injector.getInstance(ContextScope.class);
-        scope.enter(application);
+		// This project's application does not extend GuiceInjectableApplication
+		// therefore we need to enter the ContextScope manually.
+		Injector injector = application.getInjector();
+		ContextScope scope = injector.getInstance(ContextScope.class);
+		scope.enter(application);
 
-        injector.injectMembers(test);
-    }
+		injector.injectMembers(test);
+	}
 }

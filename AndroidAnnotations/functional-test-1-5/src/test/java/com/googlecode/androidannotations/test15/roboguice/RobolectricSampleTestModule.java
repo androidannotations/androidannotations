@@ -25,17 +25,18 @@ import com.google.inject.Scopes;
 
 public class RobolectricSampleTestModule extends AbstractAndroidModule {
 
-    @Override protected void configure() {
-        bind(Date.class).toProvider(FakeDateProvider.class);
-        bind(Counter.class).in(Scopes.SINGLETON);
-        bind(Ln.BaseConfig.class).toInstance(new RobolectricLoggerConfig());
-    }
+	@Override
+	protected void configure() {
+		bind(Date.class).toProvider(FakeDateProvider.class);
+		bind(Counter.class).in(Scopes.SINGLETON);
+		bind(Ln.BaseConfig.class).toInstance(new RobolectricLoggerConfig());
+	}
 
-    static class RobolectricLoggerConfig extends Ln.BaseConfig {
-        public RobolectricLoggerConfig() {
-            packageName = "robo";
-            minimumLogLevel = Log.VERBOSE;
-            scope = "ROBO";
-        }
-    }
+	static class RobolectricLoggerConfig extends Ln.BaseConfig {
+		public RobolectricLoggerConfig() {
+			packageName = "robo";
+			minimumLogLevel = Log.VERBOSE;
+			scope = "ROBO";
+		}
+	}
 }

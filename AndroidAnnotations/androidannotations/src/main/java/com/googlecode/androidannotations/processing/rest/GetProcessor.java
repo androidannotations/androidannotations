@@ -16,38 +16,28 @@
 package com.googlecode.androidannotations.processing.rest;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Get;
-import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.processing.EBeansHolder;
-import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class GetProcessor implements ElementProcessor {
-
-	private final RestImplementationsHolder restImplementationHolder;
-	private final TargetAnnotationHelper targetAnnotationHelper;
+public class GetProcessor extends MethodProcessor {
 
 	public GetProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
-		this.restImplementationHolder = restImplementationHolder;
-		targetAnnotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		super(processingEnv, restImplementationHolder);
 	}
 
 	@Override
@@ -58,75 +48,65 @@ public class GetProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
-		RestImplentationHolder holder = restImplementationHolder.getEnclosingHolder(element);
+		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
+		ExecutableElement executableElement = (ExecutableElement) element;
+
+		TypeMirror returnType = executableElement.getReturnType();
+
+		JClass generatedReturnType = null;
+		String returnTypeString = returnType.toString();
+		JClass expectedClass = null;
+
+		if (returnType.getKind() != TypeKind.VOID) {
+			if (returnTypeString.startsWith(ProcessorConstants.RESPONSE_ENTITY)) {
+				DeclaredType declaredReturnedType = (DeclaredType) returnType;
+				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
+				expectedClass = holder.refClass(typeParameter.toString());
+				generatedReturnType = holder.refClass(ProcessorConstants.RESPONSE_ENTITY).narrow(expectedClass);
+			} else {
+				generatedReturnType = holder.refClass(returnTypeString);
+				expectedClass = generatedReturnType;
+			}
+		}
 
 		Get getAnnotation = element.getAnnotation(Get.class);
 		String urlSuffix = getAnnotation.value();
-
 		String url = holder.urlPrefix + urlSuffix;
 
-		ExecutableElement executableElement = (ExecutableElement) element;
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
+	}
 
-		String methodName = executableElement.getSimpleName().toString();
+	@Override
+	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		JClass expectedClass = methodHolder.getExpectedClass();
+		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
 
-		TypeMirror returnType = executableElement.getReturnType();
-		JClass generatedReturnType;
-		String returnTypeString = returnType.toString();
-		String restMethodName;
-		JClass expectedClass;
-		if (returnTypeString.startsWith("org.springframework.http.ResponseEntity")) {
-			restMethodName = "getForEntity";
-			DeclaredType declaredReturnedType = (DeclaredType) returnType;
-			TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
-			JClass returnParameterClass = holder.refClass(typeParameter.toString());
-			expectedClass = returnParameterClass;
-			generatedReturnType = holder.refClass("org.springframework.http.ResponseEntity").narrow(returnParameterClass);
+		if (expectedClass == generatedReturnType) {
+			restCall = JExpr.invoke(restCall, "getBody");
+		}
+
+		return restCall;
+	}
+
+	@Override
+	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall.arg(generateHttpEntityVar(methodHolder));
+	}
+
+	@Override
+	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		JClass expectedClass = methodHolder.getExpectedClass();
+
+		if (expectedClass != null) {
+			return restCall.arg(expectedClass.dotclass());
 		} else {
-			restMethodName = "getForObject";
-			generatedReturnType = holder.refClass(returnTypeString);
-			expectedClass = generatedReturnType;
+			return restCall.arg(JExpr._null());
 		}
+	}
 
-		JMethod method = holder.restImplementationClass.method(JMod.PUBLIC, generatedReturnType, methodName);
-		method.annotate(Override.class);
-
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-		List<String> parameterNames = new ArrayList<String>();
-		List<JVar> methodParams = new ArrayList<JVar>();
-		for (VariableElement parameter : parameters) {
-			String paramName = parameter.getSimpleName().toString();
-			String paramType = parameter.asType().toString();
-			parameterNames.add(paramName);
-			// TODO check in validator that params are not generic. Or create a
-			// helper to fix that case and generate the right code.
-			JVar param = method.param(holder.refClass(paramType), paramName);
-			methodParams.add(param);
-		}
-
-		JBlock body = method.body();
-
-		JInvocation restCall = JExpr.invoke(holder.restTemplateField, restMethodName);
-
-		restCall.arg(url);
-		restCall.arg(expectedClass.dotclass());
-
-		List<String> urlVariableNames = targetAnnotationHelper.extractUrlVariableNames(executableElement);
-		if (urlVariableNames.size() > 0) {
-
-			JClass hashMapClass = codeModel.ref(HashMap.class).narrow(String.class, Object.class);
-			JVar hashMapVar = body.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
-
-			for (String urlVariableName : urlVariableNames) {
-				int parameterIndex = parameterNames.indexOf(urlVariableName);
-				
-				body.invoke(hashMapVar, "put").arg(urlVariableName).arg(methodParams.get(parameterIndex));
-			}
-
-			restCall.arg(hashMapVar);
-		}
-
-		body._return(restCall);
-
+	@Override
+	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
+		return generateHttpHeadersVar(body, executableElement);
 	}
 
 }

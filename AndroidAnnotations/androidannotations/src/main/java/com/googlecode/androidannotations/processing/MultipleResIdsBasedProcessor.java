@@ -37,20 +37,20 @@ public abstract class MultipleResIdsBasedProcessor {
 		this.rClass = rClass;
 	}
 
-	protected List<JFieldRef> extractQualifiedIds(Element element, int [] idsValues, String methodSuffix, EBeanHolder holder) {
+	protected List<JFieldRef> extractQualifiedIds(Element element, int[] idsValues, String methodSuffix, EBeanHolder holder) {
 
 		List<JFieldRef> idsRefs = new ArrayList<JFieldRef>();
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 
 		if (idsValues.length == 1 && idsValues[0] == Id.DEFAULT_VALUE) {
-			
+
 			String fieldName = element.getSimpleName().toString();
 			int lastIndex = fieldName.lastIndexOf(methodSuffix);
-			
+
 			if (lastIndex != -1) {
 				fieldName = fieldName.substring(0, lastIndex);
 			}
-			
+
 			JFieldRef idRef = rInnerClass.getIdStaticRef(fieldName, holder);
 			idsRefs.add(idRef);
 
@@ -59,7 +59,7 @@ public abstract class MultipleResIdsBasedProcessor {
 
 				JFieldRef idRef = rInnerClass.getIdStaticRef(idValue, holder);
 				idsRefs.add(idRef);
-			
+
 			}
 		}
 		return idsRefs;

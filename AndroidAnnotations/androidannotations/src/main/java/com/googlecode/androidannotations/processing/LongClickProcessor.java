@@ -53,50 +53,50 @@ public class LongClickProcessor extends MultipleResIdsBasedProcessor implements 
 		return LongClick.class;
 	}
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-        String methodName = element.getSimpleName().toString();
+		String methodName = element.getSimpleName().toString();
 
-        ExecutableElement executableElement = (ExecutableElement) element;
-        List<? extends VariableElement> parameters = executableElement.getParameters();
-        TypeMirror returnType = executableElement.getReturnType();
-        boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
+		ExecutableElement executableElement = (ExecutableElement) element;
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		TypeMirror returnType = executableElement.getReturnType();
+		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
 
-        boolean hasItemParameter = parameters.size() == 1;
-        
-        LongClick annotation = element.getAnnotation(LongClick.class);
-        List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "LongClicked", holder);
+		boolean hasItemParameter = parameters.size() == 1;
 
-        JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnLongClickListener"));
-        JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");
-        JClass viewClass = holder.refClass("android.view.View");
-        
-        JVar viewParam = listenerMethod.param(viewClass, "view");
-        
-        JBlock listenerMethodBody = listenerMethod.body();
-        
-        JInvocation call = JExpr.invoke(methodName);
-        
-        if (returnMethodResult) {
-            listenerMethodBody._return(call);
-        } else {
-            listenerMethodBody.add(call);
-            listenerMethodBody._return(JExpr.TRUE);
-        }
+		LongClick annotation = element.getAnnotation(LongClick.class);
+		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "LongClicked", holder);
 
-        if (hasItemParameter) {
-            call.arg(viewParam);
-        }
+		JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnLongClickListener"));
+		JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");
+		JClass viewClass = holder.refClass("android.view.View");
 
-        for (JFieldRef idRef : idsRefs) {
-        	JBlock block = holder.afterSetContentView.body().block();
-        	JInvocation findViewById = JExpr.invoke("findViewById");
-        
-        	JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
-        	block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnLongClickListener").arg(JExpr._new(listenerClass));
-        }
-    }
+		JVar viewParam = listenerMethod.param(viewClass, "view");
+
+		JBlock listenerMethodBody = listenerMethod.body();
+
+		JInvocation call = JExpr.invoke(methodName);
+
+		if (returnMethodResult) {
+			listenerMethodBody._return(call);
+		} else {
+			listenerMethodBody.add(call);
+			listenerMethodBody._return(JExpr.TRUE);
+		}
+
+		if (hasItemParameter) {
+			call.arg(viewParam);
+		}
+
+		for (JFieldRef idRef : idsRefs) {
+			JBlock block = holder.afterSetContentView.body().block();
+			JInvocation findViewById = JExpr.invoke("findViewById");
+
+			JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnLongClickListener").arg(JExpr._new(listenerClass));
+		}
+	}
 
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
     Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,23 +13,23 @@
     WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     License for the specific language governing permissions and limitations under
     the License.
-
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_refresh"
-        android:title="Refresh"
-	 />
-    
-    <item android:id="@+id/menu_search"
-        android:title="Search"
-    />
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_share"
-        android:title="Share"
-      />
-    
-    <item android:id="@+id/menu_add"
-        android:title="Add"
-      />
-        
+    <item
+        android:id="@+id/menu_refresh"
+        android:title="Refresh"/>
+
+    <item
+        android:id="@+id/menu_search"
+        android:title="Search"/>
+
+    <item
+        android:id="@+id/menu_share"
+        android:title="Share"/>
+
+    <item
+        android:id="@+id/menu_add"
+        android:title="Add"/>
+
 </menu>

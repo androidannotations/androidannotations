@@ -22,10 +22,10 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 
 @EActivity(R.layout.clicks_handled)
-public class ClicksHandledActivity extends Activity{
-	
+public class ClicksHandledActivity extends Activity {
+
 	View viewArgument;
-	
+
 	boolean conventionButtonClicked;
 	boolean snakeCaseButtonClicked;
 	boolean extendedConventionButtonClicked;
@@ -37,35 +37,35 @@ public class ClicksHandledActivity extends Activity{
 	public void conventionButton() {
 		conventionButtonClicked = true;
 	}
-	
+
 	@Click
 	public void snakeCaseButton() {
 		snakeCaseButtonClicked = true;
-	}	
-	
+	}
+
 	@Click
 	public void extendedConventionButtonClicked() {
 		extendedConventionButtonClicked = true;
 	}
-	
+
 	@Click(R.id.configurationOverConventionButton)
 	public void overridenConventionButton() {
 		overridenConventionButtonClicked = true;
 	}
-	
+
 	public void unboundButton() {
 		unboundButtonClicked = true;
 	}
-	
+
 	@Click
 	public void buttonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
 	}
 
-	@Click({R.id.button1, R.id.button2})
+	@Click({ R.id.button1, R.id.button2 })
 	public void multipleButtonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
 		multipleButtonsClicked = true;
 	}
-	
+
 }

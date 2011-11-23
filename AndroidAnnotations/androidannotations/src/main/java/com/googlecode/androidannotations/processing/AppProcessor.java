@@ -29,34 +29,33 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 
 public class AppProcessor implements ElementProcessor {
-    
-    private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return App.class;
-    }
+	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return App.class;
+	}
 
-        String fieldName = element.getSimpleName().toString();
-        
-        TypeMirror elementType = element.asType();
-        
-        
-        JBlock methodBody = holder.beforeCreate.body();
-        
-        JInvocation getApplication = invoke("getApplication");
-        
-        String applicationTypeQualifiedName = elementType.toString();
-        if (ANDROID_APPLICATION_QUALIFIED_NAME.equals(applicationTypeQualifiedName)) {
-            methodBody.assign(ref(fieldName), getApplication);
-        } else {
-            methodBody.assign(ref(fieldName), JExpr.cast(holder.refClass(applicationTypeQualifiedName), getApplication));
-        }
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-    }
+		String fieldName = element.getSimpleName().toString();
+
+		TypeMirror elementType = element.asType();
+
+		JBlock methodBody = holder.beforeCreate.body();
+
+		JInvocation getApplication = invoke("getApplication");
+
+		String applicationTypeQualifiedName = elementType.toString();
+		if (ANDROID_APPLICATION_QUALIFIED_NAME.equals(applicationTypeQualifiedName)) {
+			methodBody.assign(ref(fieldName), getApplication);
+		} else {
+			methodBody.assign(ref(fieldName), JExpr.cast(holder.refClass(applicationTypeQualifiedName), getApplication));
+		}
+
+	}
 
 }

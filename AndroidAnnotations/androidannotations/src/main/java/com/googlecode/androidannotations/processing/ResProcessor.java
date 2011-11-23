@@ -34,61 +34,61 @@ import com.sun.codemodel.JFieldRef;
 
 public class ResProcessor implements ElementProcessor {
 
-    private final IRClass rClass;
-    private final AndroidRes androidValue;
+	private final IRClass rClass;
+	private final AndroidRes androidValue;
 
-    public ResProcessor(AndroidRes androidValue, IRClass rClass) {
-        this.rClass = rClass;
-        this.androidValue = androidValue;
-    }
+	public ResProcessor(AndroidRes androidValue, IRClass rClass) {
+		this.rClass = rClass;
+		this.androidValue = androidValue;
+	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return androidValue.getTarget();
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return androidValue.getTarget();
+	}
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-        String fieldName = element.getSimpleName().toString();
+		String fieldName = element.getSimpleName().toString();
 
-        int idValue = androidValue.idFromElement(element);
+		int idValue = androidValue.idFromElement(element);
 
-        Res resInnerClass = androidValue.getRInnerClass();
+		Res resInnerClass = androidValue.getRInnerClass();
 
-        IRInnerClass rInnerClass = rClass.get(resInnerClass);
-        JFieldRef idRef;
-        if (idValue == Id.DEFAULT_VALUE) {
-            idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-        } else {
-            idRef = rInnerClass.getIdStaticRef(idValue, holder);
-        }
+		IRInnerClass rInnerClass = rClass.get(resInnerClass);
+		JFieldRef idRef;
+		if (idValue == Id.DEFAULT_VALUE) {
+			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
+		} else {
+			idRef = rInnerClass.getIdStaticRef(idValue, holder);
+		}
 
-        JBlock methodBody = holder.beforeCreate.body();
+		JBlock methodBody = holder.beforeCreate.body();
 
-        TypeMirror fieldTypeMirror = element.asType();
-        String fieldType = fieldTypeMirror.toString();
+		TypeMirror fieldTypeMirror = element.asType();
+		String fieldType = fieldTypeMirror.toString();
 
-        // Special case for loading animations
-        if ("android.view.animation.Animation".equals(fieldType)) {
-            JClass animationUtils = holder.refClass("android.view.animation.AnimationUtils");
-            methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(JExpr._this()).arg(idRef));
-        } else {
-            if (holder.resources == null)
-                holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
+		// Special case for loading animations
+		if ("android.view.animation.Animation".equals(fieldType)) {
+			JClass animationUtils = holder.refClass("android.view.animation.AnimationUtils");
+			methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(JExpr._this()).arg(idRef));
+		} else {
+			if (holder.resources == null)
+				holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
 
-            String resourceMethodName = androidValue.getResourceMethodName();
+			String resourceMethodName = androidValue.getResourceMethodName();
 
-            // Special case for @HtmlRes
-            if (element.getAnnotation(HtmlRes.class) != null) {
-                JClass html = holder.refClass("android.text.Html");
-                methodBody.assign(JExpr.ref(fieldName), html.staticInvoke("fromHtml").arg(JExpr.invoke(holder.resources, resourceMethodName).arg(idRef)));
-            } else {
-                methodBody.assign(JExpr.ref(fieldName), JExpr.invoke(holder.resources, resourceMethodName).arg(idRef));
-            }
-        }
+			// Special case for @HtmlRes
+			if (element.getAnnotation(HtmlRes.class) != null) {
+				JClass html = holder.refClass("android.text.Html");
+				methodBody.assign(JExpr.ref(fieldName), html.staticInvoke("fromHtml").arg(JExpr.invoke(holder.resources, resourceMethodName).arg(idRef)));
+			} else {
+				methodBody.assign(JExpr.ref(fieldName), JExpr.invoke(holder.resources, resourceMethodName).arg(idRef));
+			}
+		}
 
-    }
+	}
 
 }

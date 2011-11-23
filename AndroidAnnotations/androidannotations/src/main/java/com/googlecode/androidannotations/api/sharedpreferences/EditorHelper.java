@@ -42,23 +42,23 @@ public abstract class EditorHelper<T extends EditorHelper<T>> {
 	protected IntPrefEditorField<T> intField(String key) {
 		return new IntPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected StringPrefEditorField<T> stringField(String key) {
 		return new StringPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected BooleanPrefEditorField<T> booleanField(String key) {
 		return new BooleanPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected FloatPrefEditorField<T> floatField(String key) {
 		return new FloatPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected LongPrefEditorField<T> longField(String key) {
 		return new LongPrefEditorField<T>(cast(), key);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private T cast() {
 		return (T) this;

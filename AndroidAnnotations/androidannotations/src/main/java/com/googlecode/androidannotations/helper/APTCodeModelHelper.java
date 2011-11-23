@@ -36,16 +36,16 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
-	
+
 	public JClass typeMirrorToJClass(TypeMirror type, EBeanHolder holder) {
-		
+
 		if (type instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) type;
 
 			String declaredTypeName = declaredType.asElement().toString();
 
 			JClass declaredClass = holder.refClass(declaredTypeName);
-			
+
 			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 
 			List<JClass> typeArgumentJClasses = new ArrayList<JClass>();
@@ -55,7 +55,7 @@ public class APTCodeModelHelper {
 			if (typeArgumentJClasses.size() > 0) {
 				declaredClass = declaredClass.narrow(typeArgumentJClasses);
 			}
-			
+
 			return declaredClass;
 		} else {
 			return holder.refClass(type.toString());

@@ -48,7 +48,7 @@ public class TransactionalValidator implements ElementValidator {
 		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
-		
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.doesntThrowException(executableElement, valid);
@@ -56,7 +56,7 @@ public class TransactionalValidator implements ElementValidator {
 		validatorHelper.isNotFinal(element, valid);
 
 		validatorHelper.hasOneOrTwoParametersAndFirstIsDb(executableElement, valid);
-		
+
 		return valid.isValid();
 	}
 

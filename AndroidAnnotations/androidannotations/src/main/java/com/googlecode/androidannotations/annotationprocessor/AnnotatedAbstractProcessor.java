@@ -48,10 +48,7 @@ public abstract class AnnotatedAbstractProcessor extends AbstractProcessor {
 		SupportedAnnotationClasses sac = this.getClass().getAnnotation(SupportedAnnotationClasses.class);
 		if (sac == null) {
 			if (isInitialized())
-				processingEnv.getMessager().printMessage(
-						Diagnostic.Kind.WARNING,
-						"No " + SupportedAnnotationClasses.class.getSimpleName() + " annotation " + "found on " + this.getClass().getName()
-								+ ", returning parent method result.");
+				processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "No " + SupportedAnnotationClasses.class.getSimpleName() + " annotation " + "found on " + this.getClass().getName() + ", returning parent method result.");
 			return super.getSupportedAnnotationTypes();
 		} else
 			return arrayToSet(sac.value());

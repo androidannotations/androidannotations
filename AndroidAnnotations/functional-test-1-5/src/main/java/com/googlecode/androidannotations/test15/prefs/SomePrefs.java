@@ -23,12 +23,12 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPre
 @SharedPref(Scope.UNIQUE)
 public interface SomePrefs {
 
-    @DefaultString("John")
+	@DefaultString("John")
 	String name();
-	
+
 	@DefaultInt(42)
 	int age();
-	
+
 	long lastUpdated();
-	
+
 }

@@ -46,19 +46,19 @@ public class RestValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
+
 		TypeElement typeElement = (TypeElement) element;
-		
+
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
-		
-		validatorHelper.hasStringAndroidJars(element, valid);
-		
+
+		validatorHelper.hasSpringAndroidJars(element, valid);
+
 		validatorHelper.isInterface(typeElement, valid);
-		
+
 		validatorHelper.doesNotExtendOtherInterfaces(typeElement, valid);
-		
+
 		validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, valid);
-		
+
 		return valid.isValid();
 	}
 

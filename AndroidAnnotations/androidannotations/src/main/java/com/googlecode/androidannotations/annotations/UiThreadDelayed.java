@@ -21,9 +21,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on method that must be run in the Ui thread, after the specified amount of time elapses. 
+ * Should be used on method that must be run in the Ui thread, after the
+ * specified amount of time elapses.
  * 
- * The annotation value is the delay (in milliseconds) until the method will be executed.
+ * The annotation value is the delay (in milliseconds) until the method will be
+ * executed.
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)

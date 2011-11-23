@@ -22,21 +22,21 @@ import javax.lang.model.element.Element;
 
 public class RestImplementationsHolder {
 
-    private Map<Element, RestImplentationHolder> holders = new HashMap<Element, RestImplentationHolder>();
+	private Map<Element, RestImplementationHolder> holders = new HashMap<Element, RestImplementationHolder>();
 
-    public RestImplentationHolder create(Element element) {
-    	RestImplentationHolder holder = new RestImplentationHolder();
-        holders.put(element, holder);
-        return holder;
-    }
+	public RestImplementationHolder create(Element element) {
+		RestImplementationHolder holder = new RestImplementationHolder();
+		holders.put(element, holder);
+		return holder;
+	}
 
-    public RestImplentationHolder getEnclosingHolder(Element enclosedElement) {
-        Element activityElement = enclosedElement.getEnclosingElement();
-        return holders.get(activityElement);
-    }
+	public RestImplementationHolder getEnclosingHolder(Element enclosedElement) {
+		Element activityElement = enclosedElement.getEnclosingElement();
+		return holders.get(activityElement);
+	}
 
-    public RestImplentationHolder getRelativeHolder(Element element) {
-        return holders.get(element);
-    }
+	public RestImplementationHolder getRelativeHolder(Element element) {
+		return holders.get(element);
+	}
 
 }

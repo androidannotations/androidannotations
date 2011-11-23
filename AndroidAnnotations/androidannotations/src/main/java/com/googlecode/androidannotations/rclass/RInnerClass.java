@@ -70,12 +70,12 @@ public class RInnerClass implements IRInnerClass {
 	@Override
 	public boolean containsField(String name) {
 		boolean containsField = idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + name);
-		
+
 		if (!containsField) {
 			String snakeCaseName = CaseHelper.camelCaseToSnakeCase(name);
 			containsField = idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + snakeCaseName);
 		}
-		
+
 		return containsField;
 	}
 

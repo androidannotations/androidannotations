@@ -20,4 +20,5 @@ import android.app.Activity;
 import com.googlecode.androidannotations.annotations.EActivity;
 
 @EActivity
-public abstract class AbstractActivity extends Activity {}
+public abstract class AbstractActivity extends Activity {
+}

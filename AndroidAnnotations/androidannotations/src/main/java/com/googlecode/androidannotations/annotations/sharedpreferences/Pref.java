@@ -25,7 +25,8 @@ import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferences
 /**
  * Injects a {@link SharedPref}
  * 
- * The field MUST be of a type that is generated using {@link SharedPref} and therefore extends {@link SharedPreferencesHelper}.
+ * The field MUST be of a type that is generated using {@link SharedPref} and
+ * therefore extends {@link SharedPreferencesHelper}.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)

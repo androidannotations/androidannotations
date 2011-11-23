@@ -19,9 +19,8 @@ import roboguice.config.AbstractAndroidModule;
 
 public class RobolectricSampleModule extends AbstractAndroidModule {
 
-    @Override
-    protected void configure() {
-    }
+	@Override
+	protected void configure() {
+	}
 
 }
-

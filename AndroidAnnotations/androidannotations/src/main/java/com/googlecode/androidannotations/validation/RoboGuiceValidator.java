@@ -25,10 +25,10 @@ import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class RoboGuiceValidator  implements ElementValidator {
+public class RoboGuiceValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
-	
+
 	public RoboGuiceValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);

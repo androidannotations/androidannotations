@@ -16,5 +16,5 @@
 package com.googlecode.androidannotations.test15.roboguice;
 
 public class Counter {
-    public int count = 0;
+	public int count = 0;
 }

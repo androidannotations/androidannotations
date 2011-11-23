@@ -32,7 +32,7 @@ public class ViewByIdValidator implements ElementValidator {
 
 	private IdValidatorHelper validatorHelper;
 	private IdAnnotationHelper annotationHelper;
-	
+
 	public ViewByIdValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);

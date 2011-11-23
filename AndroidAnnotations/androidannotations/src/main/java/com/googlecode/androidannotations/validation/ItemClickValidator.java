@@ -35,7 +35,7 @@ public class ItemClickValidator implements ElementValidator {
 
 	private IdAnnotationHelper annotationHelper;
 	private IdValidatorHelper validatorHelper;
-	
+
 	public ItemClickValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
@@ -50,11 +50,11 @@ public class ItemClickValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
+
 		validatorHelper.idListenerMethod(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		validatorHelper.voidReturnType(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.zeroOrOneParameter(executableElement, valid);
 

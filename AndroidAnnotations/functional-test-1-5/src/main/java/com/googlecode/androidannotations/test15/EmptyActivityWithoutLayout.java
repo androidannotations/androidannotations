@@ -22,4 +22,3 @@ import com.googlecode.androidannotations.annotations.EActivity;
 @EActivity
 public class EmptyActivityWithoutLayout extends Activity {
 }
-
