@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,6 +31,7 @@ public class ClicksHandledActivity extends Activity{
 	boolean extendedConventionButtonClicked;
 	boolean overridenConventionButtonClicked;
 	boolean unboundButtonClicked;
+	boolean multipleButtonsClicked;
 
 	@Click
 	public void conventionButton() {
@@ -41,7 +42,7 @@ public class ClicksHandledActivity extends Activity{
 	public void snakeCaseButton() {
 		snakeCaseButtonClicked = true;
 	}	
-
+	
 	@Click
 	public void extendedConventionButtonClicked() {
 		extendedConventionButtonClicked = true;
@@ -59,6 +60,12 @@ public class ClicksHandledActivity extends Activity{
 	@Click
 	public void buttonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
+	}
+
+	@Click({R.id.button1, R.id.button2})
+	public void multipleButtonWithViewArgument(View viewArgument) {
+		this.viewArgument = viewArgument;
+		multipleButtonsClicked = true;
 	}
 	
 }

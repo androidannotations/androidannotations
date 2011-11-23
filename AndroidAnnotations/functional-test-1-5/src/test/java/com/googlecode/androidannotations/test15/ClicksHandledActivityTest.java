@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -86,6 +86,21 @@ public class ClicksHandledActivityTest {
 		activity.findViewById(R.id.buttonWithViewArgument).performClick();
 		
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
+	}
+	
+	@Test
+	public void multipleButtonsClicked() {
+		assertThat(activity.multipleButtonsClicked).isFalse();
+
+		activity.findViewById(R.id.button1).performClick();		
+		assertThat(activity.multipleButtonsClicked).isTrue();
+		assertThat(activity.viewArgument).hasId(R.id.button1);
+		
+		activity.multipleButtonsClicked = false;
+		
+		activity.findViewById(R.id.button2).performClick();
+		assertThat(activity.multipleButtonsClicked).isTrue();
+		assertThat(activity.viewArgument).hasId(R.id.button2);
 	}
 	
 

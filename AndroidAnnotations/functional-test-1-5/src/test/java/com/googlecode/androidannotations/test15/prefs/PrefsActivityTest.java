@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -62,6 +62,22 @@ public class PrefsActivityTest {
         somePrefs.age().put(42);
         assertThat(sharedPref.getInt("age", 0)).isEqualTo(42);
     }
+    
+    @Test
+    public void putLong() {
+        long now = System.currentTimeMillis();
+		somePrefs.lastUpdated().put(now);
+        assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
+    }
+    
+    @Test
+    public void editLong() {
+        long now = System.currentTimeMillis();
+        
+        somePrefs.edit().lastUpdated().put(now).apply();
+
+        assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
+    }    
 
     @Test
     public void putTwoValuesChained() {
@@ -121,6 +137,15 @@ public class PrefsActivityTest {
         sharedPref.edit().putString("name", "Something").commit();
 
         assertThat(somePrefs.name().get()).isEqualTo("Something");
+    }
+    
+    @Test
+    public void getLong() {
+        long now = System.currentTimeMillis();
+
+        sharedPref.edit().putLong("lastUpdated", now).commit();
+
+        assertThat(somePrefs.lastUpdated().get()).isEqualTo(now);
     }
 
     @Test

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -52,11 +52,11 @@ public class RoboGuiceProcessor implements ElementProcessor {
     }
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-        ActivityHolder holder = activitiesHolder.getRelativeActivityHolder(element);
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+        EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
 
         JClass injectorProviderClass = holder.refClass("roboguice.inject.InjectorProvider");
-        holder.activity._implements(injectorProviderClass);
+        holder.eBean._implements(injectorProviderClass);
 
         // Fields
         JFieldVar scope = scopeField(holder);
@@ -82,18 +82,18 @@ public class RoboGuiceProcessor implements ElementProcessor {
 
     }
 
-    private JMethod getInjectorMethod(ActivityHolder holder) {
+    private JMethod getInjectorMethod(EBeanHolder holder) {
         JClass injectorClass = holder.refClass("com.google.inject.Injector");
         JClass injectorProviderClass = holder.refClass("roboguice.inject.InjectorProvider");
-        JMethod method = holder.activity.method(JMod.PUBLIC, injectorClass, "getInjector");
+        JMethod method = holder.eBean.method(JMod.PUBLIC, injectorClass, "getInjector");
         method.annotate(Override.class);
         JExpression castApplication = cast(injectorProviderClass, invoke("getApplication"));
         method.body()._return(castApplication.invoke("getInjector"));
         return method;
     }
 
-    private void onRestartMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onRestart");
+    private void onRestartMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onRestart");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -101,8 +101,8 @@ public class RoboGuiceProcessor implements ElementProcessor {
         fireEvent(holder, eventManager, body, "roboguice.activity.event.OnRestartEvent");
     }
 
-    private void onStartMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onStart");
+    private void onStartMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onStart");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -110,8 +110,8 @@ public class RoboGuiceProcessor implements ElementProcessor {
         fireEvent(holder, eventManager, body, "roboguice.activity.event.OnStartEvent");
     }
 
-    private void onResumeMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onResume");
+    private void onResumeMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onResume");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -119,16 +119,16 @@ public class RoboGuiceProcessor implements ElementProcessor {
         fireEvent(holder, eventManager, body, "roboguice.activity.event.OnResumeEvent");
     }
 
-    private void onPauseMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onPause");
+    private void onPauseMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onPause");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(_super(), method);
         fireEvent(holder, eventManager, body, "roboguice.activity.event.OnPauseEvent");
     }
 
-    private void onNewIntentMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onNewIntent");
+    private void onNewIntentMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onNewIntent");
         method.annotate(Override.class);
         JVar intent = method.param(holder.refClass("android.content.Intent"), "intent");
         JBlock body = method.body();
@@ -137,7 +137,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
         fireEvent(holder, eventManager, body, "roboguice.activity.event.OnNewIntentEvent");
     }
 
-    private void fireEvent(ActivityHolder holder, JFieldVar eventManager, JBlock body, String eventClassName, JExpression... eventArguments) {
+    private void fireEvent(EBeanHolder holder, JFieldVar eventManager, JBlock body, String eventClassName, JExpression... eventArguments) {
         JClass eventClass = holder.refClass(eventClassName);
         JInvocation newEvent = _new(eventClass);
         for (JExpression eventArgument : eventArguments) {
@@ -146,8 +146,8 @@ public class RoboGuiceProcessor implements ElementProcessor {
         body.invoke(eventManager, "fire").arg(newEvent);
     }
     
-    private void onStopMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onStop");
+    private void onStopMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onStop");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -160,8 +160,8 @@ public class RoboGuiceProcessor implements ElementProcessor {
         finallyBody.invoke(_super(), method);
     }
     
-    private void onDestroyMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onDestroy");
+    private void onDestroyMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onDestroy");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(scope, "enter").arg(_this());
@@ -176,8 +176,8 @@ public class RoboGuiceProcessor implements ElementProcessor {
         finallyBody.invoke(_super(), method);
     }
     
-    private void onConfigurationChangedMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onConfigurationChanged");
+    private void onConfigurationChangedMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onConfigurationChanged");
         method.annotate(Override.class);
         JClass configurationClass = holder.refClass("android.content.res.Configuration");
 		JVar newConfig = method.param(configurationClass, "newConfig");
@@ -189,16 +189,16 @@ public class RoboGuiceProcessor implements ElementProcessor {
         fireEvent(holder, eventManager, body, "roboguice.activity.event.OnConfigurationChangedEvent", currentConfig, newConfig);
     }
     
-    private void onContentChangedMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onContentChanged");
+    private void onContentChangedMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onContentChanged");
         method.annotate(Override.class);
         JBlock body = method.body();
         body.invoke(_super(), method);
         fireEvent(holder, eventManager, body, "roboguice.activity.event.OnContentChangedEvent");
     }
     
-    private void onActivityResultMethod(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-        JMethod method = holder.activity.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
+    private void onActivityResultMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
+        JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
         method.annotate(Override.class);
         JVar requestCode = method.param(codeModel.INT, "requestCode");
         JVar resultCode = method.param(codeModel.INT, "resultCode");
@@ -217,32 +217,32 @@ public class RoboGuiceProcessor implements ElementProcessor {
         finallyBody.invoke(scope, "exit").arg(_this());
     }
     
-    private void afterSetContentView(JCodeModel codeModel, ActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
+    private void afterSetContentView(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
     	JBlock afterSetContentViewBody = holder.afterSetContentView.body();
 		afterSetContentViewBody.invoke(scope, "injectViews");
 		fireEvent(holder, eventManager, afterSetContentViewBody, "roboguice.activity.event.OnContentViewAvailableEvent");
     }
 
-    private JFieldVar eventManagerField(ActivityHolder holder) {
+    private JFieldVar eventManagerField(EBeanHolder holder) {
         JClass eventManagerClass = holder.refClass("roboguice.event.EventManager");
-        JFieldVar eventManager = holder.activity.field(JMod.PRIVATE, eventManagerClass, "eventManager_");
+        JFieldVar eventManager = holder.eBean.field(JMod.PRIVATE, eventManagerClass, "eventManager_");
         return eventManager;
     }
 
-    private JFieldVar scopeField(ActivityHolder holder) {
+    private JFieldVar scopeField(EBeanHolder holder) {
         JClass contextScopeClass = holder.refClass("roboguice.inject.ContextScope");
-        JFieldVar scope = holder.activity.field(JMod.PRIVATE, contextScopeClass, "scope_");
+        JFieldVar scope = holder.eBean.field(JMod.PRIVATE, contextScopeClass, "scope_");
         return scope;
     }
 
-    private void listenerFields(Element element, ActivityHolder holder) {
+    private void listenerFields(Element element, EBeanHolder holder) {
         JClass injectClass = holder.refClass("com.google.inject.Inject");
         List<String> listenerClasses = extractListenerClasses(element);
         if (listenerClasses.size() > 0) {
             int i = 1;
             for (String listenerClassName : listenerClasses) {
                 JClass listenerClass = holder.refClass(listenerClassName);
-                JFieldVar listener = holder.activity.field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
+                JFieldVar listener = holder.eBean.field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
                 listener.annotate(SuppressWarnings.class).param("value", "unused");
                 listener.annotate(injectClass);
                 i++;
@@ -280,7 +280,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
         return new ArrayList<String>(0);
     }
 
-    private void beforeCreateMethod(ActivityHolder holder, JFieldVar scope, JFieldVar eventManager, JMethod getInjector) {
+    private void beforeCreateMethod(EBeanHolder holder, JFieldVar scope, JFieldVar eventManager, JMethod getInjector) {
         JClass contextScopeClass = holder.refClass("roboguice.inject.ContextScope");
         JClass injectorClass = holder.refClass("com.google.inject.Injector");
         JClass eventManagerClass = holder.refClass("roboguice.event.EventManager");

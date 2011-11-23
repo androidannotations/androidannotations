@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,7 @@ import com.googlecode.androidannotations.annotations.res.DimensionPixelOffsetRes
 import com.googlecode.androidannotations.annotations.res.DimensionPixelSizeRes;
 import com.googlecode.androidannotations.annotations.res.DimensionRes;
 import com.googlecode.androidannotations.annotations.res.DrawableRes;
+import com.googlecode.androidannotations.annotations.res.HtmlRes;
 import com.googlecode.androidannotations.annotations.res.IntArrayRes;
 import com.googlecode.androidannotations.annotations.res.IntegerRes;
 import com.googlecode.androidannotations.annotations.res.LayoutRes;
@@ -45,6 +46,7 @@ public enum AndroidRes {
 	STRING(Res.STRING, StringRes.class, "getString", "java.lang.String"), //
 	STRING_ARRAY(Res.ARRAY, StringArrayRes.class, "getStringArray", "java.lang.String[]"), //
 	ANIMATION(Res.ANIM, AnimationRes.class, "getAnimation", "android.content.res.XmlResourceParser", "android.view.animation.Animation"), //
+	HTML(Res.STRING, HtmlRes.class, "getString", "java.lang.CharSequence", "android.text.Spanned"),
 	BOOLEAN(Res.BOOL, BooleanRes.class, "getBoolean", "java.lang.Boolean", "boolean"), //
 	COLOR_STATE_LIST(Res.COLOR, ColorStateListRes.class, "getColorStateList", "android.content.res.ColorStateList"), //
 	DIMENSION(Res.DIMEN, DimensionRes.class, "getDimension", "java.lang.Float", "float"), //

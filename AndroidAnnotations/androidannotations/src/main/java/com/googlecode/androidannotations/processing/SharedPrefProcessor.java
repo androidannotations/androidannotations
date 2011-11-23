@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,7 @@ import javax.lang.model.util.ElementFilter;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultInt;
+import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultLong;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
 import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
 import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
@@ -41,6 +42,7 @@ import com.googlecode.androidannotations.api.sharedpreferences.FloatPrefField;
 import com.googlecode.androidannotations.api.sharedpreferences.IntPrefEditorField;
 import com.googlecode.androidannotations.api.sharedpreferences.IntPrefField;
 import com.googlecode.androidannotations.api.sharedpreferences.LongPrefEditorField;
+import com.googlecode.androidannotations.api.sharedpreferences.LongPrefField;
 import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import com.googlecode.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import com.googlecode.androidannotations.api.sharedpreferences.StringPrefField;
@@ -89,7 +91,7 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
     }
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
         TypeElement typeElement = (TypeElement) element;
 
@@ -193,8 +195,7 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
                     defaultValue = JExpr.lit(false);
                 }
                 addFieldHelperMethod(helperClass, fieldName, defaultValue, BooleanPrefField.class, "booleanField");
-            }
-            if ("float".equals(returnType)) {
+            } else if ("float".equals(returnType)) {
                 JExpression defaultValue;
                 DefaultFloat defaultAnnotation = method.getAnnotation(DefaultFloat.class);
                 if (defaultAnnotation != null) {
@@ -203,8 +204,7 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
                     defaultValue = JExpr.lit(0f);
                 }
                 addFieldHelperMethod(helperClass, fieldName, defaultValue, FloatPrefField.class, "floatField");
-            }
-            if ("int".equals(returnType)) {
+            } else if ("int".equals(returnType)) {
                 JExpression defaultValue;
                 DefaultInt defaultAnnotation = method.getAnnotation(DefaultInt.class);
                 if (defaultAnnotation != null) {
@@ -213,8 +213,16 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
                     defaultValue = JExpr.lit(0);
                 }
                 addFieldHelperMethod(helperClass, fieldName, defaultValue, IntPrefField.class, "intField");
-            }
-            if ("java.lang.String".equals(returnType)) {
+            } else if ("long".equals(returnType)) {
+                JExpression defaultValue;
+                DefaultLong defaultAnnotation = method.getAnnotation(DefaultLong.class);
+                if (defaultAnnotation != null) {
+                    defaultValue = JExpr.lit(defaultAnnotation.value());
+                } else {
+                    defaultValue = JExpr.lit(0l);
+                }
+                addFieldHelperMethod(helperClass, fieldName, defaultValue, LongPrefField.class, "longField");
+            } else if ("java.lang.String".equals(returnType)) {
                 JExpression defaultValue;
                 DefaultString defaultAnnotation = method.getAnnotation(DefaultString.class);
                 if (defaultAnnotation != null) {

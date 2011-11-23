@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+    Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -38,7 +38,8 @@
         <activity android:name=".prefs.PrefsActivity_" />
         <activity android:name=".res.ResActivity_" />
         <activity android:name=".ThreadActivity_" />
-        
+        <activity android:name="com.googlecode.androidannotations.test15.menu.OptionsMenuActivity_" />
+        <activity android:name="com.googlecode.androidannotations.test15.NoTitleFullscreenActivity_" />
 
 	</application>
 

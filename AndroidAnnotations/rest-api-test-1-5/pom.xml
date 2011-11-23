@@ -8,7 +8,6 @@
 		<version>2.2-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.googlecode.androidannotations</groupId>
 	<artifactId>rest-api-test-1-5</artifactId>
 	<packaging>apk</packaging>
 	<name>rest-api-test-1-5</name>
@@ -95,8 +94,8 @@
 			<!-- TODO remove conf if default is OK -->
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>maven-android-plugin</artifactId>
-				<version>2.8.3</version>
+				<artifactId>android-maven-plugin</artifactId>
+				<version>3.0.0-alpha-13</version>
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
@@ -107,6 +106,11 @@
 					</sdk>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+                        <dex>
+                            <jvmArguments>
+                                <jvmArgument>-Xmx512m</jvmArgument>
+                            </jvmArguments>
+                        </dex>  					
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
@@ -118,6 +122,15 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>			
+			
 		</plugins>
 	</build>
 

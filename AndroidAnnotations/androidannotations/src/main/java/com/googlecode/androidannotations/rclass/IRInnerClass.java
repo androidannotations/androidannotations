@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
  */
 package com.googlecode.androidannotations.rclass;
 
-import com.googlecode.androidannotations.processing.ActivityHolder;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JFieldRef;
 
 public interface IRInnerClass {
@@ -27,9 +27,9 @@ public interface IRInnerClass {
 	
 	String getIdQualifiedName(String name);
 	
-	JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder);
+	JFieldRef getIdStaticRef(Integer idValue, EBeanHolder holder);
 
-	JFieldRef getIdStaticRef(String name, ActivityHolder holder);
+	JFieldRef getIdStaticRef(String name, EBeanHolder holder);
 	
 	final IRInnerClass EMPTY_R_INNER_CLASS = new RInnerClass(null);
 

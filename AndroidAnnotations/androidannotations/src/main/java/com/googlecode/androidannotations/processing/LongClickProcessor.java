@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,11 +24,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -43,13 +40,12 @@ import com.sun.codemodel.JVar;
 /**
  * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
+ * @author Mathieu Boniface
  */
-public class LongClickProcessor implements ElementProcessor {
-
-	private final IRClass rClass;
+public class LongClickProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
 
 	public LongClickProcessor(IRClass rClass) {
-		this.rClass = rClass;
+		super(rClass);
 	}
 
 	@Override
@@ -58,8 +54,8 @@ public class LongClickProcessor implements ElementProcessor {
 	}
 
     @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-        ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
         String methodName = element.getSimpleName().toString();
 
@@ -70,7 +66,8 @@ public class LongClickProcessor implements ElementProcessor {
 
         boolean hasItemParameter = parameters.size() == 1;
         
-        JFieldRef idRef = extractClickQualifiedId(element, holder);
+        LongClick annotation = element.getAnnotation(LongClick.class);
+        List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "LongClicked", holder);
 
         JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnLongClickListener"));
         JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");
@@ -93,28 +90,12 @@ public class LongClickProcessor implements ElementProcessor {
             call.arg(viewParam);
         }
 
-        JBlock block = holder.afterSetContentView.body().block();
-
-        JInvocation findViewById = JExpr.invoke("findViewById");
+        for (JFieldRef idRef : idsRefs) {
+        	JBlock block = holder.afterSetContentView.body().block();
+        	JInvocation findViewById = JExpr.invoke("findViewById");
         
-        JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
-		block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnLongClickListener").arg(JExpr._new(listenerClass));
-    }
-    
-    private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
-        LongClick annotation = element.getAnnotation(LongClick.class);
-        int idValue = annotation.value();
-        IRInnerClass rInnerClass = rClass.get(Res.ID);
-        if (idValue == Id.DEFAULT_VALUE) {
-            String fieldName = element.getSimpleName().toString();
-            int lastIndex = fieldName.lastIndexOf("LongClicked");
-            if (lastIndex != -1) {
-                fieldName = fieldName.substring(0, lastIndex);
-            }
-            return rInnerClass.getIdStaticRef(fieldName, holder);
-
-        } else {
-            return rInnerClass.getIdStaticRef(idValue, holder);
+        	JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+        	block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnLongClickListener").arg(JExpr._new(listenerClass));
         }
     }
 

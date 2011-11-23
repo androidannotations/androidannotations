@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.helper.ModelConstants;
-import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;
@@ -49,7 +49,7 @@ public class RestProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
 		RestImplementationHolder holder = restImplementationHolder.create(element);
 

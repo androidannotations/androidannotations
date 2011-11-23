@@ -4,3 +4,4 @@ target
 .project
 .classpath
 tmp
+bin

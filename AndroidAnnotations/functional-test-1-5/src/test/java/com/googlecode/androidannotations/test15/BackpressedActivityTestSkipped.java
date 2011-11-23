@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ import android.os.Build;
 import android.view.KeyEvent;
 
 //@RunWith(RobolectricTestRunner.class)
-public class BackpressedActivityTest {
+public class BackpressedActivityTestSkipped {
 
     /**
      * Test skipped because {@link Build.VERSION#RELEASE} is set to null in robolectric

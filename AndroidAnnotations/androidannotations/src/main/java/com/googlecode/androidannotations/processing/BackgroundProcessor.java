@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,13 +50,13 @@ public class BackgroundProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws JClassAlreadyExistsException {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws JClassAlreadyExistsException {
 
-		ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
 		// Method
 		String backgroundMethodName = element.getSimpleName().toString();
-		JMethod backgroundMethod = holder.activity.method(JMod.PUBLIC, codeModel.VOID, backgroundMethodName);
+		JMethod backgroundMethod = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, backgroundMethodName);
 		backgroundMethod.annotate(Override.class);
 
 		// Method parameters
@@ -77,7 +77,7 @@ public class BackgroundProcessor implements ElementProcessor {
 		JBlock runMethodBody = runMethod.body();
 		JTryBlock runTry = runMethodBody._try();
 
-		JExpression activitySuper = holder.activity.staticRef("super");
+		JExpression activitySuper = holder.eBean.staticRef("super");
 
 		JInvocation superCall = runTry.body().invoke(activitySuper, backgroundMethod);
 		for (JVar param : parameters) {
@@ -90,7 +90,7 @@ public class BackgroundProcessor implements ElementProcessor {
 
 		JInvocation errorInvoke = logClass.staticInvoke("e");
 
-		errorInvoke.arg(holder.activity.name());
+		errorInvoke.arg(holder.eBean.name());
 		errorInvoke.arg("A runtime exception was thrown while executing code in a background thread");
 		errorInvoke.arg(exceptionParam);
 

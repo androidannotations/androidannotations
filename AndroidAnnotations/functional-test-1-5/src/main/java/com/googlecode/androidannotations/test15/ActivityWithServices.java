@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,10 +24,12 @@ import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.telephony.TelephonyManager;
 import android.text.ClipboardManager;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
@@ -83,7 +85,50 @@ public class ActivityWithServices extends Activity {
     
     @SystemService
     ClipboardManager clipboardManager;
+    
+    @SystemService
+    TelephonyManager telephonyManager;
+    
+    @SystemService
+    AudioManager audioManager;
 
+    // API level 4
+    //@SystemService
+    //AccessibilityManager accessibilityManager;
+    
+    // API Level 5
+    //@SystemService
+    //AccountManager accountManager;
+    
+    //@SystemService
+    //WallpaperManager wallpaperManager;
+    
+    // API level 8
+    //@SystemService
+    //DropBoxManager dropBoxManager;
+    
+    //@SystemService
+    //DevicePolicyManager devicePolicyManager;
+    
+    // API level 9
+    //@SystemService
+    //StorageManager storageManager;
+    
+    // API level 10
+    //@SystemService
+    //NfcManager nfcManager;    
+    
+    // API level 12
+    //@SystemService
+    //UsbManager usbManager;
+    
+    // API level 14
+    //@SystemService
+    //TextServicesManager textServicesManager;
+    
+    //@SystemService
+    //WifiP2pManager wifiP2pManager;
+    
     // TODO Test those for > 1.5 Android versions
     // UiModeManager uiModeManager;
     // DownloadManager downloadManager;

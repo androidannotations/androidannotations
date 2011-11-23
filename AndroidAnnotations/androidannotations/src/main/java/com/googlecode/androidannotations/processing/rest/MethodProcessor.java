@@ -29,7 +29,7 @@ import javax.lang.model.element.VariableElement;
 import com.googlecode.androidannotations.annotations.rest.Accept;
 import com.googlecode.androidannotations.helper.ProcessorConstants;
 import com.googlecode.androidannotations.helper.RestAnnotationHelper;
-import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -226,6 +226,6 @@ public abstract class MethodProcessor implements ElementProcessor {
 	public abstract Class<? extends Annotation> getTarget();
 
 	@Override
-	public abstract void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception;
+	public abstract void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception;
 
 }
