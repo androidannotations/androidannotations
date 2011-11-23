@@ -188,13 +188,15 @@ public abstract class MethodProcessor implements ElementProcessor {
 		JClass httpHeadersClass = holder.refClass(ProcessorConstants.HTTP_HEADERS);
 		httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
 
-		JClass collectionsClass = holder.refClass(ProcessorConstants.COLLECTIONS);
-		JClass mediaTypeClass = holder.refClass(ProcessorConstants.MEDIA_TYPE);
 		String mediaType = retrieveAcceptAnnotationValue(executableElement);
-
-		JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticRef(mediaType));
-		body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
-
+		if (mediaType != null) {
+			JClass collectionsClass = holder.refClass(ProcessorConstants.COLLECTIONS);
+			JClass mediaTypeClass = holder.refClass(ProcessorConstants.MEDIA_TYPE);
+	
+			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticRef(mediaType));
+			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
+		}
+		
 		return httpHeadersVar;
 	}
 
@@ -203,7 +205,11 @@ public abstract class MethodProcessor implements ElementProcessor {
 		if (acceptAnnotation == null) {
 			acceptAnnotation = executableElement.getEnclosingElement().getAnnotation(Accept.class);
 		}
-		return acceptAnnotation.value().name();
+		if (acceptAnnotation != null) {
+			return acceptAnnotation.value().name();
+		} else {
+			return null;
+		}
 	}
 
 	private Map<String, JVar> generateMethodParametersVar(JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
