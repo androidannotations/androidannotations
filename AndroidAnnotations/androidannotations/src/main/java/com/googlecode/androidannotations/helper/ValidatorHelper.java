@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -280,10 +281,28 @@ public class ValidatorHelper {
 		if (!elementHasAnnotation(Get.class, element) && !elementHasAnnotation(Post.class, element)) {
 			annotationHelper.printAnnotationError(element, "%s can only be used in an interface annotated with Get or Post annotation");
 		}
-
 	}
 
-	public boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element) {
+	public void typeHasAnnotation(Class<? extends Annotation> annotation, Element element, IsValid valid) {
+		TypeMirror elementType = element.asType();
+		Element typeElement = annotationHelper.getTypeUtils().asElement(elementType);
+		if (!elementHasAnnotationSafe(annotation, typeElement)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on an element annotated with " + TargetAnnotationHelper.annotationName(annotation));
+		}
+	}
+
+	private boolean elementHasAnnotationSafe(Class<? extends Annotation> annotation, Element element) {
+		List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
+		for (AnnotationMirror annotationMirror : annotationMirrors) {
+			if (annotationMirror.toString().equals("@" + annotation.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element) {
 		return element.getAnnotation(annotation) != null;
 	}
 

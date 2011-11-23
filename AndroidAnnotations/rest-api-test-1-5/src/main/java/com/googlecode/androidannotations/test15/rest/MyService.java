@@ -44,24 +44,11 @@ public interface MyService {
 
 	// The response can be a ResponseEntity<T>
 	@Get("/events/{year}/{location}")
-	ResponseEntity<EventList> getEvents2(String location, int year) throws RestClientException; // You
-																								// may
-																								// (or
-																								// may
-																								// not)
-																								// declare
-																								// throwing
-																								// RestClientException
-																								// (as
-																								// a
-																								// reminder,
-																								// since
-																								// it's
-																								// a
-																								// RuntimeException),
-																								// but
-																								// nothing
-																								// else.
+	/*
+	 * You may (or may not) declare throwing RestClientException (as a reminder,
+	 * since it's a RuntimeException), but nothing else.
+	 */
+	ResponseEntity<EventList> getEvents2(String location, int year) throws RestClientException;
 
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
@@ -94,5 +81,5 @@ public interface MyService {
 
 	// if you need to add some configuration to the Spring RestTemplate.
 	RestTemplate getRestTemplate();
-
+	
 }

@@ -13,17 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.rest;
+package com.googlecode.androidannotations.annotations.rest;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.rest.RestService;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import android.app.Activity;
-
-@EActivity
-public class MyServiceActivity extends Activity {
-
-	@RestService
-	MyService myService;
-
+/**
+ * Injects a {@link Rest} service
+ * 
+ * The injected element must be an interface annotated with {@link Rest}.
+ * AndroidAnnotations will take care of creating the implementation of this
+ * interface.
+ * 
+ */
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.FIELD)
+public @interface RestService {
 }
