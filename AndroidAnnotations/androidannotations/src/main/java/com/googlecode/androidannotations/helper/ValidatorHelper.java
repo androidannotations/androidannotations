@@ -79,8 +79,8 @@ public class ValidatorHelper {
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
-    private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR);
-    
+	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR);
+
 	@SuppressWarnings("unchecked")
 	private static final List<Class<? extends Annotation>> VALID_EBEAN_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class);
 
@@ -773,17 +773,17 @@ public class ValidatorHelper {
 		}
 
 	}
-	
+
 	public void hasValidLogLevel(Element element, IsValid isValid) {
-	
+
 		Trace annotation = element.getAnnotation(Trace.class);
 		Integer level = annotation.level();
-		
-		if (! VALID_LOG_LEVELS.contains(level)) {
+
+		if (!VALID_LOG_LEVELS.contains(level)) {
 			annotationHelper.printError(element, "Unrecognized log level.");
 			isValid.invalidate();
 		}
-		
+
 	}
 
 }

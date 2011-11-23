@@ -23,22 +23,25 @@ import java.lang.annotation.Target;
 import android.util.Log;
 
 /**
- * Use this annotation to log at runtime the execution time of the targeted method.
+ * Use this annotation to log at runtime the execution time of the targeted
+ * method.
  * 
- * <i>tag</i> (optional) : the tag used for the log message. (default: enclosing class name)
+ * <i>tag</i> (optional) : the tag used for the log message. (default: enclosing
+ * class name)
  * 
- * <i>level</i> (optional) : the log level used for the log message. (default : LOG.INFO).
+ * <i>level</i> (optional) : the log level used for the log message. (default :
+ * LOG.INFO).
  * 
  * @author Mathieu Boniface
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface Trace {
-	
+
 	public static final String DEFAULT_TAG = "NO_TAG";
 
 	String tag() default DEFAULT_TAG;
-	
+
 	int level() default Log.INFO;
-	
+
 }

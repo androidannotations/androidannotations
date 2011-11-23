@@ -57,68 +57,68 @@ public class TraceProcessor implements ElementProcessor {
 		JClass systemClass = holder.refClass(System.class);
 
 		JMethod method = helper.overrideAnnotatedMethod(executableElement, holder);
-		
+
 		JBlock methodBody = method.body();
 
 		JInvocation isLoggableInvocation = logClass.staticInvoke("isLoggable");
 		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, logClass));
-		
+
 		JConditional ifStatement = methodBody._if(isLoggableInvocation);
 
 		JInvocation currentTimeInvoke = systemClass.staticInvoke("currentTimeMillis");
 		JVar startDeclaration = ifStatement._then().decl(codeModel.LONG, "start", currentTimeInvoke);
-		
+
 		JTryBlock tryBlock = ifStatement._then()._try();
 		helper.callSuperMethod(method, codeModel, holder, tryBlock.body());
-		
+
 		JBlock finallyBlock = tryBlock._finally();
-		
+
 		JVar durationDeclaration = finallyBlock.decl(codeModel.LONG, "duration", currentTimeInvoke.minus(startDeclaration));
 
 		String logMethodString = logMethodNameFromLevel(level);
 		JInvocation logInvoke = logClass.staticInvoke(logMethodString);
 		logInvoke.arg(tag);
-		
+
 		String methodName = element.getSimpleName().toString();
 		JExpression message = JExpr.lit("out " + methodName + ", duration in ms: ").plus(durationDeclaration);
 		logInvoke.arg(message);
 		finallyBlock.add(logInvoke);
-		
+
 		JBlock elseBlock = ifStatement._else();
 		helper.callSuperMethod(method, codeModel, holder, elseBlock);
 	}
-	
+
 	private String logMethodNameFromLevel(int level) {
 		switch (level) {
-			case Log.DEBUG:
-				return "d";
-			case Log.VERBOSE:
-				return "v";
-			case Log.INFO:
-				return "i";
-			case Log.WARN:
-				return "w";
-			case Log.ERROR:
-				return "e";
-			default:
-				throw new IllegalArgumentException("Unrecognized Log level : " + level);
+		case Log.DEBUG:
+			return "d";
+		case Log.VERBOSE:
+			return "v";
+		case Log.INFO:
+			return "i";
+		case Log.WARN:
+			return "w";
+		case Log.ERROR:
+			return "e";
+		default:
+			throw new IllegalArgumentException("Unrecognized Log level : " + level);
 		}
 	}
 
 	private JFieldRef logLevelFromInt(int level, JClass logClass) {
 		switch (level) {
-			case Log.DEBUG:
-				return logClass.staticRef("DEBUG");
-			case Log.VERBOSE:
-				return logClass.staticRef("VERBOSE");
-			case Log.INFO:
-				return logClass.staticRef("INFO");
-			case Log.WARN:
-				return logClass.staticRef("WARN");
-			case Log.ERROR:
-				return logClass.staticRef("ERROR");
-			default:
-				throw new IllegalArgumentException("Unrecognized log level. Given value:" + level);
+		case Log.DEBUG:
+			return logClass.staticRef("DEBUG");
+		case Log.VERBOSE:
+			return logClass.staticRef("VERBOSE");
+		case Log.INFO:
+			return logClass.staticRef("INFO");
+		case Log.WARN:
+			return logClass.staticRef("WARN");
+		case Log.ERROR:
+			return logClass.staticRef("ERROR");
+		default:
+			throw new IllegalArgumentException("Unrecognized log level. Given value:" + level);
 		}
 	}
 

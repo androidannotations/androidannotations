@@ -61,12 +61,12 @@ public class APTCodeModelHelper {
 			return holder.refClass(type.toString());
 		}
 	}
-	
+
 	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EBeanHolder holder) {
 		String methodName = executableElement.getSimpleName().toString();
-		
+
 		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder);
-		
+
 		JMethod method = holder.eBean.method(JMod.PUBLIC, returnType, methodName);
 		method.annotate(Override.class);
 
@@ -77,23 +77,23 @@ public class APTCodeModelHelper {
 			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
 			parameters.add(param);
 		}
-		
+
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
 			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
 			method._throws(thrownType);
 		}
-		
+
 		return method;
 	}
-	
+
 	public void callSuperMethod(JMethod superMethod, JCodeModel codeModel, EBeanHolder holder, JBlock callBlock) {
 		JExpression activitySuper = holder.eBean.staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
-		
+
 		for (JVar param : superMethod.params()) {
 			superCall.arg(param);
-		}	
-		
+		}
+
 		JType returnType = superMethod.type();
 		if (returnType.fullName().equals("void")) {
 			callBlock.add(superCall);
