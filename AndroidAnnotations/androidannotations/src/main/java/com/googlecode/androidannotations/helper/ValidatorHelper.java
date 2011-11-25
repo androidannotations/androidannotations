@@ -301,7 +301,7 @@ public class ValidatorHelper {
 	private boolean elementHasAnnotationSafe(Class<? extends Annotation> annotation, Element element) {
 		List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
-			if (annotationMirror.toString().equals("@" + annotation.getName())) {
+			if (annotationMirror.getAnnotationType().toString().equals(annotation.getName())) {
 				return true;
 			}
 		}
