@@ -29,7 +29,7 @@ import com.googlecode.androidannotations.annotations.UiThread;
 
 @EActivity 
 public class TracedActivity extends Activity {
-	
+
 	public boolean tracedMethodCalled = false;
 	public boolean voidTracedMethodCalled = false;
 	public boolean voidTracedMethodDebugCalled = false;

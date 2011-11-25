@@ -18,6 +18,7 @@ package com.googlecode.androidannotations;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.Messager;
@@ -371,8 +372,20 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new RunnableValidator(UiThreadDelayed.class, processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
-		modelValidator.register(new TraceValidator(processingEnv));
+		if (traceActivated()) {
+			modelValidator.register(new TraceValidator(processingEnv));
+		}
 		return modelValidator;
+	}
+
+	private boolean traceActivated() {
+		Map<String, String> options = processingEnv.getOptions();
+		if (options.containsKey("trace")) {
+			String trace = options.get("trace");
+			return !"false".equals(trace);
+		} else {
+			return true;
+		}
 	}
 
 	private JCodeModel processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
