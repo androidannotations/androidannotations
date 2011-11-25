@@ -21,6 +21,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.IncompleteAnnotationException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -36,9 +37,12 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
+import android.util.Log;
+
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.rest.Delete;
 import com.googlecode.androidannotations.annotations.rest.Get;
@@ -75,6 +79,8 @@ public class ValidatorHelper {
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
+
+	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR);
 
 	@SuppressWarnings("unchecked")
 	private static final List<Class<? extends Annotation>> VALID_EBEAN_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class);
@@ -295,7 +301,7 @@ public class ValidatorHelper {
 	private boolean elementHasAnnotationSafe(Class<? extends Annotation> annotation, Element element) {
 		List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
-			if (annotationMirror.toString().equals("@" + annotation.getName())) {
+			if (annotationMirror.getAnnotationType().toString().equals(annotation.getName())) {
 				return true;
 			}
 		}
@@ -783,6 +789,18 @@ public class ValidatorHelper {
 				annotationHelper.printError(e, "You should have only one constructor with Context and AttributeSet parameters.");
 				valid.invalidate();
 			}
+		}
+
+	}
+
+	public void hasValidLogLevel(Element element, IsValid isValid) {
+
+		Trace annotation = element.getAnnotation(Trace.class);
+		Integer level = annotation.level();
+
+		if (!VALID_LOG_LEVELS.contains(level)) {
+			annotationHelper.printError(element, "Unrecognized log level.");
+			isValid.invalidate();
 		}
 
 	}

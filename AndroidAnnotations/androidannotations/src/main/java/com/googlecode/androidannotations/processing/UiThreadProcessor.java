@@ -16,12 +16,9 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
@@ -32,7 +29,6 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -54,19 +50,10 @@ public class UiThreadProcessor implements ElementProcessor {
 		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
 		// Method
-		String backgroundMethodName = element.getSimpleName().toString();
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, backgroundMethodName);
-		method.annotate(Override.class);
-
-		// Method parameters
-		List<JVar> parameters = new ArrayList<JVar>();
 		ExecutableElement executableElement = (ExecutableElement) element;
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = helper.typeMirrorToJClass(parameter.asType(), holder);
-			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
-			parameters.add(param);
-		}
+		JMethod method = helper.overrideAnnotatedMethod(executableElement, holder);
+		
+		JBlock previousMethodBody = helper.removeBody(method);
 
 		JDefinedClass anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
 
@@ -75,13 +62,9 @@ public class UiThreadProcessor implements ElementProcessor {
 
 		JBlock runMethodBody = runMethod.body();
 		JTryBlock runTry = runMethodBody._try();
+		
+		 runTry.body().add(previousMethodBody);
 
-		JExpression activitySuper = holder.eBean.staticRef("super");
-
-		JInvocation superCall = runTry.body().invoke(activitySuper, method);
-		for (JVar param : parameters) {
-			superCall.arg(param);
-		}
 		JCatchBlock runCatch = runTry._catch(holder.refClass(RuntimeException.class));
 		JVar exceptionParam = runCatch.param("e");
 

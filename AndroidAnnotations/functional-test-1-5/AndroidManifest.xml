@@ -39,6 +39,7 @@
         <activity android:name=".prefs.PrefsActivity_" />
         <activity android:name=".res.ResActivity_" />
         <activity android:name=".ThreadActivity_" />
+        <activity android:name=".TracedActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.menu.OptionsMenuActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.NoTitleFullscreenActivity_" />
     </application>
