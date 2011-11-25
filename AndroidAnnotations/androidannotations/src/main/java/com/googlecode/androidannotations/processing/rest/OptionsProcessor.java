@@ -71,7 +71,6 @@ public class OptionsProcessor extends MethodProcessor {
 	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		restCall = JExpr.invoke(restCall, "getHeaders");
 		restCall = JExpr.invoke(restCall, "getAllow");
-
 		return restCall;
 	}
 

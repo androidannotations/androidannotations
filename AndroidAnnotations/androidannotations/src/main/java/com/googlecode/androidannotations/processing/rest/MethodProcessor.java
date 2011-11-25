@@ -51,16 +51,15 @@ public abstract class MethodProcessor implements ElementProcessor {
 	}
 
 	protected void generateRestTemplateCallBlock(MethodProcessorHolder methodHolder) {
-
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
 		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
-
 		JClass expectedClass = methodHolder.getExpectedClass();
 		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
 
 		JMethod method;
 		String methodName = executableElement.getSimpleName().toString();
-		if (generatedReturnType == null && expectedClass == null) {
+		boolean methodReturnVoid = generatedReturnType == null && expectedClass == null;
+		if (methodReturnVoid) {
 			method = holder.restImplementationClass.method(JMod.PUBLIC, void.class, methodName);
 		} else {
 			method = holder.restImplementationClass.method(JMod.PUBLIC, methodHolder.getGeneratedReturnType(), methodName);
@@ -77,9 +76,10 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 		JClass httpMethod = holder.refClass(ProcessorConstants.HTTP_METHOD);
 		// add method type param
-		restCall.arg(httpMethod.staticRef(getTarget().getSimpleName().toUpperCase()));
+		String restMethodInCapitalLetters = getTarget().getSimpleName().toUpperCase();
+		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
 
-		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParametersVar(method, executableElement, holder);
+		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParamsVar(method, executableElement, holder);
 
 		// update method holder
 		methodHolder.setBody(body);
@@ -90,15 +90,14 @@ public abstract class MethodProcessor implements ElementProcessor {
 		restCall = addHttpEntityVar(restCall, methodHolder);
 		restCall = addResponseEntityArg(restCall, methodHolder);
 
-		// add hashMap param containing url variables
-		if (hashMapVar != null) {
+		boolean hasParametersInUrl = hashMapVar != null;
+		if (hasParametersInUrl) {
 			restCall.arg(hashMapVar);
 		}
 
 		restCall = addResultCallMethod(restCall, methodHolder);
 
-		boolean returnResult = generatedReturnType == null && expectedClass == null;
-		insertRestCallInBody(body, restCall, returnResult);
+		insertRestCallInBody(body, restCall, methodReturnVoid);
 	}
 
 	protected abstract JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder);
@@ -107,8 +106,8 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 	protected abstract JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder);
 
-	private void insertRestCallInBody(JBlock body, JInvocation restCall, boolean returnResult) {
-		if (returnResult)
+	private void insertRestCallInBody(JBlock body, JInvocation restCall, boolean methodReturnVoid) {
+		if (methodReturnVoid)
 			body.add(restCall);
 		else
 			body._return(restCall);
@@ -121,7 +120,6 @@ public abstract class MethodProcessor implements ElementProcessor {
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
 		JVar hashMapVar = null;
 
-		// retrieve url place holder
 		List<String> urlVariables = restAnnotationHelper.extractUrlVariableNames(element);
 		JClass hashMapClass = codeModel.ref(HashMap.class).narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
@@ -156,13 +154,14 @@ public abstract class MethodProcessor implements ElementProcessor {
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
 		if (hasHeaders) {
 			if (!methodParams.isEmpty()) {
-				newHttpEntityVarCall.arg(methodParams.firstEntry().getValue());
+				JVar entitySentToServer = methodParams.firstEntry().getValue();
+				newHttpEntityVarCall.arg(entitySentToServer);
 			}
 			newHttpEntityVarCall.arg(httpHeadersVar);
-
 		} else {
 			if (!methodParams.isEmpty()) {
-				newHttpEntityVarCall.arg(methodParams.firstEntry().getValue());
+				JVar entitySentToServer = methodParams.firstEntry().getValue();
+				newHttpEntityVarCall.arg(entitySentToServer);
 			} else {
 				newHttpEntityVarCall.arg(JExpr._null());
 			}
@@ -179,8 +178,6 @@ public abstract class MethodProcessor implements ElementProcessor {
 		return httpEntityVar;
 	}
 
-	protected abstract JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement);
-
 	protected JVar generateHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
 		JVar httpHeadersVar = null;
@@ -189,7 +186,8 @@ public abstract class MethodProcessor implements ElementProcessor {
 		httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
 
 		String mediaType = retrieveAcceptAnnotationValue(executableElement);
-		if (mediaType != null) {
+		boolean hasMediaTypeDefined = mediaType != null;
+		if (hasMediaTypeDefined) {
 			JClass collectionsClass = holder.refClass(ProcessorConstants.COLLECTIONS);
 			JClass mediaTypeClass = holder.refClass(ProcessorConstants.MEDIA_TYPE);
 
@@ -212,10 +210,10 @@ public abstract class MethodProcessor implements ElementProcessor {
 		}
 	}
 
-	private Map<String, JVar> generateMethodParametersVar(JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
+	private Map<String, JVar> generateMethodParamsVar(JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
+		List<? extends VariableElement> params = executableElement.getParameters();
 		TreeMap<String, JVar> methodParams = new TreeMap<String, JVar>();
-		for (VariableElement parameter : parameters) {
+		for (VariableElement parameter : params) {
 			String paramName = parameter.getSimpleName().toString();
 			String paramType = parameter.asType().toString();
 
@@ -227,6 +225,8 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 		return methodParams;
 	}
+	
+	protected abstract JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement);
 
 	@Override
 	public abstract Class<? extends Annotation> getTarget();
