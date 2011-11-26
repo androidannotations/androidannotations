@@ -129,7 +129,7 @@
 					<version>2.2.1</version>
 					<configuration>
 						<pushChanges>false</pushChanges>
-						<localCheckout>true</localCheckout>
+						<localCheckout>fals</localCheckout>
 						<mavenExecutorId>forked-path</mavenExecutorId>
 					</configuration>
 				</plugin>
