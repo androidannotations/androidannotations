@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,62 +15,62 @@
  */
 package com.googlecode.androidannotations.rclass;
 
-import com.googlecode.androidannotations.processing.ActivityHolder;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JFieldRef;
 
 public class CoumpoundInnerClass implements IRInnerClass {
 
-    private final IRInnerClass rInnerClass;
-    private final IRInnerClass androidRInnerClass;
+	private final IRInnerClass rInnerClass;
+	private final IRInnerClass androidRInnerClass;
 
-    public CoumpoundInnerClass(IRInnerClass rInnerClass, IRInnerClass androidRInnerClass) {
-        this.rInnerClass = rInnerClass;
-        this.androidRInnerClass = androidRInnerClass;
-    }
+	public CoumpoundInnerClass(IRInnerClass rInnerClass, IRInnerClass androidRInnerClass) {
+		this.rInnerClass = rInnerClass;
+		this.androidRInnerClass = androidRInnerClass;
+	}
 
-    @Override
-    public boolean containsIdValue(Integer idValue) {
-        return rInnerClass.containsIdValue(idValue) || androidRInnerClass.containsIdValue(idValue);
-    }
+	@Override
+	public boolean containsIdValue(Integer idValue) {
+		return rInnerClass.containsIdValue(idValue) || androidRInnerClass.containsIdValue(idValue);
+	}
 
-    @Override
-    public String getIdQualifiedName(Integer idValue) {
-        String idQualifiedName = rInnerClass.getIdQualifiedName(idValue);
-        if (idQualifiedName == null) {
-            idQualifiedName = androidRInnerClass.getIdQualifiedName(idValue);
-        }
-        return idQualifiedName;
-    }
+	@Override
+	public String getIdQualifiedName(Integer idValue) {
+		String idQualifiedName = rInnerClass.getIdQualifiedName(idValue);
+		if (idQualifiedName == null) {
+			idQualifiedName = androidRInnerClass.getIdQualifiedName(idValue);
+		}
+		return idQualifiedName;
+	}
 
-    @Override
-    public boolean containsField(String name) {
-        return rInnerClass.containsField(name) || androidRInnerClass.containsField(name);
-    }
+	@Override
+	public boolean containsField(String name) {
+		return rInnerClass.containsField(name) || androidRInnerClass.containsField(name);
+	}
 
-    @Override
-    public String getIdQualifiedName(String name) {
-        String idQualifiedName = rInnerClass.getIdQualifiedName(name);
-        if (idQualifiedName == null) {
-            idQualifiedName = androidRInnerClass.getIdQualifiedName(name);
-        }
-        return idQualifiedName;
-    }
+	@Override
+	public String getIdQualifiedName(String name) {
+		String idQualifiedName = rInnerClass.getIdQualifiedName(name);
+		if (idQualifiedName == null) {
+			idQualifiedName = androidRInnerClass.getIdQualifiedName(name);
+		}
+		return idQualifiedName;
+	}
 
-    @Override
-    public JFieldRef getIdStaticRef(Integer idValue, ActivityHolder holder) {
-        JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, holder);
-        if (idStaticRef == null) {
-            idStaticRef = androidRInnerClass.getIdStaticRef(idValue, holder);
-        }
-        return idStaticRef;
-    }
+	@Override
+	public JFieldRef getIdStaticRef(Integer idValue, EBeanHolder holder) {
+		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, holder);
+		if (idStaticRef == null) {
+			idStaticRef = androidRInnerClass.getIdStaticRef(idValue, holder);
+		}
+		return idStaticRef;
+	}
 
-    @Override
-    public JFieldRef getIdStaticRef(String name, ActivityHolder holder) {
-        JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, holder);
-        if (idStaticRef == null) {
-            idStaticRef = androidRInnerClass.getIdStaticRef(name, holder);
-        }
-        return idStaticRef;
-    }
+	@Override
+	public JFieldRef getIdStaticRef(String name, EBeanHolder holder) {
+		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, holder);
+		if (idStaticRef == null) {
+			idStaticRef = androidRInnerClass.getIdStaticRef(name, holder);
+		}
+		return idStaticRef;
+	}
 }

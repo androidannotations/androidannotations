@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,43 +22,50 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 
 @EActivity(R.layout.clicks_handled)
-public class ClicksHandledActivity extends Activity{
-	
+public class ClicksHandledActivity extends Activity {
+
 	View viewArgument;
-	
+
 	boolean conventionButtonClicked;
 	boolean snakeCaseButtonClicked;
 	boolean extendedConventionButtonClicked;
 	boolean overridenConventionButtonClicked;
 	boolean unboundButtonClicked;
+	boolean multipleButtonsClicked;
 
 	@Click
 	public void conventionButton() {
 		conventionButtonClicked = true;
 	}
-	
+
 	@Click
 	public void snakeCaseButton() {
 		snakeCaseButtonClicked = true;
-	}	
+	}
 
 	@Click
 	public void extendedConventionButtonClicked() {
 		extendedConventionButtonClicked = true;
 	}
-	
+
 	@Click(R.id.configurationOverConventionButton)
 	public void overridenConventionButton() {
 		overridenConventionButtonClicked = true;
 	}
-	
+
 	public void unboundButton() {
 		unboundButtonClicked = true;
 	}
-	
+
 	@Click
 	public void buttonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
 	}
-	
+
+	@Click({ R.id.button1, R.id.button2 })
+	public void multipleButtonWithViewArgument(View viewArgument) {
+		this.viewArgument = viewArgument;
+		multipleButtonsClicked = true;
+	}
+
 }

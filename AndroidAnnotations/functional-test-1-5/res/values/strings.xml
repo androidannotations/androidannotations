@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+    Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -17,9 +17,13 @@
 
 -->
 <resources>
+
     <string name="hello">Hello android-functional-test-1-5!</string>
+    <string name="hello_html">        <![CDATA[Hello <b>android-functional-test-1-5</b>!]]>
+    </string>
     <string name="app_name">android-functional-test-1-5</string>
+    <string name="someView">TextView Text</string>
     <string name="injected_activity_caption">Roboguice Activity tested with Robolectric</string>
-    
     <string name="injected_string">test</string>
+
 </resources>

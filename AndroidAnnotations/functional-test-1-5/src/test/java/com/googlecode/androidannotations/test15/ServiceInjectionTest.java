@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,26 +25,27 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class ServiceInjectionTest {
 
-    @Test
-    public void servicesAreInjected() {
-        ActivityWithServices_ activity = new ActivityWithServices_();
-    	activity.onCreate(null);
-    	
-    	assertThat(activity.windowManager).isNotNull();
-    	assertThat(activity.layoutInflater).isNotNull();
-    	assertThat(activity.activityManager).isNotNull();
-    	assertThat(activity.powerManager).isNotNull();
-    	assertThat(activity.alarmManager).isNotNull();
-    	assertThat(activity.notificationManager).isNotNull();
-    	assertThat(activity.keyguardManager).isNotNull();
-    	assertThat(activity.locationManager).isNotNull();
-    	assertThat(activity.searchManager).isNotNull();
-    	assertThat(activity.vibrator).isNotNull();
-    	assertThat(activity.connectivityManager).isNotNull();
-    	assertThat(activity.wifiManager).isNotNull();
-    	assertThat(activity.inputMethodManager).isNotNull();
-    	assertThat(activity.sensorManager).isNotNull();
-    }
-    
-    
+	@Test
+	public void servicesAreInjected() {
+		ActivityWithServices_ activity = new ActivityWithServices_();
+		activity.onCreate(null);
+
+		assertThat(activity.windowManager).isNotNull();
+		assertThat(activity.layoutInflater).isNotNull();
+		assertThat(activity.activityManager).isNotNull();
+		assertThat(activity.powerManager).isNotNull();
+		assertThat(activity.alarmManager).isNotNull();
+		assertThat(activity.notificationManager).isNotNull();
+		assertThat(activity.keyguardManager).isNotNull();
+		assertThat(activity.locationManager).isNotNull();
+		assertThat(activity.searchManager).isNotNull();
+		assertThat(activity.vibrator).isNotNull();
+		assertThat(activity.connectivityManager).isNotNull();
+		assertThat(activity.wifiManager).isNotNull();
+		assertThat(activity.inputMethodManager).isNotNull();
+		assertThat(activity.sensorManager).isNotNull();
+		assertThat(activity.telephonyManager).isNotNull();
+		assertThat(activity.audioManager).isNotNull();
+	}
+
 }

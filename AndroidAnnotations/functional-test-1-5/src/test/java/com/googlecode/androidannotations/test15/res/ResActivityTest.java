@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,54 +16,79 @@
 package com.googlecode.androidannotations.test15.res;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.res.Resources;
+import android.text.Html;
 import android.view.animation.AnimationUtils;
 
+import com.googlecode.androidannotations.test15.R;
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowHtml;
 
 @RunWith(RobolectricTestRunner.class)
 public class ResActivityTest {
 
-    private ResActivity_ activity;
+	private ResActivity_ activity;
 
-    @Before
-    public void setup() {
-        activity = new ResActivity_();
-        activity.onCreate(null);
-    }
-    
-    @Test
-    public void string_snake_case_injected() {
-    	assertThat(activity.injected_string).isEqualTo("test");
-    }
-    
-    @Test
-    public void string_camel_case_injected() {
-    	assertThat(activity.injectedString).isEqualTo("test");
-    }
-    
+	@Before
+	public void setup() {
+		Robolectric.bindShadowClass(ShadowHtml.class);
+		activity = new ResActivity_();
+		activity.onCreate(null);
+	}
 
-    /**
-     * Cannot be tested right now, because there is no Robolectric shadow class
-     * for {@link AnimationUtils}.
-     */
-//     @Test
-    public void animNotNull() {
-        assertThat(activity.fadein).isNotNull();
-    }
+	@Test
+	public void string_snake_case_injected() {
+		assertThat(activity.injected_string).isEqualTo("test");
+	}
 
-    /**
-     * Cannot be tested right now, because the Robolectric shadow class for
-     * {@link Resources} doesn't implement {@link Resources#getAnimation(int)}
-     */
-    // @Test
-    public void xmlResAnimNotNull() {
-        assertThat(activity.fade_in).isNotNull();
-    }
+	@Test
+	public void string_camel_case_injected() {
+		assertThat(activity.injectedString).isEqualTo("test");
+	}
 
+	/**
+	 * Cannot be tested right now, because there is no Robolectric shadow class
+	 * for {@link AnimationUtils}.
+	 */
+	// @Test
+	public void animNotNull() {
+		assertThat(activity.fadein).isNotNull();
+	}
+
+	/**
+	 * Cannot be tested right now, because the Robolectric shadow class for
+	 * {@link Resources} doesn't implement {@link Resources#getAnimation(int)}
+	 */
+	// @Test
+	public void xmlResAnimNotNull() {
+		assertThat(activity.fade_in).isNotNull();
+	}
+
+	@Test
+	public void htmlResNotNull() {
+		assertNotNull(activity.helloHtml);
+	}
+
+	@Test
+	public void htmlInjectedNotNull() {
+		assertNotNull(activity.htmlInjected);
+	}
+
+	@Test
+	public void htmlResCorrectlySet() {
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.helloHtml);
+	}
+
+	@Test
+	public void htmlInjectedCorrectlySet() {
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.htmlInjected);
+	}
 }

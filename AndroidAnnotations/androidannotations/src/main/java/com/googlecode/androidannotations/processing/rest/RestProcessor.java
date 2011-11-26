@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.helper.ModelConstants;
-import com.googlecode.androidannotations.processing.ActivitiesHolder;
+import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.googlecode.androidannotations.processing.ElementProcessor;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;
@@ -49,9 +49,9 @@ public class RestProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		RestImplentationHolder holder = restImplementationHolder.create(element);
+		RestImplementationHolder holder = restImplementationHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -61,7 +61,9 @@ public class RestProcessor implements ElementProcessor {
 
 		String implementationName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
-		holder.restImplementationClass = codeModel._class(JMod.PUBLIC | JMod.ABSTRACT, implementationName, ClassType.CLASS);
+		// holder.restImplementationClass = codeModel._class(JMod.PUBLIC |
+		// JMod.ABSTRACT, implementationName, ClassType.CLASS);
+		holder.restImplementationClass = codeModel._class(JMod.PUBLIC, implementationName, ClassType.CLASS);
 		JClass interfaceClass = holder.refClass(interfaceName);
 		holder.restImplementationClass._implements(interfaceClass);
 
@@ -77,7 +79,7 @@ public class RestProcessor implements ElementProcessor {
 		JMethod restTemplateConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
 		JVar restTemplateParam = restTemplateConstructor.param(restTemplateClass, "restTemplate");
 		restTemplateConstructor.body().assign(JExpr._this().ref(holder.restTemplateField), restTemplateParam);
-		
+
 		// RequestFactory constructor
 		JMethod requestFactoryConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
 		JClass requestFactoryClass = holder.refClass("org.springframework.http.client.ClientHttpRequestFactory");

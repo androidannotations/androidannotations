@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,25 +24,25 @@ import com.googlecode.androidannotations.test15.R;
 @EActivity(R.layout.main)
 public class PrefsActivity extends Activity {
 
-    @Pref
-    SomePrefs_ somePrefs;
-    
-    @Pref
-    ActivityDefaultPrefs_ activityDefaultPrefs;
-    
-    @Pref
-    ActivityPrefs_ activityPrefs;
-    
-    @Pref
-    ApplicationDefaultPrefs_ applicationDefaultPrefs;
-    
-    @Pref
-    DefaultPrefs_ defaultPrefs;
-    
-    @Pref
-    PublicPrefs_ publicPrefs;
-    
-    @Pref
-    UniquePrefs_ uniquePrefs;
+	@Pref
+	SomePrefs_ somePrefs;
+
+	@Pref
+	ActivityDefaultPrefs_ activityDefaultPrefs;
+
+	@Pref
+	ActivityPrefs_ activityPrefs;
+
+	@Pref
+	ApplicationDefaultPrefs_ applicationDefaultPrefs;
+
+	@Pref
+	DefaultPrefs_ defaultPrefs;
+
+	@Pref
+	PublicPrefs_ publicPrefs;
+
+	@Pref
+	UniquePrefs_ uniquePrefs;
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,12 +23,13 @@ import java.lang.annotation.Target;
 import com.googlecode.androidannotations.annotations.Id;
 
 /**
- * Use on fields in activity classes that should be injected with values from R.color.*
+ * Use on fields in activity classes that should be injected with values from
+ * R.color.*
  * 
  * The annotated field must be an int or an Integer
  * 
- * The annotation value must be one of R.color.* fields. If the value is not set, the field
- * name will be used as the R.color.* field name.
+ * The annotation value must be one of R.color.* fields. If the value is not
+ * set, the field name will be used as the R.color.* field name.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,44 +31,43 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class TransactionalActivityTest {
 
-    private SQLiteDatabase mockDb;
-    private TransactionalActivity_ activity;
+	private SQLiteDatabase mockDb;
+	private TransactionalActivity_ activity;
 
-    @Before
-    public void setup() {
-        activity = new TransactionalActivity_();
-        activity.onCreate(null);
-        mockDb = mock(SQLiteDatabase.class); 
-    }
-    
-    @Test
-    public void successfulTransaction() {
-    	activity.successfulTransaction(mockDb);
-    	
-    	InOrder inOrder = inOrder(mockDb);
-    	
-    	inOrder.verify(mockDb).beginTransaction();
-    	inOrder.verify(mockDb).execSQL(anyString());
-    	inOrder.verify(mockDb).setTransactionSuccessful();
-    	inOrder.verify(mockDb).endTransaction();
-    }
-    
-    @Test
-    public void rollbackedTransaction() {
-        
-        try {
-            activity.rollbackedTransaction(mockDb);
-            fail("This method should throw an exception");
-        } catch(IllegalArgumentException e) {
-        }
-        
-        verify(mockDb, never()).setTransactionSuccessful();
-        
-        InOrder inOrder = inOrder(mockDb);
-        
-        inOrder.verify(mockDb).beginTransaction();
-        inOrder.verify(mockDb).endTransaction();
-    }
-    
-    
+	@Before
+	public void setup() {
+		activity = new TransactionalActivity_();
+		activity.onCreate(null);
+		mockDb = mock(SQLiteDatabase.class);
+	}
+
+	@Test
+	public void successfulTransaction() {
+		activity.successfulTransaction(mockDb);
+
+		InOrder inOrder = inOrder(mockDb);
+
+		inOrder.verify(mockDb).beginTransaction();
+		inOrder.verify(mockDb).execSQL(anyString());
+		inOrder.verify(mockDb).setTransactionSuccessful();
+		inOrder.verify(mockDb).endTransaction();
+	}
+
+	@Test
+	public void rollbackedTransaction() {
+
+		try {
+			activity.rollbackedTransaction(mockDb);
+			fail("This method should throw an exception");
+		} catch (IllegalArgumentException e) {
+		}
+
+		verify(mockDb, never()).setTransactionSuccessful();
+
+		InOrder inOrder = inOrder(mockDb);
+
+		inOrder.verify(mockDb).beginTransaction();
+		inOrder.verify(mockDb).endTransaction();
+	}
+
 }

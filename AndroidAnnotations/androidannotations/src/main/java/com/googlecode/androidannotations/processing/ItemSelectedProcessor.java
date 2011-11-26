@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,11 +22,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -40,86 +37,70 @@ import com.sun.codemodel.JVar;
 
 /**
  * @author Pierre-Yves Ricau
+ * @author Mathieu Boniface
  */
-public class ItemSelectedProcessor implements ElementProcessor {
+public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
 
-    private final IRClass rClass;
+	public ItemSelectedProcessor(IRClass rClass) {
+		super(rClass);
+	}
 
-    public ItemSelectedProcessor(IRClass rClass) {
-        this.rClass = rClass;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return ItemSelect.class;
+	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return ItemSelect.class;
-    }
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-        ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		String methodName = element.getSimpleName().toString();
 
-        String methodName = element.getSimpleName().toString();
+		ExecutableElement executableElement = (ExecutableElement) element;
+		List<? extends VariableElement> parameters = executableElement.getParameters();
 
-        ExecutableElement executableElement = (ExecutableElement) element;
-        List<? extends VariableElement> parameters = executableElement.getParameters();
+		boolean hasItemParameter = parameters.size() == 2;
 
-        boolean hasItemParameter = parameters.size() == 2;
+		ItemSelect annotation = element.getAnnotation(ItemSelect.class);
+		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "ItemSelected", holder);
 
-        JFieldRef idRef = extractClickQualifiedId(element, holder);
+		JDefinedClass onItemSelectedListenerClass = codeModel.anonymousClass(holder.refClass("android.widget.AdapterView.OnItemSelectedListener"));
+		JMethod onItemSelectedMethod = onItemSelectedListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onItemSelected");
+		JClass adapterViewClass = holder.refClass("android.widget.AdapterView");
+		JClass viewClass = holder.refClass("android.view.View");
 
-        JDefinedClass onItemSelectedListenerClass = codeModel.anonymousClass(holder.refClass("android.widget.AdapterView.OnItemSelectedListener"));
-        JMethod onItemSelectedMethod = onItemSelectedListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onItemSelected");
-        JClass adapterViewClass = holder.refClass("android.widget.AdapterView");
-        JClass viewClass = holder.refClass("android.view.View");
+		JClass narrowAdapterViewClass = adapterViewClass.narrow(codeModel.wildcard());
+		JVar onItemClickParentParam = onItemSelectedMethod.param(narrowAdapterViewClass, "parent");
+		onItemSelectedMethod.param(viewClass, "view");
+		JVar onItemClickPositionParam = onItemSelectedMethod.param(codeModel.INT, "position");
+		onItemSelectedMethod.param(codeModel.LONG, "id");
 
-        JClass narrowAdapterViewClass = adapterViewClass.narrow(codeModel.wildcard());
-        JVar onItemClickParentParam = onItemSelectedMethod.param(narrowAdapterViewClass, "parent");
-        onItemSelectedMethod.param(viewClass, "view");
-        JVar onItemClickPositionParam = onItemSelectedMethod.param(codeModel.INT, "position");
-        onItemSelectedMethod.param(codeModel.LONG, "id");
+		JInvocation itemSelectedCall = onItemSelectedMethod.body().invoke(methodName);
 
-        JInvocation itemSelectedCall = onItemSelectedMethod.body().invoke(methodName);
+		itemSelectedCall.arg(JExpr.TRUE);
 
-        itemSelectedCall.arg(JExpr.TRUE);
+		if (hasItemParameter) {
+			VariableElement parameter = parameters.get(1);
+			String parameterQualifiedName = parameter.asType().toString();
+			itemSelectedCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+		}
 
-        if (hasItemParameter) {
-            VariableElement parameter = parameters.get(1);
-            String parameterQualifiedName = parameter.asType().toString();
-            itemSelectedCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
-        }
+		JMethod onNothingSelectedMethod = onItemSelectedListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onNothingSelected");
 
-        JMethod onNothingSelectedMethod = onItemSelectedListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onNothingSelected");
+		onNothingSelectedMethod.param(narrowAdapterViewClass, "parent");
 
-        onNothingSelectedMethod.param(narrowAdapterViewClass, "parent");
+		JInvocation nothingSelectedCall = onNothingSelectedMethod.body().invoke(methodName);
 
-        JInvocation nothingSelectedCall = onNothingSelectedMethod.body().invoke(methodName);
+		nothingSelectedCall.arg(JExpr.FALSE);
+		if (hasItemParameter) {
+			nothingSelectedCall.arg(JExpr._null());
+		}
 
-        nothingSelectedCall.arg(JExpr.FALSE);
-        if (hasItemParameter) {
-            nothingSelectedCall.arg(JExpr._null());
-        }
-
-        JBlock body = holder.afterSetContentView.body();
-
-        JInvocation findViewById = JExpr.invoke("findViewById");
-        body.add(JExpr.invoke(JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)), "setOnItemSelectedListener").arg(JExpr._new(onItemSelectedListenerClass)));
-    }
-
-    private JFieldRef extractClickQualifiedId(Element element, ActivityHolder holder) {
-        ItemSelect annotation = element.getAnnotation(ItemSelect.class);
-        int idValue = annotation.value();
-        IRInnerClass rInnerClass = rClass.get(Res.ID);
-        if (idValue == Id.DEFAULT_VALUE) {
-            String fieldName = element.getSimpleName().toString();
-            int lastIndex = fieldName.lastIndexOf("ItemSelected");
-            if (lastIndex != -1) {
-                fieldName = fieldName.substring(0, lastIndex);
-            }
-            return rInnerClass.getIdStaticRef(fieldName, holder);
-
-        } else {
-            return rInnerClass.getIdStaticRef(idValue, holder);
-        }
-    }
+		for (JFieldRef idRef : idsRefs) {
+			JBlock body = holder.afterSetContentView.body();
+			JInvocation findViewById = JExpr.invoke("findViewById");
+			body.add(JExpr.invoke(JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)), "setOnItemSelectedListener").arg(JExpr._new(onItemSelectedListenerClass)));
+		}
+	}
 
 }

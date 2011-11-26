@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,17 +25,18 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class FakeDateProvider implements Provider<Date> {
-    private Date date = new Date();
+	private Date date = new Date();
 
-    @Override public Date get() {
-        return date;
-    }
+	@Override
+	public Date get() {
+		return date;
+	}
 
-    public void setDate(String dateString) {
-        try {
-            date = DateFormat.getDateInstance(DateFormat.LONG, Locale.US).parse(dateString);
-        } catch (ParseException e) {
-            throw new RuntimeException("bad date!!");
-        }
-    }
+	public void setDate(String dateString) {
+		try {
+			date = DateFormat.getDateInstance(DateFormat.LONG, Locale.US).parse(dateString);
+		} catch (ParseException e) {
+			throw new RuntimeException("bad date!!");
+		}
+	}
 }

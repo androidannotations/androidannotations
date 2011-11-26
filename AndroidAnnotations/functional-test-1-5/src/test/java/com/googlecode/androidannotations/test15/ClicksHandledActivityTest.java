@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,55 +38,68 @@ public class ClicksHandledActivityTest {
 	@Test
 	public void handlingWithConvention() {
 		assertThat(activity.conventionButtonClicked).isFalse();
-		
+
 		activity.findViewById(R.id.conventionButton).performClick();
-		
+
 		assertThat(activity.conventionButtonClicked).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithSnakeCase() {
 		assertThat(activity.snakeCaseButtonClicked).isFalse();
-		
+
 		activity.findViewById(R.id.snake_case_button).performClick();
-		
+
 		assertThat(activity.snakeCaseButtonClicked).isTrue();
 	}
-	
-	
+
 	@Test
 	public void handlingWithExtendedConvention() {
 		assertThat(activity.extendedConventionButtonClicked).isFalse();
-		
+
 		activity.findViewById(R.id.extendedConventionButton).performClick();
-		
+
 		assertThat(activity.extendedConventionButtonClicked).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonClicked).isFalse();
-		
+
 		activity.findViewById(R.id.configurationOverConventionButton).performClick();
-		
+
 		assertThat(activity.overridenConventionButtonClicked).isTrue();
 	}
-	
+
 	@Test
 	public void unannotatedButtonIsNotHandled() {
 		activity.findViewById(R.id.unboundButton).performClick();
-		
+
 		assertThat(activity.unboundButtonClicked).isFalse();
 	}
-	
+
 	@Test
 	public void viewArgumentIsGiven() {
 		assertThat(activity.viewArgument).isNull();
-		
+
 		activity.findViewById(R.id.buttonWithViewArgument).performClick();
-		
+
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
 	}
-	
+
+	@Test
+	public void multipleButtonsClicked() {
+		assertThat(activity.multipleButtonsClicked).isFalse();
+
+		activity.findViewById(R.id.button1).performClick();
+		assertThat(activity.multipleButtonsClicked).isTrue();
+		assertThat(activity.viewArgument).hasId(R.id.button1);
+
+		activity.multipleButtonsClicked = false;
+
+		activity.findViewById(R.id.button2).performClick();
+		assertThat(activity.multipleButtonsClicked).isTrue();
+		assertThat(activity.viewArgument).hasId(R.id.button2);
+	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,7 +33,7 @@ import com.googlecode.androidannotations.rclass.IRClass;
 public class ItemSelectedValidator implements ElementValidator {
 
 	private IdValidatorHelper validatorHelper;
-	
+
 	public ItemSelectedValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
@@ -48,15 +48,15 @@ public class ItemSelectedValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
+
 		validatorHelper.idListenerMethod(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.voidReturnType(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.hasOneOrTwoParametersAndFirstIsBoolean(executableElement, valid);
-		
+
 		return valid.isValid();
 	}
 }

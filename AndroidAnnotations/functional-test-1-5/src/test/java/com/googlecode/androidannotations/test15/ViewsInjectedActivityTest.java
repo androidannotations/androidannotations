@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,22 +40,22 @@ public class ViewsInjectedActivityTest {
 	public void injectionWithConventionIsDone() {
 		assertThat(activity.myButton).hasId(R.id.myButton);
 	}
-	
+
 	@Test
 	public void injectionWithConfigurationOverridesConvention() {
 		assertThat(activity.someView).hasId(R.id.my_text_view);
 	}
-	
+
 	@Test
 	public void multipleInjectionIsSame() {
 		assertThat(activity.someView).isSameAs(activity.myTextView);
 	}
-	
+
 	@Test
 	public void unannotatedViewIsNull() {
 		assertThat(activity.unboundView).isNull();
 	}
-	
+
 	@Test
 	public void countAfterSetContentViewCalls() {
 		Assertions.assertThat(activity.counter).isEqualTo(1);

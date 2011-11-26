@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,9 +31,10 @@ import com.googlecode.androidannotations.rclass.IRClass.Res;
 public class ViewByIdValidator implements ElementValidator {
 
 	private IdValidatorHelper validatorHelper;
-	
+	private IdAnnotationHelper annotationHelper;
+
 	public ViewByIdValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
-		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
@@ -47,7 +48,7 @@ public class ViewByIdValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
 
 		TypeMirror uiFieldTypeMirror = element.asType();
 

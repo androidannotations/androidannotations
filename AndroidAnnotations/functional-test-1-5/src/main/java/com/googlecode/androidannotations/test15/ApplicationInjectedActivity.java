@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +23,8 @@ import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
 
 @EActivity
 public class ApplicationInjectedActivity extends Activity {
-    
-    @App
-    SampleRoboApplication customApplication;
+
+	@App
+	SampleRoboApplication customApplication;
 
 }

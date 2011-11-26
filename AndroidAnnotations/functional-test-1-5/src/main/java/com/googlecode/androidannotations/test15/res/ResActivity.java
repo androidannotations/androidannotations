@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,19 +17,21 @@ package com.googlecode.androidannotations.test15.res;
 
 import android.app.Activity;
 import android.content.res.XmlResourceParser;
+import android.text.Spanned;
 import android.view.animation.Animation;
 
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.res.HtmlRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.test15.R;
 
 @EActivity(R.layout.main)
 public class ResActivity extends Activity {
 
-//	@AnimationRes
+	// @AnimationRes
 	XmlResourceParser fade_in;
 
-//	@AnimationRes
+	// @AnimationRes
 	Animation fadein;
 
 	@StringRes
@@ -37,4 +39,10 @@ public class ResActivity extends Activity {
 
 	@StringRes
 	String injectedString;
+
+	@HtmlRes
+	Spanned helloHtml;
+
+	@HtmlRes(R.string.hello_html)
+	CharSequence htmlInjected;
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,26 +20,26 @@ import java.util.List;
 
 public class AndroidManifest {
 
-    private final String applicationPackage;
-    private final List<String> activityQualifiedNames;
-    private final String applicationClassName;
+	private final String applicationPackage;
+	private final List<String> activityQualifiedNames;
+	private final String applicationClassName;
 
-    public AndroidManifest(String applicationPackage, String applicationClassName, List<String> activityQualifiedNames) {
-        this.applicationPackage = applicationPackage;
-        this.applicationClassName = applicationClassName;
-        this.activityQualifiedNames = activityQualifiedNames;
-    }
+	public AndroidManifest(String applicationPackage, String applicationClassName, List<String> activityQualifiedNames) {
+		this.applicationPackage = applicationPackage;
+		this.applicationClassName = applicationClassName;
+		this.activityQualifiedNames = activityQualifiedNames;
+	}
 
-    public String getApplicationPackage() {
-        return applicationPackage;
-    }
+	public String getApplicationPackage() {
+		return applicationPackage;
+	}
 
-    public List<String> getActivityQualifiedNames() {
-        return Collections.unmodifiableList(activityQualifiedNames);
-    }
+	public List<String> getActivityQualifiedNames() {
+		return Collections.unmodifiableList(activityQualifiedNames);
+	}
 
-    public String getApplicationClassName() {
-        return applicationClassName;
-    }
+	public String getApplicationClassName() {
+		return applicationClassName;
+	}
 
 }

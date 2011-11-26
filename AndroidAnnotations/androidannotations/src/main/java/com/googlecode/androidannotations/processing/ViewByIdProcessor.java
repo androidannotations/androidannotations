@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,29 +44,29 @@ public class ViewByIdProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
-	    
-	    ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-	    
-        String fieldName = element.getSimpleName().toString();
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
-        TypeMirror uiFieldTypeMirror = element.asType();
-        String typeQualifiedName = uiFieldTypeMirror.toString();
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-        ViewById annotation = element.getAnnotation(ViewById.class);
-        int idValue = annotation.value();
+		String fieldName = element.getSimpleName().toString();
 
-        IRInnerClass rInnerClass = rClass.get(Res.ID);
-        JFieldRef idRef;
-        if (idValue == Id.DEFAULT_VALUE) {
-            idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-        } else {
-            idRef = rInnerClass.getIdStaticRef(idValue, holder);
-        }
-        
-        JBlock methodBody = holder.afterSetContentView.body();
-	    
-        methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(typeQualifiedName), JExpr.invoke("findViewById").arg(idRef)));
+		TypeMirror uiFieldTypeMirror = element.asType();
+		String typeQualifiedName = uiFieldTypeMirror.toString();
+
+		ViewById annotation = element.getAnnotation(ViewById.class);
+		int idValue = annotation.value();
+
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
+		JFieldRef idRef;
+		if (idValue == Id.DEFAULT_VALUE) {
+			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
+		} else {
+			idRef = rInnerClass.getIdStaticRef(idValue, holder);
+		}
+
+		JBlock methodBody = holder.afterSetContentView.body();
+
+		methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(typeQualifiedName), JExpr.invoke("findViewById").arg(idRef)));
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,23 +42,23 @@ public abstract class EditorHelper<T extends EditorHelper<T>> {
 	protected IntPrefEditorField<T> intField(String key) {
 		return new IntPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected StringPrefEditorField<T> stringField(String key) {
 		return new StringPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected BooleanPrefEditorField<T> booleanField(String key) {
 		return new BooleanPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected FloatPrefEditorField<T> floatField(String key) {
 		return new FloatPrefEditorField<T>(cast(), key);
 	}
-	
+
 	protected LongPrefEditorField<T> longField(String key) {
 		return new LongPrefEditorField<T>(cast(), key);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private T cast() {
 		return (T) this;

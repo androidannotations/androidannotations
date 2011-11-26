@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,16 @@
  */
 package com.googlecode.androidannotations.rclass;
 
-
 public interface IRClass {
 
 	public enum Res {
-    	LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE;
-    	public String rName() {
-    		return toString().toLowerCase();
-    	}
-    }
+		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU;
+		public String rName() {
+			return toString().toLowerCase();
+		}
+	}
 
-    IRInnerClass get(Res res);
+	IRInnerClass get(Res res);
 
 	final IRClass EMPTY_R_CLASS = new IRClass() {
 		@Override

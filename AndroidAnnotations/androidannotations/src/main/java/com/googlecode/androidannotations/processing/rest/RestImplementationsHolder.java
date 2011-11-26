@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,21 +22,21 @@ import javax.lang.model.element.Element;
 
 public class RestImplementationsHolder {
 
-    private Map<Element, RestImplentationHolder> holders = new HashMap<Element, RestImplentationHolder>();
+	private Map<Element, RestImplementationHolder> holders = new HashMap<Element, RestImplementationHolder>();
 
-    public RestImplentationHolder create(Element element) {
-    	RestImplentationHolder holder = new RestImplentationHolder();
-        holders.put(element, holder);
-        return holder;
-    }
+	public RestImplementationHolder create(Element element) {
+		RestImplementationHolder holder = new RestImplementationHolder();
+		holders.put(element, holder);
+		return holder;
+	}
 
-    public RestImplentationHolder getEnclosingHolder(Element enclosedElement) {
-        Element activityElement = enclosedElement.getEnclosingElement();
-        return holders.get(activityElement);
-    }
+	public RestImplementationHolder getEnclosingHolder(Element enclosedElement) {
+		Element activityElement = enclosedElement.getEnclosingElement();
+		return holders.get(activityElement);
+	}
 
-    public RestImplentationHolder getRelativeHolder(Element element) {
-        return holders.get(element);
-    }
+	public RestImplementationHolder getRelativeHolder(Element element) {
+		return holders.get(element);
+	}
 
 }

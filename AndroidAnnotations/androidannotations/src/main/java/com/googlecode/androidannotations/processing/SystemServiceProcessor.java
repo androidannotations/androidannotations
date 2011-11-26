@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,32 +29,32 @@ import com.sun.codemodel.JFieldRef;
 
 public class SystemServiceProcessor implements ElementProcessor {
 
-    private final AndroidSystemServices androidSystemServices;
+	private final AndroidSystemServices androidSystemServices;
 
-    public SystemServiceProcessor(AndroidSystemServices androidSystemServices) {
-        this.androidSystemServices = androidSystemServices;
-    }
+	public SystemServiceProcessor(AndroidSystemServices androidSystemServices) {
+		this.androidSystemServices = androidSystemServices;
+	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return SystemService.class;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return SystemService.class;
+	}
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, ActivitiesHolder activitiesHolder) {
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
-        ActivityHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-        String fieldName = element.getSimpleName().toString();
+		String fieldName = element.getSimpleName().toString();
 
-        TypeMirror serviceType = element.asType();
-        String fieldTypeQualifiedName = serviceType.toString();
+		TypeMirror serviceType = element.asType();
+		String fieldTypeQualifiedName = serviceType.toString();
 
-        JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
+		JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
 
-        JBlock methodBody = holder.beforeCreate.body();
+		JBlock methodBody = holder.beforeCreate.body();
 
-        methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(fieldTypeQualifiedName), JExpr.invoke("getSystemService").arg(serviceRef)));
-    }
+		methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(fieldTypeQualifiedName), JExpr.invoke("getSystemService").arg(serviceRef)));
+	}
 
 }

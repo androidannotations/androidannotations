@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,19 +27,18 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class AbstractActivityTest {
 
-    @Test
-    public void abstractActivityMustGenerateAbstractActivity() {
-    	int modifiers = AbstractActivity_.class.getModifiers();
-    	
-    	assertThat(Modifier.isAbstract(modifiers)).isTrue();
-    }
-    
-    @Test
-    public void finalActivityShouldBeFinal() {
-    	int modifiers = EmptyActivityWithoutLayout_.class.getModifiers();
-    	
-    	assertThat(Modifier.isFinal(modifiers)).isTrue();
-    }
-    
-    
+	@Test
+	public void abstractActivityMustGenerateAbstractActivity() {
+		int modifiers = AbstractActivity_.class.getModifiers();
+
+		assertThat(Modifier.isAbstract(modifiers)).isTrue();
+	}
+
+	@Test
+	public void finalActivityShouldBeFinal() {
+		int modifiers = EmptyActivityWithoutLayout_.class.getModifiers();
+
+		assertThat(Modifier.isFinal(modifiers)).isTrue();
+	}
+
 }

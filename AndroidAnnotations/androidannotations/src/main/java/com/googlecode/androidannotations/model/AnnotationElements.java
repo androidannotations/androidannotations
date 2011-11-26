@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,12 +22,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 public interface AnnotationElements {
-	
+
 	Set<? extends Element> getAllElements();
 
 	Set<? extends Element> getAnnotatedElements(Class<? extends Annotation> annotationClass);
 
 	TypeElement annotationElementfromAnnotationClass(Class<? extends Annotation> annotationClass);
-	
 
 }

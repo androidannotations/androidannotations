@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,25 +20,25 @@ import java.util.regex.Pattern;
 
 public class ManifestPackageExtractor {
 
-    private static final Pattern pattern = Pattern.compile("package\\s*=\\s*\"([^\"]+)\"");
-    private Matcher matcher;
-    private boolean matches;
+	private static final Pattern pattern = Pattern.compile("package\\s*=\\s*\"([^\"]+)\"");
+	private Matcher matcher;
+	private boolean matches;
 
-    public ManifestPackageExtractor(String manifestLine) {
-        if (manifestLine != null) {
-            matcher = pattern.matcher(manifestLine);
-            matches = matcher.find();
-        } else {
-            matches = false;
-        }
-    }
+	public ManifestPackageExtractor(String manifestLine) {
+		if (manifestLine != null) {
+			matcher = pattern.matcher(manifestLine);
+			matches = matcher.find();
+		} else {
+			matches = false;
+		}
+	}
 
-    public boolean matches() {
-        return matches;
-    }
+	public boolean matches() {
+		return matches;
+	}
 
-    public String extract() {
-        return matches ? matcher.group(1) : null;
-    }
+	public String extract() {
+		return matches ? matcher.group(1) : null;
+	}
 
 }

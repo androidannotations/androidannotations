@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,10 +41,30 @@ public class IdValidatorHelper extends ValidatorHelper {
 	}
 
 	public void idExists(Element element, Res res, boolean defaultUseName, IsValid valid) {
+		idExists(element, res, defaultUseName, true, valid);
+	}
+
+	public void idExists(Element element, Res res, boolean defaultUseName, boolean allowDefault, IsValid valid) {
 
 		Integer idValue = annotationHelper.extractAnnotationValue(element);
 
-		if (idValue.equals(Id.DEFAULT_VALUE)) {
+		idExists(element, res, defaultUseName, allowDefault, valid, idValue);
+	}
+
+	public void idsExists(Element element, Res res, IsValid valid) {
+
+		int[] idsValues = annotationHelper.extractAnnotationValue(element);
+		if (idsValues[0] == Id.DEFAULT_VALUE) {
+			idExists(element, res, true, true, valid, idsValues[0]);
+		} else {
+			for (int idValue : idsValues) {
+				idExists(element, res, false, true, valid, idValue);
+			}
+		}
+	}
+
+	private void idExists(Element element, Res res, boolean defaultUseName, boolean allowDefault, IsValid valid, Integer idValue) {
+		if (allowDefault && idValue.equals(Id.DEFAULT_VALUE)) {
 			if (defaultUseName) {
 				String elementName = element.getSimpleName().toString();
 				int lastIndex = elementName.lastIndexOf(annotationHelper.actionName());
@@ -73,20 +93,29 @@ public class IdValidatorHelper extends ValidatorHelper {
 	}
 
 	public void uniqueId(Element element, AnnotationElements validatedElements, IsValid valid) {
+
 		if (valid.isValid()) {
 			Element layoutElement = element.getEnclosingElement();
-			String annotationQualifiedId = idAnnotationHelper.extractAnnotationQualifiedId(element);
+			List<String> annotationQualifiedIds = idAnnotationHelper.extractAnnotationQualifiedIds(element);
 
 			Set<? extends Element> annotatedElements = validatedElements.getAnnotatedElements(annotationHelper.getTarget());
+
 			for (Element uniqueCheckElement : annotatedElements) {
 				Element enclosingElement = uniqueCheckElement.getEnclosingElement();
+
 				if (layoutElement.equals(enclosingElement)) {
-					String checkQualifiedId = idAnnotationHelper.extractAnnotationQualifiedId(uniqueCheckElement);
-					if (annotationQualifiedId.equals(checkQualifiedId)) {
-						valid.invalidate();
-						String annotationSimpleId = annotationQualifiedId.substring(annotationQualifiedId.lastIndexOf('.') + 1);
-						annotationHelper.printAnnotationError(element, "The id " + annotationSimpleId + " is already used on the following " + annotationHelper.annotationName() + " method: " + uniqueCheckElement);
-						return;
+					List<String> checkQualifiedIds = idAnnotationHelper.extractAnnotationQualifiedIds(uniqueCheckElement);
+
+					for (String checkQualifiedId : checkQualifiedIds) {
+						for (String annotationQualifiedId : annotationQualifiedIds) {
+
+							if (annotationQualifiedId.equals(checkQualifiedId)) {
+								valid.invalidate();
+								String annotationSimpleId = annotationQualifiedId.substring(annotationQualifiedId.lastIndexOf('.') + 1);
+								annotationHelper.printAnnotationError(element, "The id " + annotationSimpleId + " is already used on the following " + annotationHelper.annotationName() + " method: " + uniqueCheckElement);
+								return;
+							}
+						}
 					}
 				}
 			}
@@ -95,9 +124,9 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
 
-		enclosingElementHasEActivity(element, validatedElements, valid);
+		enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
 
-		idExists(element, Res.ID, valid);
+		idsExists(element, Res.ID, valid);
 
 		isNotPrivate(element, valid);
 
@@ -125,4 +154,5 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 
 	}
+
 }

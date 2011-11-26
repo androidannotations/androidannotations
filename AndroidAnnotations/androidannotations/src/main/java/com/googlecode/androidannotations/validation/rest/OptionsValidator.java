@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import com.googlecode.androidannotations.annotations.rest.Options;
+import com.googlecode.androidannotations.helper.RestAnnotationHelper;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -31,10 +32,12 @@ import com.googlecode.androidannotations.validation.IsValid;
 public class OptionsValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
-	
+	private RestAnnotationHelper restAnnotationHelper;
+
 	public OptionsValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
+		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
 	}
 
 	@Override
@@ -46,18 +49,18 @@ public class OptionsValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
+
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
-		validatorHelper.enclosingElementHasRest(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		
+
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
-		
+
 		validatorHelper.hasSetOfHttpMethodReturnType(executableElement, valid);
-		
-		validatorHelper.urlVariableNamesExistInParameters(executableElement, valid);
+
+		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
 
 		return valid.isValid();
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,12 +50,12 @@ public class EActivityValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsActivity((TypeElement)element, valid);
+		validatorHelper.extendsActivity((TypeElement) element, valid);
 
 		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-		
+
 		validatorHelper.activityRegistered(element, androidManifest, valid);
 
 		return valid.isValid();

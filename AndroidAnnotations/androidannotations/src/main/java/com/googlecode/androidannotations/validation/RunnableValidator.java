@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,18 +50,17 @@ public class RunnableValidator implements ElementValidator {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.voidReturnType(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
-		
+
 		validatorHelper.doesntThrowException(executableElement, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-		
+
 		validatorHelper.isNotSynchronized(element, valid);
 
 		return valid.isValid();
 	}
-
 
 }

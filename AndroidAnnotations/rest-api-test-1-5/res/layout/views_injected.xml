@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+    Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -17,23 +17,23 @@
 
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-	<TextView  
-		android:id="@+id/myTextView"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />
-	<TextView  
-		android:id="@+id/someView"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />
-	<Button  
-		android:id="@+id/myButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />	    
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/myTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/someView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/myButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

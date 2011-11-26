@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,41 +31,43 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 
 public class SharedPrefValidator implements ElementValidator {
 
-    private final ValidatorHelper validatorHelper;
-    private final Elements elements;
+	private final ValidatorHelper validatorHelper;
+	private final Elements elements;
 
-    public SharedPrefValidator(ProcessingEnvironment processingEnv) {
-        this.elements = processingEnv.getElementUtils();
-        TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
-        validatorHelper = new ValidatorHelper(annotationHelper);
-    }
+	public SharedPrefValidator(ProcessingEnvironment processingEnv) {
+		this.elements = processingEnv.getElementUtils();
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
+	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return SharedPref.class;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return SharedPref.class;
+	}
 
-    @Override
-    public boolean validate(Element element, AnnotationElements validatedElements) {
+	@Override
+	public boolean validate(Element element, AnnotationElements validatedElements) {
 
-        IsValid valid = new IsValid();
+		IsValid valid = new IsValid();
 
-        TypeElement typeElement = (TypeElement) element;
+		TypeElement typeElement = (TypeElement) element;
 
-        validatorHelper.isInterface(typeElement, valid);
+		validatorHelper.isInterface(typeElement, valid);
 
-        List<? extends Element> inheritedMembers = elements.getAllMembers(typeElement);
+		List<? extends Element> inheritedMembers = elements.getAllMembers(typeElement);
 
-        for (Element memberElement : inheritedMembers) {
-            if (!memberElement.getEnclosingElement().asType().toString().equals("java.lang.Object")) {
-                boolean isPrefMethod = validatorHelper.isPrefMethod(memberElement);
-                if (isPrefMethod) {
-                    validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement);
-                }
-            }
-        }
+		for (Element memberElement : inheritedMembers) {
+			if (!memberElement.getEnclosingElement().asType().toString().equals("java.lang.Object")) {
+				boolean isPrefMethod = validatorHelper.isPrefMethod(memberElement);
+				if (isPrefMethod) {
+					validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement);
+				} else {
+					valid.invalidate();
+				}
+			}
+		}
 
-        return valid.isValid();
-    }
+		return valid.isValid();
+	}
 
 }

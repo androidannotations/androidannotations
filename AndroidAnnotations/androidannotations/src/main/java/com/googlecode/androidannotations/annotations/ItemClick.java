@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,18 +24,19 @@ import java.lang.annotation.Target;
  * Should be used on item click listener methods for AdapterView classes
  * 
  * The method may have 0 or 1 parameter, that will be the object from the
- * adapter, at the selected position. It may be of any type, so be careful
- * about potential ClassCastException.
+ * adapter, at the selected position. It may be of any type, so be careful about
+ * potential ClassCastException.
  * 
  * The annotation value should be one of R.id.* fields. If not set, the method
  * name will be used as the R.id.* field name.
  * 
  * @author Benjamin Fellous
  * @author Pierre-Yves Ricau
+ * @author Mathieu Boniface
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface ItemClick {
-	int value() default Id.DEFAULT_VALUE;
+	int[] value() default Id.DEFAULT_VALUE;
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,10 +19,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public abstract class AbstractPrefField {
-	
+
 	protected final SharedPreferences sharedPreferences;
 	protected final String key;
-	
+
 	public AbstractPrefField(SharedPreferences sharedPreferences, String key) {
 		this.sharedPreferences = sharedPreferences;
 		this.key = key;
@@ -31,18 +31,17 @@ public abstract class AbstractPrefField {
 	public final boolean exists() {
 		return sharedPreferences.contains(key);
 	}
-	
+
 	public final void remove() {
 		apply(edit().remove(key));
 	}
-	
+
 	protected Editor edit() {
 		return sharedPreferences.edit();
 	}
-	
+
 	protected final void apply(Editor editor) {
 		SharedPreferencesCompat.apply(editor);
 	}
-
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 Pierre-Yves Ricau (py.ricau at gmail.com)
+ * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,20 +37,20 @@ import com.googlecode.androidannotations.test15.R;
 @EActivity(R.layout.injected)
 public class ActivityWithRoboGuice extends Activity {
 
-    @InjectResource(R.string.injected_activity_caption)
-    String caption;
-    
-    @InjectView(R.id.injected_text_view)
-    TextView injectedTextView;
-    
-    @Inject
-    Date date;
+	@InjectResource(R.string.injected_activity_caption)
+	String caption;
 
-    @AfterViews
-    void updateCaption() {
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
-        String formattedDate = dateFormat.format(date);
-        injectedTextView.setText(caption + " - " + formattedDate);
-    }
-    
+	@InjectView(R.id.injected_text_view)
+	TextView injectedTextView;
+
+	@Inject
+	Date date;
+
+	@AfterViews
+	void updateCaption() {
+		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
+		String formattedDate = dateFormat.format(date);
+		injectedTextView.setText(caption + " - " + formattedDate);
+	}
+
 }
