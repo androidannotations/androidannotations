@@ -34,8 +34,17 @@ public class ItemClicksHandledActivity extends Activity {
 	@ViewById
 	Spinner spinner;
 
+	@ViewById
+	ListView listViewWithArgument;
+
+	@ViewById
+	Spinner spinnerWithArgument;
+
 	boolean spinnerItemClicked = false;
 	boolean listViewItemClicked = false;
+
+	String spinnerWithArgumentSelectedItem = null;
+	String listViewWithArgumentSelectedItem = null;
 
 	private ArrayAdapter<CharSequence> adapter;
 
@@ -46,6 +55,8 @@ public class ItemClicksHandledActivity extends Activity {
 
 		spinner.setAdapter(adapter);
 		listView.setAdapter(adapter);
+		spinnerWithArgument.setAdapter(adapter);
+		listViewWithArgument.setAdapter(adapter);
 	}
 
 	@ItemClick
@@ -53,9 +64,19 @@ public class ItemClicksHandledActivity extends Activity {
 		listViewItemClicked = true;
 	}
 
+	@ItemClick(R.id.listViewWithArgument)
+	public void listViewWithArgument(String selectedItem) {
+		listViewWithArgumentSelectedItem = selectedItem;
+	}
+
 	@ItemClick
 	public void spinner() {
 		spinnerItemClicked = true;
+	}
+
+	@ItemClick
+	public void spinnerWithArgument(String selectedItem) {
+		spinnerWithArgumentSelectedItem = selectedItem;
 	}
 
 }
