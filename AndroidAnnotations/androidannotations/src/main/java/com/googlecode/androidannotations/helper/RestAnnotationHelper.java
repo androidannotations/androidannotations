@@ -86,12 +86,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		// String urlSuffix = extractAnnotationValue(element);
 		// String uriTemplate = urlPrefix + urlSuffix;
 
+		List<String> variableNames = new ArrayList<String>();
 		String uriTemplate = extractAnnotationValue(element);
 
-		Matcher m = NAMES_PATTERN.matcher(uriTemplate);
-		List<String> variableNames = new ArrayList<String>();
-		while (m.find()) {
-			variableNames.add(m.group(1));
+		boolean hasValueInAnnotation = uriTemplate != null;
+		if (hasValueInAnnotation) {
+			Matcher m = NAMES_PATTERN.matcher(uriTemplate);
+			while (m.find()) {
+				variableNames.add(m.group(1));
+			}
 		}
 
 		return variableNames;
