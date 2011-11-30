@@ -20,6 +20,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Id;
@@ -137,6 +138,10 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 	public void activityRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
 		TypeElement typeElement = (TypeElement) element;
+
+		if (typeElement.getModifiers().contains(Modifier.ABSTRACT)) {
+			return;
+		}
 
 		String activityQualifiedName = typeElement.getQualifiedName().toString();
 		String generatedActivityQualifiedName = activityQualifiedName + ModelConstants.GENERATION_SUFFIX;
