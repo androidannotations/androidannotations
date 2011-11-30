@@ -15,47 +15,48 @@
  */
 package com.googlecode.androidannotations.test15;
 
+import android.view.MotionEvent;
 import android.view.View;
 
-import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.Touch;
 
 @EActivity(R.layout.clickable_widgets)
-public class ClicksHandledActivity extends EventsHandledAbstractActivity {
+public class TouchesHandledActivity extends EventsHandledAbstractActivity {
 
-	@Click
-	public void conventionButton() {
+	@Touch
+	public void conventionButton(MotionEvent evt) {
 		conventionButtonEventHandled = true;
 	}
-
-	@Click
-	public void snakeCaseButton() {
+	
+	@Touch
+	public void snakeCaseButton(MotionEvent evt) {
 		snakeCaseButtonEventHandled = true;
-	}
-
-	@Click
-	public void extendedConventionButtonClicked() {
+	}	
+	
+	@Touch
+	public void extendedConventionButtonTouched(MotionEvent evt) {
 		extendedConventionButtonEventHandled = true;
 	}
-
-	@Click(R.id.configurationOverConventionButton)
-	public void overridenConventionButton() {
+	
+	@Touch(R.id.configurationOverConventionButton)
+	public void overridenConventionButton(MotionEvent evt) {
 		overridenConventionButtonEventHandled = true;
 	}
-
-	public void unboundButton() {
+	
+	public void unboundButton(MotionEvent evt) {
 		unboundButtonEventHandled = true;
 	}
-
-	@Click
-	public void buttonWithViewArgument(View viewArgument) {
+	
+	@Touch
+	public void buttonWithViewArgument(MotionEvent evt, View viewArgument) {
 		this.viewArgument = viewArgument;
 	}
 
-	@Click({R.id.button1, R.id.button2})
-	public void multipleButtonWithViewArgument(View viewArgument) {
+	@Touch({R.id.button1, R.id.button2})
+	public void multipleButtonWithViewArgument(MotionEvent evt, View viewArgument) {
 		this.viewArgument = viewArgument;
 		multipleButtonsEventHandled = true;
 	}
-
+	
 }

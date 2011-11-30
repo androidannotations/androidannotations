@@ -26,6 +26,8 @@
 		<activity android:name=".EmptyActivityWithoutLayout_" />
 		<activity android:name=".ViewsInjectedActivity_" />
 		<activity android:name=".ClicksHandledActivity_" />
+		<activity android:name=".LongClicksHandledActivity_" />
+		<activity android:name=".TouchesHandledActivity_" />
 		<activity android:name=".ItemClicksHandledActivity_" />
 		<activity android:name=".ActivityWithServices_" />
         <activity android:name=".ExtraInjectedActivity_" />

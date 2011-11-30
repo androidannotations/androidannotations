@@ -16,8 +16,20 @@
 package com.googlecode.androidannotations.test15;
 
 import android.app.Activity;
+import android.view.View;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 
 @EActivity
-public abstract class AbstractActivity extends Activity {}
+public abstract class EventsHandledAbstractActivity extends Activity {
+
+	View viewArgument;
+
+	protected boolean conventionButtonEventHandled;
+	protected boolean snakeCaseButtonEventHandled;
+	protected boolean extendedConventionButtonEventHandled;
+	protected boolean overridenConventionButtonEventHandled;
+	protected boolean unboundButtonEventHandled;
+	protected boolean multipleButtonsEventHandled;
+
+}

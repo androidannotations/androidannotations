@@ -22,90 +22,90 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.xtremelabs.robolectric.Robolectric;
+import android.view.MotionEvent;
+
 import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowButton;
 
 @RunWith(RobolectricTestRunner.class)
-public class ClicksHandledActivityTest {
+public class TouchesHandledActivityTest {
 
-	private ClicksHandledActivity_ activity;
+	private TouchesHandledActivity_ activity;
+
+	private MotionEvent mockedEvent;
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowButton.class);
-
-		activity = new ClicksHandledActivity_();
+		activity = new TouchesHandledActivity_();
 		activity.onCreate(null);
+
+		mockedEvent = MotionEvent.obtain(0, 0, 0, 0f, 0f, 0);
 	}
 
 	@Test
 	public void handlingWithConvention() {
 		assertThat(activity.conventionButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.conventionButton).performClick();
-		
+
+		activity.findViewById(R.id.conventionButton).dispatchTouchEvent(mockedEvent);
+
 		assertThat(activity.conventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithSnakeCase() {
 		assertThat(activity.snakeCaseButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.snake_case_button).performClick();
-		
+
+		activity.findViewById(R.id.snake_case_button).dispatchTouchEvent(mockedEvent);
+
 		assertThat(activity.snakeCaseButtonEventHandled).isTrue();
 	}
-	
-	
+
 	@Test
 	public void handlingWithExtendedConvention() {
 		assertThat(activity.extendedConventionButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.extendedConventionButton).performClick();
-		
+
+		activity.findViewById(R.id.extendedConventionButton).dispatchTouchEvent(mockedEvent);
+
 		assertThat(activity.extendedConventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.configurationOverConventionButton).performClick();
-		
+
+		activity.findViewById(R.id.configurationOverConventionButton).dispatchTouchEvent(mockedEvent);
+
 		assertThat(activity.overridenConventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void unannotatedButtonIsNotHandled() {
-		activity.findViewById(R.id.unboundButton).performClick();
-		
+		activity.findViewById(R.id.unboundButton).dispatchTouchEvent(mockedEvent);
+
 		assertThat(activity.unboundButtonEventHandled).isFalse();
 	}
-	
+
 	@Test
 	public void viewArgumentIsGiven() {
 		assertThat(activity.viewArgument).isNull();
-		
-		activity.findViewById(R.id.buttonWithViewArgument).performClick();
-		
+
+		activity.findViewById(R.id.buttonWithViewArgument).dispatchTouchEvent(mockedEvent);
+
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
 	}
-	
+
 	@Test
 	public void multipleButtonsClicked() {
 		assertThat(activity.multipleButtonsEventHandled).isFalse();
 
-		activity.findViewById(R.id.button1).performClick();		
+		activity.findViewById(R.id.button1).dispatchTouchEvent(mockedEvent);
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button1);
-		
+
 		activity.multipleButtonsEventHandled = false;
-		
-		activity.findViewById(R.id.button2).performClick();
+
+		activity.findViewById(R.id.button2).dispatchTouchEvent(mockedEvent);
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button2);
 	}
-	
 
 }

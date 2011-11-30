@@ -5,7 +5,7 @@
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * http:www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed To in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -27,85 +27,83 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowButton;
 
 @RunWith(RobolectricTestRunner.class)
-public class ClicksHandledActivityTest {
+public class LongClicksHandledActivityTest {
 
-	private ClicksHandledActivity_ activity;
+	private LongClicksHandledActivity_ activity;
 
 	@Before
 	public void setup() {
 		Robolectric.bindShadowClass(ShadowButton.class);
 
-		activity = new ClicksHandledActivity_();
+		activity = new LongClicksHandledActivity_();
 		activity.onCreate(null);
 	}
 
 	@Test
-	public void handlingWithConvention() {
+	public void handlingWithConvention() throws InterruptedException {
 		assertThat(activity.conventionButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.conventionButton).performClick();
-		
+
+		activity.findViewById(R.id.conventionButton).performLongClick();
+
 		assertThat(activity.conventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithSnakeCase() {
 		assertThat(activity.snakeCaseButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.snake_case_button).performClick();
-		
+
+		activity.findViewById(R.id.snake_case_button).performLongClick();
+
 		assertThat(activity.snakeCaseButtonEventHandled).isTrue();
 	}
-	
-	
+
 	@Test
 	public void handlingWithExtendedConvention() {
 		assertThat(activity.extendedConventionButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.extendedConventionButton).performClick();
-		
+
+		activity.findViewById(R.id.extendedConventionButton).performLongClick();
+
 		assertThat(activity.extendedConventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.configurationOverConventionButton).performClick();
-		
+
+		activity.findViewById(R.id.configurationOverConventionButton).performLongClick();
+
 		assertThat(activity.overridenConventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void unannotatedButtonIsNotHandled() {
-		activity.findViewById(R.id.unboundButton).performClick();
-		
+		activity.findViewById(R.id.unboundButton).performLongClick();
+
 		assertThat(activity.unboundButtonEventHandled).isFalse();
 	}
-	
+
 	@Test
 	public void viewArgumentIsGiven() {
 		assertThat(activity.viewArgument).isNull();
-		
-		activity.findViewById(R.id.buttonWithViewArgument).performClick();
-		
+
+		activity.findViewById(R.id.buttonWithViewArgument).performLongClick();
+
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
 	}
-	
+
 	@Test
 	public void multipleButtonsClicked() {
 		assertThat(activity.multipleButtonsEventHandled).isFalse();
 
-		activity.findViewById(R.id.button1).performClick();		
+		activity.findViewById(R.id.button1).performLongClick();
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button1);
-		
+
 		activity.multipleButtonsEventHandled = false;
-		
-		activity.findViewById(R.id.button2).performClick();
+
+		activity.findViewById(R.id.button2).performLongClick();
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button2);
 	}
-	
 
 }
