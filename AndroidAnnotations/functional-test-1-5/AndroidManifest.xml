@@ -33,7 +33,6 @@
         <activity android:name=".ExtraInjectedActivity_" />
         <activity android:name=".BackpressedActivity_" />
         <activity android:name=".TransactionalActivity_" />
-        <activity android:name=".AbstractActivity_" />
         <activity android:name=".FromHtmlActivity_" />
         <activity android:name=".roboguice.MapActivityWithRoboGuice_" />
         <activity android:name=".roboguice.ActivityWithRoboGuice_" />
