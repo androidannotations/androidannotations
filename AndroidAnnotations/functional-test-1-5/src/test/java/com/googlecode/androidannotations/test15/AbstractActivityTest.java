@@ -29,7 +29,7 @@ public class AbstractActivityTest {
 
 	@Test
 	public void abstractActivityMustGenerateAbstractActivity() {
-		int modifiers = AbstractActivity_.class.getModifiers();
+		int modifiers = EventsHandledAbstractActivity.class.getModifiers();
 
 		assertThat(Modifier.isAbstract(modifiers)).isTrue();
 	}

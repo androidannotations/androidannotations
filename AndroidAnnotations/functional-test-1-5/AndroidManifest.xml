@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
     Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,7 +13,6 @@
     WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     License for the specific language governing permissions and limitations under
     the License.
-
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.googlecode.androidannotations.test15"
@@ -29,6 +27,9 @@
         <activity android:name=".EmptyActivityWithoutLayout_" />
         <activity android:name=".ViewsInjectedActivity_" />
         <activity android:name=".ClicksHandledActivity_" />
+        <activity android:name=".LongClicksHandledActivity_" />
+        <activity android:name=".TouchesHandledActivity_" />
+        <activity android:name=".ItemClicksHandledActivity_" />
         <activity android:name=".ActivityWithServices_" />
         <activity android:name=".ExtraInjectedActivity_" />
         <activity android:name=".BackpressedActivity_" />

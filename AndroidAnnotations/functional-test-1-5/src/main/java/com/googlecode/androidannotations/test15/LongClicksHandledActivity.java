@@ -17,45 +17,45 @@ package com.googlecode.androidannotations.test15;
 
 import android.view.View;
 
-import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.LongClick;
 
 @EActivity(R.layout.clickable_widgets)
-public class ClicksHandledActivity extends EventsHandledAbstractActivity {
-
-	@Click
+public class LongClicksHandledActivity extends EventsHandledAbstractActivity {
+	
+	@LongClick
 	public void conventionButton() {
 		conventionButtonEventHandled = true;
 	}
-
-	@Click
+	
+	@LongClick
 	public void snakeCaseButton() {
 		snakeCaseButtonEventHandled = true;
-	}
-
-	@Click
-	public void extendedConventionButtonClicked() {
+	}	
+	
+	@LongClick
+	public void extendedConventionButtonLongClicked() {
 		extendedConventionButtonEventHandled = true;
 	}
-
-	@Click(R.id.configurationOverConventionButton)
+	
+	@LongClick(R.id.configurationOverConventionButton)
 	public void overridenConventionButton() {
 		overridenConventionButtonEventHandled = true;
 	}
-
+	
 	public void unboundButton() {
 		unboundButtonEventHandled = true;
 	}
-
-	@Click
+	
+	@LongClick
 	public void buttonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
 	}
 
-	@Click({ R.id.button1, R.id.button2 })
+	@LongClick({R.id.button1, R.id.button2})
 	public void multipleButtonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
 		multipleButtonsEventHandled = true;
 	}
-
+	
 }
