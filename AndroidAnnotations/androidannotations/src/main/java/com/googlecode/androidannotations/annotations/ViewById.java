@@ -25,8 +25,8 @@ import java.lang.annotation.Target;
  * 
  * The field MUST be of a type that extends android.view.View.
  * 
- * The annotation value should be one of R.string.* fields. If not set, the field
- * name will be used as the R.id.* field name.
+ * The annotation value should be one of R.string.* fields. If not set, the
+ * field name will be used as the R.id.* field name.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)

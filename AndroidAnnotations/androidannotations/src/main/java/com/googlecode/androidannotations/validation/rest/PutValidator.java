@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import com.googlecode.androidannotations.annotations.rest.Put;
+import com.googlecode.androidannotations.helper.RestAnnotationHelper;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -31,10 +32,12 @@ import com.googlecode.androidannotations.validation.IsValid;
 public class PutValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
-	
+	private RestAnnotationHelper restAnnotationHelper;
+
 	public PutValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
+		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
 	}
 
 	@Override
@@ -46,18 +49,18 @@ public class PutValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 
 		IsValid valid = new IsValid();
-		
+
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
-		validatorHelper.enclosingElementHasRest(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		
+
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
-		
-		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
-		
-		validatorHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);
+
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
+
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

@@ -20,25 +20,25 @@ import java.util.regex.Pattern;
 
 public class ManifestPackageExtractor {
 
-    private static final Pattern pattern = Pattern.compile("package\\s*=\\s*\"([^\"]+)\"");
-    private Matcher matcher;
-    private boolean matches;
+	private static final Pattern pattern = Pattern.compile("package\\s*=\\s*\"([^\"]+)\"");
+	private Matcher matcher;
+	private boolean matches;
 
-    public ManifestPackageExtractor(String manifestLine) {
-        if (manifestLine != null) {
-            matcher = pattern.matcher(manifestLine);
-            matches = matcher.find();
-        } else {
-            matches = false;
-        }
-    }
+	public ManifestPackageExtractor(String manifestLine) {
+		if (manifestLine != null) {
+			matcher = pattern.matcher(manifestLine);
+			matches = matcher.find();
+		} else {
+			matches = false;
+		}
+	}
 
-    public boolean matches() {
-        return matches;
-    }
+	public boolean matches() {
+		return matches;
+	}
 
-    public String extract() {
-        return matches ? matcher.group(1) : null;
-    }
+	public String extract() {
+		return matches ? matcher.group(1) : null;
+	}
 
 }

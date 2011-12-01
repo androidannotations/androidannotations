@@ -47,7 +47,7 @@ public class FromHtmlValidator implements ElementValidator {
 		IsValid valid = new IsValid();
 
 		validatorHelper.hasViewByIdAnnotation(element, validatedElements, valid);
-		
+
 		validatorHelper.extendsTextView(element, valid);
 
 		validatorHelper.idExists(element, Res.STRING, valid);

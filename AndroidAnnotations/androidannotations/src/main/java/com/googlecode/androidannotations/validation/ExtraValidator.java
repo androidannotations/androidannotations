@@ -28,7 +28,7 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 public class ExtraValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
-	
+
 	public ExtraValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
@@ -46,10 +46,10 @@ public class ExtraValidator implements ElementValidator {
 		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
-		
+
 		validatorHelper.hasExtraValue(element, valid);
 
 		return valid.isValid();
 	}
-	
+
 }

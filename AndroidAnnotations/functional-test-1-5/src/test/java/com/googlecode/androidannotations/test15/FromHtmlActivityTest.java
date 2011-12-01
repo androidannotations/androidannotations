@@ -30,9 +30,9 @@ import com.xtremelabs.robolectric.shadows.ShadowHtml;
 
 @RunWith(RobolectricTestRunner.class)
 public class FromHtmlActivityTest {
-	
+
 	private FromHtmlActivity_ activity;
-	
+
 	@Before
 	public void setup() {
 		Robolectric.bindShadowClass(ShadowHtml.class);
@@ -46,7 +46,7 @@ public class FromHtmlActivityTest {
 		assertNotNull(activity.textView);
 		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.textView.getText());
 	}
-	
+
 	@Test
 	public void injectionOfHtmlWithDefaultName() {
 		assertNotNull(activity.someView);

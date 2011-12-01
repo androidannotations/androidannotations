@@ -29,31 +29,31 @@ import com.googlecode.androidannotations.annotations.ViewById;
 @EViewGroup(R.layout.component)
 public class BasicComponent extends FrameLayout {
 
-    @ViewById(R.id.title)
-    TextView tv;
+	@ViewById(R.id.title)
+	TextView tv;
 
-    @ViewById
-    TextView subtitle;
-    
-    public BasicComponent(Context context, int i) {
-        super(context);
-    }
+	@ViewById
+	TextView subtitle;
 
-    @Click(R.id.title)
-    public void title() {
-    }
+	public BasicComponent(Context context, int i) {
+		super(context);
+	}
 
-    @LongClick(R.id.title)
-    public void titleLongClick() {
-    }
+	@Click(R.id.title)
+	public void title() {
+	}
 
-    @Touch(R.id.title)
-    public void titleTouched(MotionEvent e) {
-    }
+	@LongClick(R.id.title)
+	public void titleLongClick() {
+	}
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-    }
+	@Touch(R.id.title)
+	public void titleTouched(MotionEvent e) {
+	}
+
+	@Override
+	protected void onFinishInflate() {
+		super.onFinishInflate();
+	}
 
 }

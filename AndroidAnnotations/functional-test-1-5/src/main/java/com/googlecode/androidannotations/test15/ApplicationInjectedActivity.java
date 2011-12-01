@@ -23,8 +23,8 @@ import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
 
 @EActivity
 public class ApplicationInjectedActivity extends Activity {
-    
-    @App
-    SampleRoboApplication customApplication;
+
+	@App
+	SampleRoboApplication customApplication;
 
 }

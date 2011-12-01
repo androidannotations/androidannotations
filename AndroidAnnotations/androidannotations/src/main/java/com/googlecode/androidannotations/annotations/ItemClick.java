@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
  * Should be used on item click listener methods for AdapterView classes
  * 
  * The method may have 0 or 1 parameter, that will be the object from the
- * adapter, at the selected position. It may be of any type, so be careful
- * about potential ClassCastException.
+ * adapter, at the selected position. It may be of any type, so be careful about
+ * potential ClassCastException.
  * 
  * The annotation value should be one of R.id.* fields. If not set, the method
  * name will be used as the R.id.* field name.
@@ -38,5 +38,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface ItemClick {
-	int [] value() default Id.DEFAULT_VALUE;
+	int[] value() default Id.DEFAULT_VALUE;
 }

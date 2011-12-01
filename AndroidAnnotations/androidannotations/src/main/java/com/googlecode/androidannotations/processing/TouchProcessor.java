@@ -43,63 +43,63 @@ import com.sun.codemodel.JVar;
  */
 public class TouchProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
 
-    public TouchProcessor(IRClass rClass) {
-    	super(rClass);
-    }
+	public TouchProcessor(IRClass rClass) {
+		super(rClass);
+	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return Touch.class;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return Touch.class;
+	}
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-        EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-        String methodName = element.getSimpleName().toString();
+		String methodName = element.getSimpleName().toString();
 
-        ExecutableElement executableElement = (ExecutableElement) element;
-        List<? extends VariableElement> parameters = executableElement.getParameters();
-        TypeMirror returnType = executableElement.getReturnType();
-        boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
+		ExecutableElement executableElement = (ExecutableElement) element;
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		TypeMirror returnType = executableElement.getReturnType();
+		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
 
-        boolean hasItemParameter = parameters.size() == 2;
+		boolean hasItemParameter = parameters.size() == 2;
 
-        Touch annotation = element.getAnnotation(Touch.class);
-        List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "Touched", holder);
+		Touch annotation = element.getAnnotation(Touch.class);
+		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "Touched", holder);
 
-        JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnTouchListener"));
-        JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");
-        JClass viewClass = holder.refClass("android.view.View");
-        JClass motionEventClass = holder.refClass("android.view.MotionEvent");
+		JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnTouchListener"));
+		JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");
+		JClass viewClass = holder.refClass("android.view.View");
+		JClass motionEventClass = holder.refClass("android.view.MotionEvent");
 
-        JVar viewParam = listenerMethod.param(viewClass, "view");
-        JVar eventParam = listenerMethod.param(motionEventClass, "event");
+		JVar viewParam = listenerMethod.param(viewClass, "view");
+		JVar eventParam = listenerMethod.param(motionEventClass, "event");
 
-        JBlock listenerMethodBody = listenerMethod.body();
+		JBlock listenerMethodBody = listenerMethod.body();
 
-        JInvocation call = JExpr.invoke(methodName);
+		JInvocation call = JExpr.invoke(methodName);
 
-        if (returnMethodResult) {
-            listenerMethodBody._return(call);
-        } else {
-            listenerMethodBody.add(call);
-            listenerMethodBody._return(JExpr.TRUE);
-        }
+		if (returnMethodResult) {
+			listenerMethodBody._return(call);
+		} else {
+			listenerMethodBody.add(call);
+			listenerMethodBody._return(JExpr.TRUE);
+		}
 
-        call.arg(eventParam);
+		call.arg(eventParam);
 
-        if (hasItemParameter) {
-            call.arg(viewParam);
-        }
-        
-        for(JFieldRef idRef : idsRefs) {
-        	JBlock block = holder.afterSetContentView.body().block();
-        	JInvocation findViewById = JExpr.invoke("findViewById");
-        
-        	JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
-        	block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnTouchListener").arg(JExpr._new(listenerClass));
-        }
-    }
+		if (hasItemParameter) {
+			call.arg(viewParam);
+		}
+
+		for (JFieldRef idRef : idsRefs) {
+			JBlock block = holder.afterSetContentView.body().block();
+			JInvocation findViewById = JExpr.invoke("findViewById");
+
+			JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnTouchListener").arg(JExpr._new(listenerClass));
+		}
+	}
 
 }

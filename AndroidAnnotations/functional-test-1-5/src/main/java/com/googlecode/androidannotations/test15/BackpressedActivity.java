@@ -22,10 +22,10 @@ import com.googlecode.androidannotations.annotations.EActivity;
 @EActivity(R.layout.main)
 public class BackpressedActivity extends Activity {
 
-    boolean backPressed = false;
-    
-    public void onBackPressed() {
-        backPressed = true;
-    }
-    
+	boolean backPressed = false;
+
+	public void onBackPressed() {
+		backPressed = true;
+	}
+
 }

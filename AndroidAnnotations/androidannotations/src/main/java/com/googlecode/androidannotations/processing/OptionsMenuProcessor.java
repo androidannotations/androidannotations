@@ -34,39 +34,39 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 public class OptionsMenuProcessor implements ElementProcessor {
-	
+
 	private final IRClass rClass;
 
 	public OptionsMenuProcessor(IRClass rClass) {
 		this.rClass = rClass;
 	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return OptionsMenu.class;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return OptionsMenu.class;
+	}
 
-    @Override
-    public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-        EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
-        
-        OptionsMenu layoutAnnotation = element.getAnnotation(OptionsMenu.class);
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
+
+		OptionsMenu layoutAnnotation = element.getAnnotation(OptionsMenu.class);
 		int layoutIdValue = layoutAnnotation.value();
 
 		IRInnerClass rInnerClass = rClass.get(Res.MENU);
 		JFieldRef optionsMenuId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
-		
-		JMethod method = holder.eBean.method(PUBLIC, codeModel.BOOLEAN,"onCreateOptionsMenu");
+
+		JMethod method = holder.eBean.method(PUBLIC, codeModel.BOOLEAN, "onCreateOptionsMenu");
 		method.annotate(Override.class);
 		JVar menuParam = method.param(holder.refClass("android.view.Menu"), "menu");
-		
+
 		JBlock body = method.body();
-		
+
 		JVar menuInflater = body.decl(holder.refClass("android.view.MenuInflater"), "menuInflater", invoke("getMenuInflater"));
-		
+
 		body.invoke(menuInflater, "inflate").arg(optionsMenuId).arg(menuParam);
-		
+
 		body._return(invoke(_super(), method).arg(menuParam));
-    }
+	}
 
 }

@@ -27,19 +27,18 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class AbstractActivityTest {
 
-    @Test
-    public void abstractActivityMustGenerateAbstractActivity() {
-    	int modifiers = AbstractActivity_.class.getModifiers();
-    	
-    	assertThat(Modifier.isAbstract(modifiers)).isTrue();
-    }
-    
-    @Test
-    public void finalActivityShouldBeFinal() {
-    	int modifiers = EmptyActivityWithoutLayout_.class.getModifiers();
-    	
-    	assertThat(Modifier.isFinal(modifiers)).isTrue();
-    }
-    
-    
+	@Test
+	public void abstractActivityMustGenerateAbstractActivity() {
+		int modifiers = EventsHandledAbstractActivity.class.getModifiers();
+
+		assertThat(Modifier.isAbstract(modifiers)).isTrue();
+	}
+
+	@Test
+	public void finalActivityShouldBeFinal() {
+		int modifiers = EmptyActivityWithoutLayout_.class.getModifiers();
+
+		assertThat(Modifier.isFinal(modifiers)).isTrue();
+	}
+
 }

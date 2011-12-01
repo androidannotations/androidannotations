@@ -22,21 +22,21 @@ import javax.lang.model.element.Element;
 
 public class EBeansHolder {
 
-    private Map<Element, EBeanHolder> EBeanHolders = new HashMap<Element, EBeanHolder>();
+	private Map<Element, EBeanHolder> EBeanHolders = new HashMap<Element, EBeanHolder>();
 
-    public EBeanHolder create(Element activityElement) {
-        EBeanHolder activityHolder = new EBeanHolder();
-        EBeanHolders.put(activityElement, activityHolder);
-        return activityHolder;
-    }
+	public EBeanHolder create(Element activityElement) {
+		EBeanHolder activityHolder = new EBeanHolder();
+		EBeanHolders.put(activityElement, activityHolder);
+		return activityHolder;
+	}
 
-    public EBeanHolder getEnclosingActivityHolder(Element enclosedElement) {
-        Element activityElement = enclosedElement.getEnclosingElement();
-        return EBeanHolders.get(activityElement);
-    }
+	public EBeanHolder getEnclosingActivityHolder(Element enclosedElement) {
+		Element activityElement = enclosedElement.getEnclosingElement();
+		return EBeanHolders.get(activityElement);
+	}
 
-    public EBeanHolder getRelativeEBeanHolder(Element element) {
-        return EBeanHolders.get(element);
-    }
+	public EBeanHolder getRelativeEBeanHolder(Element element) {
+		return EBeanHolders.get(element);
+	}
 
 }

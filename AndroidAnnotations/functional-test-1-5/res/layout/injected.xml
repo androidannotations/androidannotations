@@ -16,24 +16,23 @@
     the License.
 
 -->
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
     <ImageView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/roboguice"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/roboguice" />
+
     <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:id="@+id/injected_text_view"
-            android:textSize="18sp"
-            android:textStyle="bold|italic"
-            android:gravity="center"
-            />
+        android:id="@+id/injected_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold|italic" />
+
 </LinearLayout>

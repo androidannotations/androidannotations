@@ -39,7 +39,7 @@ public class ViewsInjectedActivity extends Activity {
 
 	@ViewById
 	TextView myTextView;
-	
+
 	@AfterViews
 	void incrementCounter() {
 		counter++;

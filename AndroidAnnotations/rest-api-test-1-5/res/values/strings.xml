@@ -17,6 +17,8 @@
 
 -->
 <resources>
+
     <string name="hello">Hello android-functional-test-1-5!</string>
     <string name="app_name">android-functional-test-1-5</string>
+
 </resources>

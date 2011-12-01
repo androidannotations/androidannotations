@@ -28,26 +28,26 @@ import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 
 public class IdAnnotationHelper extends TargetAnnotationHelper {
-	
+
 	private final IRClass rClass;
 
 	public IdAnnotationHelper(ProcessingEnvironment processingEnv, Class<? extends Annotation> target, IRClass rClass) {
 		super(processingEnv, target);
 		this.rClass = rClass;
 	}
-	
+
 	public List<String> extractAnnotationQualifiedIds(Element element) {
-		int [] idsValues = extractAnnotationValue(element);
+		int[] idsValues = extractAnnotationValue(element);
 		IRInnerClass rInnerClass = rClass.get(Res.ID);
 		List<String> clickQualifiedIds = new ArrayList<String>();
-		
+
 		if (idsValues.length == 1 && idsValues[0] == Id.DEFAULT_VALUE) {
 			String fieldName = element.getSimpleName().toString();
 			int lastIndex = fieldName.lastIndexOf(actionName());
 			if (lastIndex != -1) {
 				fieldName = fieldName.substring(0, lastIndex);
 			}
-			String clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName); 
+			String clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
 			clickQualifiedIds.add(clickQualifiedId);
 
 		} else {
@@ -58,12 +58,11 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 		}
 		return clickQualifiedIds;
 	}
-	
+
 	boolean containsIdValue(Integer idValue, Res res) {
 		IRInnerClass rInnerClass = rClass.get(res);
 		return rInnerClass.containsIdValue(idValue);
 	}
-
 
 	boolean containsField(String name, Res res) {
 		IRInnerClass rInnerClass = rClass.get(res);

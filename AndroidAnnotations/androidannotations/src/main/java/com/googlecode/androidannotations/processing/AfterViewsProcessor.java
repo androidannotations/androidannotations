@@ -32,9 +32,9 @@ public class AfterViewsProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-		
+
 		String methodName = element.getSimpleName().toString();
-		
+
 		holder.afterSetContentView.body().invoke(methodName);
 	}
 

@@ -15,26 +15,39 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.processing.EBeanHolder;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
-	
+
 	public JClass typeMirrorToJClass(TypeMirror type, EBeanHolder holder) {
-		
+
 		if (type instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) type;
 
 			String declaredTypeName = declaredType.asElement().toString();
 
 			JClass declaredClass = holder.refClass(declaredTypeName);
-			
+
 			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 
 			List<JClass> typeArgumentJClasses = new ArrayList<JClass>();
@@ -44,11 +57,113 @@ public class APTCodeModelHelper {
 			if (typeArgumentJClasses.size() > 0) {
 				declaredClass = declaredClass.narrow(typeArgumentJClasses);
 			}
-			
+
 			return declaredClass;
 		} else {
 			return holder.refClass(type.toString());
 		}
+	}
+
+	public static class Parameter {
+		public final String name;
+		public final JClass jClass;
+
+		public Parameter(String name, JClass jClass) {
+			this.name = name;
+			this.jClass = jClass;
+		}
+	}
+	
+	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EBeanHolder holder) {
+
+		String methodName = executableElement.getSimpleName().toString();
+
+		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder);
+
+		List<Parameter> parameters = new ArrayList<Parameter>();
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterName = parameter.getSimpleName().toString();
+			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
+			parameters.add(new Parameter(parameterName, parameterClass));
+		}
+		
+		JMethod existingMethod = findAlreadyGeneratedMethod(holder.eBean, methodName, parameters);
+		
+		if (existingMethod != null) {
+			return existingMethod;
+		}
+		
+		JMethod method = holder.eBean.method(JMod.PUBLIC, returnType, methodName);
+		method.annotate(Override.class);
+
+		List<JVar> methodParameters = new ArrayList<JVar>();
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterName = parameter.getSimpleName().toString();
+			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
+			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
+			methodParameters.add(param);
+		}
+
+		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
+			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
+			method._throws(thrownType);
+		}
+		
+		callSuperMethod(method, holder, method.body());
+
+		return method;
+	}
+
+	private JMethod findAlreadyGeneratedMethod(JDefinedClass definedClass, String methodName, List<Parameter> parameters) {
+		method: for (JMethod method : definedClass.methods()) {
+			if (method.name().equals(methodName) && method.params().size() == parameters.size()) {
+				int i = 0;
+				for (JVar param : method.params()) {
+					String searchedParamType = parameters.get(i).jClass.name();
+					if (!param.type().name().equals(searchedParamType)) {
+						continue method;
+					}
+					i++;
+				}
+				return method;
+			}
+		}
+		return null;
+	}
+
+	public void callSuperMethod(JMethod superMethod, EBeanHolder holder, JBlock callBlock) {
+		JExpression activitySuper = holder.eBean.staticRef("super");
+		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
+
+		for (JVar param : superMethod.params()) {
+			superCall.arg(param);
+		}
+
+		JType returnType = superMethod.type();
+		if (returnType.fullName().equals("void")) {
+			callBlock.add(superCall);
+		} else {
+			callBlock._return(superCall);
+		}
+	}
+	
+	public JBlock removeBody(JMethod method) {
+		JBlock body = method.body();
+		try {
+			Field bodyField = JMethod.class.getDeclaredField("body");
+			bodyField.setAccessible(true);
+			bodyField.set(method, null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		JBlock clonedBody = new JBlock(false, false);
+		
+		for(Object statement : body.getContents()) {
+			clonedBody.add((JStatement) statement);
+		}
+		
+		return clonedBody;
 	}
 
 }

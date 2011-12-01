@@ -43,7 +43,7 @@ import com.sun.codemodel.JVar;
 public class ItemClickProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
 
 	public ItemClickProcessor(IRClass rClass) {
-		super (rClass);
+		super(rClass);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class ItemClickProcessor extends MultipleResIdsBasedProcessor implements 
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
 		boolean hasItemParameter = parameters.size() == 1;
-		
+
 		ItemClick annotation = element.getAnnotation(ItemClick.class);
 		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "ItemClicked", holder);
 
@@ -69,13 +69,13 @@ public class ItemClickProcessor extends MultipleResIdsBasedProcessor implements 
 		JMethod onItemClickMethod = onItemClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onItemClick");
 		JClass adapterViewClass = holder.refClass("android.widget.AdapterView");
 		JClass viewClass = holder.refClass("android.view.View");
-		
+
 		JClass narrowAdapterViewClass = adapterViewClass.narrow(codeModel.wildcard());
 		JVar onItemClickParentParam = onItemClickMethod.param(narrowAdapterViewClass, "parent");
 		onItemClickMethod.param(viewClass, "view");
 		JVar onItemClickPositionParam = onItemClickMethod.param(codeModel.INT, "position");
 		onItemClickMethod.param(codeModel.LONG, "id");
-		
+
 		JInvocation itemClickCall = onItemClickMethod.body().invoke(methodName);
 
 		if (hasItemParameter) {
@@ -83,11 +83,11 @@ public class ItemClickProcessor extends MultipleResIdsBasedProcessor implements 
 			String parameterQualifiedName = parameter.asType().toString();
 			itemClickCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 		}
-		
+
 		for (JFieldRef idRef : idsRefs) {
 			JBlock block = holder.afterSetContentView.body().block();
 			JInvocation findViewById = JExpr.invoke("findViewById");
-			
+
 			JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)));
 			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(JExpr._new(onItemClickListenerClass));
 		}

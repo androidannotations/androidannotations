@@ -27,10 +27,10 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class OptionsMenuValidator  implements ElementValidator {
+public class OptionsMenuValidator implements ElementValidator {
 
 	private IdValidatorHelper validatorHelper;
-	
+
 	public OptionsMenuValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
@@ -47,7 +47,7 @@ public class OptionsMenuValidator  implements ElementValidator {
 		IsValid valid = new IsValid();
 
 		validatorHelper.hasEActivity(element, validatedElements, valid);
-		
+
 		validatorHelper.idExists(element, Res.MENU, false, false, valid);
 
 		return valid.isValid();

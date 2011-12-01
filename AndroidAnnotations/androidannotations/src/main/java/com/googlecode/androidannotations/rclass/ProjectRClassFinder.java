@@ -26,7 +26,6 @@ import com.googlecode.androidannotations.helper.AnnotationHelper;
 
 public class ProjectRClassFinder extends AnnotationHelper {
 
-
 	public ProjectRClassFinder(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
 	}
@@ -45,7 +44,5 @@ public class ProjectRClassFinder extends AnnotationHelper {
 
 		return new RClass(rType);
 	}
-
-
 
 }

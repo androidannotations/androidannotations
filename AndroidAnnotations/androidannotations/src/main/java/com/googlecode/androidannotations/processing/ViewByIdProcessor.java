@@ -45,28 +45,28 @@ public class ViewByIdProcessor implements ElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-	    
-	    EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
-	    
-        String fieldName = element.getSimpleName().toString();
 
-        TypeMirror uiFieldTypeMirror = element.asType();
-        String typeQualifiedName = uiFieldTypeMirror.toString();
+		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
 
-        ViewById annotation = element.getAnnotation(ViewById.class);
-        int idValue = annotation.value();
+		String fieldName = element.getSimpleName().toString();
 
-        IRInnerClass rInnerClass = rClass.get(Res.ID);
-        JFieldRef idRef;
-        if (idValue == Id.DEFAULT_VALUE) {
-            idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-        } else {
-            idRef = rInnerClass.getIdStaticRef(idValue, holder);
-        }
-        
-        JBlock methodBody = holder.afterSetContentView.body();
-	    
-        methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(typeQualifiedName), JExpr.invoke("findViewById").arg(idRef)));
+		TypeMirror uiFieldTypeMirror = element.asType();
+		String typeQualifiedName = uiFieldTypeMirror.toString();
+
+		ViewById annotation = element.getAnnotation(ViewById.class);
+		int idValue = annotation.value();
+
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
+		JFieldRef idRef;
+		if (idValue == Id.DEFAULT_VALUE) {
+			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
+		} else {
+			idRef = rInnerClass.getIdStaticRef(idValue, holder);
+		}
+
+		JBlock methodBody = holder.afterSetContentView.body();
+
+		methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(typeQualifiedName), JExpr.invoke("findViewById").arg(idRef)));
 	}
 
 }

@@ -49,12 +49,12 @@ public class AfterViewsValidator implements ElementValidator {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.voidReturnType(executableElement, valid);
-		
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
+
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.doesntThrowException(executableElement, valid);
-		
+
 		validatorHelper.zeroParameter(executableElement, valid);
 
 		return valid.isValid();

@@ -52,7 +52,7 @@ public class ClicksHandledActivity extends EventsHandledAbstractActivity {
 		this.viewArgument = viewArgument;
 	}
 
-	@Click({R.id.button1, R.id.button2})
+	@Click({ R.id.button1, R.id.button2 })
 	public void multipleButtonWithViewArgument(View viewArgument) {
 		this.viewArgument = viewArgument;
 		multipleButtonsEventHandled = true;

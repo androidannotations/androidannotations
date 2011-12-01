@@ -23,16 +23,15 @@ import com.googlecode.androidannotations.annotations.Transactional;
 
 @EActivity
 public class TransactionalActivity extends Activity {
-    
-    @Transactional
-    void successfulTransaction(SQLiteDatabase db) {
-        db.execSQL("Some SQL");
-    }
-    
-    @Transactional
-    void rollbackedTransaction(SQLiteDatabase db) {
-        throw new IllegalArgumentException();
-    }
-    
-}
 
+	@Transactional
+	void successfulTransaction(SQLiteDatabase db) {
+		db.execSQL("Some SQL");
+	}
+
+	@Transactional
+	void rollbackedTransaction(SQLiteDatabase db) {
+		throw new IllegalArgumentException();
+	}
+
+}

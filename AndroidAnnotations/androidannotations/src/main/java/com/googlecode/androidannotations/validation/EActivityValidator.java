@@ -50,12 +50,12 @@ public class EActivityValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsActivity((TypeElement)element, valid);
+		validatorHelper.extendsActivity((TypeElement) element, valid);
 
 		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-		
+
 		validatorHelper.activityRegistered(element, androidManifest, valid);
 
 		return valid.isValid();

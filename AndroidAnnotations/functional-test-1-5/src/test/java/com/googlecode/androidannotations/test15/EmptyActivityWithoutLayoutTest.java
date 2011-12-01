@@ -25,16 +25,15 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class EmptyActivityWithoutLayoutTest {
 
-    @Test
-    public void shouldHaveNoLayoutAfterCreate() {
-    	EmptyActivityWithoutLayout_ activity = new EmptyActivityWithoutLayout_();
-    	
-    	assertThat(activity.findViewById(R.id.helloTextView)).isNull();
-    	
-    	activity.onCreate(null);
-    	
-    	assertThat(activity.findViewById(R.id.helloTextView)).isNull();
-    }
-    
-    
+	@Test
+	public void shouldHaveNoLayoutAfterCreate() {
+		EmptyActivityWithoutLayout_ activity = new EmptyActivityWithoutLayout_();
+
+		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
+
+		activity.onCreate(null);
+
+		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
+	}
+
 }

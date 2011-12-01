@@ -22,5 +22,5 @@ public class MyAssertions {
 	public static ViewAssert assertThat(View actual) {
 		return new ViewAssert(actual);
 	}
-	
+
 }

@@ -47,7 +47,7 @@ public class ClicksHandledActivityTest {
 		
 		assertThat(activity.conventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithSnakeCase() {
 		assertThat(activity.snakeCaseButtonEventHandled).isFalse();
@@ -56,8 +56,7 @@ public class ClicksHandledActivityTest {
 		
 		assertThat(activity.snakeCaseButtonEventHandled).isTrue();
 	}
-	
-	
+
 	@Test
 	public void handlingWithExtendedConvention() {
 		assertThat(activity.extendedConventionButtonEventHandled).isFalse();
@@ -66,7 +65,7 @@ public class ClicksHandledActivityTest {
 		
 		assertThat(activity.extendedConventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonEventHandled).isFalse();
@@ -75,23 +74,23 @@ public class ClicksHandledActivityTest {
 		
 		assertThat(activity.overridenConventionButtonEventHandled).isTrue();
 	}
-	
+
 	@Test
 	public void unannotatedButtonIsNotHandled() {
 		activity.findViewById(R.id.unboundButton).performClick();
 		
 		assertThat(activity.unboundButtonEventHandled).isFalse();
 	}
-	
+
 	@Test
 	public void viewArgumentIsGiven() {
 		assertThat(activity.viewArgument).isNull();
-		
+
 		activity.findViewById(R.id.buttonWithViewArgument).performClick();
-		
+
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
 	}
-	
+
 	@Test
 	public void multipleButtonsClicked() {
 		assertThat(activity.multipleButtonsEventHandled).isFalse();
@@ -106,6 +105,5 @@ public class ClicksHandledActivityTest {
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button2);
 	}
-	
 
 }

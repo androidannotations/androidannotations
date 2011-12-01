@@ -46,13 +46,11 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 
-public class EViewGroupProcessor extends AnnotationHelper implements
-		ElementProcessor {
+public class EViewGroupProcessor extends AnnotationHelper implements ElementProcessor {
 
 	private final IRClass rClass;
 
-	public EViewGroupProcessor(ProcessingEnvironment processingEnv,
-			IRClass rClass) {
+	public EViewGroupProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
 	}
@@ -63,18 +61,15 @@ public class EViewGroupProcessor extends AnnotationHelper implements
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel,
-			EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
 		EBeanHolder holder = activitiesHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 
-		String annotatedActivityQualifiedName = typeElement.getQualifiedName()
-				.toString();
+		String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
 
-		String subActivityQualifiedName = annotatedActivityQualifiedName
-				+ ModelConstants.GENERATION_SUFFIX;
+		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
 		int modifiers;
 		if (element.getModifiers().contains(Modifier.ABSTRACT)) {
@@ -83,23 +78,19 @@ public class EViewGroupProcessor extends AnnotationHelper implements
 			modifiers = JMod.PUBLIC | JMod.FINAL;
 		}
 
-		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName,
-				ClassType.CLASS);
+		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
 
-		JClass annotatedActivity = codeModel
-				.directClass(annotatedActivityQualifiedName);
+		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
 		holder.eBean._extends(annotatedActivity);
-		
+
 		holder.bundleClass = holder.refClass("android.os.Bundle");
 
 		// afterSetContentView
-		holder.afterSetContentView = holder.eBean.method(PRIVATE,
-				codeModel.VOID, "afterSetContentView_");
+		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 
 		// onFinishInflate
-		JMethod onFinishInflate = holder.eBean.method(PUBLIC,
-				codeModel.VOID, "onFinishInflate");
+		JMethod onFinishInflate = holder.eBean.method(PUBLIC, codeModel.VOID, "onFinishInflate");
 		onFinishInflate.annotate(Override.class);
 
 		// inflate layout if ID is given on annotation
@@ -110,22 +101,18 @@ public class EViewGroupProcessor extends AnnotationHelper implements
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
 
-			onFinishInflate.body().invoke("inflate")
-					.arg(JExpr.invoke("getContext")).arg(contentViewId)
-					.arg(JExpr._this());
+			onFinishInflate.body().invoke("inflate").arg(JExpr.invoke("getContext")).arg(contentViewId).arg(JExpr._this());
 		}
 
 		// finally
 		onFinishInflate.body().invoke(holder.afterSetContentView);
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
-		
-		copyConstructors(element, holder,
-				onFinishInflate);
+
+		copyConstructors(element, holder, onFinishInflate);
 
 	}
 
-	private void copyConstructors(Element element,
-			EBeanHolder holder, JMethod setContentViewMethod) {
+	private void copyConstructors(Element element, EBeanHolder holder, JMethod setContentViewMethod) {
 		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
 		for (Element e : element.getEnclosedElements()) {
 			if (e.getKind() == CONSTRUCTOR) {

@@ -15,7 +15,6 @@
  */
 package com.googlecode.androidannotations.test15.menu;
 
-
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -33,9 +32,9 @@ import com.xtremelabs.robolectric.shadows.ShadowHtml;
 
 @RunWith(RobolectricTestRunner.class)
 public class OptionsMenuActivityTest {
-	
+
 	private OptionsMenuActivity_ activity;
-	
+
 	@Before
 	public void setup() {
 		Robolectric.bindShadowClass(ShadowHtml.class);
@@ -47,43 +46,42 @@ public class OptionsMenuActivityTest {
 	@Test
 	public void defaultIdSelected() {
 		MenuItem item = mock(MenuItem.class);
-		
+
 		when(item.getItemId()).thenReturn(R.id.menu_refresh);
-		
+
 		activity.onOptionsItemSelected(item);
-		
+
 		assertThat(activity.menuRefreshSelected).isTrue();
 	}
-	
+
 	@Test
 	public void multipleIdsSelected() {
 		MenuItem item = mock(MenuItem.class);
-		
+
 		when(item.getItemId()).thenReturn(R.id.menu_search);
-		
+
 		boolean result = activity.onOptionsItemSelected(item);
-		
+
 		assertThat(activity.multipleMenuItems).isTrue();
 		assertThat(result).isFalse();
 		activity.multipleMenuItems = false;
-		
+
 		when(item.getItemId()).thenReturn(R.id.menu_share);
-		
+
 		result = activity.onOptionsItemSelected(item);
 		assertThat(activity.multipleMenuItems).isTrue();
 		assertThat(result).isFalse();
 	}
-	
+
 	@Test
 	public void defaultIdUnderscore() {
 		MenuItem item = mock(MenuItem.class);
-		
+
 		when(item.getItemId()).thenReturn(R.id.menu_add);
-		
+
 		activity.onOptionsItemSelected(item);
-		
+
 		assertThat(activity.menu_add).isTrue();
 	}
-	
-	
+
 }

@@ -23,12 +23,13 @@ import java.lang.annotation.Target;
 import com.googlecode.androidannotations.annotations.Id;
 
 /**
- * Use on fields in activity classes that should be injected with values from R.color.*
+ * Use on fields in activity classes that should be injected with values from
+ * R.color.*
  * 
  * The annotated field must be an int or an Integer
  * 
- * The annotation value must be one of R.color.* fields. If the value is not set, the field
- * name will be used as the R.color.* field name.
+ * The annotation value must be one of R.color.* fields. If the value is not
+ * set, the field name will be used as the R.color.* field name.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)

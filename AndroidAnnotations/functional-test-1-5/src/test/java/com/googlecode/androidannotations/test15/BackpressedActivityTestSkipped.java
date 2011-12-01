@@ -22,22 +22,22 @@ import android.view.KeyEvent;
 //@RunWith(RobolectricTestRunner.class)
 public class BackpressedActivityTestSkipped {
 
-    /**
-     * Test skipped because {@link Build.VERSION#RELEASE} is set to null in robolectric
-     */
+	/**
+	 * Test skipped because {@link Build.VERSION#RELEASE} is set to null in
+	 * robolectric
+	 */
 	// @Test
 	public void backKeyHandled() {
-	    
-	       BackpressedActivity_ activity = new BackpressedActivity_();
-	       activity.onCreate(null);
-	       
-	       assertThat(activity.backPressed).isFalse();
-	       
-	       activity.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(null));
-	       
-	       assertThat(activity.backPressed).isTrue();
-	        
-	        
+
+		BackpressedActivity_ activity = new BackpressedActivity_();
+		activity.onCreate(null);
+
+		assertThat(activity.backPressed).isFalse();
+
+		activity.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(null));
+
+		assertThat(activity.backPressed).isTrue();
+
 	}
 
 }

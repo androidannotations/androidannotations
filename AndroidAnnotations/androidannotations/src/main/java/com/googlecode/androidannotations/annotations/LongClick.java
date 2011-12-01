@@ -41,5 +41,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface LongClick {
-	int [] value() default Id.DEFAULT_VALUE;
+	int[] value() default Id.DEFAULT_VALUE;
 }

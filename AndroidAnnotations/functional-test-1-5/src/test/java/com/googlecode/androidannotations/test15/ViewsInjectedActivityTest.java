@@ -40,22 +40,22 @@ public class ViewsInjectedActivityTest {
 	public void injectionWithConventionIsDone() {
 		assertThat(activity.myButton).hasId(R.id.myButton);
 	}
-	
+
 	@Test
 	public void injectionWithConfigurationOverridesConvention() {
 		assertThat(activity.someView).hasId(R.id.my_text_view);
 	}
-	
+
 	@Test
 	public void multipleInjectionIsSame() {
 		assertThat(activity.someView).isSameAs(activity.myTextView);
 	}
-	
+
 	@Test
 	public void unannotatedViewIsNull() {
 		assertThat(activity.unboundView).isNull();
 	}
-	
+
 	@Test
 	public void countAfterSetContentViewCalls() {
 		Assertions.assertThat(activity.counter).isEqualTo(1);
