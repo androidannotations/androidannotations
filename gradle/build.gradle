@@ -23,6 +23,16 @@ def compatibilityVersion = 1.6
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
+repositories {
+    mavenCentral()
+}
+
+def androidAnnotationsVersion = '2.2-RC2'
+
+dependencies {
+    compile "com.googlecode.androidannotations:androidannotations:$androidAnnotationsVersion:api"
+}
+
 clean {
     delete 'gen'
 }
