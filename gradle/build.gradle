@@ -56,6 +56,32 @@ task configureRelease << {
     proguard.enabled = true
 }
 
+compileJava {
+    doFirst {
+        mkdir destinationDir
+        Map otherArgs = [
+                includeAntRuntime: false,
+                destdir: destinationDir,
+                classpath: configurations.compile.asPath,
+                sourcepath: '',
+                target: targetCompatibility,
+                source: sourceCompatibility
+        ]
+        options.compilerArgs = [
+                '-processor', 'com.googlecode.androidannotations.AndroidAnnotationProcessor',
+                '-s', "${destinationDir.absolutePath}".toString(),
+                '-processorpath', "lib/androidannotations-${androidAnnotationsVersion}.jar"
+        ]
+        Map antOptions = otherArgs + options.optionMap()
+        ant.javac(antOptions) {
+            source.addToAntBuilder(ant, 'src', FileCollection.AntType.MatchingTask)
+            options.compilerArgs.each {value ->
+                compilerarg(value: value)
+            }
+        }
+    }
+}
+
 idea {
     module {
         downloadSources = true
