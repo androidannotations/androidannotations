@@ -63,6 +63,29 @@ idea {
     }
     project {
         languageLevel = compatibilityVersion
+
+        ipr {
+            withXml { provider ->
+                def compilerConfiguration = provider.node.component.find {
+                    it.@name == 'CompilerConfiguration'
+                }
+
+                def annotationProcessing = compilerConfiguration.annotationProcessing[0]
+                annotationProcessing.@enabled = true
+                annotationProcessing.@useClasspath = false
+                annotationProcessing.appendNode('processorPath', [
+                        value: "\$PROJECT_DIR\$/lib/androidannotations-${androidAnnotationsVersion}.jar"
+                ])
+                annotationProcessing.appendNode('processor', [
+                        name: 'com.googlecode.androidannotations.AndroidAnnotationProcessor',
+                        options: ''
+                ])
+                annotationProcessing.appendNode('processModule', [
+                        name: 'gradle',
+                        generatedDirName: 'gen'
+                ])
+            }
+        }
     }
 }
 
