@@ -1,0 +1,61 @@
+description = "AndroidAnnotations Gradle Sample"
+abbreviation = "GRADLESAMPLE"
+version = '1.0.0.BUILD-SNAPSHOT'
+
+buildscript {
+    repositories {
+        maven {
+            url 'http://maven.teamcodeflux.com/external/'
+        }
+    }
+
+    def gradleAndroidPluginVersion = '1.1.0-SNAPSHOT'
+
+    dependencies {
+        classpath "com.jvoegele.gradle.plugins:android-plugin:$gradleAndroidPluginVersion"
+    }
+}
+
+apply plugin: 'android'
+apply plugin: 'idea'
+
+def compatibilityVersion = 1.6
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion
+
+clean {
+    delete 'gen'
+}
+
+//androidSignAndAlign {
+//    keyStore = ''
+//    keyAlias = ''
+//    keyStorePassword = ''
+//    keyAliasPassword = ''
+//}
+
+processResources {
+    expand(project.properties)
+}
+
+task configureDebug << {
+    jar.classifier = "debug"
+}
+
+task configureRelease << {
+    proguard.enabled = true
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+    project {
+        languageLevel = compatibilityVersion
+    }
+}
+
+androidProcessResources.dependsOn(clean)
+
+defaultTasks 'assemble'
