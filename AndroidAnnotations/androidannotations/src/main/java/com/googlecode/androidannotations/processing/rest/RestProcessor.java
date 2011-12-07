@@ -15,12 +15,16 @@
  */
 package com.googlecode.androidannotations.processing.rest;
 
+import static com.sun.codemodel.JExpr._this;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.rest.Rest;
@@ -37,6 +41,7 @@ import com.sun.codemodel.JVar;
 
 public class RestProcessor implements ElementProcessor {
 
+	private static final String SPRING_REST_TEMPLATE_QUALIFIED_NAME = "org.springframework.web.client.RestTemplate";
 	private final RestImplementationsHolder restImplementationHolder;
 
 	public RestProcessor(RestImplementationsHolder restImplementationHolder) {
@@ -68,8 +73,8 @@ public class RestProcessor implements ElementProcessor {
 		holder.restImplementationClass._implements(interfaceClass);
 
 		// RestTemplate field
-		JClass restTemplateClass = holder.refClass("org.springframework.web.client.RestTemplate");
-		holder.restTemplateField = holder.restImplementationClass.field(JMod.PRIVATE | JMod.FINAL, restTemplateClass, "restTemplate");
+		JClass restTemplateClass = holder.refClass(SPRING_REST_TEMPLATE_QUALIFIED_NAME);
+		holder.restTemplateField = holder.restImplementationClass.field(JMod.PRIVATE, restTemplateClass, "restTemplate");
 
 		// Default constructor
 		JMethod defaultConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
@@ -90,12 +95,29 @@ public class RestProcessor implements ElementProcessor {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
 		List<ExecutableElement> methods = ElementFilter.methodsIn(enclosedElements);
 		for (ExecutableElement method : methods) {
-			if (method.getThrownTypes().size() == 0 && method.getParameters().size() == 0 && method.getReturnType().toString().equals("org.springframework.web.client.RestTemplate")) {
+			if (method.getParameters().size() == 0 && method.getReturnType().toString().equals(SPRING_REST_TEMPLATE_QUALIFIED_NAME)) {
 				String methodName = method.getSimpleName().toString();
 				JMethod getRestTemplateMethod = holder.restImplementationClass.method(JMod.PUBLIC, restTemplateClass, methodName);
 				getRestTemplateMethod.annotate(Override.class);
 				getRestTemplateMethod.body()._return(holder.restTemplateField);
 				break; // Only one implementation
+			}
+		}
+
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 1 && method.getReturnType().getKind() == TypeKind.VOID) {
+				VariableElement firstParameter = parameters.get(0);
+				if (firstParameter.asType().toString().equals(SPRING_REST_TEMPLATE_QUALIFIED_NAME)) {
+					String methodName = method.getSimpleName().toString();
+					JMethod setRestTemplateMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, methodName);
+					setRestTemplateMethod.annotate(Override.class);
+
+					JVar restTemplateSetterParam = setRestTemplateMethod.param(restTemplateClass, firstParameter.getSimpleName().toString());
+
+					setRestTemplateMethod.body().assign(_this().ref(holder.restTemplateField), restTemplateSetterParam);
+					break; // Only one implementation
+				}
 			}
 		}
 
