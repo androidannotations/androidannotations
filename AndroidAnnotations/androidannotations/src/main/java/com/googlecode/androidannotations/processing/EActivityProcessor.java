@@ -21,6 +21,7 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -79,7 +80,8 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
 		int modifiers;
-		if (element.getModifiers().contains(Modifier.ABSTRACT)) {
+		boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT);
+		if (isAbstract) {
 			modifiers = JMod.PUBLIC | JMod.ABSTRACT;
 		} else {
 			modifiers = JMod.PUBLIC | JMod.FINAL;
@@ -94,7 +96,13 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		holder.bundleClass = holder.refClass("android.os.Bundle");
 
 		// onCreate
-		JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
+		int onCreateVisibility;
+		if (isAbstract) {
+			onCreateVisibility = inheritedOnCreateVisibility(typeElement);
+		} else {
+			onCreateVisibility = PUBLIC;
+		}
+		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
 		// beforeSetContentView
@@ -189,6 +197,36 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 			superCall.arg(arg);
 		}
 		body.invoke(holder.afterSetContentView);
+	}
+
+	private int inheritedOnCreateVisibility(TypeElement activityElement) {
+		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
+
+		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
+
+		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
+			if (isOnCreateMethod(activityInheritedMethod)) {
+				Set<Modifier> modifiers = activityInheritedMethod.getModifiers();
+				for (Modifier modifier : modifiers) {
+					if (modifier == Modifier.PUBLIC) {
+						return JMod.PUBLIC;
+					} else if (modifier == Modifier.PROTECTED) {
+						return JMod.PROTECTED;
+					}
+				}
+				return JMod.PUBLIC;
+			}
+		}
+		return PUBLIC;
+	}
+
+	private boolean isOnCreateMethod(ExecutableElement method) {
+
+		List<? extends VariableElement> parameters = method.getParameters();
+		return method.getSimpleName().toString().equals("onCreate") //
+				&& parameters.size() == 1  //
+				&& parameters.get(0).asType().toString().equals("android.os.Bundle") //
+		;
 	}
 
 	private boolean hasOnBackPressedMethod(TypeElement activityElement) {
