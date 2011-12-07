@@ -18,9 +18,6 @@ package com.googlecode.androidannotations.test15;
 import android.app.Activity;
 import android.view.View;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-
-@EActivity
 public abstract class EventsHandledAbstractActivity extends Activity {
 
 	View viewArgument;
