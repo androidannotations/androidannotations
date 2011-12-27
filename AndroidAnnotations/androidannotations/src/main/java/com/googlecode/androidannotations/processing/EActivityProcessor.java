@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
@@ -92,8 +93,8 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
 		holder.eBean._extends(annotatedActivity);
-
-		holder.bundleClass = holder.refClass("android.os.Bundle");
+		
+		holder.contextRef = _this();
 
 		// onCreate
 		int onCreateVisibility;
@@ -104,18 +105,26 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		}
 		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
+		
+		JClass bundleClass = holder.refClass("android.os.Bundle");
 
 		// beforeSetContentView
-		holder.beforeCreate = holder.eBean.method(PRIVATE, codeModel.VOID, "beforeCreate_");
-		holder.beforeCreateSavedInstanceStateParam = holder.beforeCreate.param(holder.bundleClass, "savedInstanceState");
+		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+		holder.beforeCreateSavedInstanceStateParam = holder.init.param(bundleClass, "savedInstanceState");
+		
+		{
+			// init if activity
+			holder.initIfActivityBody = holder.init.body();
+			holder.initActivityRef =  _this();
+		}
 
 		// afterSetContentView
 		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 
-		JVar onCreateSavedInstanceState = onCreate.param(holder.bundleClass, "savedInstanceState");
+		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
 
-		onCreateBody.invoke(holder.beforeCreate).arg(onCreateSavedInstanceState);
+		onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
 
 		onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 

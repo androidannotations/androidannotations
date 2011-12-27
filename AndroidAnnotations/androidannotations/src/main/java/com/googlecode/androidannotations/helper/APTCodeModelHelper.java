@@ -15,6 +15,8 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import static com.sun.codemodel.JExpr.cast;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,9 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
@@ -34,6 +38,7 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
@@ -164,6 +169,45 @@ public class APTCodeModelHelper {
 		}
 		
 		return clonedBody;
+	}
+	
+	public JDefinedClass createDelegatingAnonymousRunnableClass(JCodeModel codeModel, EBeanHolder holder, JMethod delegatedMethod) {
+		JDefinedClass anonymousRunnableClass;
+		JBlock previousMethodBody = removeBody(delegatedMethod);
+
+		anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
+
+		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
+		runMethod.annotate(Override.class);
+
+		JBlock runMethodBody = runMethod.body();
+		JTryBlock runTry = runMethodBody._try();
+
+		runTry.body().add(previousMethodBody);
+
+		JCatchBlock runCatch = runTry._catch(holder.refClass(RuntimeException.class));
+		JVar exceptionParam = runCatch.param("e");
+
+		JClass logClass = holder.refClass("android.util.Log");
+
+		JInvocation errorInvoke = logClass.staticInvoke("e");
+
+		errorInvoke.arg(holder.eBean.name());
+		errorInvoke.arg("A runtime exception was thrown while executing code in a runnable");
+		errorInvoke.arg(exceptionParam);
+
+		runCatch.body().add(errorInvoke);
+		return anonymousRunnableClass;
+	}
+	
+	public JVar castContextToActivity(EBeanHolder holder, JBlock ifActivityBody) {
+		JClass activityClass = holder.refClass("android.app.Activity");
+		return ifActivityBody.decl(activityClass, "activity", cast(activityClass, holder.contextRef));
+	}
+
+	public JBlock ifContextInstanceOfActivity(EBeanHolder holder, JBlock methodBody) {
+		JClass activityClass = holder.refClass("android.app.Activity");
+		return methodBody._if(holder.contextRef._instanceof(activityClass))._then();
 	}
 
 }

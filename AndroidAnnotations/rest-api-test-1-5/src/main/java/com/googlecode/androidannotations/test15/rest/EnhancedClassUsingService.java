@@ -13,11 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.prefs;
+package com.googlecode.androidannotations.test15.rest;
 
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
+import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.rest.RestService;
 
-@SharedPref
-public interface ActivityPrefs {
+@Enhanced
+public class EnhancedClassUsingService {
 	
+	@RestService
+	MyService myService;
+	
+	@Background
+	void callSomeService(Event event, int id) {
+		myService.updateEvent(event, id);
+	}
+
 }

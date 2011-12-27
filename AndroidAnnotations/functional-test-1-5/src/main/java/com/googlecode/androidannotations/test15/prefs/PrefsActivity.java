@@ -26,7 +26,7 @@ public class PrefsActivity extends Activity {
 
 	@Pref
 	SomePrefs_ somePrefs;
-
+	
 	@Pref
 	ActivityDefaultPrefs_ activityDefaultPrefs;
 

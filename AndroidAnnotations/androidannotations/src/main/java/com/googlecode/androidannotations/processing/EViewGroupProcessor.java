@@ -32,16 +32,19 @@ import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -61,15 +64,15 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element);
+		EBeanHolder holder = eBeansHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 
-		String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
+		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
 
-		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
+		String generatedBeanQualifiedName = eBeanQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
 		int modifiers;
 		if (element.getModifiers().contains(Modifier.ABSTRACT)) {
@@ -78,16 +81,21 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 			modifiers = JMod.PUBLIC | JMod.FINAL;
 		}
 
-		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
+		holder.eBean = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
 
-		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
+		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
-		holder.eBean._extends(annotatedActivity);
+		holder.eBean._extends(eBeanClass);
 
-		holder.bundleClass = holder.refClass("android.os.Bundle");
-
-		// afterSetContentView
-		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+		{
+			// init
+			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+		}
+		
+		{
+			// afterSetContentView
+			holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+		}
 
 		// onFinishInflate
 		JMethod onFinishInflate = holder.eBean.method(PUBLIC, codeModel.VOID, "onFinishInflate");
@@ -109,6 +117,13 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
 		copyConstructors(element, holder, onFinishInflate);
+		
+		{
+			// init if activity
+			APTCodeModelHelper helper = new APTCodeModelHelper();
+			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
+			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
+		}
 
 	}
 
@@ -119,16 +134,27 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 				constructors.add((ExecutableElement) e);
 			}
 		}
+		
+		JClass contextClass = holder.refClass("android.content.Context");
 
 		for (ExecutableElement userConstructor : constructors) {
-			JMethod copy = holder.eBean.constructor(PUBLIC);
-			JInvocation superCall = copy.body().invoke("super");
+			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
+			JBlock body = copyConstructor.body();
+			JInvocation superCall = body.invoke("super");
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
 				String paramType = param.asType().toString();
-				copy.param(holder.refClass(paramType), paramName);
+				copyConstructor.param(holder.refClass(paramType), paramName);
 				superCall.arg(JExpr.ref(paramName));
 			}
+			
+			JFieldVar contextField = holder.eBean.field(PRIVATE, contextClass, "context_");
+			holder.contextRef = contextField;
+			
+			body.assign(contextField, JExpr.invoke("getContext"));
+			
+			body.invoke(holder.init);
+			
 		}
 	}
 

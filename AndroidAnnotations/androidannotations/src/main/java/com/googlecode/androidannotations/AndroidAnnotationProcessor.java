@@ -39,6 +39,7 @@ import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EViewGroup;
+import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.annotations.Fullscreen;
@@ -102,6 +103,7 @@ import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.EActivityProcessor;
 import com.googlecode.androidannotations.processing.EViewGroupProcessor;
+import com.googlecode.androidannotations.processing.EnhancedProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
 import com.googlecode.androidannotations.processing.FromHtmlProcessor;
 import com.googlecode.androidannotations.processing.FullscreenProcessor;
@@ -143,6 +145,7 @@ import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EActivityValidator;
 import com.googlecode.androidannotations.validation.EViewGroupValidator;
+import com.googlecode.androidannotations.validation.EnhancedValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
 import com.googlecode.androidannotations.validation.FromHtmlValidator;
 import com.googlecode.androidannotations.validation.FullscreenValidator;
@@ -227,6 +230,7 @@ import com.sun.codemodel.JCodeModel;
 		NoTitle.class, //
 		Fullscreen.class, //
 		RestService.class, //
+		Enhanced.class, //
 		Trace.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -341,6 +345,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		ModelValidator modelValidator = new ModelValidator();
 		modelValidator.register(new EActivityValidator(processingEnv, rClass, androidManifest));
 		modelValidator.register(new EViewGroupValidator(processingEnv, rClass));
+		modelValidator.register(new EnhancedValidator(processingEnv));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
 		modelValidator.register(new FromHtmlValidator(processingEnv, rClass));
@@ -405,6 +410,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
+		modelProcessor.register(new EnhancedProcessor(processingEnv));
 		modelProcessor.register(new SharedPrefProcessor(processingEnv));
 		modelProcessor.register(new PrefProcessor());
 		modelProcessor.register(new RoboGuiceProcessor());
