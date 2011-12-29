@@ -15,6 +15,9 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static com.googlecode.androidannotations.processing.EnhancedProcessor.GET_INSTANCE_METHOD_NAME;
+import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
@@ -22,18 +25,17 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.App;
+import com.googlecode.androidannotations.annotations.Inject;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 
-public class AppProcessor implements ElementProcessor {
-
-	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
+public class InjectProcessor implements ElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return App.class;
+		return Inject.class;
 	}
 
 	@Override
@@ -43,16 +45,28 @@ public class AppProcessor implements ElementProcessor {
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror elementType = element.asType();
-
-		JInvocation getApplication = holder.initActivityRef.invoke("getApplication");
-
-		String applicationTypeQualifiedName = elementType.toString();
-		if (ANDROID_APPLICATION_QUALIFIED_NAME.equals(applicationTypeQualifiedName)) {
-			holder.initIfActivityBody.assign(ref(fieldName), getApplication);
-		} else {
-			holder.initIfActivityBody.assign(ref(fieldName), JExpr.cast(holder.refClass(applicationTypeQualifiedName), getApplication));
+		
+		String typeQualifiedName = elementType.toString();
+		
+		JClass injectedClass = codeModel.ref(typeQualifiedName + GENERATION_SUFFIX);
+		
+		{
+			// getInstance
+			JBlock body = holder.init.body();
+			
+			
+			JInvocation getInstance = injectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
+			body.assign(ref(fieldName), getInstance);
 		}
-
+		
+		{
+			// afterSetContentView
+			
+			JBlock body = holder.afterSetContentView.body();
+			
+			body.invoke(cast(injectedClass, ref(fieldName)), holder.afterSetContentView);
+		}
+		
 	}
 
 }

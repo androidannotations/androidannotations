@@ -13,18 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.annotations;
 
-import android.app.Activity;
-import android.widget.Button;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.ViewById;
-
-@EActivity(R.layout.views_injected)
-public abstract class AbstractActivity extends Activity {
-
-	@ViewById
-	Button myButton;
-
+/**
+ * Injects an instance of a class annotated with {@link Enhanced}
+ */
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.FIELD)
+public @interface Inject {
 }

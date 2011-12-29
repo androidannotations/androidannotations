@@ -19,25 +19,25 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.Transactional;
+import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class TransactionalValidator implements ElementValidator {
+public class EnhancedValidator implements ElementValidator {
 
-	private ValidatorHelper validatorHelper;
+	private final ValidatorHelper validatorHelper;
+	private TargetAnnotationHelper annotationHelper;
 
-	public TransactionalValidator(ProcessingEnvironment processingEnv) {
-		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+	public EnhancedValidator(ProcessingEnvironment processingEnv) {
+		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Transactional.class;
+		return Enhanced.class;
 	}
 
 	@Override
@@ -45,18 +45,14 @@ public class TransactionalValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
-
-		validatorHelper.isNotPrivate(element, valid);
-
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		validatorHelper.doesntThrowException(executableElement, valid);
-
 		validatorHelper.isNotFinal(element, valid);
-
-		validatorHelper.hasOneOrTwoParametersAndFirstIsDb(executableElement, valid);
-
+		
+		validatorHelper.isNotAbstract(element, valid);
+		
+		validatorHelper.isNotPrivate(element, valid);
+		
+		validatorHelper.hasEmptyConstructor(element, valid);
+		
 		return valid.isValid();
 	}
 

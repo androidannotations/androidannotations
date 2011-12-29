@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
@@ -45,7 +46,7 @@ public class ExtraProcessor implements ElementProcessor {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
-		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
 		if (holder.cast == null) {
 			JType objectType = codeModel._ref(Object.class);
@@ -59,13 +60,12 @@ public class ExtraProcessor implements ElementProcessor {
 			holder.cast = method;
 		}
 
-		JBlock methodBody = holder.beforeCreate.body();
-
 		if (holder.extras == null) {
-			holder.extras = methodBody.decl(holder.bundleClass, "extras_");
-			holder.extras.init(JExpr.invoke("getIntent").invoke("getExtras"));
+			JClass bundleClass = holder.refClass("android.os.Bundle");
+			holder.extras = holder.initIfActivityBody.decl(bundleClass, "extras_");
+			holder.extras.init(holder.initActivityRef.invoke("getIntent").invoke("getExtras"));
 
-			holder.extrasNotNullBlock = methodBody._if(holder.extras.ne(JExpr._null()))._then();
+			holder.extrasNotNullBlock = holder.initIfActivityBody._if(holder.extras.ne(JExpr._null()))._then();
 		}
 
 		JBlock ifContainsKey = holder.extrasNotNullBlock._if(JExpr.invoke(holder.extras, "containsKey").arg(extraKey))._then();

@@ -43,7 +43,7 @@ public class SystemServiceProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
-		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -52,9 +52,9 @@ public class SystemServiceProcessor implements ElementProcessor {
 
 		JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
 
-		JBlock methodBody = holder.beforeCreate.body();
+		JBlock methodBody = holder.init.body();
 
-		methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(fieldTypeQualifiedName), JExpr.invoke("getSystemService").arg(serviceRef)));
+		methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(fieldTypeQualifiedName), holder.contextRef.invoke("getSystemService").arg(serviceRef)));
 	}
 
 }

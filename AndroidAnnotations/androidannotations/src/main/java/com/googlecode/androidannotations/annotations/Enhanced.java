@@ -13,18 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.annotations;
 
-import android.app.Activity;
-import android.widget.Button;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.ViewById;
-
-@EActivity(R.layout.views_injected)
-public abstract class AbstractActivity extends Activity {
-
-	@ViewById
-	Button myButton;
-
+/**
+ * Should be used on custom classes to enable usage of AndroidAnnotations
+ * 
+ * Any view related code should happen in an {@link AfterViews} annotated
+ * method.<br>
+ * <br>
+ * 
+ * Most annotations are supported in {@link Enhanced} classes
+ * 
+ */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
+public @interface Enhanced {
+	int value() default Id.DEFAULT_VALUE;
 }

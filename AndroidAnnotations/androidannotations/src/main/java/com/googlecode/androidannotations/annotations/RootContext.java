@@ -21,33 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on custom classes that extend ViewGroup to enable usage of
- * AndroidAnnotations
+ * Use it on Context fields in {@link Enhanced} classes
  * 
- * Any view related code should happen in an {@link AfterViews} annotated
- * method.<br>
- * <br>
+ * The field MUST be of a type that extends android.content.Context.
  * 
- * Supported annotations in @EViewGroup :
- * 
- * <ul>
- * <li>ViewById</li>
- * <li>AfterViews</li>
- * <li>Click</li>
- * <li>ItemClick</li>
- * <li>ItemLongClick</li>
- * <li>ItemSelected</li>
- * <li>LongClick</li>
- * <li>Touch</li>
- * </ul>
- * 
- * @see <a
- *      href="http://developer.android.com/guide/topics/ui/custom-components.html">How
- *      to build a custom component.</a>
+ * This field may not be injected at runtime if the context used to create the
+ * bean is not of the appropriate type. For example, if you create a new
+ * instance of the bean using a Service context, and you use {@link RootContext}
+ * on a field that extends Activity, this field will be null at runtime.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.TYPE)
-public @interface EViewGroup {
-	int value() default Id.DEFAULT_VALUE;
+@Target(ElementType.FIELD)
+public @interface RootContext {
 }

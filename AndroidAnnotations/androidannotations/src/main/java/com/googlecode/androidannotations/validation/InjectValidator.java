@@ -19,25 +19,26 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.Transactional;
+import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class TransactionalValidator implements ElementValidator {
+
+public class InjectValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
 
-	public TransactionalValidator(ProcessingEnvironment processingEnv) {
+	public InjectValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Transactional.class;
+		return Inject.class;
 	}
 
 	@Override
@@ -49,14 +50,8 @@ public class TransactionalValidator implements ElementValidator {
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		validatorHelper.doesntThrowException(executableElement, valid);
-
-		validatorHelper.isNotFinal(element, valid);
-
-		validatorHelper.hasOneOrTwoParametersAndFirstIsDb(executableElement, valid);
-
+		validatorHelper.typeHasAnnotation(Enhanced.class, element, valid);
+		
 		return valid.isValid();
 	}
 

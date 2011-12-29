@@ -15,6 +15,11 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.STATIC;
+
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +54,7 @@ import com.googlecode.androidannotations.api.sharedpreferences.StringPrefField;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -133,7 +139,6 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
 		}
 
 		// Helper constructor
-		JClass activityClass = codeModel.ref("android.app.Activity");
 		JClass contextClass = codeModel.ref("android.content.Context");
 
 		SharedPref sharedPrefAnnotation = typeElement.getAnnotation(SharedPref.class);
@@ -142,18 +147,21 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
 		JMethod constructor = helperClass.constructor(JMod.PUBLIC);
 		switch (scope) {
 		case ACTIVITY_DEFAULT: {
-			JVar activityParam = constructor.param(activityClass, "activity");
-			constructor.body() //
-					.invoke("super") //
-					.arg(activityParam.invoke("getPreferences") //
+
+			JVar contextParam = constructor.param(contextClass, "context");
+			JMethod getLocalClassName = getLocalClassName(helperClass, codeModel);
+			constructor.body().invoke("super") //
+					.arg(contextParam.invoke("getSharedPreferences") //
+							.arg(invoke(getLocalClassName).arg(contextParam)) //
 							.arg(JExpr.lit(mode)));
 			break;
 		}
 		case ACTIVITY: {
-			JVar activityParam = constructor.param(activityClass, "activity");
+			JVar contextParam = constructor.param(contextClass, "context");
+			JMethod getLocalClassName = getLocalClassName(helperClass, codeModel);
 			constructor.body().invoke("super") //
-					.arg(activityParam.invoke("getSharedPreferences") //
-							.arg(activityParam.invoke("getLocalClassName") //
+					.arg(contextParam.invoke("getSharedPreferences") //
+							.arg(invoke(getLocalClassName).arg(contextParam) //
 									.plus(JExpr.lit("_" + interfaceSimpleName))) //
 							.arg(JExpr.lit(mode)));
 			break;
@@ -239,5 +247,32 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
 	private void addFieldHelperMethod(JDefinedClass helperClass, String fieldName, JExpression defaultValue, Class<?> prefFieldHelperClass, String fieldHelperMethodName) {
 		JMethod fieldMethod = helperClass.method(JMod.PUBLIC, prefFieldHelperClass, fieldName);
 		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(fieldName).arg(defaultValue));
+	}
+
+	private JMethod getLocalClassName(JDefinedClass helperClass, JCodeModel codeModel) {
+
+		JClass stringClass = codeModel.ref(String.class);
+		JMethod getLocalClassName = helperClass.method(PRIVATE | STATIC, stringClass, "getLocalClassName");
+		JClass contextClass = codeModel.ref("android.content.Context");
+
+		JVar contextParam = getLocalClassName.param(contextClass, "context");
+
+		JBlock body = getLocalClassName.body();
+
+		JVar packageName = body.decl(stringClass, "packageName", contextParam.invoke("getPackageName"));
+
+		JVar className = body.decl(stringClass, "className", contextParam.invoke("getClass").invoke("getName"));
+
+		JVar packageLen = body.decl(codeModel.INT, "packageLen", packageName.invoke("length"));
+
+		JExpression condition = className.invoke("startsWith").arg(packageName).not() //
+				.cor(className.invoke("length").lte(packageLen)) //
+				.cor(className.invoke("charAt").arg(packageLen).ne(lit('.')));
+		
+		body._if(condition)._then()._return(className);
+		
+		body._return(className.invoke("substring").arg(packageLen.plus(lit(1))));
+
+		return getLocalClassName;
 	}
 }

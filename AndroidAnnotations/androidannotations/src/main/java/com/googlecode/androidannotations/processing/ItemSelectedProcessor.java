@@ -52,7 +52,7 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
 		String methodName = element.getSimpleName().toString();
 

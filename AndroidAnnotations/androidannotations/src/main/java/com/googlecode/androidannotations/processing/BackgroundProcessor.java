@@ -23,8 +23,6 @@ import javax.lang.model.element.ExecutableElement;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.api.BackgroundExecutor;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -32,9 +30,6 @@ import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
 
 public class BackgroundProcessor implements ElementProcessor {
 
@@ -46,46 +41,25 @@ public class BackgroundProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws JClassAlreadyExistsException {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws JClassAlreadyExistsException {
 
-		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
-		// Method
 		ExecutableElement executableElement = (ExecutableElement) element;
-		JMethod backgroundMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 		
-		JBlock previousMethodBody = helper.removeBody(backgroundMethod);
+		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 
-		JDefinedClass anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
+		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(codeModel, holder, delegatingMethod);
 
-		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
-		runMethod.annotate(Override.class);
+		{
+			// Execute Runnable
+			JClass backgroundExecutorClass = codeModel.ref(BackgroundExecutor.class);
 
-		JBlock runMethodBody = runMethod.body();
-		JTryBlock runTry = runMethodBody._try();
-		
-		runTry.body().add(previousMethodBody);
+			JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(JExpr._new(anonymousRunnableClass));
 
-		JCatchBlock runCatch = runTry._catch(holder.refClass(RuntimeException.class));
-		JVar exceptionParam = runCatch.param("e");
+			delegatingMethod.body().add(executeCall);
+		}
 
-		JClass logClass = holder.refClass("android.util.Log");
-
-		JInvocation errorInvoke = logClass.staticInvoke("e");
-
-		errorInvoke.arg(holder.eBean.name());
-		errorInvoke.arg("A runtime exception was thrown while executing code in a background thread");
-		errorInvoke.arg(exceptionParam);
-
-		runCatch.body().add(errorInvoke);
-
-		JBlock backgroundBody = backgroundMethod.body();
-
-		JClass backgroundExecutorClass = codeModel.ref(BackgroundExecutor.class);
-
-		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(JExpr._new(anonymousRunnableClass));
-
-		backgroundBody.add(executeCall);
 	}
 
 }

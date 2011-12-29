@@ -13,18 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.rest;
 
-import android.app.Activity;
-import android.widget.Button;
+import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.rest.RestService;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.ViewById;
-
-@EActivity(R.layout.views_injected)
-public abstract class AbstractActivity extends Activity {
-
-	@ViewById
-	Button myButton;
+@Enhanced
+public class EnhancedClassUsingService {
+	
+	@RestService
+	MyService myService;
+	
+	@Background
+	void callSomeService(Event event, int id) {
+		myService.updateEvent(event, id);
+	}
 
 }
