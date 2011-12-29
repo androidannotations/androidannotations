@@ -5,3 +5,7 @@ gen
 .project
 org.eclipse.jdt.core.prefs
 org.maven.ide.eclipse.prefs
+*.ipr
+*.iws
+*.iml
+*.idea

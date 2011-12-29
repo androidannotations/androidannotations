@@ -1,2 +1,6 @@
 .project
 target
+*.iml
+*.ipr
+*.iws
+*.idea
