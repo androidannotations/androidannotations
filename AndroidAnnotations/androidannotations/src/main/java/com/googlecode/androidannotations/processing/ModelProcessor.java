@@ -33,7 +33,7 @@ public class ModelProcessor {
 		processors.add(processor);
 	}
 
-	public JCodeModel process(AnnotationElements validatedModel) {
+	public JCodeModel process(AnnotationElements validatedModel) throws Exception {
 
 		JCodeModel codeModel = new JCodeModel();
 
@@ -44,11 +44,7 @@ public class ModelProcessor {
 			Set<? extends Element> annotatedElements = validatedModel.getAnnotatedElements(target);
 
 			for (Element annotatedElement : annotatedElements) {
-				try {
-					processor.process(annotatedElement, codeModel, eBeansHolder);
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+				processor.process(annotatedElement, codeModel, eBeansHolder);
 			}
 		}
 
