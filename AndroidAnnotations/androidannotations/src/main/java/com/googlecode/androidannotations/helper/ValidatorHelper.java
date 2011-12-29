@@ -70,12 +70,14 @@ public class ValidatorHelper {
 	private static final String ANDROID_TEXT_VIEW_QUALIFIED_NAME = "android.widget.TextView";
 	private static final String ANDROID_VIEWGROUP_QUALIFIED_NAME = "android.view.ViewGroup";
 	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
+	public static final String ANDROID_CONTEXT_QUALIFIED_NAME = "android.content.Context";
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
 	private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
 	private static final String ANDROID_MOTION_EVENT_QUALIFIED_NAME = "android.view.MotionEvent";
 	private static final String ANDROID_SQLITE_DB_QUALIFIED_NAME = "android.database.sqlite.SQLiteDatabase";
 	private static final String GUICE_INJECTOR_QUALIFIED_NAME = "com.google.inject.Injector";
 	private static final String ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME = "roboguice.inject.InjectorProvider";
+	
 
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
 
@@ -133,6 +135,23 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a private element");
 		}
 	}
+	
+	public void enclosingElementHasEnhanced(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasEnhanced(element, enclosingElement, validatedElements, valid);
+	}
+	
+	public void hasEnhanced(Element reportElement, Element element, AnnotationElements validatedElements, IsValid valid) {
+
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Enhanced.class);
+
+		if (!layoutAnnotatedElements.contains(element)) {
+			valid.invalidate();
+			if (element.getAnnotation(Enhanced.class) == null) {
+				annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with " + TargetAnnotationHelper.annotationName(Enhanced.class));
+			}
+		}
+	}	
 
 	public void enclosingElementHasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
@@ -154,7 +173,7 @@ public class ValidatorHelper {
 			}
 		}
 	}
-
+	
 	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasEBeanAnnotation(element, enclosingElement, validatedElements, valid);
@@ -471,6 +490,10 @@ public class ValidatorHelper {
 
 	public void extendsApplication(Element element, IsValid valid) {
 		extendsType(element, ANDROID_APPLICATION_QUALIFIED_NAME, valid);
+	}
+	
+	public void extendsContext(Element element, IsValid valid) {
+		extendsType(element, ANDROID_CONTEXT_QUALIFIED_NAME, valid);
 	}
 
 	public void registeredInManifest(Element element, AndroidManifest manifest, IsValid valid) {

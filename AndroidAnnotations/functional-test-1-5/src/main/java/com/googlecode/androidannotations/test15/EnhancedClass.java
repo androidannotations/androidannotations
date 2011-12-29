@@ -1,6 +1,9 @@
 package com.googlecode.androidannotations.test15;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Service;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.TextView;
 
@@ -9,6 +12,7 @@ import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.Transactional;
@@ -32,6 +36,18 @@ import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
  */
 @Enhanced
 public class EnhancedClass {
+	
+	@RootContext
+	Activity activity;
+	
+	@RootContext
+	Context context;
+	
+	@RootContext
+	Service service;
+	
+	@RootContext
+	ThreadActivity threadActivity;
 
 	@ViewById
 	TextView myTextView;
@@ -99,5 +115,5 @@ public class EnhancedClass {
 	void rollbackedTransaction(SQLiteDatabase db) {
 		throw new IllegalArgumentException();
 	}
-
+	
 }
