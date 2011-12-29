@@ -21,17 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on custom classes to enable usage of AndroidAnnotations
- * 
- * Any view related code should happen in an {@link AfterViews} annotated
- * method.<br>
- * <br>
- * 
- * Most annotations are supported in {@link Enhanced} classes
- * 
+ * Injects an instance of a class annotated with {@link Enhanced}
  */
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
-public @interface Enhanced {
-	int value() default Id.DEFAULT_VALUE;
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.FIELD)
+public @interface Inject {
 }

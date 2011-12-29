@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.FINAL;
@@ -31,7 +32,6 @@ import javax.lang.model.element.TypeElement;
 import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
-import com.googlecode.androidannotations.helper.ModelConstants;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -41,6 +41,8 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 public class EnhancedProcessor extends AnnotationHelper implements ElementProcessor {
+
+	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
 
 	public EnhancedProcessor(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
@@ -60,7 +62,7 @@ public class EnhancedProcessor extends AnnotationHelper implements ElementProces
 
 		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
 
-		String generatedBeanQualifiedName = eBeanQualifiedName + ModelConstants.GENERATION_SUFFIX;
+		String generatedBeanQualifiedName = eBeanQualifiedName + GENERATION_SUFFIX;
 
 		holder.eBean = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
 
@@ -132,7 +134,7 @@ public class EnhancedProcessor extends AnnotationHelper implements ElementProces
 		{
 			// Factory method
 			
-			JMethod factoryMethod = holder.eBean.method(STATIC | PUBLIC, holder.eBean, "getInstance_");
+			JMethod factoryMethod = holder.eBean.method(STATIC | PUBLIC, holder.eBean, GET_INSTANCE_METHOD_NAME);
 
 			JVar factoryMethodContextParam = factoryMethod.param(contextClass, "context");
 

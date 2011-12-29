@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.enhanced;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -27,6 +27,7 @@ import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Trace;
@@ -35,6 +36,7 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
+import com.googlecode.androidannotations.test15.ThreadActivity;
 import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
 
 /**
@@ -43,6 +45,9 @@ import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
  */
 @Enhanced
 public class EnhancedClass {
+	
+	@Inject
+	SecondDependency secondDependency;
 	
 	@RootContext
 	Activity activity;
