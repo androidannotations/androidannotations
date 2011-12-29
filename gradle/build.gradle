@@ -4,19 +4,20 @@ version = '1.0.0.BUILD-SNAPSHOT'
 
 buildscript {
     repositories {
+        mavenCentral()
         maven {
             url 'http://maven.teamcodeflux.com/external/'
         }
     }
 
-    def gradleAndroidPluginVersion = '1.1.0-SNAPSHOT'
+    def gradleAndroidAnnotationsPluginVersion = '0.1.0'
 
     dependencies {
-        classpath "com.jvoegele.gradle.plugins:android-plugin:$gradleAndroidPluginVersion"
+        classpath "org.androidannotations.gradle.plugins:gradle-androidannotations-plugin:$gradleAndroidAnnotationsPluginVersion"
     }
 }
 
-apply plugin: 'android'
+apply plugin: 'androidannotations'
 apply plugin: 'idea'
 
 def compatibilityVersion = 1.6
@@ -27,7 +28,7 @@ repositories {
     mavenCentral()
 }
 
-def androidAnnotationsVersion = '2.2-RC2'
+androidAnnotationsVersion = '2.2'
 
 dependencies {
     compile "com.googlecode.androidannotations:androidannotations:$androidAnnotationsVersion:api"
@@ -56,32 +57,6 @@ task configureRelease << {
     proguard.enabled = true
 }
 
-compileJava {
-    doFirst {
-        mkdir destinationDir
-        Map otherArgs = [
-                includeAntRuntime: false,
-                destdir: destinationDir,
-                classpath: configurations.compile.asPath,
-                sourcepath: '',
-                target: targetCompatibility,
-                source: sourceCompatibility
-        ]
-        options.compilerArgs = [
-                '-processor', 'com.googlecode.androidannotations.AndroidAnnotationProcessor',
-                '-s', "${destinationDir.absolutePath}".toString(),
-                '-processorpath', "lib/androidannotations-${androidAnnotationsVersion}.jar"
-        ]
-        Map antOptions = otherArgs + options.optionMap()
-        ant.javac(antOptions) {
-            source.addToAntBuilder(ant, 'src', FileCollection.AntType.MatchingTask)
-            options.compilerArgs.each {value ->
-                compilerarg(value: value)
-            }
-        }
-    }
-}
-
 idea {
     module {
         downloadSources = true
@@ -89,29 +64,6 @@ idea {
     }
     project {
         languageLevel = compatibilityVersion
-
-        ipr {
-            withXml { provider ->
-                def compilerConfiguration = provider.node.component.find {
-                    it.@name == 'CompilerConfiguration'
-                }
-
-                def annotationProcessing = compilerConfiguration.annotationProcessing[0]
-                annotationProcessing.@enabled = true
-                annotationProcessing.@useClasspath = false
-                annotationProcessing.appendNode('processorPath', [
-                        value: "\$PROJECT_DIR\$/lib/androidannotations-${androidAnnotationsVersion}.jar"
-                ])
-                annotationProcessing.appendNode('processor', [
-                        name: 'com.googlecode.androidannotations.AndroidAnnotationProcessor',
-                        options: ''
-                ])
-                annotationProcessing.appendNode('processModule', [
-                        name: 'gradle',
-                        generatedDirName: 'gen'
-                ])
-            }
-        }
     }
 }
 
