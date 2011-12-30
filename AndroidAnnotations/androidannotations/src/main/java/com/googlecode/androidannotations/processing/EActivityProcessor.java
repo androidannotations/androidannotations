@@ -16,8 +16,11 @@
 package com.googlecode.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -93,7 +96,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
 		holder.eBean._extends(annotatedActivity);
-		
+
 		holder.contextRef = _this();
 
 		// onCreate
@@ -105,17 +108,17 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		}
 		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
-		
+
 		JClass bundleClass = holder.refClass("android.os.Bundle");
 
 		// beforeSetContentView
 		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
 		holder.beforeCreateSavedInstanceStateParam = holder.init.param(bundleClass, "savedInstanceState");
-		
+
 		{
 			// init if activity
 			holder.initIfActivityBody = holder.init.body();
-			holder.initActivityRef =  _this();
+			holder.initActivityRef = _this();
 		}
 
 		// afterSetContentView
@@ -189,6 +192,72 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 			}
 		}
 
+		if (!isAbstract) {
+			// Static helpers to start activities
+
+			JClass intentClass = holder.refClass("android.content.Intent");
+			JClass contextClass = holder.refClass("android.content.Context");
+			JClass activityClass = holder.refClass("android.app.Activity");
+			
+			JMethod buildStartIntentTwoParams;
+			{
+				buildStartIntentTwoParams = holder.eBean.method(STATIC | PUBLIC, intentClass, "buildStartIntent");
+				JVar contextParam = buildStartIntentTwoParams.param(contextClass, "context");
+				JVar flagsParam = buildStartIntentTwoParams.param(codeModel.INT, "flags");
+				JBlock body = buildStartIntentTwoParams.body();
+				JVar intent = body.decl(intentClass, "intent", JExpr._new(intentClass).arg(contextParam).arg(holder.eBean.dotclass()));
+				body.invoke(intent, "setFlags").arg(flagsParam);
+				body._return(intent);
+			}
+			
+			{
+				JMethod buildStartIntentOneParams = holder.eBean.method(STATIC | PUBLIC, intentClass, "buildStartIntent");
+				JVar contextParam = buildStartIntentOneParams.param(contextClass, "context");
+				JBlock body = buildStartIntentOneParams.body();
+				body._return(JExpr.invoke(buildStartIntentTwoParams).arg(contextParam).arg(lit(0)));
+			}
+			
+			JMethod startTwoParams;
+			{
+				startTwoParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "start");
+				JVar contextParam = startTwoParams.param(contextClass, "context");
+				JVar flagsParam = startTwoParams.param(codeModel.INT, "flags");
+				JBlock body = startTwoParams.body();
+				JVar intent = body.decl(intentClass, "intent", invoke(buildStartIntentTwoParams).arg(contextParam).arg(flagsParam));
+				body.invoke(contextParam, "startActivity").arg(intent);
+			}
+			
+			JMethod startOneParams;
+			{
+				startOneParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "start");
+				JVar contextParam = startOneParams.param(contextClass, "context");
+				JBlock body = startOneParams.body();
+				body.invoke(startTwoParams).arg(contextParam).arg(lit(0));
+			}
+			
+			JMethod startForResultTwoParams;
+			{
+				startForResultTwoParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "startForResult");
+				JVar activityParam = startForResultTwoParams.param(activityClass, "activity");
+				JVar flagsParam = startForResultTwoParams.param(codeModel.INT, "flags");
+				JVar requestCodeParam = startForResultTwoParams.param(codeModel.INT, "requestCode");
+				JBlock body = startForResultTwoParams.body();
+				JVar intent = body.decl(intentClass, "intent", invoke(buildStartIntentTwoParams).arg(activityParam).arg(flagsParam));
+				body.invoke(activityParam, "startActivityForResult").arg(intent).arg(requestCodeParam);
+			}
+			
+			
+			JMethod startForResultOneParams;
+			{
+				startForResultOneParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "startForResult");
+				JVar activityParam = startForResultOneParams.param(activityClass, "activity");
+				JVar requestCodeParam = startForResultOneParams.param(codeModel.INT, "requestCode");
+				JBlock body = startForResultOneParams.body();
+				body.invoke(startForResultTwoParams).arg(activityParam).arg(lit(0)).arg(requestCodeParam);
+			}
+
+		}
+
 	}
 
 	private void setContentViewMethod(JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
@@ -233,7 +302,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		List<? extends VariableElement> parameters = method.getParameters();
 		return method.getSimpleName().toString().equals("onCreate") //
-				&& parameters.size() == 1  //
+				&& parameters.size() == 1 //
 				&& parameters.get(0).asType().toString().equals("android.os.Bundle") //
 		;
 	}
