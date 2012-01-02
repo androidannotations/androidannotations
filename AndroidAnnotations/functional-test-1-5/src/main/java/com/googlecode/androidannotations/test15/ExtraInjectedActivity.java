@@ -27,7 +27,7 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra("stringExtra")
 	String stringExtra;
-
+	
 	@Extra("arrayExtra")
 	CustomData[] arrayExtra;
 

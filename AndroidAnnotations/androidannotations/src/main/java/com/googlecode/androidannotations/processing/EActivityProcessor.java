@@ -15,9 +15,10 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
@@ -49,8 +50,10 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -193,69 +196,54 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		}
 
 		if (!isAbstract) {
-			// Static helpers to start activities
-
-			JClass intentClass = holder.refClass("android.content.Intent");
 			JClass contextClass = holder.refClass("android.content.Context");
-			JClass activityClass = holder.refClass("android.app.Activity");
-			
-			JMethod buildStartIntentTwoParams;
-			{
-				buildStartIntentTwoParams = holder.eBean.method(STATIC | PUBLIC, intentClass, "buildStartIntent");
-				JVar contextParam = buildStartIntentTwoParams.param(contextClass, "context");
-				JVar flagsParam = buildStartIntentTwoParams.param(codeModel.INT, "flags");
-				JBlock body = buildStartIntentTwoParams.body();
-				JVar intent = body.decl(intentClass, "intent", JExpr._new(intentClass).arg(contextParam).arg(holder.eBean.dotclass()));
-				body.invoke(intent, "setFlags").arg(flagsParam);
-				body._return(intent);
-			}
+			JClass intentClass = holder.refClass("android.content.Intent");
 			
 			{
-				JMethod buildStartIntentOneParams = holder.eBean.method(STATIC | PUBLIC, intentClass, "buildStartIntent");
-				JVar contextParam = buildStartIntentOneParams.param(contextClass, "context");
-				JBlock body = buildStartIntentOneParams.body();
-				body._return(JExpr.invoke(buildStartIntentTwoParams).arg(contextParam).arg(lit(0)));
+				holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
+				
+				JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
+				
+				holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
+				{
+					// Constructor
+					JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
+					JVar constructorContextParam = constructor.param(contextClass, "context");
+					JBlock constructorBody = constructor.body();
+					constructorBody.assign(contextField, constructorContextParam);
+					constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.eBean.dotclass()));
+				}
+				
+				
+				{
+					// get()
+					JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
+					method.body()._return(holder.intentField);
+				}
+				
+				{
+					// flags()
+					JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
+					JVar flagsParam = method.param(codeModel.INT, "flags");
+					JBlock body = method.body();
+					body.invoke(holder.intentField, "setFlags").arg(flagsParam);
+					body._return(_this());
+				}
+				
+				{
+					// start
+					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
+					method.body().invoke(contextField, "startActivity").arg(holder.intentField);
+				}
+				
+				{
+					// intent()
+					JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
+					JVar contextParam = method.param(contextClass, "context");
+					method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
+				}
 			}
 			
-			JMethod startTwoParams;
-			{
-				startTwoParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "start");
-				JVar contextParam = startTwoParams.param(contextClass, "context");
-				JVar flagsParam = startTwoParams.param(codeModel.INT, "flags");
-				JBlock body = startTwoParams.body();
-				JVar intent = body.decl(intentClass, "intent", invoke(buildStartIntentTwoParams).arg(contextParam).arg(flagsParam));
-				body.invoke(contextParam, "startActivity").arg(intent);
-			}
-			
-			JMethod startOneParams;
-			{
-				startOneParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "start");
-				JVar contextParam = startOneParams.param(contextClass, "context");
-				JBlock body = startOneParams.body();
-				body.invoke(startTwoParams).arg(contextParam).arg(lit(0));
-			}
-			
-			JMethod startForResultTwoParams;
-			{
-				startForResultTwoParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "startForResult");
-				JVar activityParam = startForResultTwoParams.param(activityClass, "activity");
-				JVar flagsParam = startForResultTwoParams.param(codeModel.INT, "flags");
-				JVar requestCodeParam = startForResultTwoParams.param(codeModel.INT, "requestCode");
-				JBlock body = startForResultTwoParams.body();
-				JVar intent = body.decl(intentClass, "intent", invoke(buildStartIntentTwoParams).arg(activityParam).arg(flagsParam));
-				body.invoke(activityParam, "startActivityForResult").arg(intent).arg(requestCodeParam);
-			}
-			
-			
-			JMethod startForResultOneParams;
-			{
-				startForResultOneParams = holder.eBean.method(STATIC | PUBLIC, codeModel.VOID, "startForResult");
-				JVar activityParam = startForResultOneParams.param(activityClass, "activity");
-				JVar requestCodeParam = startForResultOneParams.param(codeModel.INT, "requestCode");
-				JBlock body = startForResultOneParams.body();
-				body.invoke(startForResultTwoParams).arg(activityParam).arg(lit(0)).arg(requestCodeParam);
-			}
-
 		}
 
 	}

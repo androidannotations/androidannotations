@@ -436,7 +436,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 			modelProcessor.register(new ResProcessor(androidRes, rClass));
 		}
 		modelProcessor.register(new TransactionalProcessor());
-		modelProcessor.register(new ExtraProcessor());
+		modelProcessor.register(new ExtraProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
 		modelProcessor.register(new BeforeCreateProcessor());
 		modelProcessor.register(new AfterViewsProcessor());

@@ -43,6 +43,7 @@ public class ViewsInjectedActivity extends Activity {
 	@AfterViews
 	void incrementCounter() {
 		counter++;
+		startActivityForResult(ActivityWithServices_.intent(this).flags(0).get(), 0);
 	}
 
 }

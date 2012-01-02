@@ -15,11 +15,22 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JMod.PUBLIC;
+
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -36,6 +47,13 @@ import com.sun.codemodel.JVar;
 
 public class ExtraProcessor implements ElementProcessor {
 
+	private final APTCodeModelHelper helper = new APTCodeModelHelper();
+	private final ProcessingEnvironment processingEnv;
+
+	public ExtraProcessor(ProcessingEnvironment processingEnv) {
+		this.processingEnv = processingEnv;
+	}
+
 	@Override
 	public Class<? extends Annotation> getTarget() {
 		return Extra.class;
@@ -46,6 +64,7 @@ public class ExtraProcessor implements ElementProcessor {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
+
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
 		if (holder.cast == null) {
@@ -86,6 +105,39 @@ public class ExtraProcessor implements ElementProcessor {
 		errorInvoke.arg(exceptionParam);
 
 		containsKeyCatch.body().add(errorInvoke);
+
+		if (holder.intentBuilderClass != null) {
+			{
+				// flags()
+				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, fieldName);
+
+				boolean castToSerializable = false;
+				TypeMirror extraType = element.asType();
+				if (extraType.getKind() == TypeKind.DECLARED) {
+					Elements elementUtils = processingEnv.getElementUtils();
+					Types typeUtils = processingEnv.getTypeUtils();
+					TypeMirror parcelableType = elementUtils.getTypeElement("android.os.Parcelable").asType();
+					if (!typeUtils.isSubtype(extraType, parcelableType)) {
+						TypeMirror stringType = elementUtils.getTypeElement("java.lang.String").asType();
+						if (!typeUtils.isSubtype(extraType, stringType)) {
+								castToSerializable = true;
+						}
+					}
+				}
+				JClass paramClass = helper.typeMirrorToJClass(extraType, holder);
+				JVar extraParam = method.param(paramClass, fieldName);
+				JBlock body = method.body();
+				JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKey);
+				if (castToSerializable) {
+					JClass serializableClass = holder.refClass(Serializable.class);
+					invocation.arg(cast(serializableClass, extraParam));
+				} else {
+					invocation.arg(extraParam);
+				}
+				body._return(_this());
+			}
+		}
+
 	}
 
 }
