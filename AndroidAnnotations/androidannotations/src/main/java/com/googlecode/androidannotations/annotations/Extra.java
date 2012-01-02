@@ -24,6 +24,8 @@ import java.lang.annotation.Target;
  * Use on Extra fields in activity classes. This String value field correspond
  * to the Android extra name.
  * 
+ * If {@link Extra} is used on fields in an Activity, the intent builder will hold dedicated methods for these extras.
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)

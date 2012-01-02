@@ -51,6 +51,16 @@ public class EBeanHolder {
 	public JExpression contextRef;
 	public JBlock initIfActivityBody;
 	public JExpression initActivityRef;
+	
+	/**
+	 * Only defined in activities
+	 */
+	public JDefinedClass intentBuilderClass;
+	
+	/**
+	 * Only defined in activities
+	 */
+	public JFieldVar intentField;
 
 	public JClass refClass(String fullyQualifiedClassName) {
 
