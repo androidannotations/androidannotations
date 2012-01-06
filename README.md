@@ -1,30 +1,24 @@
-"_The ratio of time spent reading `[`code] versus writing is well over 10 to 1 [...] `[`therefore] making it easy to read makes it easier to write._" - *Robert C. Martin*
-<table  width="100%"><tbody><tr>
-<td rowspan="2">
-<a href="http://code.google.com/p/androidannotations/wiki/GettingStarted"><img src="http://wiki.androidannotations.googlecode.com/git/logo.png" /></a>
-</td>
-<td rowspan="2">
-<font size="6"><strong>Is your Android code:</strong></font>
-<font size="5">
-<ul>
-  * <strong>easy to write?</strong>
-  * <strong>readable?</strong>
-  * <strong>simple to maintain?</strong>
-</ul>
-</font>
-</td>
-<td>
-<wiki:gadget url="http://wiki.androidannotations.googlecode.com/git/gadget/plusone.xml" width="200" height="100" border="0"/><a href="https://androidannotations.ci.cloudbees.com/"><img src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png" /></a>
-</td>
-</tr>
-<tr>
-<td><a href="http://www.ebusinessinformation.fr"><img src="http://wiki.androidannotations.googlecode.com/git/providedbylogo.png" /></a></td>
-</tr>
-</tbody></table>
+"_The ratio of time spent reading [code] versus writing is well over 10 to 1 [...] [therefore] making it easy to read makes it easier to write._" - **Robert C. Martin**
 
-We provide those good things for *less than 50kb*, without any [FAQ#Does_AndroidAnnotations_have_any_perf_impact? perf impact]! Any question? Please ask them on the dedicated [http://groups.google.com/group/androidannotations mailing list].
-==[ReleaseNotes#Latest_release:_2.2 AndroidAnnotations 2.2] is out!==
-{{{
+
+**Is your Android code:**
+
+* **easy to write?**
+* **readable?**
+* **simple to maintain?**
+
+[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted)
+[![Built on DEV@cloud](http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png)](https://androidannotations.ci.cloudbees.com)
+[![Supported by eBusiness Information (Excilys Group)](https://github.com/excilys/androidannotations/wiki/img/supportedbylogo.png)](http://www.ebusinessinformation.fr)
+
+
+AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
+
+Any question? Please ask them on the dedicated [mailing list](http://groups.google.com/group/androidannotations).
+
+
+##[AndroidAnnotations 2.2](https://github.com/excilys/androidannotations/wiki/ReleaseNotes) is out!
+```java
 @EActivity(R.layout.translate) // Sets content view to R.layout.translate
 public class TranslateActivity extends Activity {
 
@@ -56,24 +50,34 @@ public class TranslateActivity extends Activity {
 
     // [...]
 }
-}}}
+```
 
-=[GettingStarted Get Started!]=
+**[Get Started!](GettingStarted)**
 
-==Apps already using AndroidAnnotations==
-|| *Your App Here* || [https://market.android.com/details?id=com.mdb.android.airhorn http://androidmarket.googleusercontent.com/android/market/com.mdb.android.airhorn/hi-256-0-bf91620f5ef81688dee3e232aaee2710229ab76c#in.png] || [https://market.android.com/details?id=info.piwai.marketappshare https://androidmarket.googleusercontent.com/android/market/info.piwai.marketappshare/hi-124-6#in.png] || [https://market.android.com/details?id=com.excilys.condor.android.application https://androidmarket.googleusercontent.com/android/market/com.excilys.condor.android.application/hi-256-0-63585098d7fa2bd3e772f22e4ab79b00271de73c#in.png] ||
-|| [http://groups.google.com/group/androidannotations Let Us Know!] || *Air Horn* || *App EasyShare* || *Capico* ||
-|| [https://market.android.com/details?id=com.mdb.android.lightsaber https://androidmarket.googleusercontent.com/android/market/com.mdb.android.lightsaber/hi-124-6#in.png] || [https://market.android.com/details?id=com.mdb.android.electricshaver https://androidmarket.googleusercontent.com/android/market/com.mdb.android.electricshaver/hi-256-1-d5612d853cf09162a980bf3f94d12a9a4109960f#in.png] || [https://market.android.com/details?id=com.bearstouch.smsscheduler https://androidmarket.googleusercontent.com/android/market/com.bearstouch.smsscheduler/hi-256-2-d2e052a1c952576c25a38e24d571255c6c207ca2#in.png] || [https://market.android.com/details?id=com.mdb.android.cointoss https://androidmarket.googleusercontent.com/android/market/com.mdb.android.cointoss/hi-256-0-a58434f94067ff93f5e8d4efa1702698e8fbeb5b#in.png] ||
-|| *Light Saber Jedi* || *Electric Shaver* || *SMS Scheduler* || *Coin Flip* ||
-|| [https://market.android.com/details?id=com.mdb.android.magicball https://lh4.ggpht.com/3iFk8P-gUnKytgbSyouuzFDXh6Fh146vEjIvqXVOX3UgxDNPoBxf5daPGiDZdenBpCs=w124#in.png] ||
-|| *Magic 8 Ball* ||
+## Apps already using AndroidAnnotations
 
+[Your app here](http://groups.google.com/group/androidannotations) | Air Horn | App EasyShare | Capico |
+-------------------------------------------------------------------|----------|---------------|--------|
+[Your app here](http://groups.google.com/group/androidannotations) | [![Air Horn Logo](https://github.com/excilys/androidannotations/wiki/img/air-horn.png)](https://market.android.com/details?id=com.mdb.android.airhorn) | [![App EasyShare Logo](https://github.com/excilys/androidannotations/wiki/img/app-easyshare.png)](https://market.android.com/details?id=info.piwai.marketappshare) | [![Capico Logo](https://github.com/excilys/androidannotations/wiki/img/capico.png)](https://market.android.com/details?id=com.excilys.condor.android.application)|
+Light Saber Jedi | Electric Shaver | SMS Scheduler | Coin Flip |
+[![Light Saber Jedi Logo](https://github.com/excilys/androidannotations/wiki/img/light-saber.png)](https://market.android.com/details?id=com.mdb.android.lightsaber) | [![Electric Shaver Logo](https://github.com/excilys/androidannotations/wiki/img/electric-shaver.png)](https://market.android.com/details?id=com.mdb.android.electricshaver) | [![SMS Scheduler Logo](https://github.com/excilys/androidannotations/wiki/img/sms-scheduler.png)](https://market.android.com/details?id=com.bearstouch.smsscheduler) | [![Coin Flip](https://github.com/excilys/androidannotations/wiki/img/coin-flip.png)](https://market.android.com/details?id=com.mdb.android.cointoss) |
+Magic 8 Ball |
+[![Magic 8 Ball Logo](https://github.com/excilys/androidannotations/wiki/img/magic-8-ball.png)](https://market.android.com/details?id=com.mdb.android.magicball) |
 
-*Want more?* [SQLiteTransactions @Transactional], [Resources @StringRes], [Extras @Extra], [SystemServices @SystemService], [HandlingEvents @ItemSelected], [HandlingEvents @LongItemClicked], [RoboGuiceIntegration @RoboGuice], [WorkingWithThreads @UiThreadDelayed] and *[ReleaseNotes much more]*!
+## Want more?
+* [@Transactional](wiki/SQLiteTransactions)
+* [@StringRes](wiki/Resources)
+* [@Extra](wiki/Extras)
+* [@SystemService](wiki/SystemServices)
+* [@ItemSelected](wiki/HandlingEvents)
+* [@LongItemClicked](wii/HandlingEvents)
+* [@RoboGuice](wiki/RoboGuiceIntegration)
+* [@UiThreadDelayed](wiki/WorkingWithThreads)
+* [and much more](ReleaseNotes)!
 
 And thanks to our compile time checks, you won't forget to register your activities in the manifest any more.
 
-----
-The project logo is based on the [http://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg Android logo], created and [http://code.google.com/policies.html shared by Google] and used according to terms described in the [http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0 Attribution License].
+***
+The project logo is based on the [Android logo](http://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg), created and [shared by Google](http://code.google.com/policies.html) and used according to terms described in the [Creative Commons 3.0 Attribution License](http://creativecommons.org/licenses/by/3.0/).
 
-Android is a trademark of Google Inc. Use of this trademark is subject to [http://www.google.com/permissions/index.html Google Permissions]. 
+Android is a trademark of Google Inc. Use of this trademark is subject to [Google Permissions](http://www.google.com/permissions/index.html). 
