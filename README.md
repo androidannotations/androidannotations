@@ -7,7 +7,7 @@
 * **readable?**
 * **simple to maintain?**
 
-[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted)
+[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted)
 [![Built on DEV@cloud](http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png)](https://androidannotations.ci.cloudbees.com)
 [![Supported by eBusiness Information (Excilys Group)](https://github.com/excilys/androidannotations/wiki/img/supportedbylogo.png)](http://www.ebusinessinformation.fr)
 
