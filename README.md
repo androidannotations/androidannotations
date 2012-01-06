@@ -1,6 +1,5 @@
 "_The ratio of time spent reading [code] versus writing is well over 10 to 1 [therefore] making it easy to read makes it easier to write._" - **Robert C. Martin**
 
-
 #Is your Android code easy to write, to read, and to maintain?
 
 AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
@@ -10,7 +9,6 @@ AndroidAnnotations provide those good things for **less than 50kb**, without any
 
 Any question? Please ask them on the dedicated [mailing list](http://groups.google.com/group/androidannotations).
 
-##[AndroidAnnotations 2.2](https://github.com/excilys/androidannotations/wiki/ReleaseNotes) is out!
 ```java
 @EActivity(R.layout.translate) // Sets content view to R.layout.translate
 public class TranslateActivity extends Activity {
@@ -44,8 +42,7 @@ public class TranslateActivity extends Activity {
     // [...]
 }
 ```
-
-**[Get Started!](GettingStarted)**
+##[Get Started](GettingStarted), then [read the cookbook](wiki/Cookbook)
 
 ## Apps already using AndroidAnnotations
 
@@ -54,21 +51,6 @@ public class TranslateActivity extends Activity {
 [Your app here](http://groups.google.com/group/androidannotations) | [![Air Horn Logo](https://github.com/excilys/androidannotations/wiki/img/air-horn.png)](https://market.android.com/details?id=com.mdb.android.airhorn) | [![App EasyShare Logo](https://github.com/excilys/androidannotations/wiki/img/app-easyshare.png)](https://market.android.com/details?id=info.piwai.marketappshare) | [![Capico Logo](https://github.com/excilys/androidannotations/wiki/img/capico.png)](https://market.android.com/details?id=com.excilys.condor.android.application)| [![Magic 8 Ball Logo](https://github.com/excilys/androidannotations/wiki/img/magic-8-ball.png)](https://market.android.com/details?id=com.mdb.android.magicball) |
 Light Saber Jedi | Electric Shaver | SMS Scheduler | Coin Flip |
 [![Light Saber Jedi Logo](https://github.com/excilys/androidannotations/wiki/img/light-saber.png)](https://market.android.com/details?id=com.mdb.android.lightsaber) | [![Electric Shaver Logo](https://github.com/excilys/androidannotations/wiki/img/electric-shaver.png)](https://market.android.com/details?id=com.mdb.android.electricshaver) | [![SMS Scheduler Logo](https://github.com/excilys/androidannotations/wiki/img/sms-scheduler.png)](https://market.android.com/details?id=com.bearstouch.smsscheduler) | [![Coin Flip](https://github.com/excilys/androidannotations/wiki/img/coin-flip.png)](https://market.android.com/details?id=com.mdb.android.cointoss) |
-
-
-
-## Want more?
-* [@Transactional](wiki/SQLiteTransactions)
-* [@StringRes](wiki/Resources)
-* [@Extra](wiki/Extras)
-* [@SystemService](wiki/SystemServices)
-* [@ItemSelected](wiki/HandlingEvents)
-* [@LongItemClicked](wii/HandlingEvents)
-* [@RoboGuice](wiki/RoboGuiceIntegration)
-* [@UiThreadDelayed](wiki/WorkingWithThreads)
-* [and much more](ReleaseNotes)!
-
-And thanks to our compile time checks, you won't forget to register your activities in the manifest any more.
 
 ***
 The project logo is based on the [Android logo](http://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg), created and [shared by Google](http://code.google.com/policies.html) and used according to terms described in the [Creative Commons 3.0 Attribution License](http://creativecommons.org/licenses/by/3.0/).
