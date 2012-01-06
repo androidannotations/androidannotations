@@ -56,13 +56,13 @@ public class TranslateActivity extends Activity {
 
 ## Apps already using AndroidAnnotations
 
-[Your app here](http://groups.google.com/group/androidannotations) | Air Horn | App EasyShare | Capico |
--------------------------------------------------------------------|----------|---------------|--------|
-[Your app here](http://groups.google.com/group/androidannotations) | [![Air Horn Logo](https://github.com/excilys/androidannotations/wiki/img/air-horn.png)](https://market.android.com/details?id=com.mdb.android.airhorn) | [![App EasyShare Logo](https://github.com/excilys/androidannotations/wiki/img/app-easyshare.png)](https://market.android.com/details?id=info.piwai.marketappshare) | [![Capico Logo](https://github.com/excilys/androidannotations/wiki/img/capico.png)](https://market.android.com/details?id=com.excilys.condor.android.application)|
+[Your app here](http://groups.google.com/group/androidannotations) | Air Horn | App EasyShare | Capico | Magic 8 Ball |
+-------------------------------------------------------------------|----------|---------------|--------|--------------|
+[Your app here](http://groups.google.com/group/androidannotations) | [![Air Horn Logo](https://github.com/excilys/androidannotations/wiki/img/air-horn.png)](https://market.android.com/details?id=com.mdb.android.airhorn) | [![App EasyShare Logo](https://github.com/excilys/androidannotations/wiki/img/app-easyshare.png)](https://market.android.com/details?id=info.piwai.marketappshare) | [![Capico Logo](https://github.com/excilys/androidannotations/wiki/img/capico.png)](https://market.android.com/details?id=com.excilys.condor.android.application)| [![Magic 8 Ball Logo](https://github.com/excilys/androidannotations/wiki/img/magic-8-ball.png)](https://market.android.com/details?id=com.mdb.android.magicball) |
 Light Saber Jedi | Electric Shaver | SMS Scheduler | Coin Flip |
 [![Light Saber Jedi Logo](https://github.com/excilys/androidannotations/wiki/img/light-saber.png)](https://market.android.com/details?id=com.mdb.android.lightsaber) | [![Electric Shaver Logo](https://github.com/excilys/androidannotations/wiki/img/electric-shaver.png)](https://market.android.com/details?id=com.mdb.android.electricshaver) | [![SMS Scheduler Logo](https://github.com/excilys/androidannotations/wiki/img/sms-scheduler.png)](https://market.android.com/details?id=com.bearstouch.smsscheduler) | [![Coin Flip](https://github.com/excilys/androidannotations/wiki/img/coin-flip.png)](https://market.android.com/details?id=com.mdb.android.cointoss) |
-Magic 8 Ball |
-[![Magic 8 Ball Logo](https://github.com/excilys/androidannotations/wiki/img/magic-8-ball.png)](https://market.android.com/details?id=com.mdb.android.magicball) |
+
+
 
 ## Want more?
 * [@Transactional](wiki/SQLiteTransactions)
