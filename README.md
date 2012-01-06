@@ -2,13 +2,6 @@
 
 #Is your Android code easy to write, to read, and to maintain?
 
-AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
-
-[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted) | [![Built on DEV@cloud](http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png)](https://androidannotations.ci.cloudbees.com) | [![Supported by eBusiness Information (Excilys Group)](https://github.com/excilys/androidannotations/wiki/img/supportedbylogo.png)](http://www.ebusinessinformation.fr) |
----|-----------|---------------|
-
-Any question? Please ask them on the dedicated [mailing list](http://groups.google.com/group/androidannotations).
-
 ```java
 @EActivity(R.layout.translate) // Sets content view to R.layout.translate
 public class TranslateActivity extends Activity {
@@ -43,6 +36,14 @@ public class TranslateActivity extends Activity {
 }
 ```
 ##[Get Started](GettingStarted), then [read the cookbook](wiki/Cookbook)
+
+AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
+
+[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted) | [![Built on DEV@cloud](http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png)](https://androidannotations.ci.cloudbees.com) | [![Supported by eBusiness Information (Excilys Group)](https://github.com/excilys/androidannotations/wiki/img/supportedbylogo.png)](http://www.ebusinessinformation.fr) |
+---|-----------|---------------|
+
+Any question? Please ask them on the dedicated [mailing list](http://groups.google.com/group/androidannotations).
+
 
 ## Apps already using AndroidAnnotations
 
