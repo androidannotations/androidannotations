@@ -35,7 +35,7 @@ public class TranslateActivity extends Activity {
     // [...]
 }
 ```
-##[Get Started](/wiki/GettingStarted), then [read the cookbook](/wiki/Cookbook)
+##[Get Started](https://github.com/excilys/androidannotations/wiki/GettingStarted), then [read the cookbook](https://github.com/excilys/androidannotations/wiki/Cookbook)
 
 AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
 
