@@ -147,17 +147,37 @@ public class AndroidManifestFinder {
 		}
 
 		NodeList activityNodes = documentElement.getElementsByTagName("activity");
+		List<String> activityQualifiedNames = extractComponentNames(applicationPackage, activityNodes);
+		
+		NodeList serviceNodes = documentElement.getElementsByTagName("service");
+		List<String> serviceQualifiedNames = extractComponentNames(applicationPackage, serviceNodes);
+		
+		NodeList receiverNodes = documentElement.getElementsByTagName("receiver");
+		List<String> receiverQualifiedNames = extractComponentNames(applicationPackage, receiverNodes);
+		
+		NodeList providerNodes = documentElement.getElementsByTagName("provider");
+		List<String> providerQualifiedNames = extractComponentNames(applicationPackage, providerNodes);
+		
+		List<String> componentQualifiedNames = new ArrayList<String>();
+		componentQualifiedNames.addAll(activityQualifiedNames);
+		componentQualifiedNames.addAll(serviceQualifiedNames);
+		componentQualifiedNames.addAll(receiverQualifiedNames);
+		componentQualifiedNames.addAll(providerQualifiedNames);
 
-		List<String> activityQualifiedNames = new ArrayList<String>();
+		return new AndroidManifest(applicationPackage, applicationQualifiedName, componentQualifiedNames);
+	}
 
-		for (int i = 0; i < activityNodes.getLength(); i++) {
-			Node activityNode = activityNodes.item(i);
+	private List<String> extractComponentNames(String applicationPackage, NodeList componentNodes) {
+		List<String> componentQualifiedNames = new ArrayList<String>();
+
+		for (int i = 0; i < componentNodes.getLength(); i++) {
+			Node activityNode = componentNodes.item(i);
 			Node nameAttribute = activityNode.getAttributes().getNamedItem("android:name");
 
 			String qualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
 
 			if (qualifiedName != null) {
-				activityQualifiedNames.add(qualifiedName);
+				componentQualifiedNames.add(qualifiedName);
 			} else {
 				Messager messager = processingEnv.getMessager();
 				if (nameAttribute != null) {
@@ -167,8 +187,7 @@ public class AndroidManifestFinder {
 				}
 			}
 		}
-
-		return new AndroidManifest(applicationPackage, applicationQualifiedName, activityQualifiedNames);
+		return componentQualifiedNames;
 	}
 
 	private String manifestNameToValidQualifiedName(String applicationPackage, Node nameAttribute) {

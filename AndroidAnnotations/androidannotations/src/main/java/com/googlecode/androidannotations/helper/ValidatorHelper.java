@@ -27,6 +27,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
@@ -72,6 +73,9 @@ public class ValidatorHelper {
 	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
 	public static final String ANDROID_CONTEXT_QUALIFIED_NAME = "android.content.Context";
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
+	private static final String ANDROID_SERVICE_QUALIFIED_NAME = "android.app.Service";
+	private static final String ANDROID_RECEIVER_QUALIFIED_NAME = "android.content.BroadcastReceiver";
+	private static final String ANDROID_PROVIDER_QUALIFIED_NAME = "android.content.ContentProvider";
 	private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
 	private static final String ANDROID_MOTION_EVENT_QUALIFIED_NAME = "android.view.MotionEvent";
 	private static final String ANDROID_SQLITE_DB_QUALIFIED_NAME = "android.database.sqlite.SQLiteDatabase";
@@ -475,6 +479,18 @@ public class ValidatorHelper {
 	public void extendsActivity(Element element, IsValid valid) {
 		extendsType(element, ANDROID_ACTIVITY_QUALIFIED_NAME, valid);
 	}
+	
+	public void extendsService(Element element, IsValid valid) {
+		extendsType(element, ANDROID_SERVICE_QUALIFIED_NAME, valid);
+	}	
+	
+	public void extendsReceiver(Element element, IsValid valid) {
+		extendsType(element, ANDROID_RECEIVER_QUALIFIED_NAME, valid);
+	}		
+	
+	public void extendsProvider(Element element, IsValid valid) {
+		extendsType(element, ANDROID_PROVIDER_QUALIFIED_NAME, valid);
+	}			
 
 	public void extendsView(Element element, IsValid valid) {
 		extendsType(element, ANDROID_VIEW_QUALIFIED_NAME, valid);
@@ -849,5 +865,29 @@ public class ValidatorHelper {
 		}
 
 	}
+	
+	public void componentRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
+		TypeElement typeElement = (TypeElement) element;
+
+		if (typeElement.getModifiers().contains(Modifier.ABSTRACT)) {
+			return;
+		}
+
+		String componentQualifiedName = typeElement.getQualifiedName().toString();
+		String generatedComponentQualifiedName = componentQualifiedName + ModelConstants.GENERATION_SUFFIX;
+
+		List<String> componentQualifiedNames = androidManifest.getComponentQualifiedNames();
+		if (!componentQualifiedNames.contains(generatedComponentQualifiedName)) {
+			String simpleName = typeElement.getSimpleName().toString();
+			String generatedSimpleName = simpleName + ModelConstants.GENERATION_SUFFIX;
+			if (componentQualifiedNames.contains(componentQualifiedName)) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedSimpleName + " instead of " + simpleName);
+			} else {
+				annotationHelper.printAnnotationWarning(element, "The component " + generatedSimpleName + " is not registered in the AndroidManifest.xml file.");
+			}
+		}
+
+	}	
 
 }
