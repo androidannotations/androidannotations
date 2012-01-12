@@ -21,28 +21,26 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.helper.AndroidManifest;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
-import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class EActivityValidator implements ElementValidator {
+public class EReceiverValidator implements ElementValidator {
 
-	private final IdValidatorHelper validatorHelper;
+	private final ValidatorHelper validatorHelper;
 	private final AndroidManifest androidManifest;
 
-	public EActivityValidator(ProcessingEnvironment processingEnv, IRClass rClass, AndroidManifest androidManifest) {
+	public EReceiverValidator(ProcessingEnvironment processingEnv, AndroidManifest androidManifest) {
 		this.androidManifest = androidManifest;
-		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-		validatorHelper = new IdValidatorHelper(annotationHelper);
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return EActivity.class;
+		return EReceiver.class;
 	}
 
 	@Override
@@ -50,11 +48,11 @@ public class EActivityValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsActivity((TypeElement) element, valid);
-
-		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
+		validatorHelper.extendsReceiver((TypeElement) element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
+		
+		validatorHelper.isNotAbstract(element, valid);
 
 		validatorHelper.componentRegistered(element, androidManifest, valid);
 
