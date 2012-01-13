@@ -45,28 +45,28 @@ public class InjectProcessor implements ElementProcessor {
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror elementType = element.asType();
-		
+
 		String typeQualifiedName = elementType.toString();
-		
+
 		JClass injectedClass = codeModel.ref(typeQualifiedName + GENERATION_SUFFIX);
-		
+
 		{
 			// getInstance
 			JBlock body = holder.init.body();
-			
-			
+
 			JInvocation getInstance = injectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
 			body.assign(ref(fieldName), getInstance);
 		}
-		
+
 		{
 			// afterSetContentView
-			
-			JBlock body = holder.afterSetContentView.body();
-			
-			body.invoke(cast(injectedClass, ref(fieldName)), holder.afterSetContentView);
+			if (holder.afterSetContentView != null) {
+				JBlock body = holder.afterSetContentView.body();
+
+				body.invoke(cast(injectedClass, ref(fieldName)), holder.afterSetContentView);
+			}
 		}
-		
+
 	}
 
 }
