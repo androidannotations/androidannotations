@@ -15,8 +15,6 @@
  */
 package com.googlecode.androidannotations.helper;
 
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
-
 import java.lang.annotation.Annotation;
 import java.lang.annotation.IncompleteAnnotationException;
 import java.util.ArrayList;
@@ -35,12 +33,14 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
 import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EViewGroup;
+import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -70,12 +70,14 @@ public class ValidatorHelper {
 	private static final String ANDROID_TEXT_VIEW_QUALIFIED_NAME = "android.widget.TextView";
 	private static final String ANDROID_VIEWGROUP_QUALIFIED_NAME = "android.view.ViewGroup";
 	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
+	public static final String ANDROID_CONTEXT_QUALIFIED_NAME = "android.content.Context";
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
 	private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
 	private static final String ANDROID_MOTION_EVENT_QUALIFIED_NAME = "android.view.MotionEvent";
 	private static final String ANDROID_SQLITE_DB_QUALIFIED_NAME = "android.database.sqlite.SQLiteDatabase";
 	private static final String GUICE_INJECTOR_QUALIFIED_NAME = "com.google.inject.Injector";
 	private static final String ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME = "roboguice.inject.InjectorProvider";
+	
 
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
 
@@ -84,7 +86,7 @@ public class ValidatorHelper {
 	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR);
 
 	@SuppressWarnings("unchecked")
-	private static final List<Class<? extends Annotation>> VALID_EBEAN_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class);
+	private static final List<Class<? extends Annotation>> VALID_EBEAN_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class, Enhanced.class);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -133,6 +135,23 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a private element");
 		}
 	}
+	
+	public void enclosingElementHasEnhanced(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasEnhanced(element, enclosingElement, validatedElements, valid);
+	}
+	
+	public void hasEnhanced(Element reportElement, Element element, AnnotationElements validatedElements, IsValid valid) {
+
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(Enhanced.class);
+
+		if (!layoutAnnotatedElements.contains(element)) {
+			valid.invalidate();
+			if (element.getAnnotation(Enhanced.class) == null) {
+				annotationHelper.printAnnotationError(reportElement, "%s can only be used in a class annotated with " + TargetAnnotationHelper.annotationName(Enhanced.class));
+			}
+		}
+	}	
 
 	public void enclosingElementHasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
@@ -154,7 +173,7 @@ public class ValidatorHelper {
 			}
 		}
 	}
-
+	
 	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasEBeanAnnotation(element, enclosingElement, validatedElements, valid);
@@ -471,6 +490,10 @@ public class ValidatorHelper {
 
 	public void extendsApplication(Element element, IsValid valid) {
 		extendsType(element, ANDROID_APPLICATION_QUALIFIED_NAME, valid);
+	}
+	
+	public void extendsContext(Element element, IsValid valid) {
+		extendsType(element, ANDROID_CONTEXT_QUALIFIED_NAME, valid);
 	}
 
 	public void registeredInManifest(Element element, AndroidManifest manifest, IsValid valid) {
@@ -792,23 +815,27 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void hasOneConstructorWithContextAndAttributSet(Element element, IsValid valid) {
-		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
-		for (Element e : element.getEnclosedElements()) {
-			if (e.getKind() == CONSTRUCTOR) {
-				constructors.add((ExecutableElement) e);
-			}
-		}
+	public void hasEmptyConstructor(Element element, IsValid valid) {
 
-		for (ExecutableElement e : constructors) {
-			List<? extends VariableElement> typeParameters = e.getParameters();
+		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
 
-			if (!(typeParameters.size() == 2 && typeParameters.get(0).asType().toString().equals("android.content.Context") && typeParameters.get(1).asType().toString().equals("android.util.AttributeSet"))) {
-				annotationHelper.printError(e, "You should have only one constructor with Context and AttributeSet parameters.");
+		if (constructors.size() == 1) {
+			
+			ExecutableElement constructor = constructors.get(0);
+			
+			if (!annotationHelper.isPrivate(constructor)) {
+				if (constructor.getParameters().size() != 0) {
+					annotationHelper.printError(element, "%s annotated element should have an empty constructor");
+					valid.invalidate();
+				}
+			} else {
+				annotationHelper.printError(element, "%s annotated element should not have a private constructor");
 				valid.invalidate();
 			}
+		} else {
+			annotationHelper.printError(element, "%s annotated element should have only one constructor");
+			valid.invalidate();
 		}
-
 	}
 
 	public void hasValidLogLevel(Element element, IsValid isValid) {

@@ -21,6 +21,7 @@ import java.util.Map;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JSwitch;
@@ -29,12 +30,14 @@ import com.sun.codemodel.JVar;
 public class EBeanHolder {
 
 	public JDefinedClass eBean;
-	public JMethod beforeCreate;
+	/**
+	 * Only defined on activities
+	 */
 	public JVar beforeCreateSavedInstanceStateParam;
+	public JMethod init;
 	public JMethod afterSetContentView;
 	public JBlock extrasNotNullBlock;
 	public JVar extras;
-	public JClass bundleClass;
 	public JVar resources;
 
 	public JMethod cast;
@@ -44,6 +47,20 @@ public class EBeanHolder {
 
 	public JSwitch onOptionsItemSelectedSwitch;
 	public JVar onOptionsItemSelectedItem;
+	
+	public JExpression contextRef;
+	public JBlock initIfActivityBody;
+	public JExpression initActivityRef;
+	
+	/**
+	 * Only defined in activities
+	 */
+	public JDefinedClass intentBuilderClass;
+	
+	/**
+	 * Only defined in activities
+	 */
+	public JFieldVar intentField;
 
 	public JClass refClass(String fullyQualifiedClassName) {
 

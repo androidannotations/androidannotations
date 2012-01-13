@@ -47,7 +47,7 @@ public class AppValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
 
 		validatorHelper.extendsApplication(element, valid);
 

@@ -21,10 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on custom component classes to enable usage of
+ * Should be used on custom classes that extend ViewGroup to enable usage of
  * AndroidAnnotations
- * 
- * A custom component should extends ViewGroup.
  * 
  * Any view related code should happen in an {@link AfterViews} annotated
  * method.<br>

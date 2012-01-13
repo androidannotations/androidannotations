@@ -15,8 +15,13 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -45,8 +50,10 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -93,7 +100,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		holder.eBean._extends(annotatedActivity);
 
-		holder.bundleClass = holder.refClass("android.os.Bundle");
+		holder.contextRef = _this();
 
 		// onCreate
 		int onCreateVisibility;
@@ -105,17 +112,25 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
+		JClass bundleClass = holder.refClass("android.os.Bundle");
+
 		// beforeSetContentView
-		holder.beforeCreate = holder.eBean.method(PRIVATE, codeModel.VOID, "beforeCreate_");
-		holder.beforeCreateSavedInstanceStateParam = holder.beforeCreate.param(holder.bundleClass, "savedInstanceState");
+		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+		holder.beforeCreateSavedInstanceStateParam = holder.init.param(bundleClass, "savedInstanceState");
+
+		{
+			// init if activity
+			holder.initIfActivityBody = holder.init.body();
+			holder.initActivityRef = _this();
+		}
 
 		// afterSetContentView
 		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 
-		JVar onCreateSavedInstanceState = onCreate.param(holder.bundleClass, "savedInstanceState");
+		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
 
-		onCreateBody.invoke(holder.beforeCreate).arg(onCreateSavedInstanceState);
+		onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
 
 		onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
 
@@ -180,6 +195,57 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 			}
 		}
 
+		if (!isAbstract) {
+			JClass contextClass = holder.refClass("android.content.Context");
+			JClass intentClass = holder.refClass("android.content.Intent");
+			
+			{
+				holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
+				
+				JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
+				
+				holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
+				{
+					// Constructor
+					JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
+					JVar constructorContextParam = constructor.param(contextClass, "context");
+					JBlock constructorBody = constructor.body();
+					constructorBody.assign(contextField, constructorContextParam);
+					constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.eBean.dotclass()));
+				}
+				
+				
+				{
+					// get()
+					JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
+					method.body()._return(holder.intentField);
+				}
+				
+				{
+					// flags()
+					JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
+					JVar flagsParam = method.param(codeModel.INT, "flags");
+					JBlock body = method.body();
+					body.invoke(holder.intentField, "setFlags").arg(flagsParam);
+					body._return(_this());
+				}
+				
+				{
+					// start
+					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
+					method.body().invoke(contextField, "startActivity").arg(holder.intentField);
+				}
+				
+				{
+					// intent()
+					JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
+					JVar contextParam = method.param(contextClass, "context");
+					method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
+				}
+			}
+			
+		}
+
 	}
 
 	private void setContentViewMethod(JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
@@ -224,7 +290,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		List<? extends VariableElement> parameters = method.getParameters();
 		return method.getSimpleName().toString().equals("onCreate") //
-				&& parameters.size() == 1  //
+				&& parameters.size() == 1 //
 				&& parameters.get(0).asType().toString().equals("android.os.Bundle") //
 		;
 	}

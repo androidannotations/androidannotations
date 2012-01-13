@@ -37,7 +37,7 @@ public class NoTitleProcessor implements ElementProcessor {
 
 		JFieldRef noTitle = holder.refClass("android.view.Window").staticRef("FEATURE_NO_TITLE");
 
-		holder.beforeCreate.body().invoke("requestWindowFeature").arg(noTitle);
+		holder.init.body().invoke("requestWindowFeature").arg(noTitle);
 	}
 
 }

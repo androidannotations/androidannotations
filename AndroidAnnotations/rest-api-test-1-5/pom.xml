@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>androidannotations-parent</artifactId>
 		<groupId>com.googlecode.androidannotations</groupId>
-		<version>2.2</version>
+		<version>2.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>rest-api-test-1-5</artifactId>
@@ -23,6 +23,7 @@
 		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>
 			<artifactId>androidannotations</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>
@@ -91,26 +92,19 @@
 
 	<build>
 		<plugins>
-			<!-- TODO remove conf if default is OK -->
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.0.0-alpha-13</version>
+				<version>3.0.0</version>
 				<configuration>
-					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
-					<resourceDirectory>${project.basedir}/res</resourceDirectory>
-					<nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
 					<sdk>
 						<platform>3</platform>
 					</sdk>
-					<deleteConflictingFiles>true</deleteConflictingFiles>
-					<undeployBeforeDeploy>true</undeployBeforeDeploy>
-					<dex>
-						<jvmArguments>
-							<jvmArgument>-Xmx512m</jvmArgument>
-						</jvmArguments>
-					</dex>
+                   	<dex>
+                    	<jvmArguments>
+                        	<jvmArgument>-Xmx512m</jvmArgument>
+                        </jvmArguments>
+                    </dex>					
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
