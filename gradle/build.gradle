@@ -5,15 +5,12 @@ version = '1.0.0.BUILD-SNAPSHOT'
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            url 'http://maven.teamcodeflux.com/external/'
-        }
     }
 
-    def gradleAndroidAnnotationsPluginVersion = '0.1.0'
+    def gradleAndroidAnnotationsPluginVersion = '0.3.0'
 
     dependencies {
-        classpath "org.androidannotations.gradle.plugins:gradle-androidannotations-plugin:$gradleAndroidAnnotationsPluginVersion"
+        classpath "net.ealden.gradle.plugins:gradle-androidannotations-plugin:$gradleAndroidAnnotationsPluginVersion"
     }
 }
 
@@ -26,12 +23,6 @@ targetCompatibility = compatibilityVersion
 
 repositories {
     mavenCentral()
-}
-
-androidAnnotationsVersion = '2.2'
-
-dependencies {
-    compile "com.googlecode.androidannotations:androidannotations:$androidAnnotationsVersion:api"
 }
 
 clean {
