@@ -136,7 +136,7 @@ public class ValidatorHelper {
 		}
 	}
 	
-	public void enclosingElementHasEnhanced(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void enclosingElementHasEnhancedAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasEnhanced(element, enclosingElement, validatedElements, valid);
 	}

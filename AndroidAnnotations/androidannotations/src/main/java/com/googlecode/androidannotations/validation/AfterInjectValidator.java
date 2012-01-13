@@ -19,24 +19,25 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.RootContext;
+import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class RootContextValidator implements ElementValidator {
+public class AfterInjectValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
 
-	public RootContextValidator(ProcessingEnvironment processingEnv) {
+	public AfterInjectValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return RootContext.class;
+		return AfterInject.class;
 	}
 
 	@Override
@@ -46,9 +47,15 @@ public class RootContextValidator implements ElementValidator {
 
 		validatorHelper.enclosingElementHasEnhancedAnnotation(element, validatedElements, valid);
 
-		validatorHelper.extendsContext(element, valid);
+		ExecutableElement executableElement = (ExecutableElement) element;
+
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
+
+		validatorHelper.doesntThrowException(executableElement, valid);
+
+		validatorHelper.zeroParameter(executableElement, valid);
 
 		return valid.isValid();
 	}
