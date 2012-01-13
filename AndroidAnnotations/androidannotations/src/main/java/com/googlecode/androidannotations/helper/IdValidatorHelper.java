@@ -123,7 +123,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
 
-		enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
+		enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
 		idsExists(element, Res.ID, valid);
 
