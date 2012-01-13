@@ -27,6 +27,8 @@ import java.lang.annotation.Target;
  * adapter, at the selected position. It may be of any type, so be careful about
  * potential ClassCastException.
  * 
+ * If the parameter is an int, it will be the position instead of the object from the adapter.
+ * 
  * The annotation value should be one of R.id.* fields. If not set, the method
  * name will be used as the R.id.* field name..
  * 

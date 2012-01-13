@@ -23,6 +23,8 @@ import android.widget.Spinner;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
+import com.googlecode.androidannotations.annotations.ItemLongClick;
+import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.item_clicks_handled)
@@ -77,6 +79,21 @@ public class ItemClicksHandledActivity extends Activity {
 	@ItemClick
 	public void spinnerWithArgument(String selectedItem) {
 		spinnerWithArgumentSelectedItem = selectedItem;
+	}
+	
+	@ItemClick
+	void listViewWithPosition(int position) {
+		
+	}
+	
+	@ItemSelect
+	void listViewWithPositionItemSelected(boolean selected, int position) {
+		
+	}
+	
+	@ItemLongClick
+	void listViewWithPositionItemLongClicked(int position) {
+		
 	}
 
 }

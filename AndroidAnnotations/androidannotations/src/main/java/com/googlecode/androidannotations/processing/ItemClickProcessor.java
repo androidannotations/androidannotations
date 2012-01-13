@@ -21,6 +21,8 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -80,8 +82,14 @@ public class ItemClickProcessor extends MultipleResIdsBasedProcessor implements 
 
 		if (hasItemParameter) {
 			VariableElement parameter = parameters.get(0);
-			String parameterQualifiedName = parameter.asType().toString();
-			itemClickCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+			
+			TypeMirror parameterType = parameter.asType();
+			if (parameterType.getKind() == TypeKind.INT) {
+				itemClickCall.arg(onItemClickPositionParam);
+			} else {
+				String parameterTypeQualifiedName = parameterType.toString();
+				itemClickCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+			}
 		}
 
 		for (JFieldRef idRef : idsRefs) {
