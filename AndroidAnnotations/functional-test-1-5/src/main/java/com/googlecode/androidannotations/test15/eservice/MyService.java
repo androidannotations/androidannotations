@@ -3,8 +3,10 @@ package com.googlecode.androidannotations.test15.eservice;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EService;
 import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.SystemService;
@@ -30,6 +32,7 @@ public class MyService extends IntentService {
 		// Do some stuff...
 
 		showToast();
+		workInBackground();
 	}
 
 	@Trace
@@ -37,5 +40,10 @@ public class MyService extends IntentService {
 	void showToast() {
 		Toast.makeText(getApplicationContext(), "Hello World!", Toast.LENGTH_LONG).show();
 	}
-
+	
+	@Trace
+	@Background
+	void workInBackground() {
+		Log.d(MyService.class.getSimpleName(), "Doing some background work.");
+	}
 }

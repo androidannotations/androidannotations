@@ -5,13 +5,17 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.SystemService;
+import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.test15.enhanced.EnhancedClass;
+import com.googlecode.androidannotations.test15.eservice.MyService;
 
 @EProvider
 public class MyProvider extends ContentProvider {
@@ -53,8 +57,14 @@ public class MyProvider extends ContentProvider {
 	}
 
 	@UiThread
+	@Trace
 	void showToast() {
 		Toast.makeText(getContext().getApplicationContext(), "Hello World!", Toast.LENGTH_LONG).show();
 	}
 
+	@Trace
+	@Background
+	void workInBackground() {
+		Log.d(MyService.class.getSimpleName(), "Doing some background work.");
+	}
 }
