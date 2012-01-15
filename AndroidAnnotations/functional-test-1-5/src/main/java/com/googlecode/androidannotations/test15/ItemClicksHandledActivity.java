@@ -42,11 +42,19 @@ public class ItemClicksHandledActivity extends Activity {
 	@ViewById
 	Spinner spinnerWithArgument;
 
+	@ViewById
+	ListView listViewWithPosition;
+
 	boolean spinnerItemClicked = false;
 	boolean listViewItemClicked = false;
 
 	String spinnerWithArgumentSelectedItem = null;
 	String listViewWithArgumentSelectedItem = null;
+
+	int listViewWithPositionClickedPosition;
+
+	boolean listViewWithPositionItemSelected;
+	int listViewWithPositionItemSelectedPosition;
 
 	private ArrayAdapter<CharSequence> adapter;
 
@@ -59,6 +67,7 @@ public class ItemClicksHandledActivity extends Activity {
 		listView.setAdapter(adapter);
 		spinnerWithArgument.setAdapter(adapter);
 		listViewWithArgument.setAdapter(adapter);
+		listViewWithPosition.setAdapter(adapter);
 	}
 
 	@ItemClick
@@ -83,17 +92,18 @@ public class ItemClicksHandledActivity extends Activity {
 	
 	@ItemClick
 	void listViewWithPosition(int position) {
-		
+		listViewWithPositionClickedPosition = position;
 	}
 	
 	@ItemSelect
 	void listViewWithPositionItemSelected(boolean selected, int position) {
-		
+		listViewWithPositionItemSelected = selected;
+		listViewWithPositionItemSelectedPosition = position;
 	}
 	
 	@ItemLongClick
 	void listViewWithPositionItemLongClicked(int position) {
-		
+
 	}
 
 }
