@@ -46,4 +46,5 @@ public class MyService extends IntentService {
 	void workInBackground() {
 		Log.d(MyService.class.getSimpleName(), "Doing some background work.");
 	}
+
 }

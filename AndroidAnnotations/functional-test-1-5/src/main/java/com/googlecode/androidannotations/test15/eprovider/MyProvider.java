@@ -62,9 +62,11 @@ public class MyProvider extends ContentProvider {
 		Toast.makeText(getContext().getApplicationContext(), "Hello World!", Toast.LENGTH_LONG).show();
 	}
 
+
 	@Trace
 	@Background
 	void workInBackground() {
 		Log.d(MyService.class.getSimpleName(), "Doing some background work.");
 	}
+
 }
