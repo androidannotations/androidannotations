@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.model;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -68,5 +69,18 @@ public class AnnotationElementsHolder implements AnnotationElements {
 
 		return allElements;
 	}
+	
+	@Override
+    public Set<? extends Element> getAnnotatedElements(List<Class<? extends Annotation>> annotationClasses) {
+        HashSet<Element> result = new HashSet<Element>();
+        for (Class<? extends Annotation> annotationClass : annotationClasses) {
+            TypeElement annotationElement = annotationElementfromAnnotationClass(annotationClass);
+            if (annotationElement != null) {
+                result.addAll(annotatedElementsByAnnotation.get(annotationElement));
+            }
+        }
+
+        return result;
+    }
 
 }
