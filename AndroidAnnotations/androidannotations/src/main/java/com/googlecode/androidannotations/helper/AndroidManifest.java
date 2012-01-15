@@ -21,21 +21,21 @@ import java.util.List;
 public class AndroidManifest {
 
 	private final String applicationPackage;
-	private final List<String> activityQualifiedNames;
+	private final List<String> componentQualifiedNames;
 	private final String applicationClassName;
 
-	public AndroidManifest(String applicationPackage, String applicationClassName, List<String> activityQualifiedNames) {
+	public AndroidManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames) {
 		this.applicationPackage = applicationPackage;
 		this.applicationClassName = applicationClassName;
-		this.activityQualifiedNames = activityQualifiedNames;
+		this.componentQualifiedNames = componentQualifiedNames;
 	}
 
 	public String getApplicationPackage() {
 		return applicationPackage;
 	}
 
-	public List<String> getActivityQualifiedNames() {
-		return Collections.unmodifiableList(activityQualifiedNames);
+	public List<String> getComponentQualifiedNames() {
+		return Collections.unmodifiableList(componentQualifiedNames);
 	}
 
 	public String getApplicationClassName() {

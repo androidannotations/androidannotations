@@ -19,25 +19,28 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.EProvider;
+import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class AfterViewsValidator implements ElementValidator {
+public class EProviderValidator implements ElementValidator {
 
-	private ValidatorHelper validatorHelper;
+	private final ValidatorHelper validatorHelper;
+	private final AndroidManifest androidManifest;
 
-	public AfterViewsValidator(ProcessingEnvironment processingEnv) {
+	public EProviderValidator(ProcessingEnvironment processingEnv, AndroidManifest androidManifest) {
+		this.androidManifest = androidManifest;
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return AfterViews.class;
+		return EProvider.class;
 	}
 
 	@Override
@@ -45,17 +48,13 @@ public class AfterViewsValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+		validatorHelper.extendsProvider((TypeElement) element, valid);
 
-		ExecutableElement executableElement = (ExecutableElement) element;
+		validatorHelper.isNotFinal(element, valid);
+		
+		validatorHelper.isNotAbstract(element, valid);
 
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
-
-		validatorHelper.isNotPrivate(element, valid);
-
-		validatorHelper.doesntThrowException(executableElement, valid);
-
-		validatorHelper.zeroParameter(executableElement, valid);
+		validatorHelper.componentRegistered(element, androidManifest, valid);
 
 		return valid.isValid();
 	}
