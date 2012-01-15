@@ -89,4 +89,25 @@ public class ItemClicksHandledActivityTest {
 		assertThat(activity.listViewWithArgumentSelectedItem).isEqualTo(clickedItem);
 	}
 
+	@Test
+	public void handlingListViewItemClickWithPosition() {
+		ListView listView = (ListView) activity.findViewById(R.id.listViewWithPosition);
+		long itemId = listView.getAdapter().getItemId(TESTED_CLICKED_INDEX);
+		View view = listView.getChildAt(TESTED_CLICKED_INDEX);
+
+		assertThat(activity.listViewWithPositionClickedPosition).isEqualTo(0);
+		listView.performItemClick(view, TESTED_CLICKED_INDEX, itemId);
+		assertThat(activity.listViewWithPositionClickedPosition).isEqualTo(TESTED_CLICKED_INDEX);
+	}
+
+	@Test
+	public void handlingListViewWithPositionItemSelected() {
+		ListView listView = (ListView) activity.findViewById(R.id.listViewWithPosition);
+
+		assertThat(activity.listViewWithPositionClickedPosition).isEqualTo(0);
+		listView.setSelection(TESTED_CLICKED_INDEX);
+		assertThat(activity.listViewWithPositionItemSelected).isTrue();
+		assertThat(activity.listViewWithPositionItemSelectedPosition).isEqualTo(TESTED_CLICKED_INDEX);
+	}
+
 }
