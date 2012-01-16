@@ -15,6 +15,8 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.IncompleteAnnotationException;
 import java.util.ArrayList;
@@ -40,7 +42,6 @@ import javax.lang.model.util.Elements;
 import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.EAppWidgetProvider;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
@@ -83,11 +84,9 @@ public class ValidatorHelper {
 	private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
 	private static final String ANDROID_MOTION_EVENT_QUALIFIED_NAME = "android.view.MotionEvent";
 	private static final String ANDROID_SQLITE_DB_QUALIFIED_NAME = "android.database.sqlite.SQLiteDatabase";
-	private static final String ANDROID_APP_WIDGET_PROVIDER_QUALIFIED_NAME = "android.appwidget.AppWidgetProvider";
 	private static final String GUICE_INJECTOR_QUALIFIED_NAME = "com.google.inject.Injector";
 	private static final String ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME = "roboguice.inject.InjectorProvider";
-	
-	
+
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
@@ -544,8 +543,8 @@ public class ValidatorHelper {
 			String elementTypeName = type.toString();
 
 			boolean sharedPrefValidatedInRound = false;
-			if (elementTypeName.endsWith("_")) {
-				String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - 1);
+			if (elementTypeName.endsWith(GENERATION_SUFFIX)) {
+				String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - GENERATION_SUFFIX.length());
 
 				Set<? extends Element> sharedPrefElements = validatedElements.getAnnotatedElements(SharedPref.class);
 
@@ -765,7 +764,6 @@ public class ValidatorHelper {
 
 	@SuppressWarnings("unchecked")
 	private static final List<Class<? extends Annotation>> REST_ANNOTATION_CLASSES = Arrays.asList(Get.class, Head.class, Options.class, Post.class, Put.class, Delete.class);
-	
 
 	public void unannotatedMethodReturnsRestTemplate(TypeElement typeElement, IsValid valid) {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
@@ -895,41 +893,5 @@ public class ValidatorHelper {
 		}
 
 	}
-
-	public void extendsAppWidgetProvider(Element element, IsValid valid) {
-		TypeMirror elementType = element.asType();
-
-        TypeMirror expectedType = annotationHelper.typeElementFromQualifiedName(ANDROID_APP_WIDGET_PROVIDER_QUALIFIED_NAME).asType();
-        if (!annotationHelper.isSubtype(elementType, expectedType)) {
-            valid.invalidate();
-            annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends "
-                    + ANDROID_APP_WIDGET_PROVIDER_QUALIFIED_NAME);
-        }
-	}
-
-	public void enclosingElementHasEActivityOrEAppWidgetProvider(Element element, AnnotationElements validatedElements,
-            IsValid valid) {
-
-        Element enclosingElement = element.getEnclosingElement();
-
-        List<Class<? extends Annotation>> annotationClasses = new ArrayList<Class<? extends Annotation>>();
-        annotationClasses.add(EActivity.class);
-        annotationClasses.add(EAppWidgetProvider.class);
-
-        Set<? extends Element> annotatedElements = validatedElements.getAnnotatedElements(annotationClasses);
-
-        if (!annotatedElements.contains(enclosingElement)) {
-            valid.invalidate();
-
-            if (enclosingElement.getAnnotation(EActivity.class) == null) {
-                annotationHelper.printAnnotationError(element, "%s can only be used in a class annotated with "
-                        + TargetAnnotationHelper.annotationName(EActivity.class));
-            }
-            if (enclosingElement.getAnnotation(EAppWidgetProvider.class) == null) {
-                annotationHelper.printAnnotationError(element, "%s can only be used in a class annotated with "
-                        + TargetAnnotationHelper.annotationName(EAppWidgetProvider.class));
-            }
-        }
-    }
 
 }

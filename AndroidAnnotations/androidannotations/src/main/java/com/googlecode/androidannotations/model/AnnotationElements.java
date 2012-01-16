@@ -16,7 +16,6 @@
 package com.googlecode.androidannotations.model;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -29,8 +28,5 @@ public interface AnnotationElements {
 	Set<? extends Element> getAnnotatedElements(Class<? extends Annotation> annotationClass);
 
 	TypeElement annotationElementfromAnnotationClass(Class<? extends Annotation> annotationClass);
-
-	Set<? extends Element> getAnnotatedElements(
-			List<Class<? extends Annotation>> annotationClasses);
 
 }

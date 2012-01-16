@@ -15,18 +15,31 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
 import java.lang.annotation.Annotation;
+import java.util.Set;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
+import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
+import com.googlecode.androidannotations.model.AnnotationElements;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
 public class PrefProcessor implements ElementProcessor {
+
+	private final AnnotationElements validatedModel;
+
+	public PrefProcessor(AnnotationElements validatedModel) {
+		this.validatedModel = validatedModel;
+	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -40,7 +53,27 @@ public class PrefProcessor implements ElementProcessor {
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror fieldTypeMirror = element.asType();
+
 		String fieldType = fieldTypeMirror.toString();
+		if (fieldTypeMirror instanceof ErrorType) {
+			String elementTypeName = fieldTypeMirror.toString();
+			String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - GENERATION_SUFFIX.length());
+			Set<? extends Element> sharedPrefElements = validatedModel.getAnnotatedElements(SharedPref.class);
+			
+			
+			for (Element sharedPrefElement : sharedPrefElements) {
+				TypeElement sharedPrefTypeElement = (TypeElement) sharedPrefElement;
+
+				String sharedPrefSimpleName = sharedPrefTypeElement.getSimpleName().toString();
+				String sharedPrefQualifiedName = sharedPrefTypeElement.getQualifiedName().toString();
+
+				if (sharedPrefSimpleName.equals(prefTypeName)) {
+					fieldType = sharedPrefQualifiedName + GENERATION_SUFFIX;
+					break;
+				}
+			}
+			
+		}
 
 		JBlock methodBody = holder.init.body();
 

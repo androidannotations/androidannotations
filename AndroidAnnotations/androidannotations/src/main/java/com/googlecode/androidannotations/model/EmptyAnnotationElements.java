@@ -17,7 +17,6 @@ package com.googlecode.androidannotations.model;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -46,10 +45,5 @@ public class EmptyAnnotationElements implements AnnotationElements {
 	public Set<? extends Element> getAllElements() {
 		return emptySet;
 	}
-	
-	@Override
-    public Set<? extends Element> getAnnotatedElements(List<Class<? extends Annotation>> annotationClasses) {
-        return emptySet;
-    }
 
 }
