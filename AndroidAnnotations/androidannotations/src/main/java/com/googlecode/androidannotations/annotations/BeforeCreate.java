@@ -23,6 +23,16 @@ import java.lang.annotation.Target;
 import android.os.Bundle;
 
 /**
+ * THIS ANNOTATION HAS BEEN DEPRECATED.<br />
+ * <br />
+ * IT WILL BE REMOVED IN THE NEXT RELEASE OF ANDROIDANNOTATIONS.<br />
+ * <br />
+ * We decided to deprecate {@link BeforeCreate} because it does not bring value
+ * to your Android code any more. Prior to AndroidAnnotations 2.2, it allowed
+ * you to execute code before the content view was set. However, this behavior
+ * has changed, the content view is now set after the onCreate() method has been
+ * called.<br />
+ * <br />
  * Methods annotated with @{@link BeforeCreate} will be called before
  * <b>super.onCreate()</b> is called by the generated activity.
  * 
@@ -32,6 +42,7 @@ import android.os.Bundle;
  * activity.
  * 
  */
+@Deprecated
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface BeforeCreate {
