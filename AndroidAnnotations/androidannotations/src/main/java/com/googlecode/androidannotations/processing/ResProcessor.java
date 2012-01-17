@@ -73,7 +73,7 @@ public class ResProcessor implements ElementProcessor {
 		// Special case for loading animations
 		if ("android.view.animation.Animation".equals(fieldType)) {
 			JClass animationUtils = holder.refClass("android.view.animation.AnimationUtils");
-			methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(JExpr._this()).arg(idRef));
+			methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(holder.contextRef).arg(idRef));
 		} else {
 			if (holder.resources == null)
 				holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", holder.contextRef.invoke("getResources"));
