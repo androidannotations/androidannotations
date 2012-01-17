@@ -86,6 +86,8 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
 		holder.eBean._extends(eBeanClass);
+		
+		holder.eBean.annotate(SuppressWarnings.class).param("value", "unused");
 
 		{
 			// init
