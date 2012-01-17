@@ -18,23 +18,36 @@ package com.googlecode.androidannotations.test15;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.Touch;
+import com.googlecode.androidannotations.annotations.Trace;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.AnimationRes;
+import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @EViewGroup(R.layout.component)
 public class ViewGroup extends FrameLayout {
 
 	@ViewById(R.id.title)
-	TextView tv;
+	protected TextView tv;
 
 	@ViewById
-	TextView subtitle;
+	protected TextView subtitle;
+	
+	@StringRes(R.string.app_name)
+	protected String res;
+	
+	@AnimationRes(R.anim.fadein)
+	protected Animation anim;
 
 	public ViewGroup(Context context, int i) {
 		super(context);
@@ -44,22 +57,34 @@ public class ViewGroup extends FrameLayout {
 		super(context, attrs);
 	}
 
-	@Click(R.id.title)
-	public void title() {
+	@Trace
+	@AfterViews
+	protected void afterViews(){
+	}
+	
+	@Click
+	protected void title() {
 	}
 
 	@LongClick(R.id.title)
-	public void titleLongClick() {
+	protected void titleLongClick() {
 	}
 
-//	@Touch(R.id.title)
-//	public void titleTouched(MotionEvent e) {
-//		
-//	}
+	@Touch(R.id.title)
+	protected void titleTouched(MotionEvent e) {
+	}
 
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
+	}	
+	
+	@Background
+	protected void someBackgroundTask(){
+	}
+	
+	@UiThread
+	protected void someUIThreadTask(){
 	}
 
 }
