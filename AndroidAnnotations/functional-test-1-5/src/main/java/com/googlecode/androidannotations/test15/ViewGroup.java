@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.test15;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.component)
-public class BasicComponent extends FrameLayout {
+public class ViewGroup extends FrameLayout {
 
 	@ViewById(R.id.title)
 	TextView tv;
@@ -35,8 +36,12 @@ public class BasicComponent extends FrameLayout {
 	@ViewById
 	TextView subtitle;
 
-	public BasicComponent(Context context, int i) {
+	public ViewGroup(Context context, int i) {
 		super(context);
+	}
+	
+	public ViewGroup(Context context, AttributeSet attrs) {
+		super(context, attrs);
 	}
 
 	@Click(R.id.title)
@@ -47,9 +52,10 @@ public class BasicComponent extends FrameLayout {
 	public void titleLongClick() {
 	}
 
-	@Touch(R.id.title)
-	public void titleTouched(MotionEvent e) {
-	}
+//	@Touch(R.id.title)
+//	public void titleTouched(MotionEvent e) {
+//		
+//	}
 
 	@Override
 	protected void onFinishInflate() {
