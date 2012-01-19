@@ -23,12 +23,12 @@ import org.junit.runner.RunWith;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class BasicComponentTest {
+public class CustomFrameLayoutTest {
 
 	@Test
 	public void shouldHaveLayoutAfterCreate() {
 		EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
-		BasicComponent component = new BasicComponent_(activity, 0);
+		CustomFrameLayout component = new CustomFrameLayout_(activity, 0);
 		component.onFinishInflate();
 		assertThat(component.subtitle).isNotNull();
 		assertThat(component.tv).isNotNull();
