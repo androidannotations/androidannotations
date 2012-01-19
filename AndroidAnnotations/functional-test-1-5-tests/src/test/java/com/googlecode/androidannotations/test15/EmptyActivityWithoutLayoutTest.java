@@ -13,11 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.enhanced;
+package com.googlecode.androidannotations.test15;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import static com.googlecode.androidannotations.test15.MyAssertions.assertThat;
 
-@Enhanced
-public class SecondDependency {
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(AndroidAnnotationsTestRunner.class)
+public class EmptyActivityWithoutLayoutTest {
+
+	@Test
+	public void shouldHaveNoLayoutAfterCreate() {
+		EmptyActivityWithoutLayout_ activity = new EmptyActivityWithoutLayout_();
+
+		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
+
+		activity.onCreate(null);
+
+		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
+	}
 
 }

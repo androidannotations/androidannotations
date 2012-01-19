@@ -13,11 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.enhanced;
+package com.googlecode.androidannotations.test15;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import java.io.File;
 
-@Enhanced
-public class SecondDependency {
+import org.junit.runners.model.InitializationError;
 
+import com.xtremelabs.robolectric.RobolectricTestRunner;
+
+public class AndroidAnnotationsTestRunner extends RobolectricTestRunner {
+    public AndroidAnnotationsTestRunner(Class<?> testClass) throws InitializationError {
+        super(testClass, new File("../functional-test-1-5"));
+    }
 }

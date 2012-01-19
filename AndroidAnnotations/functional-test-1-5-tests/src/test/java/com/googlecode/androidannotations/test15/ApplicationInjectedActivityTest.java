@@ -13,11 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.enhanced;
+package com.googlecode.androidannotations.test15;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import static org.fest.assertions.Assertions.assertThat;
 
-@Enhanced
-public class SecondDependency {
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(AndroidAnnotationsTestRunner.class)
+public class ApplicationInjectedActivityTest {
+
+	@Test
+	public void shouldHaveLayoutAfterCreate() {
+		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
+
+		activity.onCreate(null);
+
+		assertThat(activity.customApplication).isNotNull();
+	}
 
 }

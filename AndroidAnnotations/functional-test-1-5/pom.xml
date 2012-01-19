@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -11,6 +12,13 @@
 	<artifactId>functional-test-1-5</artifactId>
 	<packaging>apk</packaging>
 	<name>functional-test-1-5</name>
+
+	<properties>
+		<spring-android-version>1.0.0.M2</spring-android-version>
+		<jackson-version>1.7.2</jackson-version>
+		<simple-version>2.4.1</simple-version>
+		<android-rome-version>1.0.0-r2</android-rome-version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -29,13 +37,6 @@
 			<version>1.5_r4</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Commented because Maps is not Open Source -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.google.android.maps</groupId> -->
-		<!-- <artifactId>maps</artifactId> -->
-		<!-- <version>3_r3</version> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>
@@ -48,22 +49,38 @@
 			<version>1.1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.pivotallabs</groupId>
-			<artifactId>robolectric</artifactId>
-			<version>1.0-RC1</version>
-			<scope>test</scope>
+			<!-- spring-android-rest-template is required to use the Rest API -->
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-rest-template</artifactId>
+			<version>${spring-android-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.easytesting</groupId>
-			<artifactId>fest-assert</artifactId>
-			<version>1.4</version>
-			<scope>test</scope>
+			<!-- Using Jackson for JSON marshaling -->
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.8.1</version>
-			<scope>test</scope>
+			<!-- Using Simple for XML marshaling -->
+			<groupId>org.simpleframework</groupId>
+			<artifactId>simple-xml</artifactId>
+			<version>${simple-version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>stax</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<!-- Using ROME for RSS and ATOM feeds -->
+			<groupId>com.google.code.android-rome-feed-reader</groupId>
+			<artifactId>android-rome-feed-reader</artifactId>
+			<version>${android-rome-version}</version>
 		</dependency>
 	</dependencies>
 
@@ -77,11 +94,11 @@
 					<sdk>
 						<platform>3</platform>
 					</sdk>
-                   	<dex>
-                    	<jvmArguments>
-                        	<jvmArgument>-Xmx512m</jvmArgument>
-                        </jvmArguments>
-                    </dex>
+					<dex>
+						<jvmArguments>
+							<jvmArgument>-Xmx512m</jvmArgument>
+						</jvmArguments>
+					</dex>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
@@ -102,8 +119,37 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
+
+	<repositories>
+		<!-- For developing with Android ROME Feed Reader -->
+		<repository>
+			<id>android-rome-feed-reader-repository</id>
+			<name>Android ROME Feed Reader Repository</name>
+			<url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
+		</repository>
+		<!-- For testing against latest Spring snapshots -->
+		<repository>
+			<id>org.springframework.maven.snapshot</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://maven.springframework.org/snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- For developing against latest Spring milestones -->
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 </project>

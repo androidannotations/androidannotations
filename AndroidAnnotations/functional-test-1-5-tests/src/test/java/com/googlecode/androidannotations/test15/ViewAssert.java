@@ -13,11 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.enhanced;
+package com.googlecode.androidannotations.test15;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import static org.fest.assertions.Formatting.inBrackets;
+import static org.fest.util.Strings.concat;
 
-@Enhanced
-public class SecondDependency {
+import org.fest.assertions.GenericAssert;
+
+import android.view.View;
+
+public class ViewAssert extends GenericAssert<ViewAssert, View> {
+
+	protected ViewAssert(View actual) {
+		super(ViewAssert.class, actual);
+	}
+
+	public ViewAssert hasId(int id) {
+		isNotNull();
+
+		if (actual.getId() == id) {
+			return this;
+		}
+
+		failIfCustomMessageIsSet();
+		throw failure(concat("view id is ", inBrackets(actual.getId()), ", should be ", inBrackets(id)));
+	}
 
 }
