@@ -93,8 +93,14 @@ public class ItemLongClickProcessor extends MultipleResIdsBasedProcessor impleme
 
 		if (hasItemParameter) {
 			VariableElement parameter = parameters.get(0);
-			String parameterQualifiedName = parameter.asType().toString();
-			itemClickCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+			
+			TypeMirror parameterType = parameter.asType();
+			if (parameterType.getKind() == TypeKind.INT) {
+				itemClickCall.arg(onItemClickPositionParam);
+			} else {
+				String parameterTypeQualifiedName = parameterType.toString();
+				itemClickCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+			}
 		}
 
 		for (JFieldRef idRef : idsRefs) {

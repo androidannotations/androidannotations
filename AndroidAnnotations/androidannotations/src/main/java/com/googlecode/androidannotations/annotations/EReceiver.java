@@ -21,28 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on item long click listener methods for AdapterView classes
- * 
- * The method may have 0 or 1 parameter, that will be the object from the
- * adapter, at the selected position. It may be of any type, so be careful about
- * potential ClassCastException.
- * 
- * If the parameter is an int, it will be the position instead of the object from the adapter.
- * 
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name..
- * 
- * The method may return a boolean, void, or a java.lang.Boolean. If returning
- * void, it will be considered as returning true (ie the method has handled the
- * event).
- * 
- * @author Benjamin Fellous
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
- * 
+ * Use this annotation to enhance an Android BroadcastReceiver
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.METHOD)
-public @interface ItemLongClick {
-	int[] value() default Id.DEFAULT_VALUE;
+@Target(ElementType.TYPE)
+public @interface EReceiver {
 }

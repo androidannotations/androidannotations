@@ -56,7 +56,7 @@ public class EActivityValidator implements ElementValidator {
 
 		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.activityRegistered(element, androidManifest, valid);
+		validatorHelper.componentRegistered(element, androidManifest, valid);
 
 		return valid.isValid();
 	}
