@@ -35,7 +35,7 @@ import com.googlecode.androidannotations.annotations.res.AnimationRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @EViewGroup(R.layout.component)
-public class ViewGroup extends FrameLayout {
+public class CustomFrameLayout extends FrameLayout {
 
 	@ViewById(R.id.title)
 	protected TextView tv;
@@ -49,11 +49,11 @@ public class ViewGroup extends FrameLayout {
 	@AnimationRes(R.anim.fadein)
 	protected Animation anim;
 
-	public ViewGroup(Context context, int i) {
+	public CustomFrameLayout(Context context, int i) {
 		super(context);
 	}
 	
-	public ViewGroup(Context context, AttributeSet attrs) {
+	public CustomFrameLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
