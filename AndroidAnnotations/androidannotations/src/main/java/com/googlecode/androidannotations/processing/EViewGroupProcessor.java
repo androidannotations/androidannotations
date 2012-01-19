@@ -82,10 +82,16 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		}
 
 		holder.eBean = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
-
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
 		holder.eBean._extends(eBeanClass);
+		
+		holder.eBean.annotate(SuppressWarnings.class).param("value", "unused");
+		holder.eBean.javadoc().append( //
+				"We use @SuppressWarning here because our java code\n" +
+				"generator doesn't know that there is no need\n" +
+				"to import OnXXXListeners from View as we already\n" +
+				"are in a View. <b>See issue #21.</b>");
 
 		{
 			// init
