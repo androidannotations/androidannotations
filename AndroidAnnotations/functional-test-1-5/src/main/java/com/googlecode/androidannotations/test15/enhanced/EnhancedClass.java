@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
@@ -105,6 +106,11 @@ public class EnhancedClass {
 	@Transactional
 	void rollbackedTransaction(SQLiteDatabase db) {
 		throw new IllegalArgumentException();
+	}
+	
+	@AfterInject
+	void calledAfterInjection() {
+		
 	}
 	
 }
