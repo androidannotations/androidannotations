@@ -146,8 +146,8 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a private element");
 		}
 	}
-
-	public void enclosingElementHasEnhanced(Element element, AnnotationElements validatedElements, IsValid valid) {
+	
+	public void enclosingElementHasEnhancedAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, Enhanced.class, valid);
 	}
