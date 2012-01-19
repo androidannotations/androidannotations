@@ -43,7 +43,6 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
@@ -52,6 +51,20 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 
 public class EViewGroupProcessor extends AnnotationHelper implements ElementProcessor {
+
+	private static final String ALREADY_INFLATED_COMMENT = "" // +
+			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
+			+ "which leads to infinite calls of onFinishInflate()\n" //
+			+ "when inflating a layout with a parent and using\n" //
+			+ "the <merge /> tag." //
+	;
+
+	private static final String SUPPRESS_WARNING_COMMENT = "" //
+			+ "We use @SuppressWarning here because our java code\n" //
+			+ "generator doesn't know that there is no need\n" //
+			+ "to import OnXXXListeners from View as we already\n" //
+			+ "are in a View." //
+	;
 
 	private final IRClass rClass;
 
@@ -87,40 +100,36 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
 		holder.eBean._extends(eBeanClass);
-		
+
 		holder.eBean.annotate(SuppressWarnings.class).param("value", "unused");
-		holder.eBean.javadoc().append( //
-				"We use @SuppressWarning here because our java code\n" +
-				"generator doesn't know that there is no need\n" +
-				"to import OnXXXListeners from View as we already\n" +
-				"are in a View. <b>See issue #21.</b>");
+		holder.eBean.javadoc().append(SUPPRESS_WARNING_COMMENT);
 
 		{
 			JClass contextClass = holder.refClass("android.content.Context");
 			holder.contextRef = holder.eBean.field(PRIVATE, contextClass, "context_");
 		}
-		
+
 		{
 			// init
 			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
 			holder.init.body().assign((JFieldVar) holder.contextRef, JExpr.invoke("getContext"));
 		}
-		
+
 		{
 			// afterSetContentView
 			holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 		}
-		
+
 		JFieldVar mAlreadyInflated_ = holder.eBean.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);
 
 		// onFinishInflate
 		JMethod onFinishInflate = holder.eBean.method(PUBLIC, codeModel.VOID, "onFinishInflate");
 		onFinishInflate.annotate(Override.class);
+		onFinishInflate.javadoc().append(ALREADY_INFLATED_COMMENT);
 
 		JBlock ifNotInflated = onFinishInflate.body()._if(JExpr.ref("mAlreadyInflated_").not())._then();
-		ifNotInflated.directStatement("// See issue #68 for details.");
 		ifNotInflated.assign(mAlreadyInflated_, JExpr.TRUE);
-		
+
 		// inflate layout if ID is given on annotation
 		EViewGroup layoutAnnotation = element.getAnnotation(EViewGroup.class);
 		int layoutIdValue = layoutAnnotation.value();
@@ -131,12 +140,12 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 			ifNotInflated.invoke("inflate").arg(JExpr.invoke("getContext")).arg(contentViewId).arg(JExpr._this());
 		}
 		ifNotInflated.invoke(holder.afterSetContentView);
-		
+
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
 		copyConstructors(element, holder, onFinishInflate);
-		
+
 		{
 			// init if activity
 			APTCodeModelHelper helper = new APTCodeModelHelper();
@@ -164,7 +173,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 				copyConstructor.param(holder.refClass(paramType), paramName);
 				superCall.arg(JExpr.ref(paramName));
 			}
-			
+
 			body.invoke(holder.init);
 		}
 	}
