@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.roboguice</groupId>
 			<artifactId>roboguice</artifactId>
-			<version>	1.1.2</version>
+			<version>1.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.pivotallabs</groupId>
@@ -72,7 +72,7 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.0.2</version>
 				<configuration>
 					<sdk>
 						<platform>3</platform>
