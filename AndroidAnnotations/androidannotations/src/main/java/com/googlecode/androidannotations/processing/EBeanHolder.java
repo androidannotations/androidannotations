@@ -15,11 +15,13 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
@@ -36,7 +38,8 @@ public class EBeanHolder {
 	public JVar beforeCreateSavedInstanceStateParam;
 	public JMethod init;
 	/**
-	 * Only defined on activities and components potentially depending on activity (@EViewGroup, @Enhanced)
+	 * Only defined on activities and components potentially depending on
+	 * activity (@EViewGroup, @Enhanced)
 	 */
 	public JMethod afterSetContentView;
 	public JBlock extrasNotNullBlock;
@@ -74,7 +77,12 @@ public class EBeanHolder {
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
 		if (refClass == null) {
-			refClass = eBean.owner().ref(fullyQualifiedClassName);
+			JCodeModel codeModel = eBean.owner();
+			try {
+				refClass = codeModel.ref(fullyQualifiedClassName);
+			} catch (Exception e) {
+				refClass = newJDirectClass(codeModel, fullyQualifiedClassName);
+			}
 			loadedClasses.put(fullyQualifiedClassName, refClass);
 		}
 
@@ -85,4 +93,18 @@ public class EBeanHolder {
 		return eBean.owner().ref(clazz);
 	}
 
+	/**
+	 * Only works if the "com.sun.codemodel.JDirectClass" exists and has a
+	 * "public JDirectClass(JCodeModel _owner,String fullName)" constructor
+	 */
+	private JClass newJDirectClass(JCodeModel owner, String fullName) {
+		try {
+			Class<?> jDirectClass = Class.forName("com.sun.codemodel.JDirectClass");
+			Constructor<?> constructor = jDirectClass.getConstructors()[0];
+			constructor.setAccessible(true);
+			return (JClass) constructor.newInstance(owner, fullName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
