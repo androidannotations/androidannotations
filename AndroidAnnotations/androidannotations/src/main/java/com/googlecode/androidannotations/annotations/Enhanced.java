@@ -33,5 +33,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Enhanced {
-	int value() default Id.DEFAULT_VALUE;
 }
