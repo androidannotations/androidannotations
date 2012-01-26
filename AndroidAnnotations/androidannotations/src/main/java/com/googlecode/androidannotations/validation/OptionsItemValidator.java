@@ -54,7 +54,7 @@ public class OptionsItemValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.idsExists(element, Res.ID, valid);
 
