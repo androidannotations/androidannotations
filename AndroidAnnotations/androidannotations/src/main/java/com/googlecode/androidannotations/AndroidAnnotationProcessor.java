@@ -39,6 +39,7 @@ import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.BeforeCreate;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.EApplication;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
@@ -109,6 +110,7 @@ import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeforeCreateProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.EActivityProcessor;
+import com.googlecode.androidannotations.processing.EApplicationProcessor;
 import com.googlecode.androidannotations.processing.EProviderProcessor;
 import com.googlecode.androidannotations.processing.EReceiverProcessor;
 import com.googlecode.androidannotations.processing.EServiceProcessor;
@@ -157,6 +159,7 @@ import com.googlecode.androidannotations.validation.AppValidator;
 import com.googlecode.androidannotations.validation.BeforeCreateValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EActivityValidator;
+import com.googlecode.androidannotations.validation.EApplicationValidator;
 import com.googlecode.androidannotations.validation.EProviderValidator;
 import com.googlecode.androidannotations.validation.EReceiverValidator;
 import com.googlecode.androidannotations.validation.EServiceValidator;
@@ -255,6 +258,7 @@ import com.sun.codemodel.JCodeModel;
 		EService.class, //
 		EReceiver.class, //
 		EProvider.class, //
+		EApplication.class, //
 		Trace.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -367,6 +371,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		ModelValidator modelValidator = new ModelValidator();
+		modelValidator.register(new EApplicationValidator(processingEnv, androidManifest));
 		modelValidator.register(new EActivityValidator(processingEnv, rClass, androidManifest));
 		modelValidator.register(new EServiceValidator(processingEnv, androidManifest));
 		modelValidator.register(new EReceiverValidator(processingEnv, androidManifest));
@@ -438,6 +443,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest, AnnotationElements validatedModel) {
 		ModelProcessor modelProcessor = new ModelProcessor();
+		modelProcessor.register(new EApplicationProcessor(processingEnv));
 		modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
 		modelProcessor.register(new EServiceProcessor(processingEnv));
 		modelProcessor.register(new EReceiverProcessor(processingEnv));

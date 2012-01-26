@@ -42,6 +42,7 @@ import javax.lang.model.util.Elements;
 import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.EApplication;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
@@ -97,7 +98,7 @@ public class ValidatorHelper {
 	private static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class, Enhanced.class);
 
 	@SuppressWarnings("unchecked")
-	private static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class, Enhanced.class, EService.class, EReceiver.class, EProvider.class);
+	private static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = Arrays.asList(EApplication.class, EActivity.class, EViewGroup.class, Enhanced.class, EService.class, EReceiver.class, EProvider.class);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -146,12 +147,12 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a private element");
 		}
 	}
-	
+
 	public void enclosingElementHasEnhancedAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, Enhanced.class, valid);
 	}
-	
+
 	public void enclosingElementHasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EActivity.class, valid);
@@ -165,12 +166,12 @@ public class ValidatorHelper {
 		Element enclosingElement = element.getEnclosingElement();
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS, valid);
 	}
-	
+
 	public void enclosingElementHasEnhancedComponentAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, VALID_ENHANCED_COMPONENT_ANNOTATIONS, valid);
 	}
-	
+
 	private void hasClassAnnotation(Element reportElement, Element element, AnnotationElements validatedElements, Class<? extends Annotation> validAnnotation, IsValid valid) {
 		ArrayList<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
 		validAnnotations.add(validAnnotation);
@@ -516,9 +517,12 @@ public class ValidatorHelper {
 		extendsType(element, ANDROID_CONTEXT_QUALIFIED_NAME, valid);
 	}
 
-	public void registeredInManifest(Element element, AndroidManifest manifest, IsValid valid) {
+	public void upperclassOfRegisteredApplication(Element element, AndroidManifest manifest, IsValid valid) {
 		String applicationClassName = manifest.getApplicationClassName();
 		if (applicationClassName != null) {
+			if (applicationClassName.endsWith(GENERATION_SUFFIX)) {
+				applicationClassName = applicationClassName.substring(0, applicationClassName.length() - GENERATION_SUFFIX.length());
+			}
 			TypeMirror elementType = element.asType();
 			TypeMirror manifestType = annotationHelper.typeElementFromQualifiedName(applicationClassName).asType();
 			if (!annotationHelper.isSubtype(manifestType, elementType)) {
@@ -528,6 +532,30 @@ public class ValidatorHelper {
 		} else {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "No application class is registered in the AndroidManifest.xml");
+		}
+	}
+
+	public void applicationRegistered(Element element, AndroidManifest manifest, IsValid valid) {
+
+		String applicationClassName = manifest.getApplicationClassName();
+		if (applicationClassName != null) {
+
+			TypeElement typeElement = (TypeElement) element;
+
+			String componentQualifiedName = typeElement.getQualifiedName().toString();
+			String generatedComponentQualifiedName = componentQualifiedName + ModelConstants.GENERATION_SUFFIX;
+
+			if (!applicationClassName.equals(generatedComponentQualifiedName)) {
+				if (applicationClassName.equals(componentQualifiedName)) {
+					valid.invalidate();
+					annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedComponentQualifiedName + " instead of " + componentQualifiedName);
+				} else {
+					annotationHelper.printAnnotationWarning(element, "The component " + generatedComponentQualifiedName + " is not registered in the AndroidManifest.xml file.");
+				}
+			}
+		} else {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "No application class registered in the AndroidManifest.xml");
 		}
 
 	}
