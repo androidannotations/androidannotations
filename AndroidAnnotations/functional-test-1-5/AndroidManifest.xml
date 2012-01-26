@@ -22,7 +22,7 @@
     android:versionName="2.1-SNAPSHOT" >
 
     <application
-        android:name=".roboguice.SampleRoboApplication"
+        android:name="com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication_"
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity android:name=".EmptyActivityWithLayout_" />
