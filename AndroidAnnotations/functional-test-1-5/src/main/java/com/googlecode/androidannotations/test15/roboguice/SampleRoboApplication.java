@@ -20,8 +20,15 @@ import java.util.List;
 import roboguice.application.RoboApplication;
 
 import com.google.inject.Module;
+import com.googlecode.androidannotations.annotations.EApplication;
+import com.googlecode.androidannotations.annotations.Inject;
+import com.googlecode.androidannotations.test15.enhanced.EmptyDependency;
 
+@EApplication
 public class SampleRoboApplication extends RoboApplication {
+	
+	@Inject
+	public EmptyDependency someDependency;
 
 	private Module module = new RobolectricSampleModule();
 
