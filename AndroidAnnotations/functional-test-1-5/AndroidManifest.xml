@@ -49,6 +49,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.ExtendingActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.enhanced.InjectedActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.rest.MyServiceActivity_" />
+        <activity android:name="com.googlecode.androidannotations.test15.afterinject.AfterInjectActivity_" />
 
         <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
 

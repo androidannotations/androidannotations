@@ -45,7 +45,7 @@ public class AfterInjectValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhancedAnnotation(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
