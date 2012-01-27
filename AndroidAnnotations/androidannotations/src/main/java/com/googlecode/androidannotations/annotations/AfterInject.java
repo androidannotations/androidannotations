@@ -22,10 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * Methods annotated with @{@link AfterInject} will be called after the
- * constructor is called in an {@link Enhanced} annotated class.
- * 
- * When the constructor of your {@link Enhanced} annotated class is called, it's
- * fields have not been injected yet.
+ * constructor is called in an enhanced class.
  * 
  * Any code depending on injected fields should be done in an
  * {@link AfterInject} annotated method.
