@@ -43,6 +43,7 @@ import com.googlecode.androidannotations.annotations.EApplication;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
+import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Enhanced;
 import com.googlecode.androidannotations.annotations.Extra;
@@ -115,6 +116,7 @@ import com.googlecode.androidannotations.processing.EProviderProcessor;
 import com.googlecode.androidannotations.processing.EReceiverProcessor;
 import com.googlecode.androidannotations.processing.EServiceProcessor;
 import com.googlecode.androidannotations.processing.EViewGroupProcessor;
+import com.googlecode.androidannotations.processing.EViewProcessor;
 import com.googlecode.androidannotations.processing.EnhancedProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
 import com.googlecode.androidannotations.processing.FromHtmlProcessor;
@@ -164,6 +166,7 @@ import com.googlecode.androidannotations.validation.EProviderValidator;
 import com.googlecode.androidannotations.validation.EReceiverValidator;
 import com.googlecode.androidannotations.validation.EServiceValidator;
 import com.googlecode.androidannotations.validation.EViewGroupValidator;
+import com.googlecode.androidannotations.validation.EViewValidator;
 import com.googlecode.androidannotations.validation.EnhancedValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
 import com.googlecode.androidannotations.validation.FromHtmlValidator;
@@ -203,6 +206,7 @@ import com.sun.codemodel.JCodeModel;
 		App.class, //
 		BeforeCreate.class, //
 		EViewGroup.class, //
+		EView.class, //
 		AfterViews.class, //
 		RoboGuice.class, //
 		ViewById.class, //
@@ -377,6 +381,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new EReceiverValidator(processingEnv, androidManifest));
 		modelValidator.register(new EProviderValidator(processingEnv, androidManifest));
 		modelValidator.register(new EViewGroupValidator(processingEnv, rClass));
+		modelValidator.register(new EViewValidator(processingEnv));
 		modelValidator.register(new EnhancedValidator(processingEnv));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
@@ -449,6 +454,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new EReceiverProcessor(processingEnv));
 		modelProcessor.register(new EProviderProcessor(processingEnv));
 		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
+		modelProcessor.register(new EViewProcessor(processingEnv));
 		modelProcessor.register(new EnhancedProcessor(processingEnv));
 		modelProcessor.register(new SharedPrefProcessor(processingEnv));
 		modelProcessor.register(new PrefProcessor(validatedModel));
