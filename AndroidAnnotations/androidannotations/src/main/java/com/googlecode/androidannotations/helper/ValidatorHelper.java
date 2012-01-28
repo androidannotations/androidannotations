@@ -142,6 +142,20 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void doesNotReturnPrimitive(ExecutableElement element, IsValid valid) {
+		if (element.getReturnType().getKind().isPrimitive()) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s cannot return primitive");
+		}
+	}
+
+	public void doesNotReturnArray(ExecutableElement element, IsValid valid) {
+		if (element.getReturnType().getKind() == TypeKind.ARRAY) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s cannot return array");
+		}
+	}
+
 	public void isNotPrivate(Element element, IsValid valid) {
 		if (annotationHelper.isPrivate(element)) {
 			valid.invalidate();
