@@ -57,6 +57,10 @@ public class PostValidator implements ElementValidator {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
+		
+		validatorHelper.doesNotReturnPrimitive(executableElement, valid);
+		
+		validatorHelper.doesNotReturnArray(executableElement, valid);
 
 		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
 
