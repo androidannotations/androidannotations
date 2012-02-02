@@ -112,6 +112,10 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 		
 		{
 			// init if activity
+			/*
+			 * We suppress all warnings because we generate an unused warning that may or may not valid
+			 */
+			holder.init.annotate(SuppressWarnings.class).param("value", "all");
 			APTCodeModelHelper helper = new APTCodeModelHelper();
 			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
