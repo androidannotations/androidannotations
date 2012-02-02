@@ -45,7 +45,7 @@ public class TransactionalValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

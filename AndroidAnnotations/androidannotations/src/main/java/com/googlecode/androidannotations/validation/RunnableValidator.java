@@ -46,7 +46,7 @@ public class RunnableValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

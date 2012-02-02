@@ -285,7 +285,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
 		JClass injectorClass = holder.refClass("com.google.inject.Injector");
 		JClass eventManagerClass = holder.refClass("roboguice.event.EventManager");
 
-		JBlock body = holder.beforeCreate.body();
+		JBlock body = holder.init.body();
 		JVar injector = body.decl(injectorClass, "injector_", invoke(getInjector));
 		body.assign(scope, invoke(injector, "getInstance").arg(contextScopeClass.dotclass()));
 		body.invoke(scope, "enter").arg(_this());

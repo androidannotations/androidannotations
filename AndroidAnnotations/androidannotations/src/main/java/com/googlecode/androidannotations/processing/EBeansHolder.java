@@ -30,7 +30,7 @@ public class EBeansHolder {
 		return activityHolder;
 	}
 
-	public EBeanHolder getEnclosingActivityHolder(Element enclosedElement) {
+	public EBeanHolder getEnclosingEBeanHolder(Element enclosedElement) {
 		Element activityElement = enclosedElement.getEnclosingElement();
 		return EBeanHolders.get(activityElement);
 	}

@@ -40,7 +40,7 @@ public class FullscreenProcessor implements ElementProcessor {
 		JFieldRef fullScreen = holder.refClass("android.view.WindowManager.LayoutParams").staticRef("FLAG_FULLSCREEN");
 
 		JInvocation arg = JExpr.invoke(JExpr.invoke("getWindow"), "setFlags").arg(fullScreen).arg(fullScreen);
-		holder.beforeCreate.body().add(arg);
+		holder.init.body().add(arg);
 	}
 
 }

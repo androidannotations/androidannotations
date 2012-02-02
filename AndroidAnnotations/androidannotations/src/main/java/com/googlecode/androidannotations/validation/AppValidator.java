@@ -47,11 +47,11 @@ public class AppValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
 		validatorHelper.extendsApplication(element, valid);
 
-		validatorHelper.registeredInManifest(element, manifest, valid);
+		validatorHelper.upperclassOfRegisteredApplication(element, manifest, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

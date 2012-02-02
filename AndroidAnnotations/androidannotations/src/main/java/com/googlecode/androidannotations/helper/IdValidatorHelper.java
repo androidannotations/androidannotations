@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.model.AnnotationElements;
@@ -55,7 +52,11 @@ public class IdValidatorHelper extends ValidatorHelper {
 	public void idsExists(Element element, Res res, IsValid valid) {
 
 		int[] idsValues = annotationHelper.extractAnnotationValue(element);
-		if (idsValues[0] == Id.DEFAULT_VALUE) {
+
+		if (idsValues == null) {
+			valid.invalidate();
+			annotationHelper.printAnnotationWarning(element, "The value of the %s annotation could not be determined at compile time, for unknown reasons. Please report this issue.");
+		} else if (idsValues[0] == Id.DEFAULT_VALUE) {
 			idExists(element, res, true, true, valid, idsValues[0]);
 		} else {
 			for (int idValue : idsValues) {
@@ -121,43 +122,6 @@ public class IdValidatorHelper extends ValidatorHelper {
 				}
 			}
 		}
-	}
-
-	public void idListenerMethod(Element element, AnnotationElements validatedElements, IsValid valid) {
-
-		enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
-
-		idsExists(element, Res.ID, valid);
-
-		isNotPrivate(element, valid);
-
-		doesntThrowException((ExecutableElement) element, valid);
-
-		uniqueId(element, validatedElements, valid);
-	}
-
-	public void activityRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
-		TypeElement typeElement = (TypeElement) element;
-
-		if (typeElement.getModifiers().contains(Modifier.ABSTRACT)) {
-			return;
-		}
-
-		String activityQualifiedName = typeElement.getQualifiedName().toString();
-		String generatedActivityQualifiedName = activityQualifiedName + ModelConstants.GENERATION_SUFFIX;
-
-		List<String> activityQualifiedNames = androidManifest.getActivityQualifiedNames();
-		if (!activityQualifiedNames.contains(generatedActivityQualifiedName)) {
-			String simpleName = typeElement.getSimpleName().toString();
-			String generatedSimpleName = simpleName + ModelConstants.GENERATION_SUFFIX;
-			if (activityQualifiedNames.contains(activityQualifiedName)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original activity, and not the AndroidAnnotations generated activity. Please register " + generatedSimpleName + " instead of " + simpleName);
-			} else {
-				annotationHelper.printAnnotationWarning(element, "The activity " + generatedSimpleName + " is not registered in the AndroidManifest.xml file.");
-			}
-		}
-
 	}
 
 }

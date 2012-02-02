@@ -15,12 +15,17 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.lit;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -52,7 +57,7 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
 		String methodName = element.getSimpleName().toString();
 
@@ -79,10 +84,17 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 
 		itemSelectedCall.arg(JExpr.TRUE);
 
+		VariableElement secondParameter = parameters.get(1);
+		TypeMirror parameterType = secondParameter.asType();
+
 		if (hasItemParameter) {
-			VariableElement parameter = parameters.get(1);
-			String parameterQualifiedName = parameter.asType().toString();
-			itemSelectedCall.arg(JExpr.cast(holder.refClass(parameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+
+			if (parameterType.getKind() == TypeKind.INT) {
+				itemSelectedCall.arg(onItemClickPositionParam);
+			} else {
+				String parameterTypeQualifiedName = parameterType.toString();
+				itemSelectedCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+			}
 		}
 
 		JMethod onNothingSelectedMethod = onItemSelectedListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onNothingSelected");
@@ -93,7 +105,11 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 
 		nothingSelectedCall.arg(JExpr.FALSE);
 		if (hasItemParameter) {
-			nothingSelectedCall.arg(JExpr._null());
+			if (parameterType.getKind() == TypeKind.INT) {
+				nothingSelectedCall.arg(lit(-1));
+			} else {
+				nothingSelectedCall.arg(_null());
+			}
 		}
 
 		for (JFieldRef idRef : idsRefs) {

@@ -23,9 +23,11 @@ import java.lang.annotation.Target;
 /**
  * Should be used on item selected listener methods for AdapterView classes
  * 
- * The method may have 1 or 2 parameter. The first parameter must be a boolean,
+ * The method may have 1 or 2 parameters. The first parameter must be a boolean,
  * and the second is the object from the adapter, at the selected position. It
  * may be of any type, so be careful about potential ClassCastException.
+ * 
+ * If the second parameter is an int, it will be the position instead of the object from the adapter.
  * 
  * The first boolean parameter indicates if something has been selected or not.
  * If nothing was selected, the second parameter will be null.

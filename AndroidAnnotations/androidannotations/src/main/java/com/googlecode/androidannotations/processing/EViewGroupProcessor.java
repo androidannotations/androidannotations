@@ -32,21 +32,39 @@ import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JType;
 
 public class EViewGroupProcessor extends AnnotationHelper implements ElementProcessor {
+
+	private static final String ALREADY_INFLATED_COMMENT = "" // +
+			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
+			+ "which leads to infinite calls of onFinishInflate()\n" //
+			+ "when inflating a layout with a parent and using\n" //
+			+ "the <merge /> tag." //
+	;
+
+	private static final String SUPPRESS_WARNING_COMMENT = "" //
+			+ "We use @SuppressWarning here because our java code\n" //
+			+ "generator doesn't know that there is no need\n" //
+			+ "to import OnXXXListeners from View as we already\n" //
+			+ "are in a View." //
+	;
 
 	private final IRClass rClass;
 
@@ -61,15 +79,15 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element);
+		EBeanHolder holder = eBeansHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 
-		String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
+		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
 
-		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
+		String generatedBeanQualifiedName = eBeanQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
 		int modifiers;
 		if (element.getModifiers().contains(Modifier.ABSTRACT)) {
@@ -78,20 +96,39 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 			modifiers = JMod.PUBLIC | JMod.FINAL;
 		}
 
-		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
+		holder.eBean = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
+		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
-		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
+		holder.eBean._extends(eBeanClass);
 
-		holder.eBean._extends(annotatedActivity);
+		holder.eBean.annotate(SuppressWarnings.class).param("value", "unused");
+		holder.eBean.javadoc().append(SUPPRESS_WARNING_COMMENT);
 
-		holder.bundleClass = holder.refClass("android.os.Bundle");
+		{
+			JClass contextClass = holder.refClass("android.content.Context");
+			holder.contextRef = holder.eBean.field(PRIVATE, contextClass, "context_");
+		}
 
-		// afterSetContentView
-		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+		{
+			// init
+			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+			holder.init.body().assign((JFieldVar) holder.contextRef, JExpr.invoke("getContext"));
+		}
+
+		{
+			// afterSetContentView
+			holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+		}
+
+		JFieldVar mAlreadyInflated_ = holder.eBean.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);
 
 		// onFinishInflate
 		JMethod onFinishInflate = holder.eBean.method(PUBLIC, codeModel.VOID, "onFinishInflate");
 		onFinishInflate.annotate(Override.class);
+		onFinishInflate.javadoc().append(ALREADY_INFLATED_COMMENT);
+
+		JBlock ifNotInflated = onFinishInflate.body()._if(JExpr.ref("mAlreadyInflated_").not())._then();
+		ifNotInflated.assign(mAlreadyInflated_, JExpr.TRUE);
 
 		// inflate layout if ID is given on annotation
 		EViewGroup layoutAnnotation = element.getAnnotation(EViewGroup.class);
@@ -100,15 +137,21 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		if (layoutIdValue != Id.DEFAULT_VALUE) {
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
-
-			onFinishInflate.body().invoke("inflate").arg(JExpr.invoke("getContext")).arg(contentViewId).arg(JExpr._this());
+			ifNotInflated.invoke("inflate").arg(JExpr.invoke("getContext")).arg(contentViewId).arg(JExpr._this());
 		}
+		ifNotInflated.invoke(holder.afterSetContentView);
 
 		// finally
-		onFinishInflate.body().invoke(holder.afterSetContentView);
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
 		copyConstructors(element, holder, onFinishInflate);
+
+		{
+			// init if activity
+			APTCodeModelHelper helper = new APTCodeModelHelper();
+			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
+			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
+		}
 
 	}
 
@@ -121,14 +164,17 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		}
 
 		for (ExecutableElement userConstructor : constructors) {
-			JMethod copy = holder.eBean.constructor(PUBLIC);
-			JInvocation superCall = copy.body().invoke("super");
+			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
+			JBlock body = copyConstructor.body();
+			JInvocation superCall = body.invoke("super");
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
 				String paramType = param.asType().toString();
-				copy.param(holder.refClass(paramType), paramName);
+				copyConstructor.param(holder.refClass(paramType), paramName);
 				superCall.arg(JExpr.ref(paramName));
 			}
+
+			body.invoke(holder.init);
 		}
 	}
 

@@ -18,9 +18,13 @@ package com.googlecode.androidannotations.processing;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JSwitch;
@@ -29,12 +33,18 @@ import com.sun.codemodel.JVar;
 public class EBeanHolder {
 
 	public JDefinedClass eBean;
-	public JMethod beforeCreate;
+	/**
+	 * Only defined on activities
+	 */
 	public JVar beforeCreateSavedInstanceStateParam;
+	public JMethod init;
+	/**
+	 * Only defined on activities and components potentially depending on
+	 * activity ( {@link EViewGroup}, {@link EBean}
+	 */
 	public JMethod afterSetContentView;
 	public JBlock extrasNotNullBlock;
 	public JVar extras;
-	public JClass bundleClass;
 	public JVar resources;
 
 	public JMethod cast;
@@ -45,12 +55,35 @@ public class EBeanHolder {
 	public JSwitch onOptionsItemSelectedSwitch;
 	public JVar onOptionsItemSelectedItem;
 
+	public JExpression contextRef;
+	/**
+	 * Should not be used by inner annotations that target services, broadcast
+	 * receivers, and content providers
+	 */
+	public JBlock initIfActivityBody;
+	public JExpression initActivityRef;
+
+	/**
+	 * Only defined in activities
+	 */
+	public JDefinedClass intentBuilderClass;
+
+	/**
+	 * Only defined in activities
+	 */
+	public JFieldVar intentField;
+
 	public JClass refClass(String fullyQualifiedClassName) {
 
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
 		if (refClass == null) {
-			refClass = eBean.owner().ref(fullyQualifiedClassName);
+			JCodeModel codeModel = eBean.owner();
+			try {
+				refClass = codeModel.ref(fullyQualifiedClassName);
+			} catch (Exception e) {
+				refClass = codeModel.directClass(fullyQualifiedClassName);
+			}
 			loadedClasses.put(fullyQualifiedClassName, refClass);
 		}
 

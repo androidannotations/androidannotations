@@ -48,8 +48,8 @@ public class ResProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingActivityHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
+		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -65,7 +65,7 @@ public class ResProcessor implements ElementProcessor {
 			idRef = rInnerClass.getIdStaticRef(idValue, holder);
 		}
 
-		JBlock methodBody = holder.beforeCreate.body();
+		JBlock methodBody = holder.init.body();
 
 		TypeMirror fieldTypeMirror = element.asType();
 		String fieldType = fieldTypeMirror.toString();
@@ -73,10 +73,10 @@ public class ResProcessor implements ElementProcessor {
 		// Special case for loading animations
 		if ("android.view.animation.Animation".equals(fieldType)) {
 			JClass animationUtils = holder.refClass("android.view.animation.AnimationUtils");
-			methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(JExpr._this()).arg(idRef));
+			methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(holder.contextRef).arg(idRef));
 		} else {
 			if (holder.resources == null)
-				holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", JExpr.invoke("getResources"));
+				holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", holder.contextRef.invoke("getResources"));
 
 			String resourceMethodName = androidValue.getResourceMethodName();
 

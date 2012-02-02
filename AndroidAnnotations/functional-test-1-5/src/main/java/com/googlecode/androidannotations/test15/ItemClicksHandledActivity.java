@@ -23,6 +23,8 @@ import android.widget.Spinner;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ItemClick;
+import com.googlecode.androidannotations.annotations.ItemLongClick;
+import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.item_clicks_handled)
@@ -40,11 +42,19 @@ public class ItemClicksHandledActivity extends Activity {
 	@ViewById
 	Spinner spinnerWithArgument;
 
+	@ViewById
+	ListView listViewWithPosition;
+
 	boolean spinnerItemClicked = false;
 	boolean listViewItemClicked = false;
 
 	String spinnerWithArgumentSelectedItem = null;
 	String listViewWithArgumentSelectedItem = null;
+
+	int listViewWithPositionClickedPosition;
+
+	boolean listViewWithPositionItemSelected;
+	int listViewWithPositionItemSelectedPosition;
 
 	private ArrayAdapter<CharSequence> adapter;
 
@@ -57,6 +67,7 @@ public class ItemClicksHandledActivity extends Activity {
 		listView.setAdapter(adapter);
 		spinnerWithArgument.setAdapter(adapter);
 		listViewWithArgument.setAdapter(adapter);
+		listViewWithPosition.setAdapter(adapter);
 	}
 
 	@ItemClick
@@ -77,6 +88,22 @@ public class ItemClicksHandledActivity extends Activity {
 	@ItemClick
 	public void spinnerWithArgument(String selectedItem) {
 		spinnerWithArgumentSelectedItem = selectedItem;
+	}
+	
+	@ItemClick
+	void listViewWithPosition(int position) {
+		listViewWithPositionClickedPosition = position;
+	}
+	
+	@ItemSelect
+	void listViewWithPositionItemSelected(boolean selected, int position) {
+		listViewWithPositionItemSelected = selected;
+		listViewWithPositionItemSelectedPosition = position;
+	}
+	
+	@ItemLongClick
+	void listViewWithPositionItemLongClicked(int position) {
+
 	}
 
 }
