@@ -40,6 +40,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JPrimitiveType;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JTypeVar;
@@ -65,9 +66,12 @@ public class ExtraProcessor implements ElementProcessor {
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
 
+		TypeMirror elementType = element.asType();
+		boolean isPrimitive = elementType.getKind().isPrimitive();
+
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
-		if (holder.cast == null) {
+		if (!isPrimitive && holder.cast == null) {
 			JType objectType = codeModel._ref(Object.class);
 			JMethod method = holder.eBean.method(JMod.PRIVATE, objectType, "cast_");
 			JTypeVar genericType = method.generify("T");
@@ -93,7 +97,13 @@ public class ExtraProcessor implements ElementProcessor {
 
 		JFieldRef extraField = JExpr.ref(fieldName);
 
-		containsKeyTry.body().assign(extraField, JExpr.invoke(holder.cast).arg(holder.extras.invoke("get").arg(extraKey)));
+		if (isPrimitive) {
+			JPrimitiveType primitiveType = JType.parse(codeModel, elementType.toString());
+			JClass wrapperType = primitiveType.boxify();
+			containsKeyTry.body().assign(extraField, JExpr.cast(wrapperType, holder.extras.invoke("get").arg(extraKey)));
+		} else {
+			containsKeyTry.body().assign(extraField, JExpr.invoke(holder.cast).arg(holder.extras.invoke("get").arg(extraKey)));
+		}
 
 		JCatchBlock containsKeyCatch = containsKeyTry._catch(holder.refClass(ClassCastException.class));
 		JVar exceptionParam = containsKeyCatch.param("e");
@@ -112,7 +122,7 @@ public class ExtraProcessor implements ElementProcessor {
 				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, fieldName);
 
 				boolean castToSerializable = false;
-				TypeMirror extraType = element.asType();
+				TypeMirror extraType = elementType;
 				if (extraType.getKind() == TypeKind.DECLARED) {
 					Elements elementUtils = processingEnv.getElementUtils();
 					Types typeUtils = processingEnv.getTypeUtils();
@@ -120,7 +130,7 @@ public class ExtraProcessor implements ElementProcessor {
 					if (!typeUtils.isSubtype(extraType, parcelableType)) {
 						TypeMirror stringType = elementUtils.getTypeElement("java.lang.String").asType();
 						if (!typeUtils.isSubtype(extraType, stringType)) {
-								castToSerializable = true;
+							castToSerializable = true;
 						}
 					}
 				}
