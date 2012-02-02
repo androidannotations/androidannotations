@@ -1,6 +1,6 @@
 package com.googlecode.androidannotations.test15;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import android.app.Activity;
 
@@ -113,7 +113,7 @@ public class SaveInstanceStateActivity extends Activity {
     String [] myStringArray;
 
     @SaveOnActivityDestroy
-    List<String> myStringList;
+    ArrayList<String> myStringList;
 
     @SaveOnActivityDestroy
     MySerializableBean mySerializableBean;
