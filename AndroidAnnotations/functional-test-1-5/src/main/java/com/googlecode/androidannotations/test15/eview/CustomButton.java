@@ -22,7 +22,6 @@ import android.widget.Button;
 
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.UiThread;

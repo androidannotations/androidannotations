@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use it on Context fields in {@link Enhanced} classes
+ * Use it on Context fields in {@link EBean} classes
  * 
  * The field MUST be of a type that extends android.content.Context.
  * 

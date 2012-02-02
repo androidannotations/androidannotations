@@ -20,25 +20,25 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
-import com.googlecode.androidannotations.annotations.Inject;
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
 
-public class InjectValidator implements ElementValidator {
+public class BeanValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
 
-	public InjectValidator(ProcessingEnvironment processingEnv) {
+	public BeanValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Inject.class;
+		return Bean.class;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class InjectValidator implements ElementValidator {
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.typeHasAnnotation(Enhanced.class, element, valid);
+		validatorHelper.typeHasAnnotation(EBean.class, element, valid);
 		
 		return valid.isValid();
 	}

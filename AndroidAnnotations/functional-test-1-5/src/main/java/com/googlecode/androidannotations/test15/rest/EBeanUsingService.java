@@ -13,11 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.enhanced;
+package com.googlecode.androidannotations.test15.rest;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.rest.RestService;
 
-@Enhanced
-public class EmptyDependency {
+@EBean
+public class EBeanUsingService {
+	
+	@RestService
+	MyService myService;
+	
+	@Background
+	void callSomeService(Event event, int id) {
+		myService.updateEvent(event, id);
+	}
 
 }

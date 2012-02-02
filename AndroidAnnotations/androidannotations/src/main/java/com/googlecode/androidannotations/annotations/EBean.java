@@ -27,10 +27,10 @@ import java.lang.annotation.Target;
  * method.<br>
  * <br>
  * 
- * Most annotations are supported in {@link Enhanced} classes
+ * Most annotations are supported in {@link EBean} classes
  * 
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface Enhanced {
+public @interface EBean {
 }

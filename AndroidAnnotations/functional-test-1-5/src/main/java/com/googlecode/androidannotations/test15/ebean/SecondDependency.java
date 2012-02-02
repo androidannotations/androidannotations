@@ -13,17 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package com.googlecode.androidannotations.test15.ebean;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.googlecode.androidannotations.annotations.EBean;
 
-/**
- * Injects an instance of a class annotated with {@link Enhanced}
- */
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.FIELD)
-public @interface Inject {
+@EBean
+public class SecondDependency {
+
 }

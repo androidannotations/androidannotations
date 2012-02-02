@@ -20,24 +20,24 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class EnhancedValidator implements ElementValidator {
+public class EBeanValidator implements ElementValidator {
 
 	private final ValidatorHelper validatorHelper;
 	private TargetAnnotationHelper annotationHelper;
 
-	public EnhancedValidator(ProcessingEnvironment processingEnv) {
+	public EBeanValidator(ProcessingEnvironment processingEnv) {
 		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Enhanced.class;
+		return EBean.class;
 	}
 
 	@Override

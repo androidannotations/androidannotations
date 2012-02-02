@@ -18,10 +18,10 @@ package com.googlecode.androidannotations.test15.afterinject;
 import android.app.NotificationManager;
 
 import com.googlecode.androidannotations.annotations.AfterInject;
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.SystemService;
 
-@Enhanced
+@EBean
 public class AfterInjectBean {
 	
 	public boolean afterInjectCalled = false;
