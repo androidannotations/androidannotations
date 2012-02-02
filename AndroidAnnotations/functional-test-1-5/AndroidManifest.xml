@@ -47,7 +47,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.menu.OptionsMenuActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.NoTitleFullscreenActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.ExtendingActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.enhanced.BeanInjectedActivity_" />
+        <activity android:name="com.googlecode.androidannotations.test15.ebean.BeanInjectedActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.rest.MyServiceActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.afterinject.AfterInjectActivity_" />
 
