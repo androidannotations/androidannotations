@@ -22,12 +22,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EService;
-import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.test15.enhanced.EnhancedClass;
+import com.googlecode.androidannotations.test15.ebean.EnhancedClass;
 
 @EService
 public class MyService extends IntentService {
@@ -35,7 +35,7 @@ public class MyService extends IntentService {
 	@SystemService
 	NotificationManager notificationManager;
 
-	@Inject
+	@Bean
 	EnhancedClass dependency;
 
 	public MyService() {

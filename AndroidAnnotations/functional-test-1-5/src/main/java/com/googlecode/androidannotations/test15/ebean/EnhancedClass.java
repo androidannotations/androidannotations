@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.enhanced;
+package com.googlecode.androidannotations.test15.ebean;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -25,10 +25,10 @@ import android.widget.TextView;
 import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Trace;
@@ -42,23 +42,24 @@ import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
 
 /**
  * This class doesn't have any test, currently it's just there to show that
- * standard features work with @Enhanced. We should create tests at some point.
+ * standard features work with {@link EBean}. We should create tests at some
+ * point.
  */
-@Enhanced
+@EBean
 public class EnhancedClass {
-	
-	@Inject
+
+	@Bean
 	SecondDependency secondDependency;
-	
+
 	@RootContext
 	Activity activity;
-	
+
 	@RootContext
 	Context context;
-	
+
 	@RootContext
 	Service service;
-	
+
 	@RootContext
 	ThreadActivity threadActivity;
 
@@ -107,10 +108,10 @@ public class EnhancedClass {
 	void rollbackedTransaction(SQLiteDatabase db) {
 		throw new IllegalArgumentException();
 	}
-	
+
 	@AfterInject
 	void calledAfterInjection() {
-		
+
 	}
-	
+
 }
