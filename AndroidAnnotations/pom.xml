@@ -220,9 +220,9 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:https://py.ricau@code.google.com/p/androidannotations</connection>
-		<developerConnection>scm:git:https://py.ricau@code.google.com/p/androidannotations</developerConnection>
-		<url>http://androidannotations.googlecode.com/git</url>
+		<connection>scm:git:git@github.com:excilys/androidannotations.git</connection>
+		<developerConnection>scm:git:git@github.com:excilys/androidannotations.git</developerConnection>
+		<url>https://github.com/excilys/androidannotations</url>
 	</scm>
 
 	<profiles>
