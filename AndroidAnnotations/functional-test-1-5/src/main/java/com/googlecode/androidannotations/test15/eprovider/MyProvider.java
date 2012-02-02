@@ -24,13 +24,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EProvider;
-import com.googlecode.androidannotations.annotations.Inject;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
-import com.googlecode.androidannotations.test15.enhanced.EnhancedClass;
+import com.googlecode.androidannotations.test15.ebean.EnhancedClass;
 import com.googlecode.androidannotations.test15.eservice.MyService;
 import com.googlecode.androidannotations.test15.prefs.SomePrefs_;
 
@@ -40,7 +40,7 @@ public class MyProvider extends ContentProvider {
 	@SystemService
 	NotificationManager notificationManager;
 
-	@Inject
+	@Bean
 	EnhancedClass dependency;
 	
 	@Pref
