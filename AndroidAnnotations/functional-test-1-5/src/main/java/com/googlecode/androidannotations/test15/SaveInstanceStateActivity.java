@@ -3,6 +3,7 @@ package com.googlecode.androidannotations.test15;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.SaveOnActivityDestroy;
@@ -47,6 +48,16 @@ public class SaveInstanceStateActivity extends Activity {
 	Character [] myCharacterObjectArray;
 
 	@SaveOnActivityDestroy
+	CharSequence myCharSequence;
+
+// Only available since API level 8
+//	@SaveOnActivityDestroy
+//	CharSequence [] myCharSequenceArray;
+//
+//	@SaveOnActivityDestroy
+//	ArrayList<CharSequence> myCharSequenceArray;
+
+	@SaveOnActivityDestroy
 	double myDouble;
 
 	@SaveOnActivityDestroy
@@ -81,6 +92,9 @@ public class SaveInstanceStateActivity extends Activity {
 
     @SaveOnActivityDestroy
     Integer [] myIntegerObjectArray;
+
+    @SaveOnActivityDestroy
+    ArrayList<Integer> myIntegerArrayList;
 
     @SaveOnActivityDestroy
     long myLong;
@@ -126,5 +140,13 @@ public class SaveInstanceStateActivity extends Activity {
 
     @SaveOnActivityDestroy
     MyParcelableBean [] myParcelableBeanArray;
+
+    @SaveOnActivityDestroy
+    Bundle myBundle;
+
+//    class ErrorTest {}
+//
+//    @SaveOnActivityDestroy
+//    ErrorTest errorTest;
 
 }
