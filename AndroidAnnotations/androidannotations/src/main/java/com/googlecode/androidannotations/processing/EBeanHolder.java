@@ -51,6 +51,9 @@ public class EBeanHolder {
 	public JSwitch onOptionsItemSelectedSwitch;
 	public JVar onOptionsItemSelectedItem;
 
+	public JBlock restoreInstanceStateBlock;
+	public JBlock saveInstanceStateBlock;
+
 	public JExpression contextRef;
 	/**
 	 * Should not be used by inner annotations that target services, broadcast
