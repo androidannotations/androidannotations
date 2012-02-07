@@ -40,6 +40,7 @@ import com.sun.codemodel.JMethod;
 public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements ElementProcessor {
 	
 	private static final String BUNDLE_PARAM_NAME = "bundle";
+
 	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
 	
 	static {
@@ -112,6 +113,11 @@ public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements 
 		String methodNameToSave;
 		String methodNameToRestore;
 		boolean restoreCallNeedCastStatement = false;
+		boolean needToCheckNullValueOnSave = false;
+
+		if (isPrimitiveWrapperType(elementType)) {
+			needToCheckNullValueOnSave = true;
+		}
 
 		if (methodSuffixNameByTypeName.containsKey(typeString)) {	
 			
@@ -159,8 +165,11 @@ public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements 
 			}
 		}
 		
+		if (needToCheckNullValueOnSave) {
+			saveStateBody = saveStateBody._if(JExpr.ref(fieldName).ne(JExpr._null()))._then();
+		}
 		saveStateBody.invoke(JExpr.ref(BUNDLE_PARAM_NAME), methodNameToSave).arg(fieldName).arg(JExpr.ref(fieldName));
-		
+
 		JInvocation restoreMethodCall = JExpr.invoke(JExpr.ref("savedInstanceState"), methodNameToRestore).arg(fieldName);
 		if (restoreCallNeedCastStatement) {
 			
@@ -168,31 +177,48 @@ public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements 
 			restoreStateBody.assign(JExpr.ref(fieldName), castStatement);
 		
 		} else {
-		
+
 			restoreStateBody.assign(JExpr.ref(fieldName), restoreMethodCall);
-		
+
 		}
 	}
 
 	private JBlock getRestoreStateBody(EBeanHolder holder) {
-		
+
 		if (holder.restoreInstanceStateBlock == null) {
-			holder.restoreInstanceStateBlock = holder.initIfActivityBody.block();
+			JExpression bundleNullTest = JExpr.ref("savedInstanceState").ne(JExpr._null());
+			holder.restoreInstanceStateBlock = holder.initIfActivityBody.block()._if(bundleNullTest)._then();
 		}
 		
 		return holder.restoreInstanceStateBlock;
 	}
 
 	private JBlock getSaveStateMethodBody(JCodeModel codeModel, EBeanHolder holder) {
-		
+
 		if (holder.saveInstanceStateBlock == null) {
-			JMethod method = holder.eBean.method(PUBLIC, codeModel.VOID, "onSaveInstantData");
+			JMethod method = holder.eBean.method(PUBLIC, codeModel.VOID, "onSaveInstanceState");
+			method.annotate(Override.class);
 			method.param(Bundle.class, BUNDLE_PARAM_NAME);
 
 			holder.saveInstanceStateBlock = method.body();
+
+			holder.saveInstanceStateBlock.invoke(JExpr._super(), "onSaveInstanceState").arg(JExpr.ref(BUNDLE_PARAM_NAME));
 		}
 		
 		return holder.saveInstanceStateBlock;
+	}
+
+	private boolean isPrimitiveWrapperType(TypeElement element) {
+
+		if(element == null) {
+			return false;
+		}
+
+		TypeElement numberType = typeElementFromQualifiedName("java.lang.Number");
+
+		return element.asType().toString().equals("java.lang.Boolean") //
+				|| element.asType().toString().equals("java.lang.Character") //
+				|| isSubtype(element, numberType);
 	}
 
 	private boolean isTypeParcelable(TypeElement elementType) {
