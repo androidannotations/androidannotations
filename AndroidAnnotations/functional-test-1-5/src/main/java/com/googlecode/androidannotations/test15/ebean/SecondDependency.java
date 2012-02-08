@@ -13,31 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.ebean;
 
-import java.util.List;
+import com.googlecode.androidannotations.annotations.EBean;
 
-import android.app.Activity;
-
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Extra;
-
-@EActivity
-public class ExtraInjectedActivity extends Activity {
-
-	@Extra("stringExtra")
-	String stringExtra;
-	
-	@Extra("arrayExtra")
-	CustomData[] arrayExtra;
-
-	@Extra("listExtra")
-	List<String> listExtra;
-	
-	@Extra("intExtra")
-	int intExtra;
-	
-	@Extra("byteArrayExtra")
-	byte[] byteArrayExtra;
+@EBean
+public class SecondDependency {
 
 }

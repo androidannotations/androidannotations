@@ -13,25 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package com.googlecode.androidannotations.test15.rest;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.rest.RestService;
 
-/**
- * Should be used on custom classes to enable usage of AndroidAnnotations
- * 
- * Any view related code should happen in an {@link AfterViews} annotated
- * method.<br>
- * <br>
- * 
- * Most annotations are supported in {@link Enhanced} classes
- * 
- */
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
-public @interface Enhanced {
-	int value() default Id.DEFAULT_VALUE;
+@EBean
+public class EBeanUsingService {
+	
+	@RestService
+	MyService myService;
+	
+	@Background
+	void callSomeService(Event event, int id) {
+		myService.updateEvent(event, id);
+	}
+
 }

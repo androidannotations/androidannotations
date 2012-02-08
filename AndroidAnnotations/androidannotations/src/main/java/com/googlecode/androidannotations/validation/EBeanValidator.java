@@ -20,26 +20,24 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.App;
-import com.googlecode.androidannotations.helper.AndroidManifest;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class AppValidator implements ElementValidator {
+public class EBeanValidator implements ElementValidator {
 
-	private ValidatorHelper validatorHelper;
-	private final AndroidManifest manifest;
+	private final ValidatorHelper validatorHelper;
+	private TargetAnnotationHelper annotationHelper;
 
-	public AppValidator(ProcessingEnvironment processingEnv, AndroidManifest manifest) {
-		this.manifest = manifest;
-		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+	public EBeanValidator(ProcessingEnvironment processingEnv) {
+		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return App.class;
+		return EBean.class;
 	}
 
 	@Override
@@ -47,14 +45,14 @@ public class AppValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
-
-		validatorHelper.extendsApplication(element, valid);
-
-		validatorHelper.upperclassOfRegisteredApplication(element, manifest, valid);
-
+		validatorHelper.isNotFinal(element, valid);
+		
+		validatorHelper.isNotAbstract(element, valid);
+		
 		validatorHelper.isNotPrivate(element, valid);
-
+		
+		validatorHelper.hasEmptyConstructor(element, valid);
+		
 		return valid.isValid();
 	}
 

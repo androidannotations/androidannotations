@@ -20,25 +20,26 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
-import com.googlecode.androidannotations.annotations.Inject;
+import com.googlecode.androidannotations.annotations.EApplication;
+import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
+public class EApplicationValidator implements ElementValidator {
 
-public class InjectValidator implements ElementValidator {
+	private final ValidatorHelper validatorHelper;
+	private final AndroidManifest androidManifest;
 
-	private ValidatorHelper validatorHelper;
-
-	public InjectValidator(ProcessingEnvironment processingEnv) {
+	public EApplicationValidator(ProcessingEnvironment processingEnv, AndroidManifest androidManifest) {
+		this.androidManifest = androidManifest;
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Inject.class;
+		return EApplication.class;
 	}
 
 	@Override
@@ -46,12 +47,14 @@ public class InjectValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+		validatorHelper.extendsApplication(element, valid);
 
-		validatorHelper.isNotPrivate(element, valid);
-
-		validatorHelper.typeHasAnnotation(Enhanced.class, element, valid);
+		validatorHelper.isNotFinal(element, valid);
 		
+		validatorHelper.isNotAbstract(element, valid);
+
+		validatorHelper.applicationRegistered(element, androidManifest, valid);
+
 		return valid.isValid();
 	}
 

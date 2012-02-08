@@ -21,9 +21,32 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Injects an instance of a class annotated with {@link Enhanced}
+ * Should be used on custom classes that extend View to enable usage of
+ * AndroidAnnotations
+ * 
+ * Any view related code should happen in an {@link AfterViews} annotated
+ * method.<br>
+ * <br>
+ * 
+ * Supported annotations in @EView :
+ * 
+ * <ul>
+ * <li>ViewById</li>
+ * <li>AfterViews</li>
+ * <li>Click</li>
+ * <li>ItemClick</li>
+ * <li>ItemLongClick</li>
+ * <li>ItemSelected</li>
+ * <li>LongClick</li>
+ * <li>Touch</li>
+ * </ul>
+ * 
+ * @see <a
+ *      href="http://developer.android.com/guide/topics/ui/custom-components.html">How
+ *      to build a custom component.</a>
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.FIELD)
-public @interface Inject {
+@Target(ElementType.TYPE)
+public @interface EView {
 }

@@ -13,21 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.rest;
+package com.googlecode.androidannotations.test15.ebean;
 
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Enhanced;
-import com.googlecode.androidannotations.annotations.rest.RestService;
+import android.app.Activity;
 
-@Enhanced
-public class EnhancedClassUsingService {
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EActivity;
+
+@EActivity
+public class BeanInjectedActivity extends Activity {
 	
-	@RestService
-	MyService myService;
-	
-	@Background
-	void callSomeService(Event event, int id) {
-		myService.updateEvent(event, id);
-	}
+	@Bean
+	EnhancedClass dependency;
 
 }

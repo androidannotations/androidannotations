@@ -13,31 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.afterinject;
 
-import java.util.List;
+import android.app.NotificationManager;
 
-import android.app.Activity;
+import com.googlecode.androidannotations.annotations.AfterInject;
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.SystemService;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Extra;
-
-@EActivity
-public class ExtraInjectedActivity extends Activity {
-
-	@Extra("stringExtra")
-	String stringExtra;
+@EBean
+public class AfterInjectBean {
 	
-	@Extra("arrayExtra")
-	CustomData[] arrayExtra;
+	public boolean afterInjectCalled = false;
+	public boolean notificationManagerNullAfterInject = true;
 
-	@Extra("listExtra")
-	List<String> listExtra;
+	@SystemService
+	NotificationManager notificationManager;
 	
-	@Extra("intExtra")
-	int intExtra;
+	@AfterInject
+	void afterInject() {
+		afterInjectCalled = true;
+		notificationManagerNullAfterInject = notificationManager == null;
+	}
 	
-	@Extra("byteArrayExtra")
-	byte[] byteArrayExtra;
-
+	
 }

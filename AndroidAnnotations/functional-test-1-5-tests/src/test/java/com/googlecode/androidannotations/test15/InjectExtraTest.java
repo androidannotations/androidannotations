@@ -61,5 +61,20 @@ public class InjectExtraTest {
 		activity.onCreate(null);
 		assertThat(activity.listExtra).isEqualTo(list);
 	}
+	
+	@Test
+	public void int_extra_injected() {
+		intent.putExtra("intExtra", 42);
+		activity.onCreate(null);
+		assertThat(activity.intExtra).isEqualTo(42);
+	}
+	
+	@Test
+	public void when_int_array_extra_is_annotated_then_its_injected() {
+		byte[] byteArray = {0, 2};
+		intent.putExtra("byteArrayExtra", byteArray);
+		activity.onCreate(null);
+		assertThat(activity.byteArrayExtra).isEqualTo(byteArray);
+	}
 
 }

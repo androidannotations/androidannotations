@@ -29,7 +29,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.Enhanced;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.sun.codemodel.ClassType;
@@ -40,17 +40,17 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EnhancedProcessor extends AnnotationHelper implements ElementProcessor {
+public class EBeanProcessor extends AnnotationHelper implements ElementProcessor {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
 
-	public EnhancedProcessor(ProcessingEnvironment processingEnv) {
+	public EBeanProcessor(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Enhanced.class;
+		return EBean.class;
 	}
 
 	@Override
@@ -112,6 +112,10 @@ public class EnhancedProcessor extends AnnotationHelper implements ElementProces
 		
 		{
 			// init if activity
+			/*
+			 * We suppress all warnings because we generate an unused warning that may or may not valid
+			 */
+			holder.init.annotate(SuppressWarnings.class).param("value", "all");
 			APTCodeModelHelper helper = new APTCodeModelHelper();
 			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);

@@ -18,6 +18,8 @@ package com.googlecode.androidannotations.processing;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -38,7 +40,7 @@ public class EBeanHolder {
 	public JMethod init;
 	/**
 	 * Only defined on activities and components potentially depending on
-	 * activity (@EViewGroup, @Enhanced)
+	 * activity ( {@link EViewGroup}, {@link EBean}
 	 */
 	public JMethod afterSetContentView;
 	public JBlock extrasNotNullBlock;

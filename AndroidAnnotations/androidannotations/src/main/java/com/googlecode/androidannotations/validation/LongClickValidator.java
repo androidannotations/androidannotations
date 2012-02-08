@@ -26,6 +26,7 @@ import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 
 /**
  * @author Benjamin Fellous
@@ -50,8 +51,16 @@ public class LongClickValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.idListenerMethod(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
+		validatorHelper.idsExists(element, Res.ID, valid);
+
+		validatorHelper.isNotPrivate(element, valid);
+
+		validatorHelper.doesntThrowException((ExecutableElement) element, valid);
+
+		validatorHelper.uniqueId(element, validatedElements, valid);
+		
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);

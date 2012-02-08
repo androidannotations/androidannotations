@@ -21,19 +21,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Methods annotated with @{@link AfterInject} will be called after the
- * constructor is called in an enhanced class.
+ * Should be used on custom classes to enable usage of AndroidAnnotations
  * 
- * Any code depending on injected fields should be done in an
- * {@link AfterInject} annotated method.
+ * Any view related code should happen in an {@link AfterViews} annotated
+ * method.<br>
+ * <br>
  * 
- * The method must have zero parameters.
- * 
- * There may be several methods annotated with @{@link AfterInject} in the same
- * class.
+ * Most annotations are supported in {@link EBean} classes
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.METHOD)
-public @interface AfterInject {
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
+public @interface EBean {
 }
