@@ -266,8 +266,8 @@ import com.sun.codemodel.JCodeModel;
 		EReceiver.class, //
 		EProvider.class, //
 		Trace.class, //
-		SaveOnActivityDestroy.class //
-		EApplication.class, //
+		SaveOnActivityDestroy.class, //
+		EApplication.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
