@@ -888,15 +888,15 @@ public class ValidatorHelper {
 
 			if (!annotationHelper.isPrivate(constructor)) {
 				if (constructor.getParameters().size() != 0) {
-					annotationHelper.printError(element, "%s annotated element should have an empty constructor");
+					annotationHelper.printAnnotationError(element, "%s annotated element should have an empty constructor");
 					valid.invalidate();
 				}
 			} else {
-				annotationHelper.printError(element, "%s annotated element should not have a private constructor");
+				annotationHelper.printAnnotationError(element, "%s annotated element should not have a private constructor");
 				valid.invalidate();
 			}
 		} else {
-			annotationHelper.printError(element, "%s annotated element should have only one constructor");
+			annotationHelper.printAnnotationError(element, "%s annotated element should have only one constructor");
 			valid.invalidate();
 		}
 	}
