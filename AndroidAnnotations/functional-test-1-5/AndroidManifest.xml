@@ -25,6 +25,13 @@
         android:name="com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication_"
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
+        
+        <activity android:name=".CustomFrameLayoutActivity_" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".EmptyActivityWithLayout_" />
         <activity android:name=".EmptyActivityWithoutLayout_" />
         <activity android:name=".ViewsInjectedActivity_" />

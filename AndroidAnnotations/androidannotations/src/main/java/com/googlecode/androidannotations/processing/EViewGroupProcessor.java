@@ -17,6 +17,7 @@ package com.googlecode.androidannotations.processing;
 
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import java.lang.annotation.Annotation;
@@ -42,6 +43,7 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
@@ -49,6 +51,7 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 
 public class EViewGroupProcessor extends AnnotationHelper implements ElementProcessor {
 
@@ -144,7 +147,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
-		copyConstructors(element, holder, onFinishInflate);
+		copyConstructorsAndStaticHelpers(element, codeModel, holder, onFinishInflate);
 
 		{
 			// init if activity
@@ -155,7 +158,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 
 	}
 
-	private void copyConstructors(Element element, EBeanHolder holder, JMethod setContentViewMethod) {
+	private void copyConstructorsAndStaticHelpers(Element element, JCodeModel codeModel, EBeanHolder holder, JMethod setContentViewMethod) {
 		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
 		for (Element e : element.getEnclosedElements()) {
 			if (e.getKind() == CONSTRUCTOR) {
@@ -165,15 +168,23 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 
 		for (ExecutableElement userConstructor : constructors) {
 			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
+			JClass superType = holder.refClass(element.asType().toString());
+			JMethod staticHelper = holder.eBean.method(PUBLIC | STATIC, superType, "getInflatedInstance");
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");
+			 JInvocation newInvocation = JExpr._new(holder.eBean);
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
 				String paramType = param.asType().toString();
 				copyConstructor.param(holder.refClass(paramType), paramName);
+				staticHelper.param(holder.refClass(paramType), paramName);
 				superCall.arg(JExpr.ref(paramName));
+				newInvocation.arg(JExpr.ref(paramName));
 			}
 
+			JVar newCall = staticHelper.body().decl(superType, "instance", newInvocation);
+			staticHelper.body().invoke(newCall, "onFinishInflate");
+			staticHelper.body()._return(newCall);
 			body.invoke(holder.init);
 		}
 	}
