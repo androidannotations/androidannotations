@@ -23,8 +23,12 @@ import java.lang.annotation.Target;
 /**
  * Should be used on method that must be run in the Ui thread
  * 
+ * The annotation parameter delay is the delay (in milliseconds) until the
+ * method will be executed. The default is 0 (no delay).
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface UiThread {
+	long delay() default 0;
 }
