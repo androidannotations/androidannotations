@@ -44,6 +44,9 @@ public class ItemClicksHandledActivity extends Activity {
 
 	@ViewById
 	ListView listViewWithPosition;
+	
+	@ViewById
+	ListView listViewWithOneParam;
 
 	boolean spinnerItemClicked = false;
 	boolean listViewItemClicked = false;
@@ -58,6 +61,8 @@ public class ItemClicksHandledActivity extends Activity {
 
 	private ArrayAdapter<CharSequence> adapter;
 
+	boolean listViewWithOneParamItemSelected;
+
 	@AfterViews
 	void initView() {
 		adapter = ArrayAdapter.createFromResource(this, R.array.planets_array, R.layout.simple_spinner_item);
@@ -68,6 +73,13 @@ public class ItemClicksHandledActivity extends Activity {
 		spinnerWithArgument.setAdapter(adapter);
 		listViewWithArgument.setAdapter(adapter);
 		listViewWithPosition.setAdapter(adapter);
+		listViewWithOneParam.setAdapter(adapter);
+		spinnerItemClicked = false;
+		listViewItemClicked = false;
+		listViewWithPositionItemSelected = false;
+		listViewWithPositionClickedPosition = 0;
+		listViewWithOneParamItemSelected = false;
+		listViewWithPositionItemSelectedPosition = 0;
 	}
 
 	@ItemClick
@@ -99,6 +111,11 @@ public class ItemClicksHandledActivity extends Activity {
 	void listViewWithPositionItemSelected(boolean selected, int position) {
 		listViewWithPositionItemSelected = selected;
 		listViewWithPositionItemSelectedPosition = position;
+	}
+	
+	@ItemSelect
+	void listViewWithOneParamItemSelected(boolean selected) {
+		listViewWithOneParamItemSelected = selected;
 	}
 	
 	@ItemLongClick
