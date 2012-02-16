@@ -64,8 +64,6 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
-		boolean hasItemParameter = parameters.size() == 2;
-
 		ItemSelect annotation = element.getAnnotation(ItemSelect.class);
 		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "ItemSelected", holder);
 
@@ -83,17 +81,23 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 		JInvocation itemSelectedCall = onItemSelectedMethod.body().invoke(methodName);
 
 		itemSelectedCall.arg(JExpr.TRUE);
-
-		VariableElement secondParameter = parameters.get(1);
-		TypeMirror parameterType = secondParameter.asType();
+		
+		boolean hasItemParameter = parameters.size() == 2;
+		boolean secondParameterIsInt = false;
+		String secondParameterQualifiedName = null;
+		if (hasItemParameter) {
+			VariableElement secondParameter = parameters.get(1);
+			TypeMirror secondParameterType = secondParameter.asType();
+			secondParameterQualifiedName = secondParameterType.toString();
+			secondParameterIsInt = secondParameterType.getKind() == TypeKind.INT;
+		}
 
 		if (hasItemParameter) {
 
-			if (parameterType.getKind() == TypeKind.INT) {
+			if (secondParameterIsInt) {
 				itemSelectedCall.arg(onItemClickPositionParam);
 			} else {
-				String parameterTypeQualifiedName = parameterType.toString();
-				itemSelectedCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				itemSelectedCall.arg(JExpr.cast(holder.refClass(secondParameterQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 			}
 		}
 
@@ -105,7 +109,7 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 
 		nothingSelectedCall.arg(JExpr.FALSE);
 		if (hasItemParameter) {
-			if (parameterType.getKind() == TypeKind.INT) {
+			if (secondParameterIsInt) {
 				nothingSelectedCall.arg(lit(-1));
 			} else {
 				nothingSelectedCall.arg(_null());
