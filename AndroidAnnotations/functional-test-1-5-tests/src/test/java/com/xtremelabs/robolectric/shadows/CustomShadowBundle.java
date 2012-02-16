@@ -30,6 +30,7 @@ import android.util.SparseArray;
 import com.xtremelabs.robolectric.internal.Implementation;
 import com.xtremelabs.robolectric.internal.Implements;
 
+@SuppressWarnings("unchecked")
 @Implements(Bundle.class)
 public class CustomShadowBundle {
 
