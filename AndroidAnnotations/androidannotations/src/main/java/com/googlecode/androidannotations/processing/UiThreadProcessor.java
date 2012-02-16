@@ -15,6 +15,9 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.lit;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
@@ -53,12 +56,19 @@ public class UiThreadProcessor implements ElementProcessor {
 		{
 			// Execute Runnable
 
+			UiThread annotation = element.getAnnotation(UiThread.class);
+			long delay = annotation.delay();
+
 			if (holder.handler == null) {
 				JClass handlerClass = holder.refClass("android.os.Handler");
 				holder.handler = holder.eBean.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
 			}
 
-			delegatingMethod.body().invoke(holder.handler, "post").arg(JExpr._new(anonymousRunnableClass));
+			if (delay == 0) {
+				delegatingMethod.body().invoke(holder.handler, "post").arg(_new(anonymousRunnableClass));
+			} else {
+				delegatingMethod.body().invoke(holder.handler, "postDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
+			}
 		}
 
 	}
