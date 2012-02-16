@@ -21,12 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <b>This annotation is deprecated. You should use {@link UiThread} with the delay parameter instead</b>
+ * 
  * Should be used on method that must be run in the Ui thread, after the
  * specified amount of time elapses.
  * 
  * The annotation value is the delay (in milliseconds) until the method will be
  * executed.
+ * 
+ * 
  */
+@Deprecated
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface UiThreadDelayed {

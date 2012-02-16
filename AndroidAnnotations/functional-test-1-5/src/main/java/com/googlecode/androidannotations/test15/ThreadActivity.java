@@ -24,7 +24,6 @@ import android.app.Activity;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 
 @EActivity
 public class ThreadActivity extends Activity {
@@ -49,7 +48,6 @@ public class ThreadActivity extends Activity {
 
 	}
 
-	
 	@UiThread
 	void genericUiMethod(List<Map<String, List<Set<Void>>>> param) {
 
@@ -59,11 +57,10 @@ public class ThreadActivity extends Activity {
 	void genericBackgroundMethod(List<Map<String, List<Set<Void>>>> param) {
 
 	}
-	
-	@UiThreadDelayed(1000)
+
+	@UiThread(delay = 1000)
 	void emptyUiDelayedMethod() {
 
 	}
-
 
 }
