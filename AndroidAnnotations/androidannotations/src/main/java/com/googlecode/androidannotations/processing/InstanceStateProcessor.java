@@ -28,7 +28,7 @@ import javax.lang.model.type.TypeKind;
 
 import android.os.Bundle;
 
-import com.googlecode.androidannotations.annotations.SaveOnActivityDestroy;
+import com.googlecode.androidannotations.annotations.InstanceState;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
@@ -37,7 +37,7 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 
-public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements ElementProcessor {
+public class InstanceStateProcessor extends AnnotationHelper implements ElementProcessor {
 
 	private static final String BUNDLE_PARAM_NAME = "bundle";
 
@@ -79,13 +79,13 @@ public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements 
 		methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.String>", "StringArrayList");
 	}
 
-	public SaveOnActivityDestroyProcessor(ProcessingEnvironment processingEnv) {
+	public InstanceStateProcessor(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return SaveOnActivityDestroy.class;
+		return InstanceState.class;
 	}
 
 	@Override

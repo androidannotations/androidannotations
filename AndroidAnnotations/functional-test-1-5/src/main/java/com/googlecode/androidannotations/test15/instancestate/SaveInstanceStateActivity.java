@@ -6,146 +6,146 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.SaveOnActivityDestroy;
+import com.googlecode.androidannotations.annotations.InstanceState;
 import com.googlecode.androidannotations.test15.R;
 
 @EActivity(R.layout.main)
 public class SaveInstanceStateActivity extends Activity {
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Long nullWrappedLong = 42l;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	boolean myBoolean;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	boolean[] myBooleanArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Boolean myBooleanObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Boolean[] myBooleanObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	byte myByte;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	byte[] myByteArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Byte myByteObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Byte[] myByteObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	char myChar;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	char[] myCharacterArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Character myCharacterObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Character[] myCharacterObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	CharSequence myCharSequence;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	double myDouble;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	double[] myDoubleArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Double myDoubleObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Double[] myDoubleObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	float myFloat;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	float[] myFloatArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Float myFloatObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Float[] myFloatObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	int myInt;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	int[] myIntegerArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Integer myIntegerObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Integer[] myIntegerObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	ArrayList<Integer> myIntegerArrayList;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	long myLong;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	long[] myLongArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Long myLongObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Long[] myLongObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	short myShort;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	short[] myShortArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Short myShortObject;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Short[] myShortObjectArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	String myString;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	String[] myStringArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	ArrayList<String> myStringList;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	MySerializableBean mySerializableBean;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	MySerializableBean[] mySerializableBeanArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	MyParcelableBean myParcelableBean;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	MyParcelableBean[] myParcelableBeanArray;
 
-	@SaveOnActivityDestroy
+	@InstanceState
 	Bundle myBundle;
 
 	/*
 	 * This should be solved before we merge this feature. We should also create
 	 * the associated test.
 	 */
-	// @SaveOnActivityDestroy
+	// @InstanceState
 	// MyGenericSerializableBeasn<MySerializableBean> myGenericSerializableBean;
 
 }

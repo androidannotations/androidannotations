@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Save this attribute value by passing it to the Bundle when
- * onSaveInstnceData(Bundle) is called by the system.
+ * Use it on fields in activities to save and restore their values when the
+ * system calls onSaveInstanceState(Bundle) and onCreate(Bundle).
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
-public @interface SaveOnActivityDestroy {
+public @interface InstanceState {
 }

@@ -68,7 +68,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPre
 import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.processing.SaveOnActivityDestroyProcessor;
+import com.googlecode.androidannotations.processing.InstanceStateProcessor;
 import com.googlecode.androidannotations.validation.IsValid;
 
 public class ValidatorHelper {
@@ -945,7 +945,7 @@ public class ValidatorHelper {
 	}
 
 	private boolean isKnowInstanceStateType(String type) {
-		return SaveOnActivityDestroyProcessor.methodSuffixNameByTypeName.containsKey(type);
+		return InstanceStateProcessor.methodSuffixNameByTypeName.containsKey(type);
 	}
 
 	public void componentRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
