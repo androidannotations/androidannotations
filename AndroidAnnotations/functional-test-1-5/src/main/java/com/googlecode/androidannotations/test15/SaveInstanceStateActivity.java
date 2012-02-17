@@ -15,7 +15,7 @@ public class SaveInstanceStateActivity extends Activity {
 	boolean myBoolean;
 
 	@SaveOnActivityDestroy
-	boolean [] myBooleanArray;
+	boolean[] myBooleanArray;
 
 	@SaveOnActivityDestroy
 	Boolean myBooleanObject;
@@ -27,126 +27,121 @@ public class SaveInstanceStateActivity extends Activity {
 	byte myByte;
 
 	@SaveOnActivityDestroy
-	byte [] myByteArray;
+	byte[] myByteArray;
 
 	@SaveOnActivityDestroy
 	Byte myByteObject;
 
 	@SaveOnActivityDestroy
-	Byte [] myByteObjectArray;
+	Byte[] myByteObjectArray;
 
 	@SaveOnActivityDestroy
 	char myChar;
 
 	@SaveOnActivityDestroy
-	char [] myCharacterArray;
+	char[] myCharacterArray;
 
 	@SaveOnActivityDestroy
 	Character myCharacterObject;
 
 	@SaveOnActivityDestroy
-	Character [] myCharacterObjectArray;
+	Character[] myCharacterObjectArray;
 
 	@SaveOnActivityDestroy
 	CharSequence myCharSequence;
 
-// Only available since API level 8
-//	@SaveOnActivityDestroy
-//	CharSequence [] myCharSequenceArray;
-//
-//	@SaveOnActivityDestroy
-//	ArrayList<CharSequence> myCharSequenceArray;
+	// Only available since API level 8
+	// @SaveOnActivityDestroy
+	// CharSequence [] myCharSequenceArray;
+	//
+	// @SaveOnActivityDestroy
+	// ArrayList<CharSequence> myCharSequenceArray;
 
 	@SaveOnActivityDestroy
 	double myDouble;
 
 	@SaveOnActivityDestroy
-	double [] myDoubleArray;
+	double[] myDoubleArray;
 
 	@SaveOnActivityDestroy
 	Double myDoubleObject;
 
 	@SaveOnActivityDestroy
-	Double [] myDoubleObjectArray;
+	Double[] myDoubleObjectArray;
 
 	@SaveOnActivityDestroy
 	float myFloat;
 
 	@SaveOnActivityDestroy
-	float [] myFloatArray;
+	float[] myFloatArray;
 
 	@SaveOnActivityDestroy
 	Float myFloatObject;
 
 	@SaveOnActivityDestroy
-	Float [] myFloatObjectArray;
+	Float[] myFloatObjectArray;
 
-    @SaveOnActivityDestroy
-    int myInt;
+	@SaveOnActivityDestroy
+	int myInt;
 
-    @SaveOnActivityDestroy
-    int [] myIntegerArray;
+	@SaveOnActivityDestroy
+	int[] myIntegerArray;
 
-    @SaveOnActivityDestroy
-    Integer myIntegerObject;
+	@SaveOnActivityDestroy
+	Integer myIntegerObject;
 
-    @SaveOnActivityDestroy
-    Integer [] myIntegerObjectArray;
+	@SaveOnActivityDestroy
+	Integer[] myIntegerObjectArray;
 
-    @SaveOnActivityDestroy
-    ArrayList<Integer> myIntegerArrayList;
+	@SaveOnActivityDestroy
+	ArrayList<Integer> myIntegerArrayList;
 
-    @SaveOnActivityDestroy
-    long myLong;
+	@SaveOnActivityDestroy
+	long myLong;
 
-    @SaveOnActivityDestroy
-    long [] myLongArray;
+	@SaveOnActivityDestroy
+	long[] myLongArray;
 
-    @SaveOnActivityDestroy
-    Long myLongObject;
+	@SaveOnActivityDestroy
+	Long myLongObject;
 
-    @SaveOnActivityDestroy
-    Long [] myLongObjectArray;
+	@SaveOnActivityDestroy
+	Long[] myLongObjectArray;
 
-    @SaveOnActivityDestroy
-    short myShort;
+	@SaveOnActivityDestroy
+	short myShort;
 
-    @SaveOnActivityDestroy
-    short [] myShortArray;
+	@SaveOnActivityDestroy
+	short[] myShortArray;
 
-    @SaveOnActivityDestroy
-    Short myShortObject;
+	@SaveOnActivityDestroy
+	Short myShortObject;
 
-    @SaveOnActivityDestroy
-    Short [] myShortObjectArray;
+	@SaveOnActivityDestroy
+	Short[] myShortObjectArray;
 
-    @SaveOnActivityDestroy
-    String myString;
+	@SaveOnActivityDestroy
+	String myString;
 
-    @SaveOnActivityDestroy
-    String [] myStringArray;
+	@SaveOnActivityDestroy
+	String[] myStringArray;
 
-    @SaveOnActivityDestroy
-    ArrayList<String> myStringList;
+	@SaveOnActivityDestroy
+	ArrayList<String> myStringList;
 
-    @SaveOnActivityDestroy
-    MySerializableBean mySerializableBean;
+	@SaveOnActivityDestroy
+	MySerializableBean mySerializableBean;
 
-    @SaveOnActivityDestroy
-    MySerializableBean [] mySerializableBeanArray;
+	@SaveOnActivityDestroy
+	MySerializableBean[] mySerializableBeanArray;
 
-    @SaveOnActivityDestroy
-    MyParcelableBean myParcelableBean;
+	@SaveOnActivityDestroy
+	MyParcelableBean myParcelableBean;
 
-    @SaveOnActivityDestroy
-    MyParcelableBean [] myParcelableBeanArray;
+	@SaveOnActivityDestroy
+	MyParcelableBean[] myParcelableBeanArray;
 
-    @SaveOnActivityDestroy
-    Bundle myBundle;
-
-//    class ErrorTest {}
-//
-//    @SaveOnActivityDestroy
-//    ErrorTest errorTest;
+	@SaveOnActivityDestroy
+	Bundle myBundle;
 
 }

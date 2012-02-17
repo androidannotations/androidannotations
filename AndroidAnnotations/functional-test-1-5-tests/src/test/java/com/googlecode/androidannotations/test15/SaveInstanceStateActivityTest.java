@@ -32,15 +32,14 @@ public class SaveInstanceStateActivityTest {
 		Robolectric.bindShadowClass(CustomShadowBundle.class);
 	}
 
-
-	 @Test
+	@Test
 	public void can_create_with_empty_bundle() {
 		SaveInstanceStateActivity_ activity = new SaveInstanceStateActivity_();
 		Bundle emptyBundle = new Bundle();
 		activity.onCreate(emptyBundle);
 	}
 
-	 @Test
+	@Test
 	public void can_create_without_saved_state() {
 		SaveInstanceStateActivity_ activity = new SaveInstanceStateActivity_();
 		activity.onCreate(null);

@@ -17,6 +17,9 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 
+import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.bytecode.RobolectricClassLoader;
+
 /**
  * This class is a copy of Junit {@link Parameterized}, but it creates
  * {@link AndroidAnnotationsTestRunner} runners instead of
@@ -102,6 +105,11 @@ public class RobolectricParameterized extends Suite {
 			}
 
 			/*
+			 * We are in the original runner, but the test instance is the one
+			 * created by the delegate runner.
+			 */
+
+			/*
 			 * Let's init the test with parameters. We look for a method called
 			 * init, with any params. We can't use constructor parameters,
 			 * Robolectric won't allow that.
@@ -168,7 +176,10 @@ public class RobolectricParameterized extends Suite {
 	 * Only called reflectively. Do not use programmatically.
 	 */
 	public RobolectricParameterized(Class<?> klass) throws Throwable {
-		super(klass, Collections.<Runner> emptyList());
+		/*
+		 * Notice how we replace the class with a class loaded by robolectric.
+		 */
+		super(robolectricClass(klass), Collections.<Runner> emptyList());
 		List<Object[]> parametersList = getParametersList(getTestClass());
 		for (int i = 0; i < parametersList.size(); i++) {
 			TestClassRunnerForParameters testRunner = new TestClassRunnerForParameters(getTestClass().getJavaClass());
@@ -196,6 +207,16 @@ public class RobolectricParameterized extends Suite {
 		}
 
 		throw new Exception("No public static parameters method on class " + testClass.getName());
+	}
+
+	private static Class<?> robolectricClass(Class<?> originalClass) throws Exception {
+		return getRobolectricLoader().loadClass(originalClass.getName());
+	}
+
+	private static RobolectricClassLoader getRobolectricLoader() throws Exception {
+		Method getDefaultLoader = RobolectricTestRunner.class.getDeclaredMethod("getDefaultLoader");
+		getDefaultLoader.setAccessible(true);
+		return (RobolectricClassLoader) getDefaultLoader.invoke(null);
 	}
 
 }

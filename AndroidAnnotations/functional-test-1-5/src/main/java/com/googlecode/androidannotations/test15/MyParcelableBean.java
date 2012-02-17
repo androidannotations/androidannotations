@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class MyParcelableBean implements Parcelable {
 
-	private final int	x;
+	private final int x;
 
 	public MyParcelableBean(int x) {
 		this.x = x;
