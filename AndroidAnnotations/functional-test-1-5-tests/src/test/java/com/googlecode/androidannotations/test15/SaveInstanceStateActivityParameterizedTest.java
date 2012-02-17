@@ -32,7 +32,7 @@ import android.os.Bundle;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.CustomShadowBundle;
 
-@RunWith(AndroidAnnotationsParameterized.class)
+@RunWith(RobolectricParameterized.class)
 public class SaveInstanceStateActivityParameterizedTest {
 
 	@Parameters
@@ -98,7 +98,7 @@ public class SaveInstanceStateActivityParameterizedTest {
 	private String fieldName;
 
 	/**
-	 * @see AndroidAnnotationsParameterized
+	 * @see RobolectricParameterized
 	 */
 	public void init(String fieldName, Object value) {
 		this.fieldName = fieldName;

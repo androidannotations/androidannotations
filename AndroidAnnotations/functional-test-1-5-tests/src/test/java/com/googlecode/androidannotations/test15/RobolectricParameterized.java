@@ -25,11 +25,19 @@ import org.junit.runners.model.TestClass;
  * We added some hacks, because Robolectric has a lot of expectations on how the
  * runner and the tested class should work.
  * 
+ * 
  * <p>
  * The custom runner <code>Parameterized</code> implements parameterized tests.
  * When running a parameterized test class, instances are created for the
  * cross-product of the test methods and the test data elements.
  * </p>
+ * 
+ * <p>
+ * The test must have a constructor with no parameters. The parameters are
+ * passed through an init() method, which can have any number of parameters. The
+ * parameters of the init() method must match the {@link Parameterized} test
+ * data.
+ * <p/>
  * 
  * For example, to test a Fibonacci function, write:
  * 
@@ -45,7 +53,7 @@ import org.junit.runners.model.TestClass;
  * 
  * 	private int fExpected;
  * 
- * 	public FibonacciTest(int input, int expected) {
+ * 	public void init(int input, int expected) {
  * 		fInput = input;
  * 		fExpected = expected;
  * 	}
@@ -63,23 +71,23 @@ import org.junit.runners.model.TestClass;
  * <code>&#064;Parameters</code> method.
  * </p>
  */
-public class AndroidAnnotationsParameterized extends Suite {
+public class RobolectricParameterized extends Suite {
 
 	public static class TestClassRunnerForParameters extends AndroidAnnotationsTestRunner {
-		private int fParameterSetNumber;
+		private int parameterSetNumber;
 
-		private List<Object[]> fParameterList;
+		private List<Object[]> parameterList;
 
-		private AndroidAnnotationsParameterized motherRunner;
+		private RobolectricParameterized motherRunner;
 
 		public TestClassRunnerForParameters(Class<?> type) throws InitializationError {
 			super(type);
 		}
 
-		private void init(AndroidAnnotationsParameterized motherRunner, List<Object[]> parameterList, int i) {
+		private void init(RobolectricParameterized motherRunner, List<Object[]> parameterList, int parameterSetNumber) {
 			this.motherRunner = motherRunner;
-			fParameterList = parameterList;
-			fParameterSetNumber = i;
+			this.parameterList = parameterList;
+			this.parameterSetNumber = parameterSetNumber;
 		}
 
 		@Override
@@ -88,7 +96,7 @@ public class AndroidAnnotationsParameterized extends Suite {
 
 			if (motherRunner == null) {
 				/*
-				 * We are in the delegate runner created by Robolectric
+				 * We are in the delegate runner created by Robolectric.
 				 */
 				return test;
 			}
@@ -127,7 +135,7 @@ public class AndroidAnnotationsParameterized extends Suite {
 
 		private Object[] computeParams() throws Exception {
 			try {
-				return fParameterList.get(fParameterSetNumber);
+				return parameterList.get(parameterSetNumber);
 			} catch (ClassCastException e) {
 				throw new Exception(String.format("%s.%s() must return a Collection of arrays.", getTestClass().getName(), motherRunner.getParametersMethod(getTestClass()).getName()));
 			}
@@ -135,12 +143,12 @@ public class AndroidAnnotationsParameterized extends Suite {
 
 		@Override
 		protected String getName() {
-			return String.format("[%s]", fParameterSetNumber);
+			return String.format("[%s]", parameterSetNumber);
 		}
 
 		@Override
 		protected String testName(final FrameworkMethod method) {
-			return String.format("%s[%s]", method.getName(), fParameterSetNumber);
+			return String.format("%s[%s]", method.getName(), parameterSetNumber);
 		}
 
 		@Override
@@ -159,7 +167,7 @@ public class AndroidAnnotationsParameterized extends Suite {
 	/**
 	 * Only called reflectively. Do not use programmatically.
 	 */
-	public AndroidAnnotationsParameterized(Class<?> klass) throws Throwable {
+	public RobolectricParameterized(Class<?> klass) throws Throwable {
 		super(klass, Collections.<Runner> emptyList());
 		List<Object[]> parametersList = getParametersList(getTestClass());
 		for (int i = 0; i < parametersList.size(); i++) {
