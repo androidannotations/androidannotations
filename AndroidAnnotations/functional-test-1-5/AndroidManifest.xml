@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
     Copyright (C) 2010-2011 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,7 +13,6 @@
     WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     License for the specific language governing permissions and limitations under
     the License.
-
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.googlecode.androidannotations.test15"
@@ -49,7 +47,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.ExtendingActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.ebean.BeanInjectedActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.rest.MyServiceActivity_" />
-	<activity android:name="com.googlecode.androidannotations.test15.SaveInstanceStateActivity_" />
+        <activity android:name="com.googlecode.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.afterinject.AfterInjectActivity_" />
 
         <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
@@ -61,7 +59,6 @@
         <service
             android:name="com.googlecode.androidannotations.test15.eservice.MyService_"
             exported="false" />
-
     </application>
 
 </manifest>

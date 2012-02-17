@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.instancestate;
 
 import android.os.Parcel;
 import android.os.Parcelable;

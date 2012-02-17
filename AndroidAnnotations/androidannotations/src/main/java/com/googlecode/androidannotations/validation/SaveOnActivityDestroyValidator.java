@@ -4,17 +4,20 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.SaveOnActivityDestroy;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
+import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.processing.SaveOnActivityDestroyProcessor;
 
-public class SaveOnActivityDestroyValidator extends AnnotationHelper implements ElementValidator {
+public class SaveOnActivityDestroyValidator implements ElementValidator {
+	
+	private ValidatorHelper validatorHelper;
+
 	
 	public SaveOnActivityDestroyValidator(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -25,37 +28,15 @@ public class SaveOnActivityDestroyValidator extends AnnotationHelper implements 
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 		
-		String typeString = element.asType().toString();
+		IsValid valid = new IsValid();
 
-		if (! isTrivialType(typeString)) {
-			TypeElement elementType = typeElementFromQualifiedName(typeString);
-			
-			if (elementType == null) {
-				elementType = getArrayEnclosingType(typeString);
-				if (elementType == null) {
-					printAnnotationError(element, getTarget(), "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
-					return false;
-				}
-			}
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
-			TypeElement parcelableType = typeElementFromQualifiedName("android.os.Parcelable");
-			TypeElement serializableType = typeElementFromQualifiedName("java.io.Serializable");
-			if (! isSubtype(elementType, parcelableType) && ! isSubtype(elementType, serializableType)) {
-				printAnnotationError(element, getTarget(), "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
-				return false;
-			}
-		}
+		validatorHelper.isNotPrivate(element, valid);
 		
-		return true;
-	}
+		validatorHelper.canBeSavedAsInstanceState(element, valid);
 
-	private TypeElement getArrayEnclosingType(String typeString) {
-		typeString = typeString.replace("[]", "");
-		return typeElementFromQualifiedName(typeString);
-	}
-	
-	private boolean isTrivialType(String type) {
-		return SaveOnActivityDestroyProcessor.methodSuffixNameByTypeName.containsKey(type);
+		return valid.isValid();
 	}
 
 }

@@ -38,51 +38,40 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 
 public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements ElementProcessor {
-	
+
 	private static final String BUNDLE_PARAM_NAME = "bundle";
 
 	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
-	
+
 	static {
-		
+
 		methodSuffixNameByTypeName.put("android.os.Bundle", "Bundle");
 
 		methodSuffixNameByTypeName.put("boolean", "Boolean");
-		methodSuffixNameByTypeName.put("java.lang.Boolean", "Boolean");
 		methodSuffixNameByTypeName.put("boolean[]", "BooleanArray");
 
 		methodSuffixNameByTypeName.put("byte", "Byte");
-		methodSuffixNameByTypeName.put("java.lang.Byte", "Byte");
 		methodSuffixNameByTypeName.put("byte[]", "ByteArray");
 
 		methodSuffixNameByTypeName.put("char", "Char");
-		methodSuffixNameByTypeName.put("java.lang.Character", "Char");
 		methodSuffixNameByTypeName.put("char[]", "CharArray");
-		
+
 		methodSuffixNameByTypeName.put("java.lang.CharSequence", "CharSequence");
-		// Added on API level 8
-		//	methodSuffixNameByTypeName.put("java.lang.CharSequence[]", "CharSequenceArray");
-		//	methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.CharSequence>", "CharSequenceArrayList");
 
 		methodSuffixNameByTypeName.put("double", "Double");
-		methodSuffixNameByTypeName.put("java.lang.Double", "Double");
 		methodSuffixNameByTypeName.put("double[]", "DoubleArray");
 
 		methodSuffixNameByTypeName.put("float", "Float");
-		methodSuffixNameByTypeName.put("java.lang.Float", "Float");
 		methodSuffixNameByTypeName.put("float[]", "FloatArray");
 
 		methodSuffixNameByTypeName.put("int", "Int");
-		methodSuffixNameByTypeName.put("java.lang.Integer", "Int");
 		methodSuffixNameByTypeName.put("int[]", "IntArray");
 		methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.Integer>", "IntegerArrayList");
 
 		methodSuffixNameByTypeName.put("long", "Long");
-		methodSuffixNameByTypeName.put("java.lang.Long", "Long");
 		methodSuffixNameByTypeName.put("long[]", "LongArray");
 
 		methodSuffixNameByTypeName.put("short", "Short");
-		methodSuffixNameByTypeName.put("java.lang.Short", "Short");
 		methodSuffixNameByTypeName.put("short[]", "ShortArray");
 
 		methodSuffixNameByTypeName.put("java.lang.String", "String");
@@ -104,78 +93,57 @@ public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements 
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 		String fieldName = element.getSimpleName().toString();
 
-		JBlock saveStateBody = getSaveStateMethodBody(codeModel, holder);		
+		JBlock saveStateBody = getSaveStateMethodBody(codeModel, holder);
 		JBlock restoreStateBody = getRestoreStateBody(holder);
-		
+
 		String typeString = element.asType().toString();
 		TypeElement elementType = typeElementFromQualifiedName(typeString);
 
 		String methodNameToSave;
 		String methodNameToRestore;
 		boolean restoreCallNeedCastStatement = false;
-		boolean needToCheckNullValueOnSave = false;
 
-		if (isPrimitiveWrapperType(elementType)) {
-			needToCheckNullValueOnSave = true;
-		}
+		if (methodSuffixNameByTypeName.containsKey(typeString)) {
 
-		if (methodSuffixNameByTypeName.containsKey(typeString)) {	
-			
 			methodNameToSave = "put" + methodSuffixNameByTypeName.get(typeString);
 			methodNameToRestore = "get" + methodSuffixNameByTypeName.get(typeString);
 
 		} else if (element.asType().getKind() == TypeKind.ARRAY) {
-			
+
 			typeString = typeString.replace("[]", "");
 			elementType = typeElementFromQualifiedName(typeString);
-			
+
 			if (isTypeParcelable(elementType)) {
-				
+
 				methodNameToSave = "put" + "ParcelableArray";
 				methodNameToRestore = "get" + "ParcelableArray";
 				restoreCallNeedCastStatement = true;
-				
-			} else if (isTypeSerializable(elementType)) {
-			
+
+			} else {
 				methodNameToSave = "put" + "Serializable";
 				methodNameToRestore = "get" + "Serializable";
 				restoreCallNeedCastStatement = true;
-		
-			} else {
-				// Should never happen ...
-				throw new IllegalStateException("type:" + typeString);
 			}
-
 		} else {
-
 			if (isTypeParcelable(elementType)) {
-			
+
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
-		
-			} else if (isTypeSerializable(elementType)) {
-			
+			} else {
 				methodNameToSave = "put" + "Serializable";
 				methodNameToRestore = "get" + "Serializable";
 				restoreCallNeedCastStatement = true;
-		
-			} else {
-				// Should never happen ...
-				throw new IllegalStateException("type:" + typeString);
 			}
 		}
-		
-		if (needToCheckNullValueOnSave) {
-			saveStateBody = saveStateBody._if(JExpr.ref(fieldName).ne(JExpr._null()))._then();
-		}
+
 		saveStateBody.invoke(JExpr.ref(BUNDLE_PARAM_NAME), methodNameToSave).arg(fieldName).arg(JExpr.ref(fieldName));
 
 		JInvocation restoreMethodCall = JExpr.invoke(JExpr.ref("savedInstanceState"), methodNameToRestore).arg(fieldName);
 		if (restoreCallNeedCastStatement) {
-			
+
 			JExpression castStatement = JExpr.cast(holder.refClass(element.asType().toString()), restoreMethodCall);
 			restoreStateBody.assign(JExpr.ref(fieldName), castStatement);
-		
+
 		} else {
 
 			restoreStateBody.assign(JExpr.ref(fieldName), restoreMethodCall);
@@ -189,7 +157,7 @@ public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements 
 			JExpression bundleNullTest = JExpr.ref("savedInstanceState").ne(JExpr._null());
 			holder.restoreInstanceStateBlock = holder.initIfActivityBody.block()._if(bundleNullTest)._then();
 		}
-		
+
 		return holder.restoreInstanceStateBlock;
 	}
 
@@ -204,35 +172,15 @@ public class SaveOnActivityDestroyProcessor extends AnnotationHelper implements 
 
 			holder.saveInstanceStateBlock.invoke(JExpr._super(), "onSaveInstanceState").arg(JExpr.ref(BUNDLE_PARAM_NAME));
 		}
-		
+
 		return holder.saveInstanceStateBlock;
 	}
 
-	private boolean isPrimitiveWrapperType(TypeElement element) {
-
-		if(element == null) {
-			return false;
-		}
-
-		TypeElement numberType = typeElementFromQualifiedName("java.lang.Number");
-
-		return element.asType().toString().equals("java.lang.Boolean") //
-				|| element.asType().toString().equals("java.lang.Character") //
-				|| isSubtype(element, numberType);
-	}
-
 	private boolean isTypeParcelable(TypeElement elementType) {
-		
+
 		TypeElement parcelableType = typeElementFromQualifiedName("android.os.Parcelable");
-		
+
 		return elementType != null && isSubtype(elementType, parcelableType);
 	}
-	
-	private boolean isTypeSerializable(TypeElement elementType) {
-		
-		TypeElement serializableType = typeElementFromQualifiedName("java.io.Serializable");
-		
-		return elementType != null && isSubtype(elementType, serializableType);
-	}
-	
+
 }

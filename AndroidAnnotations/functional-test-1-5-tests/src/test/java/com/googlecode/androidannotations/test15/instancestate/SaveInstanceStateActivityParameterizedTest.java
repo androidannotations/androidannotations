@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.instancestate;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -29,13 +29,12 @@ import org.junit.runners.Parameterized.Parameters;
 import android.os.Bundle;
 
 import com.google.inject.internal.Lists;
+import com.googlecode.androidannotations.test15.RobolectricParameterized;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.CustomShadowBundle;
 
 @RunWith(RobolectricParameterized.class)
 public class SaveInstanceStateActivityParameterizedTest {
-
-	MySerializableBean test;
 
 	@Parameters
 	public static Collection<Object[]> generateTestCases() throws Exception {
@@ -82,7 +81,7 @@ public class SaveInstanceStateActivityParameterizedTest {
 				{ "mySerializableBeanArray", new MySerializableBean[] { new MySerializableBean(5), new MySerializableBean(6) } }, //
 				{ "myParcelableBean", new MyParcelableBean(9) }, //
 				{ "myParcelableBeanArray", new MyParcelableBean[] { new MyParcelableBean(3), new MyParcelableBean(9) } }, //
-
+				{ "nullWrappedLong", null }, //
 		};
 		return Arrays.asList(testCases);
 	}
@@ -100,8 +99,6 @@ public class SaveInstanceStateActivityParameterizedTest {
 		field = SaveInstanceStateActivity.class.getDeclaredField(fieldName);
 		field.setAccessible(true);
 	}
-
-
 
 	@Before
 	public void setup() throws Exception {

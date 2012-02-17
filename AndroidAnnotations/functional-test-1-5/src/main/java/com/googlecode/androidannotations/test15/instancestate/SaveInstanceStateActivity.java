@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.instancestate;
 
 import java.util.ArrayList;
 
@@ -7,9 +7,13 @@ import android.os.Bundle;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.SaveOnActivityDestroy;
+import com.googlecode.androidannotations.test15.R;
 
 @EActivity(R.layout.main)
 public class SaveInstanceStateActivity extends Activity {
+
+	@SaveOnActivityDestroy
+	Long nullWrappedLong = 42l;
 
 	@SaveOnActivityDestroy
 	boolean myBoolean;
@@ -49,13 +53,6 @@ public class SaveInstanceStateActivity extends Activity {
 
 	@SaveOnActivityDestroy
 	CharSequence myCharSequence;
-
-	// Only available since API level 8
-	// @SaveOnActivityDestroy
-	// CharSequence [] myCharSequenceArray;
-	//
-	// @SaveOnActivityDestroy
-	// ArrayList<CharSequence> myCharSequenceArray;
 
 	@SaveOnActivityDestroy
 	double myDouble;
@@ -143,5 +140,12 @@ public class SaveInstanceStateActivity extends Activity {
 
 	@SaveOnActivityDestroy
 	Bundle myBundle;
+
+	/*
+	 * This should be solved before we merge this feature. We should also create
+	 * the associated test.
+	 */
+	// @SaveOnActivityDestroy
+	// MyGenericSerializableBeasn<MySerializableBean> myGenericSerializableBean;
 
 }

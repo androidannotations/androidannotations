@@ -68,6 +68,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPre
 import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.processing.SaveOnActivityDestroyProcessor;
 import com.googlecode.androidannotations.validation.IsValid;
 
 public class ValidatorHelper {
@@ -911,6 +912,40 @@ public class ValidatorHelper {
 			isValid.invalidate();
 		}
 
+	}
+
+	public void canBeSavedAsInstanceState(Element element, IsValid isValid) {
+		String typeString = element.asType().toString();
+
+		if (!isKnowInstanceStateType(typeString)) {
+			TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
+
+			if (elementType == null) {
+				elementType = getArrayEnclosingType(typeString);
+				if (elementType == null) {
+					annotationHelper.printAnnotationError(element, "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
+					isValid.invalidate();
+				}
+			}
+
+			if (elementType != null) {
+				TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName("android.os.Parcelable");
+				TypeElement serializableType = annotationHelper.typeElementFromQualifiedName("java.io.Serializable");
+				if (!annotationHelper.isSubtype(elementType, parcelableType) && !annotationHelper.isSubtype(elementType, serializableType)) {
+					annotationHelper.printAnnotationError(element, "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
+					isValid.invalidate();
+				}
+			}
+		}
+	}
+
+	private TypeElement getArrayEnclosingType(String typeString) {
+		typeString = typeString.replace("[]", "");
+		return annotationHelper.typeElementFromQualifiedName(typeString);
+	}
+
+	private boolean isKnowInstanceStateType(String type) {
+		return SaveOnActivityDestroyProcessor.methodSuffixNameByTypeName.containsKey(type);
 	}
 
 	public void componentRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
