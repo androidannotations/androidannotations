@@ -33,13 +33,13 @@
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>1.5_r4</version>
+			<version>2.3.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>
-			<version>1.5_r4</version>
+			<version>2.3.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -88,11 +88,12 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>3.1.1</version>
 				<configuration>
 					<sdk>
-						<platform>3</platform>
-					</sdk>
+                        <path>${env.ANDROID_HOME}</path>
+                        <platform>2.3.3</platform>
+                    </sdk>
 					<dex>
 						<jvmArguments>
 							<jvmArgument>-Xmx512m</jvmArgument>
