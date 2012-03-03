@@ -45,5 +45,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface EActivity {
 	int value() default Id.DEFAULT_VALUE;
-	boolean greendroid() default false;
 }
