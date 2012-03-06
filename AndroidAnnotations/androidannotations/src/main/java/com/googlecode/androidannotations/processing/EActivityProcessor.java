@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.FINAL;
@@ -34,14 +35,12 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
-import com.googlecode.androidannotations.helper.GreenDroidConstants;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -62,10 +61,19 @@ import com.sun.codemodel.JVar;
 public class EActivityProcessor extends AnnotationHelper implements ElementProcessor {
 
 	private final IRClass rClass;
+	private List<TypeElement> greendroidActivityElements;
 
 	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
+
+		greendroidActivityElements = new ArrayList<TypeElement>();
+		for (String greendroidActivityName : GREENDROID_ACTIVITIES_LIST_CLASS) {
+			TypeElement typeElement = typeElementFromQualifiedName(greendroidActivityName);
+			if (typeElement != null) {
+				greendroidActivityElements.add(typeElement);
+			}
+		}
 	}
 
 	@Override
@@ -85,8 +93,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
-		// GreenDroid support
-		boolean isGreenDroidSupport = hasGreenDroidSupport(typeElement);
+		boolean usesGreenDroid = usesGreenDroid(typeElement);
 
 		int modifiers;
 		boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT);
@@ -149,7 +156,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		if (contentViewId != null) {
 			// GreenDroid support
-			if (isGreenDroidSupport) {
+			if (usesGreenDroid) {
 				onCreateBody.invoke("setActionBarContentView").arg(contentViewId);
 			} else {
 				onCreateBody.invoke("setContentView").arg(contentViewId);
@@ -160,16 +167,16 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		JClass viewClass = holder.refClass("android.view.View");
 		JClass layoutParamsClass = holder.refClass("android.view.ViewGroup.LayoutParams");
 
-		// GreenDroid support
-		if (isGreenDroidSupport) {
-			setActionBarContentView(codeModel, holder, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
-			setActionBarContentView(codeModel, holder, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
-			setActionBarContentView(codeModel, holder, new JType[] { viewClass }, new String[] { "view" });
+		String setContentViewMethodName;
+		if (usesGreenDroid) {
+			setContentViewMethodName = "setActionBarContentView";
 		} else {
-			setContentViewMethod(codeModel, holder, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
-			setContentViewMethod(codeModel, holder, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
-			setContentViewMethod(codeModel, holder, new JType[] { viewClass }, new String[] { "view" });
+			setContentViewMethodName = "setContentView";
 		}
+
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass }, new String[] { "view" });
 
 		// Handling onBackPressed
 		if (hasOnBackPressedMethod(typeElement)) {
@@ -251,25 +258,8 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 	}
 
-	private void setContentViewMethod(JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "setContentView");
-		method.annotate(Override.class);
-
-		ArrayList<JVar> params = new ArrayList<JVar>();
-		for (int i = 0; i < paramTypes.length; i++) {
-			JVar param = method.param(paramTypes[i], paramNames[i]);
-			params.add(param);
-		}
-		JBlock body = method.body();
-		JInvocation superCall = body.invoke(JExpr._super(), method);
-		for (JVar arg : params) {
-			superCall.arg(arg);
-		}
-		body.invoke(holder.afterSetContentView);
-	}
-
-	private void setActionBarContentView(JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "setActionBarContentView");
+	private void setContentViewMethod(String setContentViewMethodName, JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
+		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, setContentViewMethodName);
 		method.annotate(Override.class);
 
 		ArrayList<JVar> params = new ArrayList<JVar>();
@@ -338,63 +328,12 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		;
 	}
 
-	/**
-	 * TODO: Search all super classes
-	 */
-	private boolean hasGreenDroidSupport(TypeElement typeElement) {
-		return containsHeritageFromGreenDroidActivities(typeElement) //
-				|| hasSetActionBarContentViewMethod(typeElement);
-	}
-
-	private boolean containsHeritageFromGreenDroidActivities(TypeElement typeElement) {
-		TypeMirror typeMirror = typeElement.getSuperclass();
-		String className = typeMirror.getClass().toString();
-		return hasHeritageFromGreenDroidActivities(className);
-	}
-
-	private boolean hasHeritageFromGreenDroidActivities(String className) {
-		return (GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS.contains(className));
-	}
-
-	private boolean hasSetActionBarContentViewMethod(TypeElement activityElement) {
-
-		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
-
-		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
-
-		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
-			if (isSetActionBarContentViewMethod(activityInheritedMethod)) {
+	private boolean usesGreenDroid(TypeElement typeElement) {
+		for (TypeElement greendroidActivityElement : greendroidActivityElements) {
+			if (processingEnv.getTypeUtils().isSubtype(typeElement.asType(), greendroidActivityElement.asType())) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	private boolean isSetActionBarContentViewMethod(ExecutableElement method) {
-
-		List<? extends VariableElement> parameters = method.getParameters();
-
-		boolean isMethod = false;
-
-		// public void setActionBarContentView(int layoutResID)
-		isMethod = isMethod || (method.getSimpleName().toString().equals("setActionBarContentView") //
-				&& parameters.size() == 1 //
-		&& parameters.get(0).asType().toString().equals("int")) //
-		;
-
-		// public void setActionBarContentView(View view, LayoutParams params)
-		isMethod = isMethod || (method.getSimpleName().toString().equals("setActionBarContentView") //
-				&& parameters.size() == 2 //
-				&& parameters.get(0).asType().toString().equals("android.view.View") //
-		&& parameters.get(0).asType().toString().equals("android.view.ViewGroup.LayoutParams")) //
-		;
-
-		// public void setActionBarContentView(View view)
-		isMethod = isMethod || (method.getSimpleName().toString().equals("setActionBarContentView") //
-				&& parameters.size() == 1 //
-		&& parameters.get(0).asType().toString().equals("android.view.View")) //
-		;
-
-		return isMethod;
 	}
 }

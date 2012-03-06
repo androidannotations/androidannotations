@@ -58,7 +58,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.rest.MyServiceActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.afterinject.AfterInjectActivity_" />
-
+		<activity android:name="com.googlecode.androidannotations.test15.greendroid.MyGreenDroidActivity_" />
         <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
 
         <provider
