@@ -43,7 +43,6 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
@@ -147,7 +146,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
-		copyConstructorsAndStaticHelpers(element, codeModel, holder, onFinishInflate);
+		copyConstructorsAndAddStaticBuilders(element, codeModel, holder, onFinishInflate);
 
 		{
 			// init if activity
@@ -158,7 +157,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 
 	}
 
-	private void copyConstructorsAndStaticHelpers(Element element, JCodeModel codeModel, EBeanHolder holder, JMethod setContentViewMethod) {
+	private void copyConstructorsAndAddStaticBuilders(Element element, JCodeModel codeModel, EBeanHolder holder, JMethod setContentViewMethod) {
 		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
 		for (Element e : element.getEnclosedElements()) {
 			if (e.getKind() == CONSTRUCTOR) {
@@ -169,7 +168,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		for (ExecutableElement userConstructor : constructors) {
 			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
 			JClass superType = holder.refClass(element.asType().toString());
-			JMethod staticHelper = holder.eBean.method(PUBLIC | STATIC, superType, "getInflatedInstance");
+			JMethod staticHelper = holder.eBean.method(PUBLIC | STATIC, superType, "build");
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");
 			 JInvocation newInvocation = JExpr._new(holder.eBean);
