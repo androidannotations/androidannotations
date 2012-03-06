@@ -17,19 +17,13 @@ package com.googlecode.androidannotations.processing;
 
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Id;
@@ -46,11 +40,9 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
 
 public class EViewGroupProcessor extends AnnotationHelper implements ElementProcessor {
 
@@ -70,9 +62,12 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 
 	private final IRClass rClass;
 
+	private final APTCodeModelHelper codeModelHelper;
+
 	public EViewGroupProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
+		codeModelHelper = new APTCodeModelHelper();
 	}
 
 	@Override
@@ -146,7 +141,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
-		copyConstructorsAndAddStaticBuilders(element, codeModel, holder, onFinishInflate);
+		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, eBeanClass, holder, onFinishInflate);
 
 		{
 			// init if activity
@@ -155,37 +150,6 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
 
-	}
-
-	private void copyConstructorsAndAddStaticBuilders(Element element, JCodeModel codeModel, EBeanHolder holder, JMethod setContentViewMethod) {
-		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
-		for (Element e : element.getEnclosedElements()) {
-			if (e.getKind() == CONSTRUCTOR) {
-				constructors.add((ExecutableElement) e);
-			}
-		}
-
-		for (ExecutableElement userConstructor : constructors) {
-			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
-			JClass superType = holder.refClass(element.asType().toString());
-			JMethod staticHelper = holder.eBean.method(PUBLIC | STATIC, superType, "build");
-			JBlock body = copyConstructor.body();
-			JInvocation superCall = body.invoke("super");
-			 JInvocation newInvocation = JExpr._new(holder.eBean);
-			for (VariableElement param : userConstructor.getParameters()) {
-				String paramName = param.getSimpleName().toString();
-				String paramType = param.asType().toString();
-				copyConstructor.param(holder.refClass(paramType), paramName);
-				staticHelper.param(holder.refClass(paramType), paramName);
-				superCall.arg(JExpr.ref(paramName));
-				newInvocation.arg(JExpr.ref(paramName));
-			}
-
-			JVar newCall = staticHelper.body().decl(superType, "instance", newInvocation);
-			staticHelper.body().invoke(newCall, "onFinishInflate");
-			staticHelper.body()._return(newCall);
-			body.invoke(holder.init);
-		}
 	}
 
 }

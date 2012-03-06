@@ -75,11 +75,6 @@ public class CustomFrameLayout extends FrameLayout {
 	protected void titleTouched(MotionEvent e) {
 	}
 
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
-	}	
-	
 	@Background
 	protected void someBackgroundTask(){
 	}

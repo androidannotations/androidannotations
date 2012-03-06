@@ -30,8 +30,7 @@ public class CustomFrameLayoutTest {
 	@Test
 	public void shouldHaveLayoutAfterCreate() {
 		EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
-		CustomFrameLayout component = new CustomFrameLayout_(activity, 0);
-		component.onFinishInflate();
+		CustomFrameLayout component = CustomFrameLayout_.build(activity, 0);
 		assertThat(component.subtitle).isNotNull();
 		assertThat(component.tv).isNotNull();
 	}

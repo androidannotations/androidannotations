@@ -17,18 +17,13 @@ package com.googlecode.androidannotations.processing;
 
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
@@ -40,7 +35,6 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
@@ -61,8 +55,11 @@ public class EViewProcessor extends AnnotationHelper implements ElementProcessor
 			+ "are in a View." //
 	;
 
+	private final APTCodeModelHelper codeModelHelper;
+
 	public EViewProcessor(ProcessingEnvironment processingEnv) {
 		super(processingEnv);
+		codeModelHelper = new APTCodeModelHelper();
 	}
 
 	@Override
@@ -127,7 +124,7 @@ public class EViewProcessor extends AnnotationHelper implements ElementProcessor
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
-		copyConstructors(element, holder, onFinishInflate);
+		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, eBeanClass, holder, onFinishInflate);
 
 		{
 			// init if activity
@@ -136,29 +133,6 @@ public class EViewProcessor extends AnnotationHelper implements ElementProcessor
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
 
-	}
-
-	private void copyConstructors(Element element, EBeanHolder holder, JMethod setContentViewMethod) {
-		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
-		for (Element e : element.getEnclosedElements()) {
-			if (e.getKind() == CONSTRUCTOR) {
-				constructors.add((ExecutableElement) e);
-			}
-		}
-
-		for (ExecutableElement userConstructor : constructors) {
-			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
-			JBlock body = copyConstructor.body();
-			JInvocation superCall = body.invoke("super");
-			for (VariableElement param : userConstructor.getParameters()) {
-				String paramName = param.getSimpleName().toString();
-				String paramType = param.asType().toString();
-				copyConstructor.param(holder.refClass(paramType), paramName);
-				superCall.arg(JExpr.ref(paramName));
-			}
-
-			body.invoke(holder.init);
-		}
 	}
 
 }
