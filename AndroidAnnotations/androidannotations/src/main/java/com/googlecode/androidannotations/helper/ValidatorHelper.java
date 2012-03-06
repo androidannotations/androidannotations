@@ -949,6 +949,10 @@ public class ValidatorHelper {
 	}
 
 	public void componentRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
+		componentRegistered(element, androidManifest, true, valid);
+	}
+
+	public void componentRegistered(Element element, AndroidManifest androidManifest, boolean printWarning, IsValid valid) {
 		TypeElement typeElement = (TypeElement) element;
 
 		if (typeElement.getModifiers().contains(Modifier.ABSTRACT)) {
@@ -966,7 +970,9 @@ public class ValidatorHelper {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedSimpleName + " instead of " + simpleName);
 			} else {
-				annotationHelper.printAnnotationWarning(element, "The component " + generatedSimpleName + " is not registered in the AndroidManifest.xml file.");
+				if (printWarning) {
+					annotationHelper.printAnnotationWarning(element, "The component " + generatedSimpleName + " is not registered in the AndroidManifest.xml file.");
+				}
 			}
 		}
 
