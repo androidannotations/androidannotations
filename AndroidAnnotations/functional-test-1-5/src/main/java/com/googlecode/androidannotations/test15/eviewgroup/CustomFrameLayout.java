@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.eviewgroup;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -33,6 +33,7 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.AnimationRes;
 import com.googlecode.androidannotations.annotations.res.StringRes;
+import com.googlecode.androidannotations.test15.R;
 
 @EViewGroup(R.layout.component)
 public class CustomFrameLayout extends FrameLayout {
@@ -74,11 +75,6 @@ public class CustomFrameLayout extends FrameLayout {
 	protected void titleTouched(MotionEvent e) {
 	}
 
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
-	}	
-	
 	@Background
 	protected void someBackgroundTask(){
 	}
