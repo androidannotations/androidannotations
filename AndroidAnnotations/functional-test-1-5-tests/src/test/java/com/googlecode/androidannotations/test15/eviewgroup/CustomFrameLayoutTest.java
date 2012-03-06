@@ -13,12 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.test15.eviewgroup;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
+import com.googlecode.androidannotations.test15.EmptyActivityWithoutLayout;
+import com.googlecode.androidannotations.test15.EmptyActivityWithoutLayout_;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class CustomFrameLayoutTest {
