@@ -54,7 +54,8 @@ public class EReceiverValidator implements ElementValidator {
 		
 		validatorHelper.isNotAbstract(element, valid);
 
-		validatorHelper.componentRegistered(element, androidManifest, valid);
+		final boolean NO_WARNING = false;
+		validatorHelper.componentRegistered(element, androidManifest, NO_WARNING, valid);
 
 		return valid.isValid();
 	}

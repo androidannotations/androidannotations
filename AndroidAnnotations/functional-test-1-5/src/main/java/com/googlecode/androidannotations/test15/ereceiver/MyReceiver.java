@@ -45,7 +45,8 @@ public class MyReceiver extends BroadcastReceiver {
 		showToast(context);
 		workInBackground();
 	}
-	
+
+
 	@Trace
 	@UiThread
 	void showToast(Context context) {
