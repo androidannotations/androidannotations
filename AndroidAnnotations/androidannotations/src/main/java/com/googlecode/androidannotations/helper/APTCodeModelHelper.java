@@ -27,6 +27,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
@@ -68,6 +69,12 @@ public class APTCodeModelHelper {
 			}
 
 			return declaredClass;
+		} else if (type instanceof ArrayType) {
+			ArrayType arrayType = (ArrayType) type;
+
+			JClass refClass = typeMirrorToJClass(arrayType.getComponentType(), holder);
+
+			return refClass.array();
 		} else {
 			return holder.refClass(type.toString());
 		}
