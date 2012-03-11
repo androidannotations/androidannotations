@@ -336,10 +336,29 @@ public class ValidatorHelper {
 
 	public void typeHasAnnotation(Class<? extends Annotation> annotation, Element element, IsValid valid) {
 		TypeMirror elementType = element.asType();
+		typeHasAnnotation(annotation, elementType, element, valid);
+	}
+
+	public void typeHasAnnotation(Class<? extends Annotation> annotation, TypeMirror elementType, Element reportingElement, IsValid valid) {
 		Element typeElement = annotationHelper.getTypeUtils().asElement(elementType);
 		if (!elementHasAnnotationSafe(annotation, typeElement)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on an element annotated with " + TargetAnnotationHelper.annotationName(annotation));
+			annotationHelper.printAnnotationError(reportingElement, "%s can only be used on an element annotated with " + TargetAnnotationHelper.annotationName(annotation));
+		}
+	}
+
+	public void typeOrTargetValueHasAnnotation(Class<? extends Annotation> annotation, Element element, IsValid valid) {
+		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassValue(element);
+
+		if (targetAnnotationClassValue != null) {
+			typeHasAnnotation(annotation, targetAnnotationClassValue, element, valid);
+
+			if (!annotationHelper.getTypeUtils().isAssignable( targetAnnotationClassValue, element.asType())) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "The value of %s must be assignable into the annotated field");
+			}
+		} else {
+			typeHasAnnotation(annotation, element, valid);
 		}
 	}
 

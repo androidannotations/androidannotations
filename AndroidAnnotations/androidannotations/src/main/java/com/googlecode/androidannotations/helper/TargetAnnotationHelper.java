@@ -17,9 +17,14 @@ package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.DeclaredType;
 
 public class TargetAnnotationHelper extends AnnotationHelper implements HasTarget {
 
@@ -41,6 +46,29 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public DeclaredType extractAnnotationClassValue(Element element) {
+
+		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
+
+		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
+
+		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
+			/*
+			 * "value" is unset when the default value is used
+			 */
+			if ("value".equals(entry.getKey().getSimpleName().toString())) {
+
+				AnnotationValue annotationValue = entry.getValue();
+
+				DeclaredType annotationClass = (DeclaredType) annotationValue.getValue();
+
+				return annotationClass;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
