@@ -24,6 +24,7 @@ import android.app.Activity;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.UiThread;
+import com.googlecode.androidannotations.test15.instancestate.MySerializableBean;
 
 @EActivity
 public class ThreadActivity extends Activity {
@@ -54,7 +55,7 @@ public class ThreadActivity extends Activity {
 	}
 
 	@Background
-	void genericBackgroundMethod(List<Map<String, List<Set<Void>>>> param) {
+	void genericBackgroundMethod(List<Map<String, List<Set<MySerializableBean[]>>>> param) {
 
 	}
 
@@ -62,5 +63,16 @@ public class ThreadActivity extends Activity {
 	void emptyUiDelayedMethod() {
 
 	}
+	
+	@UiThread
+	void uiThreadedUsingArrayParamtersMethod(MySerializableBean [] array) {}
 
+	@UiThread
+	void uiThreadedUsingArrayParamtersMethod(MySerializableBean [][] array) {}
+
+	@Background
+	void backgrounddUsingArrayParamtersMethod(MySerializableBean [] array) {}
+
+	@Background
+	void backgroundUsingArrayParamtersMethod(MySerializableBean [][] array) {}
 }
