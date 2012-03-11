@@ -16,14 +16,12 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Transactional;
+import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -31,11 +29,12 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class TransactionalProcessor implements ElementProcessor {
+
+	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -46,24 +45,15 @@ public class TransactionalProcessor implements ElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
-		String methodName = element.getSimpleName().toString();
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		String returnTypeName = executableElement.getReturnType().toString();
 		JClass returnType = holder.refClass(returnTypeName);
 
-		JMethod method = holder.eBean.method(JMod.PUBLIC, returnType, methodName);
-		method.annotate(Override.class);
+		JMethod method = helper.overrideAnnotatedMethod(executableElement, holder);
+		helper.removeBody(method);
 
-		List<JVar> params = new ArrayList<JVar>();
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			String parameterType = parameter.asType().toString();
-			JVar param = method.param(holder.refClass(parameterType), parameterName);
-			params.add(param);
-		}
-
-		JVar db = params.get(0);
+		JVar db = method.params().get(0);
 
 		JBlock body = method.body();
 
@@ -72,7 +62,7 @@ public class TransactionalProcessor implements ElementProcessor {
 		JTryBlock tryBlock = body._try();
 
 		JInvocation superCall = JExpr.invoke(JExpr._super(), method);
-		for (JVar param : params) {
+		for (JVar param : method.params()) {
 			superCall.arg(param);
 		}
 		JBlock tryBody = tryBlock.body();
