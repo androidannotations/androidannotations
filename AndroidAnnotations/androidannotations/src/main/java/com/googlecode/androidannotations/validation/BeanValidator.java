@@ -50,8 +50,8 @@ public class BeanValidator implements ElementValidator {
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.typeHasAnnotation(EBean.class, element, valid);
-		
+		validatorHelper.typeOrTargetValueHasAnnotation(EBean.class, element, valid);
+
 		return valid.isValid();
 	}
 
