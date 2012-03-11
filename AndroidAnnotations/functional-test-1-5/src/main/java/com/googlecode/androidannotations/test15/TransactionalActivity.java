@@ -20,6 +20,7 @@ import java.util.List;
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.test15.instancestate.MySerializableBean;
@@ -51,6 +52,13 @@ public class TransactionalActivity extends Activity {
 	@Transactional
 	void mehodUsingParametrizedParameters(SQLiteDatabase db, //
 			List<MySerializableBean> parameters) {
+		// do some stuff here
+	}
+
+	@Transactional
+	@Background
+	void backgroundTransactionalAnnotatedMethod(SQLiteDatabase db, //
+			List<MySerializableBean[]> parameters) {
 		// do some stuff here
 	}
 
