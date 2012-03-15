@@ -36,16 +36,12 @@ public class TranslateActivity extends Activity {
 }
 ```
 
+AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
+
 [![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted) | [**Get Started**](https://github.com/excilys/androidannotations/wiki/GettingStarted), then [**read the cookbook**](https://github.com/excilys/androidannotations/wiki/Cookbook) |
 -----------|---------------|
 
-
-AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
-
-
-
 Any question? Please ask them on the dedicated [mailing list](http://groups.google.com/group/androidannotations).
-
 
 ## Apps already using AndroidAnnotations
 
