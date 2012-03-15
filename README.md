@@ -38,7 +38,7 @@ public class TranslateActivity extends Activity {
 }
 ```
 
-[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted) | ## [Get Started](https://github.com/excilys/androidannotations/wiki/GettingStarted), then [read the cookbook](https://github.com/excilys/androidannotations/wiki/Cookbook) |
+[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted) | [**Get Started**](https://github.com/excilys/androidannotations/wiki/GettingStarted), then [**read the cookbook**](https://github.com/excilys/androidannotations/wiki/Cookbook) |
 -----------|---------------|
 
 
