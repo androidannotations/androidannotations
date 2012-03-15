@@ -15,21 +15,11 @@
  */
 package com.googlecode.androidannotations.test15.ebean;
 
-import android.app.Activity;
+import static com.googlecode.androidannotations.api.Scope.Singleton;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.EBean;
 
-@EActivity
-public class BeanInjectedActivity extends Activity {
-	
-	@Bean
-	public EmptyDependency dependency;
-	
-	@Bean(SomeImplementation.class)
-	public SomeInterface interfaceDependency;
-	
-	@Bean
-	public SingletonDependency singletonDependency;
+@EBean(scope = Singleton)
+public class SingletonDependency {
 
 }

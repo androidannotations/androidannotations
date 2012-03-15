@@ -34,4 +34,15 @@ public class BeanInjectedActivityTest {
 	public void dependency_with_annotation_value_is_of_annotation_value_type() {
 		assertThat(activity.interfaceDependency).isInstanceOf(SomeImplementation.class);
 	}
+	
+	@Test
+	public void singleton_dependency_is_same_reference() {
+		SingletonDependency initialDependency = activity.singletonDependency;
+		
+		BeanInjectedActivity_ newActivity = new BeanInjectedActivity_();
+		newActivity.onCreate(null);
+		
+		assertThat(newActivity.singletonDependency).isSameAs(initialDependency);
+	}
+	
 }
