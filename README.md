@@ -41,8 +41,6 @@ AndroidAnnotations provide those good things for **less than 50kb**, without any
 [![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted) | [**Get Started**](https://github.com/excilys/androidannotations/wiki/GettingStarted), then [**read the cookbook**](https://github.com/excilys/androidannotations/wiki/Cookbook) |
 -----------|---------------|
 
-Any question? Please ask them on the dedicated [mailing list](http://groups.google.com/group/androidannotations).
-
 ## Apps already using AndroidAnnotations
 
 [Your app here](http://groups.google.com/group/androidannotations) | VuzZz | App EasyShare | Capico | Magic 8 Ball |
