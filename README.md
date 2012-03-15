@@ -41,8 +41,7 @@ public class TranslateActivity extends Activity {
 
 AndroidAnnotations provide those good things for **less than 50kb**, without any [perf impact](https://github.com/excilys/androidannotations/wiki/FAQ#wiki-perf-impact)!
 
-[![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/GettingStarted) | [![Built on DEV@cloud](http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png)](https://androidannotations.ci.cloudbees.com) | [![Supported by eBusiness Information (Excilys Group)](https://github.com/excilys/androidannotations/wiki/img/supportedbylogo.png)](http://www.ebusinessinformation.fr) |
----|-----------|---------------|
+
 
 Any question? Please ask them on the dedicated [mailing list](http://groups.google.com/group/androidannotations).
 
@@ -56,6 +55,11 @@ Light Saber Jedi | Electric Shaver | SMS Scheduler | Coin Flip | Screen broken |
 [![Light Saber Jedi Logo](https://github.com/excilys/androidannotations/wiki/img/light-saber.png)](https://market.android.com/details?id=com.mdb.android.lightsaber) | [![Electric Shaver Logo](https://github.com/excilys/androidannotations/wiki/img/electric-shaver.png)](https://market.android.com/details?id=com.mdb.android.electricshaver) | [![SMS Scheduler Logo](https://github.com/excilys/androidannotations/wiki/img/sms-scheduler.png)](https://market.android.com/details?id=com.bearstouch.smsscheduler) | [![Coin Flip](https://github.com/excilys/androidannotations/wiki/img/coin-flip.png)](https://market.android.com/details?id=com.mdb.android.cointoss) | [![Screen broken](https://lh3.ggpht.com/NMbgvJL0ZdCN-wi5nJVciRhjpp1rpMJmcuCmYcBRq-JPg3SMlfzKyfyvG1Hd7QhYPg=w124)](https://market.android.com/details?id=com.mdb.android.crackscreen) |
 Application Du Jour | Air Horn | Tao Po | Report Your Love | Mobilogue |
 [![Application Du Jour](https://lh3.ggpht.com/y0YQ64pXzBL6iWhuCWuCm3KmpMhbCRvkTk6WzIm5ROSCubkS5prCepzHkTkEP2VKftZG=w124)](https://market.android.com/details?id=com.gb.android.adj) | [![Air Horn Logo](https://github.com/excilys/androidannotations/wiki/img/air-horn.png)](https://market.android.com/details?id=com.mdb.android.airhorn) | [![Tao Po](https://lh3.ggpht.com/369Utq4GmsXjqchIx2nv5js7gMl51P0Ccc2ZyAD_cSNRAN5hCP85AJgvHe4MCYP94hk=w124)](https://market.android.com/details?id=com.teamcodeflux.taopo) |[![Report Your Love](https://lh3.ggpht.com/peks4PvKXwJ6JjUQ8VDJ-oYGidN-DM6g7zX7F6Ih4BI1_qHRXFiWuo0j7BPkVFcRBro=w124)](https://market.android.com/details?id=it.tetractis.mappquantomipensi) | [![Mobilogue](https://lh4.ggpht.com/jKxx1DvnLzS2kZNesLIaoGH7dDpdUppsxk1ORBOvGji0pRYyotnlub5KWzIAfp9kXEo=w124)](https://market.android.com/details?id=info.collide.android.mobilogue) |
+
+## Sponsors
+
+[![Built on DEV@cloud](http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png)](https://androidannotations.ci.cloudbees.com) | [![Supported by eBusiness Information (Excilys Group)](https://github.com/excilys/androidannotations/wiki/img/supportedbylogo.png)](http://www.ebusinessinformation.fr) |
+-----------|---------------|
 
 ***
 The project logo is based on the [Android logo](http://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg), created and [shared by Google](http://code.google.com/policies.html) and used according to terms described in the [Creative Commons 3.0 Attribution License](http://creativecommons.org/licenses/by/3.0/).
