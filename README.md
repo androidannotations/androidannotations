@@ -1,5 +1,3 @@
-# [AndroidAnnotations 2.4](https://github.com/excilys/androidannotations/wiki/ReleaseNotes#wiki-2.4) is out!
-
 "_The ratio of time spent reading [code] versus writing is well over 10 to 1 [therefore] making it easy to read makes it easier to write._" - **Robert C. Martin**
 
 #Is your Android code easy to write, read, and maintain?
