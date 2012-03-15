@@ -13,23 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ebean;
+package com.googlecode.androidannotations.api;
 
-import android.app.Activity;
+public enum Scope {
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
+	/**
+	 * A new instance of the bean is created each time it is needed
+	 */
+	Default, //
 
-@EActivity
-public class BeanInjectedActivity extends Activity {
-	
-	@Bean
-	public EmptyDependency dependency;
-	
-	@Bean(SomeImplementation.class)
-	public SomeInterface interfaceDependency;
-	
-	@Bean
-	public SingletonDependency singletonDependency;
-
+	/**
+	 * A new instance of the bean is created the first time it is needed, it is
+	 * then retained and the same instance is always returned.
+	 */
+	Singleton, //
+	;
 }
