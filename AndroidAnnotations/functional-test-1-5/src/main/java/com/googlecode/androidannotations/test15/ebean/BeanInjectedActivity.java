@@ -30,6 +30,6 @@ public class BeanInjectedActivity extends Activity {
 	public SomeInterface interfaceDependency;
 	
 	@Bean
-	public SingletonDependency singletonDependency;
-
+	public SomeSingleton singletonDependency;
+	
 }

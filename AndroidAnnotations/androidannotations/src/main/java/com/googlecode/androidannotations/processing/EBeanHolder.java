@@ -75,6 +75,11 @@ public class EBeanHolder {
 	 * Only defined in activities
 	 */
 	public JFieldVar intentField;
+	
+	/**
+	 * Only defined in activities
+	 */
+	public NonConfigurationHolder nonConfigurationHolder;
 
 	public JClass refClass(String fullyQualifiedClassName) {
 
