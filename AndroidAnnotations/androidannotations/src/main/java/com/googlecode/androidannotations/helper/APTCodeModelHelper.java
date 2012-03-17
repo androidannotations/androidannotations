@@ -29,6 +29,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.processing.EBeanHolder;
@@ -51,7 +52,7 @@ public class APTCodeModelHelper {
 
 	public JClass typeMirrorToJClass(TypeMirror type, EBeanHolder holder) {
 
-		if (type instanceof DeclaredType) {
+		if (type.getKind() == TypeKind.DECLARED) {
 			DeclaredType declaredType = (DeclaredType) type;
 
 			String declaredTypeName = declaredType.asElement().toString();
@@ -69,7 +70,7 @@ public class APTCodeModelHelper {
 			}
 
 			return declaredClass;
-		} else if (type instanceof ArrayType) {
+		} else if (type.getKind() == TypeKind.ARRAY) {
 			ArrayType arrayType = (ArrayType) type;
 
 			JClass refClass = typeMirrorToJClass(arrayType.getComponentType(), holder);

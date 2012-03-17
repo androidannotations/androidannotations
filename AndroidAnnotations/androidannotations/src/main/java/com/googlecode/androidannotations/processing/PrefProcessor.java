@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
@@ -55,7 +56,7 @@ public class PrefProcessor implements ElementProcessor {
 		TypeMirror fieldTypeMirror = element.asType();
 
 		String fieldType = fieldTypeMirror.toString();
-		if (fieldTypeMirror instanceof ErrorType) {
+		if (fieldTypeMirror.getKind() == TypeKind.ERROR) {
 			String elementTypeName = fieldTypeMirror.toString();
 			String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - GENERATION_SUFFIX.length());
 			Set<? extends Element> sharedPrefElements = validatedModel.getAnnotatedElements(SharedPref.class);
