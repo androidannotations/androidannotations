@@ -136,6 +136,13 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s can only be used on an interface");
 		}
 	}
+	
+	public void isTopLevel(TypeElement element, IsValid valid) {
+		if (!annotationHelper.isTopLevel(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on a top level type");
+		}
+	}
 
 	public void doesNotExtendOtherInterfaces(TypeElement element, IsValid valid) {
 		if (element.getInterfaces().size() > 0) {

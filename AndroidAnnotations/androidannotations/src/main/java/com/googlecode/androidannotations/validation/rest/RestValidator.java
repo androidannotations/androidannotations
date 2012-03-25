@@ -55,6 +55,8 @@ public class RestValidator implements ElementValidator {
 
 		validatorHelper.isInterface(typeElement, valid);
 
+		validatorHelper.isTopLevel(typeElement, valid);
+
 		validatorHelper.doesNotExtendOtherInterfaces(typeElement, valid);
 
 		validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, valid);
