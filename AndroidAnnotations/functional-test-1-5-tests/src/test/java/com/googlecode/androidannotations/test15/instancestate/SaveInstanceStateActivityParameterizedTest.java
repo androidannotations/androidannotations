@@ -81,6 +81,10 @@ public class SaveInstanceStateActivityParameterizedTest {
 				{ "mySerializableBeanArray", new MySerializableBean[] { new MySerializableBean(5), new MySerializableBean(6) } }, //
 				{ "myParcelableBean", new MyParcelableBean(9) }, //
 				{ "myParcelableBeanArray", new MyParcelableBean[] { new MyParcelableBean(3), new MyParcelableBean(9) } }, //
+				{ "myGenericSerializableBean", new MyGenericSerializableBean<Integer>((Integer)3)}, //
+				{ "myGenericSerializableBeanArray", new MyGenericSerializableBean[] {new MyGenericSerializableBean<Integer>((Integer)3), new MyGenericSerializableBean<Integer>((Integer)5)} }, //
+				{ "myGenericParcelableBean", new MyGenericParcelableBean<String>("Plop !")}, //
+				{ "myGenericParcelableBeanArray", new MyGenericParcelableBean[] {new MyGenericParcelableBean<Integer>((Integer)3), new MyGenericParcelableBean<Integer>((Integer)5)} }, //
 				{ "nullWrappedLong", null }, //
 		};
 		return Arrays.asList(testCases);

@@ -32,6 +32,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
@@ -937,10 +938,34 @@ public class ValidatorHelper {
 		String typeString = element.asType().toString();
 
 		if (!isKnowInstanceStateType(typeString)) {
+
+			if (element.asType() instanceof DeclaredType) {
+
+				DeclaredType declaredType = (DeclaredType) element.asType();
+				typeString = declaredType.asElement().toString();
+
+			} else if (element.asType() instanceof ArrayType) {
+				ArrayType arrayType = (ArrayType) element.asType();
+				TypeMirror componentType = arrayType.getComponentType();
+
+				if (componentType instanceof DeclaredType) {
+
+					DeclaredType declaredType = (DeclaredType) componentType;
+					typeString = declaredType.asElement().toString();
+
+				} else {
+					typeString = componentType.toString();
+				}
+
+			} else {
+				typeString = element.asType().toString();
+			}
+
 			TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 
 			if (elementType == null) {
 				elementType = getArrayEnclosingType(typeString);
+
 				if (elementType == null) {
 					annotationHelper.printAnnotationError(element, "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
 					isValid.invalidate();
