@@ -156,11 +156,16 @@ public class SaveInstanceStateActivity extends Activity {
 	@InstanceState
 	Bundle myBundle;
 
-	/*
-	 * This should be solved before we merge this feature. We should also create
-	 * the associated test.
-	 */
-	// @InstanceState
-	// MyGenericSerializableBeasn<MySerializableBean> myGenericSerializableBean;
+	@InstanceState
+	MyGenericSerializableBean<Integer> myGenericSerializableBean;
+
+	@InstanceState
+	MyGenericSerializableBean<Integer>[] myGenericSerializableBeanArray;
+
+	@InstanceState
+	MyGenericParcelableBean<String> myGenericParcelableBean;
+
+	@InstanceState
+	MyGenericParcelableBean<Integer>[] myGenericParcelableBeanArray;
 
 }
