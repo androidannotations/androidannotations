@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.googlecode.androidannotations.api.Scope;
+
 /**
  * Should be used on custom classes to enable usage of AndroidAnnotations
  * 
@@ -33,4 +35,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EBean {
+	
+	Scope scope() default Scope.Default;
+	
 }
