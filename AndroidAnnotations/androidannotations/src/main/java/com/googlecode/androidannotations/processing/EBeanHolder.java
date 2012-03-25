@@ -55,7 +55,7 @@ public class EBeanHolder {
 	public JSwitch onOptionsItemSelectedSwitch;
 	public JVar onOptionsItemSelectedItem;
 
-	public JBlock restoreInstanceStateBlock;
+	public JMethod restoreSavedInstanceStateMethod;
 	public JBlock saveInstanceStateBlock;
 
 	public JExpression contextRef;
