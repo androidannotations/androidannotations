@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
@@ -52,7 +53,7 @@ public class AcceptValidator implements ElementValidator {
 		// valid);
 
 		// Interface annotated
-		if (element instanceof TypeElement) {
+		if (element.getKind() == ElementKind.CLASS) {
 
 			validatorHelper.elementHasRestAnnotation(element, validatedElements, valid);
 

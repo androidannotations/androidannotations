@@ -23,6 +23,7 @@ import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -70,12 +71,12 @@ public class AnnotationHelper {
 			return true;
 		} else {
 
-			if (potentialSubtype instanceof DeclaredType) {
+			if (potentialSubtype.getKind() == TypeKind.DECLARED) {
 
 				DeclaredType potentialDeclaredSubtype = (DeclaredType) potentialSubtype;
 
 				Element potentialSubElement = potentialDeclaredSubtype.asElement();
-				if (potentialSubElement instanceof TypeElement) {
+				if (potentialSubElement.getKind() == ElementKind.CLASS) {
 					TypeElement potentialSubDeclaredElement = (TypeElement) potentialSubElement;
 
 					TypeMirror superclassTypeMirror = potentialSubDeclaredElement.getSuperclass();
@@ -83,7 +84,7 @@ public class AnnotationHelper {
 					if (isRootObjectClass(superclassTypeMirror)) {
 						return false;
 					} else {
-						if (superclassTypeMirror instanceof ErrorType) {
+						if (superclassTypeMirror.getKind() == TypeKind.ERROR) {
 
 							ErrorType errorType = (ErrorType) superclassTypeMirror;
 

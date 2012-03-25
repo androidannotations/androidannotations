@@ -603,7 +603,7 @@ public class ValidatorHelper {
 		/*
 		 * The type is not available yet because it has just been generated
 		 */
-		if (type instanceof ErrorType) {
+		if (type.getKind() == TypeKind.ERROR) {
 			String elementTypeName = type.toString();
 
 			boolean sharedPrefValidatedInRound = false;
@@ -754,7 +754,7 @@ public class ValidatorHelper {
 	}
 
 	public void isDeclaredType(Element element, IsValid valid, TypeMirror uiFieldTypeMirror) {
-		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
+		if (!(uiFieldTypeMirror.getKind() == TypeKind.DECLARED)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s can only be used on a field which is a declared type");
 		}
