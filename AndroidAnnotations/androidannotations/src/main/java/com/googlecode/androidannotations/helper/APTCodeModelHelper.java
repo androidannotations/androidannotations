@@ -16,13 +16,18 @@
 package com.googlecode.androidannotations.helper;
 
 import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
@@ -64,6 +69,12 @@ public class APTCodeModelHelper {
 			}
 
 			return declaredClass;
+		} else if (type instanceof ArrayType) {
+			ArrayType arrayType = (ArrayType) type;
+
+			JClass refClass = typeMirrorToJClass(arrayType.getComponentType(), holder);
+
+			return refClass.array();
 		} else {
 			return holder.refClass(type.toString());
 		}
@@ -210,4 +221,35 @@ public class APTCodeModelHelper {
 		return methodBody._if(holder.contextRef._instanceof(activityClass))._then();
 	}
 
+	
+	public void copyConstructorsAndAddStaticEViewBuilders(Element element, JCodeModel codeModel, JClass eBeanClass, EBeanHolder holder, JMethod setContentViewMethod) {
+		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
+		for (Element e : element.getEnclosedElements()) {
+			if (e.getKind() == CONSTRUCTOR) {
+				constructors.add((ExecutableElement) e);
+			}
+		}
+
+		for (ExecutableElement userConstructor : constructors) {
+			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
+			JMethod staticHelper = holder.eBean.method(PUBLIC | STATIC, eBeanClass, "build");
+			JBlock body = copyConstructor.body();
+			JInvocation superCall = body.invoke("super");
+			 JInvocation newInvocation = JExpr._new(holder.eBean);
+			for (VariableElement param : userConstructor.getParameters()) {
+				String paramName = param.getSimpleName().toString();
+				String paramType = param.asType().toString();
+				copyConstructor.param(holder.refClass(paramType), paramName);
+				staticHelper.param(holder.refClass(paramType), paramName);
+				superCall.arg(JExpr.ref(paramName));
+				newInvocation.arg(JExpr.ref(paramName));
+			}
+
+			JVar newCall = staticHelper.body().decl(holder.eBean, "instance", newInvocation);
+			staticHelper.body().invoke(newCall, "onFinishInflate");
+			staticHelper.body()._return(newCall);
+			body.invoke(holder.init);
+		}
+	}
+	
 }

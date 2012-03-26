@@ -64,7 +64,7 @@ public class GetValidator implements ElementValidator {
 		
 		validatorHelper.doesNotReturnArray(executableElement, valid);
 
-		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

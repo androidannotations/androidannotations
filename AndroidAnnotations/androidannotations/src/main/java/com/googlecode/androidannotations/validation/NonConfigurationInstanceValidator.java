@@ -19,25 +19,25 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.BeforeCreate;
+import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class BeforeCreateValidator implements ElementValidator {
-
+public class NonConfigurationInstanceValidator implements ElementValidator {
+	
 	private ValidatorHelper validatorHelper;
 
-	public BeforeCreateValidator(ProcessingEnvironment processingEnv) {
+	
+	public NonConfigurationInstanceValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return BeforeCreate.class;
+		return NonConfigurationInstance.class;
 	}
 
 	@Override
@@ -47,17 +47,7 @@ public class BeforeCreateValidator implements ElementValidator {
 
 		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
-
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
-
 		validatorHelper.isNotPrivate(element, valid);
-
-		validatorHelper.doesntThrowException(executableElement, valid);
-
-		validatorHelper.zeroOrOneBundleParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

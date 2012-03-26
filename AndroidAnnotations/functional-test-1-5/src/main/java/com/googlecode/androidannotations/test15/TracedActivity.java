@@ -21,15 +21,17 @@ import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Trace;
+import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.UiThreadDelayed;
+import com.googlecode.androidannotations.test15.instancestate.MySerializableBean;
 
-@EActivity 
+@EActivity
 public class TracedActivity extends Activity {
 
 	public boolean tracedMethodCalled = false;
@@ -41,7 +43,7 @@ public class TracedActivity extends Activity {
 	public boolean voidTracedMethodInfoCalled = false;
 	public boolean overloadedMethodInt = false;
 	public boolean overloadedMethodIntFLoat = false;
-	
+
 	@Trace
 	Object tracedMethod(List<Map<String, List<Set<Void>>>> param1, Void param2) throws IOException {
 		tracedMethodCalled = true;
@@ -53,27 +55,27 @@ public class TracedActivity extends Activity {
 		voidTracedMethodCalled = true;
 	}
 
-	@Trace(tag="TAGGED", level=Log.DEBUG)
+	@Trace(tag = "TAGGED", level = Log.DEBUG)
 	void voidTracedMethodDebug() {
 		voidTracedMethodDebugCalled = true;
 	}
 
-	@Trace(level=Log.VERBOSE)
+	@Trace(level = Log.VERBOSE)
 	void voidTracedMethodVerbose() {
 		voidTracedMethodVerboseCalled = true;
 	}
 
-	@Trace(level=Log.WARN)
+	@Trace(level = Log.WARN)
 	void voidTracedMethodWarn() {
 		voidTracedMethodWarnCalled = true;
 	}
 
-	@Trace(level=Log.ERROR)
+	@Trace(level = Log.ERROR)
 	void voidTracedMethodError() {
 		voidTracedMethodErrorCalled = true;
 	}
 
-	@Trace(level=Log.INFO)
+	@Trace(level = Log.INFO)
 	void voidTracedMethodInfo() {
 		voidTracedMethodInfoCalled = true;
 	}
@@ -87,22 +89,35 @@ public class TracedActivity extends Activity {
 	void overloadedMethod(int x, float f) {
 		overloadedMethodIntFLoat = true;
 	}
-	
+
 	@Trace
 	@UiThread
 	void mixedUiThreadMethod() {
-		
+
 	}
-	
+
 	@Trace
-	@UiThreadDelayed(1000)
+	@UiThread(delay = 1000)
 	void mixedUiThreadDelayedMethod() {
-		
+
 	}
-	
+
 	@Trace
 	@Background
 	void mixedBackgroundMethod() {
-		
+
+	}
+
+	@Trace
+	@Transactional
+	void mixedTransactionalMethod(SQLiteDatabase db) {
+
+	}
+
+	@Trace
+	void tracedUsingArrayParameters(//
+			MySerializableBean[] array,
+			MySerializableBean[][] multiDimArray) {
+
 	}
 }

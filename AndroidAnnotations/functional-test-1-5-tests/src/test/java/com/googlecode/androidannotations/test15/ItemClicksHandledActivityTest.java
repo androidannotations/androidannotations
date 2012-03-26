@@ -102,10 +102,19 @@ public class ItemClicksHandledActivityTest {
 	public void handlingListViewWithPositionItemSelected() {
 		ListView listView = (ListView) activity.findViewById(R.id.listViewWithPosition);
 
-		assertThat(activity.listViewWithPositionClickedPosition).isEqualTo(0);
+		assertThat(activity.listViewWithPositionItemSelectedPosition).isEqualTo(0);
+		assertThat(activity.listViewWithPositionItemSelected).isFalse();
 		listView.setSelection(TESTED_CLICKED_INDEX);
 		assertThat(activity.listViewWithPositionItemSelected).isTrue();
 		assertThat(activity.listViewWithPositionItemSelectedPosition).isEqualTo(TESTED_CLICKED_INDEX);
+	}
+	
+	@Test
+	public void can_have_one_selected_argument() {
+		ListView listView = (ListView) activity.findViewById(R.id.listViewWithOneParam);
+		assertThat(activity.listViewWithOneParamItemSelected).isFalse();
+		listView.setSelection(TESTED_CLICKED_INDEX);
+		assertThat(activity.listViewWithOneParamItemSelected).isTrue();
 	}
 
 }

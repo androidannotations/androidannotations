@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.FINAL;
@@ -60,10 +61,19 @@ import com.sun.codemodel.JVar;
 public class EActivityProcessor extends AnnotationHelper implements ElementProcessor {
 
 	private final IRClass rClass;
+	private List<TypeElement> greendroidActivityElements;
 
 	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv);
 		this.rClass = rClass;
+
+		greendroidActivityElements = new ArrayList<TypeElement>();
+		for (String greendroidActivityName : GREENDROID_ACTIVITIES_LIST_CLASS) {
+			TypeElement typeElement = typeElementFromQualifiedName(greendroidActivityName);
+			if (typeElement != null) {
+				greendroidActivityElements.add(typeElement);
+			}
+		}
 	}
 
 	@Override
@@ -82,6 +92,8 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
 
 		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
+
+		boolean usesGreenDroid = usesGreenDroid(typeElement);
 
 		int modifiers;
 		boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT);
@@ -143,16 +155,28 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		}
 
 		if (contentViewId != null) {
-			onCreateBody.invoke("setContentView").arg(contentViewId);
+			// GreenDroid support
+			if (usesGreenDroid) {
+				onCreateBody.invoke("setActionBarContentView").arg(contentViewId);
+			} else {
+				onCreateBody.invoke("setContentView").arg(contentViewId);
+			}
 		}
 
 		// Overriding setContentView (with layout id param)
 		JClass viewClass = holder.refClass("android.view.View");
 		JClass layoutParamsClass = holder.refClass("android.view.ViewGroup.LayoutParams");
 
-		setContentViewMethod(codeModel, holder, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
-		setContentViewMethod(codeModel, holder, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
-		setContentViewMethod(codeModel, holder, new JType[] { viewClass }, new String[] { "view" });
+		String setContentViewMethodName;
+		if (usesGreenDroid) {
+			setContentViewMethodName = "setActionBarContentView";
+		} else {
+			setContentViewMethodName = "setContentView";
+		}
+
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass }, new String[] { "view" });
 
 		// Handling onBackPressed
 		if (hasOnBackPressedMethod(typeElement)) {
@@ -185,12 +209,12 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		if (!isAbstract) {
 			JClass contextClass = holder.refClass("android.content.Context");
 			JClass intentClass = holder.refClass("android.content.Intent");
-			
+
 			{
 				holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
-				
+
 				JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
-				
+
 				holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
 				{
 					// Constructor
@@ -200,14 +224,13 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 					constructorBody.assign(contextField, constructorContextParam);
 					constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.eBean.dotclass()));
 				}
-				
-				
+
 				{
 					// get()
 					JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
 					method.body()._return(holder.intentField);
 				}
-				
+
 				{
 					// flags()
 					JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
@@ -216,13 +239,13 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 					body.invoke(holder.intentField, "setFlags").arg(flagsParam);
 					body._return(_this());
 				}
-				
+
 				{
 					// start
 					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
 					method.body().invoke(contextField, "startActivity").arg(holder.intentField);
 				}
-				
+
 				{
 					// intent()
 					JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
@@ -230,13 +253,13 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 					method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
 				}
 			}
-			
+
 		}
 
 	}
 
-	private void setContentViewMethod(JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "setContentView");
+	private void setContentViewMethod(String setContentViewMethodName, JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
+		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, setContentViewMethodName);
 		method.annotate(Override.class);
 
 		ArrayList<JVar> params = new ArrayList<JVar>();
@@ -305,4 +328,12 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		;
 	}
 
+	private boolean usesGreenDroid(TypeElement typeElement) {
+		for (TypeElement greendroidActivityElement : greendroidActivityElements) {
+			if (processingEnv.getTypeUtils().isSubtype(typeElement.asType(), greendroidActivityElement.asType())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -22,16 +22,25 @@ import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JInvocation;
 
 public class BeanProcessor implements ElementProcessor {
+
+	private TargetAnnotationHelper annotationHelper;
+
+	public BeanProcessor(ProcessingEnvironment processingEnv) {
+		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -41,10 +50,18 @@ public class BeanProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+		
+		
+		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassValue(element);
+		
+		TypeMirror elementType;
+		if (targetAnnotationClassValue != null) {
+			elementType = targetAnnotationClassValue;
+		} else {
+			elementType = element.asType();
+		}
 
 		String fieldName = element.getSimpleName().toString();
-
-		TypeMirror elementType = element.asType();
 
 		String typeQualifiedName = elementType.toString();
 

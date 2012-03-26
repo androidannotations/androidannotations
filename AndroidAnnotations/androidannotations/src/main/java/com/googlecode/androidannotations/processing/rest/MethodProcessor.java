@@ -38,6 +38,7 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public abstract class MethodProcessor implements ElementProcessor {
@@ -138,11 +139,17 @@ public abstract class MethodProcessor implements ElementProcessor {
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
 		JClass httpEntity = holder.refClass(ProcessorConstants.HTTP_ENTITY);
 		JInvocation newHttpEntityVarCall;
-		JClass expectedClass = methodHolder.getExpectedClass();
 
-		boolean hasEntitySentToServer = expectedClass != null;
-		if (hasEntitySentToServer) {
-			newHttpEntityVarCall = JExpr._new(httpEntity.narrow(expectedClass));
+		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
+		JVar entitySentToServer = null;
+		JType entityType = null; 
+		if (!methodParams.isEmpty()) {
+			entitySentToServer = methodParams.firstEntry().getValue();
+			entityType = entitySentToServer.type();
+		}
+		
+		if (entitySentToServer != null) {
+			newHttpEntityVarCall = JExpr._new(httpEntity.narrow(entityType));
 		} else {
 			newHttpEntityVarCall = JExpr._new(httpEntity.narrow(Object.class));
 		}
@@ -151,26 +158,21 @@ public abstract class MethodProcessor implements ElementProcessor {
 		JVar httpHeadersVar = generateHttpHeadersVar(body, executableElement);
 
 		boolean hasHeaders = httpHeadersVar != null;
-		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
+
+		if (entitySentToServer != null) {
+			newHttpEntityVarCall.arg(entitySentToServer);
+		}
+
 		if (hasHeaders) {
-			if (!methodParams.isEmpty()) {
-				JVar entitySentToServer = methodParams.firstEntry().getValue();
-				newHttpEntityVarCall.arg(entitySentToServer);
-			}
 			newHttpEntityVarCall.arg(httpHeadersVar);
-		} else {
-			if (!methodParams.isEmpty()) {
-				JVar entitySentToServer = methodParams.firstEntry().getValue();
-				newHttpEntityVarCall.arg(entitySentToServer);
-			} else {
-				newHttpEntityVarCall.arg(JExpr._null());
-			}
+		} else if (methodParams.isEmpty()) {
+			newHttpEntityVarCall.arg(JExpr._null());
 		}
 
 		JVar httpEntityVar;
 		String httpEntityVarName = "requestEntity";
-		if (hasEntitySentToServer) {
-			httpEntityVar = body.decl(httpEntity.narrow(expectedClass), httpEntityVarName, newHttpEntityVarCall);
+		if (entitySentToServer != null) {
+			httpEntityVar = body.decl(httpEntity.narrow(entityType), httpEntityVarName, newHttpEntityVarCall);
 		} else {
 			httpEntityVar = body.decl(httpEntity.narrow(Object.class), httpEntityVarName, newHttpEntityVarCall);
 		}
@@ -225,7 +227,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 		return methodParams;
 	}
-	
+
 	protected abstract JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement);
 
 	@Override

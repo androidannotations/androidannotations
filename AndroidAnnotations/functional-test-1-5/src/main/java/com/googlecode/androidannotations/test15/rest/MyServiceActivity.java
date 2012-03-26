@@ -15,15 +15,15 @@
  */
 package com.googlecode.androidannotations.test15.rest;
 
+import android.app.Activity;
+
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.rest.RestService;
-
-import android.app.Activity;
 
 @EActivity
 public class MyServiceActivity extends Activity {
 
 	@RestService
 	MyService myService;
-
+	
 }

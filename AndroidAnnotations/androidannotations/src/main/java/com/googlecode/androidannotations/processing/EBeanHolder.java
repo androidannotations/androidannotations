@@ -55,6 +55,9 @@ public class EBeanHolder {
 	public JSwitch onOptionsItemSelectedSwitch;
 	public JVar onOptionsItemSelectedItem;
 
+	public JMethod restoreSavedInstanceStateMethod;
+	public JBlock saveInstanceStateBlock;
+
 	public JExpression contextRef;
 	/**
 	 * Should not be used by inner annotations that target services, broadcast
@@ -72,6 +75,11 @@ public class EBeanHolder {
 	 * Only defined in activities
 	 */
 	public JFieldVar intentField;
+	
+	/**
+	 * Only defined in activities
+	 */
+	public NonConfigurationHolder nonConfigurationHolder;
 
 	public JClass refClass(String fullyQualifiedClassName) {
 

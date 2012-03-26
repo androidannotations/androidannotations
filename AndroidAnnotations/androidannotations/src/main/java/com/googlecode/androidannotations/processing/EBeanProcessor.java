@@ -17,6 +17,7 @@ package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
@@ -30,6 +31,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.api.Scope;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.sun.codemodel.ClassType;
@@ -69,61 +71,62 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
 		holder.eBean._extends(eBeanClass);
-		
+
 		JClass contextClass = holder.refClass("android.content.Context");
-		
+
 		JClass activityClass = holder.refClass("android.app.Activity");
 
 		JFieldVar contextField = holder.eBean.field(PRIVATE, contextClass, "context_");
-		
+
 		holder.contextRef = contextField;
-		
+
 		{
 			// afterSetContentView
-			
+
 			holder.afterSetContentView = holder.eBean.method(PUBLIC, codeModel.VOID, "afterSetContentView_");
-			
+
 			JBlock afterSetContentViewBody = holder.afterSetContentView.body();
-			
+
 			afterSetContentViewBody._if(holder.contextRef._instanceof(activityClass).not())._then()._return();
 		}
-		
+
 		JClass viewClass = holder.refClass("android.view.View");
-		
+
 		{
 			// findViewById
-			
+
 			JMethod findViewById = holder.eBean.method(PUBLIC, viewClass, "findViewById");
 			JVar idParam = findViewById.param(codeModel.INT, "id");
-			
+
 			findViewById.javadoc().add("You should check that context is an activity before calling this method");
-			
+
 			JBlock findViewByIdBody = findViewById.body();
-			
+
 			JVar activityVar = findViewByIdBody.decl(activityClass, "activity", cast(activityClass, holder.contextRef));
-			
+
 			findViewByIdBody._return(activityVar.invoke(findViewById).arg(idParam));
 		}
-		
+
 		{
 			// init
 			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
 		}
-		
+
 		{
 			// init if activity
 			/*
-			 * We suppress all warnings because we generate an unused warning that may or may not valid
+			 * We suppress all warnings because we generate an unused warning
+			 * that may or may not valid
 			 */
 			holder.init.annotate(SuppressWarnings.class).param("value", "all");
 			APTCodeModelHelper helper = new APTCodeModelHelper();
 			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
-		
+
 		{
 			// Constructor
-			
+
 			JMethod constructor = holder.eBean.constructor(PRIVATE);
 
 			JVar constructorContextParam = constructor.param(contextClass, "context");
@@ -131,22 +134,56 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 			JBlock constructorBody = constructor.body();
 
 			constructorBody.assign(contextField, constructorContextParam);
-			
+
 			constructorBody.invoke(holder.init);
 		}
 
+		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
+		Scope eBeanScope = eBeanAnnotation.scope();
+		boolean hasSingletonScope = eBeanScope == Scope.Singleton;
+
 		{
 			// Factory method
-			
-			JMethod factoryMethod = holder.eBean.method(STATIC | PUBLIC, holder.eBean, GET_INSTANCE_METHOD_NAME);
+
+			JMethod factoryMethod = holder.eBean.method(PUBLIC | STATIC, holder.eBean, GET_INSTANCE_METHOD_NAME);
 
 			JVar factoryMethodContextParam = factoryMethod.param(contextClass, "context");
 
 			JBlock factoryMethodBody = factoryMethod.body();
 
-			factoryMethodBody._return(_new(holder.eBean).arg(factoryMethodContextParam));
+			/*
+			 * Singletons are bound to the application context
+			 */
+			if (hasSingletonScope) {
+
+				JFieldVar instanceField = holder.eBean.field(PRIVATE | STATIC, holder.eBean, "instance_");
+
+				factoryMethodBody //
+						._if(instanceField.eq(_null())) //
+						._then() //
+						.assign(instanceField, _new(holder.eBean).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+
+				factoryMethodBody._return(instanceField);
+			} else {
+				factoryMethodBody._return(_new(holder.eBean).arg(factoryMethodContextParam));
+			}
+		}
+
+		{
+			// rebind(Context)
+			JMethod rebindMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "rebind");
+			JVar contextParam = rebindMethod.param(contextClass, "context");
+
+			/*
+			 * No rebinding of context for singletons, their are bound to the
+			 * application context
+			 */
+			if (!hasSingletonScope) {
+				JBlock body = rebindMethod.body();
+				body.assign(contextField, contextParam);
+				body.invoke(holder.init);
+			}
 		}
 
 	}
-
 }

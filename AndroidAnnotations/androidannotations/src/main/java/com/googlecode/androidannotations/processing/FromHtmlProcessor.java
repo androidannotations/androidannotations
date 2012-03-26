@@ -15,6 +15,8 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.ref;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
@@ -61,6 +63,10 @@ public class FromHtmlProcessor implements ElementProcessor {
 
 		JBlock methodBody = holder.afterSetContentView.body();
 
-		methodBody._if(JExpr.ref(fieldName).ne(JExpr._null()))._then().invoke(JExpr.ref(fieldName), "setText").arg(holder.refClass("android.text.Html").staticInvoke("fromHtml").arg(JExpr.invoke("getString").arg(idRef)));
+		//
+		methodBody. //
+				_if(JExpr.ref(fieldName).ne(JExpr._null())). //
+				_then() //
+				.invoke(ref(fieldName), "setText").arg(holder.refClass("android.text.Html").staticInvoke("fromHtml").arg(holder.contextRef.invoke("getString").arg(idRef)));
 	}
 }

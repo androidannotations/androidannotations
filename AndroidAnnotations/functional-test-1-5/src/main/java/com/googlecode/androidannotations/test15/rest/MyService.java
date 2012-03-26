@@ -61,6 +61,21 @@ public interface MyService {
 
 	@Post("/events/")
 	ResponseEntity<Event> addEvent2(Event event);
+	
+	/**
+	 * Output different then input
+	 */
+	@Post("/events/")
+	ResponseEntity<String> addEvent3(Event event);
+	
+	/**
+	 * Output different then input
+	 */
+	@Post("/events/")
+	String addEvent4(Event event);
+	
+	@Post("/events/")
+	void addEvent5(Event event);
 
 	@Post("/events/{year}/")
 	@Accept(MediaType.APPLICATION_JSON)

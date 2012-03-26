@@ -24,6 +24,12 @@ import com.googlecode.androidannotations.annotations.EActivity;
 public class BeanInjectedActivity extends Activity {
 	
 	@Bean
-	EnhancedClass dependency;
-
+	public EmptyDependency dependency;
+	
+	@Bean(SomeImplementation.class)
+	public SomeInterface interfaceDependency;
+	
+	@Bean
+	public SomeSingleton singletonDependency;
+	
 }

@@ -24,6 +24,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ErrorType;
@@ -172,6 +173,10 @@ public class AnnotationHelper {
 
 	public boolean isInterface(TypeElement element) {
 		return element.getKind().isInterface();
+	}
+	
+	public boolean isTopLevel(TypeElement element) {
+		return element.getNestingKind() == NestingKind.TOP_LEVEL;
 	}
 
 	public boolean isFinal(Element element) {
