@@ -1,3 +1,6 @@
+> 03/26/2012 [The 2.5 release is out](https://github.com/excilys/androidannotations/wiki/ReleaseNotes#wiki-2.5)
+
+
 "_The ratio of time spent reading [code] versus writing is well over 10 to 1 [therefore] making it easy to read makes it easier to write._" - **Robert C. Martin**
 
 #Is your Android code easy to write, read, and maintain?
