@@ -51,13 +51,21 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		}
 	}
 
-	public void urlVariableNamesExistInParameters(ExecutableElement element, IsValid valid) {
+	public void urlVariableNamesExistInParametersAndHasNoOneMoreParameter(ExecutableElement element, IsValid valid) {
 		if (valid.isValid()) {
 			List<String> variableNames = extractUrlVariableNames(element);
 			urlVariableNamesExistInParameters(element, variableNames, valid);
+			if (valid.isValid()) {
+				List<? extends VariableElement> parameters = element.getParameters();
+
+				if (parameters.size() > variableNames.size()) {
+					valid.invalidate();
+					printAnnotationError(element, "%s annotated method has only url variables in the method parameters");
+				}
+			}
 		}
 	}
-
+	
 	public void urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(ExecutableElement element, IsValid valid) {
 		if (valid.isValid()) {
 			List<String> variableNames = extractUrlVariableNames(element);
