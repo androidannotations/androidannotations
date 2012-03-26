@@ -52,7 +52,7 @@ public class BeanInjectedActivityTest {
 	
 	@Test
 	public void singleton_dependency_is_same_reference() {
-		SingletonDependency initialDependency = activity.singletonDependency;
+		SomeSingleton initialDependency = activity.singletonDependency;
 		
 		BeanInjectedActivity_ newActivity = new BeanInjectedActivity_();
 		newActivity.onCreate(null);

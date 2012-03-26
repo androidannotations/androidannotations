@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Injects an instance of a class annotated with {@link EBean}. You can specify
  * the type to inject using the value attribute, otherwise 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface Bean {
 	Class<?> value() default Void.class;

@@ -13,18 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package com.googlecode.androidannotations.test15.ebean;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import android.content.Context;
 
-/**
- * Use on activity fields to save and restore their values when the
- * system calls onSaveInstanceState(Bundle) and onCreate(Bundle).
- */
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.FIELD)
-public @interface InstanceState {
+import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.RootContext;
+
+@EBean
+public class SomeBean {
+	
+	@RootContext
+	public Context context;
+	
 }
