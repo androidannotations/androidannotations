@@ -138,6 +138,10 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 			constructorBody.invoke(holder.init);
 		}
 
+		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
+		Scope eBeanScope = eBeanAnnotation.scope();
+		boolean hasSingletonScope = eBeanScope == Scope.Singleton;
+
 		{
 			// Factory method
 
@@ -147,11 +151,10 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 
 			JBlock factoryMethodBody = factoryMethod.body();
 
-			EBean eBeanAnnotation = element.getAnnotation(EBean.class);
-
-			Scope eBeanScope = eBeanAnnotation.scope();
-
-			if (eBeanScope == Scope.Singleton) {
+			/*
+			 * Singletons are bound to the application context
+			 */
+			if (hasSingletonScope) {
 
 				JFieldVar instanceField = holder.eBean.field(PRIVATE | STATIC, holder.eBean, "instance_");
 
@@ -159,10 +162,26 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 						._if(instanceField.eq(_null())) //
 						._then() //
 						.assign(instanceField, _new(holder.eBean).arg(factoryMethodContextParam.invoke("getApplicationContext")));
-				
+
 				factoryMethodBody._return(instanceField);
 			} else {
 				factoryMethodBody._return(_new(holder.eBean).arg(factoryMethodContextParam));
+			}
+		}
+
+		{
+			// rebind(Context)
+			JMethod rebindMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "rebind");
+			JVar contextParam = rebindMethod.param(contextClass, "context");
+
+			/*
+			 * No rebinding of context for singletons, their are bound to the
+			 * application context
+			 */
+			if (!hasSingletonScope) {
+				JBlock body = rebindMethod.body();
+				body.assign(contextField, contextParam);
+				body.invoke(holder.init);
 			}
 		}
 
