@@ -60,7 +60,7 @@ public class OptionsValidator implements ElementValidator {
 
 		validatorHelper.hasSetOfHttpMethodReturnType(executableElement, valid);
 
-		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

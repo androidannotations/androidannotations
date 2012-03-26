@@ -60,7 +60,7 @@ public class HeadValidator implements ElementValidator {
 
 		validatorHelper.hasHttpHeadersReturnType(executableElement, valid);
 
-		restAnnotationHelper.urlVariableNamesExistInParameters(executableElement, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter(executableElement, valid);
 
 		return valid.isValid();
 	}
