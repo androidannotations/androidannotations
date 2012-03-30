@@ -32,8 +32,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import android.os.Bundle;
-
 import com.googlecode.androidannotations.annotations.InstanceState;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
@@ -221,7 +219,8 @@ public class InstanceStateProcessor extends AnnotationHelper implements ElementP
 		if (holder.saveInstanceStateBlock == null) {
 			JMethod method = holder.eBean.method(PUBLIC, codeModel.VOID, "onSaveInstanceState");
 			method.annotate(Override.class);
-			method.param(Bundle.class, BUNDLE_PARAM_NAME);
+			JClass bundleClass = holder.refClass("android.os.Bundle");
+			method.param(bundleClass, BUNDLE_PARAM_NAME);
 
 			holder.saveInstanceStateBlock = method.body();
 
