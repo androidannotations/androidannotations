@@ -89,7 +89,7 @@ public class EBeanHolder {
 			JCodeModel codeModel = eBean.owner();
 			try {
 				refClass = codeModel.ref(fullyQualifiedClassName);
-			} catch (Exception e) {
+			} catch (NoClassDefFoundError ignored) {
 				refClass = codeModel.directClass(fullyQualifiedClassName);
 			}
 			loadedClasses.put(fullyQualifiedClassName, refClass);
