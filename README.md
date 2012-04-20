@@ -54,7 +54,7 @@ Light Saber Jedi | Electric Shaver | SMS Scheduler | Coin Flip | Screen broken |
 Application Du Jour | Air Horn | Tao Po | Report Your Love | Mobilogue |
 [![Application Du Jour](https://lh3.ggpht.com/y0YQ64pXzBL6iWhuCWuCm3KmpMhbCRvkTk6WzIm5ROSCubkS5prCepzHkTkEP2VKftZG=w124)](https://market.android.com/details?id=com.gb.android.adj) | [![Air Horn Logo](https://github.com/excilys/androidannotations/wiki/img/air-horn.png)](https://market.android.com/details?id=com.mdb.android.airhorn) | [![Tao Po](https://lh3.ggpht.com/369Utq4GmsXjqchIx2nv5js7gMl51P0Ccc2ZyAD_cSNRAN5hCP85AJgvHe4MCYP94hk=w124)](https://market.android.com/details?id=com.teamcodeflux.taopo) |[![Report Your Love](https://lh3.ggpht.com/peks4PvKXwJ6JjUQ8VDJ-oYGidN-DM6g7zX7F6Ih4BI1_qHRXFiWuo0j7BPkVFcRBro=w124)](https://market.android.com/details?id=it.tetractis.mappquantomipensi) | [![Mobilogue](https://lh4.ggpht.com/jKxx1DvnLzS2kZNesLIaoGH7dDpdUppsxk1ORBOvGji0pRYyotnlub5KWzIAfp9kXEo=w124)](https://market.android.com/details?id=info.collide.android.mobilogue) |
 SunShine Horoscope |
-[![SunShine Horoscope](https://lh3.ggpht.com/oj6WLp66P08-SlQZUskVsALNX8DM94eB4cQBSVAcWe00-4k8vM9meqD6YDNY9ax-jMg=w124)](https://market.android.com/details?id=com.solodroid.sunshine) |
+[![SunShine Horoscope](https://lh3.ggpht.com/oj6WLp66P08-SlQZUskVsALNX8DM94eB4cQBSVAcWe00-4k8vM9meqD6YDNY9ax-jMg=w124)](https://market.android.com/details?id=com.solodroid.sunshine) | [![iLive](https://lh5.ggpht.com/JcdihVnq_T-o6PyMLO5NUYKfTx2x6zXIx6gAH82-IKIvbP5DDyklUk5nHesTGMR5viY=w124)](https://market.android.com/details?id=ilive.tetractis.it.activity) |
 
 ## Sponsors
 
