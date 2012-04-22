@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.test15;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
@@ -40,4 +41,14 @@ public class ExtraInjectedActivity extends Activity {
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+
+		if(stringExtra != null && stringExtra.equals("testCallToSuper"))
+		{
+			stringExtra = "altered in activity";
+		}
+		super.onNewIntent(intent);
+	}
+	
 }
