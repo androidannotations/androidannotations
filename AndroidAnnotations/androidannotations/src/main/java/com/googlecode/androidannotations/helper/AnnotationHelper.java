@@ -37,7 +37,7 @@ import javax.tools.Diagnostic.Kind;
 
 public class AnnotationHelper {
 
-	protected final ProcessingEnvironment processingEnv;
+	private final ProcessingEnvironment processingEnv;
 
 	public AnnotationHelper(ProcessingEnvironment processingEnv) {
 		this.processingEnv = processingEnv;

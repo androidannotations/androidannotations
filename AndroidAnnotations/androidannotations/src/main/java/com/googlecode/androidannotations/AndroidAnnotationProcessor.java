@@ -453,15 +453,15 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest, AnnotationElements validatedModel) {
 		ModelProcessor modelProcessor = new ModelProcessor();
-		modelProcessor.register(new EApplicationProcessor(processingEnv));
+		modelProcessor.register(new EApplicationProcessor());
 		modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
-		modelProcessor.register(new EServiceProcessor(processingEnv));
-		modelProcessor.register(new EReceiverProcessor(processingEnv));
-		modelProcessor.register(new EProviderProcessor(processingEnv));
+		modelProcessor.register(new EServiceProcessor());
+		modelProcessor.register(new EReceiverProcessor());
+		modelProcessor.register(new EProviderProcessor());
 		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewProcessor(processingEnv));
-		modelProcessor.register(new EBeanProcessor(processingEnv));
-		modelProcessor.register(new SharedPrefProcessor(processingEnv));
+		modelProcessor.register(new EBeanProcessor());
+		modelProcessor.register(new SharedPrefProcessor());
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewByIdProcessor(rClass));
