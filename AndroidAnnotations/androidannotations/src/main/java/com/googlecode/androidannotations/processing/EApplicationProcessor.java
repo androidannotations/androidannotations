@@ -22,12 +22,10 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EApplication;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
@@ -36,11 +34,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 
-public class EApplicationProcessor extends AnnotationHelper implements ElementProcessor {
-
-	public EApplicationProcessor(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
-	}
+public class EApplicationProcessor implements ElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {

@@ -21,12 +21,10 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EReceiver;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
@@ -37,11 +35,7 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EReceiverProcessor extends AnnotationHelper implements ElementProcessor {
-
-	public EReceiverProcessor(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
-	}
+public class EReceiverProcessor implements ElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {

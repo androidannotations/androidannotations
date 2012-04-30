@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -51,7 +50,6 @@ import com.googlecode.androidannotations.api.sharedpreferences.LongPrefField;
 import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import com.googlecode.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import com.googlecode.androidannotations.api.sharedpreferences.StringPrefField;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
@@ -64,7 +62,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class SharedPrefProcessor extends AnnotationHelper implements ElementProcessor {
+public class SharedPrefProcessor implements ElementProcessor {
 
 	private static class EditorFieldHolder {
 		public final Class<?> fieldClass;
@@ -86,10 +84,6 @@ public class SharedPrefProcessor extends AnnotationHelper implements ElementProc
 			put("java.lang.String", new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
 		}
 	};
-
-	public SharedPrefProcessor(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
-	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
