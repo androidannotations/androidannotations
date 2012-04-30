@@ -30,6 +30,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.OptionsItem;
+import com.googlecode.androidannotations.helper.SherlockHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
@@ -60,6 +61,8 @@ public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implement
 
 		String methodName = element.getSimpleName().toString();
 
+		boolean usesSherlock = new SherlockHelper().usesSherlock(holder);
+		
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		TypeMirror returnType = executableElement.getReturnType();
@@ -73,7 +76,7 @@ public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implement
 		if (holder.onOptionsItemSelectedSwitch == null) {
 			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");
 			method.annotate(Override.class);
-			holder.onOptionsItemSelectedItem = method.param(holder.refClass("android.view.MenuItem"), "item");
+			holder.onOptionsItemSelectedItem = method.param(holder.refClass(usesSherlock? "com.actionbarsherlock.view.MenuItem": "android.view.MenuItem"), "item");
 
 			JBlock body = method.body();
 			JVar handled = body.decl(codeModel.BOOLEAN, "handled", invoke(_super(), method).arg(holder.onOptionsItemSelectedItem));
