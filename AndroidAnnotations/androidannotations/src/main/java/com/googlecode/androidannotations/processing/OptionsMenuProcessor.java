@@ -68,7 +68,7 @@ public class OptionsMenuProcessor implements ElementProcessor {
 
 		JBlock body = method.body();
 
-		JVar menuInflater = body.decl(holder.refClass(usesSherlock? "com.actionbarsherlock.view.MenuInflator": "android.view.MenuInflater"), "menuInflater", invoke(usesSherlock? "getSupportMenuInflater": "getMenuInflater"));
+		JVar menuInflater = body.decl(holder.refClass(usesSherlock? "com.actionbarsherlock.view.MenuInflater": "android.view.MenuInflater"), "menuInflater", invoke(usesSherlock? "getSupportMenuInflater": "getMenuInflater"));
 
 		body.invoke(menuInflater, "inflate").arg(optionsMenuId).arg(menuParam);
 
