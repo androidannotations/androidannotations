@@ -21,6 +21,7 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.OptionsMenu;
@@ -36,9 +37,11 @@ import com.sun.codemodel.JVar;
 
 public class OptionsMenuProcessor implements ElementProcessor {
 
+	private final ProcessingEnvironment processingEnv;
 	private final IRClass rClass;
 
-	public OptionsMenuProcessor(IRClass rClass) {
+	public OptionsMenuProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		this.processingEnv = processingEnv;
 		this.rClass = rClass;
 	}
 
@@ -51,7 +54,7 @@ public class OptionsMenuProcessor implements ElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
 
-		boolean usesSherlock = new SherlockHelper().usesSherlock(holder);
+		boolean usesSherlock = new SherlockHelper(processingEnv).usesSherlock(holder);
 		
 		OptionsMenu layoutAnnotation = element.getAnnotation(OptionsMenu.class);
 		int layoutIdValue = layoutAnnotation.value();

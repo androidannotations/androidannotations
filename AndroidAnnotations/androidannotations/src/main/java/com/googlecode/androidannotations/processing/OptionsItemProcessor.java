@@ -23,6 +23,7 @@ import static com.sun.codemodel.JExpr.invoke;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -46,8 +47,11 @@ import com.sun.codemodel.JVar;
  */
 public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
 
-	public OptionsItemProcessor(IRClass rClass) {
+	private final ProcessingEnvironment processingEnv;
+	
+	public OptionsItemProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(rClass);
+		this.processingEnv = processingEnv;
 	}
 
 	@Override
@@ -61,7 +65,7 @@ public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implement
 
 		String methodName = element.getSimpleName().toString();
 
-		boolean usesSherlock = new SherlockHelper().usesSherlock(holder);
+		boolean usesSherlock = new SherlockHelper(processingEnv).usesSherlock(holder);
 		
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();

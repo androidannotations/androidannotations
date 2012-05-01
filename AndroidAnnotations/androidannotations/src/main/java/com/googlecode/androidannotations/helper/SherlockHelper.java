@@ -18,30 +18,36 @@ package com.googlecode.androidannotations.helper;
 import java.util.Arrays;
 import java.util.List;
 
-import com.googlecode.androidannotations.processing.EBeanHolder;
-import com.sun.codemodel.JClass;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.TypeElement;
 
+import com.googlecode.androidannotations.processing.EBeanHolder;
+
+/**
+ * @author Eric Kok
+ */
 public class SherlockHelper {
 
 	public static final List<String> SHERLOCK_ACTIVITIES_LIST_CLASS = Arrays.asList(new String[] {
 			"com.actionbarsherlock.app.SherlockActivity",
 			"com.actionbarsherlock.app.SherlockFragmentActivity",
 			"com.actionbarsherlock.app.SherlockListActivity",
-			"com.actionbarsherlock.app.SherlockPreferenceActivity"
-			});
-	
-	public SherlockHelper() {
+			"com.actionbarsherlock.app.SherlockPreferenceActivity" });
+
+	private final AnnotationHelper annotationHelper;
+
+	public SherlockHelper(ProcessingEnvironment processingEnv) {
+		annotationHelper = new AnnotationHelper(processingEnv);
 	}
 
 	public boolean usesSherlock(EBeanHolder holder) {
 		// Check whether the Activity extends one of the ActionBarSherlock Activity types
+		TypeElement annotatedType = annotationHelper.typeElementFromQualifiedName(holder.eBean
+				.fullName());
 		for (String sherlockClass : SHERLOCK_ACTIVITIES_LIST_CLASS) {
-			JClass activityClass = holder.eBean;
-			while (activityClass != null) {
-				if (activityClass.fullName().equals(sherlockClass)) {
-					return true;
-				}
-				activityClass = activityClass._extends();
+			if (annotationHelper.isSubtype(annotatedType,
+					annotationHelper.typeElementFromQualifiedName(sherlockClass))) {
+				return true;
 			}
 		}
 		return false;
