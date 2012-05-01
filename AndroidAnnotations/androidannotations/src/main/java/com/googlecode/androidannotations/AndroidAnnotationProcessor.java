@@ -488,8 +488,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new HeadProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new AppProcessor());
-		modelProcessor.register(new OptionsMenuProcessor(rClass));
-		modelProcessor.register(new OptionsItemProcessor(rClass));
+		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
+		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
