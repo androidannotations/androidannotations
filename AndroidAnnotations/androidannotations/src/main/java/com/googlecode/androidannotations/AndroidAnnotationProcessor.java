@@ -466,12 +466,12 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewByIdProcessor(rClass));
 		modelProcessor.register(new FromHtmlProcessor(rClass));
-		modelProcessor.register(new ClickProcessor(rClass));
-		modelProcessor.register(new LongClickProcessor(rClass));
-		modelProcessor.register(new TouchProcessor(rClass));
-		modelProcessor.register(new ItemClickProcessor(rClass));
-		modelProcessor.register(new ItemSelectedProcessor(rClass));
-		modelProcessor.register(new ItemLongClickProcessor(rClass));
+		modelProcessor.register(new ClickProcessor(processingEnv, rClass));
+		modelProcessor.register(new LongClickProcessor(processingEnv, rClass));
+		modelProcessor.register(new TouchProcessor(processingEnv, rClass));
+		modelProcessor.register(new ItemClickProcessor(processingEnv, rClass));
+		modelProcessor.register(new ItemSelectedProcessor(processingEnv, rClass));
+		modelProcessor.register(new ItemLongClickProcessor(processingEnv, rClass));
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			modelProcessor.register(new ResProcessor(androidRes, rClass));
 		}
@@ -489,7 +489,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new AppProcessor());
 		modelProcessor.register(new OptionsMenuProcessor(rClass));
-		modelProcessor.register(new OptionsItemProcessor(rClass));
+		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
