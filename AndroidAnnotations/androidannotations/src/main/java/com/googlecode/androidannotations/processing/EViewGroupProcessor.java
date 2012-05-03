@@ -28,7 +28,6 @@ import javax.lang.model.element.TypeElement;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -44,7 +43,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 
-public class EViewGroupProcessor extends AnnotationHelper implements ElementProcessor {
+public class EViewGroupProcessor implements ElementProcessor {
 
 	private static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
@@ -65,7 +64,6 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 	private final APTCodeModelHelper codeModelHelper;
 
 	public EViewGroupProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
 		this.rClass = rClass;
 		codeModelHelper = new APTCodeModelHelper();
 	}
