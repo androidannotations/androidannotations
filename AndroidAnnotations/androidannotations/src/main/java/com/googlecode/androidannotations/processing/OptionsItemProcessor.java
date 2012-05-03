@@ -23,6 +23,7 @@ import static com.sun.codemodel.JExpr.invoke;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -30,6 +31,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.OptionsItem;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
@@ -43,10 +45,12 @@ import com.sun.codemodel.JVar;
 /**
  * @author Pierre-Yves Ricau
  */
-public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
+public class OptionsItemProcessor implements ElementProcessor {
 
-	public OptionsItemProcessor(IRClass rClass) {
-		super(rClass);
+	private IdAnnotationHelper helper;
+
+	public OptionsItemProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -68,7 +72,7 @@ public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implement
 		boolean hasItemParameter = parameters.size() == 1;
 
 		OptionsItem annotation = element.getAnnotation(OptionsItem.class);
-		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "Selected", holder);
+		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Selected", holder);
 
 		if (holder.onOptionsItemSelectedSwitch == null) {
 			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");

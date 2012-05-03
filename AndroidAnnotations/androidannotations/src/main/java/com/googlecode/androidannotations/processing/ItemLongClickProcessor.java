@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -25,6 +26,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemLongClick;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -42,10 +44,12 @@ import com.sun.codemodel.JVar;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-public class ItemLongClickProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
+public class ItemLongClickProcessor implements ElementProcessor {
 
-	public ItemLongClickProcessor(IRClass rClass) {
-		super(rClass);
+	private IdAnnotationHelper helper;
+
+	public ItemLongClickProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class ItemLongClickProcessor extends MultipleResIdsBasedProcessor impleme
 		boolean hasItemParameter = parameters.size() == 1;
 
 		ItemLongClick annotation = element.getAnnotation(ItemLongClick.class);
-		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "ItemLongClicked", holder);
+		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "ItemLongClicked", holder);
 
 		JDefinedClass onItemClickListenerClass = codeModel.anonymousClass(holder.refClass("android.widget.AdapterView.OnItemLongClickListener"));
 		JMethod onItemLongClickMethod = onItemClickListenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onItemLongClick");

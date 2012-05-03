@@ -23,9 +23,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
+import com.sun.codemodel.JFieldRef;
 
 public class IdAnnotationHelper extends TargetAnnotationHelper {
 
@@ -57,6 +59,34 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 		return clickQualifiedIds;
+	}
+
+	public List<JFieldRef> extractFieldRefsFromAnnotationValues(Element element, int[] idsValues, String methodSuffix, EBeanHolder holder) {
+
+		List<JFieldRef> idsRefs = new ArrayList<JFieldRef>();
+		IRInnerClass rInnerClass = rClass.get(Res.ID);
+
+		if (idsValues.length == 1 && idsValues[0] == Id.DEFAULT_VALUE) {
+
+			String fieldName = element.getSimpleName().toString();
+			int lastIndex = fieldName.lastIndexOf(methodSuffix);
+
+			if (lastIndex != -1) {
+				fieldName = fieldName.substring(0, lastIndex);
+			}
+
+			JFieldRef idRef = rInnerClass.getIdStaticRef(fieldName, holder);
+			idsRefs.add(idRef);
+
+		} else {
+			for (int idValue : idsValues) {
+
+				JFieldRef idRef = rInnerClass.getIdStaticRef(idValue, holder);
+				idsRefs.add(idRef);
+
+			}
+		}
+		return idsRefs;
 	}
 
 	boolean containsIdValue(Integer idValue, Res res) {
