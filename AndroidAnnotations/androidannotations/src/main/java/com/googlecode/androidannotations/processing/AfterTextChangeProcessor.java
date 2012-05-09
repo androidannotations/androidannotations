@@ -86,7 +86,7 @@ public class AfterTextChangeProcessor implements ElementProcessor {
 
 		AfterTextChange annotation = element.getAnnotation(AfterTextChange.class);
 		
-		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "TextChanged", holder);
+		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "AfterTextChanged", holder);
 
 		for (JFieldRef idRef : idsRefs) {
 			TextWatcherHolder textWatcherHolder = helper.getOrCreateListener(codeModel, holder, idRef, viewParameterType);

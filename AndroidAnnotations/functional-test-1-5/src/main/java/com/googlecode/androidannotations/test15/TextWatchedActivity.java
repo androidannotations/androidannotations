@@ -57,4 +57,13 @@ public class TextWatchedActivity extends Activity {
 	@BeforeTextChange(R.id.helloTextView)
 	void m16(CharSequence s, int count, int start, int after) {}
 
+	@BeforeTextChange
+	void helloTextViewBeforeTextChanged() {}
+
+	@AfterTextChange
+	void helloTextViewAfterTextChanged() {}
+
+	@TextChange
+	void helloTextViewTextChanged() {}
+
 }
