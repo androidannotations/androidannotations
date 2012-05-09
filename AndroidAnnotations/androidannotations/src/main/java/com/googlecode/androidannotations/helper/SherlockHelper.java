@@ -42,9 +42,8 @@ public class SherlockHelper {
 
 	public boolean usesSherlock(EBeanHolder holder) {
 		// Check whether the Activity extends one of the ActionBarSherlock Activity types
-		String generatedClass = holder.eBean.fullName();
-		TypeElement annotatedType = annotationHelper.typeElementFromQualifiedName(generatedClass
-				.substring(0, generatedClass.length() - 1));
+		TypeElement annotatedType = annotationHelper.typeElementFromQualifiedName(holder.eBean
+				._extends().fullName());
 		for (String sherlockClass : SHERLOCK_ACTIVITIES_LIST_CLASS) {
 			if (annotationHelper.isSubtype(annotatedType,
 					annotationHelper.typeElementFromQualifiedName(sherlockClass))) {
