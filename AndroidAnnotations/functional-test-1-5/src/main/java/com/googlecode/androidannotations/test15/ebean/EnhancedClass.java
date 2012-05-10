@@ -28,7 +28,6 @@ import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Trace;
@@ -67,9 +66,6 @@ public class EnhancedClass {
 
 	@App
 	SampleRoboApplication customApplication;
-
-	@Extra("Test")
-	String testExtra;
 
 	@StringRes
 	String hello;
