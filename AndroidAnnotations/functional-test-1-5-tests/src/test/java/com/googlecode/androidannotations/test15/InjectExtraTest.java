@@ -40,9 +40,9 @@ public class InjectExtraTest {
 
 	@Test
 	public void simple_string_extra_injected() {
-		intent.putExtra("stringExtra", "Hello !");
+		intent.putExtra("stringExtra", "Hello!");
 		activity.onCreate(null);
-		assertThat(activity.stringExtra).isEqualTo("Hello !");
+		assertThat(activity.stringExtra).isEqualTo("Hello!");
 	}
 
 	@Test
@@ -58,6 +58,7 @@ public class InjectExtraTest {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("Hello !");
 		intent.putExtra("listExtra", list);
+
 		activity.onCreate(null);
 		assertThat(activity.listExtra).isEqualTo(list);
 	}
@@ -70,11 +71,24 @@ public class InjectExtraTest {
 	}
 	
 	@Test
-	public void when_int_array_extra_is_annotated_then_its_injected() {
+	public void int_array_extra_injected() {
 		byte[] byteArray = {0, 2};
 		intent.putExtra("byteArrayExtra", byteArray);
 		activity.onCreate(null);
 		assertThat(activity.byteArrayExtra).isEqualTo(byteArray);
+	}
+	
+	@Test
+	public void setIntent_reinjects_extra() {
+		intent.putExtra("stringExtra", "Hello!");
+		activity.onCreate(null);
+		
+		Intent newIntent = new Intent();
+		newIntent.putExtra("stringExtra", "Hello Again!");
+		
+		activity.setIntent(newIntent);
+		
+		assertThat(activity.stringExtra).isEqualTo("Hello Again!");
 	}
 
 }

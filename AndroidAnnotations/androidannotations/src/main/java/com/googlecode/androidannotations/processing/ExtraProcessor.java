@@ -15,8 +15,12 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.io.Serializable;
@@ -84,11 +88,8 @@ public class ExtraProcessor implements ElementProcessor {
 		}
 
 		if (holder.extras == null) {
-			JClass bundleClass = holder.refClass("android.os.Bundle");
-			holder.extras = holder.initIfActivityBody.decl(bundleClass, "extras_");
-			holder.extras.init(holder.initActivityRef.invoke("getIntent").invoke("getExtras"));
 
-			holder.extrasNotNullBlock = holder.initIfActivityBody._if(holder.extras.ne(JExpr._null()))._then();
+			injectExtras(holder, codeModel);
 		}
 
 		JBlock ifContainsKey = holder.extrasNotNullBlock._if(JExpr.invoke(holder.extras, "containsKey").arg(extraKey))._then();
@@ -148,6 +149,47 @@ public class ExtraProcessor implements ElementProcessor {
 			}
 		}
 
+	}
+
+	/**
+	 * Adds call to injectExtras_() in onCreate and setIntent() methods.
+	 */
+	private void injectExtras(EBeanHolder holder, JCodeModel codeModel) {
+
+		JClass intentClass = holder.refClass("android.content.Intent");
+		JMethod injectExtrasMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "injectExtras_");
+
+		overrideSetIntent(holder, codeModel, intentClass, injectExtrasMethod);
+
+		injectExtrasOnInit(holder, intentClass, injectExtrasMethod);
+
+		JClass bundleClass = holder.refClass("android.os.Bundle");
+		JBlock injectExtrasBody = injectExtrasMethod.body();
+
+		JVar intent = injectExtrasBody.decl(intentClass, "intent_", invoke("getIntent"));
+
+		holder.extras = injectExtrasBody.decl(bundleClass, "extras_");
+		holder.extras.init(intent.invoke("getExtras"));
+
+		holder.extrasNotNullBlock = injectExtrasBody._if(holder.extras.ne(_null()))._then();
+	}
+
+	private void overrideSetIntent(EBeanHolder holder, JCodeModel codeModel, JClass intentClass, JMethod initIntentMethod) {
+		if (holder.intentBuilderClass != null) {
+
+			JMethod setIntentMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "setIntent");
+			setIntentMethod.annotate(Override.class);
+			JVar methodParam = setIntentMethod.param(intentClass, "newIntent");
+
+			JBlock setIntentBody = setIntentMethod.body();
+
+			setIntentBody.invoke(_super(), setIntentMethod).arg(methodParam);
+			setIntentBody.invoke(initIntentMethod);
+		}
+	}
+
+	private void injectExtrasOnInit(EBeanHolder holder, JClass intentClass, JMethod injectExtrasMethod) {
+		holder.init.body().invoke(injectExtrasMethod);
 	}
 
 }

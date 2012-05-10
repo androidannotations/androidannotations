@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.test15;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
@@ -30,7 +31,7 @@ public class ExtraInjectedActivity extends Activity {
 	
 	@Extra("arrayExtra")
 	CustomData[] arrayExtra;
-
+	
 	@Extra("listExtra")
 	List<String> listExtra;
 	
@@ -39,5 +40,10 @@ public class ExtraInjectedActivity extends Activity {
 	
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
-
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+	}
+	
 }
