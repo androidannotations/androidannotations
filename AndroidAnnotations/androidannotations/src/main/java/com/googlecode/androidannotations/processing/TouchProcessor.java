@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -25,6 +26,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Touch;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -41,10 +43,12 @@ import com.sun.codemodel.JVar;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-public class TouchProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
+public class TouchProcessor implements ElementProcessor {
 
-	public TouchProcessor(IRClass rClass) {
-		super(rClass);
+	private IdAnnotationHelper helper;
+
+	public TouchProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -66,7 +70,7 @@ public class TouchProcessor extends MultipleResIdsBasedProcessor implements Elem
 		boolean hasItemParameter = parameters.size() == 2;
 
 		Touch annotation = element.getAnnotation(Touch.class);
-		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "Touched", holder);
+		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Touched", holder);
 
 		JDefinedClass listenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnTouchListener"));
 		JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");

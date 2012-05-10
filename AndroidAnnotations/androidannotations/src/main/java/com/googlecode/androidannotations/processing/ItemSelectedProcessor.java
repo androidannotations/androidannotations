@@ -21,6 +21,7 @@ import static com.sun.codemodel.JExpr.lit;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -28,6 +29,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemSelect;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -44,10 +46,12 @@ import com.sun.codemodel.JVar;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
+public class ItemSelectedProcessor implements ElementProcessor {
 
-	public ItemSelectedProcessor(IRClass rClass) {
-		super(rClass);
+	private IdAnnotationHelper helper;
+
+	public ItemSelectedProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -65,7 +69,7 @@ public class ItemSelectedProcessor extends MultipleResIdsBasedProcessor implemen
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
 		ItemSelect annotation = element.getAnnotation(ItemSelect.class);
-		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "ItemSelected", holder);
+		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "ItemSelected", holder);
 
 		JDefinedClass onItemSelectedListenerClass = codeModel.anonymousClass(holder.refClass("android.widget.AdapterView.OnItemSelectedListener"));
 		JMethod onItemSelectedMethod = onItemSelectedListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onItemSelected");

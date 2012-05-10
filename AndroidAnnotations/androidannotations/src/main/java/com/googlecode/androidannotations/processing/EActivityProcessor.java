@@ -58,18 +58,23 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class EActivityProcessor extends AnnotationHelper implements ElementProcessor {
+public class EActivityProcessor implements ElementProcessor {
 
 	private final IRClass rClass;
 	private List<TypeElement> greendroidActivityElements;
 
+	private final AnnotationHelper annotationHelper;
+
+	private final ProcessingEnvironment processingEnv;
+
 	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
+		this.processingEnv = processingEnv;
+		annotationHelper = new AnnotationHelper(processingEnv);
 		this.rClass = rClass;
 
 		greendroidActivityElements = new ArrayList<TypeElement>();
 		for (String greendroidActivityName : GREENDROID_ACTIVITIES_LIST_CLASS) {
-			TypeElement typeElement = typeElementFromQualifiedName(greendroidActivityName);
+			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(greendroidActivityName);
 			if (typeElement != null) {
 				greendroidActivityElements.add(typeElement);
 			}
@@ -276,7 +281,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 	}
 
 	private int inheritedOnCreateVisibility(TypeElement activityElement) {
-		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
+		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
 
 		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
 
@@ -307,7 +312,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 	private boolean hasOnBackPressedMethod(TypeElement activityElement) {
 
-		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
+		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
 
 		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
 

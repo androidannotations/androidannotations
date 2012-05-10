@@ -45,7 +45,7 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class InstanceStateProcessor extends AnnotationHelper implements ElementProcessor {
+public class InstanceStateProcessor implements ElementProcessor {
 
 	private static final String BUNDLE_PARAM_NAME = "bundle";
 
@@ -89,8 +89,10 @@ public class InstanceStateProcessor extends AnnotationHelper implements ElementP
 
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
+	private AnnotationHelper annotationHelper;
+
 	public InstanceStateProcessor(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+		annotationHelper = new AnnotationHelper(processingEnv);
 	}
 
 	@Override
@@ -107,7 +109,7 @@ public class InstanceStateProcessor extends AnnotationHelper implements ElementP
 		JBlock restoreStateBody = getRestoreStateBody(codeModel, holder);
 
 		String typeString = element.asType().toString();
-		TypeElement elementType = typeElementFromQualifiedName(typeString);
+		TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 
 		String methodNameToSave;
 		String methodNameToRestore;
@@ -133,7 +135,7 @@ public class InstanceStateProcessor extends AnnotationHelper implements ElementP
 				typeString = arrayType.getComponentType().toString();
 			}
 
-			elementType = typeElementFromQualifiedName(typeString);
+			elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 
 			if (isTypeParcelable(elementType)) {
 				methodNameToSave = "put" + "ParcelableArray";
@@ -155,7 +157,7 @@ public class InstanceStateProcessor extends AnnotationHelper implements ElementP
 			if (elementAsType instanceof DeclaredType) {
 				DeclaredType declaredType = (DeclaredType) elementAsType;
 				typeString = declaredType.asElement().toString();
-				elementType = typeElementFromQualifiedName(typeString);
+				elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 				hasTypeArguments = declaredType.getTypeArguments().size() > 0;
 			}
 
@@ -232,9 +234,9 @@ public class InstanceStateProcessor extends AnnotationHelper implements ElementP
 
 	private boolean isTypeParcelable(TypeElement elementType) {
 
-		TypeElement parcelableType = typeElementFromQualifiedName("android.os.Parcelable");
+		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName("android.os.Parcelable");
 
-		return elementType != null && isSubtype(elementType, parcelableType);
+		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
 	}
 
 }

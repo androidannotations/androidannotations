@@ -26,14 +26,12 @@ import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.api.Scope;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -42,13 +40,9 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EBeanProcessor extends AnnotationHelper implements ElementProcessor {
+public class EBeanProcessor implements ElementProcessor {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
-
-	public EBeanProcessor(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
-	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
