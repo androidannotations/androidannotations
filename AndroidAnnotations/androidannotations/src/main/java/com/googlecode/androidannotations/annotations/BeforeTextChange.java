@@ -43,7 +43,7 @@ import java.lang.annotation.Target;
  * modification.
  * </ul>
  *
- * Some good uses of &#064;BeforeTextChange annotation :
+ * Some usage examples of &#064;BeforeTextChange annotation :
  * <blockquote><pre>
  * &#064;BeforeTextChange(<b>R.id.helloTextView</b>)
  * void beforeTextChangedOnHelloTextView(TextView hello, CharSequence text, int start, int count, int after) {
