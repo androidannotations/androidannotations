@@ -85,7 +85,7 @@ public class ExtraProcessor implements ElementProcessor {
 		}
 
 		if (holder.extras == null) {
-			
+
 			initExtras(holder, codeModel);
 		}
 
@@ -149,24 +149,19 @@ public class ExtraProcessor implements ElementProcessor {
 	}
 
 	/**
-	 * Adds call to initExtras in onCreate and onNewIntent methods where applicable.
-	 * @param holder
-	 * @param codeModel
+	 * Adds call to initExtras in onCreate and onNewIntent methods where
+	 * applicable.
 	 */
 	private void initExtras(EBeanHolder holder, JCodeModel codeModel) {
-		
-			
+
 		JClass intentClass = holder.refClass("android.content.Intent");
 		JMethod initIntentMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "initExtras");
 		JVar intentParam = initIntentMethod.param(intentClass, "intent");
 
-		addOnNewIntent(holder, codeModel, intentClass, initIntentMethod,
-				intentParam);
-		
-		
+		addOnNewIntent(holder, codeModel, intentClass, initIntentMethod, intentParam);
+
 		addCallToInitIntentInOnCreate(holder, intentClass, initIntentMethod);
 
-		
 		JClass bundleClass = holder.refClass("android.os.Bundle");
 		JBlock initIntentBody = initIntentMethod.body();
 		holder.extras = initIntentBody.decl(bundleClass, "extras_");
@@ -175,22 +170,19 @@ public class ExtraProcessor implements ElementProcessor {
 		holder.extrasNotNullBlock = initIntentBody._if(holder.extras.ne(JExpr._null()))._then();
 	}
 
-	private void addCallToInitIntentInOnCreate(EBeanHolder holder, JClass intentClass,
-			JMethod initIntentMethod) {
+	private void addCallToInitIntentInOnCreate(EBeanHolder holder, JClass intentClass, JMethod initIntentMethod) {
 		JVar decl = holder.initIfActivityBody.decl(intentClass, "intent_");
 		decl.init(holder.initActivityRef.invoke("getIntent"));
 		holder.initIfActivityBody.invoke(initIntentMethod).arg(decl);
 	}
 
-	private void addOnNewIntent(EBeanHolder holder, JCodeModel codeModel,
-			JClass intentClass, JMethod initIntentMethod, JVar intentParam) {
-		if(holder.intentBuilderClass != null)
-		{
-			
+	private void addOnNewIntent(EBeanHolder holder, JCodeModel codeModel, JClass intentClass, JMethod initIntentMethod, JVar intentParam) {
+		if (holder.intentBuilderClass != null) {
+
 			JMethod onNewIntentMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "onNewIntent");
 			onNewIntentMethod.annotate(Override.class);
 			JVar methodParam = onNewIntentMethod.param(intentClass, "intent");
-		
+
 			JBlock onNewIntentBody = onNewIntentMethod.body();
 
 			onNewIntentBody.invoke(initIntentMethod).arg(methodParam);
