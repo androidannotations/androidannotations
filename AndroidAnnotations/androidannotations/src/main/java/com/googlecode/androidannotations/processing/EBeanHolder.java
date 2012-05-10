@@ -81,6 +81,11 @@ public class EBeanHolder {
 	 */
 	public NonConfigurationHolder nonConfigurationHolder;
 
+	/**
+	 * TextWatchers by idRef
+	 */
+	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
+
 	public JClass refClass(String fullyQualifiedClassName) {
 
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
