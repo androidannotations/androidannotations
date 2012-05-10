@@ -21,17 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * 
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.text.TextWatcher#beforeTextChanged(CharSequence s, int start, int count, int after)}
  * before the text is changed on the targeted TextView or subclass of TextView.
- *
+ * 
  * The annotation value should be one or several R.id.* fields that refers to
  * TextView or subclasses of TextView. If not set, the method name will be used
  * as the R.id.* field name.
- *
- * The method may have multiple parameters :
+ * 
+ * The method may have multiple parameters:
  * <ul>
  * <li>A android.widget.TextView parameter to know which view has targeted this
  * event
@@ -42,33 +42,44 @@ import java.lang.annotation.Target;
  * <li>An int parameter named after to know the text length after the text
  * modification.
  * </ul>
- *
- * Some usage examples of &#064;BeforeTextChange annotation :
- * <blockquote><pre>
+ * 
+ * Some usage examples of &#064;BeforeTextChange annotation: <blockquote>
+ * 
+ * <pre>
  * &#064;BeforeTextChange(<b>R.id.helloTextView</b>)
  * void beforeTextChangedOnHelloTextView(TextView hello, CharSequence text, int start, int count, int after) {
  * 	// Something Here
  * }
- * </pre></blockquote>
- * <blockquote><pre>
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
  * &#064;BeforeTextChange
  * void <b>helloTextView</b>BeforeTextChanged(TextView hello) {
  * 	// Something Here
  * }
- * </pre></blockquote>
- * <blockquote><pre>
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
  * &#064;BeforeTextChange(<b>{R.id.editText, R.id.helloTextView}</b>)
  * void beforeTextChangedOnSomeTextViews(TextView tv, CharSequence text) {
  * 	// Something Here
  * }
- * </pre></blockquote>
- * <blockquote><pre>
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
  * &#064;BeforeTextChange(<b>R.id.helloTextView</b>)
  * void beforeTextChangedOnHelloTextView() {
  * 	// Something Here
  * }
- * </pre></blockquote>
-
+ * </pre>
+ * 
+ * </blockquote>
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)

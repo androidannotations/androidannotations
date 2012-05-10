@@ -20,43 +20,55 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.text.Editable;
+
 /**
- *
+ * 
  * This annotation is intended to be used on methods to receive events defined
  * by {@link android.text.TextWatcher#afterTextChanged(Editable s)} after the
  * text is changed on the targeted TextView or subclass of TextView.
- *
+ * 
  * The annotation value should be one or several R.id.* fields that refers to
  * TextView or subclasses of TextView. If not set, the method name will be used
  * as the R.id.* field name.
- *
- * The method may have multiple parameter :
+ * 
+ * The method may have multiple parameter:
  * <ul>
  * <li>A android.widget.TextView parameter to know which view has targeted this
  * event
  * <li>An android.text.Editable to make changes on modified text.
  * </ul>
- *
- * Some usage examples of &#064;BeforeTextChange annotation :
- * <blockquote><pre>
+ * 
+ * Some usage examples of &#064;BeforeTextChange annotation: <blockquote>
+ * 
+ * <pre>
  * &#064;AfterTextChange(<b>R.id.helloTextView</b>)
  * void afterTextChangedOnHelloTextView(Editable text, TextView hello) {
  * 	// Something Here
  * }
- * </pre></blockquote>
- * <blockquote><pre>
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
  * &#064;AfterTextChange
  * void <b>helloTextView</b>AfterTextChanged(TextView hello) {
  * 	// Something Here
  * }
- * </pre></blockquote>
- * <blockquote><pre>
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
  * &#064;AfterTextChange(<b>{R.id.editText, R.id.helloTextView}</b>)
  * void afterTextChangedOnSomeTextViews(TextView tv, Editable text) {
  * 	// Something Here
  * }
- * </pre></blockquote>
- * <blockquote><pre>
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
  * &#064;AfterTextChange(<b>R.id.helloTextView</b>)
  * void afterTextChangedOnHelloTextView() {
  * 	// Something Here
