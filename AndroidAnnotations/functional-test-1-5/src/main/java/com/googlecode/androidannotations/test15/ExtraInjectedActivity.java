@@ -28,22 +28,21 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra("stringExtra")
 	String stringExtra;
-	
+
 	@Extra("arrayExtra")
 	CustomData[] arrayExtra;
-	
+
 	@Extra("listExtra")
 	List<String> listExtra;
-	
+
 	@Extra("intExtra")
 	int intExtra;
-	
+
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
 	}
-	
 }

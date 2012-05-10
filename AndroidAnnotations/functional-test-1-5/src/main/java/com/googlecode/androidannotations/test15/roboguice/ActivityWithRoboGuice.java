@@ -36,7 +36,7 @@ import com.googlecode.androidannotations.test15.R;
 @RoboGuice
 @EActivity(R.layout.injected)
 public class ActivityWithRoboGuice extends Activity {
-	
+
 	@InjectResource(R.string.injected_activity_caption)
 	String caption;
 
