@@ -30,39 +30,38 @@ import com.googlecode.androidannotations.validation.IsValid;
 
 public class RestValidator implements ElementValidator {
 
-  private final ValidatorHelper validatorHelper;
+	private final ValidatorHelper validatorHelper;
 
-  public RestValidator(ProcessingEnvironment processingEnv) {
-    TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(
-        processingEnv, getTarget());
-    validatorHelper = new ValidatorHelper(annotationHelper);
-  }
+	public RestValidator(ProcessingEnvironment processingEnv) {
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		validatorHelper = new ValidatorHelper(annotationHelper);
+	}
 
-  @Override
-  public Class<? extends Annotation> getTarget() {
-    return Rest.class;
-  }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return Rest.class;
+	}
 
-  @Override
-  public boolean validate(Element element, AnnotationElements validatedElements) {
+	@Override
+	public boolean validate(Element element, AnnotationElements validatedElements) {
 
-    IsValid valid = new IsValid();
+		IsValid valid = new IsValid();
 
-    TypeElement typeElement = (TypeElement) element;
+		TypeElement typeElement = (TypeElement) element;
 
-    validatorHelper.notAlreadyValidated(element, validatedElements, valid);
+		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
-    validatorHelper.hasSpringAndroidJars(element, valid);
+		validatorHelper.hasSpringAndroidJars(element, valid);
 
-    validatorHelper.isInterface(typeElement, valid);
+		validatorHelper.isInterface(typeElement, valid);
 
-    validatorHelper.isTopLevel(typeElement, valid);
+		validatorHelper.isTopLevel(typeElement, valid);
 
-    // validatorHelper.doesNotExtendOtherInterfaces(typeElement, valid);
+		validatorHelper.doesNotExtendOtherInterfaces(typeElement, valid);
 
-    validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, valid);
+		validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, valid);
 
-    return valid.isValid();
-  }
+		return valid.isValid();
+	}
 
 }
