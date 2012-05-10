@@ -29,45 +29,28 @@ import android.content.Intent;
 public class InjectExtraTest {
 
 	private Intent intent;
-	private Intent newIntent;
 	private ExtraInjectedActivity_ activity;
 
 	@Before
 	public void setup() {
 		activity = new ExtraInjectedActivity_();
 		intent = new Intent();
-		newIntent = new Intent();
 		activity.setIntent(intent);
 	}
 
 	@Test
 	public void simple_string_extra_injected() {
-		intent.putExtra("stringExtra", "Hello !");
+		intent.putExtra("stringExtra", "Hello!");
 		activity.onCreate(null);
-		assertThat(activity.stringExtra).isEqualTo("Hello !");
-
-		newIntent.putExtra("stringExtra", "Goodbye !");
-		assertThat(activity.stringExtra).isEqualTo("Hello !");
-
-		activity.onNewIntent(newIntent);
-		assertThat(activity.stringExtra).isEqualTo("Goodbye !");
-		
+		assertThat(activity.stringExtra).isEqualTo("Hello!");
 	}
 
 	@Test
 	public void array_extra_injected() {
 		CustomData[] customData = { new CustomData("42") };
-		CustomData[] newCustomData = { new CustomData("69") };
-		
 		intent.putExtra("arrayExtra", customData);
 		activity.onCreate(null);
 		assertThat(activity.arrayExtra).isEqualTo(customData);
-
-		newIntent.putExtra("arrayExtra", newCustomData);
-
-		activity.onNewIntent(newIntent);
-		assertThat(activity.arrayExtra).isEqualTo(newCustomData);
-			
 	}
 
 	@Test
@@ -78,12 +61,6 @@ public class InjectExtraTest {
 
 		activity.onCreate(null);
 		assertThat(activity.listExtra).isEqualTo(list);
-
-		list.add("GoodBye !");
-		intent.putExtra("listExtra", list);
-		activity.onNewIntent(intent);
-		assertThat(activity.listExtra).isEqualTo(list);
-		
 	}
 	
 	@Test
@@ -91,42 +68,27 @@ public class InjectExtraTest {
 		intent.putExtra("intExtra", 42);
 		activity.onCreate(null);
 		assertThat(activity.intExtra).isEqualTo(42);
-
-		newIntent.putExtra("intExtra", 69);
-		assertThat(activity.intExtra).isEqualTo(42);
-		activity.onNewIntent(newIntent);
-		assertThat(activity.intExtra).isEqualTo(69);
-
-	
 	}
 	
 	@Test
-	public void when_int_array_extra_is_annotated_then_its_injected() {
+	public void int_array_extra_injected() {
 		byte[] byteArray = {0, 2};
 		intent.putExtra("byteArrayExtra", byteArray);
 		activity.onCreate(null);
 		assertThat(activity.byteArrayExtra).isEqualTo(byteArray);
-
-		byte[] newByteArray = {1, 3, 3, 7};
-		newIntent.putExtra("byteArrayExtra", newByteArray);
-		assertThat(activity.byteArrayExtra).isEqualTo(byteArray);
-		activity.onNewIntent(newIntent);
-		assertThat(activity.byteArrayExtra).isEqualTo(newByteArray);
-	
-	
 	}
-
+	
 	@Test
-	public void ensure_own_OnNewIntent_works() {
-
-		intent.putExtra("stringExtra", "testCallToSuper");
+	public void setIntent_reinjects_extra() {
+		intent.putExtra("stringExtra", "Hello!");
 		activity.onCreate(null);
-		assertThat(activity.stringExtra).isEqualTo("testCallToSuper");
 		
-		newIntent.putExtra("stringExtra", "testCallToSuper");
-		activity.onNewIntent(newIntent);
-		assertThat(activity.stringExtra).isEqualTo("altered in activity");
+		Intent newIntent = new Intent();
+		newIntent.putExtra("stringExtra", "Hello Again!");
+		
+		activity.setIntent(newIntent);
+		
+		assertThat(activity.stringExtra).isEqualTo("Hello Again!");
 	}
 
-	
 }

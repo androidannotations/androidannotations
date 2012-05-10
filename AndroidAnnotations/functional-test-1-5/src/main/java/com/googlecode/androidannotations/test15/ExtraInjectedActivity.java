@@ -31,7 +31,7 @@ public class ExtraInjectedActivity extends Activity {
 	
 	@Extra("arrayExtra")
 	CustomData[] arrayExtra;
-
+	
 	@Extra("listExtra")
 	List<String> listExtra;
 	
@@ -40,15 +40,10 @@ public class ExtraInjectedActivity extends Activity {
 	
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
-
+	
 	@Override
 	protected void onNewIntent(Intent intent) {
-
-		if(stringExtra != null && stringExtra.equals("testCallToSuper"))
-		{
-			stringExtra = "altered in activity";
-		}
-		super.onNewIntent(intent);
+		setIntent(intent);
 	}
 	
 }
