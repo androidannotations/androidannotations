@@ -27,7 +27,7 @@ import com.sun.codemodel.JVar;
 public class MethodProcessorHolder {
 
 	private Element element;
-	private String url;
+	private String urlSuffix;
 	private JClass expectedClass;
 	private JClass generatedReturnType;
 	private JCodeModel codeModel;
@@ -35,9 +35,9 @@ public class MethodProcessorHolder {
 	private JBlock body;
 	private TreeMap<String, JVar> methodParams;
 
-	public MethodProcessorHolder(Element element, String url, JClass expectedClass, JClass generatedReturnType, JCodeModel codeModel) {
+	public MethodProcessorHolder(Element element, String urlSuffix, JClass expectedClass, JClass generatedReturnType, JCodeModel codeModel) {
 		this.element = element;
-		this.url = url;
+		this.urlSuffix = urlSuffix;
 		this.expectedClass = expectedClass;
 		this.generatedReturnType = generatedReturnType;
 		this.codeModel = codeModel;
@@ -47,8 +47,8 @@ public class MethodProcessorHolder {
 		return element;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getUrlSuffix() {
+		return urlSuffix;
 	}
 
 	public JClass getExpectedClass() {
