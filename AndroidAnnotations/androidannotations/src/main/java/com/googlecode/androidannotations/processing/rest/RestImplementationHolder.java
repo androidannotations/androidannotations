@@ -24,23 +24,24 @@ import com.sun.codemodel.JFieldVar;
 
 public class RestImplementationHolder {
 
-  public JDefinedClass restImplementationClass;
+	public JDefinedClass restImplementationClass;
 
-  private final Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
+	private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
 
-  public JFieldVar rootUrlField;
-  public JFieldVar restTemplateField;
+	public JFieldVar restTemplateField;
 
-  public JClass refClass(String fullyQualifiedClassName) {
+	public JFieldVar rootUrlField;
 
-    JClass refClass = loadedClasses.get(fullyQualifiedClassName);
+	public JClass refClass(String fullyQualifiedClassName) {
 
-    if (refClass == null) {
-      refClass = restImplementationClass.owner().ref(fullyQualifiedClassName);
-      loadedClasses.put(fullyQualifiedClassName, refClass);
-    }
+		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
-    return refClass;
-  }
+		if (refClass == null) {
+			refClass = restImplementationClass.owner().ref(fullyQualifiedClassName);
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+
+		return refClass;
+	}
 
 }
