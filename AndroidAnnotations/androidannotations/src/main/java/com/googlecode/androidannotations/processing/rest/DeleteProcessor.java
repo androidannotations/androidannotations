@@ -48,9 +48,8 @@ public class DeleteProcessor extends MethodProcessor {
 
 		Delete deleteAnnotation = element.getAnnotation(Delete.class);
 		String urlSuffix = deleteAnnotation.value();
-		String url = holder.urlPrefix + urlSuffix;
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, null, null, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, null, null, codeModel));
 	}
 
 	@Override

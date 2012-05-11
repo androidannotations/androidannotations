@@ -76,9 +76,8 @@ public class PostProcessor extends MethodProcessor {
 
 		Post postAnnotation = element.getAnnotation(Post.class);
 		String urlSuffix = postAnnotation.value();
-		String url = holder.urlPrefix + urlSuffix;
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
 	}
 
 	@Override
