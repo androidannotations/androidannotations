@@ -41,7 +41,8 @@ import com.sun.codemodel.JVar;
 
 public class RestProcessor implements ElementProcessor {
 
-	private static final String SPRING_REST_TEMPLATE_QUALIFIED_NAME = "org.springframework.web.client.RestTemplate";
+  private static final String SPRING_REST_TEMPLATE_QUALIFIED_NAME = "org.springframework.web.client.RestTemplate";
+	private static final String JAVA_STRING_QUALIFIED_NAME = "java.lang.String";
 	private final RestImplementationsHolder restImplementationHolder;
 
 	public RestProcessor(RestImplementationsHolder restImplementationHolder) {
@@ -59,9 +60,6 @@ public class RestProcessor implements ElementProcessor {
 		RestImplementationHolder holder = restImplementationHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
-
-		holder.urlPrefix = typeElement.getAnnotation(Rest.class).value();
-
 		String interfaceName = typeElement.getQualifiedName().toString();
 
 		String implementationName = interfaceName + ModelConstants.GENERATION_SUFFIX;
@@ -75,10 +73,14 @@ public class RestProcessor implements ElementProcessor {
 		// RestTemplate field
 		JClass restTemplateClass = holder.refClass(SPRING_REST_TEMPLATE_QUALIFIED_NAME);
 		holder.restTemplateField = holder.restImplementationClass.field(JMod.PRIVATE, restTemplateClass, "restTemplate");
+		
+		JClass stringClass = holder.refClass(JAVA_STRING_QUALIFIED_NAME);
+    holder.rootUrlField = holder.restImplementationClass.field(JMod.PUBLIC, stringClass, "rootUrl");
 
 		// Default constructor
 		JMethod defaultConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
 		defaultConstructor.body().assign(holder.restTemplateField, JExpr._new(restTemplateClass));
+		defaultConstructor.body().assign(holder.rootUrlField, JExpr.lit(typeElement.getAnnotation(Rest.class).value()));
 
 		// RestTemplate constructor
 		JMethod restTemplateConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
@@ -120,6 +122,23 @@ public class RestProcessor implements ElementProcessor {
 				}
 			}
 		}
+		
+		// Implement setRootUrl method
+		for (ExecutableElement method : methods) {
+      List<? extends VariableElement> parameters = method.getParameters();
+      if (parameters.size() == 1 && method.getReturnType().getKind() == TypeKind.VOID) {
+        VariableElement firstParameter = parameters.get(0);
+        if (firstParameter.asType().toString().equals(JAVA_STRING_QUALIFIED_NAME) && method.getSimpleName().toString().equals("setRootUrl")) {
+          JMethod setRootUrlMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
+          setRootUrlMethod.annotate(Override.class);
+
+          JVar rootUrlSetterParam = setRootUrlMethod.param(stringClass, firstParameter.getSimpleName().toString());
+
+          setRootUrlMethod.body().assign(_this().ref(holder.rootUrlField), rootUrlSetterParam);
+          break; // Only one implementation
+        }
+      }
+    }
 
 	}
 
