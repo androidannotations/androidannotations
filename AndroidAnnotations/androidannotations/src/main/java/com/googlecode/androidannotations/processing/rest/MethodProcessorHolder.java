@@ -26,58 +26,57 @@ import com.sun.codemodel.JVar;
 
 public class MethodProcessorHolder {
 
-  private final Element element;
-  private final String urlSuffix;
-  private final JClass expectedClass;
-  private final JClass generatedReturnType;
-  private final JCodeModel codeModel;
+	private Element element;
+	private String urlSuffix;
+	private JClass expectedClass;
+	private JClass generatedReturnType;
+	private JCodeModel codeModel;
 
-  private JBlock body;
-  private TreeMap<String, JVar> methodParams;
+	private JBlock body;
+	private TreeMap<String, JVar> methodParams;
 
-  public MethodProcessorHolder(Element element, String url,
-      JClass expectedClass, JClass generatedReturnType, JCodeModel codeModel) {
-    this.element = element;
-    this.urlSuffix = url;
-    this.expectedClass = expectedClass;
-    this.generatedReturnType = generatedReturnType;
-    this.codeModel = codeModel;
-  }
+	public MethodProcessorHolder(Element element, String urlSuffix, JClass expectedClass, JClass generatedReturnType, JCodeModel codeModel) {
+		this.element = element;
+		this.urlSuffix = urlSuffix;
+		this.expectedClass = expectedClass;
+		this.generatedReturnType = generatedReturnType;
+		this.codeModel = codeModel;
+	}
 
-  public Element getElement() {
-    return element;
-  }
+	public Element getElement() {
+		return element;
+	}
 
-  public String getUrlSuffix() {
-    return urlSuffix;
-  }
+	public String getUrlSuffix() {
+		return urlSuffix;
+	}
 
-  public JClass getExpectedClass() {
-    return expectedClass;
-  }
+	public JClass getExpectedClass() {
+		return expectedClass;
+	}
 
-  public JClass getGeneratedReturnType() {
-    return generatedReturnType;
-  }
+	public JClass getGeneratedReturnType() {
+		return generatedReturnType;
+	}
 
-  public JCodeModel getCodeModel() {
-    return codeModel;
-  }
+	public JCodeModel getCodeModel() {
+		return codeModel;
+	}
 
-  public JBlock getBody() {
-    return body;
-  }
+	public JBlock getBody() {
+		return body;
+	}
 
-  public void setBody(JBlock body) {
-    this.body = body;
-  }
+	public void setBody(JBlock body) {
+		this.body = body;
+	}
 
-  public TreeMap<String, JVar> getMethodParams() {
-    return methodParams;
-  }
+	public TreeMap<String, JVar> getMethodParams() {
+		return methodParams;
+	}
 
-  public void setMethodParams(TreeMap<String, JVar> methodParams) {
-    this.methodParams = methodParams;
-  }
+	public void setMethodParams(TreeMap<String, JVar> methodParams) {
+		this.methodParams = methodParams;
+	}
 
 }

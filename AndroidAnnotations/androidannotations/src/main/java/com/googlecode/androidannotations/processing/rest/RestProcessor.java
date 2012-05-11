@@ -74,8 +74,9 @@ public class RestProcessor implements ElementProcessor {
 		JClass restTemplateClass = holder.refClass(SPRING_REST_TEMPLATE_QUALIFIED_NAME);
 		holder.restTemplateField = holder.restImplementationClass.field(JMod.PRIVATE, restTemplateClass, "restTemplate");
 		
+		// RootUrl field
 		JClass stringClass = holder.refClass(JAVA_STRING_QUALIFIED_NAME);
-    holder.rootUrlField = holder.restImplementationClass.field(JMod.PUBLIC, stringClass, "rootUrl");
+    holder.rootUrlField = holder.restImplementationClass.field(JMod.PRIVATE, stringClass, "rootUrl");
 
 		// Default constructor
 		JMethod defaultConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
