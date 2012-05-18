@@ -31,6 +31,7 @@ import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.api.Scope;
+import com.googlecode.androidannotations.api.SetContentViewAware;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
@@ -65,6 +66,7 @@ public class EBeanProcessor implements ElementProcessor {
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
 		holder.eBean._extends(eBeanClass);
+		holder.eBean._implements(SetContentViewAware.class);
 
 		JClass contextClass = holder.refClass("android.content.Context");
 

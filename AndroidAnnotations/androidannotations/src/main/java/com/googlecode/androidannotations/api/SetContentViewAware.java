@@ -13,29 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ebean;
+package com.googlecode.androidannotations.api;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface SetContentViewAware {
 
-import android.app.Activity;
+	public static final String SIGNATURE = "afterSetContentView_";
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
-
-@EActivity
-public class BeanInjectedActivity extends Activity {
-
-	@Bean
-	public EmptyDependency dependency;
-
-	@Bean
-	public final List<SomeInterface> list = new ArrayList<SomeInterface>();
-
-	@Bean(SomeImplementation.class)
-	public SomeInterface interfaceDependency;
-
-	@Bean
-	public SomeSingleton singletonDependency;
+	public void afterSetContentView_();
 
 }

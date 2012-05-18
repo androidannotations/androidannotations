@@ -37,6 +37,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
@@ -44,12 +45,12 @@ import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EApplication;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
-import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -106,13 +107,20 @@ public class ValidatorHelper {
 	protected final TargetAnnotationHelper annotationHelper;
 
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
-		this.annotationHelper = targetAnnotationHelper;
+		annotationHelper = targetAnnotationHelper;
 	}
 
 	public void isNotFinal(Element element, IsValid valid) {
 		if (annotationHelper.isFinal(element)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a final element");
+		}
+	}
+
+	public void isFinal(Element element, IsValid valid) {
+		if (!annotationHelper.isFinal(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s must be used on a final element");
 		}
 	}
 
@@ -136,7 +144,7 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s can only be used on an interface");
 		}
 	}
-	
+
 	public void isTopLevel(TypeElement element, IsValid valid) {
 		if (!annotationHelper.isTopLevel(element)) {
 			valid.invalidate();
@@ -361,7 +369,7 @@ public class ValidatorHelper {
 		if (targetAnnotationClassValue != null) {
 			typeHasAnnotation(annotation, targetAnnotationClassValue, element, valid);
 
-			if (!annotationHelper.getTypeUtils().isAssignable( targetAnnotationClassValue, element.asType())) {
+			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, element.asType())) {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "The value of %s must be assignable into the annotated field");
 			}
@@ -1029,4 +1037,28 @@ public class ValidatorHelper {
 
 	}
 
+	public void validateCollectionTypeParameter(Element element, IsValid valid) {
+		DeclaredType typed = ElementHelper.getAsDeclaredType(element);
+
+		if (typed == null) {
+			return;
+		}
+
+		List<? extends TypeMirror> typedParams = typed.getTypeArguments();
+
+		if (typedParams.size() != 1) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Collection should have exactly one typed parameter");
+			return;
+		}
+		TypeMirror typedParam = typedParams.get(0);
+		if (annotationHelper.isSameType(typedParam, Object.class)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Typed Parameter of the Collection cannot be Object.class");
+		} else if (typedParam instanceof WildcardType) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Wildcard not supported");
+		}
+
+	}
 }

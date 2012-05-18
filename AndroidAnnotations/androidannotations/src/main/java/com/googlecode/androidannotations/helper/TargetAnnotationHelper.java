@@ -25,6 +25,7 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 
 public class TargetAnnotationHelper extends AnnotationHelper implements HasTarget {
 
@@ -69,6 +70,16 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 		}
 
 		return null;
+	}
+
+	public boolean isAssignable(TypeMirror type1, Class<?> type2) {
+		TypeMirror type = getElementUtils().getTypeElement(type2.getCanonicalName()).asType();
+		return getTypeUtils().isAssignable(type1, type);
+	}
+
+	public boolean isSameType(TypeMirror type1, Class<?> type2) {
+		TypeMirror type = getElementUtils().getTypeElement(type2.getCanonicalName()).asType();
+		return getTypeUtils().isAssignable(type1, type);
 	}
 
 	@Override
