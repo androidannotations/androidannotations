@@ -79,7 +79,7 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 
 	public boolean isSameType(TypeMirror type1, Class<?> type2) {
 		TypeMirror type = getElementUtils().getTypeElement(type2.getCanonicalName()).asType();
-		return getTypeUtils().isAssignable(type1, type);
+		return getTypeUtils().isSameType(type1, type);
 	}
 
 	@Override
