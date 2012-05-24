@@ -21,7 +21,7 @@ public class MyListActivity extends ListActivity {
 	String[] bestFoods;
 
 	@Bean
-	MyBaseAdapter adapter;
+	ListAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
