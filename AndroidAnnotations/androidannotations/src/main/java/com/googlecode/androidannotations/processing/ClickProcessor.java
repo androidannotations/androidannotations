@@ -18,11 +18,13 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Click;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -39,10 +41,12 @@ import com.sun.codemodel.JVar;
  * @author Mathieu Boniface
  * @author Pierre-Yves
  */
-public class ClickProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
+public class ClickProcessor implements ElementProcessor {
 
-	public ClickProcessor(IRClass rClass) {
-		super(rClass);
+	private final IdAnnotationHelper helper;
+
+	public ClickProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -63,7 +67,7 @@ public class ClickProcessor extends MultipleResIdsBasedProcessor implements Elem
 		boolean hasViewParameter = parameters.size() == 1;
 
 		Click annotation = element.getAnnotation(Click.class);
-		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "Clicked", holder);
+		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Clicked", holder);
 
 		JDefinedClass onClickListenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnClickListener"));
 		JMethod onClickMethod = onClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");

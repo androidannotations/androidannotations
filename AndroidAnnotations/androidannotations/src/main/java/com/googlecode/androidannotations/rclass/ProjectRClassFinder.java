@@ -22,12 +22,13 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
 
 import com.googlecode.androidannotations.helper.AndroidManifest;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 
-public class ProjectRClassFinder extends AnnotationHelper {
+public class ProjectRClassFinder {
+
+	private ProcessingEnvironment processingEnv;
 
 	public ProjectRClassFinder(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+		this.processingEnv = processingEnv;
 	}
 
 	public IRClass find(AndroidManifest manifest) {

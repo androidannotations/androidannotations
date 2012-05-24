@@ -32,6 +32,7 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.helper.SherlockHelper;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
@@ -45,13 +46,15 @@ import com.sun.codemodel.JVar;
 /**
  * @author Pierre-Yves Ricau
  */
-public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implements ElementProcessor {
+public class OptionsItemProcessor implements ElementProcessor {
 
-	private final ProcessingEnvironment processingEnv;
+	private final IdAnnotationHelper helper;
+
+	private final SherlockHelper sherlockHelper;
 	
 	public OptionsItemProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(rClass);
-		this.processingEnv = processingEnv;
+		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		sherlockHelper = new SherlockHelper(processingEnv);
 	}
 
 	@Override
@@ -65,7 +68,7 @@ public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implement
 
 		String methodName = element.getSimpleName().toString();
 
-		boolean usesSherlock = new SherlockHelper(processingEnv).usesSherlock(holder);
+		boolean usesSherlock = sherlockHelper.usesSherlock(holder);
 		
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
@@ -75,7 +78,7 @@ public class OptionsItemProcessor extends MultipleResIdsBasedProcessor implement
 		boolean hasItemParameter = parameters.size() == 1;
 
 		OptionsItem annotation = element.getAnnotation(OptionsItem.class);
-		List<JFieldRef> idsRefs = extractQualifiedIds(element, annotation.value(), "Selected", holder);
+		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Selected", holder);
 
 		if (holder.onOptionsItemSelectedSwitch == null) {
 			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");

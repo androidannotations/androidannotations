@@ -77,6 +77,9 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 	}
 
 	public String actionName() {
+		if (target.getSimpleName().endsWith("e")) {
+			return target.getSimpleName() + "d";
+		}
 		return target.getSimpleName() + "ed";
 	}
 

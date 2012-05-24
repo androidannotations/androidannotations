@@ -44,12 +44,12 @@ import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EApplication;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
-import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -91,6 +91,8 @@ public class ValidatorHelper {
 	private static final String GUICE_INJECTOR_QUALIFIED_NAME = "com.google.inject.Injector";
 	private static final String ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME = "roboguice.inject.InjectorProvider";
 
+	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
+
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
@@ -106,7 +108,7 @@ public class ValidatorHelper {
 	protected final TargetAnnotationHelper annotationHelper;
 
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
-		this.annotationHelper = targetAnnotationHelper;
+		annotationHelper = targetAnnotationHelper;
 	}
 
 	public void isNotFinal(Element element, IsValid valid) {
@@ -136,7 +138,7 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "%s can only be used on an interface");
 		}
 	}
-	
+
 	public void isTopLevel(TypeElement element, IsValid valid) {
 		if (!annotationHelper.isTopLevel(element)) {
 			valid.invalidate();
@@ -361,7 +363,7 @@ public class ValidatorHelper {
 		if (targetAnnotationClassValue != null) {
 			typeHasAnnotation(annotation, targetAnnotationClassValue, element, valid);
 
-			if (!annotationHelper.getTypeUtils().isAssignable( targetAnnotationClassValue, element.asType())) {
+			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, element.asType())) {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "The value of %s must be assignable into the annotated field");
 			}
@@ -840,6 +842,7 @@ public class ValidatorHelper {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
 		boolean foundGetRestTemplateMethod = false;
 		boolean foundSetRestTemplateMethod = false;
+		boolean foundSetRootUrlMethod = false;
 		for (Element enclosedElement : enclosedElements) {
 			if (enclosedElement.getKind() != ElementKind.METHOD) {
 				valid.invalidate();
@@ -881,6 +884,8 @@ public class ValidatorHelper {
 									annotationHelper.printError(enclosedElement, "You can only have oneRestTemplate setter method on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 
 								}
+							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_ROOT_URL) && !foundSetRootUrlMethod) {
+								foundSetRootUrlMethod = true;
 							} else {
 								valid.invalidate();
 								annotationHelper.printError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");

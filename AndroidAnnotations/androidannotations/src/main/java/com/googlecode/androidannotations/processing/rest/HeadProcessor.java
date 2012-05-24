@@ -54,9 +54,8 @@ public class HeadProcessor extends MethodProcessor {
 
 		Head headAnnotation = element.getAnnotation(Head.class);
 		String urlSuffix = headAnnotation.value();
-		String url = holder.urlPrefix + urlSuffix;
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, expectedClass, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, expectedClass, codeModel));
 	}
 
 	@Override

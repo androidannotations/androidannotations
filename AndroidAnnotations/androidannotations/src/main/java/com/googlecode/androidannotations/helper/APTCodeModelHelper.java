@@ -39,6 +39,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -182,6 +183,31 @@ public class APTCodeModelHelper {
 		return clonedBody;
 	}
 	
+	public String getIdStringFromIdFieldRef(JFieldRef idRef) {
+		try {
+			Field nameField = JFieldRef.class.getDeclaredField("name");
+			nameField.setAccessible(true);
+			String name = (String) nameField.get(idRef);
+
+			if (name != null) {
+				return name;
+			}
+
+			Field varField = JFieldRef.class.getDeclaredField("var");
+			varField.setAccessible(true);
+			JVar var = (JVar) varField.get(idRef);
+
+			if (var != null) {
+				return var.name();
+			}
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		throw new IllegalStateException("Unable to extract target name from JFieldRef");
+	}
+
 	public JDefinedClass createDelegatingAnonymousRunnableClass(JCodeModel codeModel, EBeanHolder holder, JMethod delegatedMethod) {
 		JDefinedClass anonymousRunnableClass;
 		JBlock previousMethodBody = removeBody(delegatedMethod);
@@ -252,4 +278,13 @@ public class APTCodeModelHelper {
 		}
 	}
 	
+	public JVar findParameterByName(JMethod method, String name) {
+		for (JVar parameter : method.params()) {
+			if (parameter.name().equals(name)) {
+				return parameter;
+			}
+		}
+		return null;
+	}
+
 }

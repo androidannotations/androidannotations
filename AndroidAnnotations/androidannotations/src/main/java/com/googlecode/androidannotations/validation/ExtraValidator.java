@@ -43,7 +43,12 @@ public class ExtraValidator implements ElementValidator {
 	public boolean validate(Element element, AnnotationElements validatedElements) {
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+		/*
+		 * TODO since we override setIntent(), we should check that the
+		 * setIntent() method can be overridden
+		 */
+
+		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
