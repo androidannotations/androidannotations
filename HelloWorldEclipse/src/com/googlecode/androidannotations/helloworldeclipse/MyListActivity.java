@@ -26,6 +26,7 @@ public class MyListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bestFoods);
 		setListAdapter(adapter);
 	}
 
