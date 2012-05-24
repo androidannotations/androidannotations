@@ -71,9 +71,8 @@ public class GetProcessor extends MethodProcessor {
 
 		Get getAnnotation = element.getAnnotation(Get.class);
 		String urlSuffix = getAnnotation.value();
-		String url = holder.urlPrefix + urlSuffix;
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
 	}
 
 	@Override

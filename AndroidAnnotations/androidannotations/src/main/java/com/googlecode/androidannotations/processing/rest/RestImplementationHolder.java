@@ -30,7 +30,7 @@ public class RestImplementationHolder {
 
 	public JFieldVar restTemplateField;
 
-	public String urlPrefix;
+	public JFieldVar rootUrlField;
 
 	public JClass refClass(String fullyQualifiedClassName) {
 
