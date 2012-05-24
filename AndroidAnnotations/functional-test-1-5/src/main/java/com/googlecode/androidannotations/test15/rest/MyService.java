@@ -98,4 +98,6 @@ public interface MyService {
 	RestTemplate getRestTemplate();
 	
 	void setRestTemplate(RestTemplate restTemplate);
+	
+	void setRootUrl(String test);
 }
