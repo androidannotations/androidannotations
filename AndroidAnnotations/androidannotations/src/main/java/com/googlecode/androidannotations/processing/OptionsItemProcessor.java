@@ -31,8 +31,8 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.OptionsItem;
-import com.googlecode.androidannotations.helper.SherlockHelper;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.SherlockHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
@@ -51,10 +51,10 @@ public class OptionsItemProcessor implements ElementProcessor {
 	private final IdAnnotationHelper helper;
 
 	private final SherlockHelper sherlockHelper;
-	
+
 	public OptionsItemProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-		sherlockHelper = new SherlockHelper(processingEnv);
+		sherlockHelper = new SherlockHelper(helper);
 	}
 
 	@Override
@@ -68,8 +68,13 @@ public class OptionsItemProcessor implements ElementProcessor {
 
 		String methodName = element.getSimpleName().toString();
 
-		boolean usesSherlock = sherlockHelper.usesSherlock(holder);
-		
+		String menuItemClassName;
+		if (sherlockHelper.usesSherlock(holder)) {
+			menuItemClassName = "com.actionbarsherlock.view.MenuItem";
+		} else {
+			menuItemClassName = "android.view.MenuItem";
+		}
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		TypeMirror returnType = executableElement.getReturnType();
@@ -83,7 +88,7 @@ public class OptionsItemProcessor implements ElementProcessor {
 		if (holder.onOptionsItemSelectedSwitch == null) {
 			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");
 			method.annotate(Override.class);
-			holder.onOptionsItemSelectedItem = method.param(holder.refClass(usesSherlock? "com.actionbarsherlock.view.MenuItem": "android.view.MenuItem"), "item");
+			holder.onOptionsItemSelectedItem = method.param(holder.refClass(menuItemClassName), "item");
 
 			JBlock body = method.body();
 			JVar handled = body.decl(codeModel.BOOLEAN, "handled", invoke(_super(), method).arg(holder.onOptionsItemSelectedItem));
