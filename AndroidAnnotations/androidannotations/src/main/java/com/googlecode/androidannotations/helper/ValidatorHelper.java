@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.helper;
 
 import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static java.util.Arrays.asList;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.IncompleteAnnotationException;
@@ -76,7 +77,7 @@ public class ValidatorHelper {
 
 	private static final String SPRING_REST_TEMPLATE_QUALIFIED_NAME = "org.springframework.web.client.RestTemplate";
 	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
-	private static final String ANDROID_MENU_ITEM_QUALIFIED_NAME = "android.view.MenuItem";
+	private static final List<String> ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES = asList("android.view.MenuItem", "com.actionbarsherlock.view.MenuItem");
 	private static final String ANDROID_TEXT_VIEW_QUALIFIED_NAME = "android.widget.TextView";
 	private static final String ANDROID_VIEWGROUP_QUALIFIED_NAME = "android.view.ViewGroup";
 	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
@@ -503,10 +504,14 @@ public class ValidatorHelper {
 	}
 
 	public void zeroOrOneMenuItemParameters(ExecutableElement executableElement, IsValid valid) {
-		zeroOrOneSpecificParameter(executableElement, ANDROID_MENU_ITEM_QUALIFIED_NAME, valid);
+		zeroOrOneSpecificParameter(executableElement, ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES, valid);
 	}
 
 	public void zeroOrOneSpecificParameter(ExecutableElement executableElement, String parameterTypeQualifiedName, IsValid valid) {
+		zeroOrOneSpecificParameter(executableElement, Arrays.asList(parameterTypeQualifiedName), valid);
+	}
+
+	public void zeroOrOneSpecificParameter(ExecutableElement executableElement, List<String> parameterTypeQualifiedNames, IsValid valid) {
 
 		zeroOrOneParameter(executableElement, valid);
 
@@ -515,9 +520,9 @@ public class ValidatorHelper {
 		if (parameters.size() == 1) {
 			VariableElement parameter = parameters.get(0);
 			TypeMirror parameterType = parameter.asType();
-			if (!parameterType.toString().equals(parameterTypeQualifiedName)) {
+			if (!parameterTypeQualifiedNames.contains(parameterType.toString())) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with no parameter or a parameter of type " + parameterTypeQualifiedName + ", not " + parameterType);
+				annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with no parameter or a parameter of type " + parameterTypeQualifiedNames + ", not " + parameterType);
 			}
 		}
 	}
