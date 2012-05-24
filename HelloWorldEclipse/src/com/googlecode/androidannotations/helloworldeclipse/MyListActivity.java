@@ -7,7 +7,6 @@ import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.ItemSelect;
@@ -20,8 +19,7 @@ public class MyListActivity extends ListActivity {
 	@StringArrayRes
 	String[] bestFoods;
 
-	@Bean
-	ListAdapter adapter;
+	private ListAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
