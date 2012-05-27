@@ -38,6 +38,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
@@ -116,6 +117,13 @@ public class ValidatorHelper {
 		if (annotationHelper.isFinal(element)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a final element");
+		}
+	}
+
+	public void isFinal(Element element, IsValid valid) {
+		if (!annotationHelper.isFinal(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s must be used on a final element");
 		}
 	}
 
@@ -1039,4 +1047,28 @@ public class ValidatorHelper {
 
 	}
 
+	public void validateCollectionTypeParameter(Element element, IsValid valid) {
+		DeclaredType typed = ElementHelper.getAsDeclaredType(element);
+
+		if (typed == null) {
+			return;
+		}
+
+		List<? extends TypeMirror> typedParams = typed.getTypeArguments();
+
+		if (typedParams.size() != 1) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Collection should have exactly one typed parameter");
+			return;
+		}
+		TypeMirror typedParam = typedParams.get(0);
+		if (annotationHelper.isSameType(typedParam, Object.class)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Typed Parameter of the Collection cannot be Object.class");
+		} else if (typedParam instanceof WildcardType) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Wildcard not supported");
+		}
+
+	}
 }

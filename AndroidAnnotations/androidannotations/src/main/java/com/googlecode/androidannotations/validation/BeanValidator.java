@@ -16,23 +16,24 @@
 package com.googlecode.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-
 public class BeanValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
+	private TargetAnnotationHelper annotationHelper;
 
 	public BeanValidator(ProcessingEnvironment processingEnv) {
-		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
@@ -50,9 +51,17 @@ public class BeanValidator implements ElementValidator {
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.typeOrTargetValueHasAnnotation(EBean.class, element, valid);
+		if (annotationHelper.isAssignable(element.asType(), Collection.class)) {
+			validateCollection(valid, element);
+		} else {
+			validatorHelper.typeOrTargetValueHasAnnotation(EBean.class, element, valid);
+		}
 
 		return valid.isValid();
 	}
 
+	private void validateCollection(IsValid valid, Element element) {
+		validatorHelper.isFinal(element, valid);
+		validatorHelper.validateCollectionTypeParameter(element, valid);
+	}
 }

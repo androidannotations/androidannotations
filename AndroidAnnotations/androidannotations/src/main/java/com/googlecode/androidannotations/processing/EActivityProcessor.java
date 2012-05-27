@@ -40,6 +40,7 @@ import javax.lang.model.util.ElementFilter;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
+import com.googlecode.androidannotations.api.SetContentViewAware;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -139,7 +140,7 @@ public class EActivityProcessor implements ElementProcessor {
 		}
 
 		// afterSetContentView
-		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, SetContentViewAware.SIGNATURE);
 
 		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
