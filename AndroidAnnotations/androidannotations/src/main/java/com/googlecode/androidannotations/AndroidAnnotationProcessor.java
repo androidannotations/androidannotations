@@ -43,6 +43,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EApplication;
 import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
@@ -119,6 +120,7 @@ import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.EActivityProcessor;
 import com.googlecode.androidannotations.processing.EApplicationProcessor;
 import com.googlecode.androidannotations.processing.EBeanProcessor;
+import com.googlecode.androidannotations.processing.EFragmentProcessor;
 import com.googlecode.androidannotations.processing.EProviderProcessor;
 import com.googlecode.androidannotations.processing.EReceiverProcessor;
 import com.googlecode.androidannotations.processing.EServiceProcessor;
@@ -173,6 +175,7 @@ import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EActivityValidator;
 import com.googlecode.androidannotations.validation.EApplicationValidator;
 import com.googlecode.androidannotations.validation.EBeanValidator;
+import com.googlecode.androidannotations.validation.EFragmentValidator;
 import com.googlecode.androidannotations.validation.EProviderValidator;
 import com.googlecode.androidannotations.validation.EReceiverValidator;
 import com.googlecode.androidannotations.validation.EServiceValidator;
@@ -277,6 +280,7 @@ import com.sun.codemodel.JCodeModel;
 		InstanceState.class, //
 		NonConfigurationInstance.class, //
 		EApplication.class, //
+		EFragment.class, //
 		BeforeTextChange.class, //
 		TextChange.class, //
 		AfterTextChange.class //
@@ -396,6 +400,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new EServiceValidator(processingEnv, androidManifest));
 		modelValidator.register(new EReceiverValidator(processingEnv, androidManifest));
 		modelValidator.register(new EProviderValidator(processingEnv, androidManifest));
+		modelValidator.register(new EFragmentValidator(processingEnv));
 		modelValidator.register(new EViewGroupValidator(processingEnv, rClass));
 		modelValidator.register(new EViewValidator(processingEnv));
 		modelValidator.register(new EBeanValidator(processingEnv));
@@ -473,6 +478,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new EServiceProcessor());
 		modelProcessor.register(new EReceiverProcessor());
 		modelProcessor.register(new EProviderProcessor());
+		modelProcessor.register(new EFragmentProcessor());
 		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewProcessor(processingEnv));
 		modelProcessor.register(new EBeanProcessor());

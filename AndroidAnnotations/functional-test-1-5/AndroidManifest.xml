@@ -19,6 +19,8 @@
     android:versionCode="1"
     android:versionName="2.1-SNAPSHOT" >
 
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="3" />
+    
     <application
         android:name="com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication_"
         android:icon="@drawable/icon"

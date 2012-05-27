@@ -46,6 +46,7 @@ import android.util.Log;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EApplication;
 import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
@@ -83,6 +84,7 @@ public class ValidatorHelper {
 	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
 	public static final String ANDROID_CONTEXT_QUALIFIED_NAME = "android.content.Context";
 	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
+	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList("android.app.Fragment", "android.support.v4.app.Fragment");
 	private static final String ANDROID_SERVICE_QUALIFIED_NAME = "android.app.Service";
 	private static final String ANDROID_RECEIVER_QUALIFIED_NAME = "android.content.BroadcastReceiver";
 	private static final String ANDROID_PROVIDER_QUALIFIED_NAME = "android.content.ContentProvider";
@@ -101,10 +103,10 @@ public class ValidatorHelper {
 	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR);
 
 	@SuppressWarnings("unchecked")
-	private static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = Arrays.asList(EActivity.class, EViewGroup.class, EView.class, EBean.class);
+	private static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
 
 	@SuppressWarnings("unchecked")
-	private static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = Arrays.asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class, EReceiver.class, EProvider.class);
+	private static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class, EReceiver.class, EProvider.class, EFragment.class);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -535,6 +537,10 @@ public class ValidatorHelper {
 		extendsType(element, ANDROID_ACTIVITY_QUALIFIED_NAME, valid);
 	}
 
+	public void extendsFragment(Element element, IsValid valid) {
+		extendsOneOfTypes(element, ANDROID_FRAGMENT_QUALIFIED_NAMES, valid);
+	}
+
 	public void extendsService(Element element, IsValid valid) {
 		extendsType(element, ANDROID_SERVICE_QUALIFIED_NAME, valid);
 	}
@@ -646,6 +652,19 @@ public class ValidatorHelper {
 			extendsType(element, SharedPreferencesHelper.class.getName(), valid);
 		}
 
+	}
+
+	public void extendsOneOfTypes(Element element, List<String> typeQualifiedNames, IsValid valid) {
+		TypeMirror elementType = element.asType();
+
+		for (String typeQualifiedName : typeQualifiedNames) {
+			TypeMirror expectedType = annotationHelper.typeElementFromQualifiedName(typeQualifiedName).asType();
+			if (annotationHelper.isSubtype(elementType, expectedType)) {
+				return;
+			}
+		}
+		valid.invalidate();
+		annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends one of the following classes: " + typeQualifiedNames);
 	}
 
 	public void extendsType(Element element, String typeQualifiedName, IsValid valid) {
