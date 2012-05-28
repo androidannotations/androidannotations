@@ -14,3 +14,20 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
+
+This project uses CodeModel (http://codemodel.java.net/), which is
+distributed under the GlassFish Dual License, which means CodeModel is
+subject to the terms of either the GNU General Public License Version 2 only
+("GPL") or the Common Development and Distribution License("CDDL").
+
+You may obtain a copy of the "CDDL" License at
+
+http://www.opensource.org/licenses/cddl1.php
+
+As per section 3.6 ("Larger Works") of the "CDDL" License, we may create a
+Larger Work by combining Covered Software with other code not governed by
+the terms of this License and distribute the Larger Work as a single
+product.
+
+We are therefore allowed to distribute CodeModel without Modification as
+part of AndroidAnnotations.
