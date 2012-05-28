@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.helper.AndroidManifest;
@@ -50,7 +49,7 @@ public class EActivityValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsActivity((TypeElement) element, valid);
+		validatorHelper.extendsActivity(element, valid);
 
 		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 

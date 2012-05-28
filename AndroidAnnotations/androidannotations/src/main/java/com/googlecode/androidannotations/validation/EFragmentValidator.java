@@ -20,23 +20,24 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class EBeanValidator implements ElementValidator {
+public class EFragmentValidator implements ElementValidator {
 
 	private final ValidatorHelper validatorHelper;
+	private TargetAnnotationHelper annotationHelper;
 
-	public EBeanValidator(ProcessingEnvironment processingEnv) {
-		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+	public EFragmentValidator(ProcessingEnvironment processingEnv) {
+		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return EBean.class;
+		return EFragment.class;
 	}
 
 	@Override
@@ -51,6 +52,8 @@ public class EBeanValidator implements ElementValidator {
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.hasEmptyConstructor(element, valid);
+
+		validatorHelper.extendsFragment(element, valid);
 
 		return valid.isValid();
 	}

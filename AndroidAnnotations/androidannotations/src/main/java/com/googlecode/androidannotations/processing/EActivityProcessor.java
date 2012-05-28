@@ -17,6 +17,7 @@ package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
 import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
@@ -146,7 +147,7 @@ public class EActivityProcessor implements ElementProcessor {
 
 		onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
 
-		onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
+		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 
 		EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
 		int layoutIdValue = layoutAnnotation.value();
