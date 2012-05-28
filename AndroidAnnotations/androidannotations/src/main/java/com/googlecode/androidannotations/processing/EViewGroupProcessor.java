@@ -20,7 +20,6 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -63,7 +62,7 @@ public class EViewGroupProcessor implements ElementProcessor {
 
 	private final APTCodeModelHelper codeModelHelper;
 
-	public EViewGroupProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public EViewGroupProcessor(IRClass rClass) {
 		this.rClass = rClass;
 		codeModelHelper = new APTCodeModelHelper();
 	}

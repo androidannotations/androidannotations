@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>1.5_r4</version>
+			<version>4.0.1.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

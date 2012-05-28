@@ -50,6 +50,8 @@ import com.googlecode.androidannotations.annotations.EService;
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.FragmentById;
+import com.googlecode.androidannotations.annotations.FragmentByTag;
 import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.annotations.Fullscreen;
 import com.googlecode.androidannotations.annotations.InstanceState;
@@ -127,6 +129,8 @@ import com.googlecode.androidannotations.processing.EServiceProcessor;
 import com.googlecode.androidannotations.processing.EViewGroupProcessor;
 import com.googlecode.androidannotations.processing.EViewProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
+import com.googlecode.androidannotations.processing.FragmentByIdProcessor;
+import com.googlecode.androidannotations.processing.FragmentByTagProcessor;
 import com.googlecode.androidannotations.processing.FromHtmlProcessor;
 import com.googlecode.androidannotations.processing.FullscreenProcessor;
 import com.googlecode.androidannotations.processing.InstanceStateProcessor;
@@ -182,6 +186,8 @@ import com.googlecode.androidannotations.validation.EServiceValidator;
 import com.googlecode.androidannotations.validation.EViewGroupValidator;
 import com.googlecode.androidannotations.validation.EViewValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
+import com.googlecode.androidannotations.validation.FragmentByIdValidator;
+import com.googlecode.androidannotations.validation.FragmentByTagValidator;
 import com.googlecode.androidannotations.validation.FromHtmlValidator;
 import com.googlecode.androidannotations.validation.FullscreenValidator;
 import com.googlecode.androidannotations.validation.InstanceStateValidator;
@@ -281,6 +287,8 @@ import com.sun.codemodel.JCodeModel;
 		NonConfigurationInstance.class, //
 		EApplication.class, //
 		EFragment.class, //
+		FragmentById.class, //
+		FragmentByTag.class, //
 		BeforeTextChange.class, //
 		TextChange.class, //
 		AfterTextChange.class //
@@ -406,6 +414,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new EBeanValidator(processingEnv));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
+		modelValidator.register(new FragmentByIdValidator(processingEnv, rClass));
+		modelValidator.register(new FragmentByTagValidator(processingEnv));
 		modelValidator.register(new FromHtmlValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
@@ -479,13 +489,15 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new EReceiverProcessor());
 		modelProcessor.register(new EProviderProcessor());
 		modelProcessor.register(new EFragmentProcessor());
-		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
-		modelProcessor.register(new EViewProcessor(processingEnv));
+		modelProcessor.register(new EViewGroupProcessor(rClass));
+		modelProcessor.register(new EViewProcessor());
 		modelProcessor.register(new EBeanProcessor());
 		modelProcessor.register(new SharedPrefProcessor());
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewByIdProcessor(rClass));
+		modelProcessor.register(new FragmentByIdProcessor(processingEnv, rClass));
+		modelProcessor.register(new FragmentByTagProcessor(processingEnv));
 		modelProcessor.register(new FromHtmlProcessor(rClass));
 		modelProcessor.register(new ClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new LongClickProcessor(processingEnv, rClass));

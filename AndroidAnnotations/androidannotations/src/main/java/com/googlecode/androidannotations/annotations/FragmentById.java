@@ -21,9 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use it on View fields in activity classes
- * 
- * The field MUST be of a type that extends android.view.View.
+ * Use it on Fragment fields in activity classes
  * 
  * The annotation value should be one of R.id.* fields. If not set, the field
  * name will be used as the R.id.* field name.
@@ -31,6 +29,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
-public @interface ViewById {
+public @interface FragmentById {
 	int value() default Id.DEFAULT_VALUE;
 }
