@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
@@ -131,7 +132,7 @@ public class EViewGroupProcessor implements ElementProcessor {
 		if (layoutIdValue != Id.DEFAULT_VALUE) {
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
-			ifNotInflated.invoke("inflate").arg(JExpr.invoke("getContext")).arg(contentViewId).arg(JExpr._this());
+			ifNotInflated.invoke("inflate").arg(invoke("getContext")).arg(contentViewId).arg(JExpr._this());
 		}
 		ifNotInflated.invoke(holder.afterSetContentView);
 

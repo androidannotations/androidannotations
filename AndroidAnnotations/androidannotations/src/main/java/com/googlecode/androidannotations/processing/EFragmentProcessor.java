@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
@@ -29,15 +30,26 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EFragment;
+import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
+import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 public class EFragmentProcessor implements ElementProcessor {
+
+	private final IRClass rClass;
+
+	public EFragmentProcessor(IRClass rClass) {
+		this.rClass = rClass;
+	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -94,6 +106,20 @@ public class EFragmentProcessor implements ElementProcessor {
 			holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 		}
 
+		JFieldRef contentViewId;
+		{
+			// Extract contentViewId
+			EFragment layoutAnnotation = element.getAnnotation(EFragment.class);
+			int layoutIdValue = layoutAnnotation.value();
+
+			if (layoutIdValue != Id.DEFAULT_VALUE) {
+				IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
+				contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
+			} else {
+				contentViewId = null;
+			}
+		}
+
 		{
 			// onCreateView()
 			JMethod onCreateView = holder.eBean.method(PUBLIC, viewClass, "onCreateView");
@@ -103,6 +129,12 @@ public class EFragmentProcessor implements ElementProcessor {
 
 			JBlock body = onCreateView.body();
 			body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
+
+			if (contentViewId != null) {
+				body._if(contentView.eq(_null())) //
+						._then() //
+						.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+			}
 
 			body.invoke(holder.afterSetContentView);
 
