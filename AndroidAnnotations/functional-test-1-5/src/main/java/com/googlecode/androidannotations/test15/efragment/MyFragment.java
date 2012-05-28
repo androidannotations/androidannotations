@@ -16,10 +16,11 @@ import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.test15.R;
 import com.googlecode.androidannotations.test15.ebean.SomeBean;
 import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
 
-@EFragment
+@EFragment(R.layout.injected)
 public class MyFragment extends Fragment {
 	
 	@Bean

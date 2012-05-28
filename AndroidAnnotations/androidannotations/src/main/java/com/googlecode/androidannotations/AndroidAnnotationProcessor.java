@@ -408,7 +408,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new EServiceValidator(processingEnv, androidManifest));
 		modelValidator.register(new EReceiverValidator(processingEnv, androidManifest));
 		modelValidator.register(new EProviderValidator(processingEnv, androidManifest));
-		modelValidator.register(new EFragmentValidator(processingEnv));
+		modelValidator.register(new EFragmentValidator(processingEnv, rClass));
 		modelValidator.register(new EViewGroupValidator(processingEnv, rClass));
 		modelValidator.register(new EViewValidator(processingEnv));
 		modelValidator.register(new EBeanValidator(processingEnv));
@@ -488,7 +488,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new EServiceProcessor());
 		modelProcessor.register(new EReceiverProcessor());
 		modelProcessor.register(new EProviderProcessor());
-		modelProcessor.register(new EFragmentProcessor());
+		modelProcessor.register(new EFragmentProcessor(rClass));
 		modelProcessor.register(new EViewGroupProcessor(rClass));
 		modelProcessor.register(new EViewProcessor());
 		modelProcessor.register(new EBeanProcessor());

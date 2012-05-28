@@ -23,8 +23,12 @@ import java.lang.annotation.Target;
 /**
  * Should be used on Fragment classes to enable usage of AndroidAnnotations
  * 
+ * The annotation value should be one of R.layout.* fields, or none if you want
+ * to handle the view creation by yourself.
+ * 
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface EFragment {
+	int value() default Id.DEFAULT_VALUE;
 }

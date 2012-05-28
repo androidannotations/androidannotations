@@ -21,18 +21,19 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 
 public class EFragmentValidator implements ElementValidator {
 
-	private final ValidatorHelper validatorHelper;
-	private TargetAnnotationHelper annotationHelper;
+	private final IdValidatorHelper validatorHelper;
 
-	public EFragmentValidator(ProcessingEnvironment processingEnv) {
-		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
-		validatorHelper = new ValidatorHelper(annotationHelper);
+	public EFragmentValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
 	@Override
@@ -48,6 +49,8 @@ public class EFragmentValidator implements ElementValidator {
 		validatorHelper.isNotFinal(element, valid);
 
 		validatorHelper.isNotAbstract(element, valid);
+
+		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
