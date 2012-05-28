@@ -15,6 +15,10 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.ref;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
@@ -27,7 +31,6 @@ import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
 public class ViewByIdProcessor implements ElementProcessor {
@@ -44,9 +47,9 @@ public class ViewByIdProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
 
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -66,7 +69,7 @@ public class ViewByIdProcessor implements ElementProcessor {
 
 		JBlock methodBody = holder.afterSetContentView.body();
 
-		methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(typeQualifiedName), JExpr.invoke("findViewById").arg(idRef)));
+		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke("findViewById").arg(idRef)));
 	}
 
 }

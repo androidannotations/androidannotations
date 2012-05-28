@@ -75,7 +75,7 @@ public class EBeanHolder {
 	 * Only defined in activities
 	 */
 	public JFieldVar intentField;
-	
+
 	/**
 	 * Only defined in activities
 	 */
@@ -85,6 +85,11 @@ public class EBeanHolder {
 	 * TextWatchers by idRef
 	 */
 	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
+
+	public JMethod findNativeFragmentById;
+	public JMethod findSupportFragmentById;
+	public JMethod findNativeFragmentByTag;
+	public JMethod findSupportFragmentByTag;
 
 	public JClass refClass(String fullyQualifiedClassName) {
 

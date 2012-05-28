@@ -20,23 +20,26 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
+import com.googlecode.androidannotations.annotations.FragmentById;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
+import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class EBeanValidator implements ElementValidator {
+public class FragmentByIdValidator implements ElementValidator {
 
-	private final ValidatorHelper validatorHelper;
+	private IdValidatorHelper validatorHelper;
+	private IdAnnotationHelper annotationHelper;
 
-	public EBeanValidator(ProcessingEnvironment processingEnv) {
-		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
-		validatorHelper = new ValidatorHelper(annotationHelper);
+	public FragmentByIdValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return EBean.class;
+		return FragmentById.class;
 	}
 
 	@Override
@@ -44,13 +47,13 @@ public class EBeanValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.isNotFinal(element, valid);
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
-		validatorHelper.isNotAbstract(element, valid);
+		validatorHelper.extendsFragment(element, valid);
+
+		validatorHelper.idExists(element, Res.ID, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
-
-		validatorHelper.hasEmptyConstructor(element, valid);
 
 		return valid.isValid();
 	}

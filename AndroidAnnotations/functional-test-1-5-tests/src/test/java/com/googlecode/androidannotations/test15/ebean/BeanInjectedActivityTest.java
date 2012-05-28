@@ -32,7 +32,6 @@ public class BeanInjectedActivityTest {
 	public void setup() {
 		activity = new BeanInjectedActivity_();
 		activity.onCreate(null);
-		
 	}
 
 	@Test

@@ -43,7 +43,6 @@ public class DeleteProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		Delete deleteAnnotation = element.getAnnotation(Delete.class);

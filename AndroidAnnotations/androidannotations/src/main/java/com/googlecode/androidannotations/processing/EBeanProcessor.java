@@ -96,7 +96,7 @@ public class EBeanProcessor implements ElementProcessor {
 
 			JBlock findViewByIdBody = findViewById.body();
 
-			JVar activityVar = findViewByIdBody.decl(activityClass, "activity", cast(activityClass, holder.contextRef));
+			JVar activityVar = findViewByIdBody.decl(activityClass, "activity_", cast(activityClass, holder.contextRef));
 
 			findViewByIdBody._return(activityVar.invoke(findViewById).arg(idParam));
 		}
