@@ -122,6 +122,10 @@ public class AnnotationHelper {
 		return isSubtype(t1.asType(), t2.asType());
 	}
 
+	/**
+	 * This method may return null if the {@link TypeElement} cannot be found in
+	 * the processor classpath
+	 */
 	public TypeElement typeElementFromQualifiedName(String qualifiedName) {
 		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
 	}
@@ -174,7 +178,7 @@ public class AnnotationHelper {
 	public boolean isInterface(TypeElement element) {
 		return element.getKind().isInterface();
 	}
-	
+
 	public boolean isTopLevel(TypeElement element) {
 		return element.getNestingKind() == NestingKind.TOP_LEVEL;
 	}

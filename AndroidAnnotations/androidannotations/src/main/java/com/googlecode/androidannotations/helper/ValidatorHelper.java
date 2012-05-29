@@ -658,9 +658,12 @@ public class ValidatorHelper {
 		TypeMirror elementType = element.asType();
 
 		for (String typeQualifiedName : typeQualifiedNames) {
-			TypeMirror expectedType = annotationHelper.typeElementFromQualifiedName(typeQualifiedName).asType();
-			if (annotationHelper.isSubtype(elementType, expectedType)) {
-				return;
+			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(typeQualifiedName);
+			if (typeElement != null) {
+				TypeMirror expectedType = typeElement.asType();
+				if (annotationHelper.isSubtype(elementType, expectedType)) {
+					return;
+				}
 			}
 		}
 		valid.invalidate();
@@ -670,10 +673,13 @@ public class ValidatorHelper {
 	public void extendsType(Element element, String typeQualifiedName, IsValid valid) {
 		TypeMirror elementType = element.asType();
 
-		TypeMirror expectedType = annotationHelper.typeElementFromQualifiedName(typeQualifiedName).asType();
-		if (!annotationHelper.isSubtype(elementType, expectedType)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(typeQualifiedName);
+		if (typeElement != null) {
+			TypeMirror expectedType = typeElement.asType();
+			if (!annotationHelper.isSubtype(elementType, expectedType)) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
+			}
 		}
 	}
 
