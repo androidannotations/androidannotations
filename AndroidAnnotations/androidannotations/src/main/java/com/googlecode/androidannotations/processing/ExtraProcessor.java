@@ -15,6 +15,11 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.INTENT;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.LOG;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.STRING;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
@@ -109,7 +114,7 @@ public class ExtraProcessor implements ElementProcessor {
 		JCatchBlock containsKeyCatch = containsKeyTry._catch(holder.refClass(ClassCastException.class));
 		JVar exceptionParam = containsKeyCatch.param("e");
 
-		JInvocation errorInvoke = holder.refClass("android.util.Log").staticInvoke("e");
+		JInvocation logError = holder.refClass(LOG).staticInvoke("e");
 
 		errorInvoke.arg(holder.eBean.name());
 		errorInvoke.arg("Could not cast extra to expected type, the field is left to its default value");
@@ -127,9 +132,9 @@ public class ExtraProcessor implements ElementProcessor {
 				if (extraType.getKind() == TypeKind.DECLARED) {
 					Elements elementUtils = processingEnv.getElementUtils();
 					Types typeUtils = processingEnv.getTypeUtils();
-					TypeMirror parcelableType = elementUtils.getTypeElement("android.os.Parcelable").asType();
+					TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
 					if (!typeUtils.isSubtype(extraType, parcelableType)) {
-						TypeMirror stringType = elementUtils.getTypeElement("java.lang.String").asType();
+						TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
 						if (!typeUtils.isSubtype(extraType, stringType)) {
 							castToSerializable = true;
 						}
@@ -156,14 +161,14 @@ public class ExtraProcessor implements ElementProcessor {
 	 */
 	private void injectExtras(EBeanHolder holder, JCodeModel codeModel) {
 
-		JClass intentClass = holder.refClass("android.content.Intent");
+		JClass intentClass = holder.refClass(INTENT);
 		JMethod injectExtrasMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "injectExtras_");
 
 		overrideSetIntent(holder, codeModel, intentClass, injectExtrasMethod);
 
 		injectExtrasOnInit(holder, intentClass, injectExtrasMethod);
 
-		JClass bundleClass = holder.refClass("android.os.Bundle");
+		JClass bundleClass = holder.refClass(BUNDLE);
 		JBlock injectExtrasBody = injectExtrasMethod.body();
 
 		JVar intent = injectExtrasBody.decl(intentClass, "intent_", invoke("getIntent"));

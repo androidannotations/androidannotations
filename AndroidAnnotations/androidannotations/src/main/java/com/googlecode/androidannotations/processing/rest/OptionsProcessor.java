@@ -24,7 +24,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Options;
-import com.googlecode.androidannotations.helper.ProcessorConstants;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -58,7 +58,7 @@ public class OptionsProcessor extends MethodProcessor {
 
 		JClass expectedClass = holder.refClass(typeParameter.toString());
 
-		JClass generatedReturnType = holder.refClass(ProcessorConstants.SET).narrow(expectedClass);
+		JClass generatedReturnType = holder.refClass(CanonicalNameConstants.SET).narrow(expectedClass);
 
 		Options optionsAnnotation = element.getAnnotation(Options.class);
 		String urlSuffix = optionsAnnotation.value();
