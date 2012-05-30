@@ -50,22 +50,21 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 	}
 
 	public DeclaredType extractAnnotationClassValue(Element element) {
+		return (DeclaredType) extractAnnotationClassAttrVal(element, "value");
+	}
+
+	public Object extractAnnotationClassAttrVal(Element element, String attrName) {
 
 		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
 
 		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
 
 		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
-			/*
-			 * "value" is unset when the default value is used
-			 */
-			if ("value".equals(entry.getKey().getSimpleName().toString())) {
+			if (attrName.equals(entry.getKey().getSimpleName().toString())) {
 
 				AnnotationValue annotationValue = entry.getValue();
 
-				DeclaredType annotationClass = (DeclaredType) annotationValue.getValue();
-
-				return annotationClass;
+				return annotationValue.getValue();
 			}
 		}
 
@@ -75,6 +74,11 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 	public boolean isAssignable(TypeMirror type1, Class<?> type2) {
 		TypeMirror type = getElementUtils().getTypeElement(type2.getCanonicalName()).asType();
 		return getTypeUtils().isAssignable(type1, type);
+	}
+
+	public boolean isAssignable(Class<?> type1, TypeMirror type2) {
+		TypeMirror type = getElementUtils().getTypeElement(type1.getCanonicalName()).asType();
+		return getTypeUtils().isAssignable(type, type2);
 	}
 
 	public boolean isSameType(TypeMirror type1, Class<?> type2) {

@@ -21,16 +21,19 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.api.SetContentViewAware;
 import com.googlecode.androidannotations.helper.ElementHelper;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
@@ -38,17 +41,17 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JForEach;
 import com.sun.codemodel.JInvocation;
 
 public class BeanProcessor implements ElementProcessor {
 
 	private TargetAnnotationHelper annotationHelper;
-	private AnnotationElements validatedModel;
 
 	public BeanProcessor(ProcessingEnvironment processingEnv, AnnotationElements validatedModel) {
 		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
-		this.validatedModel = validatedModel;
 	}
 
 	@Override
@@ -61,6 +64,7 @@ public class BeanProcessor implements ElementProcessor {
 
 		if (annotationHelper.isAssignable(element.asType(), Collection.class)) {
 			processCollection(element, codeModel, eBeansHolder);
+			processCollectionItems(element, codeModel, eBeansHolder);
 			return;
 		}
 
@@ -70,7 +74,43 @@ public class BeanProcessor implements ElementProcessor {
 
 	private void processCollection(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
-		Set<? extends Element> eBeans = validatedModel.getAnnotatedElements(EBean.class);
+		DeclaredType providedImpl = annotationHelper.extractAnnotationClassValue(element);
+		String fieldName = element.getSimpleName().toString();
+
+		if (providedImpl != null) {
+			if (providedImpl.toString().startsWith("java.")) {
+				assignCollection(codeModel, holder.init.body(), codeModel.ref(providedImpl.toString()), fieldName);
+				return;
+			}
+			processSingle(element, codeModel, eBeansHolder);
+		} else {
+			TypeMirror elementDeclaredType = element.asType();
+			TypeMirror typed = ElementHelper.getAsDeclaredType(element).getTypeArguments().get(0);
+			if (annotationHelper.isAssignable(Collection.class, elementDeclaredType) || annotationHelper.isAssignable(elementDeclaredType, List.class)) {
+				assignNarrowedCollection(codeModel, holder.init.body(), ArrayList.class.getCanonicalName(), fieldName, typed);
+				return;
+			}
+			if (annotationHelper.isAssignable(elementDeclaredType, Set.class)) {
+				assignNarrowedCollection(codeModel, holder.init.body(), HashSet.class.getCanonicalName(), fieldName, typed);
+				return;
+			}
+		}
+	}
+
+	private void assignNarrowedCollection(JCodeModel codeModel, JBlock body, String providedImpl, String fieldName, TypeMirror narrowed) {
+		JClass injectedClass = codeModel.ref(providedImpl).narrow(codeModel.ref(narrowed.toString()));
+		assignCollection(codeModel, body, injectedClass, fieldName);
+	}
+
+	private void assignCollection(JCodeModel codeModel, JBlock body, JClass injectedClass, String fieldName) {
+		JInvocation getInstance = JExpr._new(injectedClass);
+		JFieldRef ref = ref(fieldName);
+		body._if(ref.eq(JExpr._null()))._then().assign(ref, getInstance);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void processCollectionItems(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
+		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
 		JBlock init = holder.init.body();
 		JBlock afterSetContentView = holder.afterSetContentView.body();
@@ -81,15 +121,16 @@ public class BeanProcessor implements ElementProcessor {
 			JForEach forEach = afterSetContentView.forEach(codeModel.ref(Object.class), "item", ref(fieldName));
 			forEach.body().invoke(cast(codeModel.ref(SetContentViewAware.class), ref("item")), SetContentViewAware.SIGNATURE);
 		}
-		DeclaredType typed = ElementHelper.getAsDeclaredType(element);
-		TypeMirror typedParamType = typed.getTypeArguments().get(0);
-		for (Element bean : eBeans) {
-			if (annotationHelper.getTypeUtils().isAssignable(bean.asType(), typedParamType)) {
-				JClass injectedClass = codeModel.ref(bean.asType().toString() + GENERATION_SUFFIX);
+
+		List<? extends AnnotationValue> eBeans = (List<? extends AnnotationValue>) annotationHelper.extractAnnotationClassAttrVal(element, "items");
+		if (eBeans != null) {
+			for (AnnotationValue bean : eBeans) {
+				JClass injectedClass = codeModel.ref(bean.getValue().toString() + GENERATION_SUFFIX);
 				JInvocation getInstance = injectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
 				init.invoke(ref(fieldName), "add").arg(getInstance);
 			}
 		}
+
 	}
 
 	private void processSingle(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {

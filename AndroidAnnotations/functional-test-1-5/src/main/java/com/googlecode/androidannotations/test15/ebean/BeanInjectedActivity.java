@@ -15,9 +15,6 @@
  */
 package com.googlecode.androidannotations.test15.ebean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 
 import com.googlecode.androidannotations.annotations.Bean;
@@ -28,11 +25,8 @@ public class BeanInjectedActivity extends Activity {
 
 	@Bean
 	public EmptyDependency dependency;
-
-	@Bean
-	public final List<SomeInterface> list = new ArrayList<SomeInterface>();
-
-	@Bean(SomeImplementation.class)
+	
+	@Bean(value = SomeImplementation.class)
 	public SomeInterface interfaceDependency;
 
 	@Bean

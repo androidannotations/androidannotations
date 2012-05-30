@@ -59,9 +59,4 @@ public class BeanInjectedActivityTest {
 		
 		assertThat(newActivity.singletonDependency).isSameAs(initialDependency);
 	}
-	
-	@Test
-	public void list_is_injected() {
-		assertThat(activity.list.size()).isEqualTo(1);
-	}
 }

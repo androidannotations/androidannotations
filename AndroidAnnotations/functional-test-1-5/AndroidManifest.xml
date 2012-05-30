@@ -56,6 +56,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.NoTitleFullscreenActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.ExtendingActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.ebean.BeanInjectedActivity_" />
+        <activity android:name="com.googlecode.androidannotations.test15.ebean.CollectionInjectedActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.rest.MyServiceActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.afterinject.AfterInjectActivity_" />

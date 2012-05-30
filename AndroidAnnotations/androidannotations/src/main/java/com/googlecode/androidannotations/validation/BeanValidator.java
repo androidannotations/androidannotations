@@ -52,7 +52,7 @@ public class BeanValidator implements ElementValidator {
 		validatorHelper.isNotPrivate(element, valid);
 
 		if (annotationHelper.isAssignable(element.asType(), Collection.class)) {
-			validateCollection(valid, element);
+			validatorHelper.validateBeanCollection(element, valid);
 		} else {
 			validatorHelper.typeOrTargetValueHasAnnotation(EBean.class, element, valid);
 		}
@@ -60,8 +60,4 @@ public class BeanValidator implements ElementValidator {
 		return valid.isValid();
 	}
 
-	private void validateCollection(IsValid valid, Element element) {
-		validatorHelper.isFinal(element, valid);
-		validatorHelper.validateCollectionTypeParameter(element, valid);
-	}
 }

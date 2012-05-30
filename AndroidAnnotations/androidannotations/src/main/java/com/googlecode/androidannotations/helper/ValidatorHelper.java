@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -114,13 +115,6 @@ public class ValidatorHelper {
 		if (annotationHelper.isFinal(element)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a final element");
-		}
-	}
-
-	public void isFinal(Element element, IsValid valid) {
-		if (!annotationHelper.isFinal(element)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s must be used on a final element");
 		}
 	}
 
@@ -1037,28 +1031,66 @@ public class ValidatorHelper {
 
 	}
 
-	public void validateCollectionTypeParameter(Element element, IsValid valid) {
-		DeclaredType typed = ElementHelper.getAsDeclaredType(element);
+	public void validateBeanCollection(Element element, IsValid valid) {
+		DeclaredType providedImpl = annotationHelper.extractAnnotationClassValue(element);
 
-		if (typed == null) {
-			return;
+		if (providedImpl != null) {
+			if (!annotationHelper.getTypeUtils().isAssignable(providedImpl, element.asType())) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "The value of %s must be assignable into the annotated field");
+				return;
+			}
+			if (!providedImpl.toString().startsWith("java.")) {
+				typeOrTargetValueHasAnnotation(EBean.class, element, valid);
+				if (!valid.isValid()) {
+					return;
+				}
+			}
 		}
 
-		List<? extends TypeMirror> typedParams = typed.getTypeArguments();
-
-		if (typedParams.size() != 1) {
+		TypeMirror typedParam = getTypedParameter(element, valid);
+		if (typedParam == null) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "Collection should have exactly one typed parameter");
 			return;
 		}
-		TypeMirror typedParam = typedParams.get(0);
 		if (annotationHelper.isSameType(typedParam, Object.class)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "Typed Parameter of the Collection cannot be Object.class");
+			return;
 		} else if (typedParam instanceof WildcardType) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "Wildcard not supported");
+			return;
 		}
 
+		validateCollectionItem(element, typedParam, valid);
+	}
+
+	private TypeMirror getTypedParameter(Element element, IsValid valid) {
+		DeclaredType typed = ElementHelper.getAsDeclaredType(element);
+
+		List<? extends TypeMirror> typedParams = typed.getTypeArguments();
+
+		if (typedParams.size() != 1) {
+			return null;
+		}
+		return typedParams.get(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void validateCollectionItem(Element element, TypeMirror typedParam, IsValid valid) {
+		Object obj = annotationHelper.extractAnnotationClassAttrVal(element, "items");
+		if (obj != null) {
+			for (AnnotationValue item : (List<? extends AnnotationValue>) obj) {
+				TypeMirror type = (TypeMirror) item.getValue();
+				if (!annotationHelper.getTypeUtils().isAssignable(type, typedParam)) {
+					valid.invalidate();
+					annotationHelper.printAnnotationError(element, type + " is not assignable to " + typedParam);
+					return;
+				}
+				typeHasAnnotation(EBean.class, type, element, valid);
+			}
+		}
 	}
 }

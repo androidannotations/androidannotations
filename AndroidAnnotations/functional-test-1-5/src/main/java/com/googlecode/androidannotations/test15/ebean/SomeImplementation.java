@@ -20,4 +20,10 @@ import com.googlecode.androidannotations.annotations.EBean;
 @EBean
 public class SomeImplementation implements SomeInterface {
 
+	@Override
+	public boolean isAfterViewCalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
