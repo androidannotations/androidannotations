@@ -75,25 +75,20 @@ public class ExtraProcessor implements ElementProcessor {
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
 
+		if (extraKey.isEmpty()) {
+			extraKey = fieldName;
+		}
+
 		TypeMirror elementType = element.asType();
 		boolean isPrimitive = elementType.getKind().isPrimitive();
 
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 
 		if (!isPrimitive && holder.cast == null) {
-			JType objectType = codeModel._ref(Object.class);
-			JMethod method = holder.eBean.method(JMod.PRIVATE, objectType, "cast_");
-			JTypeVar genericType = method.generify("T");
-			method.type(genericType);
-			JVar objectParam = method.param(objectType, "object");
-			method.annotate(SuppressWarnings.class).param("value", "unchecked");
-			method.body()._return(JExpr.cast(genericType, objectParam));
-
-			holder.cast = method;
+			generateCastMethod(codeModel, holder);
 		}
 
 		if (holder.extras == null) {
-
 			injectExtras(holder, codeModel);
 		}
 
@@ -116,11 +111,11 @@ public class ExtraProcessor implements ElementProcessor {
 
 		JInvocation logError = holder.refClass(LOG).staticInvoke("e");
 
-		errorInvoke.arg(holder.eBean.name());
-		errorInvoke.arg("Could not cast extra to expected type, the field is left to its default value");
-		errorInvoke.arg(exceptionParam);
+		logError.arg(holder.eBean.name());
+		logError.arg("Could not cast extra to expected type, the field is left to its default value");
+		logError.arg(exceptionParam);
 
-		containsKeyCatch.body().add(errorInvoke);
+		containsKeyCatch.body().add(logError);
 
 		if (holder.intentBuilderClass != null) {
 			{
@@ -154,6 +149,17 @@ public class ExtraProcessor implements ElementProcessor {
 			}
 		}
 
+	}
+
+	private void generateCastMethod(JCodeModel codeModel, EBeanHolder holder) {
+		JType objectType = codeModel._ref(Object.class);
+		JMethod method = holder.eBean.method(JMod.PRIVATE, objectType, "cast_");
+		JTypeVar genericType = method.generify("T");
+		method.type(genericType);
+		JVar objectParam = method.param(objectType, "object");
+		method.annotate(SuppressWarnings.class).param("value", "unchecked");
+		method.body()._return(JExpr.cast(genericType, objectParam));
+		holder.cast = method;
 	}
 
 	/**
