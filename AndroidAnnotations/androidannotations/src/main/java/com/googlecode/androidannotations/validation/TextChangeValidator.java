@@ -64,6 +64,8 @@ public class TextChangeValidator implements ElementValidator {
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		haveTextChangedMethodParameters(executableElement, valid);
+		
+		validatorHelper.methodHasName(executableElement, "onTextChanged", valid);
 
 		return valid.isValid();
 	}

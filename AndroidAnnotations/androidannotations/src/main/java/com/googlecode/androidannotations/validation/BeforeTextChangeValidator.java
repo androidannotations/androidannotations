@@ -64,6 +64,8 @@ public class BeforeTextChangeValidator implements ElementValidator {
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		haveBeforeTextChangedMethodParameters(executableElement, valid);
+		
+		validatorHelper.methodHasName(executableElement, "beforeTextChanged", valid);
 
 		return valid.isValid();
 	}
