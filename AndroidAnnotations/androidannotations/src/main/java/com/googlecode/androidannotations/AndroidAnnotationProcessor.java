@@ -71,7 +71,6 @@ import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.AnimationRes;
 import com.googlecode.androidannotations.annotations.res.BooleanRes;
@@ -154,7 +153,6 @@ import com.googlecode.androidannotations.processing.TextChangeProcessor;
 import com.googlecode.androidannotations.processing.TouchProcessor;
 import com.googlecode.androidannotations.processing.TraceProcessor;
 import com.googlecode.androidannotations.processing.TransactionalProcessor;
-import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewByIdProcessor;
 import com.googlecode.androidannotations.processing.rest.DeleteProcessor;
@@ -236,7 +234,6 @@ import com.sun.codemodel.JCodeModel;
 		ItemLongClick.class, //
 		Touch.class, //
 		ItemSelect.class, //
-		UiThreadDelayed.class, //
 		UiThread.class, //
 		Transactional.class, //
 		Background.class, //
@@ -452,7 +449,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		if (traceActivated()) {
 			modelValidator.register(new TraceValidator(processingEnv));
 		}
-		modelValidator.register(new RunnableValidator(UiThreadDelayed.class, processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
@@ -530,7 +526,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new BeanProcessor(processingEnv));
 		modelProcessor.register(new TraceProcessor());
 		modelProcessor.register(new UiThreadProcessor());
-		modelProcessor.register(new UiThreadDelayedProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
