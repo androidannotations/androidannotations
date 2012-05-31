@@ -63,6 +63,8 @@ public class AfterTextChangeValidator implements ElementValidator {
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		haveAfterTextChangedMethodParameters(executableElement, valid);
+		
+		validatorHelper.methodHasName(executableElement, "afterTextChanged", valid);
 
 		return valid.isValid();
 	}

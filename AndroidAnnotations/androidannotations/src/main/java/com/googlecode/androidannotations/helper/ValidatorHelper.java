@@ -1063,5 +1063,12 @@ public class ValidatorHelper {
 		}
 
 	}
+	
+	public void methodHasName(ExecutableElement method, String name, IsValid valid) {
+		if (method.getSimpleName().toString().equals(name)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(method, "A method with this annotation cannot have the name \"" + name +  "\". Please rename " + name + "() to something else.");
+		}
+	}
 
 }
