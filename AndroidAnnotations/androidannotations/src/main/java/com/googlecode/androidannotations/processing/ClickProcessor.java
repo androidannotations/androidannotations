@@ -25,9 +25,9 @@ import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
@@ -58,6 +58,7 @@ public class ClickProcessor implements ElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
 
@@ -69,10 +70,9 @@ public class ClickProcessor implements ElementProcessor {
 		Click annotation = element.getAnnotation(Click.class);
 		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Clicked", holder);
 
-		JDefinedClass onClickListenerClass = codeModel.anonymousClass(holder.refClass("android.view.View.OnClickListener"));
+		JDefinedClass onClickListenerClass = codeModel.anonymousClass(classes.VIEW_ON_CLICK_LISTENER);
 		JMethod onClickMethod = onClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");
-		JClass viewClass = holder.refClass("android.view.View");
-		JVar onClickViewParam = onClickMethod.param(viewClass, "view");
+		JVar onClickViewParam = onClickMethod.param(classes.VIEW, "view");
 
 		JInvocation clickCall = onClickMethod.body().invoke(methodName);
 
@@ -84,7 +84,7 @@ public class ClickProcessor implements ElementProcessor {
 			JBlock block = holder.afterSetContentView.body().block();
 
 			JInvocation findViewById = JExpr.invoke("findViewById");
-			JVar view = block.decl(viewClass, "view", findViewById.arg(idRef));
+			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
 			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnClickListener").arg(JExpr._new(onClickListenerClass));
 		}
 

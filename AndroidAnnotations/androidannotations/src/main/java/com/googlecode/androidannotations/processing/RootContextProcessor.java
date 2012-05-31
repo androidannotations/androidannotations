@@ -15,7 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
-import static com.googlecode.androidannotations.helper.ValidatorHelper.ANDROID_CONTEXT_QUALIFIED_NAME;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
@@ -47,7 +47,7 @@ public class RootContextProcessor implements ElementProcessor {
 		String typeQualifiedName = elementType.toString();
 
 		JBlock body = holder.init.body();
-		if (ANDROID_CONTEXT_QUALIFIED_NAME.equals(typeQualifiedName)) {
+		if (CONTEXT.equals(typeQualifiedName)) {
 			body.assign(ref(fieldName), holder.contextRef);
 		} else {
 			JClass extendingContextClass = holder.refClass(typeQualifiedName);

@@ -35,7 +35,7 @@ public class NoTitleProcessor implements ElementProcessor {
 
 		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
 
-		JFieldRef noTitle = holder.refClass("android.view.Window").staticRef("FEATURE_NO_TITLE");
+		JFieldRef noTitle = holder.classes().WINDOW.staticRef("FEATURE_NO_TITLE");
 
 		holder.init.body().invoke("requestWindowFeature").arg(noTitle);
 	}

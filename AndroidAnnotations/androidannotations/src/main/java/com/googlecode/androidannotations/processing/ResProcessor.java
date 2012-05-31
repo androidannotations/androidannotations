@@ -15,6 +15,9 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.ref;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
@@ -22,14 +25,14 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.res.HtmlRes;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.model.AndroidRes;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
 public class ResProcessor implements ElementProcessor {
@@ -50,6 +53,7 @@ public class ResProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -71,21 +75,20 @@ public class ResProcessor implements ElementProcessor {
 		String fieldType = fieldTypeMirror.toString();
 
 		// Special case for loading animations
-		if ("android.view.animation.Animation".equals(fieldType)) {
-			JClass animationUtils = holder.refClass("android.view.animation.AnimationUtils");
-			methodBody.assign(JExpr.ref(fieldName), animationUtils.staticInvoke("loadAnimation").arg(holder.contextRef).arg(idRef));
+		if (CanonicalNameConstants.ANIMATION.equals(fieldType)) {
+			methodBody.assign(ref(fieldName), classes.ANIMATION_UTILS.staticInvoke("loadAnimation").arg(holder.contextRef).arg(idRef));
 		} else {
-			if (holder.resources == null)
-				holder.resources = methodBody.decl(holder.refClass("android.content.res.Resources"), "resources_", holder.contextRef.invoke("getResources"));
+			if (holder.resources == null) {
+				holder.resources = methodBody.decl(classes.RESOURCES, "resources_", holder.contextRef.invoke("getResources"));
+			}
 
 			String resourceMethodName = androidValue.getResourceMethodName();
 
 			// Special case for @HtmlRes
 			if (element.getAnnotation(HtmlRes.class) != null) {
-				JClass html = holder.refClass("android.text.Html");
-				methodBody.assign(JExpr.ref(fieldName), html.staticInvoke("fromHtml").arg(JExpr.invoke(holder.resources, resourceMethodName).arg(idRef)));
+				methodBody.assign(ref(fieldName), classes.HTML.staticInvoke("fromHtml").arg(invoke(holder.resources, resourceMethodName).arg(idRef)));
 			} else {
-				methodBody.assign(JExpr.ref(fieldName), JExpr.invoke(holder.resources, resourceMethodName).arg(idRef));
+				methodBody.assign(ref(fieldName), invoke(holder.resources, resourceMethodName).arg(idRef));
 			}
 		}
 
