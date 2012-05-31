@@ -40,6 +40,9 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
+	
+	@Extra
+	String extraWithoutValue;
 
 	@Override
 	protected void onNewIntent(Intent intent) {

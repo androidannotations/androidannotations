@@ -37,7 +37,7 @@ public class ModelProcessor {
 
 		JCodeModel codeModel = new JCodeModel();
 
-		EBeansHolder eBeansHolder = new EBeansHolder();
+		EBeansHolder eBeansHolder = new EBeansHolder(codeModel);
 		for (ElementProcessor processor : processors) {
 			Class<? extends Annotation> target = processor.getTarget();
 

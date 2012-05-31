@@ -15,13 +15,14 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.invoke;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.Fullscreen;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 
@@ -37,9 +38,9 @@ public class FullscreenProcessor implements ElementProcessor {
 
 		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
 
-		JFieldRef fullScreen = holder.refClass("android.view.WindowManager.LayoutParams").staticRef("FLAG_FULLSCREEN");
+		JFieldRef fullScreen = holder.classes().WINDOW_MANAGER_LAYOUT_PARAMS.staticRef("FLAG_FULLSCREEN");
 
-		JInvocation arg = JExpr.invoke(JExpr.invoke("getWindow"), "setFlags").arg(fullScreen).arg(fullScreen);
+		JInvocation arg = invoke(invoke("getWindow"), "setFlags").arg(fullScreen).arg(fullScreen);
 		holder.init.body().add(arg);
 	}
 

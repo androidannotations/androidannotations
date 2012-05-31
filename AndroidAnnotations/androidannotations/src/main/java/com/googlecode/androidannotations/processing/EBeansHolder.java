@@ -15,17 +15,113 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
 
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+
 public class EBeansHolder {
 
-	private Map<Element, EBeanHolder> EBeanHolders = new HashMap<Element, EBeanHolder>();
+	public class Classes {
+
+		/*
+		 * Java classes
+		 */
+		public final JClass RUNTIME_EXCEPTION = refClass(RuntimeException.class);
+		public final JClass CHAR_SEQUENCE = refClass(CharSequence.class);
+		public final JClass CLASS_CAST_EXCEPTION = refClass(ClassCastException.class);
+		public final JClass SERIALIZABLE = refClass(Serializable.class);
+		public final JClass STRING = refClass(String.class);
+		public final JClass SYSTEM = refClass(System.class);
+
+		/*
+		 * Android classes
+		 */
+		public final JClass LOG = refClass(CanonicalNameConstants.LOG);
+		public final JClass BUNDLE = refClass(CanonicalNameConstants.BUNDLE);
+		public final JClass ACTIVITY = refClass(CanonicalNameConstants.ACTIVITY);
+		public final JClass EDITABLE = refClass(CanonicalNameConstants.EDITABLE);
+		public final JClass TEXT_WATCHER = refClass(CanonicalNameConstants.TEXT_WATCHER);
+		public final JClass TEXT_VIEW = refClass(CanonicalNameConstants.TEXT_VIEW);
+		public final JClass VIEW = refClass(CanonicalNameConstants.VIEW);
+		public final JClass VIEW_ON_CLICK_LISTENER = refClass(CanonicalNameConstants.VIEW_ON_CLICK_LISTENER);
+		public final JClass VIEW_GROUP_LAYOUT_PARAMS = refClass(CanonicalNameConstants.VIEW_GROUP_LAYOUT_PARAMS);
+		public final JClass KEY_EVENT = refClass(CanonicalNameConstants.KEY_EVENT);
+		public final JClass CONTEXT = refClass(CanonicalNameConstants.CONTEXT);
+		public final JClass INTENT = refClass(CanonicalNameConstants.INTENT);
+		public final JClass VIEW_GROUP = refClass(CanonicalNameConstants.VIEW_GROUP);
+		public final JClass LAYOUT_INFLATER = refClass(CanonicalNameConstants.LAYOUT_INFLATER);
+		public final JClass FRAGMENT_ACTIVITY = refClass(CanonicalNameConstants.FRAGMENT_ACTIVITY);
+		public final JClass FRAGMENT = refClass(CanonicalNameConstants.FRAGMENT);
+		public final JClass SUPPORT_V4_FRAGMENT = refClass(CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+		public final JClass HTML = refClass(CanonicalNameConstants.HTML);
+		public final JClass WINDOW_MANAGER_LAYOUT_PARAMS = refClass(CanonicalNameConstants.WINDOW_MANAGER_LAYOUT_PARAMS);
+		public final JClass ADAPTER_VIEW = refClass(CanonicalNameConstants.ADAPTER_VIEW);
+		public final JClass ON_ITEM_LONG_CLICK_LISTENER = refClass(CanonicalNameConstants.ON_ITEM_LONG_CLICK_LISTENER);
+		public final JClass ON_ITEM_CLICK_LISTENER = refClass(CanonicalNameConstants.ON_ITEM_CLICK_LISTENER);
+		public final JClass ON_ITEM_SELECTED_LISTENER = refClass(CanonicalNameConstants.ON_ITEM_SELECTED_LISTENER);
+		public final JClass ON_LONG_CLICK_LISTENER = refClass(CanonicalNameConstants.ON_LONG_CLICK_LISTENER);
+		public final JClass WINDOW = refClass(CanonicalNameConstants.WINDOW);
+		public final JClass MENU_ITEM = refClass(CanonicalNameConstants.MENU_ITEM);
+		public final JClass MENU_INFLATER = refClass(CanonicalNameConstants.MENU_INFLATER);
+		public final JClass MENU = refClass(CanonicalNameConstants.MENU);
+		public final JClass ANIMATION_UTILS = refClass(CanonicalNameConstants.ANIMATION_UTILS);
+		public final JClass RESOURCES = refClass(CanonicalNameConstants.RESOURCES);
+		public final JClass CONFIGURATION = refClass(CanonicalNameConstants.CONFIGURATION);
+		public final JClass MOTION_EVENT = refClass(CanonicalNameConstants.MOTION_EVENT);
+		public final JClass ON_TOUCH_LISTENER = refClass(CanonicalNameConstants.ON_TOUCH_LISTENER);
+		public final JClass HANDLER = refClass(CanonicalNameConstants.HANDLER);
+
+		/*
+		 * Sherlock classes
+		 */
+		public final JClass SHERLOCK_MENU = refClass(CanonicalNameConstants.SHERLOCK_MENU);
+		public final JClass SHERLOCK_MENU_ITEM = refClass(CanonicalNameConstants.SHERLOCK_MENU_ITEM);
+		public final JClass SHERLOCK_MENU_INFLATER = refClass(CanonicalNameConstants.SHERLOCK_MENU_INFLATER);
+
+		/*
+		 * RoboGuice
+		 */
+		public final JClass INJECTOR_PROVIDER = refClass(CanonicalNameConstants.INJECTOR_PROVIDER);
+		public final JClass INJECTOR = refClass(CanonicalNameConstants.INJECTOR);
+		public final JClass ON_RESTART_EVENT = refClass(CanonicalNameConstants.ON_RESTART_EVENT);
+		public final JClass ON_START_EVENT = refClass(CanonicalNameConstants.ON_START_EVENT);
+		public final JClass ON_RESUME_EVENT = refClass(CanonicalNameConstants.ON_RESUME_EVENT);
+		public final JClass ON_PAUSE_EVENT = refClass(CanonicalNameConstants.ON_PAUSE_EVENT);
+		public final JClass ON_NEW_INTENT_EVENT = refClass(CanonicalNameConstants.ON_NEW_INTENT_EVENT);
+		public final JClass EVENT_MANAGER = refClass(CanonicalNameConstants.EVENT_MANAGER);
+		public final JClass CONTEXT_SCOPE = refClass(CanonicalNameConstants.CONTEXT_SCOPE);
+		public final JClass INJECT = refClass(CanonicalNameConstants.INJECT);
+		public final JClass ON_STOP_EVENT = refClass(CanonicalNameConstants.ON_STOP_EVENT);
+		public final JClass ON_DESTROY_EVENT = refClass(CanonicalNameConstants.ON_DESTROY_EVENT);
+		public final JClass ON_CONFIGURATION_CHANGED_EVENT = refClass(CanonicalNameConstants.ON_CONFIGURATION_CHANGED_EVENT);
+		public final JClass ON_CONTENT_CHANGED_EVENT = refClass(CanonicalNameConstants.ON_CONTENT_CHANGED_EVENT);
+		public final JClass ON_ACTIVITY_RESULT_EVENT = refClass(CanonicalNameConstants.ON_ACTIVITY_RESULT_EVENT);
+		public final JClass ON_CONTENT_VIEW_AVAILABLE_EVENT = refClass(CanonicalNameConstants.ON_CONTENT_VIEW_AVAILABLE_EVENT);
+		public final JClass ON_CREATE_EVENT = refClass(CanonicalNameConstants.ON_CREATE_EVENT);
+
+	}
+
+	private final Map<Element, EBeanHolder> EBeanHolders = new HashMap<Element, EBeanHolder>();
+
+	private final JCodeModel codeModel;
+
+	private final Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
+
+	private final Classes classes;
+
+	public EBeansHolder(JCodeModel codeModel) {
+		this.codeModel = codeModel;
+		classes = new Classes();
+	}
 
 	public EBeanHolder create(Element activityElement) {
-		EBeanHolder activityHolder = new EBeanHolder();
+		EBeanHolder activityHolder = new EBeanHolder(this);
 		EBeanHolders.put(activityElement, activityHolder);
 		return activityHolder;
 	}
@@ -37,6 +133,34 @@ public class EBeansHolder {
 
 	public EBeanHolder getRelativeEBeanHolder(Element element) {
 		return EBeanHolders.get(element);
+	}
+
+	public JClass refClass(String fullyQualifiedClassName) {
+
+		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
+
+		if (refClass == null) {
+			try {
+				refClass = codeModel.ref(fullyQualifiedClassName);
+			} catch (NoClassDefFoundError ignored) {
+				refClass = codeModel.directClass(fullyQualifiedClassName);
+			}
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+
+		return refClass;
+	}
+
+	public JClass refClass(Class<?> clazz) {
+		return codeModel.ref(clazz);
+	}
+
+	public JCodeModel codeModel() {
+		return codeModel;
+	}
+
+	public Classes classes() {
+		return classes;
 	}
 
 }

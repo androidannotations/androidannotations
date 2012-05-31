@@ -27,6 +27,7 @@ import javax.lang.model.element.TypeElement;
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -69,6 +70,8 @@ public class EViewProcessor implements ElementProcessor {
 
 		EBeanHolder holder = eBeansHolder.create(element);
 
+		Classes classes = holder.classes();
+
 		TypeElement typeElement = (TypeElement) element;
 
 		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
@@ -91,8 +94,7 @@ public class EViewProcessor implements ElementProcessor {
 		holder.eBean.javadoc().append(SUPPRESS_WARNING_COMMENT);
 
 		{
-			JClass contextClass = holder.refClass("android.content.Context");
-			holder.contextRef = holder.eBean.field(PRIVATE, contextClass, "context_");
+			holder.contextRef = holder.eBean.field(PRIVATE, classes.CONTEXT, "context_");
 		}
 
 		{

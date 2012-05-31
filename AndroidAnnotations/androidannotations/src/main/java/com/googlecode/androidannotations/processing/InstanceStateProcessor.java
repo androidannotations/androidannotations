@@ -15,6 +15,9 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.STRING;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
@@ -53,7 +56,7 @@ public class InstanceStateProcessor implements ElementProcessor {
 
 	static {
 
-		methodSuffixNameByTypeName.put("android.os.Bundle", "Bundle");
+		methodSuffixNameByTypeName.put(BUNDLE, "Bundle");
 
 		methodSuffixNameByTypeName.put("boolean", "Boolean");
 		methodSuffixNameByTypeName.put("boolean[]", "BooleanArray");
@@ -64,7 +67,7 @@ public class InstanceStateProcessor implements ElementProcessor {
 		methodSuffixNameByTypeName.put("char", "Char");
 		methodSuffixNameByTypeName.put("char[]", "CharArray");
 
-		methodSuffixNameByTypeName.put("java.lang.CharSequence", "CharSequence");
+		methodSuffixNameByTypeName.put(CHAR_SEQUENCE, "CharSequence");
 
 		methodSuffixNameByTypeName.put("double", "Double");
 		methodSuffixNameByTypeName.put("double[]", "DoubleArray");
@@ -82,7 +85,7 @@ public class InstanceStateProcessor implements ElementProcessor {
 		methodSuffixNameByTypeName.put("short", "Short");
 		methodSuffixNameByTypeName.put("short[]", "ShortArray");
 
-		methodSuffixNameByTypeName.put("java.lang.String", "String");
+		methodSuffixNameByTypeName.put(STRING, "String");
 		methodSuffixNameByTypeName.put("java.lang.String[]", "StringArray");
 		methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.String>", "StringArrayList");
 	}
@@ -202,8 +205,7 @@ public class InstanceStateProcessor implements ElementProcessor {
 
 			holder.restoreSavedInstanceStateMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "restoreSavedInstanceState_");
 
-			JClass bundleClass = holder.refClass("android.os.Bundle");
-			JVar savedInstanceState = holder.restoreSavedInstanceStateMethod.param(bundleClass, "savedInstanceState");
+			JVar savedInstanceState = holder.restoreSavedInstanceStateMethod.param(holder.classes().BUNDLE, "savedInstanceState");
 
 			holder.initIfActivityBody.invoke(holder.restoreSavedInstanceStateMethod).arg(savedInstanceState);
 
@@ -221,8 +223,7 @@ public class InstanceStateProcessor implements ElementProcessor {
 		if (holder.saveInstanceStateBlock == null) {
 			JMethod method = holder.eBean.method(PUBLIC, codeModel.VOID, "onSaveInstanceState");
 			method.annotate(Override.class);
-			JClass bundleClass = holder.refClass("android.os.Bundle");
-			method.param(bundleClass, BUNDLE_PARAM_NAME);
+			method.param(holder.classes().BUNDLE, BUNDLE_PARAM_NAME);
 
 			holder.saveInstanceStateBlock = method.body();
 

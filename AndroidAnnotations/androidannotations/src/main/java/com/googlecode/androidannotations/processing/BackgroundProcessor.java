@@ -46,10 +46,10 @@ public class BackgroundProcessor implements ElementProcessor {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		
+
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 
-		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(codeModel, holder, delegatingMethod);
+		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
 
 		{
 			// Execute Runnable

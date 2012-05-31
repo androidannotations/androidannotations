@@ -31,6 +31,7 @@ import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -73,10 +74,7 @@ public class EFragmentProcessor implements ElementProcessor {
 
 		holder.eBean._extends(eBeanClass);
 
-		JClass viewClass = holder.refClass("android.view.View");
-		JClass viewGroupClass = holder.refClass("android.view.ViewGroup");
-		JClass layoutInflaterClass = holder.refClass("android.view.LayoutInflater");
-		JClass bundleClass = holder.refClass("android.os.Bundle");
+		Classes classes = holder.classes();
 
 		{
 			// init
@@ -88,7 +86,7 @@ public class EFragmentProcessor implements ElementProcessor {
 
 			JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
 			onCreate.annotate(Override.class);
-			JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
+			JVar onCreateSavedInstanceState = onCreate.param(classes.BUNDLE, "savedInstanceState");
 			JBlock onCreateBody = onCreate.body();
 
 			onCreateBody.invoke(holder.init);
@@ -99,7 +97,7 @@ public class EFragmentProcessor implements ElementProcessor {
 		holder.contextRef = invoke("getActivity");
 
 		// contentView
-		JFieldVar contentView = holder.eBean.field(PRIVATE, viewClass, "contentView_");
+		JFieldVar contentView = holder.eBean.field(PRIVATE, classes.VIEW, "contentView_");
 
 		{
 			// afterSetContentView
@@ -122,10 +120,10 @@ public class EFragmentProcessor implements ElementProcessor {
 
 		{
 			// onCreateView()
-			JMethod onCreateView = holder.eBean.method(PUBLIC, viewClass, "onCreateView");
-			JVar inflater = onCreateView.param(layoutInflaterClass, "inflater");
-			JVar container = onCreateView.param(viewGroupClass, "container");
-			JVar savedInstanceState = onCreateView.param(bundleClass, "savedInstanceState");
+			JMethod onCreateView = holder.eBean.method(PUBLIC, classes.VIEW, "onCreateView");
+			JVar inflater = onCreateView.param(classes.LAYOUT_INFLATER, "inflater");
+			JVar container = onCreateView.param(classes.VIEW_GROUP, "container");
+			JVar savedInstanceState = onCreateView.param(classes.BUNDLE, "savedInstanceState");
 
 			JBlock body = onCreateView.body();
 			body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
@@ -144,7 +142,7 @@ public class EFragmentProcessor implements ElementProcessor {
 		{
 			// findViewById
 
-			JMethod findViewById = holder.eBean.method(PUBLIC, viewClass, "findViewById");
+			JMethod findViewById = holder.eBean.method(PUBLIC, classes.VIEW, "findViewById");
 			JVar idParam = findViewById.param(codeModel.INT, "id");
 
 			JBlock body = findViewById.body();

@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
@@ -41,9 +42,12 @@ import com.sun.codemodel.JVar;
 
 public class NonConfigurationInstanceProcessor implements ElementProcessor {
 
+	private static final double VALUE = 1.0 / 0.0;
+
 	private APTCodeModelHelper aptCodeModelHelper;
 
 	public NonConfigurationInstanceProcessor() {
+		double a = VALUE;
 		aptCodeModelHelper = new APTCodeModelHelper();
 	}
 
@@ -119,7 +123,7 @@ public class NonConfigurationInstanceProcessor implements ElementProcessor {
 
 		boolean hasBeanAnnotation = element.getAnnotation(Bean.class) != null;
 		if (hasBeanAnnotation) {
-			JClass fieldGeneratedBeanClass = holder.refClass(fieldType.fullName() + "_");
+			JClass fieldGeneratedBeanClass = holder.refClass(fieldType.fullName() + GENERATION_SUFFIX);
 
 			ncHolder.initIfNonConfiguration.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}
