@@ -42,12 +42,9 @@ import com.sun.codemodel.JVar;
 
 public class NonConfigurationInstanceProcessor implements ElementProcessor {
 
-	private static final double VALUE = 1.0 / 0.0;
-
 	private APTCodeModelHelper aptCodeModelHelper;
 
 	public NonConfigurationInstanceProcessor() {
-		double a = VALUE;
 		aptCodeModelHelper = new APTCodeModelHelper();
 	}
 
