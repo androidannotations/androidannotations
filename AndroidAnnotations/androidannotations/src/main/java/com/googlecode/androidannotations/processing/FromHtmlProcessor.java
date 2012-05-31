@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
@@ -23,12 +24,12 @@ import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
 public class FromHtmlProcessor implements ElementProcessor {
@@ -47,6 +48,7 @@ public class FromHtmlProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -65,8 +67,8 @@ public class FromHtmlProcessor implements ElementProcessor {
 
 		//
 		methodBody. //
-				_if(JExpr.ref(fieldName).ne(JExpr._null())). //
+				_if(ref(fieldName).ne(_null())). //
 				_then() //
-				.invoke(ref(fieldName), "setText").arg(holder.refClass("android.text.Html").staticInvoke("fromHtml").arg(holder.contextRef.invoke("getString").arg(idRef)));
+				.invoke(ref(fieldName), "setText").arg(classes.HTML.staticInvoke("fromHtml").arg(holder.contextRef.invoke("getString").arg(idRef)));
 	}
 }

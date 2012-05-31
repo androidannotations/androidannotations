@@ -15,9 +15,6 @@
  */
 package com.googlecode.androidannotations.processing;
 
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.INTENT;
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.LOG;
 import static com.googlecode.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
 import static com.googlecode.androidannotations.helper.CanonicalNameConstants.STRING;
 import static com.sun.codemodel.JExpr._null;
@@ -28,7 +25,6 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -40,6 +36,7 @@ import javax.lang.model.util.Types;
 
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -83,6 +80,7 @@ public class ExtraProcessor implements ElementProcessor {
 		boolean isPrimitive = elementType.getKind().isPrimitive();
 
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		if (!isPrimitive && holder.cast == null) {
 			generateCastMethod(codeModel, holder);
@@ -106,10 +104,10 @@ public class ExtraProcessor implements ElementProcessor {
 			containsKeyTry.body().assign(extraField, JExpr.invoke(holder.cast).arg(holder.extras.invoke("get").arg(extraKey)));
 		}
 
-		JCatchBlock containsKeyCatch = containsKeyTry._catch(holder.refClass(ClassCastException.class));
+		JCatchBlock containsKeyCatch = containsKeyTry._catch(classes.CLASS_CAST_EXCEPTION);
 		JVar exceptionParam = containsKeyCatch.param("e");
 
-		JInvocation logError = holder.refClass(LOG).staticInvoke("e");
+		JInvocation logError = classes.LOG.staticInvoke("e");
 
 		logError.arg(holder.eBean.name());
 		logError.arg("Could not cast extra to expected type, the field is left to its default value");
@@ -140,8 +138,7 @@ public class ExtraProcessor implements ElementProcessor {
 				JBlock body = method.body();
 				JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKey);
 				if (castToSerializable) {
-					JClass serializableClass = holder.refClass(Serializable.class);
-					invocation.arg(cast(serializableClass, extraParam));
+					invocation.arg(cast(classes.SERIALIZABLE, extraParam));
 				} else {
 					invocation.arg(extraParam);
 				}
@@ -167,30 +164,30 @@ public class ExtraProcessor implements ElementProcessor {
 	 */
 	private void injectExtras(EBeanHolder holder, JCodeModel codeModel) {
 
-		JClass intentClass = holder.refClass(INTENT);
+		Classes classes = holder.classes();
+
 		JMethod injectExtrasMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "injectExtras_");
 
-		overrideSetIntent(holder, codeModel, intentClass, injectExtrasMethod);
+		overrideSetIntent(holder, codeModel, injectExtrasMethod);
 
-		injectExtrasOnInit(holder, intentClass, injectExtrasMethod);
+		injectExtrasOnInit(holder, classes.INTENT, injectExtrasMethod);
 
-		JClass bundleClass = holder.refClass(BUNDLE);
 		JBlock injectExtrasBody = injectExtrasMethod.body();
 
-		JVar intent = injectExtrasBody.decl(intentClass, "intent_", invoke("getIntent"));
+		JVar intent = injectExtrasBody.decl(classes.INTENT, "intent_", invoke("getIntent"));
 
-		holder.extras = injectExtrasBody.decl(bundleClass, "extras_");
+		holder.extras = injectExtrasBody.decl(classes.BUNDLE, "extras_");
 		holder.extras.init(intent.invoke("getExtras"));
 
 		holder.extrasNotNullBlock = injectExtrasBody._if(holder.extras.ne(_null()))._then();
 	}
 
-	private void overrideSetIntent(EBeanHolder holder, JCodeModel codeModel, JClass intentClass, JMethod initIntentMethod) {
+	private void overrideSetIntent(EBeanHolder holder, JCodeModel codeModel, JMethod initIntentMethod) {
 		if (holder.intentBuilderClass != null) {
 
 			JMethod setIntentMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "setIntent");
 			setIntentMethod.annotate(Override.class);
-			JVar methodParam = setIntentMethod.param(intentClass, "newIntent");
+			JVar methodParam = setIntentMethod.param(holder.classes().INTENT, "newIntent");
 
 			JBlock setIntentBody = setIntentMethod.body();
 

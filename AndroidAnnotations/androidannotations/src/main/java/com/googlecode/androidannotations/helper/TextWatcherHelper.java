@@ -41,13 +41,12 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 		TextWatcherHolder textWatcherHolder = holder.textWatchers.get(idRefString);
 
 		if (textWatcherHolder == null) {
-			JClass editableClass = holder.refClass("android.text.Editable");
-			JClass charSequenceClass = holder.refClass("java.lang.CharSequence");
+			JClass charSequenceClass = holder.classes().CHAR_SEQUENCE;
 
-			JDefinedClass onTextChangeListenerClass = codeModel.anonymousClass(holder.refClass("android.text.TextWatcher"));
+			JDefinedClass onTextChangeListenerClass = codeModel.anonymousClass(holder.classes().TEXT_WATCHER);
 
 			JMethod afterTextChangedMethod = onTextChangeListenerClass.method(JMod.PUBLIC, codeModel.VOID, "afterTextChanged");
-			afterTextChangedMethod.param(editableClass, "s");
+			afterTextChangedMethod.param(holder.classes().EDITABLE, "s");
 			afterTextChangedMethod.annotate(Override.class);
 
 			JMethod onTextChangedMethod = onTextChangeListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onTextChanged");
@@ -71,7 +70,7 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 				String viewParameterTypeString = viewParameterType.toString();
 				viewClass = holder.refClass(viewParameterTypeString);
 			} else {
-				viewClass = holder.refClass("android.widget.TextView");
+				viewClass = holder.classes().TEXT_VIEW;
 			}
 			JExpression findViewById = JExpr.cast(viewClass, JExpr.invoke("findViewById").arg(idRef));
 
@@ -89,6 +88,5 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 
 		return textWatcherHolder;
 	}
-
 
 }

@@ -26,6 +26,7 @@ import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.helper.ModelConstants;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -58,19 +59,18 @@ public class EReceiverProcessor implements ElementProcessor {
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 
 		holder.eBean._extends(annotatedComponent);
-		
-		JClass contextClass = holder.refClass("android.content.Context");
-		
-		JFieldVar contextField = holder.eBean.field(PRIVATE, contextClass, "context_");
+
+		Classes classes = holder.classes();
+
+		JFieldVar contextField = holder.eBean.field(PRIVATE, classes.CONTEXT, "context_");
 		holder.contextRef = contextField;
 
 		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
 		{
 			// onReceive
-			JClass intentClass = holder.refClass("android.content.Intent");
 			JMethod onReceive = holder.eBean.method(PUBLIC, codeModel.VOID, "onReceive");
-			JVar contextParam = onReceive.param(contextClass, "context");
-			JVar intentParam = onReceive.param(intentClass, "intent");
+			JVar contextParam = onReceive.param(classes.CONTEXT, "context");
+			JVar intentParam = onReceive.param(classes.INTENT, "intent");
 			onReceive.annotate(Override.class);
 			JBlock onReceiveBody = onReceive.body();
 			onReceiveBody.assign(contextField, contextParam);
@@ -81,6 +81,7 @@ public class EReceiverProcessor implements ElementProcessor {
 		{
 			/*
 			 * Setting to null shouldn't be a problem as long as we don't allow
+			 * 
 			 * @App and @Extra on this component
 			 */
 			holder.initIfActivityBody = null;
@@ -88,6 +89,5 @@ public class EReceiverProcessor implements ElementProcessor {
 		}
 
 	}
-
 
 }

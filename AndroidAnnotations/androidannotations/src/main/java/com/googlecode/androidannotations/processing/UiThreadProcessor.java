@@ -51,7 +51,7 @@ public class UiThreadProcessor implements ElementProcessor {
 
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 
-		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(codeModel, holder, delegatingMethod);
+		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
 
 		{
 			// Execute Runnable
@@ -60,7 +60,7 @@ public class UiThreadProcessor implements ElementProcessor {
 			long delay = annotation.delay();
 
 			if (holder.handler == null) {
-				JClass handlerClass = holder.refClass("android.os.Handler");
+				JClass handlerClass = holder.classes().HANDLER;
 				holder.handler = holder.eBean.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
 			}
 

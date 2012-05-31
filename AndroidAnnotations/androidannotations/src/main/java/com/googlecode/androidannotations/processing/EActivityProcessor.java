@@ -127,7 +127,7 @@ public class EActivityProcessor implements ElementProcessor {
 		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
-		JClass bundleClass = holder.refClass("android.os.Bundle");
+		JClass bundleClass = holder.classes().BUNDLE;
 
 		// beforeSetContentView
 		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
@@ -170,8 +170,7 @@ public class EActivityProcessor implements ElementProcessor {
 		}
 
 		// Overriding setContentView (with layout id param)
-		JClass viewClass = holder.refClass("android.view.View");
-		JClass layoutParamsClass = holder.refClass("android.view.ViewGroup.LayoutParams");
+		JClass layoutParamsClass = holder.classes().VIEW_GROUP_LAYOUT_PARAMS;
 
 		String setContentViewMethodName;
 		if (usesGreenDroid) {
@@ -181,15 +180,15 @@ public class EActivityProcessor implements ElementProcessor {
 		}
 
 		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
-		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
-		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass }, new String[] { "view" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { holder.classes().VIEW, layoutParamsClass }, new String[] { "view", "params" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { holder.classes().VIEW }, new String[] { "view" });
 
 		// Handling onBackPressed
 		if (hasOnBackPressedMethod(typeElement)) {
 			JMethod onKeyDownMethod = holder.eBean.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
 			onKeyDownMethod.annotate(Override.class);
 			JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
-			JClass keyEventClass = holder.refClass("android.view.KeyEvent");
+			JClass keyEventClass = holder.classes().KEY_EVENT;
 			JVar eventParam = onKeyDownMethod.param(keyEventClass, "event");
 
 			JClass versionHelperClass = codeModel.ref(SdkVersionHelper.class);
@@ -213,8 +212,8 @@ public class EActivityProcessor implements ElementProcessor {
 		}
 
 		if (!isAbstract) {
-			JClass contextClass = holder.refClass("android.content.Context");
-			JClass intentClass = holder.refClass("android.content.Intent");
+			JClass contextClass = holder.classes().CONTEXT;
+			JClass intentClass = holder.classes().INTENT;
 
 			{
 				holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");

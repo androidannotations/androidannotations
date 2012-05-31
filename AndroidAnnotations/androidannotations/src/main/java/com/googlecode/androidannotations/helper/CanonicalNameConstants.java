@@ -15,35 +15,105 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.Set;
+
 public final class CanonicalNameConstants {
 
-	/**
-	 * Android libraries
+	/*
+	 * Java classes
+	 */
+	public static final String URI = URI.class.getCanonicalName();
+	public static final String SET = Set.class.getCanonicalName();
+	public static final String COLLECTIONS = Collections.class.getCanonicalName();
+	public static final String STRING = String.class.getCanonicalName();
+	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();
+
+	/*
+	 * Android classes
 	 */
 	public static final String LOG = "android.util.Log";
 	public static final String PARCELABLE = "android.os.Parcelable";
 	public static final String INTENT = "android.content.Intent";
 	public static final String BUNDLE = "android.os.Bundle";
+	public static final String APPLICATION = "android.app.Application";
+	public static final String ACTIVITY = "android.app.Activity";
+	public static final String EDITABLE = "android.text.Editable";
+	public static final String TEXT_WATCHER = "android.text.TextWatcher";
+	public static final String TEXT_VIEW = "android.widget.TextView";
+	public static final String VIEW = "android.view.View";
+	public static final String VIEW_ON_CLICK_LISTENER = "android.view.View.OnClickListener";
+	public static final String VIEW_GROUP_LAYOUT_PARAMS = "android.view.ViewGroup.LayoutParams";
+	public static final String VIEW_GROUP = "android.view.ViewGroup";
+	public static final String CONTEXT = "android.content.Context";
+	public static final String KEY_EVENT = "android.view.KeyEvent";
+	public static final String LAYOUT_INFLATER = "android.view.LayoutInflater";
+	public static final String FRAGMENT_ACTIVITY = "android.support.v4.app.FragmentActivity";
+	public static final String FRAGMENT = "android.app.Fragment";
+	public static final String SUPPORT_V4_FRAGMENT = "android.support.v4.app.Fragment";
+	public static final String HTML = "android.text.Html";
+	public static final String WINDOW_MANAGER_LAYOUT_PARAMS = "android.view.WindowManager.LayoutParams";
+	public static final String ADAPTER_VIEW = "android.widget.AdapterView";
+	public static final String ON_ITEM_CLICK_LISTENER = "android.widget.AdapterView.OnItemClickListener";
+	public static final String ON_ITEM_LONG_CLICK_LISTENER = "android.widget.AdapterView.OnItemLongClickListener";
+	public static final String ON_ITEM_SELECTED_LISTENER = "android.widget.AdapterView.OnItemSelectedListener";
+	public static final String ON_LONG_CLICK_LISTENER = "android.view.View.OnLongClickListener";
+	public static final String WINDOW = "android.view.Window";
+	public static final String MENU_ITEM = "android.view.MenuItem";
+	public static final String MENU_INFLATER = "android.view.MenuInflater";
+	public static final String MENU = "android.view.Menu";
+	public static final String ANIMATION = "android.view.animation.Animation";
+	public static final String ANIMATION_UTILS = "android.view.animation.AnimationUtils";
+	public static final String RESOURCES = "android.content.res.Resources";
+	public static final String CONFIGURATION = "android.content.res.Configuration";
+	public static final String MOTION_EVENT = "android.view.MotionEvent";
+	public static final String ON_TOUCH_LISTENER = "android.view.View.OnTouchListener";
+	public static final String HANDLER = "android.os.Handler";
+	public static final String SERVICE = "android.app.Service";
+	public static final String BROADCAST_RECEIVER = "android.content.BroadcastReceiver";
+	public static final String CONTENT_PROVIDER = "android.content.ContentProvider";
+	public static final String SQLITE_DATABASE = "android.database.sqlite.SQLiteDatabase";
 
-	/**
-	 * Java libraries
+	/*
+	 * Sherlock classes
 	 */
-	public static final String URI = "java.net.URI";
-	public static final String SET = "java.util.Set";
-	public static final String COLLECTIONS = "java.util.Collections";
-	public static final String STRING = "java.lang.String";
+	public static final String SHERLOCK_MENU = "com.actionbarsherlock.view.Menu";
+	public static final String SHERLOCK_MENU_ITEM = "com.actionbarsherlock.view.MenuItem";
+	public static final String SHERLOCK_MENU_INFLATER = "com.actionbarsherlock.view.MenuInflater";
 
-	/**
-	 * SpringFramework libraries
+	/*
+	 * SpringFramework classes
 	 */
 	public static final String RESPONSE_ENTITY = "org.springframework.http.ResponseEntity";
 	public static final String HTTP_HEADERS = "org.springframework.http.HttpHeaders";
 	public static final String MEDIA_TYPE = "org.springframework.http.MediaType";
 	public static final String HTTP_METHOD = "org.springframework.http.HttpMethod";
 	public static final String HTTP_ENTITY = "org.springframework.http.HttpEntity";
+	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
+
+	/*
+	 * RoboGuice
+	 */
+	public static final String INJECTOR_PROVIDER = "roboguice.inject.InjectorProvider";
+	public static final String INJECTOR = "com.google.inject.Injector";
+	public static final String ON_RESTART_EVENT = "roboguice.activity.event.OnRestartEvent";
+	public static final String ON_START_EVENT = "roboguice.activity.event.OnStartEvent";
+	public static final String ON_RESUME_EVENT = "roboguice.activity.event.OnResumeEvent";
+	public static final String ON_PAUSE_EVENT = "roboguice.activity.event.OnPauseEvent";
+	public static final String ON_NEW_INTENT_EVENT = "roboguice.activity.event.OnNewIntentEvent";
+	public static final String EVENT_MANAGER = "roboguice.event.EventManager";
+	public static final String CONTEXT_SCOPE = "roboguice.inject.ContextScope";
+	public static final String INJECT = "com.google.inject.Inject";
+	public static final String ON_STOP_EVENT = "roboguice.activity.event.OnStopEvent";
+	public static final String ON_DESTROY_EVENT = "roboguice.activity.event.OnDestroyEvent";
+	public static final String ON_CONFIGURATION_CHANGED_EVENT = "roboguice.activity.event.OnConfigurationChangedEvent";
+	public static final String ON_CONTENT_CHANGED_EVENT = "roboguice.activity.event.OnContentChangedEvent";
+	public static final String ON_ACTIVITY_RESULT_EVENT = "roboguice.activity.event.OnActivityResultEvent";
+	public static final String ON_CONTENT_VIEW_AVAILABLE_EVENT = "roboguice.activity.event.OnContentViewAvailableEvent";
+	public static final String ON_CREATE_EVENT = "roboguice.activity.event.OnCreateEvent";
 
 	private CanonicalNameConstants() {
-
 	}
 
 }
