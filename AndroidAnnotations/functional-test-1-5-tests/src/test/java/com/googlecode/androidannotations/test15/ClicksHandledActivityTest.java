@@ -39,6 +39,15 @@ public class ClicksHandledActivityTest {
 	}
 
 	@Test
+	public void avoidStackOverflow() {
+		assertThat(activity.avoidStackOverflowEventHandled).isFalse();
+
+		activity.findViewById(R.id.stackOverflowProofButton).performClick();
+
+		assertThat(activity.avoidStackOverflowEventHandled).isTrue();
+	}
+
+	@Test
 	public void handlingWithConvention() {
 		assertThat(activity.conventionButtonEventHandled).isFalse();
 		

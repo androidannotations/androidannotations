@@ -22,6 +22,7 @@ public abstract class EventsHandledAbstractActivity extends Activity {
 
 	View viewArgument;
 
+	protected boolean avoidStackOverflowEventHandled;
 	protected boolean conventionButtonEventHandled;
 	protected boolean snakeCaseButtonEventHandled;
 	protected boolean extendedConventionButtonEventHandled;
