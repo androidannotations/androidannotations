@@ -18,7 +18,7 @@ package com.googlecode.androidannotations.rclass;
 public interface IRClass {
 
 	public enum Res {
-		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU;
+		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU, RAW;
 		public String rName() {
 			return toString().toLowerCase();
 		}

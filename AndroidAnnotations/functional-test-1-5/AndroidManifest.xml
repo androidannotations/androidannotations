@@ -63,6 +63,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.nonconfiguration.NonConfigurationActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.sherlock.MySherlockActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.efragment.MyFragmentActivity_" />
+        <activity android:name=".SSLConnection_" />
 
         <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
 
