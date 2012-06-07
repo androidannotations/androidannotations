@@ -45,8 +45,9 @@ import java.lang.annotation.Target;
  * <code>changeit</code>) <br/>
  * <br/>
  * 
- * <i>hostnameVerif</i>: boolean, Turn on or off strict hostname verification
- * (default <code>false</code>) Hostname in certificate (DN) must match the URL. <br/>
+ * <i>allowAllHostnames</i>: boolean, if true, authorizes any TLS/SSL hostname
+ * (default <code>true</code>) If false, Hostname in certificate (DN) must match
+ * the URL.<br/>
  * <br/>
  * 
  * <b>Note</b>:
@@ -68,5 +69,5 @@ public @interface HttpsClient {
 
 	String keyStorePwd() default DEFAULT_PASSWD;
 
-	boolean hostnameVerif() default false;
+	boolean allowAllHostnames() default true;
 }

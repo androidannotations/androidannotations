@@ -61,7 +61,7 @@ public class HttpsClientProcessor implements ElementProcessor {
 		int keyStoreFile = annotation.keyStore();
 		String keyStorePwd = annotation.keyStorePwd();
 
-		boolean hostnameVerif = annotation.hostnameVerif();
+		boolean allowAllHostnames = annotation.allowAllHostnames();
 
 		boolean useCustomTrustStore = Id.DEFAULT_VALUE != trustStoreFile ? true : false;
 		boolean useCustomKeyStore = Id.DEFAULT_VALUE != keyStoreFile ? true : false;
@@ -141,7 +141,7 @@ public class HttpsClientProcessor implements ElementProcessor {
 			JVar jVarCcm = jTryBlock.body().decl(classes.CLIENT_CONNECTION_MANAGER, "ccm");
 			jVarCcm.init(_super().invoke("createClientConnectionManager"));
 
-			if (!hostnameVerif) {
+			if (allowAllHostnames) {
 				JExpression jCast = cast(classes.SSL_SOCKET_FACTORY, jVarCcm.invoke("getSchemeRegistry").invoke("getScheme").arg("https").invoke("getSocketFactory"));
 				jTryBlock.body().add(jCast.invoke("setHostnameVerifier").arg(classes.SSL_SOCKET_FACTORY.staticRef("ALLOW_ALL_HOSTNAME_VERIFIER")));
 			}
@@ -152,7 +152,7 @@ public class HttpsClientProcessor implements ElementProcessor {
 			JVar jVarSslFact = jTryBlock.body().decl(classes.SSL_SOCKET_FACTORY, "newSslSocketFactory");
 			jVarSslFact.init(_new(classes.SSL_SOCKET_FACTORY).arg(null == jVarKeystore ? _null() : jVarKeystore).arg(keyStorePwd).arg(null == jVarTrusted ? _null() : jVarTrusted));
 
-			if (!hostnameVerif) {
+			if (allowAllHostnames) {
 				jTryBlock.body().add(invoke(jVarSslFact, "setHostnameVerifier").arg(classes.SSL_SOCKET_FACTORY.staticRef("ALLOW_ALL_HOSTNAME_VERIFIER")));
 			}
 

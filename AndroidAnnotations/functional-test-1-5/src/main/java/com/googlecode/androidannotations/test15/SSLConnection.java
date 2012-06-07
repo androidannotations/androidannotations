@@ -13,7 +13,7 @@ public class SSLConnection extends Activity {
 	@HttpsClient(trustStore = R.raw.cacerts)
 	HttpClient mHttpsClientTest1;
 
-	@HttpsClient(trustStore = R.raw.cacerts, hostnameVerif = true)
+	@HttpsClient(trustStore = R.raw.cacerts, allowAllHostnames = false)
 	HttpClient mHttpsClientTest2;
 
 	@HttpsClient
