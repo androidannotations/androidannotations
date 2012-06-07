@@ -78,6 +78,7 @@ public class TouchProcessor implements ElementProcessor {
 
 		JDefinedClass listenerClass = codeModel.anonymousClass(classes.ON_TOUCH_LISTENER);
 		JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");
+		listenerMethod.annotate(Override.class);
 
 		JVar viewParam = listenerMethod.param(classes.VIEW, "view");
 		JVar eventParam = listenerMethod.param(classes.MOTION_EVENT, "event");
