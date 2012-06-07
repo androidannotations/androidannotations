@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -121,6 +121,7 @@ public class EFragmentProcessor implements ElementProcessor {
 		{
 			// onCreateView()
 			JMethod onCreateView = holder.eBean.method(PUBLIC, classes.VIEW, "onCreateView");
+			onCreateView.annotate(Override.class);
 			JVar inflater = onCreateView.param(classes.LAYOUT_INFLATER, "inflater");
 			JVar container = onCreateView.param(classes.VIEW_GROUP, "container");
 			JVar savedInstanceState = onCreateView.param(classes.BUNDLE, "savedInstanceState");

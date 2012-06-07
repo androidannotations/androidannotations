@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,10 @@
  * the License.
  */
 package com.googlecode.androidannotations.processing;
+
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.invoke;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -73,6 +77,7 @@ public class ClickProcessor implements ElementProcessor {
 
 		JDefinedClass onClickListenerClass = codeModel.anonymousClass(classes.VIEW_ON_CLICK_LISTENER);
 		JMethod onClickMethod = onClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");
+		onClickMethod.annotate(Override.class);
 		JVar onClickViewParam = onClickMethod.param(classes.VIEW, "view");
 
 		JExpression activityRef = holder.eBean.staticRef("this");
@@ -85,9 +90,9 @@ public class ClickProcessor implements ElementProcessor {
 		for (JFieldRef idRef : idsRefs) {
 			JBlock block = holder.afterSetContentView.body().block();
 
-			JInvocation findViewById = JExpr.invoke("findViewById");
+			JInvocation findViewById = invoke("findViewById");
 			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
-			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnClickListener").arg(JExpr._new(onClickListenerClass));
+			block._if(view.ne(_null()))._then().invoke(view, "setOnClickListener").arg(_new(onClickListenerClass));
 		}
 
 	}
