@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,7 +27,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.rest.Accept;
-import com.googlecode.androidannotations.helper.ProcessorConstants;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.RestAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.googlecode.androidannotations.processing.ElementProcessor;
@@ -78,7 +78,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 	    // add url param
 	    restCall.arg(concatCall.arg(JExpr.lit(methodHolder.getUrlSuffix())));
 
-		JClass httpMethod = holder.refClass(ProcessorConstants.HTTP_METHOD);
+		JClass httpMethod = holder.refClass(CanonicalNameConstants.HTTP_METHOD);
 		// add method type param
 		String restMethodInCapitalLetters = getTarget().getSimpleName().toUpperCase();
 		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
@@ -140,7 +140,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 	protected JVar generateHttpEntityVar(MethodProcessorHolder methodHolder) {
 		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
-		JClass httpEntity = holder.refClass(ProcessorConstants.HTTP_ENTITY);
+		JClass httpEntity = holder.refClass(CanonicalNameConstants.HTTP_ENTITY);
 		JInvocation newHttpEntityVarCall;
 
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
@@ -187,14 +187,14 @@ public abstract class MethodProcessor implements ElementProcessor {
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
 		JVar httpHeadersVar = null;
 
-		JClass httpHeadersClass = holder.refClass(ProcessorConstants.HTTP_HEADERS);
+		JClass httpHeadersClass = holder.refClass(CanonicalNameConstants.HTTP_HEADERS);
 		httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
 
 		String mediaType = retrieveAcceptAnnotationValue(executableElement);
 		boolean hasMediaTypeDefined = mediaType != null;
 		if (hasMediaTypeDefined) {
-			JClass collectionsClass = holder.refClass(ProcessorConstants.COLLECTIONS);
-			JClass mediaTypeClass = holder.refClass(ProcessorConstants.MEDIA_TYPE);
+			JClass collectionsClass = holder.refClass(CanonicalNameConstants.COLLECTIONS);
+			JClass mediaTypeClass = holder.refClass(CanonicalNameConstants.MEDIA_TYPE);
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticRef(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));

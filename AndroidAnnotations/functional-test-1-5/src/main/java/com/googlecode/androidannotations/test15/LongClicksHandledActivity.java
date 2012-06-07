@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,11 @@ import com.googlecode.androidannotations.annotations.LongClick;
 @EActivity(R.layout.clickable_widgets)
 public class LongClicksHandledActivity extends EventsHandledAbstractActivity {
 	
+	@LongClick(R.id.stackOverflowProofButton)
+	public void onLongClick(View v) {
+		avoidStackOverflowEventHandled = true;
+	}
+
 	@LongClick
 	public void conventionButton() {
 		conventionButtonEventHandled = true;

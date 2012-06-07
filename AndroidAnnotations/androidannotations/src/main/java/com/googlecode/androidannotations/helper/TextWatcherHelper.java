@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed To in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
@@ -41,13 +56,12 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 		TextWatcherHolder textWatcherHolder = holder.textWatchers.get(idRefString);
 
 		if (textWatcherHolder == null) {
-			JClass editableClass = holder.refClass("android.text.Editable");
-			JClass charSequenceClass = holder.refClass("java.lang.CharSequence");
+			JClass charSequenceClass = holder.classes().CHAR_SEQUENCE;
 
-			JDefinedClass onTextChangeListenerClass = codeModel.anonymousClass(holder.refClass("android.text.TextWatcher"));
+			JDefinedClass onTextChangeListenerClass = codeModel.anonymousClass(holder.classes().TEXT_WATCHER);
 
 			JMethod afterTextChangedMethod = onTextChangeListenerClass.method(JMod.PUBLIC, codeModel.VOID, "afterTextChanged");
-			afterTextChangedMethod.param(editableClass, "s");
+			afterTextChangedMethod.param(holder.classes().EDITABLE, "s");
 			afterTextChangedMethod.annotate(Override.class);
 
 			JMethod onTextChangedMethod = onTextChangeListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onTextChanged");
@@ -71,7 +85,7 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 				String viewParameterTypeString = viewParameterType.toString();
 				viewClass = holder.refClass(viewParameterTypeString);
 			} else {
-				viewClass = holder.refClass("android.widget.TextView");
+				viewClass = holder.classes().TEXT_VIEW;
 			}
 			JExpression findViewById = JExpr.cast(viewClass, JExpr.invoke("findViewById").arg(idRef));
 
@@ -89,6 +103,5 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 
 		return textWatcherHolder;
 	}
-
 
 }

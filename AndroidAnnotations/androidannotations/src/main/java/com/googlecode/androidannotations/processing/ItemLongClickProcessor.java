@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,11 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -27,6 +32,7 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -60,6 +66,7 @@ public class ItemLongClickProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
 
@@ -73,14 +80,13 @@ public class ItemLongClickProcessor implements ElementProcessor {
 		ItemLongClick annotation = element.getAnnotation(ItemLongClick.class);
 		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "ItemLongClicked", holder);
 
-		JDefinedClass onItemClickListenerClass = codeModel.anonymousClass(holder.refClass("android.widget.AdapterView.OnItemLongClickListener"));
-		JMethod onItemLongClickMethod = onItemClickListenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onItemLongClick");
-		JClass adapterViewClass = holder.refClass("android.widget.AdapterView");
-		JClass viewClass = holder.refClass("android.view.View");
+		JDefinedClass onItemLongClickListenerClass = codeModel.anonymousClass(classes.ON_ITEM_LONG_CLICK_LISTENER);
+		JMethod onItemLongClickMethod = onItemLongClickListenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onItemLongClick");
+		onItemLongClickMethod.annotate(Override.class);
 
-		JClass narrowAdapterViewClass = adapterViewClass.narrow(codeModel.wildcard());
+		JClass narrowAdapterViewClass = classes.ADAPTER_VIEW.narrow(codeModel.wildcard());
 		JVar onItemClickParentParam = onItemLongClickMethod.param(narrowAdapterViewClass, "parent");
-		onItemLongClickMethod.param(viewClass, "view");
+		onItemLongClickMethod.param(classes.VIEW, "view");
 		JVar onItemClickPositionParam = onItemLongClickMethod.param(codeModel.INT, "position");
 		onItemLongClickMethod.param(codeModel.LONG, "id");
 
@@ -97,20 +103,20 @@ public class ItemLongClickProcessor implements ElementProcessor {
 
 		if (hasItemParameter) {
 			VariableElement parameter = parameters.get(0);
-			
+
 			TypeMirror parameterType = parameter.asType();
 			if (parameterType.getKind() == TypeKind.INT) {
 				itemClickCall.arg(onItemClickPositionParam);
 			} else {
 				String parameterTypeQualifiedName = parameterType.toString();
-				itemClickCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				itemClickCall.arg(cast(holder.refClass(parameterTypeQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 			}
 		}
 
 		for (JFieldRef idRef : idsRefs) {
 			JBlock block = holder.afterSetContentView.body().block();
 			JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, JExpr.invoke("findViewById").arg(idRef)));
-			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemLongClickListener").arg(JExpr._new(onItemClickListenerClass));
+			block._if(view.ne(_null()))._then().invoke(view, "setOnItemLongClickListener").arg(_new(onItemLongClickListenerClass));
 		}
 	}
 

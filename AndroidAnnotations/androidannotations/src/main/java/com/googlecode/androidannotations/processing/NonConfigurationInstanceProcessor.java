@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
@@ -119,7 +120,7 @@ public class NonConfigurationInstanceProcessor implements ElementProcessor {
 
 		boolean hasBeanAnnotation = element.getAnnotation(Bean.class) != null;
 		if (hasBeanAnnotation) {
-			JClass fieldGeneratedBeanClass = holder.refClass(fieldType.fullName() + "_");
+			JClass fieldGeneratedBeanClass = holder.refClass(fieldType.fullName() + GENERATION_SUFFIX);
 
 			ncHolder.initIfNonConfiguration.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}

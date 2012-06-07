@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,7 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -60,6 +61,7 @@ public class ItemClickProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
 
@@ -71,14 +73,13 @@ public class ItemClickProcessor implements ElementProcessor {
 		ItemClick annotation = element.getAnnotation(ItemClick.class);
 		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "ItemClicked", holder);
 
-		JDefinedClass onItemClickListenerClass = codeModel.anonymousClass(holder.refClass("android.widget.AdapterView.OnItemClickListener"));
-		JMethod onItemClickMethod = onItemClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onItemClick");
-		JClass adapterViewClass = holder.refClass("android.widget.AdapterView");
-		JClass viewClass = holder.refClass("android.view.View");
+		JDefinedClass onItemClickListenerAnonymousClass = codeModel.anonymousClass(classes.ON_ITEM_CLICK_LISTENER);
+		JMethod onItemClickMethod = onItemClickListenerAnonymousClass.method(JMod.PUBLIC, codeModel.VOID, "onItemClick");
+		onItemClickMethod.annotate(Override.class);
 
-		JClass narrowAdapterViewClass = adapterViewClass.narrow(codeModel.wildcard());
+		JClass narrowAdapterViewClass = classes.ADAPTER_VIEW.narrow(codeModel.wildcard());
 		JVar onItemClickParentParam = onItemClickMethod.param(narrowAdapterViewClass, "parent");
-		onItemClickMethod.param(viewClass, "view");
+		onItemClickMethod.param(classes.VIEW, "view");
 		JVar onItemClickPositionParam = onItemClickMethod.param(codeModel.INT, "position");
 		onItemClickMethod.param(codeModel.LONG, "id");
 
@@ -86,7 +87,7 @@ public class ItemClickProcessor implements ElementProcessor {
 
 		if (hasItemParameter) {
 			VariableElement parameter = parameters.get(0);
-			
+
 			TypeMirror parameterType = parameter.asType();
 			if (parameterType.getKind() == TypeKind.INT) {
 				itemClickCall.arg(onItemClickPositionParam);
@@ -101,7 +102,7 @@ public class ItemClickProcessor implements ElementProcessor {
 			JInvocation findViewById = JExpr.invoke("findViewById");
 
 			JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)));
-			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(JExpr._new(onItemClickListenerClass));
+			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(JExpr._new(onItemClickListenerAnonymousClass));
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION
 import static java.util.Arrays.asList;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.IncompleteAnnotationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,7 +51,6 @@ import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
-import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.rest.Delete;
@@ -76,27 +74,12 @@ import com.googlecode.androidannotations.validation.IsValid;
 
 public class ValidatorHelper {
 
-	private static final String SPRING_REST_TEMPLATE_QUALIFIED_NAME = "org.springframework.web.client.RestTemplate";
-	private static final String ANDROID_VIEW_QUALIFIED_NAME = "android.view.View";
-	private static final List<String> ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES = asList("android.view.MenuItem", "com.actionbarsherlock.view.MenuItem");
-	private static final String ANDROID_TEXT_VIEW_QUALIFIED_NAME = "android.widget.TextView";
-	private static final String ANDROID_VIEWGROUP_QUALIFIED_NAME = "android.view.ViewGroup";
-	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
-	public static final String ANDROID_CONTEXT_QUALIFIED_NAME = "android.content.Context";
-	private static final String ANDROID_ACTIVITY_QUALIFIED_NAME = "android.app.Activity";
-	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList("android.app.Fragment", "android.support.v4.app.Fragment");
-	private static final String ANDROID_SERVICE_QUALIFIED_NAME = "android.app.Service";
-	private static final String ANDROID_RECEIVER_QUALIFIED_NAME = "android.content.BroadcastReceiver";
-	private static final String ANDROID_PROVIDER_QUALIFIED_NAME = "android.content.ContentProvider";
-	private static final String ANDROID_BUNDLE_QUALIFIED_NAME = "android.os.Bundle";
-	private static final String ANDROID_MOTION_EVENT_QUALIFIED_NAME = "android.view.MotionEvent";
-	private static final String ANDROID_SQLITE_DB_QUALIFIED_NAME = "android.database.sqlite.SQLiteDatabase";
-	private static final String GUICE_INJECTOR_QUALIFIED_NAME = "com.google.inject.Injector";
-	private static final String ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME = "roboguice.inject.InjectorProvider";
+	private static final List<String> ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES = asList(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM);
+	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
 
-	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", "java.lang.String");
+	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING);
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
@@ -248,22 +231,6 @@ public class ValidatorHelper {
 		}
 
 		return sb.toString();
-	}
-
-	public void hasExtraValue(Element element, IsValid valid) {
-		boolean error = false;
-		try {
-			Extra extra = element.getAnnotation(Extra.class);
-			if (extra.value() == null) {
-				error = true;
-			}
-		} catch (IncompleteAnnotationException e) {
-			error = true;
-		}
-		if (error) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s must have a value, which is the extra name used when sending the intent");
-		}
 	}
 
 	public void hasViewByIdAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
@@ -502,7 +469,7 @@ public class ValidatorHelper {
 	}
 
 	public void zeroOrOneViewParameters(ExecutableElement executableElement, IsValid valid) {
-		zeroOrOneSpecificParameter(executableElement, ANDROID_VIEW_QUALIFIED_NAME, valid);
+		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.VIEW, valid);
 	}
 
 	public void zeroOrOneMenuItemParameters(ExecutableElement executableElement, IsValid valid) {
@@ -530,11 +497,11 @@ public class ValidatorHelper {
 	}
 
 	public void zeroOrOneBundleParameter(ExecutableElement executableElement, IsValid valid) {
-		zeroOrOneSpecificParameter(executableElement, ANDROID_BUNDLE_QUALIFIED_NAME, valid);
+		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.BUNDLE, valid);
 	}
 
 	public void extendsActivity(Element element, IsValid valid) {
-		extendsType(element, ANDROID_ACTIVITY_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.ACTIVITY, valid);
 	}
 
 	public void extendsFragment(Element element, IsValid valid) {
@@ -542,35 +509,35 @@ public class ValidatorHelper {
 	}
 
 	public void extendsService(Element element, IsValid valid) {
-		extendsType(element, ANDROID_SERVICE_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.SERVICE, valid);
 	}
 
 	public void extendsReceiver(Element element, IsValid valid) {
-		extendsType(element, ANDROID_RECEIVER_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.BROADCAST_RECEIVER, valid);
 	}
 
 	public void extendsProvider(Element element, IsValid valid) {
-		extendsType(element, ANDROID_PROVIDER_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.CONTENT_PROVIDER, valid);
 	}
 
 	public void extendsView(Element element, IsValid valid) {
-		extendsType(element, ANDROID_VIEW_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.VIEW, valid);
 	}
 
 	public void extendsTextView(Element element, IsValid valid) {
-		extendsType(element, ANDROID_TEXT_VIEW_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.TEXT_VIEW, valid);
 	}
 
 	public void extendsViewGroup(Element element, IsValid valid) {
-		extendsType(element, ANDROID_VIEWGROUP_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.VIEW_GROUP, valid);
 	}
 
 	public void extendsApplication(Element element, IsValid valid) {
-		extendsType(element, ANDROID_APPLICATION_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.APPLICATION, valid);
 	}
 
 	public void extendsContext(Element element, IsValid valid) {
-		extendsType(element, ANDROID_CONTEXT_QUALIFIED_NAME, valid);
+		extendsType(element, CanonicalNameConstants.CONTEXT, valid);
 	}
 
 	public void upperclassOfRegisteredApplication(Element element, AndroidManifest manifest, IsValid valid) {
@@ -714,9 +681,9 @@ public class ValidatorHelper {
 	public void hasRoboGuiceJars(Element element, IsValid valid) {
 		Elements elementUtils = annotationHelper.getElementUtils();
 
-		if (elementUtils.getTypeElement(ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME) == null) {
+		if (elementUtils.getTypeElement(CanonicalNameConstants.INJECTOR_PROVIDER) == null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + ROBOGUICE_INJECTOR_PROVIDER_QUALIFIED_NAME);
+			annotationHelper.printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR_PROVIDER);
 		}
 
 		if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_APPLICATION_CLASS) == null) {
@@ -725,20 +692,20 @@ public class ValidatorHelper {
 		}
 
 		try {
-			if (elementUtils.getTypeElement(GUICE_INJECTOR_QUALIFIED_NAME) == null) {
+			if (elementUtils.getTypeElement(CanonicalNameConstants.INJECTOR) == null) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + GUICE_INJECTOR_QUALIFIED_NAME);
+				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR);
 			}
 		} catch (RuntimeException e) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + GUICE_INJECTOR_QUALIFIED_NAME);
+			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR);
 		}
 	}
 
 	public void hasSpringAndroidJars(Element element, IsValid valid) {
 		Elements elementUtils = annotationHelper.getElementUtils();
 
-		if (elementUtils.getTypeElement(SPRING_REST_TEMPLATE_QUALIFIED_NAME) == null) {
+		if (elementUtils.getTypeElement(CanonicalNameConstants.REST_TEMPLATE) == null) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "Could not find the SpringAndroid framework in the classpath, the following class is missing: org.springframework.web.client.RestTemplate");
 		}
@@ -761,16 +728,16 @@ public class ValidatorHelper {
 		} else {
 			VariableElement firstParameter = parameters.get(0);
 			String firstParameterType = firstParameter.asType().toString();
-			if (!firstParameterType.equals(ANDROID_MOTION_EVENT_QUALIFIED_NAME)) {
+			if (!firstParameterType.equals(CanonicalNameConstants.MOTION_EVENT)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + ANDROID_MOTION_EVENT_QUALIFIED_NAME + ", not a " + firstParameterType);
+				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.MOTION_EVENT + ", not a " + firstParameterType);
 			}
 			if (parameters.size() == 2) {
 				VariableElement secondParameter = parameters.get(1);
 				String secondParameterType = secondParameter.asType().toString();
-				if (!secondParameterType.equals(ANDROID_VIEW_QUALIFIED_NAME)) {
+				if (!secondParameterType.equals(CanonicalNameConstants.VIEW)) {
 					valid.invalidate();
-					annotationHelper.printAnnotationError(executableElement, "the second parameter must be a " + ANDROID_VIEW_QUALIFIED_NAME + ", not a " + secondParameterType);
+					annotationHelper.printAnnotationError(executableElement, "the second parameter must be a " + CanonicalNameConstants.VIEW + ", not a " + secondParameterType);
 				}
 			}
 		}
@@ -781,13 +748,13 @@ public class ValidatorHelper {
 
 		if (parameters.size() < 1) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "There should be at least 1 parameter: a " + ANDROID_SQLITE_DB_QUALIFIED_NAME);
+			annotationHelper.printAnnotationError(executableElement, "There should be at least 1 parameter: a " + CanonicalNameConstants.SQLITE_DATABASE);
 		} else {
 			VariableElement firstParameter = parameters.get(0);
 			String firstParameterType = firstParameter.asType().toString();
-			if (!firstParameterType.equals(ANDROID_SQLITE_DB_QUALIFIED_NAME)) {
+			if (!firstParameterType.equals(CanonicalNameConstants.SQLITE_DATABASE)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + ANDROID_SQLITE_DB_QUALIFIED_NAME + ", not a " + firstParameterType);
+				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.SQLITE_DATABASE + ", not a " + firstParameterType);
 			}
 		}
 	}
@@ -890,7 +857,7 @@ public class ValidatorHelper {
 				if (!hasRestAnnotation) {
 					ExecutableElement executableElement = (ExecutableElement) enclosedElement;
 					TypeMirror returnType = executableElement.getReturnType();
-					if (returnType.toString().equals(SPRING_REST_TEMPLATE_QUALIFIED_NAME)) {
+					if (returnType.toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
 						if (executableElement.getParameters().size() > 0) {
 							valid.invalidate();
 							annotationHelper.printError(enclosedElement, "The method returning a RestTemplate should not declare any parameter in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
@@ -906,7 +873,7 @@ public class ValidatorHelper {
 						List<? extends VariableElement> parameters = executableElement.getParameters();
 						if (parameters.size() == 1) {
 							VariableElement firstParameter = parameters.get(0);
-							if (firstParameter.asType().toString().equals(SPRING_REST_TEMPLATE_QUALIFIED_NAME)) {
+							if (firstParameter.asType().toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
 								if (!foundSetRestTemplateMethod) {
 									foundSetRestTemplateMethod = true;
 								} else {

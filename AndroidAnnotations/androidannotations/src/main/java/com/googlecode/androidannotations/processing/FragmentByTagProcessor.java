@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,8 +30,8 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.FragmentByTag;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
@@ -53,6 +53,7 @@ public class FragmentByTagProcessor implements ElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
 
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -66,10 +67,6 @@ public class FragmentByTagProcessor implements ElementProcessor {
 			tagValue = fieldName;
 		}
 
-		JClass activityClass = holder.refClass("android.app.Activity");
-		JClass stringClass = holder.refClass("java.lang.String");
-		JClass supportFragmentActivityClass = holder.refClass("android.support.v4.app.FragmentActivity");
-
 		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName("android.app.Fragment").asType();
 
 		JMethod findFragmentByTag;
@@ -79,15 +76,14 @@ public class FragmentByTagProcessor implements ElementProcessor {
 			findFragmentByTag = null;
 
 			if (holder.findNativeFragmentByTag == null) {
-				JClass fragmentClass = holder.refClass("android.app.Fragment");
-				holder.findNativeFragmentByTag = holder.eBean.method(PRIVATE, fragmentClass, "findNativeFragmentByTag");
-				JVar tagParam = holder.findNativeFragmentByTag.param(stringClass, "tag");
+				holder.findNativeFragmentByTag = holder.eBean.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentByTag");
+				JVar tagParam = holder.findNativeFragmentByTag.param(classes.STRING, "tag");
 
 				holder.findNativeFragmentByTag.javadoc().add("You should check that context is an activity before calling this method");
 
 				JBlock body = holder.findNativeFragmentByTag.body();
 
-				JVar activityVar = body.decl(activityClass, "activity_", cast(activityClass, holder.contextRef));
+				JVar activityVar = body.decl(classes.ACTIVITY, "activity_", cast(classes.ACTIVITY, holder.contextRef));
 
 				body._return(activityVar.invoke("getFragmentManager").invoke("findFragmentByTag").arg(tagParam));
 			}
@@ -98,15 +94,14 @@ public class FragmentByTagProcessor implements ElementProcessor {
 			// Injecting support fragment
 
 			if (holder.findSupportFragmentByTag == null) {
-				JClass fragmentClass = holder.refClass("android.support.v4.app.Fragment");
-				holder.findSupportFragmentByTag = holder.eBean.method(PRIVATE, fragmentClass, "findSupportFragmentByTag");
-				JVar tagParam = holder.findSupportFragmentByTag.param(stringClass, "tag");
+				holder.findSupportFragmentByTag = holder.eBean.method(PRIVATE, classes.SUPPORT_V4_FRAGMENT, "findSupportFragmentByTag");
+				JVar tagParam = holder.findSupportFragmentByTag.param(classes.STRING, "tag");
 
 				JBlock body = holder.findSupportFragmentByTag.body();
 
-				body._if(holder.contextRef._instanceof(supportFragmentActivityClass).not())._then()._return(_null());
+				body._if(holder.contextRef._instanceof(classes.FRAGMENT_ACTIVITY).not())._then()._return(_null());
 
-				JVar activityVar = body.decl(supportFragmentActivityClass, "activity_", cast(supportFragmentActivityClass, holder.contextRef));
+				JVar activityVar = body.decl(classes.FRAGMENT_ACTIVITY, "activity_", cast(classes.FRAGMENT_ACTIVITY, holder.contextRef));
 
 				body._return(activityVar.invoke("getSupportFragmentManager").invoke("findFragmentByTag").arg(tagParam));
 			}

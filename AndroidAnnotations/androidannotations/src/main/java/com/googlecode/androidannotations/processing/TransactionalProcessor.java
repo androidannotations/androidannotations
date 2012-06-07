@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -85,8 +85,7 @@ public class TransactionalProcessor implements ElementProcessor {
 
 		JBlock catchBody = catchBlock.body();
 
-		JClass logClass = holder.refClass("android.util.Log");
-		JInvocation errorInvoke = catchBody.staticInvoke(logClass, "e");
+		JInvocation errorInvoke = catchBody.staticInvoke(holder.classes().LOG, "e");
 
 		errorInvoke.arg(holder.eBean.name());
 		errorInvoke.arg("Error in transaction");

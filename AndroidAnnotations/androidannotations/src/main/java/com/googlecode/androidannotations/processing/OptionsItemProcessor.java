@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,9 +33,11 @@ import javax.lang.model.type.TypeMirror;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.SherlockHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
@@ -65,14 +67,15 @@ public class OptionsItemProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
 
-		String menuItemClassName;
+		JClass menuItemClass;
 		if (sherlockHelper.usesSherlock(holder)) {
-			menuItemClassName = "com.actionbarsherlock.view.MenuItem";
+			menuItemClass = classes.SHERLOCK_MENU_ITEM;
 		} else {
-			menuItemClassName = "android.view.MenuItem";
+			menuItemClass = classes.MENU_ITEM;
 		}
 
 		ExecutableElement executableElement = (ExecutableElement) element;
@@ -88,7 +91,7 @@ public class OptionsItemProcessor implements ElementProcessor {
 		if (holder.onOptionsItemSelectedSwitch == null) {
 			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");
 			method.annotate(Override.class);
-			holder.onOptionsItemSelectedItem = method.param(holder.refClass(menuItemClassName), "item");
+			holder.onOptionsItemSelectedItem = method.param(menuItemClass, "item");
 
 			JBlock body = method.body();
 			JVar handled = body.decl(codeModel.BOOLEAN, "handled", invoke(_super(), method).arg(holder.onOptionsItemSelectedItem));

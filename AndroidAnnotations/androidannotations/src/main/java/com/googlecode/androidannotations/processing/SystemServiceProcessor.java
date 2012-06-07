@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,9 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.ref;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
@@ -24,7 +27,6 @@ import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
 public class SystemServiceProcessor implements ElementProcessor {
@@ -54,7 +56,7 @@ public class SystemServiceProcessor implements ElementProcessor {
 
 		JBlock methodBody = holder.init.body();
 
-		methodBody.assign(JExpr.ref(fieldName), JExpr.cast(holder.refClass(fieldTypeQualifiedName), holder.contextRef.invoke("getSystemService").arg(serviceRef)));
+		methodBody.assign(ref(fieldName), cast(holder.refClass(fieldTypeQualifiedName), holder.contextRef.invoke("getSystemService").arg(serviceRef)));
 	}
 
 }

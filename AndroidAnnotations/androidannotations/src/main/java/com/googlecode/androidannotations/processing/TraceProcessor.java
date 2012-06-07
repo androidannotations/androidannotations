@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -48,13 +49,11 @@ public class TraceProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+		Classes classes = holder.classes();
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		String tag = extractTag(executableElement);
 		int level = executableElement.getAnnotation(Trace.class).level();
-
-		JClass logClass = holder.refClass("android.util.Log");
-		JClass systemClass = holder.refClass(System.class);
 
 		JMethod method = helper.overrideAnnotatedMethod(executableElement, holder);
 
@@ -62,12 +61,12 @@ public class TraceProcessor implements ElementProcessor {
 
 		JBlock methodBody = method.body();
 
-		JInvocation isLoggableInvocation = logClass.staticInvoke("isLoggable");
-		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, logClass));
+		JInvocation isLoggableInvocation = classes.LOG.staticInvoke("isLoggable");
+		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, classes.LOG));
 
 		JConditional ifStatement = methodBody._if(isLoggableInvocation);
 
-		JInvocation currentTimeInvoke = systemClass.staticInvoke("currentTimeMillis");
+		JInvocation currentTimeInvoke = classes.SYSTEM.staticInvoke("currentTimeMillis");
 		JBlock _thenBody = ifStatement._then();
 		JVar startDeclaration = _thenBody.decl(codeModel.LONG, "start", currentTimeInvoke);
 
@@ -75,7 +74,7 @@ public class TraceProcessor implements ElementProcessor {
 
 		// Log In
 		String logMethodName = logMethodNameFromLevel(level);
-		JInvocation logEnterInvoke = logClass.staticInvoke(logMethodName);
+		JInvocation logEnterInvoke = classes.LOG.staticInvoke(logMethodName);
 		logEnterInvoke.arg(tag);
 
 		JExpression enterMessage = JExpr.lit("Entering " + methodName);
@@ -90,7 +89,7 @@ public class TraceProcessor implements ElementProcessor {
 
 		JVar durationDeclaration = finallyBlock.decl(codeModel.LONG, "duration", currentTimeInvoke.minus(startDeclaration));
 
-		JInvocation logExitInvoke = logClass.staticInvoke(logMethodName);
+		JInvocation logExitInvoke = classes.LOG.staticInvoke(logMethodName);
 		logExitInvoke.arg(tag);
 
 		JExpression exitMessage = JExpr.lit("Exiting " + methodName + ", duration in ms: ").plus(durationDeclaration);
