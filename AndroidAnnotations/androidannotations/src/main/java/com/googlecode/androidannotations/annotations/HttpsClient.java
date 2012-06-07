@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * and TrustStore configured to perform an <b>HTTPS</b> request <br/>
  * <br/>
  * 
- * All the parameters are optional <br/>
+ * All the parameters are optional<br/>
  * <br/>
  * 
  * <i>trustStore</i>: int, Resource id of your trust store file ex
@@ -50,7 +50,7 @@ import java.lang.annotation.Target;
  * <br/>
  * 
  * <b>Note</b>:
- * <tt>Until ICS, Android accept [Key|Trust]store only in BKS format
+ * <tt>Prior to ICS, Android accepts [Key|Trust]store only in BKS format
  * (Bouncycastle Key Store)</tt>
  * 
  * @author Nabil Hachicha

@@ -292,7 +292,8 @@ import com.sun.codemodel.JCodeModel;
 		BeforeTextChange.class, //
 		TextChange.class, //
 		AfterTextChange.class, //
-		HttpsClient.class })
+		HttpsClient.class //
+})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 

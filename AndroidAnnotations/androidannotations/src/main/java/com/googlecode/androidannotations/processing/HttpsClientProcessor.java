@@ -17,18 +17,25 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JExpr.ref;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.HttpsClient;
 import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -37,9 +44,6 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class HttpsClientProcessor implements ElementProcessor {
-
-	public HttpsClientProcessor() {
-	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -50,13 +54,14 @@ public class HttpsClientProcessor implements ElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
-		int trustStoreFile = element.getAnnotation(HttpsClient.class).trustStore();
-		String trustStorePwd = element.getAnnotation(HttpsClient.class).trustStorePwd();
+		HttpsClient annotation = element.getAnnotation(HttpsClient.class);
+		int trustStoreFile = annotation.trustStore();
+		String trustStorePwd = annotation.trustStorePwd();
 
-		int keyStoreFile = element.getAnnotation(HttpsClient.class).keyStore();
-		String keyStorePwd = element.getAnnotation(HttpsClient.class).keyStorePwd();
+		int keyStoreFile = annotation.keyStore();
+		String keyStorePwd = annotation.keyStorePwd();
 
-		boolean hostnameVerif = element.getAnnotation(HttpsClient.class).hostnameVerif();
+		boolean hostnameVerif = annotation.hostnameVerif();
 
 		boolean useCustomTrustStore = Id.DEFAULT_VALUE != trustStoreFile ? true : false;
 		boolean useCustomKeyStore = Id.DEFAULT_VALUE != keyStoreFile ? true : false;
@@ -64,15 +69,11 @@ public class HttpsClientProcessor implements ElementProcessor {
 		String fieldName = element.getSimpleName().toString();
 		JBlock methodBody = holder.init.body();
 
-		JClass jTypeRetMethod = holder.refClass("org.apache.http.conn.ClientConnectionManager");
-		JClass jTypeDefHttp = holder.refClass("org.apache.http.impl.client.DefaultHttpClient");
-		JClass jTypeKeyStore = holder.refClass("java.security.KeyStore");
-		JClass jTypeRes = holder.refClass("android.content.res.Resources");
-		JClass jTypeInputStream = holder.refClass("java.io.InputStream");
+		Classes classes = holder.classes();
 
-		JDefinedClass jAnonClass = codeModel.anonymousClass(jTypeDefHttp);
+		JDefinedClass jAnonClass = codeModel.anonymousClass(classes.DEFAULT_HTTP_CLIENT);
 
-		JMethod method = jAnonClass.method(JMod.PROTECTED, jTypeRetMethod, "createClientConnectionManager");
+		JMethod method = jAnonClass.method(JMod.PROTECTED, classes.CLIENT_CONNECTION_MANAGER, "createClientConnectionManager");
 		method.annotate(Override.class);
 
 		JTryBlock jTryBlock = method.body()._try();
@@ -80,18 +81,16 @@ public class HttpsClientProcessor implements ElementProcessor {
 		JVar jVarKeystore = null;
 
 		if (useCustomKeyStore) {
-			jVarKeystore = jTryBlock.body().decl(jTypeKeyStore, "keystore");
-			jVarKeystore.init(jTypeKeyStore.staticInvoke("getInstance").arg("BKS"));
+			jVarKeystore = jTryBlock.body().decl(classes.KEY_STORE, "keystore");
+			jVarKeystore.init(classes.KEY_STORE.staticInvoke("getInstance").arg("BKS"));
 		}
 
-		if (useCustomTrustStore || !useCustomTrustStore && useCustomKeyStore/*
-																			 * use
-																			 * default
-																			 * trust
-																			 * store
-																			 */) {
-			jVarTrusted = jTryBlock.body().decl(jTypeKeyStore, "trusted");
-			jVarTrusted.init(jTypeKeyStore.staticInvoke("getInstance").arg("BKS"));
+		if (useCustomTrustStore || !useCustomTrustStore && useCustomKeyStore) {
+			/*
+			 * use default trust store
+			 */
+			jVarTrusted = jTryBlock.body().decl(classes.KEY_STORE, "trusted");
+			jVarTrusted.init(classes.KEY_STORE.staticInvoke("getInstance").arg("BKS"));
 
 		}
 
@@ -100,21 +99,20 @@ public class HttpsClientProcessor implements ElementProcessor {
 		JVar jVarKeyFile = null;
 
 		if (useCustomKeyStore || useCustomTrustStore) {
-			jVarRes = jTryBlock.body().decl(jTypeRes, "res", JExpr.invoke("getResources"));
+			jVarRes = jTryBlock.body().decl(classes.RESOURCES, "res", invoke("getResources"));
 		}
 
 		if (useCustomKeyStore) {
-			JInvocation jInvRawKey = jVarRes.invoke("openRawResource").arg(JExpr.lit(keyStoreFile));
-			jVarKeyFile = jTryBlock.body().decl(jTypeInputStream, "inKeystore", jInvRawKey);
+			JInvocation jInvRawKey = jVarRes.invoke("openRawResource").arg(lit(keyStoreFile));
+			jVarKeyFile = jTryBlock.body().decl(classes.INPUT_STREAM, "inKeystore", jInvRawKey);
 		}
 
 		if (useCustomTrustStore) {
-			JInvocation jInvRawTrust = jVarRes.invoke("openRawResource").arg(JExpr.lit(trustStoreFile));
-			jVarTrstFile = jTryBlock.body().decl(jTypeInputStream, "inTrustStore", jInvRawTrust);
+			JInvocation jInvRawTrust = jVarRes.invoke("openRawResource").arg(lit(trustStoreFile));
+			jVarTrstFile = jTryBlock.body().decl(classes.INPUT_STREAM, "inTrustStore", jInvRawTrust);
 
 		} else if (useCustomKeyStore) {
-			JClass jTypeFileInputStream = holder.refClass("java.io.FileInputStream");
-			jVarTrstFile = jTryBlock.body().decl(jTypeInputStream, "inTrustStore", JExpr._new(jTypeFileInputStream).arg("/system/etc/security/cacerts.bks"));
+			jVarTrstFile = jTryBlock.body().decl(classes.INPUT_STREAM, "inTrustStore", _new(classes.FILE_INPUT_STREAM).arg("/system/etc/security/cacerts.bks"));
 		}
 
 		// try load
@@ -122,66 +120,58 @@ public class HttpsClientProcessor implements ElementProcessor {
 			JTryBlock jTryLoad = jTryBlock.body()._try();
 
 			if (useCustomKeyStore) {
-				jTryLoad.body().add(JExpr.invoke(jVarKeystore, "load").arg(jVarKeyFile).arg(JExpr.invoke(JExpr.lit(keyStorePwd), "toCharArray")));
+				jTryLoad.body().add(invoke(jVarKeystore, "load").arg(jVarKeyFile).arg(invoke(lit(keyStorePwd), "toCharArray")));
 			}
 
 			if (useCustomTrustStore || !useCustomTrustStore && useCustomKeyStore) {
-				jTryLoad.body().add(JExpr.invoke(jVarTrusted, "load").arg(jVarTrstFile).arg(JExpr.invoke(JExpr.lit(trustStorePwd), "toCharArray")));
+				jTryLoad.body().add(invoke(jVarTrusted, "load").arg(jVarTrstFile).arg(invoke(lit(trustStorePwd), "toCharArray")));
 			}
 			// finally load
 			JBlock jFinally = jTryLoad._finally();
 			if (useCustomKeyStore) {
-				jFinally.add(JExpr.invoke(jVarKeyFile, "close"));
+				jFinally.add(invoke(jVarKeyFile, "close"));
 			}
 
 			if (useCustomTrustStore || !useCustomTrustStore && useCustomKeyStore) {
-				jFinally.add(JExpr.invoke(jVarTrstFile, "close"));
+				jFinally.add(invoke(jVarTrstFile, "close"));
 			}
 		}
 
 		if (null == jVarKeystore && null == jVarTrusted) {
-			JVar jVarCcm = jTryBlock.body().decl(jTypeRetMethod, "ccm");
-			jVarCcm.init(JExpr._super().invoke("createClientConnectionManager"));
+			JVar jVarCcm = jTryBlock.body().decl(classes.CLIENT_CONNECTION_MANAGER, "ccm");
+			jVarCcm.init(_super().invoke("createClientConnectionManager"));
 
 			if (!hostnameVerif) {
-				JClass jTypeSocketFact = holder.refClass("org.apache.http.conn.ssl.SSLSocketFactory");
-				JExpression jCast = JExpr.cast(jTypeSocketFact, jVarCcm.invoke("getSchemeRegistry").invoke("getScheme").arg("https").invoke("getSocketFactory"));
-				JClass jTypeSslFact = holder.refClass("org.apache.http.conn.ssl.SSLSocketFactory");
-				jTryBlock.body().add(jCast.invoke("setHostnameVerifier").arg(jTypeSslFact.staticRef("ALLOW_ALL_HOSTNAME_VERIFIER")));
+				JExpression jCast = cast(classes.SSL_SOCKET_FACTORY, jVarCcm.invoke("getSchemeRegistry").invoke("getScheme").arg("https").invoke("getSocketFactory"));
+				jTryBlock.body().add(jCast.invoke("setHostnameVerifier").arg(classes.SSL_SOCKET_FACTORY.staticRef("ALLOW_ALL_HOSTNAME_VERIFIER")));
 			}
 
 			jTryBlock.body()._return(jVarCcm);
 
 		} else {
-			JClass jTypeSslFact = holder.refClass("org.apache.http.conn.ssl.SSLSocketFactory");
-			JClass jTypeScheme = holder.refClass("org.apache.http.conn.scheme.Scheme");
-			JClass jTypeSchemeReg = holder.refClass("org.apache.http.conn.scheme.SchemeRegistry");
-			JClass jTypeSingleConnMgr = holder.refClass("org.apache.http.impl.conn.SingleClientConnManager");
-
-			JVar jVarSslFact = jTryBlock.body().decl(jTypeSslFact, "newSslSocketFactory");
-			jVarSslFact.init(JExpr._new(jTypeSslFact).arg(null == jVarKeystore ? JExpr._null() : jVarKeystore).arg(keyStorePwd).arg(null == jVarTrusted ? JExpr._null() : jVarTrusted));
+			JVar jVarSslFact = jTryBlock.body().decl(classes.SSL_SOCKET_FACTORY, "newSslSocketFactory");
+			jVarSslFact.init(_new(classes.SSL_SOCKET_FACTORY).arg(null == jVarKeystore ? _null() : jVarKeystore).arg(keyStorePwd).arg(null == jVarTrusted ? _null() : jVarTrusted));
 
 			if (!hostnameVerif) {
-				jTryBlock.body().add(JExpr.invoke(jVarSslFact, "setHostnameVerifier").arg(jTypeSslFact.staticRef("ALLOW_ALL_HOSTNAME_VERIFIER")));
+				jTryBlock.body().add(invoke(jVarSslFact, "setHostnameVerifier").arg(classes.SSL_SOCKET_FACTORY.staticRef("ALLOW_ALL_HOSTNAME_VERIFIER")));
 			}
 
-			JVar jVarSchemeReg = jTryBlock.body().decl(jTypeSchemeReg, "registry");
-			jVarSchemeReg.init(JExpr._new(jTypeSchemeReg));
-			jTryBlock.body().add(JExpr.invoke(jVarSchemeReg, "register").arg(JExpr._new(jTypeScheme).arg("https").arg(jVarSslFact).arg(JExpr.lit(443))));
+			JVar jVarSchemeReg = jTryBlock.body().decl(classes.SCHEME_REGISTRY, "registry");
+			jVarSchemeReg.init(_new(classes.SCHEME_REGISTRY));
+			jTryBlock.body().add(invoke(jVarSchemeReg, "register").arg(_new(classes.SCHEME).arg("https").arg(jVarSslFact).arg(lit(443))));
 
-			JVar jVarCcm = jTryBlock.body().decl(jTypeRetMethod, "ccm");
-			jVarCcm.init(JExpr._new(jTypeSingleConnMgr).arg(JExpr.invoke("getParams")).arg(jVarSchemeReg));
+			JVar jVarCcm = jTryBlock.body().decl(classes.CLIENT_CONNECTION_MANAGER, "ccm");
+			jVarCcm.init(_new(classes.SINGLE_CLIENT_CONN_MANAGER).arg(invoke("getParams")).arg(jVarSchemeReg));
 			jTryBlock.body()._return(jVarCcm);
 		}
 
 		// catch block
-		JClass jTypeException = holder.refClass("java.lang.Exception");
-		JCatchBlock jCatchBlock = jTryBlock._catch(jTypeException);
+		JCatchBlock jCatchBlock = jTryBlock._catch(classes.EXCEPTION);
 		JVar jVarExceptionParam = jCatchBlock.param("e");
 		jCatchBlock.body().add(jVarExceptionParam.invoke("printStackTrace"));
-		jCatchBlock.body()._return(JExpr._super().invoke("createClientConnectionManager"));
+		jCatchBlock.body()._return(_super().invoke("createClientConnectionManager"));
 
-		methodBody.assign(JExpr.ref(fieldName), JExpr._new(jAnonClass));
+		methodBody.assign(ref(fieldName), _new(jAnonClass));
 
 	}
 

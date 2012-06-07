@@ -35,17 +35,8 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 		this.target = target;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T extractAnnotationValue(Element element) {
-		Annotation annotation = element.getAnnotation(target);
-
-		Method method;
-		try {
-			method = annotation.getClass().getMethod("value");
-			return (T) method.invoke(annotation);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return extractAnnotationValue(element, "value");
 	}
 
 	@SuppressWarnings("unchecked")
