@@ -34,6 +34,8 @@ import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -78,7 +80,8 @@ public class ClickProcessor implements ElementProcessor {
 		onClickMethod.annotate(Override.class);
 		JVar onClickViewParam = onClickMethod.param(classes.VIEW, "view");
 
-		JInvocation clickCall = onClickMethod.body().invoke(methodName);
+		JExpression activityRef = holder.eBean.staticRef("this");
+		JInvocation clickCall = onClickMethod.body().invoke(activityRef, methodName);
 
 		if (hasViewParameter) {
 			clickCall.arg(onClickViewParam);

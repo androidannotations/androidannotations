@@ -31,6 +31,7 @@ import com.googlecode.androidannotations.helper.TextWatcherHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -42,7 +43,7 @@ import com.sun.codemodel.JVar;
 public class TextChangeProcessor implements ElementProcessor {
 
 	private final TextWatcherHelper helper;
-	
+
 	private final APTCodeModelHelper codeModelHelper;
 
 	public TextChangeProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
@@ -71,16 +72,15 @@ public class TextChangeProcessor implements ElementProcessor {
 		int charSequenceParameterPosition = -1;
 		int viewParameterPosition = -1;
 		TypeMirror viewParameterType = null;
-		
-		for (int i = 0 ; i < parameters.size() ; i++) {
+
+		for (int i = 0; i < parameters.size(); i++) {
 			VariableElement parameter = parameters.get(i);
 			String parameterName = parameter.toString();
 			TypeMirror parameterType = parameter.asType();
-			
+
 			if ("java.lang.CharSequence".equals(parameterType.toString())) {
 				charSequenceParameterPosition = i;
-			} else if (parameterType.getKind() == TypeKind.INT
-					|| "java.lang.integer".equals(parameterType.toString())) {
+			} else if (parameterType.getKind() == TypeKind.INT || "java.lang.integer".equals(parameterType.toString())) {
 				if ("start".equals(parameterName)) {
 					startParameterPosition = i;
 				} else if ("count".equals(parameterName)) {
@@ -96,9 +96,9 @@ public class TextChangeProcessor implements ElementProcessor {
 				}
 			}
 		}
-		
+
 		TextChange annotation = element.getAnnotation(TextChange.class);
-		
+
 		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "TextChanged", holder);
 
 		for (JFieldRef idRef : idsRefs) {
@@ -109,17 +109,18 @@ public class TextChangeProcessor implements ElementProcessor {
 
 			JBlock previousBody = codeModelHelper.removeBody(methodToCall);
 			JBlock methodBody = methodToCall.body();
-			
-			methodBody.add(previousBody);
-			textChangeCall = methodBody.invoke(methodName);
 
-			for (int i = 0 ; i < parameters.size() ; i++) {
+			methodBody.add(previousBody);
+			JExpression activityRef = holder.eBean.staticRef("this");
+			textChangeCall = methodBody.invoke(activityRef, methodName);
+
+			for (int i = 0; i < parameters.size(); i++) {
 				if (i == startParameterPosition) {
 					JVar startParameter = codeModelHelper.findParameterByName(methodToCall, "start");
 					textChangeCall.arg(startParameter);
 				} else if (i == countParameterPosition) {
 					JVar countParameter = codeModelHelper.findParameterByName(methodToCall, "count");
-					textChangeCall.arg(countParameter);				
+					textChangeCall.arg(countParameter);
 				} else if (i == beforeParameterPosition) {
 					JVar beforeParameter = codeModelHelper.findParameterByName(methodToCall, "before");
 					textChangeCall.arg(beforeParameter);

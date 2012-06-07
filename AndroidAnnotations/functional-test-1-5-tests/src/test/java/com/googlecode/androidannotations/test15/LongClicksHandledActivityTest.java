@@ -39,6 +39,15 @@ public class LongClicksHandledActivityTest {
 	}
 
 	@Test
+	public void avoidStackOverflow() throws InterruptedException {
+		assertThat(activity.avoidStackOverflowEventHandled).isFalse();
+
+		activity.findViewById(R.id.stackOverflowProofButton).performLongClick();
+
+		assertThat(activity.avoidStackOverflowEventHandled).isTrue();
+	}
+
+	@Test
 	public void handlingWithConvention() throws InterruptedException {
 		assertThat(activity.conventionButtonEventHandled).isFalse();
 
