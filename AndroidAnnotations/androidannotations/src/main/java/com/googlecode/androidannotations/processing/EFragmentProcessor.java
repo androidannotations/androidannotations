@@ -121,6 +121,7 @@ public class EFragmentProcessor implements ElementProcessor {
 		{
 			// onCreateView()
 			JMethod onCreateView = holder.eBean.method(PUBLIC, classes.VIEW, "onCreateView");
+			onCreateView.annotate(Override.class);
 			JVar inflater = onCreateView.param(classes.LAYOUT_INFLATER, "inflater");
 			JVar container = onCreateView.param(classes.VIEW_GROUP, "container");
 			JVar savedInstanceState = onCreateView.param(classes.BUNDLE, "savedInstanceState");

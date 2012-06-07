@@ -82,6 +82,7 @@ public class ItemLongClickProcessor implements ElementProcessor {
 
 		JDefinedClass onItemLongClickListenerClass = codeModel.anonymousClass(classes.ON_ITEM_LONG_CLICK_LISTENER);
 		JMethod onItemLongClickMethod = onItemLongClickListenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onItemLongClick");
+		onItemLongClickMethod.annotate(Override.class);
 
 		JClass narrowAdapterViewClass = classes.ADAPTER_VIEW.narrow(codeModel.wildcard());
 		JVar onItemClickParentParam = onItemLongClickMethod.param(narrowAdapterViewClass, "parent");
