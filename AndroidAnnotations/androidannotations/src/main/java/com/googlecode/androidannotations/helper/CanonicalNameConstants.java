@@ -22,7 +22,7 @@ import java.util.Set;
 public final class CanonicalNameConstants {
 
 	/*
-	 * Java classes
+	 * Java
 	 */
 	public static final String URI = URI.class.getCanonicalName();
 	public static final String SET = Set.class.getCanonicalName();
@@ -31,7 +31,7 @@ public final class CanonicalNameConstants {
 	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();
 
 	/*
-	 * Android classes
+	 * Android
 	 */
 	public static final String LOG = "android.util.Log";
 	public static final String PARCELABLE = "android.os.Parcelable";
@@ -74,16 +74,17 @@ public final class CanonicalNameConstants {
 	public static final String BROADCAST_RECEIVER = "android.content.BroadcastReceiver";
 	public static final String CONTENT_PROVIDER = "android.content.ContentProvider";
 	public static final String SQLITE_DATABASE = "android.database.sqlite.SQLiteDatabase";
+	public static final String KEY_STORE = "java.security.KeyStore";
 
 	/*
-	 * Sherlock classes
+	 * Sherlock
 	 */
 	public static final String SHERLOCK_MENU = "com.actionbarsherlock.view.Menu";
 	public static final String SHERLOCK_MENU_ITEM = "com.actionbarsherlock.view.MenuItem";
 	public static final String SHERLOCK_MENU_INFLATER = "com.actionbarsherlock.view.MenuInflater";
 
 	/*
-	 * SpringFramework classes
+	 * SpringFramework
 	 */
 	public static final String RESPONSE_ENTITY = "org.springframework.http.ResponseEntity";
 	public static final String HTTP_HEADERS = "org.springframework.http.HttpHeaders";
@@ -112,6 +113,16 @@ public final class CanonicalNameConstants {
 	public static final String ON_ACTIVITY_RESULT_EVENT = "roboguice.activity.event.OnActivityResultEvent";
 	public static final String ON_CONTENT_VIEW_AVAILABLE_EVENT = "roboguice.activity.event.OnContentViewAvailableEvent";
 	public static final String ON_CREATE_EVENT = "roboguice.activity.event.OnCreateEvent";
+
+	/*
+	 * HttpClient
+	 */
+	public static final String CLIENT_CONNECTION_MANAGER = "org.apache.http.conn.ClientConnectionManager";
+	public static final String DEFAULT_HTTP_CLIENT = "org.apache.http.impl.client.DefaultHttpClient";
+	public static final String SSL_SOCKET_FACTORY = "org.apache.http.conn.ssl.SSLSocketFactory";
+	public static final String SCHEME = "org.apache.http.conn.scheme.Scheme";
+	public static final String SCHEME_REGISTRY = "org.apache.http.conn.scheme.SchemeRegistry";
+	public static final String SINGLE_CLIENT_CONN_MANAGER = "org.apache.http.impl.conn.SingleClientConnManager";
 
 	private CanonicalNameConstants() {
 	}
