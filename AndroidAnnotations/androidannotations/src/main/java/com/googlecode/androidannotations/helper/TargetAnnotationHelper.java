@@ -35,8 +35,9 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 		this.target = target;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T extractAnnotationValue(Element element) {
-		return extractAnnotationValue(element, "value");
+		return (T) extractAnnotationValue(element, "value");
 	}
 
 	@SuppressWarnings("unchecked")
