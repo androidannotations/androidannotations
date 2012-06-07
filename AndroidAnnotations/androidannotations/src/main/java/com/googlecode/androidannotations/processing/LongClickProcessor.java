@@ -76,7 +76,7 @@ public class LongClickProcessor implements ElementProcessor {
 
 		JDefinedClass listenerAnonymousClass = codeModel.anonymousClass(classes.ON_LONG_CLICK_LISTENER);
 		JMethod listenerMethod = listenerAnonymousClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");
-
+		listenerMethod.annotate(Override.class);
 		JVar viewParam = listenerMethod.param(classes.VIEW, "view");
 
 		JBlock listenerMethodBody = listenerMethod.body();

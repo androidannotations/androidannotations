@@ -75,6 +75,7 @@ public class ItemClickProcessor implements ElementProcessor {
 
 		JDefinedClass onItemClickListenerAnonymousClass = codeModel.anonymousClass(classes.ON_ITEM_CLICK_LISTENER);
 		JMethod onItemClickMethod = onItemClickListenerAnonymousClass.method(JMod.PUBLIC, codeModel.VOID, "onItemClick");
+		onItemClickMethod.annotate(Override.class);
 
 		JClass narrowAdapterViewClass = classes.ADAPTER_VIEW.narrow(codeModel.wildcard());
 		JVar onItemClickParentParam = onItemClickMethod.param(narrowAdapterViewClass, "parent");
