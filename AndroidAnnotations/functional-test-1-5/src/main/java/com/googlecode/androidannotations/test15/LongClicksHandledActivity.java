@@ -23,6 +23,11 @@ import com.googlecode.androidannotations.annotations.LongClick;
 @EActivity(R.layout.clickable_widgets)
 public class LongClicksHandledActivity extends EventsHandledAbstractActivity {
 	
+	@LongClick(R.id.stackOverflowProofButton)
+	public void onLongClick(View v) {
+		avoidStackOverflowEventHandled = true;
+	}
+
 	@LongClick
 	public void conventionButton() {
 		conventionButtonEventHandled = true;

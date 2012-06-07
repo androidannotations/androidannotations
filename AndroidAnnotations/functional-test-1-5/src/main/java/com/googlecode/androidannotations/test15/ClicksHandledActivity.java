@@ -23,6 +23,11 @@ import com.googlecode.androidannotations.annotations.EActivity;
 @EActivity(R.layout.clickable_widgets)
 public class ClicksHandledActivity extends EventsHandledAbstractActivity {
 
+	@Click(R.id.stackOverflowProofButton)
+	public void onClick(View v) {
+		avoidStackOverflowEventHandled = true;
+	}
+
 	@Click
 	public void conventionButton() {
 		conventionButtonEventHandled = true;
