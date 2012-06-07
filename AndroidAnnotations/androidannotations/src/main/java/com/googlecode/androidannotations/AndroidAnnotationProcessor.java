@@ -54,6 +54,7 @@ import com.googlecode.androidannotations.annotations.FragmentById;
 import com.googlecode.androidannotations.annotations.FragmentByTag;
 import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.annotations.Fullscreen;
+import com.googlecode.androidannotations.annotations.HttpsClient;
 import com.googlecode.androidannotations.annotations.InstanceState;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
@@ -132,6 +133,7 @@ import com.googlecode.androidannotations.processing.FragmentByIdProcessor;
 import com.googlecode.androidannotations.processing.FragmentByTagProcessor;
 import com.googlecode.androidannotations.processing.FromHtmlProcessor;
 import com.googlecode.androidannotations.processing.FullscreenProcessor;
+import com.googlecode.androidannotations.processing.HttpsClientProcessor;
 import com.googlecode.androidannotations.processing.InstanceStateProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
 import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
@@ -188,6 +190,7 @@ import com.googlecode.androidannotations.validation.FragmentByIdValidator;
 import com.googlecode.androidannotations.validation.FragmentByTagValidator;
 import com.googlecode.androidannotations.validation.FromHtmlValidator;
 import com.googlecode.androidannotations.validation.FullscreenValidator;
+import com.googlecode.androidannotations.validation.HttpsClientValidator;
 import com.googlecode.androidannotations.validation.InstanceStateValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
 import com.googlecode.androidannotations.validation.ItemLongClickValidator;
@@ -288,7 +291,8 @@ import com.sun.codemodel.JCodeModel;
 		FragmentByTag.class, //
 		BeforeTextChange.class, //
 		TextChange.class, //
-		AfterTextChange.class //
+		AfterTextChange.class, //
+		HttpsClient.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
@@ -456,6 +460,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new BeforeTextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new TextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		return modelValidator;
 	}
 
@@ -533,6 +538,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new HttpsClientProcessor(rClass));
 		return modelProcessor;
 	}
 

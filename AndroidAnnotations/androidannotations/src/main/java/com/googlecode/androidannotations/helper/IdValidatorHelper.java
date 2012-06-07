@@ -49,6 +49,13 @@ public class IdValidatorHelper extends ValidatorHelper {
 		idExists(element, res, defaultUseName, allowDefault, valid, idValue);
 	}
 
+	public void idExists(Element element, Res res, boolean defaultUseName, boolean allowDefault, IsValid valid, String methodName) {
+
+		Integer idValue = annotationHelper.extractAnnotationValue(element, methodName);
+
+		idExists(element, res, defaultUseName, allowDefault, valid, idValue);
+	}
+
 	public void idsExists(Element element, Res res, IsValid valid) {
 
 		int[] idsValues = annotationHelper.extractAnnotationValue(element);
