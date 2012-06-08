@@ -113,6 +113,14 @@ public final class CanonicalNameConstants {
 	public static final String ON_CONTENT_VIEW_AVAILABLE_EVENT = "roboguice.activity.event.OnContentViewAvailableEvent";
 	public static final String ON_CREATE_EVENT = "roboguice.activity.event.OnCreateEvent";
 
+	/*
+	 * ORMLite
+	 */
+	public static final String DAO_MANAGER = "com.j256.ormlite.dao.DaoManager";
+	public static final String CONNECTION_SOURCE = "com.j256.ormlite.support.ConnectionSource";
+	public static final String OPEN_HELPER_MANAGER = "com.j256.ormlite.android.apptools.OpenHelperManager";
+	public static final String SQL_EXCEPTION = "java.sql.SQLException";
+
 	private CanonicalNameConstants() {
 	}
 

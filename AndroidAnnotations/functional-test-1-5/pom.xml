@@ -18,7 +18,7 @@
 		<simple-version>2.4.1</simple-version>
 		<android-rome-version>1.0.0-r2</android-rome-version>
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>
@@ -46,6 +46,11 @@
 			<groupId>org.roboguice</groupId>
 			<artifactId>roboguice</artifactId>
 			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-android</artifactId>
+			<version>4.41</version>
 		</dependency>
 		<dependency>
 			<!-- spring-android-rest-template is required to use the Rest API -->
@@ -153,6 +158,11 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
+		</repository>
+		
+		<repository>
+			<id>maven-central</id>
+			<url>http://repo1.maven.org/</url>
 		</repository>
 	</repositories>
 
