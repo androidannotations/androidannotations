@@ -27,7 +27,6 @@ import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.BooleanRes;
 import com.googlecode.androidannotations.annotations.res.ColorRes;
@@ -102,7 +101,7 @@ public class MyActivity extends Activity {
         textView.setTextColor(color);
     }
 
-    @UiThreadDelayed(2000)
+    @UiThread(delay=2000)
     void showNotificationsDelayed() {
         Notification notification = new Notification(R.drawable.icon, "Hello !", 0);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
