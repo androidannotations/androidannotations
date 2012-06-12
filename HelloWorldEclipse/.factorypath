@@ -1,4 +1,4 @@
 <factorypath>
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/androidannotations/target/androidannotations-2.2-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/androidannotations/target/androidannotations-2.6-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

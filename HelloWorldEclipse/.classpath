@@ -8,6 +8,6 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/androidannotations/target/androidannotations-2.2-SNAPSHOT-api.jar" sourcepath="/androidannotations/target/androidannotations-2.2-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry exported="true" kind="lib" path="/androidannotations/target/androidannotations-2.6-SNAPSHOT-api.jar" sourcepath="/androidannotations/target/androidannotations-2.6-SNAPSHOT-sources.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
