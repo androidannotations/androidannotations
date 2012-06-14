@@ -3,9 +3,9 @@ package com.googlecode.androidannotations.helloworldeclipse;
 import java.util.Date;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -35,9 +35,8 @@ public class ActivityWithExtra extends Activity {
 	@Extra(MY_INT_EXTRA)
 	String classCastExceptionExtra = "classCastExceptionExtraDefaultValue";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	@AfterViews
+	protected void init() {
 		extraTextView.setText(myMessage + " " + myDate + " " + unboundExtra + " " + classCastExceptionExtra);
 	}
 

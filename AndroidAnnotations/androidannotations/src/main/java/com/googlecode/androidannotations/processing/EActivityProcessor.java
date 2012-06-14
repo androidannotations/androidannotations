@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
 import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
@@ -58,18 +59,23 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class EActivityProcessor extends AnnotationHelper implements ElementProcessor {
+public class EActivityProcessor implements ElementProcessor {
 
 	private final IRClass rClass;
 	private List<TypeElement> greendroidActivityElements;
 
+	private final AnnotationHelper annotationHelper;
+
+	private final ProcessingEnvironment processingEnv;
+
 	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
+		this.processingEnv = processingEnv;
+		annotationHelper = new AnnotationHelper(processingEnv);
 		this.rClass = rClass;
 
 		greendroidActivityElements = new ArrayList<TypeElement>();
 		for (String greendroidActivityName : GREENDROID_ACTIVITIES_LIST_CLASS) {
-			TypeElement typeElement = typeElementFromQualifiedName(greendroidActivityName);
+			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(greendroidActivityName);
 			if (typeElement != null) {
 				greendroidActivityElements.add(typeElement);
 			}
@@ -121,7 +127,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
-		JClass bundleClass = holder.refClass("android.os.Bundle");
+		JClass bundleClass = holder.classes().BUNDLE;
 
 		// beforeSetContentView
 		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
@@ -141,7 +147,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 		onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
 
-		onCreateBody.invoke(JExpr._super(), onCreate).arg(onCreateSavedInstanceState);
+		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 
 		EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
 		int layoutIdValue = layoutAnnotation.value();
@@ -164,8 +170,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		}
 
 		// Overriding setContentView (with layout id param)
-		JClass viewClass = holder.refClass("android.view.View");
-		JClass layoutParamsClass = holder.refClass("android.view.ViewGroup.LayoutParams");
+		JClass layoutParamsClass = holder.classes().VIEW_GROUP_LAYOUT_PARAMS;
 
 		String setContentViewMethodName;
 		if (usesGreenDroid) {
@@ -175,15 +180,15 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		}
 
 		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { codeModel.INT }, new String[] { "layoutResID" });
-		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass, layoutParamsClass }, new String[] { "view", "params" });
-		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { viewClass }, new String[] { "view" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { holder.classes().VIEW, layoutParamsClass }, new String[] { "view", "params" });
+		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { holder.classes().VIEW }, new String[] { "view" });
 
 		// Handling onBackPressed
 		if (hasOnBackPressedMethod(typeElement)) {
 			JMethod onKeyDownMethod = holder.eBean.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
 			onKeyDownMethod.annotate(Override.class);
 			JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
-			JClass keyEventClass = holder.refClass("android.view.KeyEvent");
+			JClass keyEventClass = holder.classes().KEY_EVENT;
 			JVar eventParam = onKeyDownMethod.param(keyEventClass, "event");
 
 			JClass versionHelperClass = codeModel.ref(SdkVersionHelper.class);
@@ -207,8 +212,8 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 		}
 
 		if (!isAbstract) {
-			JClass contextClass = holder.refClass("android.content.Context");
-			JClass intentClass = holder.refClass("android.content.Intent");
+			JClass contextClass = holder.classes().CONTEXT;
+			JClass intentClass = holder.classes().INTENT;
 
 			{
 				holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
@@ -276,7 +281,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 	}
 
 	private int inheritedOnCreateVisibility(TypeElement activityElement) {
-		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
+		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
 
 		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
 
@@ -307,7 +312,7 @@ public class EActivityProcessor extends AnnotationHelper implements ElementProce
 
 	private boolean hasOnBackPressedMethod(TypeElement activityElement) {
 
-		List<? extends Element> allMembers = getElementUtils().getAllMembers(activityElement);
+		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
 
 		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
 

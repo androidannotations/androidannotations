@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.APPLICATION;
+import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
@@ -24,12 +26,9 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.App;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 
 public class AppProcessor implements ElementProcessor {
-
-	private static final String ANDROID_APPLICATION_QUALIFIED_NAME = "android.app.Application";
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -38,6 +37,7 @@ public class AppProcessor implements ElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
+
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
 		String fieldName = element.getSimpleName().toString();
@@ -47,10 +47,10 @@ public class AppProcessor implements ElementProcessor {
 		JInvocation getApplication = holder.initActivityRef.invoke("getApplication");
 
 		String applicationTypeQualifiedName = elementType.toString();
-		if (ANDROID_APPLICATION_QUALIFIED_NAME.equals(applicationTypeQualifiedName)) {
+		if (APPLICATION.equals(applicationTypeQualifiedName)) {
 			holder.initIfActivityBody.assign(ref(fieldName), getApplication);
 		} else {
-			holder.initIfActivityBody.assign(ref(fieldName), JExpr.cast(holder.refClass(applicationTypeQualifiedName), getApplication));
+			holder.initIfActivityBody.assign(ref(fieldName), cast(eBeansHolder.refClass(applicationTypeQualifiedName), getApplication));
 		}
 
 	}

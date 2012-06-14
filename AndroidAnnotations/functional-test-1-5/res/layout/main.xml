@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+    Copyright (C) 2010-2012 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,12 @@
 
     <TextView
         android:id="@+id/helloTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hello" />
+
+    <EditText
+        android:id="@+id/watchedEditText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/hello" />

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Get;
-import com.googlecode.androidannotations.helper.ProcessorConstants;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -58,11 +58,11 @@ public class GetProcessor extends MethodProcessor {
 		JClass expectedClass = null;
 
 		if (returnType.getKind() != TypeKind.VOID) {
-			if (returnTypeString.startsWith(ProcessorConstants.RESPONSE_ENTITY)) {
+			if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 				DeclaredType declaredReturnedType = (DeclaredType) returnType;
 				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
 				expectedClass = holder.refClass(typeParameter.toString());
-				generatedReturnType = holder.refClass(ProcessorConstants.RESPONSE_ENTITY).narrow(expectedClass);
+				generatedReturnType = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
 			} else {
 				generatedReturnType = holder.refClass(returnTypeString);
 				expectedClass = generatedReturnType;
@@ -71,9 +71,8 @@ public class GetProcessor extends MethodProcessor {
 
 		Get getAnnotation = element.getAnnotation(Get.class);
 		String urlSuffix = getAnnotation.value();
-		String url = holder.urlPrefix + urlSuffix;
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, expectedClass, generatedReturnType, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
 	}
 
 	@Override

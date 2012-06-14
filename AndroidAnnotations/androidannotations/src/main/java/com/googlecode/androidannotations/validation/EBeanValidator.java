@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,10 +28,9 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 public class EBeanValidator implements ElementValidator {
 
 	private final ValidatorHelper validatorHelper;
-	private TargetAnnotationHelper annotationHelper;
 
 	public EBeanValidator(ProcessingEnvironment processingEnv) {
-		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
@@ -46,13 +45,13 @@ public class EBeanValidator implements ElementValidator {
 		IsValid valid = new IsValid();
 
 		validatorHelper.isNotFinal(element, valid);
-		
+
 		validatorHelper.isNotAbstract(element, valid);
-		
+
 		validatorHelper.isNotPrivate(element, valid);
-		
+
 		validatorHelper.hasEmptyConstructor(element, valid);
-		
+
 		return valid.isValid();
 	}
 

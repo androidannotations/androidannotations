@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ import javax.tools.Diagnostic.Kind;
 
 public class AnnotationHelper {
 
-	protected final ProcessingEnvironment processingEnv;
+	private final ProcessingEnvironment processingEnv;
 
 	public AnnotationHelper(ProcessingEnvironment processingEnv) {
 		this.processingEnv = processingEnv;
@@ -122,6 +122,10 @@ public class AnnotationHelper {
 		return isSubtype(t1.asType(), t2.asType());
 	}
 
+	/**
+	 * This method may return null if the {@link TypeElement} cannot be found in
+	 * the processor classpath
+	 */
 	public TypeElement typeElementFromQualifiedName(String qualifiedName) {
 		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
 	}
@@ -174,7 +178,7 @@ public class AnnotationHelper {
 	public boolean isInterface(TypeElement element) {
 		return element.getKind().isInterface();
 	}
-	
+
 	public boolean isTopLevel(TypeElement element) {
 		return element.getNestingKind() == NestingKind.TOP_LEVEL;
 	}

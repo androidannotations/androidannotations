@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,12 +15,12 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -28,8 +28,8 @@ import javax.lang.model.element.TypeElement;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
@@ -44,7 +44,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 
-public class EViewGroupProcessor extends AnnotationHelper implements ElementProcessor {
+public class EViewGroupProcessor implements ElementProcessor {
 
 	private static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
@@ -64,8 +64,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 
 	private final APTCodeModelHelper codeModelHelper;
 
-	public EViewGroupProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		super(processingEnv);
+	public EViewGroupProcessor(IRClass rClass) {
 		this.rClass = rClass;
 		codeModelHelper = new APTCodeModelHelper();
 	}
@@ -79,6 +78,8 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
 		EBeanHolder holder = eBeansHolder.create(element);
+
+		Classes classes = holder.classes();
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -102,8 +103,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		holder.eBean.javadoc().append(SUPPRESS_WARNING_COMMENT);
 
 		{
-			JClass contextClass = holder.refClass("android.content.Context");
-			holder.contextRef = holder.eBean.field(PRIVATE, contextClass, "context_");
+			holder.contextRef = holder.eBean.field(PRIVATE, classes.CONTEXT, "context_");
 		}
 
 		{
@@ -134,7 +134,7 @@ public class EViewGroupProcessor extends AnnotationHelper implements ElementProc
 		if (layoutIdValue != Id.DEFAULT_VALUE) {
 			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
 			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
-			ifNotInflated.invoke("inflate").arg(JExpr.invoke("getContext")).arg(contentViewId).arg(JExpr._this());
+			ifNotInflated.invoke("inflate").arg(invoke("getContext")).arg(contentViewId).arg(JExpr._this());
 		}
 		ifNotInflated.invoke(holder.afterSetContentView);
 

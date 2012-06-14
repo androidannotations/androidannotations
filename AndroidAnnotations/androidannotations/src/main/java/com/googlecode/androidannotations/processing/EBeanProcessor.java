@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,14 +26,13 @@ import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.api.Scope;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -42,13 +41,9 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EBeanProcessor extends AnnotationHelper implements ElementProcessor {
+public class EBeanProcessor implements ElementProcessor {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
-
-	public EBeanProcessor(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
-	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -72,11 +67,9 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 
 		holder.eBean._extends(eBeanClass);
 
-		JClass contextClass = holder.refClass("android.content.Context");
+		Classes classes = holder.classes();
 
-		JClass activityClass = holder.refClass("android.app.Activity");
-
-		JFieldVar contextField = holder.eBean.field(PRIVATE, contextClass, "context_");
+		JFieldVar contextField = holder.eBean.field(PRIVATE, classes.CONTEXT, "context_");
 
 		holder.contextRef = contextField;
 
@@ -87,22 +80,20 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 
 			JBlock afterSetContentViewBody = holder.afterSetContentView.body();
 
-			afterSetContentViewBody._if(holder.contextRef._instanceof(activityClass).not())._then()._return();
+			afterSetContentViewBody._if(holder.contextRef._instanceof(classes.ACTIVITY).not())._then()._return();
 		}
-
-		JClass viewClass = holder.refClass("android.view.View");
 
 		{
 			// findViewById
 
-			JMethod findViewById = holder.eBean.method(PUBLIC, viewClass, "findViewById");
+			JMethod findViewById = holder.eBean.method(PUBLIC, classes.VIEW, "findViewById");
 			JVar idParam = findViewById.param(codeModel.INT, "id");
 
 			findViewById.javadoc().add("You should check that context is an activity before calling this method");
 
 			JBlock findViewByIdBody = findViewById.body();
 
-			JVar activityVar = findViewByIdBody.decl(activityClass, "activity", cast(activityClass, holder.contextRef));
+			JVar activityVar = findViewByIdBody.decl(classes.ACTIVITY, "activity_", cast(classes.ACTIVITY, holder.contextRef));
 
 			findViewByIdBody._return(activityVar.invoke(findViewById).arg(idParam));
 		}
@@ -129,7 +120,7 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 
 			JMethod constructor = holder.eBean.constructor(PRIVATE);
 
-			JVar constructorContextParam = constructor.param(contextClass, "context");
+			JVar constructorContextParam = constructor.param(classes.CONTEXT, "context");
 
 			JBlock constructorBody = constructor.body();
 
@@ -147,7 +138,7 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 
 			JMethod factoryMethod = holder.eBean.method(PUBLIC | STATIC, holder.eBean, GET_INSTANCE_METHOD_NAME);
 
-			JVar factoryMethodContextParam = factoryMethod.param(contextClass, "context");
+			JVar factoryMethodContextParam = factoryMethod.param(classes.CONTEXT, "context");
 
 			JBlock factoryMethodBody = factoryMethod.body();
 
@@ -172,7 +163,7 @@ public class EBeanProcessor extends AnnotationHelper implements ElementProcessor
 		{
 			// rebind(Context)
 			JMethod rebindMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "rebind");
-			JVar contextParam = rebindMethod.param(contextClass, "context");
+			JVar contextParam = rebindMethod.param(classes.CONTEXT, "context");
 
 			/*
 			 * No rebinding of context for singletons, their are bound to the

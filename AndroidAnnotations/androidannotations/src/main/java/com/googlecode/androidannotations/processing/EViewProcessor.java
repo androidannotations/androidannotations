@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,15 +20,14 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -39,7 +38,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 
-public class EViewProcessor extends AnnotationHelper implements ElementProcessor {
+public class EViewProcessor implements ElementProcessor {
 
 	private static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
@@ -57,8 +56,7 @@ public class EViewProcessor extends AnnotationHelper implements ElementProcessor
 
 	private final APTCodeModelHelper codeModelHelper;
 
-	public EViewProcessor(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+	public EViewProcessor() {
 		codeModelHelper = new APTCodeModelHelper();
 	}
 
@@ -71,6 +69,8 @@ public class EViewProcessor extends AnnotationHelper implements ElementProcessor
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
 		EBeanHolder holder = eBeansHolder.create(element);
+
+		Classes classes = holder.classes();
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -94,8 +94,7 @@ public class EViewProcessor extends AnnotationHelper implements ElementProcessor
 		holder.eBean.javadoc().append(SUPPRESS_WARNING_COMMENT);
 
 		{
-			JClass contextClass = holder.refClass("android.content.Context");
-			holder.contextRef = holder.eBean.field(PRIVATE, contextClass, "context_");
+			holder.contextRef = holder.eBean.field(PRIVATE, classes.CONTEXT, "context_");
 		}
 
 		{

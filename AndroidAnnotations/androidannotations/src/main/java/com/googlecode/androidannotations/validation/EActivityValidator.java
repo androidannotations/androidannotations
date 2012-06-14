@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.helper.AndroidManifest;
@@ -50,7 +49,7 @@ public class EActivityValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsActivity((TypeElement) element, valid);
+		validatorHelper.extendsActivity(element, valid);
 
 		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
 

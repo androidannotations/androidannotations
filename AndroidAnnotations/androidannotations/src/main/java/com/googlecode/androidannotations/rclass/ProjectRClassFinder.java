@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,12 +22,13 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
 
 import com.googlecode.androidannotations.helper.AndroidManifest;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 
-public class ProjectRClassFinder extends AnnotationHelper {
+public class ProjectRClassFinder {
+
+	private ProcessingEnvironment processingEnv;
 
 	public ProjectRClassFinder(ProcessingEnvironment processingEnv) {
-		super(processingEnv);
+		this.processingEnv = processingEnv;
 	}
 
 	public IRClass find(AndroidManifest manifest) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,10 +16,10 @@
 package com.googlecode.androidannotations.processing;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.EViewGroup;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -49,7 +49,6 @@ public class EBeanHolder {
 
 	public JMethod cast;
 
-	private Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
 	public JFieldVar handler;
 
 	public JSwitch onOptionsItemSelectedSwitch;
@@ -75,31 +74,38 @@ public class EBeanHolder {
 	 * Only defined in activities
 	 */
 	public JFieldVar intentField;
-	
+
 	/**
 	 * Only defined in activities
 	 */
 	public NonConfigurationHolder nonConfigurationHolder;
 
-	public JClass refClass(String fullyQualifiedClassName) {
+	/**
+	 * TextWatchers by idRef
+	 */
+	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
 
-		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
+	public JMethod findNativeFragmentById;
+	public JMethod findSupportFragmentById;
+	public JMethod findNativeFragmentByTag;
+	public JMethod findSupportFragmentByTag;
 
-		if (refClass == null) {
-			JCodeModel codeModel = eBean.owner();
-			try {
-				refClass = codeModel.ref(fullyQualifiedClassName);
-			} catch (Exception e) {
-				refClass = codeModel.directClass(fullyQualifiedClassName);
-			}
-			loadedClasses.put(fullyQualifiedClassName, refClass);
-		}
+	private EBeansHolder eBeansHolder;
 
-		return refClass;
+	public EBeanHolder(EBeansHolder eBeansHolder) {
+		this.eBeansHolder = eBeansHolder;
 	}
 
-	public JClass refClass(Class<?> clazz) {
-		return eBean.owner().ref(clazz);
+	public Classes classes() {
+		return eBeansHolder.classes();
+	}
+
+	public JCodeModel codeModel() {
+		return eBeansHolder.codeModel();
+	}
+
+	public JClass refClass(String fullyQualifiedClassName) {
+		return eBeansHolder.refClass(fullyQualifiedClassName);
 	}
 
 }

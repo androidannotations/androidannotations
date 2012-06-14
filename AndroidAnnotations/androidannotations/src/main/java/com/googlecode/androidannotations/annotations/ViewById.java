@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,8 +25,8 @@ import java.lang.annotation.Target;
  * 
  * The field MUST be of a type that extends android.view.View.
  * 
- * The annotation value should be one of R.string.* fields. If not set, the
- * field name will be used as the R.id.* field name.
+ * The annotation value should be one of R.id.* fields. If not set, the field
+ * name will be used as the R.id.* field name.
  * 
  */
 @Retention(RetentionPolicy.SOURCE)

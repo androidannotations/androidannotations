@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,14 +43,12 @@ public class DeleteProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		Delete deleteAnnotation = element.getAnnotation(Delete.class);
 		String urlSuffix = deleteAnnotation.value();
-		String url = holder.urlPrefix + urlSuffix;
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, url, null, null, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, null, null, codeModel));
 	}
 
 	@Override

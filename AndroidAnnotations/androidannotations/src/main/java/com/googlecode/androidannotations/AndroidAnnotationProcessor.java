@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,22 +33,28 @@ import javax.tools.Diagnostic;
 import com.googlecode.androidannotations.annotationprocessor.AnnotatedAbstractProcessor;
 import com.googlecode.androidannotations.annotationprocessor.SupportedAnnotationClasses;
 import com.googlecode.androidannotations.annotations.AfterInject;
+import com.googlecode.androidannotations.annotations.AfterTextChange;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.BeforeTextChange;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EApplication;
 import com.googlecode.androidannotations.annotations.EBean;
+import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.EProvider;
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.annotations.EService;
 import com.googlecode.androidannotations.annotations.EView;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.Extra;
+import com.googlecode.androidannotations.annotations.FragmentById;
+import com.googlecode.androidannotations.annotations.FragmentByTag;
 import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.annotations.Fullscreen;
+import com.googlecode.androidannotations.annotations.HttpsClient;
 import com.googlecode.androidannotations.annotations.InstanceState;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
@@ -61,11 +67,11 @@ import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
+import com.googlecode.androidannotations.annotations.TextChange;
 import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.UiThreadDelayed;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.AnimationRes;
 import com.googlecode.androidannotations.annotations.res.BooleanRes;
@@ -106,22 +112,28 @@ import com.googlecode.androidannotations.model.AnnotationElementsHolder;
 import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.AfterInjectProcessor;
+import com.googlecode.androidannotations.processing.AfterTextChangeProcessor;
 import com.googlecode.androidannotations.processing.AfterViewsProcessor;
 import com.googlecode.androidannotations.processing.AppProcessor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeanProcessor;
+import com.googlecode.androidannotations.processing.BeforeTextChangeProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.EActivityProcessor;
 import com.googlecode.androidannotations.processing.EApplicationProcessor;
 import com.googlecode.androidannotations.processing.EBeanProcessor;
+import com.googlecode.androidannotations.processing.EFragmentProcessor;
 import com.googlecode.androidannotations.processing.EProviderProcessor;
 import com.googlecode.androidannotations.processing.EReceiverProcessor;
 import com.googlecode.androidannotations.processing.EServiceProcessor;
 import com.googlecode.androidannotations.processing.EViewGroupProcessor;
 import com.googlecode.androidannotations.processing.EViewProcessor;
 import com.googlecode.androidannotations.processing.ExtraProcessor;
+import com.googlecode.androidannotations.processing.FragmentByIdProcessor;
+import com.googlecode.androidannotations.processing.FragmentByTagProcessor;
 import com.googlecode.androidannotations.processing.FromHtmlProcessor;
 import com.googlecode.androidannotations.processing.FullscreenProcessor;
+import com.googlecode.androidannotations.processing.HttpsClientProcessor;
 import com.googlecode.androidannotations.processing.InstanceStateProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
 import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
@@ -139,10 +151,10 @@ import com.googlecode.androidannotations.processing.RoboGuiceProcessor;
 import com.googlecode.androidannotations.processing.RootContextProcessor;
 import com.googlecode.androidannotations.processing.SharedPrefProcessor;
 import com.googlecode.androidannotations.processing.SystemServiceProcessor;
+import com.googlecode.androidannotations.processing.TextChangeProcessor;
 import com.googlecode.androidannotations.processing.TouchProcessor;
 import com.googlecode.androidannotations.processing.TraceProcessor;
 import com.googlecode.androidannotations.processing.TransactionalProcessor;
-import com.googlecode.androidannotations.processing.UiThreadDelayedProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewByIdProcessor;
 import com.googlecode.androidannotations.processing.rest.DeleteProcessor;
@@ -158,21 +170,27 @@ import com.googlecode.androidannotations.rclass.CoumpoundRClass;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.ProjectRClassFinder;
 import com.googlecode.androidannotations.validation.AfterInjectValidator;
+import com.googlecode.androidannotations.validation.AfterTextChangeValidator;
 import com.googlecode.androidannotations.validation.AfterViewsValidator;
 import com.googlecode.androidannotations.validation.AppValidator;
 import com.googlecode.androidannotations.validation.BeanValidator;
+import com.googlecode.androidannotations.validation.BeforeTextChangeValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EActivityValidator;
 import com.googlecode.androidannotations.validation.EApplicationValidator;
 import com.googlecode.androidannotations.validation.EBeanValidator;
+import com.googlecode.androidannotations.validation.EFragmentValidator;
 import com.googlecode.androidannotations.validation.EProviderValidator;
 import com.googlecode.androidannotations.validation.EReceiverValidator;
 import com.googlecode.androidannotations.validation.EServiceValidator;
 import com.googlecode.androidannotations.validation.EViewGroupValidator;
 import com.googlecode.androidannotations.validation.EViewValidator;
 import com.googlecode.androidannotations.validation.ExtraValidator;
+import com.googlecode.androidannotations.validation.FragmentByIdValidator;
+import com.googlecode.androidannotations.validation.FragmentByTagValidator;
 import com.googlecode.androidannotations.validation.FromHtmlValidator;
 import com.googlecode.androidannotations.validation.FullscreenValidator;
+import com.googlecode.androidannotations.validation.HttpsClientValidator;
 import com.googlecode.androidannotations.validation.InstanceStateValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
 import com.googlecode.androidannotations.validation.ItemLongClickValidator;
@@ -191,6 +209,7 @@ import com.googlecode.androidannotations.validation.RootContextValidator;
 import com.googlecode.androidannotations.validation.RunnableValidator;
 import com.googlecode.androidannotations.validation.SharedPrefValidator;
 import com.googlecode.androidannotations.validation.SystemServiceValidator;
+import com.googlecode.androidannotations.validation.TextChangeValidator;
 import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.TraceValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
@@ -218,7 +237,6 @@ import com.sun.codemodel.JCodeModel;
 		ItemLongClick.class, //
 		Touch.class, //
 		ItemSelect.class, //
-		UiThreadDelayed.class, //
 		UiThread.class, //
 		Transactional.class, //
 		Background.class, //
@@ -267,16 +285,17 @@ import com.sun.codemodel.JCodeModel;
 		Trace.class, //
 		InstanceState.class, //
 		NonConfigurationInstance.class, //
-		EApplication.class //
+		EApplication.class, //
+		EFragment.class, //
+		FragmentById.class, //
+		FragmentByTag.class, //
+		BeforeTextChange.class, //
+		TextChange.class, //
+		AfterTextChange.class, //
+		HttpsClient.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
-
-	/**
-	 * We do not need multiple round processing, since the generated classes do
-	 * not need to be processed.
-	 */
-	private boolean alreadyProcessed = false;
 
 	private final TimeStats timeStats = new TimeStats();
 
@@ -311,8 +330,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 			return;
 		}
 
-		alreadyProcessed = true;
-
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
 		AndroidManifest androidManifest = extractAndroidManifest();
@@ -329,7 +346,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 	}
 
 	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-		return roundEnv.processingOver() || annotations.size() == 0 || alreadyProcessed;
+		return roundEnv.processingOver() || annotations.size() == 0;
 	}
 
 	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -384,11 +401,14 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new EServiceValidator(processingEnv, androidManifest));
 		modelValidator.register(new EReceiverValidator(processingEnv, androidManifest));
 		modelValidator.register(new EProviderValidator(processingEnv, androidManifest));
+		modelValidator.register(new EFragmentValidator(processingEnv, rClass));
 		modelValidator.register(new EViewGroupValidator(processingEnv, rClass));
 		modelValidator.register(new EViewValidator(processingEnv));
 		modelValidator.register(new EBeanValidator(processingEnv));
 		modelValidator.register(new RoboGuiceValidator(processingEnv));
 		modelValidator.register(new ViewByIdValidator(processingEnv, rClass));
+		modelValidator.register(new FragmentByIdValidator(processingEnv, rClass));
+		modelValidator.register(new FragmentByTagValidator(processingEnv));
 		modelValidator.register(new FromHtmlValidator(processingEnv, rClass));
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
@@ -402,7 +422,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new TransactionalValidator(processingEnv));
 		modelValidator.register(new ExtraValidator(processingEnv));
 		modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
-		modelValidator.register(new AfterViewsValidator(processingEnv));
 		modelValidator.register(new SharedPrefValidator(processingEnv));
 		modelValidator.register(new PrefValidator(processingEnv));
 		modelValidator.register(new RestValidator(processingEnv));
@@ -422,14 +441,18 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new RootContextValidator(processingEnv));
 		modelValidator.register(new BeanValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
+		modelValidator.register(new AfterViewsValidator(processingEnv));
 		if (traceActivated()) {
 			modelValidator.register(new TraceValidator(processingEnv));
 		}
-		modelValidator.register(new RunnableValidator(UiThreadDelayed.class, processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
 		modelValidator.register(new NonConfigurationInstanceValidator(processingEnv));
+		modelValidator.register(new BeforeTextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new TextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		return modelValidator;
 	}
 
@@ -453,32 +476,34 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest, AnnotationElements validatedModel) {
 		ModelProcessor modelProcessor = new ModelProcessor();
-		modelProcessor.register(new EApplicationProcessor(processingEnv));
+		modelProcessor.register(new EApplicationProcessor());
 		modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
-		modelProcessor.register(new EServiceProcessor(processingEnv));
-		modelProcessor.register(new EReceiverProcessor(processingEnv));
-		modelProcessor.register(new EProviderProcessor(processingEnv));
-		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
-		modelProcessor.register(new EViewProcessor(processingEnv));
-		modelProcessor.register(new EBeanProcessor(processingEnv));
-		modelProcessor.register(new SharedPrefProcessor(processingEnv));
+		modelProcessor.register(new EServiceProcessor());
+		modelProcessor.register(new EReceiverProcessor());
+		modelProcessor.register(new EProviderProcessor());
+		modelProcessor.register(new EFragmentProcessor(rClass));
+		modelProcessor.register(new EViewGroupProcessor(rClass));
+		modelProcessor.register(new EViewProcessor());
+		modelProcessor.register(new EBeanProcessor());
+		modelProcessor.register(new SharedPrefProcessor());
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewByIdProcessor(rClass));
+		modelProcessor.register(new FragmentByIdProcessor(processingEnv, rClass));
+		modelProcessor.register(new FragmentByTagProcessor(processingEnv));
 		modelProcessor.register(new FromHtmlProcessor(rClass));
-		modelProcessor.register(new ClickProcessor(rClass));
-		modelProcessor.register(new LongClickProcessor(rClass));
-		modelProcessor.register(new TouchProcessor(rClass));
-		modelProcessor.register(new ItemClickProcessor(rClass));
-		modelProcessor.register(new ItemSelectedProcessor(rClass));
-		modelProcessor.register(new ItemLongClickProcessor(rClass));
+		modelProcessor.register(new ClickProcessor(processingEnv, rClass));
+		modelProcessor.register(new LongClickProcessor(processingEnv, rClass));
+		modelProcessor.register(new TouchProcessor(processingEnv, rClass));
+		modelProcessor.register(new ItemClickProcessor(processingEnv, rClass));
+		modelProcessor.register(new ItemSelectedProcessor(processingEnv, rClass));
+		modelProcessor.register(new ItemLongClickProcessor(processingEnv, rClass));
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			modelProcessor.register(new ResProcessor(androidRes, rClass));
 		}
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
-		modelProcessor.register(new AfterViewsProcessor());
 		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
 		modelProcessor.register(new RestProcessor(restImplementationHolder));
 		modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
@@ -488,20 +513,24 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new HeadProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new AppProcessor());
-		modelProcessor.register(new OptionsMenuProcessor(rClass));
-		modelProcessor.register(new OptionsItemProcessor(rClass));
+		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
+		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
 		modelProcessor.register(new RootContextProcessor());
 		modelProcessor.register(new BeanProcessor(processingEnv));
+		modelProcessor.register(new AfterViewsProcessor());
 		modelProcessor.register(new TraceProcessor());
 		modelProcessor.register(new UiThreadProcessor());
-		modelProcessor.register(new UiThreadDelayedProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
 		modelProcessor.register(new NonConfigurationInstanceProcessor());
+		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new HttpsClientProcessor(rClass));
 		return modelProcessor;
 	}
 

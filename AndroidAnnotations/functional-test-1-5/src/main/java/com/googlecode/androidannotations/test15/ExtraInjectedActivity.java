@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.test15;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.Extra;
@@ -27,17 +28,24 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra("stringExtra")
 	String stringExtra;
-	
+
 	@Extra("arrayExtra")
 	CustomData[] arrayExtra;
 
 	@Extra("listExtra")
 	List<String> listExtra;
-	
+
 	@Extra("intExtra")
 	int intExtra;
-	
+
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
+	
+	@Extra
+	String extraWithoutValue;
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+	}
 }

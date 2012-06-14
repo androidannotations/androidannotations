@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,18 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.OptionsMenu;
+import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.SherlockHelper;
+import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JMethod;
@@ -35,9 +40,12 @@ import com.sun.codemodel.JVar;
 
 public class OptionsMenuProcessor implements ElementProcessor {
 
+	private final SherlockHelper sherlockHelper;
+
 	private final IRClass rClass;
 
-	public OptionsMenuProcessor(IRClass rClass) {
+	public OptionsMenuProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		sherlockHelper = new SherlockHelper(new AnnotationHelper(processingEnv));
 		this.rClass = rClass;
 	}
 
@@ -49,6 +57,20 @@ public class OptionsMenuProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
+		Classes classes = holder.classes();
+
+		JClass menuClass;
+		JClass menuInflaterClass;
+		String getMenuInflaterMethodName;
+		if (sherlockHelper.usesSherlock(holder)) {
+			menuClass = classes.SHERLOCK_MENU;
+			menuInflaterClass = classes.SHERLOCK_MENU_INFLATER;
+			getMenuInflaterMethodName = "getSupportMenuInflater";
+		} else {
+			menuClass = classes.MENU;
+			menuInflaterClass = classes.MENU_INFLATER;
+			getMenuInflaterMethodName = "getMenuInflater";
+		}
 
 		OptionsMenu layoutAnnotation = element.getAnnotation(OptionsMenu.class);
 		int layoutIdValue = layoutAnnotation.value();
@@ -58,15 +80,14 @@ public class OptionsMenuProcessor implements ElementProcessor {
 
 		JMethod method = holder.eBean.method(PUBLIC, codeModel.BOOLEAN, "onCreateOptionsMenu");
 		method.annotate(Override.class);
-		JVar menuParam = method.param(holder.refClass("android.view.Menu"), "menu");
+		JVar menuParam = method.param(menuClass, "menu");
 
 		JBlock body = method.body();
 
-		JVar menuInflater = body.decl(holder.refClass("android.view.MenuInflater"), "menuInflater", invoke("getMenuInflater"));
+		JVar menuInflater = body.decl(menuInflaterClass, "menuInflater", invoke(getMenuInflaterMethodName));
 
 		body.invoke(menuInflater, "inflate").arg(optionsMenuId).arg(menuParam);
 
 		body._return(invoke(_super(), method).arg(menuParam));
 	}
-
 }

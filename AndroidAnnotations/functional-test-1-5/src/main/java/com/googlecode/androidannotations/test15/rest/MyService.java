@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -98,4 +98,6 @@ public interface MyService {
 	RestTemplate getRestTemplate();
 	
 	void setRestTemplate(RestTemplate restTemplate);
+	
+	void setRootUrl(String test);
 }

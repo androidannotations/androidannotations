@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,19 +21,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <b>This annotation is deprecated. You should use {@link UiThread} with the delay parameter instead</b>
+ * Use it on Fragment fields in activity classes
  * 
- * Should be used on method that must be run in the Ui thread, after the
- * specified amount of time elapses.
- * 
- * The annotation value is the delay (in milliseconds) until the method will be
- * executed.
- * 
+ * The annotation value should be the tag name of the fragment. If not set, the
+ * field name will be used as tag name name.
  * 
  */
-@Deprecated
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.METHOD)
-public @interface UiThreadDelayed {
-	long value();
+@Target(ElementType.FIELD)
+public @interface FragmentByTag {
+	String value() default "";
 }

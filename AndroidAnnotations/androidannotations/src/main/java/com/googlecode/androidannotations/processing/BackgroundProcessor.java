@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,10 +46,10 @@ public class BackgroundProcessor implements ElementProcessor {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		
+
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 
-		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(codeModel, holder, delegatingMethod);
+		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
 
 		{
 			// Execute Runnable
