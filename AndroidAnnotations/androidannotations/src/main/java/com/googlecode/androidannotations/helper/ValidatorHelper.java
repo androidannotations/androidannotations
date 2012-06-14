@@ -1040,47 +1040,37 @@ public class ValidatorHelper {
 				annotationHelper.printAnnotationError(element, "The value of %s must be assignable into the annotated field");
 				return;
 			}
-			if (!providedImpl.toString().startsWith("java.")) {
-				typeOrTargetValueHasAnnotation(EBean.class, element, valid);
-				if (!valid.isValid()) {
-					return;
-				}
+			typeOrTargetValueHasAnnotation(EBean.class, element, valid);
+			if (!valid.isValid()) {
+				return;
 			}
 		}
 
-		TypeMirror typedParam = getTypedParameter(element, valid);
-		if (typedParam == null) {
+		if (!annotationHelper.isAssignableFromAny(element.asType(), Collection.class, List.class, Set.class)) {
+			typeOrTargetValueHasAnnotation(EBean.class, element, valid);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void validateCollectionItem(Element element, IsValid valid) {
+		if (element.asType().toString().startsWith("java.") && !annotationHelper.isAssignableFromAny(element.asType(), Collection.class, List.class, Set.class)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Collection should have exactly one typed parameter");
+			annotationHelper.printAnnotationError(element, "Only allow Collection, List, Set");
 			return;
 		}
-		if (annotationHelper.isSameType(typedParam, Object.class)) {
+		TypeMirror typedParam = GenericTypeFinder.newInstance(element.asType(), annotationHelper).get(0);
+		if (typedParam == null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Typed Parameter of the Collection cannot be Object.class");
+			annotationHelper.printAnnotationError(element, "Could not resolve generic type!");
 			return;
-		} else if (typedParam instanceof WildcardType) {
+		}
+		if (typedParam instanceof WildcardType) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "Wildcard not supported");
 			return;
 		}
 
-		validateCollectionItem(element, typedParam, valid);
-	}
-
-	private TypeMirror getTypedParameter(Element element, IsValid valid) {
-		DeclaredType typed = ElementHelper.getAsDeclaredType(element);
-
-		List<? extends TypeMirror> typedParams = typed.getTypeArguments();
-
-		if (typedParams.size() != 1) {
-			return null;
-		}
-		return typedParams.get(0);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void validateCollectionItem(Element element, TypeMirror typedParam, IsValid valid) {
-		Object obj = annotationHelper.extractAnnotationClassAttrVal(element, "items");
+		Object obj = annotationHelper.extractAnnotationClassAttrVal(element, "value");
 		if (obj != null) {
 			for (AnnotationValue item : (List<? extends AnnotationValue>) obj) {
 				TypeMirror type = (TypeMirror) item.getValue();

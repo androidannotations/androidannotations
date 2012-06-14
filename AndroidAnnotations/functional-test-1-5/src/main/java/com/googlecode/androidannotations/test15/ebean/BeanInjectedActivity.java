@@ -25,8 +25,8 @@ public class BeanInjectedActivity extends Activity {
 
 	@Bean
 	public EmptyDependency dependency;
-	
-	@Bean(value = SomeImplementation.class)
+
+	@Bean(SomeImplementation.class)
 	public SomeInterface interfaceDependency;
 
 	@Bean

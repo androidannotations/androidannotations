@@ -38,6 +38,7 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.Beans;
 import com.googlecode.androidannotations.annotations.BeforeTextChange;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -114,6 +115,7 @@ import com.googlecode.androidannotations.processing.AfterViewsProcessor;
 import com.googlecode.androidannotations.processing.AppProcessor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeanProcessor;
+import com.googlecode.androidannotations.processing.BeansProcessor;
 import com.googlecode.androidannotations.processing.BeforeTextChangeProcessor;
 import com.googlecode.androidannotations.processing.ClickProcessor;
 import com.googlecode.androidannotations.processing.EActivityProcessor;
@@ -168,6 +170,7 @@ import com.googlecode.androidannotations.validation.AfterTextChangeValidator;
 import com.googlecode.androidannotations.validation.AfterViewsValidator;
 import com.googlecode.androidannotations.validation.AppValidator;
 import com.googlecode.androidannotations.validation.BeanValidator;
+import com.googlecode.androidannotations.validation.BeansValidator;
 import com.googlecode.androidannotations.validation.BeforeTextChangeValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
 import com.googlecode.androidannotations.validation.EActivityValidator;
@@ -269,6 +272,7 @@ import com.sun.codemodel.JCodeModel;
 		EBean.class, //
 		RootContext.class, //
 		Bean.class, //
+		Beans.class, //
 		AfterInject.class, //
 		EService.class, //
 		EReceiver.class, //
@@ -433,6 +437,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new RestServiceValidator(processingEnv));
 		modelValidator.register(new RootContextValidator(processingEnv));
 		modelValidator.register(new BeanValidator(processingEnv));
+		modelValidator.register(new BeansValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
 		if (traceActivated()) {
 			modelValidator.register(new TraceValidator(processingEnv));
@@ -509,7 +514,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
 		modelProcessor.register(new RootContextProcessor());
-		modelProcessor.register(new BeanProcessor(processingEnv, validatedModel));
+		modelProcessor.register(new BeanProcessor(processingEnv));
+		modelProcessor.register(new BeansProcessor(processingEnv));
 		modelProcessor.register(new TraceProcessor());
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new UiThreadDelayedProcessor());

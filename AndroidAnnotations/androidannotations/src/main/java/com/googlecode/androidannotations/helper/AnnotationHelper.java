@@ -174,7 +174,7 @@ public class AnnotationHelper {
 	public boolean isInterface(TypeElement element) {
 		return element.getKind().isInterface();
 	}
-	
+
 	public boolean isTopLevel(TypeElement element) {
 		return element.getNestingKind() == NestingKind.TOP_LEVEL;
 	}
@@ -193,6 +193,30 @@ public class AnnotationHelper {
 
 	public Types getTypeUtils() {
 		return processingEnv.getTypeUtils();
+	}
+
+	public boolean isAssignable(TypeMirror type1, Class<?> type2) {
+		TypeMirror type = getElementUtils().getTypeElement(type2.getCanonicalName()).asType();
+		return getTypeUtils().isAssignable(type1, type);
+	}
+
+	public boolean isAssignable(Class<?> type1, TypeMirror type2) {
+		TypeMirror type = getElementUtils().getTypeElement(type1.getCanonicalName()).asType();
+		return getTypeUtils().isAssignable(type, type2);
+	}
+
+	public boolean isAssignableFromAny(TypeMirror type1, Class<?>... types) {
+		for (Class<?> type : types) {
+			if (isAssignable(type, type1)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isSameType(TypeMirror type1, Class<?> type2) {
+		TypeMirror type = getElementUtils().getTypeElement(type2.getCanonicalName()).asType();
+		return getTypeUtils().isSameType(type1, type);
 	}
 
 }

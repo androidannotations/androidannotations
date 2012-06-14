@@ -28,6 +28,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Bean {
 	Class<?> value() default Void.class;
-
-	Class<?>[] items() default Void.class;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.Beans;
 import com.googlecode.androidannotations.annotations.EActivity;
 
 import android.app.Activity;
@@ -12,18 +13,28 @@ import android.app.Activity;
 @EActivity
 public class CollectionInjectedActivity extends Activity {
 
-	@Bean(items = { SomeImplementation.class, SomeImplementation.class })
+	@Bean
+	@Beans(value = { SomeItemImpl.class, SomeImplementation.class })
 	public Collection<SomeInterface> collection;
 
-	@Bean
+	@Beans
 	public Collection<SomeInterface> emptyCollection;
 
-	@Bean(value = SomeList.class, items = { SomeItemImpl.class })
-	public Collection<SomeInterface> someList;
+	@Bean(SomeComplexGenericList.class)
+	@Beans(value = { SomeItemImpl.class, SomeImplementation.class })
+	public List<SomeInterface> someListInterface;
 
 	@Bean
+	@Beans(value = { SomeItemImpl.class, SomeImplementation.class })
+	public SomeComplexGenericList<?> someListImpl;
+
+	@Bean(SomeSimpleList.class)
+	@Beans(value = { SomeItemImpl.class, SomeImplementation.class })
+	public SomeSimpleList someOtherList;
+
+	@Beans
 	public List<SomeInterface> giveMeList;
 
-	@Bean
+	@Beans
 	public Set<SomeInterface> giveMeSet;
 }
