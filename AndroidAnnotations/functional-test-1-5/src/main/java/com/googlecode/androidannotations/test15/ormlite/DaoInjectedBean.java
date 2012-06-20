@@ -20,8 +20,8 @@ import android.app.Activity;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.googlecode.androidannotations.annotations.EActivity;
 
-@EActivity(R.layout.ormlite)
-public class DaoInjectedActivity extends Activity {
+@EBean
+public class DaoInjectedBean {
 	
 	@OrmLiteDao(helper = DatabaseHelper.class, User.class)
 	public UserDao userDao;

@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.ref;
+import static com.sun.codemodel.JMod.PRIVATE;
 
 import java.lang.annotation.Annotation;
 
@@ -30,6 +31,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JTryBlock;
 
 public class OrmLiteDaoProcessor implements ElementProcessor {
@@ -65,11 +67,21 @@ public class OrmLiteDaoProcessor implements ElementProcessor {
 
 		JBlock methodBody = holder.init.body();
 
+		// comments
+		String contextRef = "context_";
+		JFieldVar contextField;
+		try {
+			contextField = holder.eBean.field(PRIVATE, classes.CONTEXT, contextRef);
+			methodBody._if(JExpr._this()._instanceof(classes.CONTEXT))._then().assign(contextField, JExpr._this());
+		} catch (IllegalArgumentException e) {
+			// context_ already generated
+		}
+
 		// get connection source
 		String connectionSourceRef = "_aa_connection_source";
 		methodBody.decl(classes.CONNECTION_SOURCE, connectionSourceRef);
 		JExpression dbHelperExpr = holder.refClass(databaseHelperTypeMirror.toString()).dotclass();
-		methodBody.assign(ref(connectionSourceRef), holder.refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER).staticInvoke("getHelper").arg(ref("context_")).arg(dbHelperExpr).invoke("getConnectionSource"));
+		methodBody.assign(ref(connectionSourceRef), holder.refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER).staticInvoke("getHelper").arg(ref(contextRef)).arg(dbHelperExpr).invoke("getConnectionSource"));
 
 		// create dao from dao manager
 		JTryBlock tryBlock = methodBody._try();

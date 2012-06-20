@@ -116,9 +116,11 @@ public final class CanonicalNameConstants {
 	/*
 	 * ORMLite
 	 */
+	public static final String DAO = "com.j256.ormlite.dao.Dao";
 	public static final String DAO_MANAGER = "com.j256.ormlite.dao.DaoManager";
 	public static final String CONNECTION_SOURCE = "com.j256.ormlite.support.ConnectionSource";
 	public static final String OPEN_HELPER_MANAGER = "com.j256.ormlite.android.apptools.OpenHelperManager";
+	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
 	public static final String SQL_EXCEPTION = "java.sql.SQLException";
 
 	private CanonicalNameConstants() {
