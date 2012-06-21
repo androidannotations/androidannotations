@@ -61,11 +61,11 @@ import java.lang.annotation.Target;
 public @interface HttpsClient {
 	public static final String DEFAULT_PASSWD = "changeit";
 
-	int trustStore() default Id.DEFAULT_VALUE;
+	int trustStore() default ResId.DEFAULT_VALUE;
 
 	String trustStorePwd() default DEFAULT_PASSWD;
 
-	int keyStore() default Id.DEFAULT_VALUE;
+	int keyStore() default ResId.DEFAULT_VALUE;
 
 	String keyStorePwd() default DEFAULT_PASSWD;
 

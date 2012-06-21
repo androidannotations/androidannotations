@@ -27,6 +27,7 @@ import javax.lang.model.type.TypeKind;
 import com.googlecode.androidannotations.annotations.TextChange;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -54,11 +55,11 @@ public class TextChangeValidator implements ElementValidator {
 
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
-		validatorHelper.idsExists(element, Res.ID, valid);
+		validatorHelper.resIdsExist(element, Res.ID, FallbackStrategy.USE_ELEMENT_NAME, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.doesntThrowException((ExecutableElement) element, valid);
+		validatorHelper.doesntThrowException(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
@@ -90,19 +91,16 @@ public class TextChangeValidator implements ElementValidator {
 				textViewParameterFound = true;
 				continue;
 			}
-			if (parameter.asType().getKind() == TypeKind.INT
-					|| "java.lang.Integer".equals(parameterType)) {
+			if (parameter.asType().getKind() == TypeKind.INT || "java.lang.Integer".equals(parameterType)) {
 				String parameterName = parameter.toString();
-				if ("start".equals(parameterName)
-						|| "before".equals(parameterName)
-						|| "count".equals(parameterName)) {
+				if ("start".equals(parameterName) || "before".equals(parameterName) || "count".equals(parameterName)) {
 					continue;
 				}
 				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. You can only have start, before, or count parameter name. Try to pick a prameter from the android.text.TextWatcher.onTextChanged() method.");
 				valid.invalidate();
 				continue;
 			}
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter ("+parameter.toString()+"). %s can only have a android.widget.TextView parameter and/or parameters from android.text.TextWatcher.onTextChanged() method.");
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter (" + parameter.toString() + "). %s can only have a android.widget.TextView parameter and/or parameters from android.text.TextWatcher.onTextChanged() method.");
 			valid.invalidate();
 		}
 	}

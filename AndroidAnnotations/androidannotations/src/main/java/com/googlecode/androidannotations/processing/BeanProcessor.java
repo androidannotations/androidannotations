@@ -52,7 +52,7 @@ public class BeanProcessor implements ElementProcessor {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 		
 		
-		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassValue(element);
+		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
 		
 		TypeMirror elementType;
 		if (targetAnnotationClassValue != null) {

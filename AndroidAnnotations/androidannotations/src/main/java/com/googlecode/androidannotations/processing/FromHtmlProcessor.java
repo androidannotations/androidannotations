@@ -20,24 +20,24 @@ import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.FromHtml;
-import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
 public class FromHtmlProcessor implements ElementProcessor {
 
-	private final IRClass rClass;
+	private final IdAnnotationHelper annotationHelper;
 
-	public FromHtmlProcessor(IRClass rClass) {
-		this.rClass = rClass;
+	public FromHtmlProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -52,16 +52,7 @@ public class FromHtmlProcessor implements ElementProcessor {
 
 		String fieldName = element.getSimpleName().toString();
 
-		FromHtml annotation = element.getAnnotation(FromHtml.class);
-		int idValue = annotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.STRING);
-		JFieldRef idRef;
-		if (idValue == Id.DEFAULT_VALUE) {
-			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-		} else {
-			idRef = rInnerClass.getIdStaticRef(idValue, holder);
-		}
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.STRING, true);
 
 		JBlock methodBody = holder.afterSetContentView.body();
 

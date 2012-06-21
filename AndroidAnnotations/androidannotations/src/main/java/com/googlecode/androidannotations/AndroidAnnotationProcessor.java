@@ -481,17 +481,17 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new EServiceProcessor());
 		modelProcessor.register(new EReceiverProcessor());
 		modelProcessor.register(new EProviderProcessor());
-		modelProcessor.register(new EFragmentProcessor(rClass));
-		modelProcessor.register(new EViewGroupProcessor(rClass));
+		modelProcessor.register(new EFragmentProcessor(processingEnv, rClass));
+		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewProcessor());
 		modelProcessor.register(new EBeanProcessor());
 		modelProcessor.register(new SharedPrefProcessor());
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());
-		modelProcessor.register(new ViewByIdProcessor(rClass));
+		modelProcessor.register(new ViewByIdProcessor(processingEnv, rClass));
 		modelProcessor.register(new FragmentByIdProcessor(processingEnv, rClass));
 		modelProcessor.register(new FragmentByTagProcessor(processingEnv));
-		modelProcessor.register(new FromHtmlProcessor(rClass));
+		modelProcessor.register(new FromHtmlProcessor(processingEnv, rClass));
 		modelProcessor.register(new ClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new LongClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new TouchProcessor(processingEnv, rClass));
@@ -499,7 +499,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new ItemSelectedProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemLongClickProcessor(processingEnv, rClass));
 		for (AndroidRes androidRes : AndroidRes.values()) {
-			modelProcessor.register(new ResProcessor(androidRes, rClass));
+			modelProcessor.register(new ResProcessor(processingEnv, androidRes, rClass));
 		}
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor(processingEnv));

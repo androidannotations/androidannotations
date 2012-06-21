@@ -24,6 +24,7 @@ import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.helper.AndroidManifest;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -51,7 +52,7 @@ public class EActivityValidator implements ElementValidator {
 
 		validatorHelper.extendsActivity(element, valid);
 
-		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
+		validatorHelper.resIdsExist(element, Res.LAYOUT, FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
 		validatorHelper.isNotFinal(element, valid);
 

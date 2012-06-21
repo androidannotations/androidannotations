@@ -19,11 +19,11 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -48,9 +48,9 @@ public class EViewGroupValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsViewGroup((TypeElement) element, valid);
+		validatorHelper.extendsViewGroup(element, valid);
 
-		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
+		validatorHelper.resIdsExist(element, Res.LAYOUT, FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
 		validatorHelper.isNotFinal(element, valid);
 
