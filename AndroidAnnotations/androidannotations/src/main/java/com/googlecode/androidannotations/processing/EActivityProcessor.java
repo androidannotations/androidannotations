@@ -39,13 +39,11 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -149,13 +147,11 @@ public class EActivityProcessor implements ElementProcessor {
 
 		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 
-		EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
-		int layoutIdValue = layoutAnnotation.value();
+		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, EActivity.class, rClass.get(Res.LAYOUT), false);
 
 		JFieldRef contentViewId;
-		if (layoutIdValue != Id.DEFAULT_VALUE) {
-			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
+		if (fieldRefs.size() == 1) {
+			contentViewId = fieldRefs.get(0);
 		} else {
 			contentViewId = null;
 		}

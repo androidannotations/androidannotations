@@ -108,7 +108,7 @@ public class RInnerClass implements IRInnerClass {
 		return extractIdStaticRef(holder, layoutFieldQualifiedName);
 	}
 
-	private JFieldRef extractIdStaticRef(EBeanHolder holder, String layoutFieldQualifiedName) {
+	public static JFieldRef extractIdStaticRef(EBeanHolder holder, String layoutFieldQualifiedName) {
 		if (layoutFieldQualifiedName != null) {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
 			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);

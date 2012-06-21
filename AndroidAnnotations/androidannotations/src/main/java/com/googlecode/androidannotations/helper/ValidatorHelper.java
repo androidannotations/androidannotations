@@ -328,7 +328,7 @@ public class ValidatorHelper {
 	}
 
 	public void typeOrTargetValueHasAnnotation(Class<? extends Annotation> annotation, Element element, IsValid valid) {
-		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassValue(element);
+		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
 
 		if (targetAnnotationClassValue != null) {
 			typeHasAnnotation(annotation, targetAnnotationClassValue, element, valid);

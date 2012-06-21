@@ -27,6 +27,11 @@ public class ClicksHandledActivity extends EventsHandledAbstractActivity {
 	public void onClick(View v) {
 		avoidStackOverflowEventHandled = true;
 	}
+	
+	@Click(resName={"libResButton1", "libResButton2"})
+	public void libResButton() {
+		libResButtonEventHandled = true;
+	}
 
 	@Click
 	public void conventionButton() {
