@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,6 +33,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -76,12 +77,13 @@ public class LongClickProcessor implements ElementProcessor {
 
 		JDefinedClass listenerAnonymousClass = codeModel.anonymousClass(classes.ON_LONG_CLICK_LISTENER);
 		JMethod listenerMethod = listenerAnonymousClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");
-
+		listenerMethod.annotate(Override.class);
 		JVar viewParam = listenerMethod.param(classes.VIEW, "view");
 
 		JBlock listenerMethodBody = listenerMethod.body();
 
-		JInvocation call = JExpr.invoke(methodName);
+		JExpression activityRef = holder.eBean.staticRef("this");
+		JInvocation call = JExpr.invoke(activityRef, methodName);
 
 		if (returnMethodResult) {
 			listenerMethodBody._return(call);

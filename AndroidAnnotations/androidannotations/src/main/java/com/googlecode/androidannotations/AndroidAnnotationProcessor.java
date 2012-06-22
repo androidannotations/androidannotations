@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,6 +54,7 @@ import com.googlecode.androidannotations.annotations.FragmentById;
 import com.googlecode.androidannotations.annotations.FragmentByTag;
 import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.annotations.Fullscreen;
+import com.googlecode.androidannotations.annotations.HttpsClient;
 import com.googlecode.androidannotations.annotations.InstanceState;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
@@ -133,6 +134,7 @@ import com.googlecode.androidannotations.processing.FragmentByIdProcessor;
 import com.googlecode.androidannotations.processing.FragmentByTagProcessor;
 import com.googlecode.androidannotations.processing.FromHtmlProcessor;
 import com.googlecode.androidannotations.processing.FullscreenProcessor;
+import com.googlecode.androidannotations.processing.HttpsClientProcessor;
 import com.googlecode.androidannotations.processing.InstanceStateProcessor;
 import com.googlecode.androidannotations.processing.ItemClickProcessor;
 import com.googlecode.androidannotations.processing.ItemLongClickProcessor;
@@ -190,6 +192,7 @@ import com.googlecode.androidannotations.validation.FragmentByIdValidator;
 import com.googlecode.androidannotations.validation.FragmentByTagValidator;
 import com.googlecode.androidannotations.validation.FromHtmlValidator;
 import com.googlecode.androidannotations.validation.FullscreenValidator;
+import com.googlecode.androidannotations.validation.HttpsClientValidator;
 import com.googlecode.androidannotations.validation.InstanceStateValidator;
 import com.googlecode.androidannotations.validation.ItemClickValidator;
 import com.googlecode.androidannotations.validation.ItemLongClickValidator;
@@ -292,16 +295,11 @@ import com.sun.codemodel.JCodeModel;
 		BeforeTextChange.class, //
 		TextChange.class, //
 		AfterTextChange.class, //
-		OrmLiteDao.class //
+		OrmLiteDao.class, //
+		HttpsClient.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
-
-	/**
-	 * We do not need multiple round processing, since the generated classes do
-	 * not need to be processed.
-	 */
-	private boolean alreadyProcessed = false;
 
 	private final TimeStats timeStats = new TimeStats();
 
@@ -336,8 +334,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 			return;
 		}
 
-		alreadyProcessed = true;
-
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
 		AndroidManifest androidManifest = extractAndroidManifest();
@@ -354,7 +350,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 	}
 
 	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-		return roundEnv.processingOver() || annotations.size() == 0 || alreadyProcessed;
+		return roundEnv.processingOver() || annotations.size() == 0;
 	}
 
 	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -430,7 +426,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new TransactionalValidator(processingEnv));
 		modelValidator.register(new ExtraValidator(processingEnv));
 		modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
-		modelValidator.register(new AfterViewsValidator(processingEnv));
 		modelValidator.register(new SharedPrefValidator(processingEnv));
 		modelValidator.register(new PrefValidator(processingEnv));
 		modelValidator.register(new RestValidator(processingEnv));
@@ -450,6 +445,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new RootContextValidator(processingEnv));
 		modelValidator.register(new BeanValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
+		modelValidator.register(new AfterViewsValidator(processingEnv));
 		if (traceActivated()) {
 			modelValidator.register(new TraceValidator(processingEnv));
 		}
@@ -461,6 +457,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new TextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
+		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		return modelValidator;
 	}
 
@@ -512,7 +509,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
-		modelProcessor.register(new AfterViewsProcessor());
 		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
 		modelProcessor.register(new RestProcessor(restImplementationHolder));
 		modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
@@ -529,6 +525,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new RestServiceProcessor());
 		modelProcessor.register(new RootContextProcessor());
 		modelProcessor.register(new BeanProcessor(processingEnv));
+		modelProcessor.register(new AfterViewsProcessor());
 		modelProcessor.register(new TraceProcessor());
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new BackgroundProcessor());
@@ -539,6 +536,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new OrmLiteDaoProcessor());
+		modelProcessor.register(new HttpsClientProcessor(rClass));
 		return modelProcessor;
 	}
 
