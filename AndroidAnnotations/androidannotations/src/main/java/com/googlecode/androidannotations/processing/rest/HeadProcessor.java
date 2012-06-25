@@ -33,6 +33,8 @@ import com.sun.codemodel.JVar;
 
 public class HeadProcessor extends MethodProcessor {
 
+	private EBeansHolder activitiesHolder;
+
 	public HeadProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
 	}
@@ -45,17 +47,17 @@ public class HeadProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
+		this.activitiesHolder = activitiesHolder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
 
-		JClass expectedClass = holder.refClass(returnType.toString());
+		JClass expectedClass = activitiesHolder.refClass(returnType.toString());
 
 		Head headAnnotation = element.getAnnotation(Head.class);
 		String urlSuffix = headAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, expectedClass, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(activitiesHolder, executableElement, urlSuffix, expectedClass, expectedClass, codeModel));
 	}
 
 	@Override
@@ -75,7 +77,7 @@ public class HeadProcessor extends MethodProcessor {
 
 	@Override
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(body, executableElement);
+		return generateHttpHeadersVar(activitiesHolder, body, executableElement);
 	}
 
 }

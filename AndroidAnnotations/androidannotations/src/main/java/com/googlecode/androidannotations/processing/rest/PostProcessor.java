@@ -36,6 +36,8 @@ import com.sun.codemodel.JVar;
 
 public class PostProcessor extends MethodProcessor {
 
+	private EBeansHolder activitiesHolder;
+
 	public PostProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
 	}
@@ -48,7 +50,7 @@ public class PostProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
 
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
+		this.activitiesHolder = activitiesHolder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
@@ -61,15 +63,15 @@ public class PostProcessor extends MethodProcessor {
 			if (returnTypeString.startsWith(CanonicalNameConstants.URI)) {
 				DeclaredType declaredReturnedType = (DeclaredType) returnType;
 				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
-				expectedClass = holder.refClass(typeParameter.toString());
-				generatedReturnType = holder.refClass(CanonicalNameConstants.URI);
+				expectedClass = activitiesHolder.refClass(typeParameter.toString());
+				generatedReturnType = activitiesHolder.refClass(CanonicalNameConstants.URI);
 			} else if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 				DeclaredType declaredReturnedType = (DeclaredType) returnType;
 				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
-				expectedClass = holder.refClass(typeParameter.toString());
-				generatedReturnType = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
+				expectedClass = activitiesHolder.refClass(typeParameter.toString());
+				generatedReturnType = activitiesHolder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
 			} else {
-				generatedReturnType = holder.refClass(returnTypeString);
+				generatedReturnType = activitiesHolder.refClass(returnTypeString);
 				expectedClass = generatedReturnType;
 			}
 		}
@@ -77,7 +79,7 @@ public class PostProcessor extends MethodProcessor {
 		Post postAnnotation = element.getAnnotation(Post.class);
 		String urlSuffix = postAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(activitiesHolder, executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
 	}
 
 	@Override
@@ -112,7 +114,7 @@ public class PostProcessor extends MethodProcessor {
 
 	@Override
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(body, executableElement);
+		return generateHttpHeadersVar(activitiesHolder, body, executableElement);
 	}
 
 }

@@ -67,15 +67,15 @@ public class RestProcessor implements ElementProcessor {
 		// holder.restImplementationClass = codeModel._class(JMod.PUBLIC |
 		// JMod.ABSTRACT, implementationName, ClassType.CLASS);
 		holder.restImplementationClass = codeModel._class(JMod.PUBLIC, implementationName, ClassType.CLASS);
-		JClass interfaceClass = holder.refClass(interfaceName);
+		JClass interfaceClass = activitiesHolder.refClass(interfaceName);
 		holder.restImplementationClass._implements(interfaceClass);
 
 		// RestTemplate field
-		JClass restTemplateClass = holder.refClass(SPRING_REST_TEMPLATE_QUALIFIED_NAME);
+		JClass restTemplateClass = activitiesHolder.refClass(SPRING_REST_TEMPLATE_QUALIFIED_NAME);
 		holder.restTemplateField = holder.restImplementationClass.field(JMod.PRIVATE, restTemplateClass, "restTemplate");
 
 		// RootUrl field
-		JClass stringClass = holder.refClass(JAVA_STRING_QUALIFIED_NAME);
+		JClass stringClass = activitiesHolder.refClass(JAVA_STRING_QUALIFIED_NAME);
 		holder.rootUrlField = holder.restImplementationClass.field(JMod.PRIVATE, stringClass, "rootUrl");
 
 		// Default constructor
@@ -90,7 +90,7 @@ public class RestProcessor implements ElementProcessor {
 
 		// RequestFactory constructor
 		JMethod requestFactoryConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
-		JClass requestFactoryClass = holder.refClass("org.springframework.http.client.ClientHttpRequestFactory");
+		JClass requestFactoryClass = activitiesHolder.refClass("org.springframework.http.client.ClientHttpRequestFactory");
 		JVar requestFactoryParam = requestFactoryConstructor.param(requestFactoryClass, "requestFactory");
 		requestFactoryConstructor.body().assign(holder.restTemplateField, JExpr._new(restTemplateClass).arg(requestFactoryParam));
 

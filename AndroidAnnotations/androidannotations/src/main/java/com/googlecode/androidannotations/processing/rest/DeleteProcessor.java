@@ -31,6 +31,8 @@ import com.sun.codemodel.JVar;
 
 public class DeleteProcessor extends MethodProcessor {
 
+	private EBeansHolder activitiesHolder;
+
 	public DeleteProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
 	}
@@ -43,12 +45,13 @@ public class DeleteProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
+		this.activitiesHolder = activitiesHolder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		Delete deleteAnnotation = element.getAnnotation(Delete.class);
 		String urlSuffix = deleteAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, null, null, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(activitiesHolder, executableElement, urlSuffix, null, null, codeModel));
 	}
 
 	@Override
@@ -69,7 +72,7 @@ public class DeleteProcessor extends MethodProcessor {
 
 	@Override
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(body, executableElement);
+		return generateHttpHeadersVar(activitiesHolder, body, executableElement);
 	}
 
 }

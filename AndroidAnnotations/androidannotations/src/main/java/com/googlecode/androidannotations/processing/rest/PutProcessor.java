@@ -31,6 +31,8 @@ import com.sun.codemodel.JVar;
 
 public class PutProcessor extends MethodProcessor {
 
+	private EBeansHolder activitiesHolder;
+
 	public PutProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
 	}
@@ -43,12 +45,13 @@ public class PutProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
+		this.activitiesHolder = activitiesHolder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		Put putAnnotation = element.getAnnotation(Put.class);
 		String urlSuffix = putAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, null, null, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(activitiesHolder, executableElement, urlSuffix, null, null, codeModel));
 	}
 
 	@Override
@@ -68,7 +71,7 @@ public class PutProcessor extends MethodProcessor {
 
 	@Override
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(body, executableElement);
+		return generateHttpHeadersVar(activitiesHolder, body, executableElement);
 	}
 
 }
