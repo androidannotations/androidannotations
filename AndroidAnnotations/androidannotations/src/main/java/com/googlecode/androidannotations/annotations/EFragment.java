@@ -30,5 +30,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface EFragment {
-	int value() default Id.DEFAULT_VALUE;
+	int value() default ResId.DEFAULT_VALUE;
+
+	String resName() default "";
 }

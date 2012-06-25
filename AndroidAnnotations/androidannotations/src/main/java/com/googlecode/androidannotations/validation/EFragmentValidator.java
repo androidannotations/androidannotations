@@ -23,6 +23,7 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -50,7 +51,7 @@ public class EFragmentValidator implements ElementValidator {
 
 		validatorHelper.isNotAbstract(element, valid);
 
-		validatorHelper.idExists(element, Res.LAYOUT, false, valid);
+		validatorHelper.resIdsExist(element, Res.LAYOUT, FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

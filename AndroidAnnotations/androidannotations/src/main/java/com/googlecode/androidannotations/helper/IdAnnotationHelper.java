@@ -16,13 +16,11 @@
 package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -38,65 +36,33 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 		this.rClass = rClass;
 	}
 
-	public List<String> extractAnnotationQualifiedIds(Element element) {
-		int[] idsValues = extractAnnotationValue(element);
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		List<String> clickQualifiedIds = new ArrayList<String>();
-
-		if (idsValues.length == 1 && idsValues[0] == Id.DEFAULT_VALUE) {
-			String fieldName = element.getSimpleName().toString();
-			int lastIndex = fieldName.lastIndexOf(actionName());
-			if (lastIndex != -1) {
-				fieldName = fieldName.substring(0, lastIndex);
-			}
-			String clickQualifiedId = rInnerClass.getIdQualifiedName(fieldName);
-			clickQualifiedIds.add(clickQualifiedId);
-
-		} else {
-			for (int idValue : idsValues) {
-				String clickQualifiedId = rInnerClass.getIdQualifiedName(idValue);
-				clickQualifiedIds.add(clickQualifiedId);
-			}
-		}
-		return clickQualifiedIds;
-	}
-
-	public List<JFieldRef> extractFieldRefsFromAnnotationValues(Element element, int[] idsValues, String methodSuffix, EBeanHolder holder) {
-
-		List<JFieldRef> idsRefs = new ArrayList<JFieldRef>();
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-
-		if (idsValues.length == 1 && idsValues[0] == Id.DEFAULT_VALUE) {
-
-			String fieldName = element.getSimpleName().toString();
-			int lastIndex = fieldName.lastIndexOf(methodSuffix);
-
-			if (lastIndex != -1) {
-				fieldName = fieldName.substring(0, lastIndex);
-			}
-
-			JFieldRef idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-			idsRefs.add(idRef);
-
-		} else {
-			for (int idValue : idsValues) {
-
-				JFieldRef idRef = rInnerClass.getIdStaticRef(idValue, holder);
-				idsRefs.add(idRef);
-
-			}
-		}
-		return idsRefs;
-	}
-
-	boolean containsIdValue(Integer idValue, Res res) {
+	public boolean containsIdValue(Integer idValue, Res res) {
 		IRInnerClass rInnerClass = rClass.get(res);
 		return rInnerClass.containsIdValue(idValue);
 	}
 
-	boolean containsField(String name, Res res) {
+	public boolean containsField(String name, Res res) {
 		IRInnerClass rInnerClass = rClass.get(res);
 		return rInnerClass.containsField(name);
+	}
+
+	public List<String> extractAnnotationResources(Element element, Res res, boolean useElementName) {
+		return super.extractAnnotationResources(element, getTarget(), rClass.get(res), useElementName);
+	}
+
+	public List<JFieldRef> extractAnnotationFieldRefs(EBeanHolder holder, Element element, Res res, boolean useElementName) {
+		return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
+	}
+
+	public JFieldRef extractOneAnnotationFieldRef(EBeanHolder holder, Element element, Res res, boolean useElementName) {
+		List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, res, useElementName);
+
+		if (jFieldRefs.size() == 1) {
+			return jFieldRefs.get(0);
+		} else {
+			return null;
+		}
+
 	}
 
 }

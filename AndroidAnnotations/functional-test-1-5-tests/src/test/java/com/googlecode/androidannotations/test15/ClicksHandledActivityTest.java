@@ -113,5 +113,18 @@ public class ClicksHandledActivityTest {
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button2);
 	}
+	
+	@Test
+	public void libResBussonClicked() {
+		assertThat(activity.libResButtonEventHandled).isFalse();
+
+		activity.findViewById(R.id.libResButton1).performClick();		
+		assertThat(activity.libResButtonEventHandled).isTrue();
+		
+		activity.libResButtonEventHandled = false;
+		
+		activity.findViewById(R.id.libResButton2).performClick();
+		assertThat(activity.libResButtonEventHandled).isTrue();
+	}
 
 }

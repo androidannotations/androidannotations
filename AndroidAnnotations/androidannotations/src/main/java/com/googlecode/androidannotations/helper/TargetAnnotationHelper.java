@@ -16,7 +16,6 @@
 package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -36,24 +35,16 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T extractAnnotationValue(Element element) {
-		return (T) extractAnnotationValue(element, "value");
+	public <T> T extractAnnotationValueParameter(Element element) {
+		return (T) extractAnnotationParameter(element, "value");
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T extractAnnotationValue(Element element, String methodName) {
-		Annotation annotation = element.getAnnotation(target);
-
-		Method method;
-		try {
-			method = annotation.getClass().getMethod(methodName);
-			return (T) method.invoke(annotation);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	public <T> T extractAnnotationParameter(Element element, String methodName) {
+		return (T) extractAnnotationParameter(element, target, methodName);
 	}
 
-	public DeclaredType extractAnnotationClassValue(Element element) {
+	public DeclaredType extractAnnotationClassParameter(Element element) {
 
 		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
 
@@ -82,10 +73,7 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 	}
 
 	public String actionName() {
-		if (target.getSimpleName().endsWith("e")) {
-			return target.getSimpleName() + "d";
-		}
-		return target.getSimpleName() + "ed";
+		return actionName(target);
 	}
 
 	public static String annotationName(Class<? extends Annotation> annotationClass) {

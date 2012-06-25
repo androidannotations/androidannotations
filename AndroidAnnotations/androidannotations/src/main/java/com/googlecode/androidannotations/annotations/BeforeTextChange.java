@@ -85,6 +85,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface BeforeTextChange {
 
-	int[] value() default Id.DEFAULT_VALUE;
+	int[] value() default ResId.DEFAULT_VALUE;
+
+	String[] resName() default "";
 
 }

@@ -50,8 +50,8 @@ public class HttpsClientValidator implements ElementValidator {
 
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
-		validatorHelper.idExists(element, Res.RAW, false, true, valid, "keyStore");
-		validatorHelper.idExists(element, Res.RAW, false, true, valid, "trustStore");
+		validatorHelper.annotationParameterIsOptionalValidResId(element, Res.RAW, "keyStore", valid);
+		validatorHelper.annotationParameterIsOptionalValidResId(element, Res.RAW, "trustStore", valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

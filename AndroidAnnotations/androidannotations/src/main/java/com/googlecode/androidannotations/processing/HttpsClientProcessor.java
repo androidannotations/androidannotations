@@ -30,7 +30,7 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.HttpsClient;
-import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.annotations.ResId;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -73,8 +73,8 @@ public class HttpsClientProcessor implements ElementProcessor {
 
 		boolean allowAllHostnames = annotation.allowAllHostnames();
 
-		boolean useCustomTrustStore = Id.DEFAULT_VALUE != trustStoreRawId ? true : false;
-		boolean useCustomKeyStore = Id.DEFAULT_VALUE != keyStoreRawId ? true : false;
+		boolean useCustomTrustStore = ResId.DEFAULT_VALUE != trustStoreRawId ? true : false;
+		boolean useCustomKeyStore = ResId.DEFAULT_VALUE != keyStoreRawId ? true : false;
 
 		String fieldName = element.getSimpleName().toString();
 		JBlock methodBody = holder.init.body();
