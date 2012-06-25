@@ -47,7 +47,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 	protected final RestAnnotationHelper restAnnotationHelper;
 
 	public MethodProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
-		this.restImplementationsHolder = restImplementationHolder;
+		restImplementationsHolder = restImplementationHolder;
 		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
 	}
 
@@ -75,15 +75,16 @@ public abstract class MethodProcessor implements ElementProcessor {
 		// concat root url + suffix
 		JInvocation concatCall = JExpr.invoke(holder.rootUrlField, "concat");
 
-	    // add url param
-	    restCall.arg(concatCall.arg(JExpr.lit(methodHolder.getUrlSuffix())));
+		// add url param
+		restCall.arg(concatCall.arg(JExpr.lit(methodHolder.getUrlSuffix())));
 
-		JClass httpMethod = holder.refClass(CanonicalNameConstants.HTTP_METHOD);
+		EBeansHolder activitiesHolder = methodHolder.getActivitiesHolder();
+		JClass httpMethod = activitiesHolder.refClass(CanonicalNameConstants.HTTP_METHOD);
 		// add method type param
 		String restMethodInCapitalLetters = getTarget().getSimpleName().toUpperCase();
 		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
 
-		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParamsVar(method, executableElement, holder);
+		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParamsVar(activitiesHolder, method, executableElement, holder);
 
 		// update method holder
 		methodHolder.setBody(body);
@@ -111,10 +112,11 @@ public abstract class MethodProcessor implements ElementProcessor {
 	protected abstract JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder);
 
 	private void insertRestCallInBody(JBlock body, JInvocation restCall, boolean methodReturnVoid) {
-		if (methodReturnVoid)
+		if (methodReturnVoid) {
 			body.add(restCall);
-		else
+		} else {
 			body._return(restCall);
+		}
 	}
 
 	private JVar generateHashMapVar(MethodProcessorHolder methodHolder) {
@@ -139,18 +141,18 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 	protected JVar generateHttpEntityVar(MethodProcessorHolder methodHolder) {
 		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
-		JClass httpEntity = holder.refClass(CanonicalNameConstants.HTTP_ENTITY);
+		EBeansHolder activitiesHolder = methodHolder.getActivitiesHolder();
+		JClass httpEntity = activitiesHolder.refClass(CanonicalNameConstants.HTTP_ENTITY);
 		JInvocation newHttpEntityVarCall;
 
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
 		JVar entitySentToServer = null;
-		JType entityType = null; 
+		JType entityType = null;
 		if (!methodParams.isEmpty()) {
 			entitySentToServer = methodParams.firstEntry().getValue();
 			entityType = entitySentToServer.type();
 		}
-		
+
 		if (entitySentToServer != null) {
 			newHttpEntityVarCall = JExpr._new(httpEntity.narrow(entityType));
 		} else {
@@ -158,7 +160,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 		}
 
 		JBlock body = methodHolder.getBody();
-		JVar httpHeadersVar = generateHttpHeadersVar(body, executableElement);
+		JVar httpHeadersVar = generateHttpHeadersVar(activitiesHolder, body, executableElement);
 
 		boolean hasHeaders = httpHeadersVar != null;
 
@@ -183,18 +185,17 @@ public abstract class MethodProcessor implements ElementProcessor {
 		return httpEntityVar;
 	}
 
-	protected JVar generateHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(executableElement);
+	protected JVar generateHttpHeadersVar(EBeansHolder activitiesHolder, JBlock body, ExecutableElement executableElement) {
 		JVar httpHeadersVar = null;
 
-		JClass httpHeadersClass = holder.refClass(CanonicalNameConstants.HTTP_HEADERS);
+		JClass httpHeadersClass = activitiesHolder.refClass(CanonicalNameConstants.HTTP_HEADERS);
 		httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
 
 		String mediaType = retrieveAcceptAnnotationValue(executableElement);
 		boolean hasMediaTypeDefined = mediaType != null;
 		if (hasMediaTypeDefined) {
-			JClass collectionsClass = holder.refClass(CanonicalNameConstants.COLLECTIONS);
-			JClass mediaTypeClass = holder.refClass(CanonicalNameConstants.MEDIA_TYPE);
+			JClass collectionsClass = activitiesHolder.refClass(CanonicalNameConstants.COLLECTIONS);
+			JClass mediaTypeClass = activitiesHolder.refClass(CanonicalNameConstants.MEDIA_TYPE);
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticRef(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
@@ -215,7 +216,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 		}
 	}
 
-	private Map<String, JVar> generateMethodParamsVar(JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
+	private Map<String, JVar> generateMethodParamsVar(EBeansHolder activitiesHolder, JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
 		List<? extends VariableElement> params = executableElement.getParameters();
 		TreeMap<String, JVar> methodParams = new TreeMap<String, JVar>();
 		for (VariableElement parameter : params) {
@@ -224,7 +225,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 			// TODO check in validator that params are not generic. Or create a
 			// helper to fix that case and generate the right code.
-			JVar param = method.param(holder.refClass(paramType), paramName);
+			JVar param = method.param(activitiesHolder.refClass(paramType), paramName);
 			methodParams.put(paramName, param);
 		}
 

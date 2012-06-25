@@ -50,10 +50,9 @@ public class BeanProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
 		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
-		
-		
+
 		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
-		
+
 		TypeMirror elementType;
 		if (targetAnnotationClassValue != null) {
 			elementType = targetAnnotationClassValue;
@@ -65,7 +64,7 @@ public class BeanProcessor implements ElementProcessor {
 
 		String typeQualifiedName = elementType.toString();
 
-		JClass injectedClass = codeModel.ref(typeQualifiedName + GENERATION_SUFFIX);
+		JClass injectedClass = eBeansHolder.refClass(typeQualifiedName + GENERATION_SUFFIX);
 
 		{
 			// getInstance

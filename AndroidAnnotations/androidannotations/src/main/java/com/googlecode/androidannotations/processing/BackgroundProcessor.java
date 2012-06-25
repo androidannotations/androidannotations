@@ -53,7 +53,7 @@ public class BackgroundProcessor implements ElementProcessor {
 
 		{
 			// Execute Runnable
-			JClass backgroundExecutorClass = codeModel.ref(BackgroundExecutor.class);
+			JClass backgroundExecutorClass = eBeansHolder.refClass(BackgroundExecutor.class);
 
 			JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(JExpr._new(anonymousRunnableClass));
 

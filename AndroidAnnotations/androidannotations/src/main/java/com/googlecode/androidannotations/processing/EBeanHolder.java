@@ -108,4 +108,8 @@ public class EBeanHolder {
 		return eBeansHolder.refClass(fullyQualifiedClassName);
 	}
 
+	public JClass refClass(Class<?> clazz) {
+		return eBeansHolder.refClass(clazz);
+	}
+
 }
