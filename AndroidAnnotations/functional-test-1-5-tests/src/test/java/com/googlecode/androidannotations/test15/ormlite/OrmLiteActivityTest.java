@@ -24,18 +24,33 @@ import org.junit.runner.RunWith;
 import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
-public class DaoInjectedActivityTest {
+public class OrmLiteActivityTest {
 	
-	private DaoInjectedActivity_ activity;
+	private OrmLiteActivity_ activity;
 
 	@Before
 	public void setup() {
-		activity = new DaoInjectedActivity_();
+		activity = new OrmLiteActivity_();
 		activity.onCreate(null);
 	}
 
 	@Test
-	public void dependency_is_injected() {
+	public void custom_dao_is_injected() {
 		assertThat(activity.userDao).isNotNull();
-	}	
+	}
+
+	@Test
+	public void dao_is_injected() {
+		assertThat(activity.carDao).isNotNull();
+	}
+
+	@Test
+	public void bean_is_injected() {
+		assertThat(activity.ormLiteBean).isNotNull();
+	}
+
+	@Test
+	public void dao_in_bean_is_injected() {
+		assertThat(activity.ormLiteBean.userDao).isNotNull();
+	}
 }

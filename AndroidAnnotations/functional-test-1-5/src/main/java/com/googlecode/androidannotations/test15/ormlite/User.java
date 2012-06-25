@@ -1,12 +1,10 @@
 package com.googlecode.androidannotations.test15.ormlite;
 
-import java.io.Serializable;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(daoClass = UserDaoImpl.class, tableName = "user")
-public final class User implements Serializable {
+@DatabaseTable(daoClass = UserDaoImpl.class)
+public class User {
 
 	@DatabaseField(generatedId = true)
 	private long id;

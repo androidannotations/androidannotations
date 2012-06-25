@@ -10,11 +10,12 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.googlecode.androidannotations.test15.R;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "aaormlite.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 
 	public DatabaseHelper(Context context) {
@@ -24,9 +25,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
 		try {
+			TableUtils.createTable(connectionSource, Car.class);
 			TableUtils.createTable(connectionSource, User.class);
 		} catch (SQLException e) {
-			Log.e("aa-ormlite", "Unable to create datbases", e);
+			Log.e("aa-ormlite", "Unable to create database", e);
 		}
 	}
 

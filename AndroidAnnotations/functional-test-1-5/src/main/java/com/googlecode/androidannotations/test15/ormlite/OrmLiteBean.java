@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2011 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,15 +15,17 @@
  */
 package com.googlecode.androidannotations.test15.ormlite;
 
-import android.app.Activity;
 
+import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
-import com.googlecode.androidannotations.annotations.EActivity;
+
+import com.googlecode.androidannotations.test15.ormlite.User;
+import com.googlecode.androidannotations.test15.ormlite.UserDao;
+import com.googlecode.androidannotations.test15.ormlite.DatabaseHelper;
 
 @EBean
-public class DaoInjectedBean {
-	
-	@OrmLiteDao(helper = DatabaseHelper.class, User.class)
-	public UserDao userDao;
-	
+public class OrmLiteBean {
+
+	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	protected UserDao userDao;
 }

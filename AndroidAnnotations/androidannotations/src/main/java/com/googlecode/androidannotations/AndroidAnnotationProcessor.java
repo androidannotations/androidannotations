@@ -523,6 +523,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
+		modelProcessor.register(new OrmLiteDaoProcessor());
 		modelProcessor.register(new RootContextProcessor());
 		modelProcessor.register(new BeanProcessor(processingEnv));
 		modelProcessor.register(new AfterViewsProcessor());
@@ -535,7 +536,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
-		modelProcessor.register(new OrmLiteDaoProcessor());
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		return modelProcessor;
 	}

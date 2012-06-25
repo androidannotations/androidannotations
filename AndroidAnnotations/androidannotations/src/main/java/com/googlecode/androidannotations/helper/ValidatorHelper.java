@@ -544,6 +544,7 @@ public class ValidatorHelper {
 
 	public void extendsOrmLiteDao(Element element, IsValid valid) {
 		TypeMirror typeMirror = element.asType();
+		String typeClass = typeMirror.toString().split("<")[0];
 		boolean isValid = false;
 
 		// get model annotation class value
@@ -557,14 +558,16 @@ public class ValidatorHelper {
 
 		// first case : element is a Dao
 		TypeMirror daoTypeMirror = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO).asType();
-		if (annotationHelper.getTypeUtils().isSubtype(daoTypeMirror, typeMirror)) {
+		String daoTypeClass = daoTypeMirror.toString().split("<")[0];
+
+		if (typeClass != null && typeClass.equalsIgnoreCase(daoTypeClass)) {
 			isValid = hasDaoAnObjectModelParameterizedType(typeMirror, modelObjectTypeMirror);
 		}
 		// second case : element inherits from Dao
 		else {
 			List<? extends TypeMirror> supertypes = annotationHelper.getTypeUtils().directSupertypes(typeMirror);
 			for (int i = supertypes.size(); i-- > 0;) {
-				if (annotationHelper.getTypeUtils().isSubtype(supertypes.get(i), daoTypeMirror) && hasDaoAnObjectModelParameterizedType(supertypes.get(i), modelObjectTypeMirror)) {
+				if (hasDaoAnObjectModelParameterizedType(supertypes.get(i), modelObjectTypeMirror)) {
 					isValid = true;
 					break;
 				}

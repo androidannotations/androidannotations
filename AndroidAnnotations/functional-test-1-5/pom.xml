@@ -159,11 +159,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		
-		<repository>
-			<id>maven-central</id>
-			<url>http://repo1.maven.org/</url>
-		</repository>
 	</repositories>
 
 </project>
