@@ -187,7 +187,7 @@ public class EActivityProcessor implements ElementProcessor {
 			JClass keyEventClass = holder.classes().KEY_EVENT;
 			JVar eventParam = onKeyDownMethod.param(keyEventClass, "event");
 
-			JClass versionHelperClass = codeModel.ref(SdkVersionHelper.class);
+			JClass versionHelperClass = holder.refClass(SdkVersionHelper.class);
 
 			JInvocation sdkInt = versionHelperClass.staticInvoke("getSdkInt");
 

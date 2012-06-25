@@ -79,7 +79,7 @@ public class TransactionalProcessor implements ElementProcessor {
 			tryBody._return(result);
 		}
 
-		JCatchBlock catchBlock = tryBlock._catch(codeModel.ref(RuntimeException.class));
+		JCatchBlock catchBlock = tryBlock._catch(holder.refClass(RuntimeException.class));
 
 		JVar exceptionParam = catchBlock.param("e");
 

@@ -35,6 +35,8 @@ import com.sun.codemodel.JVar;
 
 public class OptionsProcessor extends MethodProcessor {
 
+	private EBeansHolder activitiesHolder;
+
 	public OptionsProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
 	}
@@ -47,7 +49,7 @@ public class OptionsProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
+		this.activitiesHolder = activitiesHolder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
@@ -56,14 +58,14 @@ public class OptionsProcessor extends MethodProcessor {
 
 		TypeMirror typeParameter = declaredReturnType.getTypeArguments().get(0);
 
-		JClass expectedClass = holder.refClass(typeParameter.toString());
+		JClass expectedClass = activitiesHolder.refClass(typeParameter.toString());
 
-		JClass generatedReturnType = holder.refClass(CanonicalNameConstants.SET).narrow(expectedClass);
+		JClass generatedReturnType = activitiesHolder.refClass(CanonicalNameConstants.SET).narrow(expectedClass);
 
 		Options optionsAnnotation = element.getAnnotation(Options.class);
 		String urlSuffix = optionsAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(activitiesHolder, executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
 	}
 
 	@Override
@@ -85,7 +87,7 @@ public class OptionsProcessor extends MethodProcessor {
 
 	@Override
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(body, executableElement);
+		return generateHttpHeadersVar(activitiesHolder, body, executableElement);
 	}
 
 }
