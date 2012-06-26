@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
@@ -65,7 +66,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 	}
-	
+
 	public void urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(ExecutableElement element, IsValid valid) {
 		if (valid.isValid()) {
 			List<String> variableNames = extractUrlVariableNames(element);
@@ -108,4 +109,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return variableNames;
 	}
 
+	public boolean isAnnotatedBy(Element element, Class<? extends Annotation> annotationClass) {
+		Annotation annotation = element.getAnnotation(annotationClass);
+		return annotation != null;
+	}
 }

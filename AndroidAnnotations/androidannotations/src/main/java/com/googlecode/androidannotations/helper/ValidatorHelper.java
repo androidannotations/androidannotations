@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
 import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static java.util.Arrays.asList;
 
@@ -1044,4 +1045,20 @@ public class ValidatorHelper {
 
 	}
 
+	public void annotationParametersExtendHttpMessageConverter(Element element, AnnotationElements validatedElements, IsValid valid) {
+		List<DeclaredType> annotationClassesValue = annotationHelper.extractAnnotationClassesArrayParameter(element);
+
+		boolean isSubtype = true;
+		for (DeclaredType declaredType : annotationClassesValue) {
+			if (!annotationHelper.isSubtypeForGenerics(declaredType, HTTP_MESSAGE_CONVERTER)) {
+				isSubtype = false;
+				break;
+			}
+		}
+
+		if (!isSubtype) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "The class values must be a subtype of " + HTTP_MESSAGE_CONVERTER);
+		}
+	}
 }

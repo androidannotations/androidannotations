@@ -21,10 +21,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
@@ -131,6 +134,33 @@ public class AnnotationHelper {
 
 	public boolean isSubtype(TypeElement t1, TypeElement t2) {
 		return isSubtype(t1.asType(), t2.asType());
+	}
+
+	/**
+	 * Types#isSubtype(TypeMirror, TypeMirror) methods seems to doesn't work
+	 * with generics classes or interfaces (Maven compilaton only). Use this
+	 * method instead.
+	 * 
+	 * @param potentialSubtype
+	 *            The first type
+	 * @param potentialSupertype
+	 *            The canonical name of the second type
+	 * @return true if and only if the first type is a subtype of the second
+	 * @see AnnotationHelper#isSubtype(TypeMirror, TypeMirror)
+	 */
+	public boolean isSubtypeForGenerics(TypeMirror potentialSubtype, String potentialSupertype) {
+		List<? extends TypeMirror> directSupertypes = processingEnv.getTypeUtils().directSupertypes(potentialSubtype);
+		boolean isSubtype = false;
+
+		for (TypeMirror typeMirror : directSupertypes) {
+			if (typeMirror.toString().startsWith(potentialSupertype)) {
+				isSubtype = true;
+				break;
+			} else {
+				isSubtype = isSubtypeForGenerics(typeMirror, potentialSupertype);
+			}
+		}
+		return isSubtype;
 	}
 
 	/**
@@ -364,6 +394,38 @@ public class AnnotationHelper {
 			return target.getSimpleName() + "d";
 		}
 		return target.getSimpleName() + "ed";
+	}
+
+	public Object extractAnnotationClassesValue(Element element, Class<? extends Annotation> annotationClass) {
+		AnnotationMirror annotationMirror = findAnnotationMirror(element, annotationClass);
+
+		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
+
+		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
+			/*
+			 * "value" is unset when the default value is used
+			 */
+			if ("value".equals(entry.getKey().getSimpleName().toString())) {
+
+				AnnotationValue annotationValue = entry.getValue();
+
+				return annotationValue.getValue();
+			}
+		}
+
+		return null;
+	}
+
+	public List<DeclaredType> extractAnnotationClassesArrayValue(Element element, Class<? extends Annotation> annotationClass) {
+		List<DeclaredType> classesValue = new ArrayList<DeclaredType>();
+
+		@SuppressWarnings("unchecked")
+		List<AnnotationValue> annotationsValue = (List<AnnotationValue>) extractAnnotationClassesValue(element, annotationClass);
+
+		for (AnnotationValue annotationValue : annotationsValue) {
+			classesValue.add((DeclaredType) annotationValue.getValue());
+		}
+		return classesValue;
 	}
 
 }

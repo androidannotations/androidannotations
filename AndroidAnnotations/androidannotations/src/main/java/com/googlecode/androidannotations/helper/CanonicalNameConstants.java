@@ -16,7 +16,9 @@
 package com.googlecode.androidannotations.helper;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public final class CanonicalNameConstants {
@@ -29,6 +31,8 @@ public final class CanonicalNameConstants {
 	public static final String COLLECTIONS = Collections.class.getCanonicalName();
 	public static final String STRING = String.class.getCanonicalName();
 	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();
+	public static final String LIST = List.class.getCanonicalName();
+	public static final String ARRAY_LIST = ArrayList.class.getCanonicalName();
 
 	/*
 	 * Android
@@ -92,6 +96,7 @@ public final class CanonicalNameConstants {
 	public static final String HTTP_METHOD = "org.springframework.http.HttpMethod";
 	public static final String HTTP_ENTITY = "org.springframework.http.HttpEntity";
 	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
+	public static final String HTTP_MESSAGE_CONVERTER = "org.springframework.http.converter.HttpMessageConverter";
 
 	/*
 	 * RoboGuice
