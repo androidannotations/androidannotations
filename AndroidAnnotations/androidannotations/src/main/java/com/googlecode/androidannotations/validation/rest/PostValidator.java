@@ -60,8 +60,6 @@ public class PostValidator implements ElementValidator {
 		
 		validatorHelper.doesNotReturnPrimitive(executableElement, valid);
 		
-		validatorHelper.doesNotReturnArray(executableElement, valid);
-
 		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
 
 		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);

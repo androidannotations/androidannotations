@@ -153,6 +153,12 @@ public class EBeansHolder {
 
 	public JClass refClass(String fullyQualifiedClassName) {
 
+		int arrayCounter = 0;
+		while (fullyQualifiedClassName.endsWith("[]")) {
+			arrayCounter++;
+			fullyQualifiedClassName = fullyQualifiedClassName.substring(0, fullyQualifiedClassName.length() - 2);
+		}
+
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
 		if (refClass == null) {
@@ -162,6 +168,10 @@ public class EBeansHolder {
 				refClass = codeModel.directClass(fullyQualifiedClassName);
 			}
 			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+
+		for (int i = 0; i < arrayCounter; i++) {
+			refClass = refClass.array();
 		}
 
 		return refClass;
