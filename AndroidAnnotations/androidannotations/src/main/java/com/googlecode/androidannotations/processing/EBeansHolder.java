@@ -153,6 +153,12 @@ public class EBeansHolder {
 
 	public JClass refClass(String fullyQualifiedClassName) {
 
+		boolean isAnArray = false;
+		if (fullyQualifiedClassName.endsWith("[]")) {
+			isAnArray = true;
+			fullyQualifiedClassName = fullyQualifiedClassName.replace("[]", "");
+		}
+
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
 		if (refClass == null) {
@@ -164,7 +170,7 @@ public class EBeansHolder {
 			loadedClasses.put(fullyQualifiedClassName, refClass);
 		}
 
-		return refClass;
+		return isAnArray ? refClass.array() : refClass;
 	}
 
 	public JClass refClass(Class<?> clazz) {
