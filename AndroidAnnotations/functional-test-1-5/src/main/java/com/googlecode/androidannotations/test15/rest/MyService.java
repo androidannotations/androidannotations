@@ -41,6 +41,10 @@ public interface MyService {
 	@Get("/events/{year}/{location}")
 	@Accept(MediaType.APPLICATION_JSON)
 	EventList getEvents(String location, int year);
+	
+	@Get("/events/{year}/{location}")
+	@Accept(MediaType.APPLICATION_JSON)
+	Event[] getEventsArray(String location, int year);
 
 	// The response can be a ResponseEntity<T>
 	@Get("/events/{year}/{location}")
@@ -49,6 +53,9 @@ public interface MyService {
 	 * since it's a RuntimeException), but nothing else.
 	 */
 	ResponseEntity<EventList> getEvents2(String location, int year) throws RestClientException;
+	
+	@Get("/events/{year}/{location}")
+	ResponseEntity<Event[]> getEventsArray2(String location, int year) throws RestClientException;
 
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
