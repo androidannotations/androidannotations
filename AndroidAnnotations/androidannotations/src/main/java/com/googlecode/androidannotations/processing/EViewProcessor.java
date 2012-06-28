@@ -68,7 +68,7 @@ public class EViewProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = eBeansHolder.create(element);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget());
 
 		Classes classes = holder.classes();
 
