@@ -170,8 +170,21 @@ public class ValidatorHelper {
 		hasClassAnnotation(element, enclosingElement, validatedElements, EActivity.class, valid);
 	}
 
+	public void enclosingElementHasEActivityOrEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		@SuppressWarnings("unchecked")
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class);
+		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
+	}
+
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		hasClassAnnotation(element, element, validatedElements, EActivity.class, valid);
+	}
+
+	public void hasEActivityOrEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
+		@SuppressWarnings("unchecked")
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class);
+		hasOneOfClassAnnotations(element, element, validatedElements, validAnnotations, valid);
 	}
 
 	public void enclosingElementHasEnhancedViewSupportAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {

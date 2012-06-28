@@ -47,7 +47,7 @@ public class OptionsMenuValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.hasEActivity(element, validatedElements, valid);
+		validatorHelper.hasEActivityOrEFragment(element, validatedElements, valid);
 
 		validatorHelper.resIdsExist(element, Res.MENU, FallbackStrategy.NEED_RES_ID, valid);
 

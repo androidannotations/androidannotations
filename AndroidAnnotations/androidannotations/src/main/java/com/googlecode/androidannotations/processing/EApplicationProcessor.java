@@ -44,7 +44,7 @@ public class EApplicationProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element);
+		EBeanHolder holder = activitiesHolder.create(element, getTarget());
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -73,6 +73,7 @@ public class EApplicationProcessor implements ElementProcessor {
 		{
 			/*
 			 * Setting to null shouldn't be a problem as long as we don't allow
+			 * 
 			 * @App and @Extra on this component
 			 */
 			holder.initIfActivityBody = null;
@@ -80,6 +81,5 @@ public class EApplicationProcessor implements ElementProcessor {
 		}
 
 	}
-
 
 }
