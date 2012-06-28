@@ -83,17 +83,6 @@ public class RestProcessor implements ElementProcessor {
 		defaultConstructor.body().assign(holder.restTemplateField, JExpr._new(restTemplateClass));
 		defaultConstructor.body().assign(holder.rootUrlField, JExpr.lit(typeElement.getAnnotation(Rest.class).value()));
 
-		// RestTemplate constructor
-		JMethod restTemplateConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
-		JVar restTemplateParam = restTemplateConstructor.param(restTemplateClass, "restTemplate");
-		restTemplateConstructor.body().assign(JExpr._this().ref(holder.restTemplateField), restTemplateParam);
-
-		// RequestFactory constructor
-		JMethod requestFactoryConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
-		JClass requestFactoryClass = activitiesHolder.refClass("org.springframework.http.client.ClientHttpRequestFactory");
-		JVar requestFactoryParam = requestFactoryConstructor.param(requestFactoryClass, "requestFactory");
-		requestFactoryConstructor.body().assign(holder.restTemplateField, JExpr._new(restTemplateClass).arg(requestFactoryParam));
-
 		// Implement getRestTemplate method
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
 		List<ExecutableElement> methods = ElementFilter.methodsIn(enclosedElements);
