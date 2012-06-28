@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface OptionsMenu {
-	int value() default ResId.DEFAULT_VALUE;
+	int[] value() default ResId.DEFAULT_VALUE;
 
-	String resName() default "";
+	String[] resName() default "";
 }
