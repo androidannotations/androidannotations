@@ -41,6 +41,7 @@ import javax.lang.model.util.ElementFilter;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -302,7 +303,7 @@ public class EActivityProcessor implements ElementProcessor {
 		List<? extends VariableElement> parameters = method.getParameters();
 		return method.getSimpleName().toString().equals("onCreate") //
 				&& parameters.size() == 1 //
-				&& parameters.get(0).asType().toString().equals("android.os.Bundle") //
+				&& parameters.get(0).asType().toString().equals(CanonicalNameConstants.BUNDLE) //
 		;
 	}
 
@@ -313,15 +314,18 @@ public class EActivityProcessor implements ElementProcessor {
 		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
 
 		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
-			if (isOnBackPressedMethod(activityInheritedMethod)) {
+			if (isCustomOnBackPressedMethod(activityInheritedMethod)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean isOnBackPressedMethod(ExecutableElement method) {
-		return method.getSimpleName().toString().equals("onBackPressed") //
+	private boolean isCustomOnBackPressedMethod(ExecutableElement method) {
+		TypeElement methodClass = (TypeElement) method.getEnclosingElement();
+		boolean methodBelongsToActivityClass = methodClass.getQualifiedName().toString().equals(CanonicalNameConstants.ACTIVITY);
+		return !methodBelongsToActivityClass //
+				&& method.getSimpleName().toString().equals("onBackPressed") //
 				&& method.getThrownTypes().size() == 0 //
 				&& method.getModifiers().contains(Modifier.PUBLIC) //
 				&& method.getReturnType().getKind().equals(TypeKind.VOID) //
