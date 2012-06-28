@@ -20,17 +20,17 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.OptionsMenu;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.SherlockHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -42,11 +42,11 @@ public class OptionsMenuProcessor implements ElementProcessor {
 
 	private final SherlockHelper sherlockHelper;
 
-	private final IRClass rClass;
+	private IdAnnotationHelper annotationHelper;
 
 	public OptionsMenuProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		sherlockHelper = new SherlockHelper(new AnnotationHelper(processingEnv));
-		this.rClass = rClass;
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		sherlockHelper = new SherlockHelper(annotationHelper);
 	}
 
 	@Override
@@ -72,11 +72,7 @@ public class OptionsMenuProcessor implements ElementProcessor {
 			getMenuInflaterMethodName = "getMenuInflater";
 		}
 
-		OptionsMenu layoutAnnotation = element.getAnnotation(OptionsMenu.class);
-		int layoutIdValue = layoutAnnotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.MENU);
-		JFieldRef optionsMenuId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
+		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, Res.MENU, false);
 
 		JMethod method = holder.eBean.method(PUBLIC, codeModel.BOOLEAN, "onCreateOptionsMenu");
 		method.annotate(Override.class);
@@ -86,7 +82,9 @@ public class OptionsMenuProcessor implements ElementProcessor {
 
 		JVar menuInflater = body.decl(menuInflaterClass, "menuInflater", invoke(getMenuInflaterMethodName));
 
-		body.invoke(menuInflater, "inflate").arg(optionsMenuId).arg(menuParam);
+		for (JFieldRef optionsMenuRefId : fieldRefs) {
+			body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam);
+		}
 
 		body._return(invoke(_super(), method).arg(menuParam));
 	}
