@@ -15,12 +15,10 @@
  */
 package com.googlecode.androidannotations.helper;
 
-import static java.util.Arrays.asList;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.processing.EBeanHolder;
 
@@ -29,28 +27,10 @@ import com.googlecode.androidannotations.processing.EBeanHolder;
  */
 public class SherlockHelper {
 
-	public static final List<String> SHERLOCK_ACTIVITY_CLASS_NAMES = asList( //
-			"com.actionbarsherlock.app.SherlockActivity", //
-			"com.actionbarsherlock.app.SherlockFragmentActivity", //
-			"com.actionbarsherlock.app.SherlockListActivity", //
-			"com.actionbarsherlock.app.SherlockExpandableListActivity.java", //
-			"com.actionbarsherlock.app.SherlockMapActivity", //
-			"com.actionbarsherlock.app.SherlockPreferenceActivity" //
-	);
-
 	private final AnnotationHelper annotationHelper;
-
-	private final List<TypeElement> sherlockActivityTypeElements = new ArrayList<TypeElement>();
 
 	public SherlockHelper(AnnotationHelper annotationHelper) {
 		this.annotationHelper = annotationHelper;
-
-		for (String sherlockClassName : SHERLOCK_ACTIVITY_CLASS_NAMES) {
-			TypeElement sherlockActivityTypeElement = annotationHelper.typeElementFromQualifiedName(sherlockClassName);
-			if (sherlockActivityTypeElement != null) {
-				sherlockActivityTypeElements.add(sherlockActivityTypeElement);
-			}
-		}
 	}
 
 	/**
@@ -58,9 +38,12 @@ public class SherlockHelper {
 	 * types
 	 */
 	public boolean usesSherlock(EBeanHolder holder) {
-		TypeElement annotatedType = annotationHelper.typeElementFromQualifiedName(holder.eBean._extends().fullName());
-		for (TypeElement sherlockActivityTypeElement : sherlockActivityTypeElements) {
-			if (annotationHelper.isSubtype(annotatedType, sherlockActivityTypeElement)) {
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.eBean._extends().fullName());
+
+		TypeMirror superType;
+		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {
+			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
+			if (typeElement.getQualifiedName().toString().startsWith("com.actionbarsherlock.app")) {
 				return true;
 			}
 		}

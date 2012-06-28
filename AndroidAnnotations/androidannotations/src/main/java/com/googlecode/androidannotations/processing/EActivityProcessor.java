@@ -89,7 +89,7 @@ public class EActivityProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element);
+		EBeanHolder holder = activitiesHolder.create(element, getTarget());
 
 		TypeElement typeElement = (TypeElement) element;
 
