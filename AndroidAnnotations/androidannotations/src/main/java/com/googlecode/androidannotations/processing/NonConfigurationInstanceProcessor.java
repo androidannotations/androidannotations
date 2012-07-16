@@ -95,7 +95,7 @@ public class NonConfigurationInstanceProcessor implements ElementProcessor {
 			{
 				// init()
 				JBlock initBody = holder.init.body();
-				ncHolder.initNonConfigurationInstance = initBody.decl(ncHolder.holderClass, "nonConfigurationInstance", cast(ncHolder.holderClass, _super().invoke("getLastNonConfigurationInstance")));
+				ncHolder.initNonConfigurationInstance = initBody.decl(ncHolder.holderClass, "nonConfigurationInstance", cast(ncHolder.holderClass, _super().invoke(getLastNonConfigurationInstanceName)));
 				ncHolder.initIfNonConfiguration = initBody._if(ncHolder.initNonConfigurationInstance.ne(_null()))._then();
 			}
 
