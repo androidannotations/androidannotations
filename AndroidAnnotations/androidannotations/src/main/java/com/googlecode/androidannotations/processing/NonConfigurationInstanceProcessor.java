@@ -26,11 +26,16 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
+import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -43,8 +48,10 @@ import com.sun.codemodel.JVar;
 public class NonConfigurationInstanceProcessor implements ElementProcessor {
 
 	private APTCodeModelHelper aptCodeModelHelper;
+	private AnnotationHelper annotationHelper;
 
-	public NonConfigurationInstanceProcessor() {
+	public NonConfigurationInstanceProcessor(ProcessingEnvironment processingEnv) {
+		annotationHelper = new AnnotationHelper(processingEnv);
 		aptCodeModelHelper = new APTCodeModelHelper();
 	}
 
@@ -75,16 +82,27 @@ public class NonConfigurationInstanceProcessor implements ElementProcessor {
 			ncHolder.holderConstructor.body() //
 					.assign(_this().ref(superNonConfigurationInstanceField), superNonConfigurationInstanceParam);
 
+			TypeMirror fragmentActivityType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY).asType();
+			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.eBean._extends().fullName());
+
+			String getLastNonConfigurationInstanceName = "getLastNonConfigurationInstance";
+			String onRetainNonConfigurationInstanceName = "onRetainNonConfigurationInstance";
+			if (annotationHelper.isSubtype(typeElement.asType(), fragmentActivityType)) {
+				getLastNonConfigurationInstanceName = "getLastCustomNonConfigurationInstance";
+				onRetainNonConfigurationInstanceName = "onRetainCustomNonConfigurationInstance";
+			}
+
 			{
 				// init()
 				JBlock initBody = holder.init.body();
-				ncHolder.initNonConfigurationInstance = initBody.decl(ncHolder.holderClass, "nonConfigurationInstance", cast(ncHolder.holderClass, _super().invoke("getLastNonConfigurationInstance")));
+				ncHolder.initNonConfigurationInstance = initBody.decl(ncHolder.holderClass, "nonConfigurationInstance", cast(ncHolder.holderClass, _super().invoke(getLastNonConfigurationInstanceName)));
 				ncHolder.initIfNonConfiguration = initBody._if(ncHolder.initNonConfigurationInstance.ne(_null()))._then();
 			}
 
 			{
 				// getLastNonConfigurationInstance()
-				JMethod getLastNonConfigurationInstance = holder.eBean.method(PUBLIC, Object.class, "getLastNonConfigurationInstance");
+				JMethod getLastNonConfigurationInstance = holder.eBean.method(PUBLIC, Object.class, getLastNonConfigurationInstanceName);
+
 				getLastNonConfigurationInstance.annotate(Override.class);
 				JBlock body = getLastNonConfigurationInstance.body();
 
@@ -97,7 +115,8 @@ public class NonConfigurationInstanceProcessor implements ElementProcessor {
 
 			{
 				// onRetainNonConfigurationInstance()
-				JMethod onRetainNonConfigurationInstance = holder.eBean.method(PUBLIC, ncHolder.holderClass, "onRetainNonConfigurationInstance");
+				JMethod onRetainNonConfigurationInstance = holder.eBean.method(PUBLIC, ncHolder.holderClass, onRetainNonConfigurationInstanceName);
+
 				onRetainNonConfigurationInstance.annotate(Override.class);
 				ncHolder.newHolder = _new(ncHolder.holderClass);
 				ncHolder.newHolder.arg(_super().invoke(onRetainNonConfigurationInstance));
@@ -126,5 +145,4 @@ public class NonConfigurationInstanceProcessor implements ElementProcessor {
 		}
 
 	}
-
 }
