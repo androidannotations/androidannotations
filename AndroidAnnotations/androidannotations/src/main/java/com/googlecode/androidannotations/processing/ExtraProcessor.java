@@ -115,6 +115,10 @@ public class ExtraProcessor implements ElementProcessor {
 
 		containsKeyCatch.body().add(logError);
 
+		/*
+		 * holder.intentBuilderClass may be null if the annotated component is
+		 * an abstract activity
+		 */
 		if (holder.intentBuilderClass != null) {
 			{
 				// flags()
