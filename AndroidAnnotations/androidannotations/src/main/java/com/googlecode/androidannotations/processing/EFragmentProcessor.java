@@ -79,6 +79,7 @@ public class EFragmentProcessor implements ElementProcessor {
 		{
 			// init
 			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+			holder.init.param(holder.classes().BUNDLE, "savedInstanceState");
 		}
 
 		{
@@ -89,7 +90,7 @@ public class EFragmentProcessor implements ElementProcessor {
 			JVar onCreateSavedInstanceState = onCreate.param(classes.BUNDLE, "savedInstanceState");
 			JBlock onCreateBody = onCreate.body();
 
-			onCreateBody.invoke(holder.init);
+			onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
 
 			onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 		}
