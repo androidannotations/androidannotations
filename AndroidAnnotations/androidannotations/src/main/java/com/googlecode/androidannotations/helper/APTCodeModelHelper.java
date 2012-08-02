@@ -15,7 +15,11 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
@@ -36,11 +40,14 @@ import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -286,6 +293,78 @@ public class APTCodeModelHelper {
 			}
 		}
 		return null;
+	}
+
+	public void addActivityIntentBuilder(JCodeModel codeModel, EBeanHolder holder) throws Exception {
+		addIntentBuilder(codeModel, holder, true);
+	}
+
+	public void addServiceIntentBuilder(JCodeModel codeModel, EBeanHolder holder) throws Exception {
+		addIntentBuilder(codeModel, holder, false);
+	}
+
+	private void addIntentBuilder(JCodeModel codeModel, EBeanHolder holder, boolean isActivity) throws JClassAlreadyExistsException {
+		JClass contextClass = holder.classes().CONTEXT;
+		JClass intentClass = holder.classes().INTENT;
+
+		{
+			holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
+
+			JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
+
+			holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
+			{
+				// Constructor
+				JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
+				JVar constructorContextParam = constructor.param(contextClass, "context");
+				JBlock constructorBody = constructor.body();
+				constructorBody.assign(contextField, constructorContextParam);
+				constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.eBean.dotclass()));
+			}
+
+			{
+				// get()
+				JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
+				method.body()._return(holder.intentField);
+			}
+
+			{
+				// flags()
+				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
+				JVar flagsParam = method.param(codeModel.INT, "flags");
+				JBlock body = method.body();
+				body.invoke(holder.intentField, "setFlags").arg(flagsParam);
+				body._return(_this());
+			}
+
+			{
+				// start()
+				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
+				String startComponentName = isActivity ? "startActivity" : "startService";
+				method.body().invoke(contextField, startComponentName).arg(holder.intentField);
+			}
+
+			if (isActivity) {
+				// startForResult()
+				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
+				JVar requestCode = method.param(codeModel.INT, "requestCode");
+
+				JBlock body = method.body();
+				JClass activityClass = holder.classes().ACTIVITY;
+				JConditional condition = body._if(contextField._instanceof(activityClass));
+				condition._then() //
+						.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.intentField).arg(requestCode);
+				condition._else() //
+						.invoke(contextField, "startActivity").arg(holder.intentField);
+			}
+
+			{
+				// intent()
+				JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
+				JVar contextParam = method.param(contextClass, "context");
+				method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
+			}
+		}
 	}
 
 }
