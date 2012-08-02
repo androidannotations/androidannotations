@@ -197,7 +197,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 			JClass collectionsClass = activitiesHolder.refClass(CanonicalNameConstants.COLLECTIONS);
 			JClass mediaTypeClass = activitiesHolder.refClass(CanonicalNameConstants.MEDIA_TYPE);
 
-			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticRef(mediaType));
+			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
 		}
 
@@ -210,7 +210,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 			acceptAnnotation = executableElement.getEnclosingElement().getAnnotation(Accept.class);
 		}
 		if (acceptAnnotation != null) {
-			return acceptAnnotation.value().name();
+			return acceptAnnotation.value();
 		} else {
 			return null;
 		}
