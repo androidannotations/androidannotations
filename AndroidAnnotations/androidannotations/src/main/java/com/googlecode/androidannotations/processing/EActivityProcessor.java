@@ -49,6 +49,7 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
@@ -243,9 +244,23 @@ public class EActivityProcessor implements ElementProcessor {
 				}
 
 				{
-					// start
+					// start()
 					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
 					method.body().invoke(contextField, "startActivity").arg(holder.intentField);
+				}
+
+				{
+					// startForResult()
+					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
+					JVar requestCode = method.param(codeModel.INT, "requestCode");
+
+					JBlock body = method.body();
+					JClass activityClass = holder.classes().ACTIVITY;
+					JConditional condition = body._if(contextField._instanceof(activityClass));
+					condition._then() //
+							.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.intentField).arg(requestCode);
+					condition._else() //
+							.invoke(contextField, "startActivity").arg(holder.intentField);
 				}
 
 				{

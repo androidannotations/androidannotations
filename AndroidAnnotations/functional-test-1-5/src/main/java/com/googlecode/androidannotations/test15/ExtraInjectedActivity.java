@@ -40,12 +40,18 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
-	
+
 	@Extra
 	String extraWithoutValue;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
+	}
+
+	void intentWithExtras() {
+		ExtraInjectedActivity_.intent(this).arrayExtra(null).start();
+		ExtraInjectedActivity_.intent(this).intExtra(42).get();
+		ExtraInjectedActivity_.intent(this).stringExtra("hello").startForResult(42);
 	}
 }
