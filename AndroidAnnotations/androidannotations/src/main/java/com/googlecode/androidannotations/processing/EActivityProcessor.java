@@ -16,13 +16,10 @@
 package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
-import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -40,6 +37,7 @@ import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
+import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.ModelConstants;
@@ -49,10 +47,8 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -67,10 +63,12 @@ public class EActivityProcessor implements ElementProcessor {
 	private final AnnotationHelper annotationHelper;
 
 	private final ProcessingEnvironment processingEnv;
+	private final APTCodeModelHelper aptCodeModelHelper;
 
 	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		this.processingEnv = processingEnv;
 		annotationHelper = new AnnotationHelper(processingEnv);
+		aptCodeModelHelper = new APTCodeModelHelper();
 		this.rClass = rClass;
 
 		greendroidActivityElements = new ArrayList<TypeElement>();
@@ -210,67 +208,7 @@ public class EActivityProcessor implements ElementProcessor {
 		}
 
 		if (!isAbstract) {
-			JClass contextClass = holder.classes().CONTEXT;
-			JClass intentClass = holder.classes().INTENT;
-
-			{
-				holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
-
-				JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
-
-				holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
-				{
-					// Constructor
-					JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
-					JVar constructorContextParam = constructor.param(contextClass, "context");
-					JBlock constructorBody = constructor.body();
-					constructorBody.assign(contextField, constructorContextParam);
-					constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.eBean.dotclass()));
-				}
-
-				{
-					// get()
-					JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
-					method.body()._return(holder.intentField);
-				}
-
-				{
-					// flags()
-					JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
-					JVar flagsParam = method.param(codeModel.INT, "flags");
-					JBlock body = method.body();
-					body.invoke(holder.intentField, "setFlags").arg(flagsParam);
-					body._return(_this());
-				}
-
-				{
-					// start()
-					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
-					method.body().invoke(contextField, "startActivity").arg(holder.intentField);
-				}
-
-				{
-					// startForResult()
-					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
-					JVar requestCode = method.param(codeModel.INT, "requestCode");
-
-					JBlock body = method.body();
-					JClass activityClass = holder.classes().ACTIVITY;
-					JConditional condition = body._if(contextField._instanceof(activityClass));
-					condition._then() //
-							.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.intentField).arg(requestCode);
-					condition._else() //
-							.invoke(contextField, "startActivity").arg(holder.intentField);
-				}
-
-				{
-					// intent()
-					JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
-					JVar contextParam = method.param(contextClass, "context");
-					method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
-				}
-			}
-
+			aptCodeModelHelper.addActivityIntentBuilder(codeModel, holder);
 		}
 
 	}
