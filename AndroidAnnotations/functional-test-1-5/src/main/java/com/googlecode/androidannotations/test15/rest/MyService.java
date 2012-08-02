@@ -43,7 +43,7 @@ public interface MyService {
 	EventList getEvents(String location, int year);
 
 	@Get("/events/{year}/{location}")
-	@Accept(MediaType.APPLICATION_JSON)
+	@Accept("application/json")
 	Event[] getEventsArray(String location, int year);
 
 	@Get("/events/{year}/{location}")
