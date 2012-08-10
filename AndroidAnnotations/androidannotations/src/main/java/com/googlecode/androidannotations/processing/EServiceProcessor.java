@@ -35,7 +35,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 
-public class EServiceProcessor implements ElementProcessor {
+public class EServiceProcessor implements GeneratingElementProcessor {
 
 	private final APTCodeModelHelper aptCodeModelHelper;
 
@@ -49,9 +49,9 @@ public class EServiceProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element, getTarget());
+		EBeanHolder holder = eBeansHolder.create(element, getTarget());
 
 		TypeElement typeElement = (TypeElement) element;
 

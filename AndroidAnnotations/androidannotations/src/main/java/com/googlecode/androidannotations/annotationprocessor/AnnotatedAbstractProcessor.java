@@ -44,18 +44,42 @@ public abstract class AnnotatedAbstractProcessor extends AbstractProcessor {
 	 *         or {@link AbstractProcessor#getSupportedAnnotationTypes()} result
 	 *         if none
 	 */
+	@Override
 	public Set<String> getSupportedAnnotationTypes() {
-		SupportedAnnotationClasses sac = this.getClass().getAnnotation(SupportedAnnotationClasses.class);
-		if (sac == null) {
-			if (isInitialized())
+		Class<? extends Annotation>[] annotationClassesArray = readSupportedAnnotationClasses();
+		if (annotationClassesArray == null) {
+			if (isInitialized()) {
 				processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "No " + SupportedAnnotationClasses.class.getSimpleName() + " annotation " + "found on " + this.getClass().getName() + ", returning parent method result.");
+			}
 			return super.getSupportedAnnotationTypes();
-		} else
-			return arrayToSet(sac.value());
+		} else {
+			return arrayToSet(annotationClassesArray);
+		}
+	}
+
+	private Class<? extends Annotation>[] readSupportedAnnotationClasses() {
+		SupportedAnnotationClasses sac = this.getClass().getAnnotation(SupportedAnnotationClasses.class);
+		if (sac != null) {
+			return sac.value();
+		} else {
+			return null;
+		}
+	}
+
+	public Set<Class<? extends Annotation>> getSupportedAnnotationClasses() {
+		Class<? extends Annotation>[] annotationClassesArray = readSupportedAnnotationClasses();
+		if (annotationClassesArray == null) {
+			return Collections.emptySet();
+		} else {
+			Set<Class<? extends Annotation>> set = new HashSet<Class<? extends Annotation>>(annotationClassesArray.length);
+			for (Class<? extends Annotation> c : annotationClassesArray) {
+				set.add(c);
+			}
+			return Collections.unmodifiableSet(set);
+		}
 	}
 
 	private static Set<String> arrayToSet(Class<? extends Annotation>[] array) {
-		assert array != null;
 		Set<String> set = new HashSet<String>(array.length);
 		for (Class<? extends Annotation> c : array) {
 			set.add(c.getName());

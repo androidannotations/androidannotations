@@ -42,7 +42,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class OptionsMenuProcessor implements ElementProcessor {
+public class OptionsMenuProcessor implements DecoratingElementProcessor {
 
 	private final SherlockHelper sherlockHelper;
 
@@ -59,8 +59,7 @@ public class OptionsMenuProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		boolean isFragment = holder.eBeanAnnotation == EFragment.class;

@@ -48,7 +48,7 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class InstanceStateProcessor implements ElementProcessor {
+public class InstanceStateProcessor implements DecoratingElementProcessor {
 
 	private static final String BUNDLE_PARAM_NAME = "bundle";
 
@@ -104,8 +104,7 @@ public class InstanceStateProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		String fieldName = element.getSimpleName().toString();
 
 		JBlock saveStateBody = getSaveStateMethodBody(codeModel, holder);

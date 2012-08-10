@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * The first parameter of the method must be a SQLiteDatabase.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Transactional {
 }

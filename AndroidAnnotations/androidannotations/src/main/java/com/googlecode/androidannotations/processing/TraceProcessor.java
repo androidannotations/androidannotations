@@ -37,7 +37,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
-public class TraceProcessor implements ElementProcessor {
+public class TraceProcessor implements DecoratingElementProcessor {
 
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
@@ -47,8 +47,7 @@ public class TraceProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 		ExecutableElement executableElement = (ExecutableElement) element;
 

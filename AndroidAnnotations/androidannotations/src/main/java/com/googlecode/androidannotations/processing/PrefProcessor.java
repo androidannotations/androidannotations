@@ -33,7 +33,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
-public class PrefProcessor implements ElementProcessor {
+public class PrefProcessor implements DecoratingElementProcessor {
 
 	private final AnnotationElements validatedModel;
 
@@ -47,8 +47,7 @@ public class PrefProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -58,9 +57,8 @@ public class PrefProcessor implements ElementProcessor {
 		if (fieldTypeMirror instanceof ErrorType) {
 			String elementTypeName = fieldTypeMirror.toString();
 			String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - GENERATION_SUFFIX.length());
-			Set<? extends Element> sharedPrefElements = validatedModel.getAnnotatedElements(SharedPref.class);
-			
-			
+			Set<? extends Element> sharedPrefElements = validatedModel.getRootAnnotatedElements(SharedPref.class.getName());
+
 			for (Element sharedPrefElement : sharedPrefElements) {
 				TypeElement sharedPrefTypeElement = (TypeElement) sharedPrefElement;
 
@@ -72,7 +70,7 @@ public class PrefProcessor implements ElementProcessor {
 					break;
 				}
 			}
-			
+
 		}
 
 		JBlock methodBody = holder.init.body();

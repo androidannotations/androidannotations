@@ -22,7 +22,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPre
 
 @SharedPref(Scope.UNIQUE)
 public interface SomePrefs {
-
+	
 	@DefaultString("John")
 	String name();
 

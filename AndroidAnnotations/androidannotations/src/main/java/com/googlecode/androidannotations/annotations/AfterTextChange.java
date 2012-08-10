@@ -74,7 +74,7 @@ import android.text.Editable;
  * 	// Something Here
  * }
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface AfterTextChange {
 

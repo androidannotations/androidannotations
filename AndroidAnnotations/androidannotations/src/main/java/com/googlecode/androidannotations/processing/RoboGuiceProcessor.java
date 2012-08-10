@@ -45,7 +45,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
-public class RoboGuiceProcessor implements ElementProcessor {
+public class RoboGuiceProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -53,8 +53,7 @@ public class RoboGuiceProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		holder.eBean._implements(holder.classes().INJECTOR_PROVIDER);
 

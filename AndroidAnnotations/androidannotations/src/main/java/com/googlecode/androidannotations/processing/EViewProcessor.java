@@ -38,7 +38,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 
-public class EViewProcessor implements ElementProcessor {
+public class EViewProcessor implements GeneratingElementProcessor {
 
 	private static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +

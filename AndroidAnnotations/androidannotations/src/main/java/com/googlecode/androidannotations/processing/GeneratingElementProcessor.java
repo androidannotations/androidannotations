@@ -13,23 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations.res;
+package com.googlecode.androidannotations.processing;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.ResId;
+import com.googlecode.androidannotations.helper.HasTarget;
+import com.sun.codemodel.JCodeModel;
 
-/**
- * Use on fields in activity classes that should be injected with this specific
- * resource
- */
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
-public @interface DrawableRes {
-	int value() default ResId.DEFAULT_VALUE;
+public interface GeneratingElementProcessor extends HasTarget {
 
-	String resName() default "";
+	void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception;
+
 }

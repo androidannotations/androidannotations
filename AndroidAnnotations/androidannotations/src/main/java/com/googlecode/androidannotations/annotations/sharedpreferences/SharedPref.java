@@ -27,7 +27,7 @@ import android.content.Context;
  * that will contain access methods related to the methods you define in the
  * interface.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface SharedPref {
 	public enum Scope {

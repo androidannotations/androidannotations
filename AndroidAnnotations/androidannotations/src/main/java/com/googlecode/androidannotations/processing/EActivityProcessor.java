@@ -24,14 +24,12 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
@@ -55,7 +53,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class EActivityProcessor implements ElementProcessor {
+public class EActivityProcessor implements GeneratingElementProcessor {
 
 	private final IRClass rClass;
 	private List<TypeElement> greendroidActivityElements;
@@ -86,9 +84,9 @@ public class EActivityProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element, getTarget());
+		EBeanHolder holder = eBeansHolder.create(element, getTarget());
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -99,13 +97,7 @@ public class EActivityProcessor implements ElementProcessor {
 
 		boolean usesGreenDroid = usesGreenDroid(typeElement);
 
-		int modifiers;
-		boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT);
-		if (isAbstract) {
-			modifiers = JMod.PUBLIC | JMod.ABSTRACT;
-		} else {
-			modifiers = JMod.PUBLIC | JMod.FINAL;
-		}
+		int modifiers = JMod.PUBLIC | JMod.FINAL;
 
 		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
 
@@ -116,13 +108,7 @@ public class EActivityProcessor implements ElementProcessor {
 		holder.contextRef = _this();
 
 		// onCreate
-		int onCreateVisibility;
-		if (isAbstract) {
-			onCreateVisibility = inheritedOnCreateVisibility(typeElement);
-		} else {
-			onCreateVisibility = PUBLIC;
-		}
-		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
+		JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
 		JClass bundleClass = holder.classes().BUNDLE;
@@ -207,9 +193,7 @@ public class EActivityProcessor implements ElementProcessor {
 
 		}
 
-		if (!isAbstract) {
-			aptCodeModelHelper.addActivityIntentBuilder(codeModel, holder);
-		}
+		aptCodeModelHelper.addActivityIntentBuilder(codeModel, holder);
 
 	}
 
@@ -228,36 +212,6 @@ public class EActivityProcessor implements ElementProcessor {
 			superCall.arg(arg);
 		}
 		body.invoke(holder.afterSetContentView);
-	}
-
-	private int inheritedOnCreateVisibility(TypeElement activityElement) {
-		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
-
-		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
-
-		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
-			if (isOnCreateMethod(activityInheritedMethod)) {
-				Set<Modifier> modifiers = activityInheritedMethod.getModifiers();
-				for (Modifier modifier : modifiers) {
-					if (modifier == Modifier.PUBLIC) {
-						return JMod.PUBLIC;
-					} else if (modifier == Modifier.PROTECTED) {
-						return JMod.PROTECTED;
-					}
-				}
-				return JMod.PUBLIC;
-			}
-		}
-		return PUBLIC;
-	}
-
-	private boolean isOnCreateMethod(ExecutableElement method) {
-
-		List<? extends VariableElement> parameters = method.getParameters();
-		return method.getSimpleName().toString().equals("onCreate") //
-				&& parameters.size() == 1 //
-				&& parameters.get(0).asType().toString().equals(CanonicalNameConstants.BUNDLE) //
-		;
 	}
 
 	private boolean hasOnBackPressedMethod(TypeElement activityElement) {

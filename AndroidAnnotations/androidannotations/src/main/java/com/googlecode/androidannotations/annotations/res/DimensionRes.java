@@ -26,7 +26,7 @@ import com.googlecode.androidannotations.annotations.ResId;
  * Use on fields in activity classes that should be injected with this specific
  * resource
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface DimensionRes {
 	int value() default ResId.DEFAULT_VALUE;

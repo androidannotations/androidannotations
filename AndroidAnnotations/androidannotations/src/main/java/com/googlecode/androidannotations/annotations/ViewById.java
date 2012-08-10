@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * name will be used as the R.id.* field name.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface ViewById {
 	int value() default ResId.DEFAULT_VALUE;

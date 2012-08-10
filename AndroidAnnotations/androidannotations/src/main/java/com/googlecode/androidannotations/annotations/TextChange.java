@@ -77,7 +77,7 @@ import java.lang.annotation.Target;
  * 	// Something Here
  * }
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface TextChange {
 

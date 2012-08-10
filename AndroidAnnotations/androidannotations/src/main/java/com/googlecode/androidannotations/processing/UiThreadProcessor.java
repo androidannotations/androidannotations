@@ -33,7 +33,7 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 
-public class UiThreadProcessor implements ElementProcessor {
+public class UiThreadProcessor implements DecoratingElementProcessor {
 
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
@@ -43,9 +43,7 @@ public class UiThreadProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws JClassAlreadyExistsException {
-
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws JClassAlreadyExistsException {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

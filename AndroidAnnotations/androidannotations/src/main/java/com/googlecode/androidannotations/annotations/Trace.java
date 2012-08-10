@@ -34,7 +34,7 @@ import android.util.Log;
  * 
  * @author Mathieu Boniface
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Trace {
 

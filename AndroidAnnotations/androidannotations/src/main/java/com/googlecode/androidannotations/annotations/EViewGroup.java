@@ -46,7 +46,7 @@ import java.lang.annotation.Target;
  *      to build a custom component.</a>
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EViewGroup {
 	int value() default ResId.DEFAULT_VALUE;

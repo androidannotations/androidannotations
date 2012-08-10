@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * interface.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface RestService {
 }

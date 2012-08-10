@@ -44,7 +44,7 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EFragmentProcessor implements ElementProcessor {
+public class EFragmentProcessor implements GeneratingElementProcessor {
 
 	private final IdAnnotationHelper helper;
 

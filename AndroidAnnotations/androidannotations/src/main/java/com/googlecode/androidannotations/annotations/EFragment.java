@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * to handle the view creation by yourself.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EFragment {
 	int value() default ResId.DEFAULT_VALUE;

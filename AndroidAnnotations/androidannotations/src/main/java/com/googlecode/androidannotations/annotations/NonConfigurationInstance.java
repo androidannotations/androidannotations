@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * This caution doesn't apply to beans annotated with {@link Bean}, because
  * AndroidAnnotations automatically takes care of rebinding their context.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface NonConfigurationInstance {
 }
