@@ -23,7 +23,7 @@ import com.googlecode.androidannotations.annotations.NoTitle;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
-public class NoTitleProcessor implements ElementProcessor {
+public class NoTitleProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -31,9 +31,7 @@ public class NoTitleProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-
-		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		JFieldRef noTitle = holder.classes().WINDOW.staticRef("FEATURE_NO_TITLE");
 

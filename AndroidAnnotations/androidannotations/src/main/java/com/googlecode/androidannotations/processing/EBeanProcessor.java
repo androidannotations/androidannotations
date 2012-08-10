@@ -41,7 +41,7 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EBeanProcessor implements ElementProcessor {
+public class EBeanProcessor implements GeneratingElementProcessor {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
 

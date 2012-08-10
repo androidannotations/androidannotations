@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * 
  * @author Mathieu Boniface
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Touch {
 	int[] value() default ResId.DEFAULT_VALUE;

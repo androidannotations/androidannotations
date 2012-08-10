@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 import com.googlecode.androidannotations.annotations.ResId;
 
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface HtmlRes {
 	int value() default ResId.DEFAULT_VALUE;

@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Use it on manager fields in activity classes
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface SystemService {
 }

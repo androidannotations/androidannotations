@@ -46,7 +46,7 @@ import com.sun.codemodel.JVar;
  * @author Mathieu Boniface
  * @author Pierre-Yves
  */
-public class ClickProcessor implements ElementProcessor {
+public class ClickProcessor implements DecoratingElementProcessor {
 
 	private final AnnotationHelper helper;
 	private final IRClass rClass;
@@ -62,9 +62,7 @@ public class ClickProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();

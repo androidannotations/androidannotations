@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface ItemSelect {
 	int[] value() default ResId.DEFAULT_VALUE;

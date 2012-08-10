@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Injects the application. Please check that your registered the application in
  * the AndroidManifest.xml class prior to using this annotation.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface App {
 }

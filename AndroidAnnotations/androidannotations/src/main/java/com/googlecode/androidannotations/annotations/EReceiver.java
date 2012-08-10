@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to enhance an Android BroadcastReceiver
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EReceiver {
 }

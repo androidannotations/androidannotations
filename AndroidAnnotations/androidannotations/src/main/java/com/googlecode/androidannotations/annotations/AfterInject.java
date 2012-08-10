@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * class.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface AfterInject {
 }

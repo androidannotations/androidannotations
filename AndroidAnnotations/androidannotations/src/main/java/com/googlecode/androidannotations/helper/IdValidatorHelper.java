@@ -39,17 +39,6 @@ public class IdValidatorHelper extends ValidatorHelper {
 		USE_ELEMENT_NAME, ALLOW_NO_RES_ID, NEED_RES_ID
 	}
 
-	/**
-	 * @param element
-	 * @param res
-	 * @param useElementName
-	 *            if true, we will use the elementName as a fallback strategy,
-	 *            and in such case it MUST match a valid resource id. if false,
-	 *            we validate based on allowNoResId.
-	 * @param allowNoResId
-	 *            Only taken into account if useElementName is false and
-	 * @param valid
-	 */
 	public void resIdsExist(Element element, Res res, FallbackStrategy fallbackStrategy, IsValid valid) {
 
 		Class<? extends Annotation> target = idAnnotationHelper.getTarget();
@@ -106,7 +95,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 			List<String> annotationQualifiedIds = idAnnotationHelper.extractAnnotationResources(element, Res.ID, true);
 
 			Element elementEnclosingElement = element.getEnclosingElement();
-			Set<? extends Element> annotatedElements = validatedElements.getAnnotatedElements(annotationHelper.getTarget());
+			Set<? extends Element> annotatedElements = validatedElements.getRootAnnotatedElements(annotationHelper.getTarget().getName());
 
 			for (Element uniqueCheckElement : annotatedElements) {
 				Element uniqueCheckEnclosingElement = uniqueCheckElement.getEnclosingElement();

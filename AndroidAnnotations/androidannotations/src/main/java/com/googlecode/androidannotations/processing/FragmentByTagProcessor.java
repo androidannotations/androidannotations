@@ -36,7 +36,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class FragmentByTagProcessor implements ElementProcessor {
+public class FragmentByTagProcessor implements DecoratingElementProcessor {
 
 	private final AnnotationHelper annotationHelper;
 
@@ -50,9 +50,7 @@ public class FragmentByTagProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();

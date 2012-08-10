@@ -41,7 +41,7 @@ import java.lang.annotation.Target;
  * AndroidAnnotations.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EActivity {
 	int value() default ResId.DEFAULT_VALUE;

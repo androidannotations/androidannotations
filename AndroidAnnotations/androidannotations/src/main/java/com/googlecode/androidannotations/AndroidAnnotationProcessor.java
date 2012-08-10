@@ -109,7 +109,6 @@ import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
-import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.AfterInjectProcessor;
 import com.googlecode.androidannotations.processing.AfterTextChangeProcessor;
@@ -340,9 +339,11 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
 
-		JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
+		if (validatedModel != null) {
+			JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
 
-		generateSources(codeModel);
+			generateSources(codeModel);
+		}
 	}
 
 	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -351,7 +352,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		timeStats.start("Extract Annotations");
-		ModelExtractor modelExtractor = new ModelExtractor();
+		ModelExtractor modelExtractor = new ModelExtractor(processingEnv, getSupportedAnnotationClasses());
 		AnnotationElementsHolder extractedModel = modelExtractor.extract(annotations, roundEnv);
 		timeStats.stop("Extract Annotations");
 		return extractedModel;
@@ -388,7 +389,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
 			validatedAnnotations = modelValidator.validate(extractedModel);
 		} else {
-			validatedAnnotations = EmptyAnnotationElements.INSTANCE;
+			validatedAnnotations = null;
 		}
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;

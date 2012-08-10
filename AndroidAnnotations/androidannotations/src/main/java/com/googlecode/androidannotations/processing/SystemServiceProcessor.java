@@ -29,7 +29,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
-public class SystemServiceProcessor implements ElementProcessor {
+public class SystemServiceProcessor implements DecoratingElementProcessor {
 
 	private final AndroidSystemServices androidSystemServices;
 
@@ -43,9 +43,7 @@ public class SystemServiceProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		String fieldName = element.getSimpleName().toString();
 

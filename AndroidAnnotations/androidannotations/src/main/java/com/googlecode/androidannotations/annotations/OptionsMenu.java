@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * The annotation value should be one of R.menu.* fields.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface OptionsMenu {
 	int[] value() default ResId.DEFAULT_VALUE;

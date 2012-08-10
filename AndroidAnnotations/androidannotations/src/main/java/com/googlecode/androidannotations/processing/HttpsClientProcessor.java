@@ -47,7 +47,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
-public class HttpsClientProcessor implements ElementProcessor {
+public class HttpsClientProcessor implements DecoratingElementProcessor {
 
 	private final IRClass rClass;
 
@@ -61,8 +61,7 @@ public class HttpsClientProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		HttpsClient annotation = element.getAnnotation(HttpsClient.class);
 		int trustStoreRawId = annotation.trustStore();

@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * on a field that extends Activity, this field will be null at runtime.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface RootContext {
 }

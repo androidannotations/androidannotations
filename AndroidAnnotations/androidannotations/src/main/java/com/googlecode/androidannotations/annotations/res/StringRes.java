@@ -36,7 +36,7 @@ import com.googlecode.androidannotations.annotations.ResId;
  * be used.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface StringRes {
 

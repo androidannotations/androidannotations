@@ -35,7 +35,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
-public class ResProcessor implements ElementProcessor {
+public class ResProcessor implements DecoratingElementProcessor {
 
 	private final AndroidRes androidValue;
 
@@ -52,8 +52,7 @@ public class ResProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();

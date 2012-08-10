@@ -32,7 +32,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
-public class FromHtmlProcessor implements ElementProcessor {
+public class FromHtmlProcessor implements DecoratingElementProcessor {
 
 	private final IdAnnotationHelper annotationHelper;
 
@@ -46,8 +46,7 @@ public class FromHtmlProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
 		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();

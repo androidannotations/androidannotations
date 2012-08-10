@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * The activity must be annotated with {@link EActivity}.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Fullscreen {
 }
