@@ -29,7 +29,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 
-public class RootContextProcessor implements ElementProcessor {
+public class RootContextProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -37,8 +37,7 @@ public class RootContextProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		String fieldName = element.getSimpleName().toString();
 

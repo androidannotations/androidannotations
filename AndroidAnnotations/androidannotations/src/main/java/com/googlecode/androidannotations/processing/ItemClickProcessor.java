@@ -46,7 +46,7 @@ import com.sun.codemodel.JVar;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-public class ItemClickProcessor implements ElementProcessor {
+public class ItemClickProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;
 
@@ -60,8 +60,7 @@ public class ItemClickProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();

@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to enhance an Android ContentProvider
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EProvider {
 }

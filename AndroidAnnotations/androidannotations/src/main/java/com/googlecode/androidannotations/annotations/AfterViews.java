@@ -35,7 +35,7 @@ import android.app.Activity;
  * activity.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface AfterViews {
 }

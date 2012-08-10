@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * method will be executed. The default is 0 (no delay).
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface UiThread {
 	long delay() default 0;

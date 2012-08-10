@@ -33,7 +33,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
-public class TransactionalProcessor implements ElementProcessor {
+public class TransactionalProcessor implements DecoratingElementProcessor {
 
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
@@ -43,8 +43,7 @@ public class TransactionalProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

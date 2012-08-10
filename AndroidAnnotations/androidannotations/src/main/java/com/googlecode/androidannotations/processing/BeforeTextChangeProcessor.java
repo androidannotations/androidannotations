@@ -41,7 +41,7 @@ import com.sun.codemodel.JVar;
 /**
  * @author Mathieu Boniface
  */
-public class BeforeTextChangeProcessor implements ElementProcessor {
+public class BeforeTextChangeProcessor implements DecoratingElementProcessor {
 
 	private final TextWatcherHelper helper;
 
@@ -58,8 +58,7 @@ public class BeforeTextChangeProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		String methodName = element.getSimpleName().toString();
 

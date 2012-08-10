@@ -15,11 +15,10 @@
  */
 package com.googlecode.androidannotations.model;
 
-import java.lang.annotation.Annotation;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -27,46 +26,57 @@ import javax.lang.model.element.TypeElement;
 
 public class AnnotationElementsHolder implements AnnotationElements {
 
-	Map<TypeElement, Set<? extends Element>> annotatedElementsByAnnotation = new HashMap<TypeElement, Set<? extends Element>>();
+	private final Map<String, Set<? extends Element>> rootAnnotatedElementsByAnnotation = new HashMap<String, Set<? extends Element>>();
+	private final Map<String, Set<AnnotatedAndRootElements>> ancestorAnnotatedElementsByAnnotation = new HashMap<String, Set<AnnotatedAndRootElements>>();
 
-	public void put(TypeElement annotation, Set<? extends Element> annotatedElements) {
-		annotatedElementsByAnnotation.put(annotation, annotatedElements);
+	public void putRootAnnotatedElements(String annotationName, Set<? extends Element> annotatedElements) {
+		rootAnnotatedElementsByAnnotation.put(annotationName, annotatedElements);
+	}
+
+	public void putAncestorAnnotatedElement(String annotationName, Element annotatedElement, TypeElement rootTypeElement) {
+		Set<AnnotatedAndRootElements> set = ancestorAnnotatedElementsByAnnotation.get(annotationName);
+		if (set == null) {
+			set = new HashSet<AnnotationElements.AnnotatedAndRootElements>();
+			ancestorAnnotatedElementsByAnnotation.put(annotationName, set);
+		}
+		set.add(new AnnotatedAndRootElements(annotatedElement, rootTypeElement));
 	}
 
 	@Override
-	public Set<? extends Element> getAnnotatedElements(Class<? extends Annotation> annotationClass) {
-
-		TypeElement annotationElement = annotationElementfromAnnotationClass(annotationClass);
-		if (annotationElement != null) {
-			return new HashSet<Element>(annotatedElementsByAnnotation.get(annotationElement));
+	public Set<AnnotatedAndRootElements> getAncestorAnnotatedElements(String annotationName) {
+		Set<AnnotatedAndRootElements> set = ancestorAnnotatedElementsByAnnotation.get(annotationName);
+		if (set != null) {
+			return set;
 		} else {
-			return new HashSet<Element>();
+			return Collections.emptySet();
 		}
 	}
 
-	public TypeElement annotationElementfromAnnotationClass(Class<? extends Annotation> annotationClass) {
-		for (Entry<TypeElement, Set<? extends Element>> annotatedElements : annotatedElementsByAnnotation.entrySet()) {
-			TypeElement elementAnnotation = annotatedElements.getKey();
-			if (elementAnnotation != null) {
-				String elementAnnotationQualifiedName = elementAnnotation.getQualifiedName().toString();
-				String annotationClassName = annotationClass.getName();
-				if (elementAnnotationQualifiedName.equals(annotationClassName)) {
-					return elementAnnotation;
-				}
-			}
+	@Override
+	public Set<? extends Element> getRootAnnotatedElements(String annotationName) {
+		Set<? extends Element> set = rootAnnotatedElementsByAnnotation.get(annotationName);
+		if (set != null) {
+			return set;
+		} else {
+			return Collections.emptySet();
 		}
-		return null;
 	}
 
 	@Override
 	public Set<Element> getAllElements() {
 		Set<Element> allElements = new HashSet<Element>();
 
-		for (Set<? extends Element> annotatedElements : annotatedElementsByAnnotation.values()) {
+		for (Set<? extends Element> annotatedElements : rootAnnotatedElementsByAnnotation.values()) {
 			allElements.addAll(annotatedElements);
 		}
 
 		return allElements;
+	}
+
+	public AnnotationElementsHolder validatingHolder() {
+		AnnotationElementsHolder holder = new AnnotationElementsHolder();
+		holder.ancestorAnnotatedElementsByAnnotation.putAll(ancestorAnnotatedElementsByAnnotation);
+		return holder;
 	}
 
 }

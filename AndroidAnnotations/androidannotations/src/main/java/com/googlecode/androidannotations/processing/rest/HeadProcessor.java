@@ -23,7 +23,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Head;
-import com.googlecode.androidannotations.processing.EBeansHolder;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -33,7 +33,7 @@ import com.sun.codemodel.JVar;
 
 public class HeadProcessor extends MethodProcessor {
 
-	private EBeansHolder activitiesHolder;
+	private EBeanHolder holder;
 
 	public HeadProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
@@ -45,19 +45,19 @@ public class HeadProcessor extends MethodProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
 
-		this.activitiesHolder = activitiesHolder;
+		this.holder = holder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
 
-		JClass expectedClass = activitiesHolder.refClass(returnType.toString());
+		JClass expectedClass = holder.refClass(returnType.toString());
 
 		Head headAnnotation = element.getAnnotation(Head.class);
 		String urlSuffix = headAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(activitiesHolder, executableElement, urlSuffix, expectedClass, expectedClass, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, expectedClass, codeModel));
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class HeadProcessor extends MethodProcessor {
 
 	@Override
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(activitiesHolder, body, executableElement);
+		return generateHttpHeadersVar(holder, body, executableElement);
 	}
 
 }

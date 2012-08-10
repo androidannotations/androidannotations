@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * annotated extras.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface Extra {
 

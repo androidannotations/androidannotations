@@ -32,7 +32,7 @@ import com.googlecode.androidannotations.annotations.ResId;
  * set, the field name will be used as the R.array.* field name.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface StringArrayRes {
 

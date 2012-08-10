@@ -56,7 +56,7 @@ import java.lang.annotation.Target;
  * 
  * @author Nabil Hachicha
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface HttpsClient {
 	public static final String DEFAULT_PASSWD = "changeit";

@@ -45,7 +45,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class NonConfigurationInstanceProcessor implements ElementProcessor {
+public class NonConfigurationInstanceProcessor implements DecoratingElementProcessor {
 
 	private APTCodeModelHelper aptCodeModelHelper;
 	private AnnotationHelper annotationHelper;
@@ -61,8 +61,7 @@ public class NonConfigurationInstanceProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws JClassAlreadyExistsException {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws JClassAlreadyExistsException {
 
 		NonConfigurationHolder ncHolder = holder.nonConfigurationHolder;
 

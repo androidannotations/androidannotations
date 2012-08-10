@@ -34,7 +34,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JMethod;
 
-public class EProviderProcessor implements ElementProcessor {
+public class EProviderProcessor implements GeneratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -42,9 +42,9 @@ public class EProviderProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element, getTarget());
+		EBeanHolder holder = eBeansHolder.create(element, getTarget());
 
 		TypeElement typeElement = (TypeElement) element;
 

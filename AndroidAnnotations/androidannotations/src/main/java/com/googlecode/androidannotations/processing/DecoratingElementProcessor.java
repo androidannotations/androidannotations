@@ -20,8 +20,12 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.helper.HasTarget;
 import com.sun.codemodel.JCodeModel;
 
-public interface ElementProcessor extends HasTarget {
+/**
+ * An enclosed element is either a field or a method. If you come up with a
+ * better name, please let us know !
+ */
+public interface DecoratingElementProcessor extends HasTarget {
 
-	void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception;
+	void process(Element element, JCodeModel codeModel, EBeanHolder eBeanHolder) throws Exception;
 
 }

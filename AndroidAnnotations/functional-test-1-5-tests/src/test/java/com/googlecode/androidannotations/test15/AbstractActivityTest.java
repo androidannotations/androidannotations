@@ -15,7 +15,6 @@
  */
 package com.googlecode.androidannotations.test15;
 
-import static com.googlecode.androidannotations.test15.MyAssertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.lang.reflect.Modifier;
@@ -27,24 +26,10 @@ import org.junit.runner.RunWith;
 public class AbstractActivityTest {
 
 	@Test
-	public void abstractActivityMustGenerateAbstractActivity() {
-		int modifiers = AbstractActivity_.class.getModifiers();
-
-		assertThat(Modifier.isAbstract(modifiers)).isTrue();
-	}
-
-	@Test
-	public void finalActivityShouldBeFinal() {
+	public void activityShouldBeFinal() {
 		int modifiers = EmptyActivityWithoutLayout_.class.getModifiers();
 
 		assertThat(Modifier.isFinal(modifiers)).isTrue();
 	}
 	
-	@Test
-	public void injectionWithConventionIsDone() {
-		ExtendingActivity_ activity = new ExtendingActivity_();
-		activity.onCreate(null);
-		assertThat(activity.myButton).hasId(R.id.myButton);
-	}
-
 }

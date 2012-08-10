@@ -124,7 +124,7 @@ public class EBeansHolder {
 
 	}
 
-	private final Map<Element, EBeanHolder> EBeanHolders = new HashMap<Element, EBeanHolder>();
+	private final Map<Element, EBeanHolder> eBeanHolders = new HashMap<Element, EBeanHolder>();
 
 	private final JCodeModel codeModel;
 
@@ -137,19 +137,14 @@ public class EBeansHolder {
 		classes = new Classes();
 	}
 
-	public EBeanHolder create(Element activityElement, Class<? extends Annotation> eBeanAnnotation) {
+	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation) {
 		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation);
-		EBeanHolders.put(activityElement, activityHolder);
+		eBeanHolders.put(element, activityHolder);
 		return activityHolder;
 	}
 
-	public EBeanHolder getEnclosingEBeanHolder(Element enclosedElement) {
-		Element activityElement = enclosedElement.getEnclosingElement();
-		return EBeanHolders.get(activityElement);
-	}
-
-	public EBeanHolder getRelativeEBeanHolder(Element element) {
-		return EBeanHolders.get(element);
+	public EBeanHolder getEBeanHolder(Element element) {
+		return eBeanHolders.get(element);
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {

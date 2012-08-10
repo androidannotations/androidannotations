@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * field name will be used as tag name name.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface FragmentByTag {
 	String value() default "";

@@ -81,7 +81,7 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface BeforeTextChange {
 

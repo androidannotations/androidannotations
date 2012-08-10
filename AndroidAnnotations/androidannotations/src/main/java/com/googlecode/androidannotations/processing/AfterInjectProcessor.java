@@ -22,7 +22,7 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.annotations.AfterInject;
 import com.sun.codemodel.JCodeModel;
 
-public class AfterInjectProcessor implements ElementProcessor {
+public class AfterInjectProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -30,9 +30,7 @@ public class AfterInjectProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
-
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		String methodName = element.getSimpleName().toString();
 
 		holder.init.body().invoke(methodName);

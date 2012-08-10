@@ -29,8 +29,8 @@ import javax.lang.model.element.VariableElement;
 import com.googlecode.androidannotations.annotations.rest.Accept;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.RestAnnotationHelper;
-import com.googlecode.androidannotations.processing.EBeansHolder;
-import com.googlecode.androidannotations.processing.ElementProcessor;
+import com.googlecode.androidannotations.processing.EBeanHolder;
+import com.googlecode.androidannotations.processing.DecoratingElementProcessor;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -41,7 +41,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public abstract class MethodProcessor implements ElementProcessor {
+public abstract class MethodProcessor implements DecoratingElementProcessor {
 
 	protected final RestImplementationsHolder restImplementationsHolder;
 	protected final RestAnnotationHelper restAnnotationHelper;
@@ -78,13 +78,13 @@ public abstract class MethodProcessor implements ElementProcessor {
 		// add url param
 		restCall.arg(concatCall.arg(JExpr.lit(methodHolder.getUrlSuffix())));
 
-		EBeansHolder activitiesHolder = methodHolder.getActivitiesHolder();
-		JClass httpMethod = activitiesHolder.refClass(CanonicalNameConstants.HTTP_METHOD);
+		EBeanHolder eBeanHolder = methodHolder.getHolder();
+		JClass httpMethod = eBeanHolder.refClass(CanonicalNameConstants.HTTP_METHOD);
 		// add method type param
 		String restMethodInCapitalLetters = getTarget().getSimpleName().toUpperCase();
 		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
 
-		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParamsVar(activitiesHolder, method, executableElement, holder);
+		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParamsVar(eBeanHolder, method, executableElement, holder);
 
 		// update method holder
 		methodHolder.setBody(body);
@@ -141,8 +141,8 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 	protected JVar generateHttpEntityVar(MethodProcessorHolder methodHolder) {
 		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
-		EBeansHolder activitiesHolder = methodHolder.getActivitiesHolder();
-		JClass httpEntity = activitiesHolder.refClass(CanonicalNameConstants.HTTP_ENTITY);
+		EBeanHolder holder = methodHolder.getHolder();
+		JClass httpEntity = holder.refClass(CanonicalNameConstants.HTTP_ENTITY);
 		JInvocation newHttpEntityVarCall;
 
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
@@ -160,7 +160,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 		}
 
 		JBlock body = methodHolder.getBody();
-		JVar httpHeadersVar = generateHttpHeadersVar(activitiesHolder, body, executableElement);
+		JVar httpHeadersVar = generateHttpHeadersVar(holder, body, executableElement);
 
 		boolean hasHeaders = httpHeadersVar != null;
 
@@ -185,17 +185,17 @@ public abstract class MethodProcessor implements ElementProcessor {
 		return httpEntityVar;
 	}
 
-	protected JVar generateHttpHeadersVar(EBeansHolder activitiesHolder, JBlock body, ExecutableElement executableElement) {
+	protected JVar generateHttpHeadersVar(EBeanHolder holder, JBlock body, ExecutableElement executableElement) {
 		JVar httpHeadersVar = null;
 
-		JClass httpHeadersClass = activitiesHolder.refClass(CanonicalNameConstants.HTTP_HEADERS);
+		JClass httpHeadersClass = holder.refClass(CanonicalNameConstants.HTTP_HEADERS);
 		httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
 
 		String mediaType = retrieveAcceptAnnotationValue(executableElement);
 		boolean hasMediaTypeDefined = mediaType != null;
 		if (hasMediaTypeDefined) {
-			JClass collectionsClass = activitiesHolder.refClass(CanonicalNameConstants.COLLECTIONS);
-			JClass mediaTypeClass = activitiesHolder.refClass(CanonicalNameConstants.MEDIA_TYPE);
+			JClass collectionsClass = holder.refClass(CanonicalNameConstants.COLLECTIONS);
+			JClass mediaTypeClass = holder.refClass(CanonicalNameConstants.MEDIA_TYPE);
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
@@ -216,7 +216,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 		}
 	}
 
-	private Map<String, JVar> generateMethodParamsVar(EBeansHolder activitiesHolder, JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
+	private Map<String, JVar> generateMethodParamsVar(EBeanHolder eBeanHolder, JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
 		List<? extends VariableElement> params = executableElement.getParameters();
 		TreeMap<String, JVar> methodParams = new TreeMap<String, JVar>();
 		for (VariableElement parameter : params) {
@@ -225,7 +225,7 @@ public abstract class MethodProcessor implements ElementProcessor {
 
 			// TODO check in validator that params are not generic. Or create a
 			// helper to fix that case and generate the right code.
-			JVar param = method.param(activitiesHolder.refClass(paramType), paramName);
+			JVar param = method.param(eBeanHolder.refClass(paramType), paramName);
 			methodParams.put(paramName, param);
 		}
 
@@ -238,6 +238,6 @@ public abstract class MethodProcessor implements ElementProcessor {
 	public abstract Class<? extends Annotation> getTarget();
 
 	@Override
-	public abstract void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception;
+	public abstract void process(Element element, JCodeModel codeModel, EBeanHolder eBeanHolder) throws Exception;
 
 }

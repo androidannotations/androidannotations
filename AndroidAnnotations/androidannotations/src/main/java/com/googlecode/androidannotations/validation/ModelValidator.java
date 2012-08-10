@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
@@ -37,17 +36,21 @@ public class ModelValidator {
 
 	public AnnotationElements validate(AnnotationElementsHolder extractedModel) {
 
-		AnnotationElementsHolder validatedElements = new AnnotationElementsHolder();
+		/*
+		 * We currently do not validate the elements on the ancestors, assuming
+		 * they've already been validated. This also means some checks such as
+		 * unique ids might not be check all situations.
+		 */
+		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
 		for (ElementValidator validator : validators) {
 			Class<? extends Annotation> target = validator.getTarget();
 
-			Set<? extends Element> annotatedElements = extractedModel.getAnnotatedElements(target);
+			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(target.getName());
 
-			TypeElement annotationElement = extractedModel.annotationElementfromAnnotationClass(target);
 			Set<Element> validatedAnnotatedElements = new HashSet<Element>();
 
-			validatedElements.put(annotationElement, validatedAnnotatedElements);
+			validatedElements.putRootAnnotatedElements(target.getName(), validatedAnnotatedElements);
 
 			for (Element annotatedElement : annotatedElements) {
 				if (validator.validate(annotatedElement, validatedElements)) {
