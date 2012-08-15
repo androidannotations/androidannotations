@@ -15,23 +15,31 @@
  */
 package com.googlecode.androidannotations.processing.rest;
 
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.ARRAY_LIST;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
+import static com.googlecode.androidannotations.helper.CanonicalNameConstants.LIST;
 import static com.sun.codemodel.JExpr._this;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
+import com.googlecode.androidannotations.annotations.rest.Converters;
 import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.helper.ModelConstants;
+import com.googlecode.androidannotations.helper.RestAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder;
 import com.googlecode.androidannotations.processing.GeneratingElementProcessor;
 import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
@@ -44,9 +52,11 @@ public class RestProcessor implements GeneratingElementProcessor {
 	private static final String SPRING_REST_TEMPLATE_QUALIFIED_NAME = "org.springframework.web.client.RestTemplate";
 	private static final String JAVA_STRING_QUALIFIED_NAME = "java.lang.String";
 	private final RestImplementationsHolder restImplementationHolder;
+	private RestAnnotationHelper restAnnotationHelper;
 
-	public RestProcessor(RestImplementationsHolder restImplementationHolder) {
+	public RestProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		this.restImplementationHolder = restImplementationHolder;
+		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
 	}
 
 	@Override
@@ -79,10 +89,42 @@ public class RestProcessor implements GeneratingElementProcessor {
 		JClass stringClass = eBeansHolder.refClass(JAVA_STRING_QUALIFIED_NAME);
 		holder.rootUrlField = holder.restImplementationClass.field(JMod.PRIVATE, stringClass, "rootUrl");
 
+		// SetMessageConverters method
+		JMethod setMessageConverters = holder.restImplementationClass.method(JMod.PRIVATE, void.class, "setMessageConverters");
+		JBlock body = setMessageConverters.body();
+		if (restAnnotationHelper.isAnnotatedBy(element, Converters.class)) {
+			JClass httpMessageConverterClass = activitiesHolder.refClass(HTTP_MESSAGE_CONVERTER).narrow(codeModel.wildcard());
+			JClass listVarClass = activitiesHolder.refClass(LIST).narrow(httpMessageConverterClass);
+			JVar messagerConvertersList = body.decl(listVarClass, "messageConverters");
+			JClass arrayListVarClass = activitiesHolder.refClass(ARRAY_LIST).narrow(httpMessageConverterClass);
+			messagerConvertersList.init(JExpr._new(arrayListVarClass));
+			List<DeclaredType> classValues = restAnnotationHelper.extractAnnotationClassesArrayValue(element, Converters.class);
+
+			for (DeclaredType classValue : classValues) {
+				body.invoke(messagerConvertersList, "add").arg(JExpr._new(activitiesHolder.refClass(classValue.toString())));
+			}
+			body.invoke(holder.restTemplateField, "setMessageConverters").arg(messagerConvertersList);
+		} else {
+			body.invoke(holder.restTemplateField, "setMessageConverters").arg(JExpr._null());
+		}
+
 		// Default constructor
 		JMethod defaultConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
 		defaultConstructor.body().assign(holder.restTemplateField, JExpr._new(restTemplateClass));
+		defaultConstructor.body().invoke(setMessageConverters);
 		defaultConstructor.body().assign(holder.rootUrlField, JExpr.lit(typeElement.getAnnotation(Rest.class).value()));
+
+		// RestTemplate constructor
+		JMethod restTemplateConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
+		JVar restTemplateParam = restTemplateConstructor.param(restTemplateClass, "restTemplate");
+		restTemplateConstructor.body().assign(JExpr._this().ref(holder.restTemplateField), restTemplateParam);
+
+		// RequestFactory constructor
+		JMethod requestFactoryConstructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
+		JClass requestFactoryClass = activitiesHolder.refClass("org.springframework.http.client.ClientHttpRequestFactory");
+		JVar requestFactoryParam = requestFactoryConstructor.param(requestFactoryClass, "requestFactory");
+		requestFactoryConstructor.body().assign(holder.restTemplateField, JExpr._new(restTemplateClass).arg(requestFactoryParam));
+		requestFactoryConstructor.body().invoke(setMessageConverters);
 
 		// Implement getRestTemplate method
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();

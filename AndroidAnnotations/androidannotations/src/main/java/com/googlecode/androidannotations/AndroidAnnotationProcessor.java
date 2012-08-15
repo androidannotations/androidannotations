@@ -91,6 +91,7 @@ import com.googlecode.androidannotations.annotations.res.StringRes;
 import com.googlecode.androidannotations.annotations.res.TextArrayRes;
 import com.googlecode.androidannotations.annotations.res.TextRes;
 import com.googlecode.androidannotations.annotations.rest.Accept;
+import com.googlecode.androidannotations.annotations.rest.Converters;
 import com.googlecode.androidannotations.annotations.rest.Delete;
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Head;
@@ -214,6 +215,7 @@ import com.googlecode.androidannotations.validation.TraceValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewByIdValidator;
 import com.googlecode.androidannotations.validation.rest.AcceptValidator;
+import com.googlecode.androidannotations.validation.rest.ConvertersValidator;
 import com.googlecode.androidannotations.validation.rest.DeleteValidator;
 import com.googlecode.androidannotations.validation.rest.GetValidator;
 import com.googlecode.androidannotations.validation.rest.HeadValidator;
@@ -267,6 +269,7 @@ import com.sun.codemodel.JCodeModel;
 		Put.class, //
 		Delete.class, //
 		Accept.class, //
+		Converters.class, //
 		FromHtml.class, //
 		OptionsMenu.class, //
 		OptionsItem.class, //
@@ -433,6 +436,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new PostValidator(processingEnv));
 		modelValidator.register(new PutValidator(processingEnv));
 		modelValidator.register(new AcceptValidator(processingEnv));
+		modelValidator.register(new ConvertersValidator(processingEnv));
 		modelValidator.register(new AppValidator(processingEnv, androidManifest));
 		modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
@@ -504,7 +508,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new ExtraProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
 		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
-		modelProcessor.register(new RestProcessor(restImplementationHolder));
+		modelProcessor.register(new RestProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new PostProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new PutProcessor(processingEnv, restImplementationHolder));
