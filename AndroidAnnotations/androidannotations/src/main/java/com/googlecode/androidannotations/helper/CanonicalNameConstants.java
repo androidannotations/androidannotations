@@ -41,6 +41,8 @@ public final class CanonicalNameConstants {
 	public static final String ACTIVITY = "android.app.Activity";
 	public static final String EDITABLE = "android.text.Editable";
 	public static final String TEXT_WATCHER = "android.text.TextWatcher";
+	public static final String SEEKBAR = "android.widget.SeekBar";
+	public static final String ON_SEEKBAR_CHANGE_LISTENER = "android.widget.SeekBar.OnSeekBarChangeListener";
 	public static final String TEXT_VIEW = "android.widget.TextView";
 	public static final String VIEW = "android.view.View";
 	public static final String VIEW_ON_CLICK_LISTENER = "android.view.View.OnClickListener";

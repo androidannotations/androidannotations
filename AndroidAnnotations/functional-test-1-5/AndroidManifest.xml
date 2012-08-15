@@ -67,6 +67,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.efragment.MyFragmentActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.afterviews.AfterViewsActivity_" />
         <activity android:name=".SSLConnection_" />
+		<activity android:name=".SeekBarChangeListenedActivity_" />
 
         <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
 
