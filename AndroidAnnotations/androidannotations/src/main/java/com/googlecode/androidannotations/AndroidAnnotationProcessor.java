@@ -443,9 +443,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new BeanValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
 		modelValidator.register(new AfterViewsValidator(processingEnv));
-		if (traceActivated()) {
-			modelValidator.register(new TraceValidator(processingEnv));
-		}
+		modelValidator.register(new TraceValidator(processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
@@ -522,7 +520,9 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new RootContextProcessor());
 		modelProcessor.register(new BeanProcessor(processingEnv));
 		modelProcessor.register(new AfterViewsProcessor());
-		modelProcessor.register(new TraceProcessor());
+		if (traceActivated()) {
+			modelProcessor.register(new TraceProcessor());
+		}
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());
