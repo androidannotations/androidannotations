@@ -88,10 +88,10 @@ public class ProgressChangeProcessor implements DecoratingElementProcessor {
 		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
-			OnSeekBarChangeListenerHolder textWatcherHolder = helper.getOrCreateListener(codeModel, holder, idRef);
+			OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = helper.getOrCreateListener(codeModel, holder, idRef);
 
 			JInvocation textChangeCall;
-			JMethod methodToCall = textWatcherHolder.onProgressChangedMethod;
+			JMethod methodToCall = onSeekBarChangeListenerHolder.onProgressChangedMethod;
 
 			JBlock previousBody = codeModelHelper.removeBody(methodToCall);
 			JBlock methodBody = methodToCall.body();
