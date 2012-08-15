@@ -115,6 +115,16 @@ public final class CanonicalNameConstants {
 	public static final String ON_CREATE_EVENT = "roboguice.activity.event.OnCreateEvent";
 
 	/*
+	 * ORMLite
+	 */
+	public static final String DAO = "com.j256.ormlite.dao.Dao";
+	public static final String DAO_MANAGER = "com.j256.ormlite.dao.DaoManager";
+	public static final String CONNECTION_SOURCE = "com.j256.ormlite.support.ConnectionSource";
+	public static final String OPEN_HELPER_MANAGER = "com.j256.ormlite.android.apptools.OpenHelperManager";
+	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
+	public static final String SQL_EXCEPTION = "java.sql.SQLException";
+
+	/*
 	 * HttpClient
 	 */
 	public static final String CLIENT_CONNECTION_MANAGER = "org.apache.http.conn.ClientConnectionManager";

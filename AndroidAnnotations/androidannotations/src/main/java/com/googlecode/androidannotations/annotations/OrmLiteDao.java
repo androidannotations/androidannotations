@@ -13,19 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.afterviews;
+package com.googlecode.androidannotations.annotations;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EBean;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@EBean
-public class AfterViewBean {
+/**
+ * Should be used on custom classes to enable usage of AndroidAnnotations
+ * 
+ * Any view related code should happen in an {@link AfterViews} annotated
+ * method.<br>
+ * <br>
+ * 
+ * Most annotations are supported in {@link OrmLiteDao} classes
+ * 
+ */
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.FIELD)
+public @interface OrmLiteDao {
 
-	public boolean afterViewsCalled = false;
+	Class<?> model();
 
-	@AfterViews
-	public void afterViews() {
-		afterViewsCalled = true;
-	}
-
+	Class<?> helper();
 }
