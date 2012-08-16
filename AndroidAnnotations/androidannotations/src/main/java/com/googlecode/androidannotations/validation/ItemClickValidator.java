@@ -24,6 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -54,11 +55,11 @@ public class ItemClickValidator implements ElementValidator {
 
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
-		validatorHelper.idsExists(element, Res.ID, valid);
+		validatorHelper.resIdsExist(element, Res.ID, FallbackStrategy.USE_ELEMENT_NAME, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.doesntThrowException((ExecutableElement) element, valid);
+		validatorHelper.doesntThrowException(element, valid);
 
 		validatorHelper.uniqueId(element, validatedElements, valid);
 		ExecutableElement executableElement = (ExecutableElement) element;

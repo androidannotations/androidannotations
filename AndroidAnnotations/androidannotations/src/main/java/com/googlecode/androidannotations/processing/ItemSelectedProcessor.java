@@ -35,6 +35,7 @@ import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -50,7 +51,7 @@ import com.sun.codemodel.JVar;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-public class ItemSelectedProcessor implements ElementProcessor {
+public class ItemSelectedProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;
 
@@ -64,8 +65,7 @@ public class ItemSelectedProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
@@ -73,8 +73,7 @@ public class ItemSelectedProcessor implements ElementProcessor {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
-		ItemSelect annotation = element.getAnnotation(ItemSelect.class);
-		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "ItemSelected", holder);
+		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		JDefinedClass onItemSelectedListenerClass = codeModel.anonymousClass(classes.ON_ITEM_SELECTED_LISTENER);
 		JMethod onItemSelectedMethod = onItemSelectedListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onItemSelected");

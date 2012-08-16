@@ -28,7 +28,7 @@ import com.googlecode.androidannotations.annotations.App;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JInvocation;
 
-public class AppProcessor implements ElementProcessor {
+public class AppProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -36,9 +36,7 @@ public class AppProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		String fieldName = element.getSimpleName().toString();
 
@@ -50,7 +48,7 @@ public class AppProcessor implements ElementProcessor {
 		if (APPLICATION.equals(applicationTypeQualifiedName)) {
 			holder.initIfActivityBody.assign(ref(fieldName), getApplication);
 		} else {
-			holder.initIfActivityBody.assign(ref(fieldName), cast(eBeansHolder.refClass(applicationTypeQualifiedName), getApplication));
+			holder.initIfActivityBody.assign(ref(fieldName), cast(holder.refClass(applicationTypeQualifiedName), getApplication));
 		}
 
 	}

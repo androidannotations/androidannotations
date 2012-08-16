@@ -26,15 +26,15 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -44,12 +44,12 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EFragmentProcessor implements ElementProcessor {
+public class EFragmentProcessor implements GeneratingElementProcessor {
 
-	private final IRClass rClass;
+	private final IdAnnotationHelper helper;
 
-	public EFragmentProcessor(IRClass rClass) {
-		this.rClass = rClass;
+	public EFragmentProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class EFragmentProcessor implements ElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = eBeansHolder.create(element);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget());
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -79,6 +79,7 @@ public class EFragmentProcessor implements ElementProcessor {
 		{
 			// init
 			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+			holder.init.param(holder.classes().BUNDLE, "savedInstanceState");
 		}
 
 		{
@@ -89,7 +90,7 @@ public class EFragmentProcessor implements ElementProcessor {
 			JVar onCreateSavedInstanceState = onCreate.param(classes.BUNDLE, "savedInstanceState");
 			JBlock onCreateBody = onCreate.body();
 
-			onCreateBody.invoke(holder.init);
+			onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
 
 			onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 		}
@@ -104,20 +105,6 @@ public class EFragmentProcessor implements ElementProcessor {
 			holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 		}
 
-		JFieldRef contentViewId;
-		{
-			// Extract contentViewId
-			EFragment layoutAnnotation = element.getAnnotation(EFragment.class);
-			int layoutIdValue = layoutAnnotation.value();
-
-			if (layoutIdValue != Id.DEFAULT_VALUE) {
-				IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-				contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
-			} else {
-				contentViewId = null;
-			}
-		}
-
 		{
 			// onCreateView()
 			JMethod onCreateView = holder.eBean.method(PUBLIC, classes.VIEW, "onCreateView");
@@ -128,6 +115,8 @@ public class EFragmentProcessor implements ElementProcessor {
 
 			JBlock body = onCreateView.body();
 			body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
+
+			JFieldRef contentViewId = helper.extractOneAnnotationFieldRef(holder, element, Res.LAYOUT, false);
 
 			if (contentViewId != null) {
 				body._if(contentView.eq(_null())) //

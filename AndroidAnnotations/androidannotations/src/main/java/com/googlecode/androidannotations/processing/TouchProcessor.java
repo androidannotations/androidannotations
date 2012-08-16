@@ -32,6 +32,7 @@ import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -46,7 +47,7 @@ import com.sun.codemodel.JVar;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-public class TouchProcessor implements ElementProcessor {
+public class TouchProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;
 
@@ -60,8 +61,7 @@ public class TouchProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
@@ -73,8 +73,7 @@ public class TouchProcessor implements ElementProcessor {
 
 		boolean hasItemParameter = parameters.size() == 2;
 
-		Touch annotation = element.getAnnotation(Touch.class);
-		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Touched", holder);
+		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		JDefinedClass listenerClass = codeModel.anonymousClass(classes.ON_TOUCH_LISTENER);
 		JMethod listenerMethod = listenerClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onTouch");

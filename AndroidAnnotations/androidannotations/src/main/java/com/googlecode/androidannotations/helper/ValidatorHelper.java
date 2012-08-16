@@ -172,8 +172,21 @@ public class ValidatorHelper {
 		hasClassAnnotation(element, enclosingElement, validatedElements, EActivity.class, valid);
 	}
 
+	public void enclosingElementHasEActivityOrEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		@SuppressWarnings("unchecked")
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class);
+		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
+	}
+
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		hasClassAnnotation(element, element, validatedElements, EActivity.class, valid);
+	}
+
+	public void hasEActivityOrEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
+		@SuppressWarnings("unchecked")
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class);
+		hasOneOfClassAnnotations(element, element, validatedElements, validAnnotations, valid);
 	}
 
 	public void enclosingElementHasEnhancedViewSupportAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
@@ -198,7 +211,7 @@ public class ValidatorHelper {
 		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
 			if (element.getAnnotation(validAnnotation) != null) {
 
-				Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(validAnnotation);
+				Set<? extends Element> layoutAnnotatedElements = validatedElements.getRootAnnotatedElements(validAnnotation.getName());
 
 				/*
 				 * This is for the case where the element has the right
@@ -269,7 +282,7 @@ public class ValidatorHelper {
 
 	public void elementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, IsValid valid, String error) {
 
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(annotation);
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getRootAnnotatedElements(annotation.getName());
 
 		if (!layoutAnnotatedElements.contains(element)) {
 			valid.invalidate();
@@ -295,7 +308,7 @@ public class ValidatorHelper {
 	}
 
 	public boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements) {
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getAnnotatedElements(annotation);
+		Set<? extends Element> layoutAnnotatedElements = validatedElements.getRootAnnotatedElements(annotation.getName());
 		return layoutAnnotatedElements.contains(element);
 	}
 
@@ -330,7 +343,7 @@ public class ValidatorHelper {
 	}
 
 	public void typeOrTargetValueHasAnnotation(Class<? extends Annotation> annotation, Element element, IsValid valid) {
-		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassValue(element);
+		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
 
 		if (targetAnnotationClassValue != null) {
 			typeHasAnnotation(annotation, targetAnnotationClassValue, element, valid);
@@ -665,7 +678,7 @@ public class ValidatorHelper {
 			if (elementTypeName.endsWith(GENERATION_SUFFIX)) {
 				String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - GENERATION_SUFFIX.length());
 
-				Set<? extends Element> sharedPrefElements = validatedElements.getAnnotatedElements(SharedPref.class);
+				Set<? extends Element> sharedPrefElements = validatedElements.getRootAnnotatedElements(SharedPref.class.getName());
 
 				for (Element sharedPrefElement : sharedPrefElements) {
 					TypeElement sharedPrefTypeElement = (TypeElement) sharedPrefElement;

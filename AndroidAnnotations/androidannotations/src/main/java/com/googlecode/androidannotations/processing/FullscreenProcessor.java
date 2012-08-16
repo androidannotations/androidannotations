@@ -26,7 +26,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 
-public class FullscreenProcessor implements ElementProcessor {
+public class FullscreenProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -34,9 +34,7 @@ public class FullscreenProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-
-		EBeanHolder holder = activitiesHolder.getRelativeEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		JFieldRef fullScreen = holder.classes().WINDOW_MANAGER_LAYOUT_PARAMS.staticRef("FLAG_FULLSCREEN");
 

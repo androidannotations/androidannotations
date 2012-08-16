@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Use on activity fields to save and restore their values when the
  * system calls onSaveInstanceState(Bundle) and onCreate(Bundle).
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface InstanceState {
 }

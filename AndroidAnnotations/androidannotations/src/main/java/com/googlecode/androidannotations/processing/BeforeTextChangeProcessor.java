@@ -29,6 +29,7 @@ import com.googlecode.androidannotations.annotations.BeforeTextChange;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.TextWatcherHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpression;
@@ -40,7 +41,7 @@ import com.sun.codemodel.JVar;
 /**
  * @author Mathieu Boniface
  */
-public class BeforeTextChangeProcessor implements ElementProcessor {
+public class BeforeTextChangeProcessor implements DecoratingElementProcessor {
 
 	private final TextWatcherHelper helper;
 
@@ -57,8 +58,7 @@ public class BeforeTextChangeProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
 		String methodName = element.getSimpleName().toString();
 
@@ -97,8 +97,7 @@ public class BeforeTextChangeProcessor implements ElementProcessor {
 
 		}
 
-		BeforeTextChange annotation = element.getAnnotation(BeforeTextChange.class);
-		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "BeforeTextChanged", holder);
+		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
 			TextWatcherHolder textWatcherHolder = helper.getOrCreateListener(codeModel, holder, idRef, viewParameterType);

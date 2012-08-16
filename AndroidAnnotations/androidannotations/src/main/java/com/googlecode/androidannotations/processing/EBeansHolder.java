@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.processing;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -131,7 +132,7 @@ public class EBeansHolder {
 
 	}
 
-	private final Map<Element, EBeanHolder> EBeanHolders = new HashMap<Element, EBeanHolder>();
+	private final Map<Element, EBeanHolder> eBeanHolders = new HashMap<Element, EBeanHolder>();
 
 	private final JCodeModel codeModel;
 
@@ -144,22 +145,23 @@ public class EBeansHolder {
 		classes = new Classes();
 	}
 
-	public EBeanHolder create(Element activityElement) {
-		EBeanHolder activityHolder = new EBeanHolder(this);
-		EBeanHolders.put(activityElement, activityHolder);
+	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation) {
+		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation);
+		eBeanHolders.put(element, activityHolder);
 		return activityHolder;
 	}
 
-	public EBeanHolder getEnclosingEBeanHolder(Element enclosedElement) {
-		Element activityElement = enclosedElement.getEnclosingElement();
-		return EBeanHolders.get(activityElement);
-	}
-
-	public EBeanHolder getRelativeEBeanHolder(Element element) {
-		return EBeanHolders.get(element);
+	public EBeanHolder getEBeanHolder(Element element) {
+		return eBeanHolders.get(element);
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {
+
+		int arrayCounter = 0;
+		while (fullyQualifiedClassName.endsWith("[]")) {
+			arrayCounter++;
+			fullyQualifiedClassName = fullyQualifiedClassName.substring(0, fullyQualifiedClassName.length() - 2);
+		}
 
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
@@ -170,6 +172,10 @@ public class EBeansHolder {
 				refClass = codeModel.directClass(fullyQualifiedClassName);
 			}
 			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+
+		for (int i = 0; i < arrayCounter; i++) {
+			refClass = refClass.array();
 		}
 
 		return refClass;

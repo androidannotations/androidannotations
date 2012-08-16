@@ -26,7 +26,7 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
-import com.googlecode.androidannotations.processing.EBeansHolder;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -35,6 +35,8 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 
 public class GetProcessor extends MethodProcessor {
+
+	private EBeanHolder holder;
 
 	public GetProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
@@ -46,9 +48,9 @@ public class GetProcessor extends MethodProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
-		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(element);
+		this.holder = holder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
@@ -72,7 +74,7 @@ public class GetProcessor extends MethodProcessor {
 		Get getAnnotation = element.getAnnotation(Get.class);
 		String urlSuffix = getAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
 	}
 
 	@Override
@@ -105,7 +107,7 @@ public class GetProcessor extends MethodProcessor {
 
 	@Override
 	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(body, executableElement);
+		return generateHttpHeadersVar(holder, body, executableElement);
 	}
 
 }

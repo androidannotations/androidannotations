@@ -13,15 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package com.googlecode.androidannotations.annotations;
 
-import javax.lang.model.element.Element;
+public abstract class ResId {
 
-import com.googlecode.androidannotations.helper.HasTarget;
-import com.sun.codemodel.JCodeModel;
+	public static final int DEFAULT_VALUE = -1;
 
-public interface ElementProcessor extends HasTarget {
-
-	void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception;
+	private ResId() {
+	}
 
 }

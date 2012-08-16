@@ -16,50 +16,44 @@
 package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
-import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
+import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.ModelConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class EActivityProcessor implements ElementProcessor {
+public class EActivityProcessor implements GeneratingElementProcessor {
 
 	private final IRClass rClass;
 	private List<TypeElement> greendroidActivityElements;
@@ -67,10 +61,12 @@ public class EActivityProcessor implements ElementProcessor {
 	private final AnnotationHelper annotationHelper;
 
 	private final ProcessingEnvironment processingEnv;
+	private final APTCodeModelHelper aptCodeModelHelper;
 
 	public EActivityProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		this.processingEnv = processingEnv;
 		annotationHelper = new AnnotationHelper(processingEnv);
+		aptCodeModelHelper = new APTCodeModelHelper();
 		this.rClass = rClass;
 
 		greendroidActivityElements = new ArrayList<TypeElement>();
@@ -88,9 +84,9 @@ public class EActivityProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = activitiesHolder.create(element);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget());
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -101,13 +97,7 @@ public class EActivityProcessor implements ElementProcessor {
 
 		boolean usesGreenDroid = usesGreenDroid(typeElement);
 
-		int modifiers;
-		boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT);
-		if (isAbstract) {
-			modifiers = JMod.PUBLIC | JMod.ABSTRACT;
-		} else {
-			modifiers = JMod.PUBLIC | JMod.FINAL;
-		}
+		int modifiers = JMod.PUBLIC | JMod.FINAL;
 
 		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
 
@@ -118,13 +108,7 @@ public class EActivityProcessor implements ElementProcessor {
 		holder.contextRef = _this();
 
 		// onCreate
-		int onCreateVisibility;
-		if (isAbstract) {
-			onCreateVisibility = inheritedOnCreateVisibility(typeElement);
-		} else {
-			onCreateVisibility = PUBLIC;
-		}
-		JMethod onCreate = holder.eBean.method(onCreateVisibility, codeModel.VOID, "onCreate");
+		JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
 		JClass bundleClass = holder.classes().BUNDLE;
@@ -149,13 +133,11 @@ public class EActivityProcessor implements ElementProcessor {
 
 		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 
-		EActivity layoutAnnotation = element.getAnnotation(EActivity.class);
-		int layoutIdValue = layoutAnnotation.value();
+		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, EActivity.class, rClass.get(Res.LAYOUT), false);
 
 		JFieldRef contentViewId;
-		if (layoutIdValue != Id.DEFAULT_VALUE) {
-			IRInnerClass rInnerClass = rClass.get(Res.LAYOUT);
-			contentViewId = rInnerClass.getIdStaticRef(layoutIdValue, holder);
+		if (fieldRefs.size() == 1) {
+			contentViewId = fieldRefs.get(0);
 		} else {
 			contentViewId = null;
 		}
@@ -191,7 +173,7 @@ public class EActivityProcessor implements ElementProcessor {
 			JClass keyEventClass = holder.classes().KEY_EVENT;
 			JVar eventParam = onKeyDownMethod.param(keyEventClass, "event");
 
-			JClass versionHelperClass = codeModel.ref(SdkVersionHelper.class);
+			JClass versionHelperClass = holder.refClass(SdkVersionHelper.class);
 
 			JInvocation sdkInt = versionHelperClass.staticInvoke("getSdkInt");
 
@@ -211,55 +193,7 @@ public class EActivityProcessor implements ElementProcessor {
 
 		}
 
-		if (!isAbstract) {
-			JClass contextClass = holder.classes().CONTEXT;
-			JClass intentClass = holder.classes().INTENT;
-
-			{
-				holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
-
-				JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
-
-				holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
-				{
-					// Constructor
-					JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
-					JVar constructorContextParam = constructor.param(contextClass, "context");
-					JBlock constructorBody = constructor.body();
-					constructorBody.assign(contextField, constructorContextParam);
-					constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.eBean.dotclass()));
-				}
-
-				{
-					// get()
-					JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
-					method.body()._return(holder.intentField);
-				}
-
-				{
-					// flags()
-					JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
-					JVar flagsParam = method.param(codeModel.INT, "flags");
-					JBlock body = method.body();
-					body.invoke(holder.intentField, "setFlags").arg(flagsParam);
-					body._return(_this());
-				}
-
-				{
-					// start
-					JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
-					method.body().invoke(contextField, "startActivity").arg(holder.intentField);
-				}
-
-				{
-					// intent()
-					JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
-					JVar contextParam = method.param(contextClass, "context");
-					method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
-				}
-			}
-
-		}
+		aptCodeModelHelper.addActivityIntentBuilder(codeModel, holder);
 
 	}
 
@@ -280,36 +214,6 @@ public class EActivityProcessor implements ElementProcessor {
 		body.invoke(holder.afterSetContentView);
 	}
 
-	private int inheritedOnCreateVisibility(TypeElement activityElement) {
-		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
-
-		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
-
-		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
-			if (isOnCreateMethod(activityInheritedMethod)) {
-				Set<Modifier> modifiers = activityInheritedMethod.getModifiers();
-				for (Modifier modifier : modifiers) {
-					if (modifier == Modifier.PUBLIC) {
-						return JMod.PUBLIC;
-					} else if (modifier == Modifier.PROTECTED) {
-						return JMod.PROTECTED;
-					}
-				}
-				return JMod.PUBLIC;
-			}
-		}
-		return PUBLIC;
-	}
-
-	private boolean isOnCreateMethod(ExecutableElement method) {
-
-		List<? extends VariableElement> parameters = method.getParameters();
-		return method.getSimpleName().toString().equals("onCreate") //
-				&& parameters.size() == 1 //
-				&& parameters.get(0).asType().toString().equals("android.os.Bundle") //
-		;
-	}
-
 	private boolean hasOnBackPressedMethod(TypeElement activityElement) {
 
 		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
@@ -317,15 +221,18 @@ public class EActivityProcessor implements ElementProcessor {
 		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
 
 		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
-			if (isOnBackPressedMethod(activityInheritedMethod)) {
+			if (isCustomOnBackPressedMethod(activityInheritedMethod)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean isOnBackPressedMethod(ExecutableElement method) {
-		return method.getSimpleName().toString().equals("onBackPressed") //
+	private boolean isCustomOnBackPressedMethod(ExecutableElement method) {
+		TypeElement methodClass = (TypeElement) method.getEnclosingElement();
+		boolean methodBelongsToActivityClass = methodClass.getQualifiedName().toString().equals(CanonicalNameConstants.ACTIVITY);
+		return !methodBelongsToActivityClass //
+				&& method.getSimpleName().toString().equals("onBackPressed") //
 				&& method.getThrownTypes().size() == 0 //
 				&& method.getModifiers().contains(Modifier.PUBLIC) //
 				&& method.getReturnType().getKind().equals(TypeKind.VOID) //

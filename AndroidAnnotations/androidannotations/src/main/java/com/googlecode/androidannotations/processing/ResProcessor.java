@@ -20,29 +20,30 @@ import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.res.HtmlRes;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
-public class ResProcessor implements ElementProcessor {
+public class ResProcessor implements DecoratingElementProcessor {
 
-	private final IRClass rClass;
 	private final AndroidRes androidValue;
 
-	public ResProcessor(AndroidRes androidValue, IRClass rClass) {
-		this.rClass = rClass;
+	private final IdAnnotationHelper annotationHelper;
+
+	public ResProcessor(ProcessingEnvironment processingEnv, AndroidRes androidValue, IRClass rClass) {
 		this.androidValue = androidValue;
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -51,23 +52,14 @@ public class ResProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();
 
-		int idValue = androidValue.idFromElement(element);
-
 		Res resInnerClass = androidValue.getRInnerClass();
 
-		IRInnerClass rInnerClass = rClass.get(resInnerClass);
-		JFieldRef idRef;
-		if (idValue == Id.DEFAULT_VALUE) {
-			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-		} else {
-			idRef = rInnerClass.getIdStaticRef(idValue, holder);
-		}
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, resInnerClass, true);
 
 		JBlock methodBody = holder.init.body();
 

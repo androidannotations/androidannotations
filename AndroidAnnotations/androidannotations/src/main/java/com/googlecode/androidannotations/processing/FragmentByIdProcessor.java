@@ -28,27 +28,23 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.FragmentById;
-import com.googlecode.androidannotations.annotations.Id;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class FragmentByIdProcessor implements ElementProcessor {
+public class FragmentByIdProcessor implements DecoratingElementProcessor {
 
-	private final IRClass rClass;
-	private final AnnotationHelper annotationHelper;
+	private final IdAnnotationHelper annotationHelper;
 
 	public FragmentByIdProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		annotationHelper = new AnnotationHelper(processingEnv);
-		this.rClass = rClass;
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -57,26 +53,14 @@ public class FragmentByIdProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
 		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror elementType = element.asType();
 		String typeQualifiedName = elementType.toString();
-
-		FragmentById annotation = element.getAnnotation(FragmentById.class);
-		int idValue = annotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		JFieldRef idRef;
-		if (idValue == Id.DEFAULT_VALUE) {
-			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-		} else {
-			idRef = rInnerClass.getIdStaticRef(idValue, holder);
-		}
 
 		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT).asType();
 
@@ -121,6 +105,9 @@ public class FragmentByIdProcessor implements ElementProcessor {
 		}
 
 		JBlock methodBody = holder.afterSetContentView.body();
+
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.ID, true);
+
 		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke(findFragmentById).arg(idRef)));
 	}
 }

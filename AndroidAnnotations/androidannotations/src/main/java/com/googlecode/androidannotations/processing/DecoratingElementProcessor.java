@@ -13,13 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package com.googlecode.androidannotations.processing;
 
-public abstract class Id {
+import javax.lang.model.element.Element;
 
-	public static final int DEFAULT_VALUE = -1;
+import com.googlecode.androidannotations.helper.HasTarget;
+import com.sun.codemodel.JCodeModel;
 
-	private Id() {
-	}
+/**
+ * An enclosed element is either a field or a method. If you come up with a
+ * better name, please let us know !
+ */
+public interface DecoratingElementProcessor extends HasTarget {
+
+	void process(Element element, JCodeModel codeModel, EBeanHolder eBeanHolder) throws Exception;
 
 }

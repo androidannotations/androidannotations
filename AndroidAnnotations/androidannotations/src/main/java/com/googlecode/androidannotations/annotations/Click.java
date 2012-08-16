@@ -30,10 +30,12 @@ import java.lang.annotation.Target;
  * name will be used as the R.id.* field name.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Click {
 
-	int[] value() default Id.DEFAULT_VALUE;
+	int[] value() default ResId.DEFAULT_VALUE;
+
+	String[] resName() default "";
 
 }

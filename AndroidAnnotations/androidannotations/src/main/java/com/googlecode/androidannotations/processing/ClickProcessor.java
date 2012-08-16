@@ -28,9 +28,10 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
+import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -45,12 +46,14 @@ import com.sun.codemodel.JVar;
  * @author Mathieu Boniface
  * @author Pierre-Yves
  */
-public class ClickProcessor implements ElementProcessor {
+public class ClickProcessor implements DecoratingElementProcessor {
 
-	private final IdAnnotationHelper helper;
+	private final AnnotationHelper helper;
+	private final IRClass rClass;
 
 	public ClickProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		this.rClass = rClass;
+		helper = new AnnotationHelper(processingEnv);
 	}
 
 	@Override
@@ -59,9 +62,7 @@ public class ClickProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
@@ -71,8 +72,7 @@ public class ClickProcessor implements ElementProcessor {
 
 		boolean hasViewParameter = parameters.size() == 1;
 
-		Click annotation = element.getAnnotation(Click.class);
-		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Clicked", holder);
+		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(Res.ID), true);
 
 		JDefinedClass onClickListenerClass = codeModel.anonymousClass(classes.VIEW_ON_CLICK_LISTENER);
 		JMethod onClickMethod = onClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");

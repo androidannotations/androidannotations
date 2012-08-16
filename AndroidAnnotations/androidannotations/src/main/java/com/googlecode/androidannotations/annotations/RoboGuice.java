@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Should be used on Activity classes that use the RoboGuice framework
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface RoboGuice {
 	/**

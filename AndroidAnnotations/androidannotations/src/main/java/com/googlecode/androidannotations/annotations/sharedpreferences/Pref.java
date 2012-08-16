@@ -29,7 +29,7 @@ import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferences
  * therefore extends {@link SharedPreferencesHelper}.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface Pref {
 }

@@ -24,7 +24,7 @@ import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.test15.R;
 
 @EActivity
-@OptionsMenu(R.menu.my_menu)
+@OptionsMenu({R.menu.my_menu, R.menu.my_menu2})
 public class OptionsMenuActivity extends Activity {
 
 	boolean menuRefreshSelected;

@@ -29,6 +29,7 @@ import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -45,7 +46,7 @@ import com.sun.codemodel.JVar;
  * @author Pierre-Yves Ricau
  * @author Mathieu Boniface
  */
-public class LongClickProcessor implements ElementProcessor {
+public class LongClickProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;
 
@@ -59,8 +60,7 @@ public class LongClickProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
@@ -72,8 +72,7 @@ public class LongClickProcessor implements ElementProcessor {
 
 		boolean hasItemParameter = parameters.size() == 1;
 
-		LongClick annotation = element.getAnnotation(LongClick.class);
-		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "LongClicked", holder);
+		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		JDefinedClass listenerAnonymousClass = codeModel.anonymousClass(classes.ON_LONG_CLICK_LISTENER);
 		JMethod listenerMethod = listenerAnonymousClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onLongClick");

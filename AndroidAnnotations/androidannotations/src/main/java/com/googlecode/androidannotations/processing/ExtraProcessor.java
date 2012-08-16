@@ -52,7 +52,7 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
-public class ExtraProcessor implements ElementProcessor {
+public class ExtraProcessor implements DecoratingElementProcessor {
 
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 	private final ProcessingEnvironment processingEnv;
@@ -67,7 +67,7 @@ public class ExtraProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
@@ -79,7 +79,6 @@ public class ExtraProcessor implements ElementProcessor {
 		TypeMirror elementType = element.asType();
 		boolean isPrimitive = elementType.getKind().isPrimitive();
 
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
 		Classes classes = holder.classes();
 
 		if (!isPrimitive && holder.cast == null) {
@@ -115,6 +114,10 @@ public class ExtraProcessor implements ElementProcessor {
 
 		containsKeyCatch.body().add(logError);
 
+		/*
+		 * holder.intentBuilderClass may be null if the annotated component is
+		 * an abstract activity
+		 */
 		if (holder.intentBuilderClass != null) {
 			{
 				// flags()

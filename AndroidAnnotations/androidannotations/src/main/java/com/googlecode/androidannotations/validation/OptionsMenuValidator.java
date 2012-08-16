@@ -23,6 +23,7 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -46,9 +47,9 @@ public class OptionsMenuValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.hasEActivity(element, validatedElements, valid);
+		validatorHelper.hasEActivityOrEFragment(element, validatedElements, valid);
 
-		validatorHelper.idExists(element, Res.MENU, false, false, valid);
+		validatorHelper.resIdsExist(element, Res.MENU, FallbackStrategy.NEED_RES_ID, valid);
 
 		return valid.isValid();
 	}

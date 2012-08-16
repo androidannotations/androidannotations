@@ -62,7 +62,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class SharedPrefProcessor implements ElementProcessor {
+public class SharedPrefProcessor implements GeneratingElementProcessor {
 
 	private static class EditorFieldHolder {
 		public final Class<?> fieldClass;
@@ -91,7 +91,7 @@ public class SharedPrefProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -114,11 +114,11 @@ public class SharedPrefProcessor implements ElementProcessor {
 		// Static editor class
 		JDefinedClass editorClass = helperClass._class(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
 
-		editorClass._extends(codeModel.ref(EditorHelper.class).narrow(editorClass));
+		editorClass._extends(eBeansHolder.refClass(EditorHelper.class).narrow(editorClass));
 
 		// Editor constructor
 		JMethod editorConstructor = editorClass.constructor(JMod.NONE);
-		JClass sharedPreferencesClass = codeModel.ref("android.content.SharedPreferences");
+		JClass sharedPreferencesClass = eBeansHolder.refClass("android.content.SharedPreferences");
 		JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
 		editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
 
@@ -126,14 +126,14 @@ public class SharedPrefProcessor implements ElementProcessor {
 		for (ExecutableElement method : validMethods) {
 			String returnType = method.getReturnType().toString();
 			EditorFieldHolder editorFieldHolder = EDITOR_FIELD_BY_TYPE.get(returnType);
-			JClass editorFieldClass = codeModel.ref(editorFieldHolder.fieldClass);
+			JClass editorFieldClass = eBeansHolder.refClass(editorFieldHolder.fieldClass);
 			String fieldName = method.getSimpleName().toString();
 			JMethod editorFieldMethod = editorClass.method(JMod.PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
 			editorFieldMethod.body()._return(JExpr.invoke(editorFieldHolder.fieldMethodName).arg(fieldName));
 		}
 
 		// Helper constructor
-		JClass contextClass = codeModel.ref("android.content.Context");
+		JClass contextClass = eBeansHolder.refClass("android.content.Context");
 
 		SharedPref sharedPrefAnnotation = typeElement.getAnnotation(SharedPref.class);
 		Scope scope = sharedPrefAnnotation.value();
@@ -143,7 +143,7 @@ public class SharedPrefProcessor implements ElementProcessor {
 		case ACTIVITY_DEFAULT: {
 
 			JVar contextParam = constructor.param(contextClass, "context");
-			JMethod getLocalClassName = getLocalClassName(helperClass, codeModel);
+			JMethod getLocalClassName = getLocalClassName(eBeansHolder, helperClass, codeModel);
 			constructor.body().invoke("super") //
 					.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam)) //
@@ -152,7 +152,7 @@ public class SharedPrefProcessor implements ElementProcessor {
 		}
 		case ACTIVITY: {
 			JVar contextParam = constructor.param(contextClass, "context");
-			JMethod getLocalClassName = getLocalClassName(helperClass, codeModel);
+			JMethod getLocalClassName = getLocalClassName(eBeansHolder, helperClass, codeModel);
 			constructor.body().invoke("super") //
 					.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam) //
@@ -170,7 +170,7 @@ public class SharedPrefProcessor implements ElementProcessor {
 			break;
 		}
 		case APPLICATION_DEFAULT: {
-			JClass preferenceManagerClass = codeModel.ref("android.preference.PreferenceManager");
+			JClass preferenceManagerClass = eBeansHolder.refClass("android.preference.PreferenceManager");
 			JVar contextParam = constructor.param(contextClass, "context");
 			constructor.body() //
 					.invoke("super") //
@@ -243,11 +243,11 @@ public class SharedPrefProcessor implements ElementProcessor {
 		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(fieldName).arg(defaultValue));
 	}
 
-	private JMethod getLocalClassName(JDefinedClass helperClass, JCodeModel codeModel) {
+	private JMethod getLocalClassName(EBeansHolder eBeansHolder, JDefinedClass helperClass, JCodeModel codeModel) {
 
-		JClass stringClass = codeModel.ref(String.class);
+		JClass stringClass = eBeansHolder.refClass(String.class);
 		JMethod getLocalClassName = helperClass.method(PRIVATE | STATIC, stringClass, "getLocalClassName");
-		JClass contextClass = codeModel.ref("android.content.Context");
+		JClass contextClass = eBeansHolder.refClass("android.content.Context");
 
 		JVar contextParam = getLocalClassName.param(contextClass, "context");
 
@@ -262,9 +262,9 @@ public class SharedPrefProcessor implements ElementProcessor {
 		JExpression condition = className.invoke("startsWith").arg(packageName).not() //
 				.cor(className.invoke("length").lte(packageLen)) //
 				.cor(className.invoke("charAt").arg(packageLen).ne(lit('.')));
-		
+
 		body._if(condition)._then()._return(className);
-		
+
 		body._return(className.invoke("substring").arg(packageLen.plus(lit(1))));
 
 		return getLocalClassName;

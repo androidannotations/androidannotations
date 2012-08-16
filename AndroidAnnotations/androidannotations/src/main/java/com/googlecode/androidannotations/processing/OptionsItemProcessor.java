@@ -35,6 +35,7 @@ import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.SherlockHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
@@ -48,7 +49,7 @@ import com.sun.codemodel.JVar;
 /**
  * @author Pierre-Yves Ricau
  */
-public class OptionsItemProcessor implements ElementProcessor {
+public class OptionsItemProcessor implements DecoratingElementProcessor {
 
 	private final IdAnnotationHelper helper;
 
@@ -65,8 +66,7 @@ public class OptionsItemProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder activitiesHolder) {
-		EBeanHolder holder = activitiesHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String methodName = element.getSimpleName().toString();
@@ -85,8 +85,7 @@ public class OptionsItemProcessor implements ElementProcessor {
 
 		boolean hasItemParameter = parameters.size() == 1;
 
-		OptionsItem annotation = element.getAnnotation(OptionsItem.class);
-		List<JFieldRef> idsRefs = helper.extractFieldRefsFromAnnotationValues(element, annotation.value(), "Selected", holder);
+		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		if (holder.onOptionsItemSelectedSwitch == null) {
 			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");

@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * must belong to an activity annotated with @Layout.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Background {
 }

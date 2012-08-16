@@ -34,7 +34,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JInvocation;
 
-public class BeanProcessor implements ElementProcessor {
+public class BeanProcessor implements DecoratingElementProcessor {
 
 	private TargetAnnotationHelper annotationHelper;
 
@@ -48,12 +48,10 @@ public class BeanProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
-		
-		
-		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassValue(element);
-		
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
+
+		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
+
 		TypeMirror elementType;
 		if (targetAnnotationClassValue != null) {
 			elementType = targetAnnotationClassValue;
@@ -65,7 +63,7 @@ public class BeanProcessor implements ElementProcessor {
 
 		String typeQualifiedName = elementType.toString();
 
-		JClass injectedClass = codeModel.ref(typeQualifiedName + GENERATION_SUFFIX);
+		JClass injectedClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
 
 		{
 			// getInstance

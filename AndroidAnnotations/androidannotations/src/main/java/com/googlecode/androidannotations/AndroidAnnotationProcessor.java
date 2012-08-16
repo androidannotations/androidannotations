@@ -110,7 +110,6 @@ import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AndroidSystemServices;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.model.AnnotationElementsHolder;
-import com.googlecode.androidannotations.model.EmptyAnnotationElements;
 import com.googlecode.androidannotations.model.ModelExtractor;
 import com.googlecode.androidannotations.processing.AfterInjectProcessor;
 import com.googlecode.androidannotations.processing.AfterTextChangeProcessor;
@@ -344,9 +343,11 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
 
-		JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
+		if (validatedModel != null) {
+			JCodeModel codeModel = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
 
-		generateSources(codeModel);
+			generateSources(codeModel);
+		}
 	}
 
 	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -355,7 +356,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		timeStats.start("Extract Annotations");
-		ModelExtractor modelExtractor = new ModelExtractor();
+		ModelExtractor modelExtractor = new ModelExtractor(processingEnv, getSupportedAnnotationClasses());
 		AnnotationElementsHolder extractedModel = modelExtractor.extract(annotations, roundEnv);
 		timeStats.stop("Extract Annotations");
 		return extractedModel;
@@ -392,7 +393,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
 			validatedAnnotations = modelValidator.validate(extractedModel);
 		} else {
-			validatedAnnotations = EmptyAnnotationElements.INSTANCE;
+			validatedAnnotations = null;
 		}
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;
@@ -446,9 +447,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new BeanValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
 		modelValidator.register(new AfterViewsValidator(processingEnv));
-		if (traceActivated()) {
-			modelValidator.register(new TraceValidator(processingEnv));
-		}
+		modelValidator.register(new TraceValidator(processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
@@ -486,17 +485,17 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new EServiceProcessor());
 		modelProcessor.register(new EReceiverProcessor());
 		modelProcessor.register(new EProviderProcessor());
-		modelProcessor.register(new EFragmentProcessor(rClass));
-		modelProcessor.register(new EViewGroupProcessor(rClass));
+		modelProcessor.register(new EFragmentProcessor(processingEnv, rClass));
+		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewProcessor());
 		modelProcessor.register(new EBeanProcessor());
 		modelProcessor.register(new SharedPrefProcessor());
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());
-		modelProcessor.register(new ViewByIdProcessor(rClass));
+		modelProcessor.register(new ViewByIdProcessor(processingEnv, rClass));
 		modelProcessor.register(new FragmentByIdProcessor(processingEnv, rClass));
 		modelProcessor.register(new FragmentByTagProcessor(processingEnv));
-		modelProcessor.register(new FromHtmlProcessor(rClass));
+		modelProcessor.register(new FromHtmlProcessor(processingEnv, rClass));
 		modelProcessor.register(new ClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new LongClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new TouchProcessor(processingEnv, rClass));
@@ -504,7 +503,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new ItemSelectedProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemLongClickProcessor(processingEnv, rClass));
 		for (AndroidRes androidRes : AndroidRes.values()) {
-			modelProcessor.register(new ResProcessor(androidRes, rClass));
+			modelProcessor.register(new ResProcessor(processingEnv, androidRes, rClass));
 		}
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor(processingEnv));
@@ -527,12 +526,14 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new RootContextProcessor());
 		modelProcessor.register(new BeanProcessor(processingEnv));
 		modelProcessor.register(new AfterViewsProcessor());
-		modelProcessor.register(new TraceProcessor());
+		if (traceActivated()) {
+			modelProcessor.register(new TraceProcessor());
+		}
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
-		modelProcessor.register(new NonConfigurationInstanceProcessor());
+		modelProcessor.register(new NonConfigurationInstanceProcessor(processingEnv));
 		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));

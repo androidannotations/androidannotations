@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Default value for a preference field
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface DefaultFloat {
 	float value();

@@ -21,24 +21,24 @@ import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Id;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
-public class ViewByIdProcessor implements ElementProcessor {
+public class ViewByIdProcessor implements DecoratingElementProcessor {
 
-	private final IRClass rClass;
+	private final IdAnnotationHelper annotationHelper;
 
-	public ViewByIdProcessor(IRClass rClass) {
-		this.rClass = rClass;
+	public ViewByIdProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -47,25 +47,13 @@ public class ViewByIdProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
-
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror uiFieldTypeMirror = element.asType();
 		String typeQualifiedName = uiFieldTypeMirror.toString();
 
-		ViewById annotation = element.getAnnotation(ViewById.class);
-		int idValue = annotation.value();
-
-		IRInnerClass rInnerClass = rClass.get(Res.ID);
-		JFieldRef idRef;
-		if (idValue == Id.DEFAULT_VALUE) {
-			idRef = rInnerClass.getIdStaticRef(fieldName, holder);
-		} else {
-			idRef = rInnerClass.getIdStaticRef(idValue, holder);
-		}
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.ID, true);
 
 		JBlock methodBody = holder.afterSetContentView.body();
 

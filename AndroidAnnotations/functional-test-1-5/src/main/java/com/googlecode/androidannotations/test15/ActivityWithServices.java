@@ -76,6 +76,7 @@ public class ActivityWithServices extends Activity {
 	@SystemService
 	WifiManager wifiManager;
 
+	
 	@SystemService
 	InputMethodManager inputMethodManager;
 

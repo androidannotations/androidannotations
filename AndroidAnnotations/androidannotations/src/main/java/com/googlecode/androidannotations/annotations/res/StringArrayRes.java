@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.googlecode.androidannotations.annotations.Id;
+import com.googlecode.androidannotations.annotations.ResId;
 
 /**
  * Use on fields in activity classes that should be injected with values from
@@ -32,9 +32,11 @@ import com.googlecode.androidannotations.annotations.Id;
  * set, the field name will be used as the R.array.* field name.
  * 
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface StringArrayRes {
 
-	int value() default Id.DEFAULT_VALUE;
+	int value() default ResId.DEFAULT_VALUE;
+
+	String resName() default "";
 }

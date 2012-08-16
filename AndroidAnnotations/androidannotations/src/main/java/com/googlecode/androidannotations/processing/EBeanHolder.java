@@ -15,6 +15,7 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
 import com.googlecode.androidannotations.annotations.EBean;
@@ -90,10 +91,12 @@ public class EBeanHolder {
 	public JMethod findNativeFragmentByTag;
 	public JMethod findSupportFragmentByTag;
 
-	private EBeansHolder eBeansHolder;
+	private final EBeansHolder eBeansHolder;
+	public final Class<? extends Annotation> eBeanAnnotation;
 
-	public EBeanHolder(EBeansHolder eBeansHolder) {
+	public EBeanHolder(EBeansHolder eBeansHolder, Class<? extends Annotation> eBeanAnnotation) {
 		this.eBeansHolder = eBeansHolder;
+		this.eBeanAnnotation = eBeanAnnotation;
 	}
 
 	public Classes classes() {
@@ -106,6 +109,10 @@ public class EBeanHolder {
 
 	public JClass refClass(String fullyQualifiedClassName) {
 		return eBeansHolder.refClass(fullyQualifiedClassName);
+	}
+
+	public JClass refClass(Class<?> clazz) {
+		return eBeansHolder.refClass(clazz);
 	}
 
 }

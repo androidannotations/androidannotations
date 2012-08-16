@@ -31,7 +31,7 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 
-public class BackgroundProcessor implements ElementProcessor {
+public class BackgroundProcessor implements DecoratingElementProcessor {
 
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
@@ -41,9 +41,7 @@ public class BackgroundProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws JClassAlreadyExistsException {
-
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws JClassAlreadyExistsException {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
@@ -53,7 +51,7 @@ public class BackgroundProcessor implements ElementProcessor {
 
 		{
 			// Execute Runnable
-			JClass backgroundExecutorClass = codeModel.ref(BackgroundExecutor.class);
+			JClass backgroundExecutorClass = holder.refClass(BackgroundExecutor.class);
 
 			JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(JExpr._new(anonymousRunnableClass));
 

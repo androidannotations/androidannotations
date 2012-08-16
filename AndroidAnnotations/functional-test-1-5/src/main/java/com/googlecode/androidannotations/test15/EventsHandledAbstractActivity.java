@@ -20,7 +20,7 @@ import android.view.View;
 
 public abstract class EventsHandledAbstractActivity extends Activity {
 
-	View viewArgument;
+	protected View viewArgument;
 
 	protected boolean avoidStackOverflowEventHandled;
 	protected boolean conventionButtonEventHandled;
@@ -29,5 +29,6 @@ public abstract class EventsHandledAbstractActivity extends Activity {
 	protected boolean overridenConventionButtonEventHandled;
 	protected boolean unboundButtonEventHandled;
 	protected boolean multipleButtonsEventHandled;
+	protected boolean libResButtonEventHandled;
 
 }

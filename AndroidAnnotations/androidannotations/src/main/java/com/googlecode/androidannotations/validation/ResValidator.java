@@ -23,6 +23,7 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AndroidRes;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
@@ -54,7 +55,7 @@ public class ResValidator implements ElementValidator {
 
 		validatorHelper.allowedType(element, valid, fieldTypeMirror, androidValue.getAllowedTypes());
 
-		validatorHelper.idExists(element, androidValue.getRInnerClass(), valid);
+		validatorHelper.resIdsExist(element, androidValue.getRInnerClass(), FallbackStrategy.USE_ELEMENT_NAME, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

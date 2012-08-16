@@ -23,6 +23,7 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.annotations.FromHtml;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -50,7 +51,7 @@ public class FromHtmlValidator implements ElementValidator {
 
 		validatorHelper.extendsTextView(element, valid);
 
-		validatorHelper.idExists(element, Res.STRING, valid);
+		validatorHelper.resIdsExist(element, Res.STRING, FallbackStrategy.USE_ELEMENT_NAME, valid);
 
 		return valid.isValid();
 	}
