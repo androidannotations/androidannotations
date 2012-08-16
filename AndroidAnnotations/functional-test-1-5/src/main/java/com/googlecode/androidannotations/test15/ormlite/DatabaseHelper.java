@@ -22,10 +22,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.googlecode.androidannotations.test15.R;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 

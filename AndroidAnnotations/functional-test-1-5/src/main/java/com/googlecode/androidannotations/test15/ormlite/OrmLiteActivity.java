@@ -17,27 +17,19 @@ package com.googlecode.androidannotations.test15.ormlite;
 
 import android.app.Activity;
 
-import com.j256.ormlite.dao.Dao;
-
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
-
-import com.googlecode.androidannotations.test15.ormlite.Car;
-import com.googlecode.androidannotations.test15.ormlite.User;
-import com.googlecode.androidannotations.test15.ormlite.UserDao;
-import com.googlecode.androidannotations.test15.ormlite.OrmLiteBean;
-import com.googlecode.androidannotations.test15.ormlite.DatabaseHelper;
+import com.j256.ormlite.dao.Dao;
 
 @EActivity
 public class OrmLiteActivity extends Activity {
-
 	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
-	protected UserDao userDao;
+	UserDao userDao;
 
 	@OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
-	protected Dao<Car, Long> carDao;
+	Dao<Car, Long> carDao;
 
 	@Bean
-	protected OrmLiteBean ormLiteBean;
+	OrmLiteBean ormLiteBean;
 }

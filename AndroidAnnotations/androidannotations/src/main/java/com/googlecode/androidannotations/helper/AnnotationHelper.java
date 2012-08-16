@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -271,11 +273,17 @@ public class AnnotationHelper {
 	@SuppressWarnings("unchecked")
 	public <T> T extractAnnotationParameter(Element element, Class<? extends Annotation> target, String methodName) {
 		Annotation annotation = element.getAnnotation(target);
-
 		Method method;
 		try {
 			method = annotation.getClass().getMethod(methodName);
 			return (T) method.invoke(annotation);
+		} catch (InvocationTargetException e) {
+			if (e.getCause() instanceof MirroredTypeException) {
+				MirroredTypeException cause = (MirroredTypeException) e.getCause();
+				return (T) cause.getTypeMirror();
+			} else {
+				throw new RuntimeException(e);
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

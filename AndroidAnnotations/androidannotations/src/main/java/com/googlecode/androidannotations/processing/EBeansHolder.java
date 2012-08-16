@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class EBeansHolder {
 		public final JClass SYSTEM = refClass(System.class);
 		public final JClass INPUT_STREAM = refClass(InputStream.class);
 		public final JClass FILE_INPUT_STREAM = refClass(FileInputStream.class);
+		public final JClass SQL_EXCEPTION = refClass(SQLException.class);
 
 		/*
 		 * Android
@@ -118,7 +120,6 @@ public class EBeansHolder {
 		public final JClass CONNECTION_SOURCE = refClass(CanonicalNameConstants.CONNECTION_SOURCE);
 		public final JClass OPEN_HELPER_MANAGER = refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER);
 		public final JClass DAO_MANAGER = refClass(CanonicalNameConstants.DAO_MANAGER);
-		public final JClass SQL_EXCEPTION = refClass(CanonicalNameConstants.SQL_EXCEPTION);
 
 		/*
 		 * HttpClient
@@ -168,7 +169,7 @@ public class EBeansHolder {
 		if (refClass == null) {
 			try {
 				refClass = codeModel.ref(fullyQualifiedClassName);
-			} catch (NoClassDefFoundError ignored) {
+			} catch (Throwable ignored) {
 				refClass = codeModel.directClass(fullyQualifiedClassName);
 			}
 			loadedClasses.put(fullyQualifiedClassName, refClass);

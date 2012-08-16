@@ -17,11 +17,29 @@ package com.googlecode.androidannotations.test15;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.content.Context;
+
+import com.xtremelabs.robolectric.shadows.ShadowApplication;
+
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ServiceInjectionTest {
+
+	@Before
+	public void setup() throws Exception {
+		Field serviceMapField = ShadowApplication.class.getDeclaredField("SYSTEM_SERVICE_MAP");
+		serviceMapField.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		Map<String, String> SYSTEM_SERVICE_MAP = (Map<String, String>) serviceMapField.get(null);
+
+		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "com.googlecode.androidannotations.test15.FakeClipboardManager");
+	}
 
 	@Test
 	public void servicesAreInjected() {
