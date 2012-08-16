@@ -24,7 +24,6 @@ import com.j256.ormlite.dao.Dao;
 
 @EActivity
 public class OrmLiteActivity extends Activity {
-
 	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
 	UserDao userDao;
 

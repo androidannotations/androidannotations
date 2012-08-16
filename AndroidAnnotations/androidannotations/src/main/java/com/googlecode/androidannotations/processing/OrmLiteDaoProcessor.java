@@ -20,19 +20,20 @@ import static com.sun.codemodel.JMod.PRIVATE;
 
 import java.lang.annotation.Annotation;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
-import com.googlecode.androidannotations.helper.CanonicalNameConstants;
+import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JVar;
 
 /**
  * This class generates the code that creates DAOs with ORMLite
@@ -40,6 +41,13 @@ import com.sun.codemodel.JTryBlock;
  * @author Johan Poirier <johan.poirier@gmail.com>
  */
 public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
+
+	private static final String CONNECTION_SOURCE_FIELD_NAME = "connectionSource_";
+	private TargetAnnotationHelper helper;
+
+	public OrmLiteDaoProcessor(ProcessingEnvironment processingEnv) {
+		helper = new TargetAnnotationHelper(processingEnv, getTarget());
+	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -51,51 +59,50 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();
-		OrmLiteDao annotation = element.getAnnotation(OrmLiteDao.class);
 
-		// Get model object class
-		TypeMirror modelObjectTypeMirror = null;
-		try {
-			annotation.model();
-		} catch (MirroredTypeException mte) {
-			modelObjectTypeMirror = mte.getTypeMirror();
-		}
+		TypeMirror modelObjectTypeMirror = helper.extractAnnotationParameter(element, "model");
 
-		// Get database hleper class
-		TypeMirror databaseHelperTypeMirror = null;
-		try {
-			annotation.helper();
-		} catch (MirroredTypeException mte) {
-			databaseHelperTypeMirror = mte.getTypeMirror();
-		}
-
-		JBlock methodBody = holder.init.body();
+		TypeMirror databaseHelperTypeMirror = helper.extractAnnotationParameter(element, "helper");
 
 		// connection source field
-		String connectionSourceRef = "connection_source_";
-		try {
-			holder.eBean.field(PRIVATE, classes.CONNECTION_SOURCE, connectionSourceRef);
-		} catch (IllegalArgumentException e) {
-			// connection_source_ already generated
-		}
+		boolean connectionSourceInjected = holder.eBean.fields().containsKey(CONNECTION_SOURCE_FIELD_NAME);
 
-		// context field
-		String contextRef = "context_";
-		JFieldVar contextField;
-		try {
-			contextField = holder.eBean.field(PRIVATE, classes.CONTEXT, contextRef);
-			methodBody._if(JExpr._this()._instanceof(classes.CONTEXT))._then().assign(contextField, JExpr._this());
-		} catch (IllegalArgumentException e) {
-			// context_ already generated
-		}
+		JBlock initBody = holder.init.body();
 
-		// get connection source
-		JExpression dbHelperExpr = holder.refClass(databaseHelperTypeMirror.toString()).dotclass();
-		methodBody._if(JExpr.ref(connectionSourceRef).eq(JExpr._null()))._then().assign(ref(connectionSourceRef), holder.refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER).staticInvoke("getHelper").arg(ref(contextRef)).arg(dbHelperExpr).invoke("getConnectionSource"));
+		JFieldVar connectionSourceRef;
+		if (connectionSourceInjected) {
+			connectionSourceRef = holder.eBean.fields().get(CONNECTION_SOURCE_FIELD_NAME);
+		} else {
+			connectionSourceRef = holder.eBean.field(PRIVATE, classes.CONNECTION_SOURCE, CONNECTION_SOURCE_FIELD_NAME);
+
+			// get connection source
+			JExpression dbHelperClass = holder.refClass(databaseHelperTypeMirror.toString()).dotclass();
+
+			initBody.assign(connectionSourceRef, //
+					classes.OPEN_HELPER_MANAGER //
+							.staticInvoke("getHelper") //
+							.arg(holder.contextRef) //
+							.arg(dbHelperClass) //
+							.invoke("getConnectionSource"));
+		}
 
 		// create dao from dao manager
-		JTryBlock tryBlock = methodBody._try();
-		tryBlock.body().assign(ref(fieldName), holder.refClass(CanonicalNameConstants.DAO_MANAGER).staticInvoke("createDao").arg(JExpr.ref(connectionSourceRef)).arg(holder.refClass(modelObjectTypeMirror.toString()).dotclass()));
-		tryBlock._catch(classes.SQL_EXCEPTION).body().directStatement("android.util.Log.d(\"AndroidAnnotations\", _x.getMessage()); _x.printStackTrace();");
+		JTryBlock tryBlock = initBody._try();
+
+		JExpression modelClass = holder.refClass(modelObjectTypeMirror.toString()).dotclass();
+		tryBlock.body().assign(ref(fieldName), //
+				classes.DAO_MANAGER //
+						.staticInvoke("createDao") //
+						.arg(connectionSourceRef) //
+						.arg(modelClass));
+
+		JCatchBlock catchBlock = tryBlock._catch(classes.SQL_EXCEPTION);
+		JVar exception = catchBlock.param("e");
+
+		catchBlock.body() //
+				.staticInvoke(classes.LOG, "e") //
+				.arg(holder.eBean.name()) //
+				.arg("Could not create DAO") //
+				.arg(exception);
 	}
 }

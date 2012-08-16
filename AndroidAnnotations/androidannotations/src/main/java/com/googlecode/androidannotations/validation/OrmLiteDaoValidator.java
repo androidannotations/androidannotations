@@ -46,11 +46,13 @@ public class OrmLiteDaoValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
+		validatorHelper.hasOrmLiteJars(element, valid);
+
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.extendsOrmLiteDao(element, valid);
+		validatorHelper.extendsOrmLiteDaoWithValidModelParameter(element, valid);
 
 		validatorHelper.hasASqlLiteOpenHelperParameterizedType(element, valid);
 
