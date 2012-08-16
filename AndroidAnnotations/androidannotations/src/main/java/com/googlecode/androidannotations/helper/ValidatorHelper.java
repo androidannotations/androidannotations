@@ -553,6 +553,35 @@ public class ValidatorHelper {
 		extendsType(element, CanonicalNameConstants.CONTEXT, valid);
 	}
 
+	public void extendsOrmLiteDaoWithValidModelParameter(Element element, IsValid valid) {
+		TypeMirror elementType = element.asType();
+
+		TypeMirror modelTypeMirror = annotationHelper.extractAnnotationParameter(element, "model");
+
+		TypeElement daoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO);
+		if (daoTypeElement != null) {
+
+			TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
+			DeclaredType daoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, modelTypeMirror, wildcardType);
+
+			// Checks that elementType extends Dao<ModelType, ?>
+			if (!annotationHelper.isSubtype(elementType, daoParameterizedType)) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString());
+			}
+		}
+	}
+
+	public void hasASqlLiteOpenHelperParameterizedType(Element element, IsValid valid) {
+		TypeMirror helperType = annotationHelper.extractAnnotationParameter(element, "helper");
+
+		TypeMirror openHelperType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.SQLLITE_OPEN_HELPER).asType();
+		if (!annotationHelper.isSubtype(helperType, openHelperType)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s helper() parameter must extend " + CanonicalNameConstants.SQLLITE_OPEN_HELPER);
+		}
+	}
+
 	public void upperclassOfRegisteredApplication(Element element, AndroidManifest manifest, IsValid valid) {
 		String applicationClassName = manifest.getApplicationClassName();
 		if (applicationClassName != null) {
@@ -720,7 +749,16 @@ public class ValidatorHelper {
 
 		if (elementUtils.getTypeElement(CanonicalNameConstants.REST_TEMPLATE) == null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the SpringAndroid framework in the classpath, the following class is missing: org.springframework.web.client.RestTemplate");
+			annotationHelper.printAnnotationError(element, "Could not find the SpringAndroid framework in the classpath, the following class is missing: " + CanonicalNameConstants.REST_TEMPLATE);
+		}
+	}
+
+	public void hasOrmLiteJars(Element element, IsValid valid) {
+		Elements elementUtils = annotationHelper.getElementUtils();
+
+		if (elementUtils.getTypeElement(CanonicalNameConstants.DAO) == null) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Could not find the OrmLite framework in the classpath, the following class is missing: " + CanonicalNameConstants.DAO);
 		}
 	}
 

@@ -65,6 +65,7 @@ import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.ProgressChange;
+import com.googlecode.androidannotations.annotations.OrmLiteDao;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
@@ -146,6 +147,7 @@ import com.googlecode.androidannotations.processing.NoTitleProcessor;
 import com.googlecode.androidannotations.processing.NonConfigurationInstanceProcessor;
 import com.googlecode.androidannotations.processing.OptionsItemProcessor;
 import com.googlecode.androidannotations.processing.OptionsMenuProcessor;
+import com.googlecode.androidannotations.processing.OrmLiteDaoProcessor;
 import com.googlecode.androidannotations.processing.PrefProcessor;
 import com.googlecode.androidannotations.processing.ProgressChangeProcessor;
 import com.googlecode.androidannotations.processing.ResProcessor;
@@ -206,6 +208,7 @@ import com.googlecode.androidannotations.validation.NoTitleValidator;
 import com.googlecode.androidannotations.validation.NonConfigurationInstanceValidator;
 import com.googlecode.androidannotations.validation.OptionsItemValidator;
 import com.googlecode.androidannotations.validation.OptionsMenuValidator;
+import com.googlecode.androidannotations.validation.OrmLiteDaoValidator;
 import com.googlecode.androidannotations.validation.PrefValidator;
 import com.googlecode.androidannotations.validation.ProgressChangeValidator;
 import com.googlecode.androidannotations.validation.ResValidator;
@@ -303,6 +306,7 @@ import com.sun.codemodel.JCodeModel;
 		TrackingTouchStart.class, //
 		TrackingTouchStop.class, //
 		AfterTextChange.class, //
+		OrmLiteDao.class, //
 		HttpsClient.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -455,9 +459,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new BeanValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
 		modelValidator.register(new AfterViewsValidator(processingEnv));
-		if (traceActivated()) {
-			modelValidator.register(new TraceValidator(processingEnv));
-		}
+		modelValidator.register(new TraceValidator(processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
@@ -468,6 +470,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new TrackingTouchStartValidator(processingEnv, rClass));
 		modelValidator.register(new TrackingTouchStopValidator(processingEnv, rClass));
 		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		return modelValidator;
 	}
@@ -534,10 +537,13 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
+		modelProcessor.register(new OrmLiteDaoProcessor(processingEnv));
 		modelProcessor.register(new RootContextProcessor());
 		modelProcessor.register(new BeanProcessor(processingEnv));
 		modelProcessor.register(new AfterViewsProcessor());
-		modelProcessor.register(new TraceProcessor());
+		if (traceActivated()) {
+			modelProcessor.register(new TraceProcessor());
+		}
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());

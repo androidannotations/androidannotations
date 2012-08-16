@@ -13,19 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.afterviews;
+package com.googlecode.androidannotations.test15.ormlite;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EBean;
+import com.j256.ormlite.dao.BaseDaoImpl;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.DatabaseTableConfig;
+import java.sql.SQLException;
 
-@EBean
-public class AfterViewBean {
-
-	public boolean afterViewsCalled = false;
-
-	@AfterViews
-	public void afterViews() {
-		afterViewsCalled = true;
+public class UserDaoImpl extends BaseDaoImpl<User, Long> implements UserDao {
+	
+	public UserDaoImpl(ConnectionSource connectionSource, Class<User> dataClass) throws SQLException {
+		super(connectionSource, dataClass);
 	}
-
+	
+	public UserDaoImpl(ConnectionSource connectionSource, DatabaseTableConfig<User> tableConfig) throws SQLException {
+		super(connectionSource, tableConfig);
+	}
 }

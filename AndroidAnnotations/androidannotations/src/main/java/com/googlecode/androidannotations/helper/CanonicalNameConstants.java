@@ -16,6 +16,7 @@
 package com.googlecode.androidannotations.helper;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ public final class CanonicalNameConstants {
 	public static final String COLLECTIONS = Collections.class.getCanonicalName();
 	public static final String STRING = String.class.getCanonicalName();
 	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();
+	public static final String SQL_EXCEPTION = SQLException.class.getCanonicalName();
 
 	/*
 	 * Android
@@ -77,6 +79,7 @@ public final class CanonicalNameConstants {
 	public static final String CONTENT_PROVIDER = "android.content.ContentProvider";
 	public static final String SQLITE_DATABASE = "android.database.sqlite.SQLiteDatabase";
 	public static final String KEY_STORE = "java.security.KeyStore";
+	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
 
 	/*
 	 * Sherlock
@@ -115,6 +118,14 @@ public final class CanonicalNameConstants {
 	public static final String ON_ACTIVITY_RESULT_EVENT = "roboguice.activity.event.OnActivityResultEvent";
 	public static final String ON_CONTENT_VIEW_AVAILABLE_EVENT = "roboguice.activity.event.OnContentViewAvailableEvent";
 	public static final String ON_CREATE_EVENT = "roboguice.activity.event.OnCreateEvent";
+
+	/*
+	 * ORMLite
+	 */
+	public static final String DAO = "com.j256.ormlite.dao.Dao";
+	public static final String DAO_MANAGER = "com.j256.ormlite.dao.DaoManager";
+	public static final String CONNECTION_SOURCE = "com.j256.ormlite.support.ConnectionSource";
+	public static final String OPEN_HELPER_MANAGER = "com.j256.ormlite.android.apptools.OpenHelperManager";
 
 	/*
 	 * HttpClient

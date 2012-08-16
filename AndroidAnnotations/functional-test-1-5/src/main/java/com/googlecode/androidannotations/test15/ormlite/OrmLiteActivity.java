@@ -13,19 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.afterviews;
+package com.googlecode.androidannotations.test15.ormlite;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EBean;
+import android.app.Activity;
 
-@EBean
-public class AfterViewBean {
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.OrmLiteDao;
+import com.j256.ormlite.dao.Dao;
 
-	public boolean afterViewsCalled = false;
+@EActivity
+public class OrmLiteActivity extends Activity {
+	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	UserDao userDao;
 
-	@AfterViews
-	public void afterViews() {
-		afterViewsCalled = true;
-	}
+	@OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
+	Dao<Car, Long> carDao;
 
+	@Bean
+	OrmLiteBean ormLiteBean;
 }
