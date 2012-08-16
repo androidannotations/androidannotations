@@ -113,6 +113,14 @@ public class EBeansHolder {
 		public final JClass ON_CREATE_EVENT = refClass(CanonicalNameConstants.ON_CREATE_EVENT);
 
 		/*
+		 * OrmLite
+		 */
+		public final JClass CONNECTION_SOURCE = refClass(CanonicalNameConstants.CONNECTION_SOURCE);
+		public final JClass OPEN_HELPER_MANAGER = refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER);
+		public final JClass DAO_MANAGER = refClass(CanonicalNameConstants.DAO_MANAGER);
+		public final JClass SQL_EXCEPTION = refClass(CanonicalNameConstants.SQL_EXCEPTION);
+
+		/*
 		 * HttpClient
 		 */
 		public final JClass CLIENT_CONNECTION_MANAGER = refClass(CanonicalNameConstants.CLIENT_CONNECTION_MANAGER);
