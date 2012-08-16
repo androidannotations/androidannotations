@@ -39,7 +39,7 @@ import com.sun.codemodel.JTryBlock;
  * 
  * @author Johan Poirier <johan.poirier@gmail.com>
  */
-public class OrmLiteDaoProcessor implements ElementProcessor {
+public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -47,8 +47,7 @@ public class OrmLiteDaoProcessor implements ElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) {
-		EBeanHolder holder = eBeansHolder.getEnclosingEBeanHolder(element);
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();

@@ -15,7 +15,6 @@
  */
 package com.googlecode.androidannotations.test15.ormlite;
 
-
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
 
@@ -27,5 +26,6 @@ import com.googlecode.androidannotations.test15.ormlite.DatabaseHelper;
 public class OrmLiteBean {
 
 	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
-	protected UserDao userDao;
+	UserDao userDao;
+
 }

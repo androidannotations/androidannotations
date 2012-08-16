@@ -45,6 +45,9 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
+/**
+ * @author Nabil Hachicha
+ */
 public class HttpsClientProcessor implements DecoratingElementProcessor {
 
 	private final IRClass rClass;
