@@ -16,36 +16,20 @@
 package com.googlecode.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.annotations.TrackingTouchStart;
-import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.OnSeekBarChangeListenerHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
 
 /**
  * @author Mathieu Boniface
  */
-public class TrackingTouchStartProcessor implements DecoratingElementProcessor {
-
-	private final OnSeekBarChangeListenerHelper helper;
-
-	private final APTCodeModelHelper codeModelHelper;
+public class TrackingTouchStartProcessor extends AbstractTrackingTouchProcessor {
 
 	public TrackingTouchStartProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		codeModelHelper = new APTCodeModelHelper();
-		helper = new OnSeekBarChangeListenerHelper(processingEnv, getTarget(), rClass, codeModelHelper);
+		super(processingEnv, rClass);
 	}
 
 	@Override
@@ -54,31 +38,6 @@ public class TrackingTouchStartProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
-
-		String methodName = element.getSimpleName().toString();
-
-		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
-
-		for (JFieldRef idRef : idsRefs) {
-			OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = helper.getOrCreateListener(codeModel, holder, idRef);
-
-			JInvocation textChangeCall;
-			JMethod methodToCall = getMethodToCall(onSeekBarChangeListenerHolder);
-
-			JBlock previousBody = codeModelHelper.removeBody(methodToCall);
-			JBlock methodBody = methodToCall.body();
-
-			methodBody.add(previousBody);
-			JExpression activityRef = holder.eBean.staticRef("this");
-			textChangeCall = methodBody.invoke(activityRef, methodName);
-
-			JVar progressParameter = codeModelHelper.findParameterByName(methodToCall, "seekBar");
-			textChangeCall.arg(progressParameter);
-		}
-
-	}
-
 	protected JMethod getMethodToCall(OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder) {
 		JMethod methodToCall = onSeekBarChangeListenerHolder.onStartTrackingTouchMethod;
 		return methodToCall;

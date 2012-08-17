@@ -76,7 +76,7 @@ public class OnSeekBarChangeListenerHelper extends IdAnnotationHelper {
 
 			JBlock block = holder.afterSetContentView.body().block();
 
-			TypeMirror viewParameterType = typeElementFromQualifiedName("android.widget.SeekBar").asType();
+			TypeMirror viewParameterType = typeElementFromQualifiedName(CanonicalNameConstants.SEEKBAR).asType();
 
 			String viewParameterTypeString = viewParameterType.toString();
 			JClass viewClass = holder.refClass(viewParameterTypeString);

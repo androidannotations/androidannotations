@@ -31,6 +31,8 @@ public final class CanonicalNameConstants {
 	public static final String STRING = String.class.getCanonicalName();
 	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();
 	public static final String SQL_EXCEPTION = SQLException.class.getCanonicalName();
+	public static final String INTEGER = Integer.class.getCanonicalName();
+	public static final String BOOLEAN = Boolean.class.getCanonicalName();
 
 	/*
 	 * Android

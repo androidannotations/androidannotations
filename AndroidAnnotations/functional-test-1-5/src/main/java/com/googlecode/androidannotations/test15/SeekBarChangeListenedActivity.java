@@ -27,32 +27,41 @@ import com.googlecode.androidannotations.annotations.TrackingTouchStop;
 public class SeekBarChangeListenedActivity extends Activity {
 
 	@ProgressChange(R.id.seekBar1)
-	void m1(SeekBar seekBar) {}
+	void m1(SeekBar seekBar) {
+	}
 
 	@ProgressChange(R.id.seekBar1)
-	void m2(SeekBar seekBar, int progress) {}
+	void m2(SeekBar seekBar, int progress) {
+	}
 
 	@ProgressChange(R.id.seekBar1)
-	void m3(SeekBar seekBar, int progress, boolean fromUser) {}
+	void m3(SeekBar seekBar, int progress, boolean fromUser) {
+	}
 
 	@ProgressChange(R.id.seekBar1)
-	void m4(SeekBar seekBar, boolean fromUser, int progress) {}
+	void m4(SeekBar seekBar, boolean fromUser, int progress) {
+	}
 
-	@ProgressChange({R.id.seekBar1, R.id.seekBar2})
-	void m5(SeekBar seekBar, boolean fromUser, int progress) {}
+	@ProgressChange({ R.id.seekBar1, R.id.seekBar2 })
+	void m5(SeekBar seekBar, boolean fromUser, int progress) {
+	}
 
-	@ProgressChange({R.id.seekBar1, R.id.seekBar2})
-	void m6(Boolean fromUser, SeekBar seekBar, Integer progress) {}
+	@ProgressChange({ R.id.seekBar1, R.id.seekBar2 })
+	void m6(Boolean fromUser, SeekBar seekBar, Integer progress) {
+	}
 
 	@TrackingTouchStart(R.id.seekBar2)
 	@ProgressChange(R.id.seekBar2)
 	@TrackingTouchStop(R.id.seekBar2)
-	void m7(SeekBar seekBar) {}
+	void m7(SeekBar seekBar) {
+	}
 
 	@TrackingTouchStop(R.id.seekBar1)
-	void m8(SeekBar seekBar) {}
+	void m8(SeekBar seekBar) {
+	}
 
 	@TrackingTouchStart(R.id.seekBar1)
-	void m9(SeekBar seekBar) {}
+	void m9(SeekBar seekBar) {
+	}
 
 }

@@ -15,19 +15,12 @@
  */
 package com.googlecode.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.ProgressChange;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.OnSeekBarChangeListenerHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -40,22 +33,20 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 /**
+ * Note: this could probably be moved to a helper, rather then being an abstract
+ * class (favor composition over inheritance)
+ * 
  * @author Mathieu Boniface
  */
-public class ProgressChangeProcessor implements DecoratingElementProcessor {
+public abstract class AbstractTrackingTouchProcessor implements DecoratingElementProcessor {
 
 	private final OnSeekBarChangeListenerHelper helper;
 
 	private final APTCodeModelHelper codeModelHelper;
 
-	public ProgressChangeProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public AbstractTrackingTouchProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		codeModelHelper = new APTCodeModelHelper();
 		helper = new OnSeekBarChangeListenerHelper(processingEnv, getTarget(), rClass, codeModelHelper);
-	}
-
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ProgressChange.class;
 	}
 
 	@Override
@@ -63,36 +54,13 @@ public class ProgressChangeProcessor implements DecoratingElementProcessor {
 
 		String methodName = element.getSimpleName().toString();
 
-		ExecutableElement executableElement = (ExecutableElement) element;
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		int seekBarViewParameterPosition = -1;
-		int progressParameterPosition = -1;
-		int fromUserParameterPosition = -1;
-
-		for (int i = 0; i < parameters.size(); i++) {
-			VariableElement parameter = parameters.get(i);
-			String parameterName = parameter.toString();
-			TypeMirror parameterType = parameter.asType();
-
-			if (CanonicalNameConstants.SEEKBAR.equals(parameterType.toString())) {
-				seekBarViewParameterPosition = i;
-			} else if (parameterType.getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType.toString()) //
-					&& "progress".equals(parameterName)) {
-				progressParameterPosition = i;
-			} else if ((parameterType.getKind() == TypeKind.BOOLEAN || CanonicalNameConstants.BOOLEAN.equals(parameterType.toString())) //
-					&& "fromUser".equals(parameterName)) {
-				fromUserParameterPosition = i;
-			}
-		}
-
 		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
 			OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = helper.getOrCreateListener(codeModel, holder, idRef);
 
 			JInvocation textChangeCall;
-			JMethod methodToCall = onSeekBarChangeListenerHolder.onProgressChangedMethod;
+			JMethod methodToCall = getMethodToCall(onSeekBarChangeListenerHolder);
 
 			JBlock previousBody = codeModelHelper.removeBody(methodToCall);
 			JBlock methodBody = methodToCall.body();
@@ -101,20 +69,11 @@ public class ProgressChangeProcessor implements DecoratingElementProcessor {
 			JExpression activityRef = holder.eBean.staticRef("this");
 			textChangeCall = methodBody.invoke(activityRef, methodName);
 
-			for (int i = 0; i < parameters.size(); i++) {
-				if (i == seekBarViewParameterPosition) {
-					JVar seekBarViewParameter = codeModelHelper.findParameterByName(methodToCall, "seekBar");
-					textChangeCall.arg(seekBarViewParameter);
-				} else if (i == progressParameterPosition) {
-					JVar progressParameter = codeModelHelper.findParameterByName(methodToCall, "progress");
-					textChangeCall.arg(progressParameter);
-				} else if (i == fromUserParameterPosition) {
-					JVar fromUserParameter = codeModelHelper.findParameterByName(methodToCall, "fromUser");
-					textChangeCall.arg(fromUserParameter);
-				}
-			}
-
+			JVar progressParameter = codeModelHelper.findParameterByName(methodToCall, "seekBar");
+			textChangeCall.arg(progressParameter);
 		}
 
 	}
+
+	protected abstract JMethod getMethodToCall(OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder);
 }

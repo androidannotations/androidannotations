@@ -26,7 +26,7 @@ import com.sun.codemodel.JMethod;
 /**
  * @author Mathieu Boniface
  */
-public class TrackingTouchStopProcessor extends TrackingTouchStartProcessor implements DecoratingElementProcessor {
+public class TrackingTouchStopProcessor extends AbstractTrackingTouchProcessor {
 
 	public TrackingTouchStopProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv, rClass);

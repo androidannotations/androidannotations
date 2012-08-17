@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * This annotation is intended to be used on methods to receive events defined
  * by
- * {@link android.text.TextWatcher#onTextChanged(CharSequence s, int start, int before, int count)}
+ * {@link android.widget.SeekBar.OnSeekBarChangeListener#onProgressChanged(android.widget.SeekBar, int, boolean)}
  * when the progress level of a SeekBar has changed.
  * 
  * The annotation value should be one or several R.id.* fields that refers to an
@@ -32,8 +32,8 @@ import java.lang.annotation.Target;
  * 
  * The method may have multiple parameter :
  * <ul>
- * <li>A android.widget.SeekBar parameter to determine which view has targeted
- * this event (this parameter is mandatory)
+ * <li>A {@link android.widget.SeekBar} parameter to determine which view has
+ * targeted this event (this parameter is mandatory)
  * <li>An int parameter named progress to get the progress level of the SeekBar
  * (this parameter is optional)
  * <li>A boolean parameter named fromUser to determine if this event is
