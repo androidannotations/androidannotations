@@ -32,7 +32,7 @@ import android.widget.SeekBar;
  * android.widget.SeekBar. If not set, the method name will be used as the
  * R.id.* field name.
  * 
- * The method can have only one parameter of type SeekBar.
+ * The method can have zero or one parameter of type SeekBar.
  * 
  */
 @Retention(RetentionPolicy.CLASS)

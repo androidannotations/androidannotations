@@ -33,12 +33,13 @@ import java.lang.annotation.Target;
  * The method may have multiple parameter :
  * <ul>
  * <li>A {@link android.widget.SeekBar} parameter to determine which view has
- * targeted this event (this parameter is mandatory)
+ * targeted this event
  * <li>An int parameter named progress to get the progress level of the SeekBar
- * (this parameter is optional)
  * <li>A boolean parameter named fromUser to determine if this event is
- * triggered by the user (this parameter is optional)
+ * triggered by the user
  * </ul>
+ * 
+ * All of those parameters are optional.
  * 
  * Some usage examples of &#064;ProgressChange annotation: <blockquote>
  * 
@@ -68,6 +69,16 @@ import java.lang.annotation.Target;
  * </pre>
  * 
  * </blockquote> <blockquote>
+ * 
+ * <pre>
+ * &#064;ProgressChange(<b>{R.id.seekBar1, R.id.seekBar2}</b>)
+ * void onProgressChangeOnSeekBar() {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
