@@ -103,9 +103,6 @@ public class ProgressChangeValidator implements ElementValidator {
 			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "(SeekBar seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
 			valid.invalidate();
 		}
-		if (!seekBarParameterFound) {
-			annotationHelper.printAnnotationError(executableElement, "SeekBar parameter not found. The method should declare at least on parameter of type android.widget.SeekBar ");
-		}
 	}
 
 }

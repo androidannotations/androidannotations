@@ -71,17 +71,20 @@ public class TrackingTouchStartValidator implements ElementValidator {
 	private void haveProgressChangeMethodParameters(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
-		if (parameters.size() != 1) {
+		if (parameters.size() > 1) {
 			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type SeekBar. Try by declaring " + executableElement.getSimpleName() + "(SeekBar seekBar);");
 			valid.invalidate();
 			return;
 		}
 
-		String parameterType = parameters.get(0).asType().toString();
-		if (!parameterType.equals("android.widget.SeekBar")) {
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type SeekBar. Try by declaring " + executableElement.getSimpleName() + "(SeekBar seekBar);");
-			valid.invalidate();
+		if (parameters.size() == 1) {
+			String parameterType = parameters.get(0).asType().toString();
+			if (!parameterType.equals("android.widget.SeekBar")) {
+				annotationHelper.printAnnotationError(executableElement, "Unrecognized param	eter declaration. You can only have one parameter of type SeekBar. Try by declaring " + executableElement.getSimpleName() + "(SeekBar seekBar);");
+				valid.invalidate();
+			}
 		}
+
 	}
 
 }
