@@ -23,17 +23,29 @@ import java.lang.annotation.Target;
 import android.widget.SeekBar;
 
 /**
+ * <blockquote>
+ * 
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStartTrackingTouch(SeekBar seekBar)}
  * when the user begins to move the cursor of the targeted SeekBar.
  * 
+ * </blockquote> <blockquote>
+ * 
  * The annotation value should be one or several R.id.* fields that refers to an
  * android.widget.SeekBar. If not set, the method name will be used as the
  * R.id.* field name.
  * 
+ * </blockquote> <blockquote>
+ * 
  * The method can have zero or one parameter of type SeekBar.
  * 
+ * </blockquote>
+ * 
+ * @since 2.7
+ * 
+ * @see com.googlecode.androidannotations.annotations.TrackingTouchStop
+ * @see com.googlecode.androidannotations.annotations.ProgressChange
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

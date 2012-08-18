@@ -21,16 +21,25 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <blockquote>
+ * 
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.SeekBar.OnSeekBarChangeListener#onProgressChanged(android.widget.SeekBar, int, boolean)}
  * when the progress level of a SeekBar has changed.
  * 
+ * </blockquote> <blockquote>
+ * 
  * The annotation value should be one or several R.id.* fields that refers to an
  * android.widget.SeekBar. If not set, the method name will be used as the
  * R.id.* field name.
  * 
+ * </blockquote> <blockquote>
+ * 
  * The method may have multiple parameter :
+ * 
+ * </blockquote> <blockquote>
+ * 
  * <ul>
  * <li>A {@link android.widget.SeekBar} parameter to determine which view has
  * targeted this event
@@ -39,27 +48,26 @@ import java.lang.annotation.Target;
  * triggered by the user
  * </ul>
  * 
+ * </blockquote> <blockquote>
+ * 
  * All of those parameters are optional.
  * 
- * Some usage examples of &#064;ProgressChange annotation: <blockquote>
+ * </blockquote> <blockquote>
+ * 
+ * Some usage examples of &#064;ProgressChange annotation:
  * 
  * <pre>
  * &#064;ProgressChange(<b>R.id.seekBar</b>)
  * void onProgressChangeOnSeekBar(SeekBar seekBar, int progress, boolean fromUser) {
  * 	// Something Here
  * }
- * </pre>
  * 
- * </blockquote> <blockquote>
  * 
- * <pre>
  * &#064;ProgressChange(<b>R.id.seekBar</b>)
  * void onProgressChangeOnSeekBar(SeekBar seekBar, int progress) {
  * 	// Something Here
  * }
  * </pre>
- * 
- * </blockquote> <blockquote>
  * 
  * <pre>
  * &#064;ProgressChange(<b>{R.id.seekBar1, R.id.seekBar2}</b>)
@@ -68,8 +76,6 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * 
- * </blockquote> <blockquote>
- * 
  * <pre>
  * &#064;ProgressChange(<b>{R.id.seekBar1, R.id.seekBar2}</b>)
  * void onProgressChangeOnSeekBar() {
@@ -77,8 +83,12 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * 
- * </blockquote> <blockquote>
+ * </blockquote>
  * 
+ * @since 2.7
+ * 
+ * @see com.googlecode.androidannotations.annotations.TrackingTouchStart
+ * @see com.googlecode.androidannotations.annotations.TrackingTouchStop
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
