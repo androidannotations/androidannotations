@@ -16,8 +16,10 @@
 package com.googlecode.androidannotations.rclass;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -33,6 +35,7 @@ import com.sun.codemodel.JFieldRef;
 public class RInnerClass implements IRInnerClass {
 
 	private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<Integer, String>();
+	private final Set<String> idQualifiedNames = new HashSet<String>();
 
 	private final String rInnerQualifiedName;
 
@@ -48,8 +51,12 @@ public class RInnerClass implements IRInnerClass {
 			for (VariableElement idField : idFields) {
 				TypeKind fieldType = idField.asType().getKind();
 				if (fieldType.isPrimitive() && fieldType.equals(TypeKind.INT)) {
+					String idQualifiedName = rInnerQualifiedName + "." + idField.getSimpleName();
+					idQualifiedNames.add(idQualifiedName);
 					Integer idFieldId = (Integer) idField.getConstantValue();
-					idQualifiedNamesByIdValues.put(idFieldId, rInnerQualifiedName + "." + idField.getSimpleName());
+					if (idFieldId != null) {
+						idQualifiedNamesByIdValues.put(idFieldId, idQualifiedName);
+					}
 				}
 			}
 		} else {
@@ -69,11 +76,11 @@ public class RInnerClass implements IRInnerClass {
 
 	@Override
 	public boolean containsField(String name) {
-		boolean containsField = idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + name);
+		boolean containsField = idQualifiedNames.contains(rInnerQualifiedName + "." + name);
 
 		if (!containsField) {
 			String snakeCaseName = CaseHelper.camelCaseToSnakeCase(name);
-			containsField = idQualifiedNamesByIdValues.containsValue(rInnerQualifiedName + "." + snakeCaseName);
+			containsField = idQualifiedNames.contains(rInnerQualifiedName + "." + snakeCaseName);
 		}
 
 		return containsField;
@@ -83,12 +90,12 @@ public class RInnerClass implements IRInnerClass {
 	public String getIdQualifiedName(String name) {
 		String idQualifiedName = rInnerQualifiedName + "." + name;
 
-		if (idQualifiedNamesByIdValues.containsValue(idQualifiedName)) {
+		if (idQualifiedNames.contains(idQualifiedName)) {
 			return idQualifiedName;
 		} else {
 			String snakeCaseName = CaseHelper.camelCaseToSnakeCase(name);
 			idQualifiedName = rInnerQualifiedName + "." + snakeCaseName;
-			if (idQualifiedNamesByIdValues.containsValue(idQualifiedName)) {
+			if (idQualifiedNames.contains(idQualifiedName)) {
 				return idQualifiedName;
 			} else {
 				return null;
