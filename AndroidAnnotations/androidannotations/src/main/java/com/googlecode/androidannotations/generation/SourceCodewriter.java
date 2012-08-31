@@ -52,6 +52,7 @@ public class SourceCodewriter extends CodeWriter {
 		message.printMessage(Kind.NOTE, "Generating source file: " + qualifiedClassName);
 		try {
 			JavaFileObject sourceFile = filer.createSourceFile(qualifiedClassName);
+			
 			return sourceFile.openOutputStream();
 		} catch (FilerException e) {
 			message.printMessage(Kind.NOTE, "Could not generate source file for " + qualifiedClassName + ", message: " + e.getMessage());

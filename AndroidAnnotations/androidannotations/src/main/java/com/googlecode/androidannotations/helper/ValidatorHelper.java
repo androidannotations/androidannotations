@@ -583,6 +583,11 @@ public class ValidatorHelper {
 	}
 
 	public void upperclassOfRegisteredApplication(Element element, AndroidManifest manifest, IsValid valid) {
+
+		if (manifest.isLibraryProject()) {
+			return;
+		}
+
 		String applicationClassName = manifest.getApplicationClassName();
 		if (applicationClassName != null) {
 			if (applicationClassName.endsWith(GENERATION_SUFFIX)) {
@@ -601,6 +606,10 @@ public class ValidatorHelper {
 	}
 
 	public void applicationRegistered(Element element, AndroidManifest manifest, IsValid valid) {
+
+		if (manifest.isLibraryProject()) {
+			return;
+		}
 
 		String applicationClassName = manifest.getApplicationClassName();
 		if (applicationClassName != null) {
@@ -1060,6 +1069,10 @@ public class ValidatorHelper {
 		TypeElement typeElement = (TypeElement) element;
 
 		if (typeElement.getModifiers().contains(Modifier.ABSTRACT)) {
+			return;
+		}
+
+		if (androidManifest.isLibraryProject()) {
 			return;
 		}
 
