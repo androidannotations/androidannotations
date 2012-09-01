@@ -177,6 +177,11 @@ public class ValidatorHelper {
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
 
+	public void enclosingElementHasEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasClassAnnotation(element, enclosingElement, validatedElements, EFragment.class, valid);
+	}
+
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		hasClassAnnotation(element, element, validatedElements, EActivity.class, valid);
 	}
