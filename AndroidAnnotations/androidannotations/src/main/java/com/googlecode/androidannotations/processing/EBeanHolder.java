@@ -86,6 +86,12 @@ public class EBeanHolder {
 	 */
 	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
 
+	public JVar fragmentArguments;
+	public JFieldVar fragmentArgumentsBuilderField;
+	public JMethod fragmentArgumentsInjectMethod;
+	public JBlock fragmentArgumentsNotNullBlock;
+	public JDefinedClass fragmentBuilderClass;
+
 	public JMethod findNativeFragmentById;
 	public JMethod findSupportFragmentById;
 	public JMethod findNativeFragmentByTag;
