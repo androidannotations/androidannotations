@@ -446,15 +446,15 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new RootContextValidator(processingEnv));
 		modelValidator.register(new BeanValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
+		modelValidator.register(new BeforeTextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new TextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new AfterViewsValidator(processingEnv));
 		modelValidator.register(new TraceValidator(processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
 		modelValidator.register(new NonConfigurationInstanceValidator(processingEnv));
-		modelValidator.register(new BeforeTextChangeValidator(processingEnv, rClass));
-		modelValidator.register(new TextChangeValidator(processingEnv, rClass));
-		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		return modelValidator;
@@ -525,6 +525,9 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new OrmLiteDaoProcessor(processingEnv));
 		modelProcessor.register(new RootContextProcessor());
 		modelProcessor.register(new BeanProcessor(processingEnv));
+		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterViewsProcessor());
 		if (traceActivated()) {
 			modelProcessor.register(new TraceProcessor());
@@ -534,9 +537,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
 		modelProcessor.register(new NonConfigurationInstanceProcessor(processingEnv));
-		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
-		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
-		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		return modelProcessor;
 	}
