@@ -111,13 +111,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void isNotAbstract(Element element, IsValid valid) {
-		if (annotationHelper.isAbstract(element)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s cannot be used on an abstract element");
-		}
-	}
-
 	public void isInterface(TypeElement element, IsValid valid) {
 		if (!annotationHelper.isInterface(element)) {
 			valid.invalidate();
