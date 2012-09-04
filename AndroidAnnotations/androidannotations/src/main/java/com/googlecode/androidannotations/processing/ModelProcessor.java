@@ -99,7 +99,13 @@ public class ModelProcessor {
 			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(target.getName());
 			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
 				EBeanHolder holder = eBeansHolder.getEBeanHolder(elements.rootTypeElement);
-				processor.process(elements.annotatedElement, codeModel, holder);
+				/*
+				 * Annotations coming from ancestors may be applied to root
+				 * elements that are not validated, and therefore not available.
+				 */
+				if (holder != null) {
+					processor.process(elements.annotatedElement, codeModel, holder);
+				}
 			}
 		}
 

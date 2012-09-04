@@ -169,11 +169,7 @@ public class EBeansHolder {
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
 		if (refClass == null) {
-			try {
-				refClass = codeModel.ref(fullyQualifiedClassName);
-			} catch (Throwable ignored) {
-				refClass = codeModel.directClass(fullyQualifiedClassName);
-			}
+			refClass = codeModel.directClass(fullyQualifiedClassName);
 			loadedClasses.put(fullyQualifiedClassName, refClass);
 		}
 
