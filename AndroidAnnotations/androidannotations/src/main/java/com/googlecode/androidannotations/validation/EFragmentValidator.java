@@ -49,8 +49,6 @@ public class EFragmentValidator implements ElementValidator {
 
 		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.isNotAbstract(element, valid);
-
 		validatorHelper.resIdsExist(element, Res.LAYOUT, FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
