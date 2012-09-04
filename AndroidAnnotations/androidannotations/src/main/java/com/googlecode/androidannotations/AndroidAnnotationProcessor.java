@@ -64,8 +64,8 @@ import com.googlecode.androidannotations.annotations.NoTitle;
 import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
-import com.googlecode.androidannotations.annotations.ProgressChange;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
+import com.googlecode.androidannotations.annotations.ProgressChange;
 import com.googlecode.androidannotations.annotations.RoboGuice;
 import com.googlecode.androidannotations.annotations.RootContext;
 import com.googlecode.androidannotations.annotations.SystemService;
@@ -461,15 +461,19 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new BeforeTextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new TextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
+		modelValidator.register(new ProgressChangeValidator(processingEnv, rClass));
+		modelValidator.register(new TrackingTouchStartValidator(processingEnv, rClass));
+		modelValidator.register(new TrackingTouchStopValidator(processingEnv, rClass));
+		/*
+		 * Any view injection or listener binding should occur before
+		 * AfterViewsValidator
+		 */
 		modelValidator.register(new AfterViewsValidator(processingEnv));
 		modelValidator.register(new TraceValidator(processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
 		modelValidator.register(new NonConfigurationInstanceValidator(processingEnv));
-		modelValidator.register(new ProgressChangeValidator(processingEnv, rClass));
-		modelValidator.register(new TrackingTouchStartValidator(processingEnv, rClass));
-		modelValidator.register(new TrackingTouchStopValidator(processingEnv, rClass));
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		return modelValidator;
@@ -543,6 +547,13 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new ProgressChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new TrackingTouchStartProcessor(processingEnv, rClass));
+		modelProcessor.register(new TrackingTouchStopProcessor(processingEnv, rClass));
+		/*
+		 * Any view injection or listener binding should occur before
+		 * AfterViewsProcessor
+		 */
 		modelProcessor.register(new AfterViewsProcessor());
 		if (traceActivated()) {
 			modelProcessor.register(new TraceProcessor());
@@ -552,9 +563,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
 		modelProcessor.register(new NonConfigurationInstanceProcessor(processingEnv));
-		modelProcessor.register(new ProgressChangeProcessor(processingEnv, rClass));
-		modelProcessor.register(new TrackingTouchStartProcessor(processingEnv, rClass));
-		modelProcessor.register(new TrackingTouchStopProcessor(processingEnv, rClass));
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		return modelProcessor;
 	}
