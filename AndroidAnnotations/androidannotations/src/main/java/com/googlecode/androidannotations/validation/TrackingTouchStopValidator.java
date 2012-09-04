@@ -22,7 +22,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import com.googlecode.androidannotations.annotations.TrackingTouchStop;
 import com.googlecode.androidannotations.rclass.IRClass;
 
-public class TrackingTouchStopValidator extends TrackingTouchStartValidator implements ElementValidator {
+public class TrackingTouchStopValidator extends AbstractTrackingTouchValidator {
 
 	public TrackingTouchStopValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv, rClass);

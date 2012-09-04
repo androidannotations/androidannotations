@@ -15,16 +15,13 @@
  */
 package com.googlecode.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
 
-import com.googlecode.androidannotations.annotations.ProgressChange;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
@@ -33,20 +30,15 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class ProgressChangeValidator implements ElementValidator {
+public abstract class AbstractTrackingTouchValidator implements ElementValidator {
 
 	private final IdValidatorHelper validatorHelper;
 
 	private final IdAnnotationHelper annotationHelper;
 
-	public ProgressChangeValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public AbstractTrackingTouchValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
-	}
-
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ProgressChange.class;
 	}
 
 	@Override
@@ -72,38 +64,21 @@ public class ProgressChangeValidator implements ElementValidator {
 
 	private void hasProgressChangeMethodParameters(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
-		boolean seekBarParameterFound = false;
-		for (VariableElement parameter : parameters) {
-			String parameterType = parameter.asType().toString();
-			if (parameterType.equals(CanonicalNameConstants.SEEKBAR)) {
-				if (seekBarParameterFound) {
-					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can declare only one parameter of type " + CanonicalNameConstants.SEEKBAR);
-					valid.invalidate();
-				}
-				seekBarParameterFound = true;
-				continue;
-			}
-			if (parameter.asType().getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType)) {
-				String parameterName = parameter.toString();
-				if ("progress".equals(parameterName)) {
-					continue;
-				}
-				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. The parameter name must be 'progress'.");
-				valid.invalidate();
-				continue;
-			}
-			if (parameter.asType().getKind() == TypeKind.BOOLEAN || CanonicalNameConstants.BOOLEAN.equals(parameterType)) {
-				String parameterName = parameter.toString();
-				if ("fromUser".equals(parameterName)) {
-					continue;
-				}
-				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. The parameter name must be 'fromUser'.");
-				valid.invalidate();
-				continue;
-			}
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
+
+		if (parameters.size() > 1) {
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
 			valid.invalidate();
+			return;
 		}
+
+		if (parameters.size() == 1) {
+			String parameterType = parameters.get(0).asType().toString();
+			if (!parameterType.equals(CanonicalNameConstants.SEEKBAR)) {
+				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
+				valid.invalidate();
+			}
+		}
+
 	}
 
 }
