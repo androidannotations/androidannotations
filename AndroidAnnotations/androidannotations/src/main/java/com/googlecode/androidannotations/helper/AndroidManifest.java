@@ -23,8 +23,18 @@ public class AndroidManifest {
 	private final String applicationPackage;
 	private final List<String> componentQualifiedNames;
 	private final String applicationClassName;
+	private final boolean libraryProject;
 
-	public AndroidManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames) {
+	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames) {
+		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames);
+	}
+
+	public static AndroidManifest createLibraryManifest(String applicationPackage) {
+		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList());
+	}
+
+	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames) {
+		this.libraryProject = libraryProject;
 		this.applicationPackage = applicationPackage;
 		this.applicationClassName = applicationClassName;
 		this.componentQualifiedNames = componentQualifiedNames;
@@ -40,6 +50,10 @@ public class AndroidManifest {
 
 	public String getApplicationClassName() {
 		return applicationClassName;
+	}
+
+	public boolean isLibraryProject() {
+		return libraryProject;
 	}
 
 }
