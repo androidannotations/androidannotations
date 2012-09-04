@@ -50,8 +50,6 @@ public class EApplicationValidator implements ElementValidator {
 		validatorHelper.extendsApplication(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-		
-		validatorHelper.isNotAbstract(element, valid);
 
 		validatorHelper.applicationRegistered(element, androidManifest, valid);
 
