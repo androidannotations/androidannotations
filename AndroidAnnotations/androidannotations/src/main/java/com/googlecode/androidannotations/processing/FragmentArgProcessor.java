@@ -13,7 +13,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.Arg;
+import com.googlecode.androidannotations.annotations.FragmentArg;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
 import com.googlecode.androidannotations.helper.BundleHelper;
@@ -30,23 +30,23 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
-public class ArgProcessor implements DecoratingElementProcessor {
+public class FragmentArgProcessor implements DecoratingElementProcessor {
 
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 	private final AnnotationHelper annotationHelper;
 
-	public ArgProcessor(ProcessingEnvironment processingEnv) {
+	public FragmentArgProcessor(ProcessingEnvironment processingEnv) {
 		annotationHelper = new AnnotationHelper(processingEnv);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Arg.class;
+		return FragmentArg.class;
 	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
-		Arg annotation = element.getAnnotation(Arg.class);
+		FragmentArg annotation = element.getAnnotation(FragmentArg.class);
 		String argKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
 

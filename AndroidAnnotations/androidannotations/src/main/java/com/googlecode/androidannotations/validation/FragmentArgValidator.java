@@ -5,23 +5,23 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.Arg;
+import com.googlecode.androidannotations.annotations.FragmentArg;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.googlecode.androidannotations.helper.ValidatorHelper;
 import com.googlecode.androidannotations.model.AnnotationElements;
 
-public class ArgValidator implements ElementValidator {
+public class FragmentArgValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
 
-	public ArgValidator(ProcessingEnvironment processingEnv) {
+	public FragmentArgValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return Arg.class;
+		return FragmentArg.class;
 	}
 
 	@Override
