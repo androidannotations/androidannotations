@@ -163,7 +163,7 @@ public class FragmentArguments extends Fragment {
 	}
 
 	static {
-		FragmentArguments_.create().myBundle(null).myCharSequence(null).build();
+		FragmentArguments_.builder().myBundle(null).myCharSequence(null).build();
 	}
 
 }
