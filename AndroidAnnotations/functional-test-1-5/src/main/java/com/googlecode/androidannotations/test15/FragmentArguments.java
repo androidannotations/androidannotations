@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Fragment;
 import android.os.Bundle;
 
+import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.Arg;
 import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.test15.instancestate.MyGenericParcelableBean;
@@ -155,6 +156,11 @@ public class FragmentArguments extends Fragment {
 
 	@Arg
 	MyGenericParcelableBean<Integer>[] myGenericParcelableBeanArray;
+	
+	@AfterInject
+	void afterInject(){
+		
+	}
 
 	static {
 		FragmentArguments_.create().myBundle(null).myCharSequence(null).build();

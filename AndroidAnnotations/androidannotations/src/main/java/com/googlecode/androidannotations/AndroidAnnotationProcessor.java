@@ -512,6 +512,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		}
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor(processingEnv));
+		modelProcessor.register(new ArgProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
 		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
 		modelProcessor.register(new RestProcessor(restImplementationHolder));
@@ -543,7 +544,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new HttpsClientProcessor(rClass));
-		modelProcessor.register(new ArgProcessor(processingEnv));
 		return modelProcessor;
 	}
 
