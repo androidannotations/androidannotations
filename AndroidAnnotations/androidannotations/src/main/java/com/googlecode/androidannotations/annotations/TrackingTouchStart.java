@@ -45,7 +45,7 @@ import android.widget.SeekBar;
  * @since 2.7
  * 
  * @see com.googlecode.androidannotations.annotations.TrackingTouchStop
- * @see com.googlecode.androidannotations.annotations.ProgressChange
+ * @see com.googlecode.androidannotations.annotations.SeekBarProgressChange
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

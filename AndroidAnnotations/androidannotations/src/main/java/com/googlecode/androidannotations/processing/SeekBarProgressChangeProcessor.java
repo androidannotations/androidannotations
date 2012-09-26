@@ -25,7 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.ProgressChange;
+import com.googlecode.androidannotations.annotations.SeekBarProgressChange;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.OnSeekBarChangeListenerHelper;
@@ -42,20 +42,20 @@ import com.sun.codemodel.JVar;
 /**
  * @author Mathieu Boniface
  */
-public class ProgressChangeProcessor implements DecoratingElementProcessor {
+public class SeekBarProgressChangeProcessor implements DecoratingElementProcessor {
 
 	private final OnSeekBarChangeListenerHelper helper;
 
 	private final APTCodeModelHelper codeModelHelper;
 
-	public ProgressChangeProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public SeekBarProgressChangeProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		codeModelHelper = new APTCodeModelHelper();
 		helper = new OnSeekBarChangeListenerHelper(processingEnv, getTarget(), rClass, codeModelHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return ProgressChange.class;
+		return SeekBarProgressChange.class;
 	}
 
 	@Override

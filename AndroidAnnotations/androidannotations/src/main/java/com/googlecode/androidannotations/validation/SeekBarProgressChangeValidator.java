@@ -24,7 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
-import com.googlecode.androidannotations.annotations.ProgressChange;
+import com.googlecode.androidannotations.annotations.SeekBarProgressChange;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
@@ -33,20 +33,20 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public class ProgressChangeValidator implements ElementValidator {
+public class SeekBarProgressChangeValidator implements ElementValidator {
 
 	private final IdValidatorHelper validatorHelper;
 
 	private final IdAnnotationHelper annotationHelper;
 
-	public ProgressChangeValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public SeekBarProgressChangeValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return ProgressChange.class;
+		return SeekBarProgressChange.class;
 	}
 
 	@Override

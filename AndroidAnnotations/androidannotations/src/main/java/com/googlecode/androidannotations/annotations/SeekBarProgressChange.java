@@ -92,7 +92,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-public @interface ProgressChange {
+public @interface SeekBarProgressChange {
 
 	int[] value() default ResId.DEFAULT_VALUE;
 
