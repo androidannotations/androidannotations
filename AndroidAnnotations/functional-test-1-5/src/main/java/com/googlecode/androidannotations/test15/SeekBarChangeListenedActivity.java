@@ -20,8 +20,8 @@ import android.widget.SeekBar;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.SeekBarProgressChange;
-import com.googlecode.androidannotations.annotations.TrackingTouchStart;
-import com.googlecode.androidannotations.annotations.TrackingTouchStop;
+import com.googlecode.androidannotations.annotations.SeekBarTouchStart;
+import com.googlecode.androidannotations.annotations.SeekBarTouchStop;
 
 @EActivity(R.layout.seekbars)
 public class SeekBarChangeListenedActivity extends Activity {
@@ -54,25 +54,25 @@ public class SeekBarChangeListenedActivity extends Activity {
 	void m7() {
 	}
 
-	@TrackingTouchStart(R.id.seekBar2)
+	@SeekBarTouchStart(R.id.seekBar2)
 	@SeekBarProgressChange(R.id.seekBar2)
-	@TrackingTouchStop(R.id.seekBar2)
+	@SeekBarTouchStop(R.id.seekBar2)
 	void m8(SeekBar seekBar) {
 	}
 
-	@TrackingTouchStop(R.id.seekBar1)
+	@SeekBarTouchStop(R.id.seekBar1)
 	void m9(SeekBar seekBar) {
 	}
 
-	@TrackingTouchStop(R.id.seekBar1)
+	@SeekBarTouchStop(R.id.seekBar1)
 	void m10() {
 	}
 
-	@TrackingTouchStart(R.id.seekBar1)
+	@SeekBarTouchStart(R.id.seekBar1)
 	void m11(SeekBar seekBar) {
 	}
 
-	@TrackingTouchStart(R.id.seekBar1)
+	@SeekBarTouchStart(R.id.seekBar1)
 	void m12() {
 	}
 
