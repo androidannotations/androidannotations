@@ -87,8 +87,8 @@ import java.lang.annotation.Target;
  * 
  * @since 2.7
  * 
- * @see com.googlecode.androidannotations.annotations.TrackingTouchStart
- * @see com.googlecode.androidannotations.annotations.TrackingTouchStop
+ * @see com.googlecode.androidannotations.annotations.SeekBarTouchStart
+ * @see com.googlecode.androidannotations.annotations.SeekBarTouchStop
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

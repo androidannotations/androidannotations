@@ -27,8 +27,8 @@ import android.widget.SeekBar;
  * 
  * This annotation is intended to be used on methods to receive events defined
  * by
- * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStartTrackingTouch(SeekBar seekBar)}
- * when the user begins to move the cursor of the targeted SeekBar.
+ * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStopTrackingTouch(SeekBar seekBar)}
+ * when the user has finished to move the cursor of the targeted SeekBar.
  * 
  * </blockquote> <blockquote>
  * 
@@ -44,12 +44,12 @@ import android.widget.SeekBar;
  * 
  * @since 2.7
  * 
- * @see com.googlecode.androidannotations.annotations.TrackingTouchStop
+ * @see com.googlecode.androidannotations.annotations.SeekBarTouchStart
  * @see com.googlecode.androidannotations.annotations.SeekBarProgressChange
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-public @interface TrackingTouchStart {
+public @interface SeekBarTouchStop {
 
 	int[] value() default ResId.DEFAULT_VALUE;
 

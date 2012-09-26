@@ -30,13 +30,13 @@ import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 
-public abstract class AbstractTrackingTouchValidator implements ElementValidator {
+public abstract class AbstractSeekBarTouchValidator implements ElementValidator {
 
 	private final IdValidatorHelper validatorHelper;
 
 	private final IdAnnotationHelper annotationHelper;
 
-	public AbstractTrackingTouchValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public AbstractSeekBarTouchValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}

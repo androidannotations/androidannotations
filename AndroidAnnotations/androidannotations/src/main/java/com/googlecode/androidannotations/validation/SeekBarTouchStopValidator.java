@@ -13,33 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package com.googlecode.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
-import com.googlecode.androidannotations.annotations.TrackingTouchStart;
+import com.googlecode.androidannotations.annotations.SeekBarTouchStop;
 import com.googlecode.androidannotations.rclass.IRClass;
-import com.sun.codemodel.JMethod;
 
-/**
- * @author Mathieu Boniface
- */
-public class TrackingTouchStartProcessor extends AbstractTrackingTouchProcessor {
+public class SeekBarTouchStopValidator extends AbstractSeekBarTouchValidator {
 
-	public TrackingTouchStartProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public SeekBarTouchStopValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv, rClass);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return TrackingTouchStart.class;
+		return SeekBarTouchStop.class;
 	}
 
-	@Override
-	protected JMethod getMethodToCall(OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder) {
-		JMethod methodToCall = onSeekBarChangeListenerHolder.onStartTrackingTouchMethod;
-		return methodToCall;
-	}
 }

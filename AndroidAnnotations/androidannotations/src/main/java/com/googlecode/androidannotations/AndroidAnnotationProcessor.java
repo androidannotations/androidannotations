@@ -72,8 +72,8 @@ import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.TextChange;
 import com.googlecode.androidannotations.annotations.Touch;
 import com.googlecode.androidannotations.annotations.Trace;
-import com.googlecode.androidannotations.annotations.TrackingTouchStart;
-import com.googlecode.androidannotations.annotations.TrackingTouchStop;
+import com.googlecode.androidannotations.annotations.SeekBarTouchStart;
+import com.googlecode.androidannotations.annotations.SeekBarTouchStop;
 import com.googlecode.androidannotations.annotations.Transactional;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -159,8 +159,8 @@ import com.googlecode.androidannotations.processing.SystemServiceProcessor;
 import com.googlecode.androidannotations.processing.TextChangeProcessor;
 import com.googlecode.androidannotations.processing.TouchProcessor;
 import com.googlecode.androidannotations.processing.TraceProcessor;
-import com.googlecode.androidannotations.processing.TrackingTouchStartProcessor;
-import com.googlecode.androidannotations.processing.TrackingTouchStopProcessor;
+import com.googlecode.androidannotations.processing.SeekBarTouchStartProcessor;
+import com.googlecode.androidannotations.processing.SeekBarTouchStopProcessor;
 import com.googlecode.androidannotations.processing.TransactionalProcessor;
 import com.googlecode.androidannotations.processing.UiThreadProcessor;
 import com.googlecode.androidannotations.processing.ViewByIdProcessor;
@@ -221,8 +221,8 @@ import com.googlecode.androidannotations.validation.SystemServiceValidator;
 import com.googlecode.androidannotations.validation.TextChangeValidator;
 import com.googlecode.androidannotations.validation.TouchValidator;
 import com.googlecode.androidannotations.validation.TraceValidator;
-import com.googlecode.androidannotations.validation.TrackingTouchStartValidator;
-import com.googlecode.androidannotations.validation.TrackingTouchStopValidator;
+import com.googlecode.androidannotations.validation.SeekBarTouchStartValidator;
+import com.googlecode.androidannotations.validation.SeekBarTouchStopValidator;
 import com.googlecode.androidannotations.validation.TransactionalValidator;
 import com.googlecode.androidannotations.validation.ViewByIdValidator;
 import com.googlecode.androidannotations.validation.rest.AcceptValidator;
@@ -303,8 +303,8 @@ import com.sun.codemodel.JCodeModel;
 		BeforeTextChange.class, //
 		TextChange.class, //
 		SeekBarProgressChange.class, //
-		TrackingTouchStart.class, //
-		TrackingTouchStop.class, //
+		SeekBarTouchStart.class, //
+		SeekBarTouchStop.class, //
 		AfterTextChange.class, //
 		OrmLiteDao.class, //
 		HttpsClient.class //
@@ -462,8 +462,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new TextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new AfterTextChangeValidator(processingEnv, rClass));
 		modelValidator.register(new SeekBarProgressChangeValidator(processingEnv, rClass));
-		modelValidator.register(new TrackingTouchStartValidator(processingEnv, rClass));
-		modelValidator.register(new TrackingTouchStopValidator(processingEnv, rClass));
+		modelValidator.register(new SeekBarTouchStartValidator(processingEnv, rClass));
+		modelValidator.register(new SeekBarTouchStopValidator(processingEnv, rClass));
 		/*
 		 * Any view injection or listener binding should occur before
 		 * AfterViewsValidator
@@ -548,8 +548,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new AfterTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new SeekBarProgressChangeProcessor(processingEnv, rClass));
-		modelProcessor.register(new TrackingTouchStartProcessor(processingEnv, rClass));
-		modelProcessor.register(new TrackingTouchStopProcessor(processingEnv, rClass));
+		modelProcessor.register(new SeekBarTouchStartProcessor(processingEnv, rClass));
+		modelProcessor.register(new SeekBarTouchStopProcessor(processingEnv, rClass));
 		/*
 		 * Any view injection or listener binding should occur before
 		 * AfterViewsProcessor
