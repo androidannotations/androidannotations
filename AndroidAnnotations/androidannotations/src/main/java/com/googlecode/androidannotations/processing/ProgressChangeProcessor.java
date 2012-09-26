@@ -72,16 +72,13 @@ public class ProgressChangeProcessor implements DecoratingElementProcessor {
 
 		for (int i = 0; i < parameters.size(); i++) {
 			VariableElement parameter = parameters.get(i);
-			String parameterName = parameter.toString();
 			TypeMirror parameterType = parameter.asType();
 
 			if (CanonicalNameConstants.SEEKBAR.equals(parameterType.toString())) {
 				seekBarViewParameterPosition = i;
-			} else if (parameterType.getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType.toString()) //
-					&& "progress".equals(parameterName)) {
+			} else if (parameterType.getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType.toString())) {
 				progressParameterPosition = i;
-			} else if ((parameterType.getKind() == TypeKind.BOOLEAN || CanonicalNameConstants.BOOLEAN.equals(parameterType.toString())) //
-					&& "fromUser".equals(parameterName)) {
+			} else if (parameterType.getKind() == TypeKind.BOOLEAN || CanonicalNameConstants.BOOLEAN.equals(parameterType.toString())) {
 				fromUserParameterPosition = i;
 			}
 		}

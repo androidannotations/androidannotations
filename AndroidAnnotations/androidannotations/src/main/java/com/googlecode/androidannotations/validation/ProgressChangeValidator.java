@@ -73,6 +73,8 @@ public class ProgressChangeValidator implements ElementValidator {
 	private void hasProgressChangeMethodParameters(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		boolean seekBarParameterFound = false;
+		boolean fromUserParameterFound = false;
+		boolean progressParameterFound = false;
 		for (VariableElement parameter : parameters) {
 			String parameterType = parameter.asType().toString();
 			if (parameterType.equals(CanonicalNameConstants.SEEKBAR)) {
@@ -84,26 +86,23 @@ public class ProgressChangeValidator implements ElementValidator {
 				continue;
 			}
 			if (parameter.asType().getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType)) {
-				String parameterName = parameter.toString();
-				if ("progress".equals(parameterName)) {
-					continue;
+				if (progressParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "You can have only one parameter of type " + CanonicalNameConstants.INTEGER);
+					valid.invalidate();
 				}
-				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. The parameter name must be 'progress'.");
-				valid.invalidate();
+				progressParameterFound = true;
 				continue;
 			}
 			if (parameter.asType().getKind() == TypeKind.BOOLEAN || CanonicalNameConstants.BOOLEAN.equals(parameterType)) {
-				String parameterName = parameter.toString();
-				if ("fromUser".equals(parameterName)) {
-					continue;
+				if (fromUserParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "You can have only one parameter of type " + CanonicalNameConstants.BOOLEAN);
+					valid.invalidate();
 				}
-				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. The parameter name must be 'fromUser'.");
-				valid.invalidate();
+				fromUserParameterFound = true;
 				continue;
 			}
 			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
 			valid.invalidate();
 		}
 	}
-
 }
