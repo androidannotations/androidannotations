@@ -21,6 +21,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
@@ -55,34 +56,43 @@ public class GetProcessor extends MethodProcessor {
 
 		TypeMirror returnType = executableElement.getReturnType();
 
-		JClass generatedReturnType = null;
-		String returnTypeString = returnType.toString();
 		JClass expectedClass = null;
+		JClass generatedReturnClass = null;
+		String returnTypeString = returnType.toString();
 
 		if (returnType.getKind() != TypeKind.VOID) {
+			DeclaredType declaredReturnType = (DeclaredType) returnType;
+
 			if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
-				DeclaredType declaredReturnedType = (DeclaredType) returnType;
-				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
+				TypeMirror typeParameter = declaredReturnType.getTypeArguments().get(0);
 				expectedClass = holder.refClass(typeParameter.toString());
-				generatedReturnType = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
+				generatedReturnClass = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
+			} else if (returnType.getKind() == TypeKind.DECLARED) {
+				TypeMirror enclosingType = declaredReturnType.getEnclosingType();
+				if (enclosingType instanceof NoType) {
+					expectedClass = holder.parseClass(declaredReturnType.toString());
+				} else {
+					expectedClass = holder.parseClass(enclosingType.toString());
+				}
+
+				generatedReturnClass = holder.parseClass(declaredReturnType.toString());
 			} else {
-				generatedReturnType = holder.refClass(returnTypeString);
-				expectedClass = generatedReturnType;
+				generatedReturnClass = holder.refClass(returnTypeString);
+				expectedClass = holder.refClass(returnTypeString);
 			}
 		}
 
 		Get getAnnotation = element.getAnnotation(Get.class);
 		String urlSuffix = getAnnotation.value();
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
+		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, generatedReturnClass, codeModel));
 	}
 
 	@Override
 	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		JClass expectedClass = methodHolder.getExpectedClass();
 		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
 
-		if (expectedClass == generatedReturnType) {
+		if (!generatedReturnType.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 			restCall = JExpr.invoke(restCall, "getBody");
 		}
 

@@ -57,10 +57,8 @@ public class PostValidator implements ElementValidator {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
-		
+
 		validatorHelper.doesNotReturnPrimitive(executableElement, valid);
-		
-		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
 
 		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);
 

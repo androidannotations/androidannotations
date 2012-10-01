@@ -28,6 +28,7 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JType;
 
 public class EBeansHolder {
 
@@ -176,6 +177,10 @@ public class EBeansHolder {
 		}
 
 		return refClass;
+	}
+
+	public JType parseClass(String fullyQualifiedClassName) throws ClassNotFoundException {
+		return codeModel.parseType(fullyQualifiedClassName);
 	}
 
 	public JClass refClass(Class<?> clazz) {

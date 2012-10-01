@@ -29,6 +29,7 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JSwitch;
+import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public class EBeanHolder {
@@ -105,6 +106,26 @@ public class EBeanHolder {
 
 	public JCodeModel codeModel() {
 		return eBeansHolder.codeModel();
+	}
+
+	/**
+	 * Parse the fully qualified class name and return a JClass instance. This
+	 * method support both generics (it'll return a {@link JNarrowedClass}) and
+	 * primitives (it'll autobox it to a {@link JClass})
+	 * 
+	 * @param fullyQualifiedClassName
+	 * @return
+	 */
+	public JClass parseClass(String fullyQualifiedClassName) {
+		try {
+			JType jType = eBeansHolder.parseClass(fullyQualifiedClassName);
+			if (jType.isPrimitive()) {
+				return jType.boxify();
+			}
+			return (JClass) jType;
+		} catch (ClassNotFoundException e) {
+			return eBeansHolder.refClass(fullyQualifiedClassName);
+		}
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {

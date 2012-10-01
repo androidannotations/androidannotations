@@ -29,8 +29,8 @@ import javax.lang.model.element.VariableElement;
 import com.googlecode.androidannotations.annotations.rest.Accept;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.RestAnnotationHelper;
-import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.googlecode.androidannotations.processing.DecoratingElementProcessor;
+import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -66,6 +66,9 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 			method = holder.restImplementationClass.method(JMod.PUBLIC, methodHolder.getGeneratedReturnType(), methodName);
 		}
 		method.annotate(Override.class);
+		if (expectedClass != generatedReturnType && !generatedReturnType.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+			method.annotate(SuppressWarnings.class).param("value", "unchecked");
+		}
 
 		JBlock body = method.body();
 

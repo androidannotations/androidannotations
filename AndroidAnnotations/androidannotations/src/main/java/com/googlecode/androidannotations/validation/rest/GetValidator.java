@@ -58,10 +58,8 @@ public class GetValidator implements ElementValidator {
 
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
 
-		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
-		
 		validatorHelper.doesNotReturnPrimitive(executableElement, valid);
-		
+
 		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter(executableElement, valid);
 
 		return valid.isValid();
