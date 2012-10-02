@@ -28,16 +28,10 @@ import javax.lang.model.type.TypeMirror;
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.processing.EBeanHolder;
-import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JVar;
 
-public class GetProcessor extends MethodProcessor {
-
-	private EBeanHolder holder;
+public class GetProcessor extends GetPostProcessor {
 
 	public GetProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
@@ -60,6 +54,7 @@ public class GetProcessor extends MethodProcessor {
 		JClass generatedReturnClass = null;
 		String returnTypeString = returnType.toString();
 
+		// TODO: Refactoring this block...
 		if (returnType.getKind() != TypeKind.VOID) {
 			if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 				DeclaredType declaredReturnType = (DeclaredType) returnType;
@@ -86,38 +81,6 @@ public class GetProcessor extends MethodProcessor {
 		String urlSuffix = getAnnotation.value();
 
 		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, generatedReturnClass, codeModel));
-	}
-
-	@Override
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
-
-		if (!generatedReturnType.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
-			restCall = JExpr.invoke(restCall, "getBody");
-		}
-
-		return restCall;
-	}
-
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(generateHttpEntityVar(methodHolder));
-	}
-
-	@Override
-	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		JClass expectedClass = methodHolder.getExpectedClass();
-
-		if (expectedClass != null) {
-			return restCall.arg(expectedClass.dotclass());
-		} else {
-			return restCall.arg(JExpr._null());
-		}
-	}
-
-	@Override
-	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(holder, body, executableElement);
 	}
 
 }
