@@ -61,13 +61,13 @@ public class GetProcessor extends MethodProcessor {
 		String returnTypeString = returnType.toString();
 
 		if (returnType.getKind() != TypeKind.VOID) {
-			DeclaredType declaredReturnType = (DeclaredType) returnType;
-
 			if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+				DeclaredType declaredReturnType = (DeclaredType) returnType;
 				TypeMirror typeParameter = declaredReturnType.getTypeArguments().get(0);
 				expectedClass = holder.refClass(typeParameter.toString());
 				generatedReturnClass = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
 			} else if (returnType.getKind() == TypeKind.DECLARED) {
+				DeclaredType declaredReturnType = (DeclaredType) returnType;
 				TypeMirror enclosingType = declaredReturnType.getEnclosingType();
 				if (enclosingType instanceof NoType) {
 					expectedClass = holder.parseClass(declaredReturnType.toString());
