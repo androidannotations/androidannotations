@@ -37,9 +37,9 @@ import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -87,7 +87,7 @@ public class OptionsItemProcessor implements DecoratingElementProcessor {
 
 		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
-		if (holder.onOptionsItemSelectedSwitch == null) {
+		if (holder.onOptionsItemSelectedIfElseBlock == null) {
 			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");
 			method.annotate(Override.class);
 			holder.onOptionsItemSelectedItem = method.param(menuItemClass, "item");
@@ -97,25 +97,26 @@ public class OptionsItemProcessor implements DecoratingElementProcessor {
 
 			body._if(handled)._then()._return(TRUE);
 
-			holder.onOptionsItemSelectedSwitch = body._switch(holder.onOptionsItemSelectedItem.invoke("getItemId"));
+			holder.onOptionsItemSelectedItemId = body.decl(codeModel.INT, "itemId_", holder.onOptionsItemSelectedItem.invoke("getItemId"));
+			holder.onOptionsItemSelectedIfElseBlock = body.block();
 
-			JBlock defaultBody = holder.onOptionsItemSelectedSwitch._default().body();
-			defaultBody._return(FALSE);
+			body._return(FALSE);
 		}
 
-		JCase itemCase = null;
-		for (JFieldRef idRef : idsRefs) {
-			itemCase = holder.onOptionsItemSelectedSwitch._case(idRef);
+		JExpression ifExpr = holder.onOptionsItemSelectedItemId.eq(idsRefs.get(0));
+
+		for (int i = 1; i < idsRefs.size(); i++) {
+			ifExpr = ifExpr.cor(holder.onOptionsItemSelectedItemId.eq(idsRefs.get(i)));
 		}
 
-		JBlock itemCaseBody = itemCase.body();
+		JBlock itemIfBody = holder.onOptionsItemSelectedIfElseBlock._if(ifExpr)._then();
 		JInvocation methodCall = invoke(methodName);
 
 		if (returnMethodResult) {
-			itemCaseBody._return(methodCall);
+			itemIfBody._return(methodCall);
 		} else {
-			itemCaseBody.add(methodCall);
-			itemCaseBody._return(TRUE);
+			itemIfBody.add(methodCall);
+			itemIfBody._return(TRUE);
 		}
 
 		if (hasItemParameter) {

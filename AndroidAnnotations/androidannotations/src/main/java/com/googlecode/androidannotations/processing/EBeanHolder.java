@@ -28,7 +28,6 @@ import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
 public class EBeanHolder {
@@ -52,7 +51,8 @@ public class EBeanHolder {
 
 	public JFieldVar handler;
 
-	public JSwitch onOptionsItemSelectedSwitch;
+	public JBlock onOptionsItemSelectedIfElseBlock;
+	public JVar onOptionsItemSelectedItemId;
 	public JVar onOptionsItemSelectedItem;
 
 	public JMethod restoreSavedInstanceStateMethod;
