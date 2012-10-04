@@ -86,6 +86,11 @@ public class EBeanHolder {
 	 */
 	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
 
+	/**
+	 * onSeekBarChangeListeners by idRef
+	 */
+	public HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListeners = new HashMap<String, OnSeekBarChangeListenerHolder>();
+
 	public JMethod findNativeFragmentById;
 	public JMethod findSupportFragmentById;
 	public JMethod findNativeFragmentByTag;

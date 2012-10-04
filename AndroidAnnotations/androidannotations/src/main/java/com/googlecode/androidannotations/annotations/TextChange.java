@@ -32,8 +32,8 @@ import java.lang.annotation.Target;
  * 
  * The method may have multiple parameter :
  * <ul>
- * <li>A android.widget.TextView parameter to know which view has targeted this
- * event
+ * <li>A {@link android.widget.TextView} parameter to know which view has
+ * targeted this event
  * <li>An java.lang.CharSequence parameter to get the modified text.
  * <li>An int parameter named start to get the start position of the modified
  * text.

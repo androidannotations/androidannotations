@@ -13,29 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package com.googlecode.androidannotations.validation;
 
-import android.text.ClipboardManager;
+import java.lang.annotation.Annotation;
 
-import com.xtremelabs.robolectric.internal.Implementation;
-import com.xtremelabs.robolectric.internal.Implements;
+import javax.annotation.processing.ProcessingEnvironment;
 
-public class FakeClipboardManager extends ClipboardManager {
+import com.googlecode.androidannotations.annotations.SeekBarTouchStop;
+import com.googlecode.androidannotations.rclass.IRClass;
 
-	private CharSequence text;
+public class SeekBarTouchStopValidator extends AbstractSeekBarTouchValidator {
 
-	@Override
-	public CharSequence getText() {
-		return text;
+	public SeekBarTouchStopValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+		super(processingEnv, rClass);
 	}
 
 	@Override
-	public void setText(CharSequence text) {
-		this.text = text;
+	public Class<? extends Annotation> getTarget() {
+		return SeekBarTouchStop.class;
 	}
 
-	@Override
-	public boolean hasText() {
-		return text != null;
-	}
 }
