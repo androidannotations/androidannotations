@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeKind;
@@ -29,7 +28,6 @@ import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
 
 public class GetProcessor extends GetPostProcessor {
 
@@ -43,44 +41,40 @@ public class GetProcessor extends GetPostProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
-
-		this.holder = holder;
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		TypeMirror returnType = executableElement.getReturnType();
-
+	public void retrieveReturnClass(EBeanHolder holder, TypeMirror returnType, MethodProcessorHolder processorHolder) {
+		String returnTypeString = returnType.toString();
 		JClass expectedClass = null;
 		JClass generatedReturnClass = null;
-		String returnTypeString = returnType.toString();
 
-		// TODO: Refactoring this block...
-		if (returnType.getKind() != TypeKind.VOID) {
-			if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
-				DeclaredType declaredReturnType = (DeclaredType) returnType;
-				TypeMirror typeParameter = declaredReturnType.getTypeArguments().get(0);
-				expectedClass = holder.refClass(typeParameter.toString());
-				generatedReturnClass = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
-			} else if (returnType.getKind() == TypeKind.DECLARED) {
-				DeclaredType declaredReturnType = (DeclaredType) returnType;
-				TypeMirror enclosingType = declaredReturnType.getEnclosingType();
-				if (enclosingType instanceof NoType) {
-					expectedClass = holder.parseClass(declaredReturnType.toString());
-				} else {
-					expectedClass = holder.parseClass(enclosingType.toString());
-				}
+		if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+			DeclaredType declaredReturnType = (DeclaredType) returnType;
+			TypeMirror typeParameter = declaredReturnType.getTypeArguments().get(0);
+			expectedClass = holder.refClass(typeParameter.toString());
+			generatedReturnClass = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
 
-				generatedReturnClass = holder.parseClass(declaredReturnType.toString());
+		} else if (returnType.getKind() == TypeKind.DECLARED) {
+			DeclaredType declaredReturnType = (DeclaredType) returnType;
+			TypeMirror enclosingType = declaredReturnType.getEnclosingType();
+			if (enclosingType instanceof NoType) {
+				expectedClass = holder.parseClass(declaredReturnType.toString());
 			} else {
-				generatedReturnClass = holder.refClass(returnTypeString);
-				expectedClass = holder.refClass(returnTypeString);
+				expectedClass = holder.parseClass(enclosingType.toString());
 			}
+			generatedReturnClass = holder.parseClass(declaredReturnType.toString());
+
+		} else {
+			generatedReturnClass = holder.refClass(returnTypeString);
+			expectedClass = holder.refClass(returnTypeString);
 		}
 
-		Get getAnnotation = element.getAnnotation(Get.class);
-		String urlSuffix = getAnnotation.value();
+		processorHolder.setExpectedClass(expectedClass);
+		processorHolder.setGeneratedReturnType(generatedReturnClass);
+	}
 
-		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, generatedReturnClass, codeModel));
+	@Override
+	public String retrieveUrlSuffix(Element element) {
+		Get getAnnotation = element.getAnnotation(Get.class);
+		return getAnnotation.value();
 	}
 
 }

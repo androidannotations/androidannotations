@@ -58,8 +58,16 @@ public class MethodProcessorHolder {
 		return expectedClass;
 	}
 
+	public void setExpectedClass(JClass expectedClass) {
+		this.expectedClass = expectedClass;
+	}
+
 	public JClass getGeneratedReturnType() {
 		return generatedReturnType;
+	}
+
+	public void setGeneratedReturnType(JClass generatedReturnType) {
+		this.generatedReturnType = generatedReturnType;
 	}
 
 	public JCodeModel getCodeModel() {
