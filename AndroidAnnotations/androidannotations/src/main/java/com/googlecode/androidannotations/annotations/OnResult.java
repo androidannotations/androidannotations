@@ -20,9 +20,76 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.content.Intent;
+
 /**
- * @author Mathieu Boniface
+ * <blockquote>
+ * 
+ * This annotation is intended to be used on methods to receive results from a
+ * previously started activity using
+ * {@link android.app.Activity#startActivityForResult(Intent, int)}
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * The annotation value must be an integer constant that represents the
+ * <b>requestCode</b> associated with the given result.
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * The method may have multiple parameter :
+ * <ul>
+ * <li>A android.content.Intent that contains data
+ * <li>An int or an java.lang.Integer to get the resultCode
+ * </ul>
+ * 
+ * Some usage examples of &#064;OnResult annotation: <blockquote>
+ * 
+ * </blockquote>
+ * 
+ * <pre>
+ * &#064;OnResult(<b>REQUEST_CODE</b>)
+ * void onResult(int resultCode, Intent data) {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
+ * &#064;OnResult(<b>REQUEST_CODE</b>)
+ * void onResult(int resultCode) {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
+ * &#064;OnResult(<b>ANOTHER_REQUEST_CODE</b>)
+ * void onResult(Intent data) {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote> <blockquote>
+ * 
+ * <pre>
+ * &#064;OnResult(<b>ANOTHER_REQUEST_CODE</b>)
+ * void onResult() {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see android.app.Activity#startActivityForResult(Intent, int)
+ * @see android.app.Activity#onActivityResult(int, int, Intent)
+ * 
+ * 
+ * @author Mathieu Boniface < mat.boniface@gmail.com >
+ * 
  */
+
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface OnResult {
