@@ -30,7 +30,6 @@ import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
@@ -38,7 +37,6 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
-import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
 /**
@@ -83,10 +81,10 @@ public class OnResultProcessor implements DecoratingElementProcessor {
 
 		int requestCode = executableElement.getAnnotation(OnResult.class).value();
 
-		JCase onActivityResultCase = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCode);
+		JBlock onActivityResultBlock = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCode);
 
 		JExpression activityRef = holder.eBean.staticRef("this");
-		JInvocation onResultInvocation = onActivityResultCase.body().invoke(activityRef, methodName);
+		JInvocation onResultInvocation = onActivityResultBlock.invoke(activityRef, methodName);
 
 		for (int i = 0; i < parameters.size(); i++) {
 			if (i == intentParameterPosition) {
@@ -100,13 +98,14 @@ public class OnResultProcessor implements DecoratingElementProcessor {
 
 	}
 
-	public JCase getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, int requestCode) {
+	public JBlock getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, int requestCode) {
 		JClass intentClass = holder.classes().INTENT;
+		JBlock onActivityResultBlock;
 
-		if (holder.onActivityResultSwitch == null) {
+		if (holder.onActivityResultMethod == null) {
 
 			JMethod onActivityResultMethod = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
-			JVar requestCodeParam = onActivityResultMethod.param(codeModel.INT, "requestCode");
+			JVar resultCodeParameter = onActivityResultMethod.param(codeModel.INT, "requestCode");
 			onActivityResultMethod.param(codeModel.INT, "resultCode");
 			onActivityResultMethod.param(intentClass, "data");
 			onActivityResultMethod.annotate(Override.class);
@@ -115,21 +114,29 @@ public class OnResultProcessor implements DecoratingElementProcessor {
 
 			JBlock onActivityResultMethodBody = onActivityResultMethod.body();
 			codeModelHelper.callSuperMethod(onActivityResultMethod, holder, onActivityResultMethodBody);
-			holder.onActivityResultSwitch = onActivityResultMethodBody._switch(requestCodeParam);
+
+			holder.onActivityResultLastCondition = onActivityResultMethodBody._if(resultCodeParameter.eq(JExpr.lit(requestCode)));
+
+			onActivityResultBlock = holder.onActivityResultLastCondition._then();
+			holder.onActivityResultBlocks.put(requestCode, onActivityResultBlock);
+		} else {
+
+			JVar resultCodeParameter = codeModelHelper.findParameterByName(holder.onActivityResultMethod, "requestCode");
+
+			onActivityResultBlock = holder.onActivityResultBlocks.get(requestCode);
+
+			if (onActivityResultBlock == null) {
+
+				holder.onActivityResultLastCondition = holder.onActivityResultLastCondition._elseif(resultCodeParameter.eq(JExpr.lit(requestCode)));
+
+				onActivityResultBlock = holder.onActivityResultLastCondition._then();
+
+				holder.onActivityResultBlocks.put(requestCode, onActivityResultBlock);
+
+			}
+
 		}
 
-		JSwitch onActivityResultSwitch = holder.onActivityResultSwitch;
-
-		JCase onActivityResultCase = holder.onActivityResultCases.get(requestCode);
-
-		if (onActivityResultCase == null) {
-
-			onActivityResultCase = onActivityResultSwitch._case(JExpr.lit(requestCode));
-
-			holder.onActivityResultCases.put(requestCode, onActivityResultCase);
-
-		}
-
-		return onActivityResultCase;
+		return onActivityResultBlock;
 	}
 }

@@ -24,28 +24,30 @@ import com.googlecode.androidannotations.annotations.OnResult;
 @EActivity(R.layout.views_injected)
 public class AwaitingResultActivity extends Activity {
 
-	private static final int REQUEST_CODE = 2;
+	private static final int FIRST_REQUEST_CODE = 1;
 
-	private static final int ANOTHER_REQUEST_CODE = 3;
+	private static final int SECOND_REQUEST_CODE = 2;
 
-	@OnResult(REQUEST_CODE)
+	private static final int THIRD_REQUEST_CODE = 3;
+
+	@OnResult(FIRST_REQUEST_CODE)
 	void onResult() {
 	}
 
-	@OnResult(ANOTHER_REQUEST_CODE)
+	@OnResult(SECOND_REQUEST_CODE)
 	void onResultWithData(Intent intent) {
 	}
 
-	@OnResult(REQUEST_CODE)
+	@OnResult(SECOND_REQUEST_CODE)
+	void onResultWithResultCodeAndData(int result, Intent intent) {
+	}
+
+	@OnResult(THIRD_REQUEST_CODE)
 	void onResultWithIntResultCode(int resultCode) {
 	}
 
-	@OnResult(REQUEST_CODE)
+	@OnResult(THIRD_REQUEST_CODE)
 	void onResultWithIntegerResultCode(Integer resultCode) {
-	}
-
-	@OnResult(ANOTHER_REQUEST_CODE)
-	void onResultWithResultCodeAndData(int result, Intent intent) {
 	}
 
 }

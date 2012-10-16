@@ -22,14 +22,13 @@ import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
 public class EBeanHolder {
@@ -88,13 +87,13 @@ public class EBeanHolder {
 	 */
 	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
 
-	public JSwitch onActivityResultSwitch;
+	public JConditional onActivityResultLastCondition;
 	public JMethod onActivityResultMethod;
 
 	/**
 	 * OnActivityResult byResultCode
 	 */
-	public HashMap<Integer, JCase> onActivityResultCases = new HashMap<Integer, JCase>();
+	public HashMap<Integer, JBlock> onActivityResultBlocks = new HashMap<Integer, JBlock>();
 
 	/**
 	 * onSeekBarChangeListeners by idRef
