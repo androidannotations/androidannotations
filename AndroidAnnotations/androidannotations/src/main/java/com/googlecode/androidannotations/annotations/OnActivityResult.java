@@ -31,7 +31,7 @@ import android.content.Intent;
  * 
  * </blockquote> <blockquote>
  * 
- * The annotation value must be an integer constant that represents the
+ * The annotation value must be a resource id that represents the
  * <b>requestCode</b> associated with the given result.
  * 
  * </blockquote> <blockquote>
@@ -47,7 +47,7 @@ import android.content.Intent;
  * </blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>REQUEST_CODE</b>)
+ * &#064;OnResult(<b>R.id.myRequest</b>)
  * void onResult(int resultCode, Intent data) {
  * 	// Something Here
  * }
@@ -56,7 +56,7 @@ import android.content.Intent;
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>REQUEST_CODE</b>)
+ * &#064;OnResult(<b>R.id.myRequest</b>)
  * void onResult(int resultCode) {
  * 	// Something Here
  * }
@@ -65,7 +65,7 @@ import android.content.Intent;
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>ANOTHER_REQUEST_CODE</b>)
+ * &#064;OnResult(<b>R.id.myRequest</b>)
  * void onResult(Intent data) {
  * 	// Something Here
  * }
@@ -74,8 +74,8 @@ import android.content.Intent;
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>ANOTHER_REQUEST_CODE</b>)
- * void onResult() {
+ * &#064;OnResult
+ * void myRequestResult() {
  * 	// Something Here
  * }
  * </pre>
@@ -92,10 +92,10 @@ import android.content.Intent;
 
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-public @interface OnResult {
+public @interface OnActivityResult {
 
-	public static final int DEFAULT_VALUE = Integer.MAX_VALUE - 1;
+	int[] value() default ResId.DEFAULT_VALUE;
 
-	int value() default DEFAULT_VALUE;
+	String[] resName() default "";
 
 }

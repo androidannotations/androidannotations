@@ -120,10 +120,4 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public <T> void annotationValueHasBeenFilled(Element element, IsValid valid, T value, T defaultValue) {
-		if ((value == null && defaultValue == null) || value.equals(defaultValue)) {
-			annotationHelper.printAnnotationError(element, "The annotation value has not been filled");
-			valid.invalidate();
-		}
-	}
 }

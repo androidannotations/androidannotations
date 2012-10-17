@@ -62,7 +62,7 @@ import com.googlecode.androidannotations.annotations.ItemSelect;
 import com.googlecode.androidannotations.annotations.LongClick;
 import com.googlecode.androidannotations.annotations.NoTitle;
 import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
-import com.googlecode.androidannotations.annotations.OnResult;
+import com.googlecode.androidannotations.annotations.OnActivityResult;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.OptionsMenu;
 import com.googlecode.androidannotations.annotations.OrmLiteDao;
@@ -311,7 +311,7 @@ import com.sun.codemodel.JCodeModel;
 		AfterTextChange.class, //
 		OrmLiteDao.class, //
 		HttpsClient.class, //
-		OnResult.class //
+		OnActivityResult.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {

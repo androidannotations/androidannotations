@@ -25,15 +25,17 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.OnResult;
+import com.googlecode.androidannotations.annotations.OnActivityResult;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
+import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -46,13 +48,16 @@ public class OnResultProcessor implements DecoratingElementProcessor {
 
 	private APTCodeModelHelper codeModelHelper;
 
+	private IdAnnotationHelper idAnnotationHelper;
+
 	public OnResultProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		codeModelHelper = new APTCodeModelHelper();
+		idAnnotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return OnResult.class;
+		return OnActivityResult.class;
 	}
 
 	@Override
@@ -79,28 +84,34 @@ public class OnResultProcessor implements DecoratingElementProcessor {
 
 		}
 
-		int requestCode = executableElement.getAnnotation(OnResult.class).value();
+		List<JFieldRef> requestCodeRefs = idAnnotationHelper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
-		JBlock onActivityResultBlock = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCode);
+		for (JFieldRef requestCodeRef : requestCodeRefs) {
 
-		JExpression activityRef = holder.eBean.staticRef("this");
-		JInvocation onResultInvocation = onActivityResultBlock.invoke(activityRef, methodName);
+			JBlock onActivityResultBlock = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCodeRef);
 
-		for (int i = 0; i < parameters.size(); i++) {
-			if (i == intentParameterPosition) {
-				JVar intentParameter = codeModelHelper.findParameterByName(holder.onActivityResultMethod, "data");
-				onResultInvocation.arg(intentParameter);
-			} else if (i == resultCodeParameterPosition) {
-				JVar resultCodeParameter = codeModelHelper.findParameterByName(holder.onActivityResultMethod, "resultCode");
-				onResultInvocation.arg(resultCodeParameter);
+			JExpression activityRef = holder.eBean.staticRef("this");
+			JInvocation onResultInvocation = onActivityResultBlock.invoke(activityRef, methodName);
+
+			for (int i = 0; i < parameters.size(); i++) {
+				if (i == intentParameterPosition) {
+					JVar intentParameter = codeModelHelper.findParameterByName(holder.onActivityResultMethod, "data");
+					onResultInvocation.arg(intentParameter);
+				} else if (i == resultCodeParameterPosition) {
+					JVar resultCodeParameter = codeModelHelper.findParameterByName(holder.onActivityResultMethod, "resultCode");
+					onResultInvocation.arg(resultCodeParameter);
+				}
 			}
+
 		}
 
 	}
 
-	public JBlock getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, int requestCode) {
+	public JBlock getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, JFieldRef requestCodeRef) {
+
 		JClass intentClass = holder.classes().INTENT;
 		JBlock onActivityResultBlock;
+		String requestCodeRefString = codeModelHelper.getIdStringFromIdFieldRef(requestCodeRef);
 
 		if (holder.onActivityResultMethod == null) {
 
@@ -115,23 +126,26 @@ public class OnResultProcessor implements DecoratingElementProcessor {
 			JBlock onActivityResultMethodBody = onActivityResultMethod.body();
 			codeModelHelper.callSuperMethod(onActivityResultMethod, holder, onActivityResultMethodBody);
 
-			holder.onActivityResultLastCondition = onActivityResultMethodBody._if(resultCodeParameter.eq(JExpr.lit(requestCode)));
+			JExpression condition = resultCodeParameter.eq(requestCodeRef);
+			holder.onActivityResultLastCondition = onActivityResultMethodBody._if(condition);
 
 			onActivityResultBlock = holder.onActivityResultLastCondition._then();
-			holder.onActivityResultBlocks.put(requestCode, onActivityResultBlock);
+
+			holder.onActivityResultBlocks.put(requestCodeRefString, onActivityResultBlock);
 		} else {
 
 			JVar resultCodeParameter = codeModelHelper.findParameterByName(holder.onActivityResultMethod, "requestCode");
 
-			onActivityResultBlock = holder.onActivityResultBlocks.get(requestCode);
+			onActivityResultBlock = holder.onActivityResultBlocks.get(requestCodeRefString);
 
 			if (onActivityResultBlock == null) {
 
-				holder.onActivityResultLastCondition = holder.onActivityResultLastCondition._elseif(resultCodeParameter.eq(JExpr.lit(requestCode)));
+				JExpression condition = resultCodeParameter.eq(requestCodeRef);
+				holder.onActivityResultLastCondition = holder.onActivityResultLastCondition._elseif(condition);
 
 				onActivityResultBlock = holder.onActivityResultLastCondition._then();
 
-				holder.onActivityResultBlocks.put(requestCode, onActivityResultBlock);
+				holder.onActivityResultBlocks.put(requestCodeRefString, onActivityResultBlock);
 
 			}
 

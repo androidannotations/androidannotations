@@ -25,12 +25,14 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.OnResult;
+import com.googlecode.androidannotations.annotations.OnActivityResult;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.IdAnnotationHelper;
 import com.googlecode.androidannotations.helper.IdValidatorHelper;
+import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import com.googlecode.androidannotations.model.AnnotationElements;
 import com.googlecode.androidannotations.rclass.IRClass;
+import com.googlecode.androidannotations.rclass.IRClass.Res;
 
 /**
  * @author Mathieu Boniface
@@ -48,7 +50,7 @@ public class OnResultValidator implements ElementValidator {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return OnResult.class;
+		return OnActivityResult.class;
 	}
 
 	@Override
@@ -62,8 +64,7 @@ public class OnResultValidator implements ElementValidator {
 
 		validatorHelper.doesntThrowException(element, valid);
 
-		OnResult onResultAnnotation = element.getAnnotation(OnResult.class);
-		validatorHelper.annotationValueHasBeenFilled(element, valid, onResultAnnotation.value(), OnResult.DEFAULT_VALUE);
+		validatorHelper.resIdsExist(element, Res.ID, FallbackStrategy.USE_ELEMENT_NAME, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);

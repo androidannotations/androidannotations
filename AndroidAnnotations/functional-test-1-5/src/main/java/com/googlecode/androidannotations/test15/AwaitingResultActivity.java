@@ -19,35 +19,37 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.OnResult;
+import com.googlecode.androidannotations.annotations.OnActivityResult;
 
 @EActivity(R.layout.views_injected)
 public class AwaitingResultActivity extends Activity {
 
-	private static final int FIRST_REQUEST_CODE = 1;
-
-	private static final int SECOND_REQUEST_CODE = 2;
-
-	private static final int THIRD_REQUEST_CODE = 3;
-
-	@OnResult(FIRST_REQUEST_CODE)
+	@OnActivityResult(R.id.first_request)
 	void onResult() {
 	}
 
-	@OnResult(SECOND_REQUEST_CODE)
-	void onResultWithData(Intent intent) {
+	@OnActivityResult(R.id.second_request)
+	void onResultWithData(Intent intentData) {
 	}
 
-	@OnResult(SECOND_REQUEST_CODE)
-	void onResultWithResultCodeAndData(int result, Intent intent) {
+	@OnActivityResult
+	void secondRequestResult(int result, Intent intentData) {
 	}
 
-	@OnResult(THIRD_REQUEST_CODE)
+	@OnActivityResult(R.id.third_request)
 	void onResultWithIntResultCode(int resultCode) {
 	}
 
-	@OnResult(THIRD_REQUEST_CODE)
-	void onResultWithIntegerResultCode(Integer resultCode) {
+	@OnActivityResult(R.id.third_request)
+	void onResultWithIntegerResultCode(Integer resultCodeInteger) {
+	}
+
+	@OnActivityResult({ R.id.first_request, R.id.second_request })
+	void firstAndSecondRequestResult(Integer resultCodeInteger) {
+	}
+
+	@OnActivityResult(resName = { "third_request", "second_request" })
+	void secondAndThirdRequestResult(Integer resultCodeInteger) {
 	}
 
 }

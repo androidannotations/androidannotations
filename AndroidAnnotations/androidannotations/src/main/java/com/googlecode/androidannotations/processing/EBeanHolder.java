@@ -89,11 +89,7 @@ public class EBeanHolder {
 
 	public JConditional onActivityResultLastCondition;
 	public JMethod onActivityResultMethod;
-
-	/**
-	 * OnActivityResult byResultCode
-	 */
-	public HashMap<Integer, JBlock> onActivityResultBlocks = new HashMap<Integer, JBlock>();
+	public HashMap<String, JBlock> onActivityResultBlocks = new HashMap<String, JBlock>();
 
 	/**
 	 * onSeekBarChangeListeners by idRef
