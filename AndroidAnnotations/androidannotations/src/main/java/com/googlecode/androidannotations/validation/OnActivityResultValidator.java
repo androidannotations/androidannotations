@@ -37,13 +37,13 @@ import com.googlecode.androidannotations.rclass.IRClass.Res;
 /**
  * @author Mathieu Boniface
  */
-public class OnResultValidator implements ElementValidator {
+public class OnActivityResultValidator implements ElementValidator {
 
 	private final IdValidatorHelper validatorHelper;
 
 	private final IdAnnotationHelper annotationHelper;
 
-	public OnResultValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public OnActivityResultValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
