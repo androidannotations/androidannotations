@@ -44,13 +44,13 @@ import com.sun.codemodel.JVar;
 /**
  * @author Mathieu Boniface
  */
-public class OnResultProcessor implements DecoratingElementProcessor {
+public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 	private APTCodeModelHelper codeModelHelper;
 
 	private IdAnnotationHelper idAnnotationHelper;
 
-	public OnResultProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public OnActivityResultProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		codeModelHelper = new APTCodeModelHelper();
 		idAnnotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
