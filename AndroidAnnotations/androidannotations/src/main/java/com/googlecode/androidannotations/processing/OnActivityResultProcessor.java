@@ -106,7 +106,7 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 	}
 
-	public JBlock getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, JFieldRef requestCodeRef) {
+	private JBlock getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, JFieldRef requestCodeRef) {
 
 		JClass intentClass = holder.classes().INTENT;
 		JBlock onActivityResultBlock;

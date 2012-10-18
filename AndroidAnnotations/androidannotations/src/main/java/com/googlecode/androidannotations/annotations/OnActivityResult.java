@@ -43,14 +43,7 @@ import android.content.Intent;
  * <ul>
  * <li>A android.content.Intent that contains data returned by the previously
  * launched activity
- * <li>An int or an java.lang.Integer to get the resultCode. This parameter can
- * take three values :
- * <ul>
- * <li>Activity.RESULT_OK
- * <li>Activity.RESULT_CANCELED
- * <li>Activity.RESULT_FIRST_USER
- * </ul>
- * </ul>
+ * <li>An int or an java.lang.Integer to get the resultCode.
  * 
  * Some usage examples of &#064;OnActivityResult annotation : <blockquote>
  * 
@@ -86,7 +79,7 @@ import android.content.Intent;
  * <pre>
  * &#064;OnActivityResult
  * void <b>myRequest</b>Result() {
- * 	// The method name host the res id
+ * 	// The method name contains the res id
  * }
  * </pre>
  * 

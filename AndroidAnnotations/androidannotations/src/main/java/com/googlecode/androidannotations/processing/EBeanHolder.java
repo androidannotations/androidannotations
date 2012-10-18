@@ -85,16 +85,16 @@ public class EBeanHolder {
 	/**
 	 * TextWatchers by idRef
 	 */
-	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
+	public final HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
 
 	public JConditional onActivityResultLastCondition;
 	public JMethod onActivityResultMethod;
-	public HashMap<String, JBlock> onActivityResultBlocks = new HashMap<String, JBlock>();
+	public final HashMap<String, JBlock> onActivityResultBlocks = new HashMap<String, JBlock>();
 
 	/**
 	 * onSeekBarChangeListeners by idRef
 	 */
-	public HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListeners = new HashMap<String, OnSeekBarChangeListenerHolder>();
+	public final HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListeners = new HashMap<String, OnSeekBarChangeListenerHolder>();
 
 	public JMethod findNativeFragmentById;
 	public JMethod findSupportFragmentById;
