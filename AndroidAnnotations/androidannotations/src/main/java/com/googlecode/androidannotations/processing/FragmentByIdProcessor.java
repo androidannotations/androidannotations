@@ -25,6 +25,7 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.FragmentById;
@@ -62,12 +63,11 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 		TypeMirror elementType = element.asType();
 		String typeQualifiedName = elementType.toString();
 
-		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT).asType();
+		TypeElement nativeFragmentElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT);
 
 		JMethod findFragmentById;
-		if (annotationHelper.isSubtype(elementType, nativeFragmentType)) {
+		if (nativeFragmentElement != null && annotationHelper.isSubtype(elementType, nativeFragmentElement.asType())) {
 			// Injecting native fragment
-
 			findFragmentById = null;
 
 			if (holder.findNativeFragmentById == null) {
