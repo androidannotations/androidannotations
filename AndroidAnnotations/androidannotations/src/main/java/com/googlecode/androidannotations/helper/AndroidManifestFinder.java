@@ -17,7 +17,9 @@ package com.googlecode.androidannotations.helper;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -37,6 +39,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class AndroidManifestFinder {
+
+	private static final String ANDROID_MANIFEST_FILE = "androidManifestFile";
 
 	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
 
@@ -82,6 +86,26 @@ public class AndroidManifestFinder {
 		return parseThrowing(androidManifestFile, libraryProject);
 	}
 
+	private File findManifestFileThrowing() throws Exception {
+		if (processingEnv.getOptions().containsKey(ANDROID_MANIFEST_FILE)) {
+			return findManifestInSpecifiedPath();
+		} else {
+			return findManifestInParentsDirectories();
+		}
+	}
+
+	private File findManifestInSpecifiedPath() {
+		String path = processingEnv.getOptions().get(ANDROID_MANIFEST_FILE);
+		File androidManifestFile = new File(path, "AndroidManifest.xml");
+		Messager messager = processingEnv.getMessager();
+		if (!androidManifestFile.exists()) {
+			throw new IllegalStateException("Could not find the AndroidManifest.xml file in specified path : " + path);
+		} else {
+			messager.printMessage(Kind.NOTE, "AndroidManifest.xml file found: " + androidManifestFile.toString());
+		}
+		return androidManifestFile;
+	}
+
 	/**
 	 * We use a dirty trick to find the AndroidManifest.xml file, since it's not
 	 * available in the classpath. The idea is quite simple : create a fake
@@ -89,7 +113,7 @@ public class AndroidManifestFinder {
 	 * find the AndroidManifest.xml file. Any better solution will be
 	 * appreciated.
 	 */
-	private File findManifestFileThrowing() throws Exception {
+	private File findManifestInParentsDirectories() throws IOException, URISyntaxException {
 		Filer filer = processingEnv.getFiler();
 
 		JavaFileObject dummySourceFile = filer.createSourceFile("dummy" + System.currentTimeMillis());
