@@ -71,6 +71,7 @@
         <activity android:name="com.googlecode.androidannotations.test15.afterviews.AfterViewsActivity_" />
         <activity android:name=".SSLConnection_" />
         <activity android:name="com.googlecode.androidannotations.test15.SeekBarChangeListenedActivity_" />
+        <activity android:name="com.googlecode.androidannotations.test15.AwaitingResultActivity_" />
 
         <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
 

@@ -24,6 +24,7 @@ import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
@@ -84,12 +85,16 @@ public class EBeanHolder {
 	/**
 	 * TextWatchers by idRef
 	 */
-	public HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
+	public final HashMap<String, TextWatcherHolder> textWatchers = new HashMap<String, TextWatcherHolder>();
+
+	public JConditional onActivityResultLastCondition;
+	public JMethod onActivityResultMethod;
+	public final HashMap<String, JBlock> onActivityResultBlocks = new HashMap<String, JBlock>();
 
 	/**
 	 * onSeekBarChangeListeners by idRef
 	 */
-	public HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListeners = new HashMap<String, OnSeekBarChangeListenerHolder>();
+	public final HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListeners = new HashMap<String, OnSeekBarChangeListenerHolder>();
 
 	public JMethod findNativeFragmentById;
 	public JMethod findSupportFragmentById;
