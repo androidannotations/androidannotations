@@ -36,6 +36,10 @@ public class AwaitingResultActivity extends Activity {
 	void secondRequestResult(int result, Intent intentData) {
 	}
 
+	@OnActivityResult
+	void secondRequestResult(Intent intentData, int result) {
+	}
+
 	@OnActivityResult(R.id.third_request)
 	void onResultWithIntResultCode(int resultCode) {
 	}
