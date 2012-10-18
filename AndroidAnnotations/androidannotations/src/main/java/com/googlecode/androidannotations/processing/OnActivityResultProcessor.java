@@ -90,8 +90,7 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 			JBlock onActivityResultBlock = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCodeRef);
 
-			JExpression activityRef = holder.eBean.staticRef("this");
-			JInvocation onResultInvocation = onActivityResultBlock.invoke(activityRef, methodName);
+			JInvocation onResultInvocation = onActivityResultBlock.invoke(methodName);
 
 			for (int i = 0; i < parameters.size(); i++) {
 				if (i == intentParameterPosition) {
