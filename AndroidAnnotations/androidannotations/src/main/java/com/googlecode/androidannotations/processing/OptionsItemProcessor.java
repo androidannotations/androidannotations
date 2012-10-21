@@ -88,7 +88,7 @@ public class OptionsItemProcessor implements DecoratingElementProcessor {
 		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, Res.ID, true);
 
 		if (holder.onOptionsItemSelectedIfElseBlock == null) {
-			JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");
+			JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.BOOLEAN, "onOptionsItemSelected");
 			method.annotate(Override.class);
 			holder.onOptionsItemSelectedItem = method.param(menuItemClass, "item");
 

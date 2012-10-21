@@ -39,6 +39,7 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
@@ -60,32 +61,32 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget());
-
 		TypeElement typeElement = (TypeElement) element;
 
 		String beanQualifiedName = typeElement.getQualifiedName().toString();
 
 		String generatedBeanQualifiedName = beanQualifiedName + GENERATION_SUFFIX;
 
-		holder.eBean = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
+		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
+
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(beanQualifiedName);
 
-		holder.eBean._extends(eBeanClass);
+		holder.generatedClass._extends(eBeanClass);
 
 		Classes classes = holder.classes();
 
 		{
 			// init
-			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+			holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
 			holder.init.param(holder.classes().BUNDLE, "savedInstanceState");
 		}
 
 		{
 			// onCreate()
 
-			JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
+			JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
 			onCreate.annotate(Override.class);
 			JVar onCreateSavedInstanceState = onCreate.param(classes.BUNDLE, "savedInstanceState");
 			JBlock onCreateBody = onCreate.body();
@@ -98,16 +99,16 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 		holder.contextRef = invoke("getActivity");
 
 		// contentView
-		JFieldVar contentView = holder.eBean.field(PRIVATE, classes.VIEW, "contentView_");
+		JFieldVar contentView = holder.generatedClass.field(PRIVATE, classes.VIEW, "contentView_");
 
 		{
 			// afterSetContentView
-			holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+			holder.afterSetContentView = holder.generatedClass.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 		}
 
 		{
 			// onCreateView()
-			JMethod onCreateView = holder.eBean.method(PUBLIC, classes.VIEW, "onCreateView");
+			JMethod onCreateView = holder.generatedClass.method(PUBLIC, classes.VIEW, "onCreateView");
 			onCreateView.annotate(Override.class);
 			JVar inflater = onCreateView.param(classes.LAYOUT_INFLATER, "inflater");
 			JVar container = onCreateView.param(classes.VIEW_GROUP, "container");
@@ -132,7 +133,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 		{
 			// findViewById
 
-			JMethod findViewById = holder.eBean.method(PUBLIC, classes.VIEW, "findViewById");
+			JMethod findViewById = holder.generatedClass.method(PUBLIC, classes.VIEW, "findViewById");
 			JVar idParam = findViewById.param(codeModel.INT, "id");
 
 			JBlock body = findViewById.body();

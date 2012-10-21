@@ -71,7 +71,7 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 			findFragmentById = null;
 
 			if (holder.findNativeFragmentById == null) {
-				holder.findNativeFragmentById = holder.eBean.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentById");
+				holder.findNativeFragmentById = holder.generatedClass.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentById");
 				JVar idParam = holder.findNativeFragmentById.param(codeModel.INT, "id");
 
 				holder.findNativeFragmentById.javadoc().add("You should check that context is an activity before calling this method");
@@ -89,7 +89,7 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 			// Injecting support fragment
 
 			if (holder.findSupportFragmentById == null) {
-				holder.findSupportFragmentById = holder.eBean.method(PRIVATE, classes.SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
+				holder.findSupportFragmentById = holder.generatedClass.method(PRIVATE, classes.SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
 				JVar idParam = holder.findSupportFragmentById.param(codeModel.INT, "id");
 
 				JBlock body = holder.findSupportFragmentById.body();

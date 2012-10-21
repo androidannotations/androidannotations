@@ -95,7 +95,7 @@ public class SeekBarProgressChangeProcessor implements DecoratingElementProcesso
 			JBlock methodBody = methodToCall.body();
 
 			methodBody.add(previousBody);
-			JExpression activityRef = holder.eBean.staticRef("this");
+			JExpression activityRef = holder.generatedClass.staticRef("this");
 			textChangeCall = methodBody.invoke(activityRef, methodName);
 
 			for (int i = 0; i < parameters.size(); i++) {

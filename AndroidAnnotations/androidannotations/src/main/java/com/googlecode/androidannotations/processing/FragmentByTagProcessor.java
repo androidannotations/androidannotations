@@ -74,7 +74,7 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 			findFragmentByTag = null;
 
 			if (holder.findNativeFragmentByTag == null) {
-				holder.findNativeFragmentByTag = holder.eBean.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentByTag");
+				holder.findNativeFragmentByTag = holder.generatedClass.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentByTag");
 				JVar tagParam = holder.findNativeFragmentByTag.param(classes.STRING, "tag");
 
 				holder.findNativeFragmentByTag.javadoc().add("You should check that context is an activity before calling this method");
@@ -92,7 +92,7 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 			// Injecting support fragment
 
 			if (holder.findSupportFragmentByTag == null) {
-				holder.findSupportFragmentByTag = holder.eBean.method(PRIVATE, classes.SUPPORT_V4_FRAGMENT, "findSupportFragmentByTag");
+				holder.findSupportFragmentByTag = holder.generatedClass.method(PRIVATE, classes.SUPPORT_V4_FRAGMENT, "findSupportFragmentByTag");
 				JVar tagParam = holder.findSupportFragmentByTag.param(classes.STRING, "tag");
 
 				JBlock body = holder.findSupportFragmentByTag.body();
