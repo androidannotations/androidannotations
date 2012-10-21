@@ -68,7 +68,7 @@ public abstract class AbstractTrackingTouchProcessor implements DecoratingElemen
 			JBlock methodBody = methodToCall.body();
 
 			methodBody.add(previousBody);
-			JExpression activityRef = holder.eBean.staticRef("this");
+			JExpression activityRef = holder.generatedClass.staticRef("this");
 			textChangeCall = methodBody.invoke(activityRef, methodName);
 
 			ExecutableElement executableElement = (ExecutableElement) element;
