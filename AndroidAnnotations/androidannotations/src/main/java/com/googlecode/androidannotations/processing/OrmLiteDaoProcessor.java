@@ -65,15 +65,15 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 		TypeMirror databaseHelperTypeMirror = helper.extractAnnotationParameter(element, "helper");
 
 		// connection source field
-		boolean connectionSourceInjected = holder.eBean.fields().containsKey(CONNECTION_SOURCE_FIELD_NAME);
+		boolean connectionSourceInjected = holder.generatedClass.fields().containsKey(CONNECTION_SOURCE_FIELD_NAME);
 
 		JBlock initBody = holder.init.body();
 
 		JFieldVar connectionSourceRef;
 		if (connectionSourceInjected) {
-			connectionSourceRef = holder.eBean.fields().get(CONNECTION_SOURCE_FIELD_NAME);
+			connectionSourceRef = holder.generatedClass.fields().get(CONNECTION_SOURCE_FIELD_NAME);
 		} else {
-			connectionSourceRef = holder.eBean.field(PRIVATE, classes.CONNECTION_SOURCE, CONNECTION_SOURCE_FIELD_NAME);
+			connectionSourceRef = holder.generatedClass.field(PRIVATE, classes.CONNECTION_SOURCE, CONNECTION_SOURCE_FIELD_NAME);
 
 			// get connection source
 			JExpression dbHelperClass = holder.refClass(databaseHelperTypeMirror.toString()).dotclass();
@@ -101,7 +101,7 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 
 		catchBlock.body() //
 				.staticInvoke(classes.LOG, "e") //
-				.arg(holder.eBean.name()) //
+				.arg(holder.generatedClass.name()) //
 				.arg("Could not create DAO") //
 				.arg(exception);
 	}

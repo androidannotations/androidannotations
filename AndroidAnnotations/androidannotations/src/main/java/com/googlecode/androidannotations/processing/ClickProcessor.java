@@ -79,7 +79,7 @@ public class ClickProcessor implements DecoratingElementProcessor {
 		onClickMethod.annotate(Override.class);
 		JVar onClickViewParam = onClickMethod.param(classes.VIEW, "view");
 
-		JExpression activityRef = holder.eBean.staticRef("this");
+		JExpression activityRef = holder.generatedClass.staticRef("this");
 		JInvocation clickCall = onClickMethod.body().invoke(activityRef, methodName);
 
 		if (hasViewParameter) {

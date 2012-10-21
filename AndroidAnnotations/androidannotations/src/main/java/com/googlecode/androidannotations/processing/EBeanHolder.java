@@ -33,7 +33,7 @@ import com.sun.codemodel.JVar;
 
 public class EBeanHolder {
 
-	public JDefinedClass eBean;
+	public final JDefinedClass generatedClass;
 	/**
 	 * Only defined on activities
 	 */
@@ -104,9 +104,10 @@ public class EBeanHolder {
 	private final EBeansHolder eBeansHolder;
 	public final Class<? extends Annotation> eBeanAnnotation;
 
-	public EBeanHolder(EBeansHolder eBeansHolder, Class<? extends Annotation> eBeanAnnotation) {
+	public EBeanHolder(EBeansHolder eBeansHolder, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
 		this.eBeansHolder = eBeansHolder;
 		this.eBeanAnnotation = eBeanAnnotation;
+		this.generatedClass = generatedClass;
 	}
 
 	public Classes classes() {

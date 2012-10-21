@@ -81,7 +81,7 @@ public class LongClickProcessor implements DecoratingElementProcessor {
 
 		JBlock listenerMethodBody = listenerMethod.body();
 
-		JExpression activityRef = holder.eBean.staticRef("this");
+		JExpression activityRef = holder.generatedClass.staticRef("this");
 		JInvocation call = JExpr.invoke(activityRef, methodName);
 
 		if (returnMethodResult) {

@@ -17,12 +17,14 @@ package com.googlecode.androidannotations.generation;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
 import javax.annotation.processing.Messager;
-import javax.tools.JavaFileObject;
+import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
+import javax.tools.JavaFileObject;
 
 import com.sun.codemodel.CodeWriter;
 import com.sun.codemodel.JPackage;
@@ -33,6 +35,7 @@ public class SourceCodewriter extends CodeWriter {
 	private final Messager message;
 
 	private static final VoidOutputStream VOID_OUTPUT_STREAM = new VoidOutputStream();
+	private Map<String, Element> originatingElementsByGeneratedClassQualifiedName;
 
 	private static class VoidOutputStream extends OutputStream {
 		@Override
@@ -41,18 +44,28 @@ public class SourceCodewriter extends CodeWriter {
 		}
 	}
 
-	public SourceCodewriter(Filer filer, Messager message) {
+	public SourceCodewriter(Filer filer, Messager message, Map<String, Element> originatingElementsByGeneratedClassQualifiedName) {
 		this.filer = filer;
 		this.message = message;
+		this.originatingElementsByGeneratedClassQualifiedName = originatingElementsByGeneratedClassQualifiedName;
 	}
 
 	@Override
 	public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
 		message.printMessage(Kind.NOTE, "Generating source file: " + qualifiedClassName);
+
+		Element originatingElement = originatingElementsByGeneratedClassQualifiedName.get(qualifiedClassName);
+
 		try {
-			JavaFileObject sourceFile = filer.createSourceFile(qualifiedClassName);
-			
+			JavaFileObject sourceFile;
+			if (originatingElement != null) {
+				sourceFile = filer.createSourceFile(qualifiedClassName, originatingElement);
+			} else {
+				message.printMessage(Kind.NOTE, "Generating class with no originating element: " + qualifiedClassName);
+				sourceFile = filer.createSourceFile(qualifiedClassName);
+			}
+
 			return sourceFile.openOutputStream();
 		} catch (FilerException e) {
 			message.printMessage(Kind.NOTE, "Could not generate source file for " + qualifiedClassName + ", message: " + e.getMessage());

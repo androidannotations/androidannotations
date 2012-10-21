@@ -55,7 +55,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
-		holder.eBean._implements(holder.classes().INJECTOR_PROVIDER);
+		holder.generatedClass._implements(holder.classes().INJECTOR_PROVIDER);
 
 		// Fields
 		JFieldVar scope = scopeField(holder);
@@ -82,7 +82,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private JMethod getInjectorMethod(EBeanHolder holder) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, holder.classes().INJECTOR, "getInjector");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, holder.classes().INJECTOR, "getInjector");
 		method.annotate(Override.class);
 		JExpression castApplication = cast(holder.classes().INJECTOR_PROVIDER, invoke("getApplication"));
 		method.body()._return(castApplication.invoke("getInjector"));
@@ -90,7 +90,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onRestartMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onRestart");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onRestart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(scope, "enter").arg(_this());
@@ -99,7 +99,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onStartMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onStart");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onStart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(scope, "enter").arg(_this());
@@ -108,7 +108,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onResumeMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onResume");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onResume");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(scope, "enter").arg(_this());
@@ -117,7 +117,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onPauseMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onPause");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onPause");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(_super(), method);
@@ -125,7 +125,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onNewIntentMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onNewIntent");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onNewIntent");
 		method.annotate(Override.class);
 		JVar intent = method.param(holder.classes().INTENT, "intent");
 		JBlock body = method.body();
@@ -143,7 +143,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onStopMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onStop");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onStop");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(scope, "enter").arg(_this());
@@ -157,7 +157,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onDestroyMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onDestroy");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onDestroy");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(scope, "enter").arg(_this());
@@ -173,7 +173,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onConfigurationChangedMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onConfigurationChanged");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onConfigurationChanged");
 		method.annotate(Override.class);
 		JClass configurationClass = holder.classes().CONFIGURATION;
 		JVar newConfig = method.param(configurationClass, "newConfig");
@@ -186,7 +186,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onContentChangedMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onContentChanged");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onContentChanged");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(_super(), method);
@@ -194,7 +194,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private void onActivityResultMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
 		method.annotate(Override.class);
 		JVar requestCode = method.param(codeModel.INT, "requestCode");
 		JVar resultCode = method.param(codeModel.INT, "resultCode");
@@ -220,12 +220,12 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	}
 
 	private JFieldVar eventManagerField(EBeanHolder holder) {
-		JFieldVar eventManager = holder.eBean.field(JMod.PRIVATE, holder.classes().EVENT_MANAGER, "eventManager_");
+		JFieldVar eventManager = holder.generatedClass.field(JMod.PRIVATE, holder.classes().EVENT_MANAGER, "eventManager_");
 		return eventManager;
 	}
 
 	private JFieldVar scopeField(EBeanHolder holder) {
-		JFieldVar scope = holder.eBean.field(JMod.PRIVATE, holder.classes().CONTEXT_SCOPE, "scope_");
+		JFieldVar scope = holder.generatedClass.field(JMod.PRIVATE, holder.classes().CONTEXT_SCOPE, "scope_");
 		return scope;
 	}
 
@@ -235,7 +235,7 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 			int i = 1;
 			for (String listenerClassName : listenerClasses) {
 				JClass listenerClass = holder.refClass(listenerClassName);
-				JFieldVar listener = holder.eBean.field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
+				JFieldVar listener = holder.generatedClass.field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
 				listener.annotate(SuppressWarnings.class).param("value", "unused");
 				listener.annotate(holder.classes().INJECT);
 				i++;

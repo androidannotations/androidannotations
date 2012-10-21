@@ -114,7 +114,7 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 		if (holder.onActivityResultMethod == null) {
 
-			JMethod onActivityResultMethod = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
+			JMethod onActivityResultMethod = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onActivityResult");
 			JVar resultCodeParameter = onActivityResultMethod.param(codeModel.INT, "requestCode");
 			onActivityResultMethod.param(codeModel.INT, "resultCode");
 			onActivityResultMethod.param(intentClass, "data");

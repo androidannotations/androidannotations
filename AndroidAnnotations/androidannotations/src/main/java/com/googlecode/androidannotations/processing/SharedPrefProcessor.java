@@ -100,6 +100,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 
 		String helperQualifiedName = interfaceQualifiedName + ModelConstants.GENERATION_SUFFIX;
 		JDefinedClass helperClass = codeModel._class(JMod.PUBLIC | JMod.FINAL, helperQualifiedName, ClassType.CLASS);
+		eBeansHolder.create(typeElement, getTarget(), helperClass);
 
 		helperClass._extends(SharedPreferencesHelper.class);
 

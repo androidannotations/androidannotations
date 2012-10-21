@@ -57,7 +57,6 @@ public class RestProcessor implements GeneratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		eBeansHolder.create(element, getTarget());
 		RestImplementationHolder holder = restImplementationHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
@@ -65,9 +64,9 @@ public class RestProcessor implements GeneratingElementProcessor {
 
 		String implementationName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
-		// holder.restImplementationClass = codeModel._class(JMod.PUBLIC |
-		// JMod.ABSTRACT, implementationName, ClassType.CLASS);
 		holder.restImplementationClass = codeModel._class(JMod.PUBLIC, implementationName, ClassType.CLASS);
+		eBeansHolder.create(element, getTarget(), holder.restImplementationClass);
+
 		JClass interfaceClass = eBeansHolder.refClass(interfaceName);
 		holder.restImplementationClass._implements(interfaceClass);
 
