@@ -112,13 +112,13 @@ public class APTCodeModelHelper {
 			parameters.add(new Parameter(parameterName, parameterClass));
 		}
 
-		JMethod existingMethod = findAlreadyGeneratedMethod(holder.eBean, methodName, parameters);
+		JMethod existingMethod = findAlreadyGeneratedMethod(holder.generatedClass, methodName, parameters);
 
 		if (existingMethod != null) {
 			return existingMethod;
 		}
 
-		JMethod method = holder.eBean.method(JMod.PUBLIC, returnType, methodName);
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, returnType, methodName);
 		method.annotate(Override.class);
 
 		List<JVar> methodParameters = new ArrayList<JVar>();
@@ -157,7 +157,7 @@ public class APTCodeModelHelper {
 	}
 
 	public void callSuperMethod(JMethod superMethod, EBeanHolder holder, JBlock callBlock) {
-		JExpression activitySuper = holder.eBean.staticRef("super");
+		JExpression activitySuper = holder.generatedClass.staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
 
 		for (JVar param : superMethod.params()) {
@@ -239,7 +239,7 @@ public class APTCodeModelHelper {
 
 		JInvocation errorInvoke = classes.LOG.staticInvoke("e");
 
-		errorInvoke.arg(holder.eBean.name());
+		errorInvoke.arg(holder.generatedClass.name());
 		errorInvoke.arg("A runtime exception was thrown while executing code in a runnable");
 		errorInvoke.arg(exceptionParam);
 
@@ -265,11 +265,11 @@ public class APTCodeModelHelper {
 		}
 
 		for (ExecutableElement userConstructor : constructors) {
-			JMethod copyConstructor = holder.eBean.constructor(PUBLIC);
-			JMethod staticHelper = holder.eBean.method(PUBLIC | STATIC, eBeanClass, "build");
+			JMethod copyConstructor = holder.generatedClass.constructor(PUBLIC);
+			JMethod staticHelper = holder.generatedClass.method(PUBLIC | STATIC, eBeanClass, "build");
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");
-			JInvocation newInvocation = JExpr._new(holder.eBean);
+			JInvocation newInvocation = JExpr._new(holder.generatedClass);
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
 				String paramType = param.asType().toString();
@@ -279,7 +279,7 @@ public class APTCodeModelHelper {
 				newInvocation.arg(JExpr.ref(paramName));
 			}
 
-			JVar newCall = staticHelper.body().decl(holder.eBean, "instance", newInvocation);
+			JVar newCall = staticHelper.body().decl(holder.generatedClass, "instance", newInvocation);
 			staticHelper.body().invoke(newCall, "onFinishInflate");
 			staticHelper.body()._return(newCall);
 			body.invoke(holder.init);
@@ -308,7 +308,7 @@ public class APTCodeModelHelper {
 		JClass intentClass = holder.classes().INTENT;
 
 		{
-			holder.intentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "IntentBuilder_");
+			holder.intentBuilderClass = holder.generatedClass._class(PUBLIC | STATIC, "IntentBuilder_");
 
 			JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
 
@@ -319,7 +319,7 @@ public class APTCodeModelHelper {
 				JVar constructorContextParam = constructor.param(contextClass, "context");
 				JBlock constructorBody = constructor.body();
 				constructorBody.assign(contextField, constructorContextParam);
-				constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.eBean.dotclass()));
+				constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.generatedClass.dotclass()));
 			}
 
 			{
@@ -360,7 +360,7 @@ public class APTCodeModelHelper {
 
 			{
 				// intent()
-				JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
+				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
 				JVar contextParam = method.param(contextClass, "context");
 				method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
 			}

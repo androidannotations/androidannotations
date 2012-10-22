@@ -38,7 +38,7 @@ public class SherlockHelper {
 	 * types
 	 */
 	public boolean usesSherlock(EBeanHolder holder) {
-		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.eBean._extends().fullName());
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
 
 		TypeMirror superType;
 		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {

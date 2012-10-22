@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EReceiver;
 import com.googlecode.androidannotations.helper.AndroidManifest;
@@ -48,11 +47,9 @@ public class EReceiverValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsReceiver((TypeElement) element, valid);
+		validatorHelper.extendsReceiver(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-		
-		validatorHelper.isNotAbstract(element, valid);
 
 		final boolean NO_WARNING = false;
 		validatorHelper.componentRegistered(element, androidManifest, NO_WARNING, valid);

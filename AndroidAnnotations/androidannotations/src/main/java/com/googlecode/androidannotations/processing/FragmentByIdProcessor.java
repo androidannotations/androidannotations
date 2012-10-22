@@ -25,6 +25,7 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.FragmentById;
@@ -62,16 +63,15 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 		TypeMirror elementType = element.asType();
 		String typeQualifiedName = elementType.toString();
 
-		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT).asType();
+		TypeElement nativeFragmentElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT);
 
 		JMethod findFragmentById;
-		if (annotationHelper.isSubtype(elementType, nativeFragmentType)) {
+		if (nativeFragmentElement != null && annotationHelper.isSubtype(elementType, nativeFragmentElement.asType())) {
 			// Injecting native fragment
-
 			findFragmentById = null;
 
 			if (holder.findNativeFragmentById == null) {
-				holder.findNativeFragmentById = holder.eBean.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentById");
+				holder.findNativeFragmentById = holder.generatedClass.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentById");
 				JVar idParam = holder.findNativeFragmentById.param(codeModel.INT, "id");
 
 				holder.findNativeFragmentById.javadoc().add("You should check that context is an activity before calling this method");
@@ -89,7 +89,7 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 			// Injecting support fragment
 
 			if (holder.findSupportFragmentById == null) {
-				holder.findSupportFragmentById = holder.eBean.method(PRIVATE, classes.SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
+				holder.findSupportFragmentById = holder.generatedClass.method(PRIVATE, classes.SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
 				JVar idParam = holder.findSupportFragmentById.param(codeModel.INT, "id");
 
 				JBlock body = holder.findSupportFragmentById.body();

@@ -45,6 +45,7 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
@@ -86,8 +87,6 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget());
-
 		TypeElement typeElement = (TypeElement) element;
 
 		// Activity
@@ -99,22 +98,24 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		int modifiers = JMod.PUBLIC | JMod.FINAL;
 
-		holder.eBean = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
+		JDefinedClass generatedClass = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
+
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
 
 		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
-		holder.eBean._extends(annotatedActivity);
+		holder.generatedClass._extends(annotatedActivity);
 
 		holder.contextRef = _this();
 
 		// onCreate
-		JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
+		JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
 		onCreate.annotate(Override.class);
 
 		JClass bundleClass = holder.classes().BUNDLE;
 
 		// beforeSetContentView
-		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
 		holder.beforeCreateSavedInstanceStateParam = holder.init.param(bundleClass, "savedInstanceState");
 
 		{
@@ -124,7 +125,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 		}
 
 		// afterSetContentView
-		holder.afterSetContentView = holder.eBean.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+		holder.afterSetContentView = holder.generatedClass.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
 
 		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
@@ -167,7 +168,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		// Handling onBackPressed
 		if (hasOnBackPressedMethod(typeElement)) {
-			JMethod onKeyDownMethod = holder.eBean.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
+			JMethod onKeyDownMethod = holder.generatedClass.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
 			onKeyDownMethod.annotate(Override.class);
 			JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
 			JClass keyEventClass = holder.classes().KEY_EVENT;
@@ -198,7 +199,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 	}
 
 	private void setContentViewMethod(String setContentViewMethodName, JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
-		JMethod method = holder.eBean.method(JMod.PUBLIC, codeModel.VOID, setContentViewMethodName);
+		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, setContentViewMethodName);
 		method.annotate(Override.class);
 
 		ArrayList<JVar> params = new ArrayList<JVar>();

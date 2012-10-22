@@ -28,6 +28,7 @@ import javax.lang.model.element.Element;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 
 public class EBeansHolder {
 
@@ -55,6 +56,8 @@ public class EBeansHolder {
 		public final JClass ACTIVITY = refClass(CanonicalNameConstants.ACTIVITY);
 		public final JClass EDITABLE = refClass(CanonicalNameConstants.EDITABLE);
 		public final JClass TEXT_WATCHER = refClass(CanonicalNameConstants.TEXT_WATCHER);
+		public final JClass SEEKBAR = refClass(CanonicalNameConstants.SEEKBAR);
+		public final JClass ON_SEEKBAR_CHANGE_LISTENER = refClass(CanonicalNameConstants.ON_SEEKBAR_CHANGE_LISTENER);
 		public final JClass TEXT_VIEW = refClass(CanonicalNameConstants.TEXT_VIEW);
 		public final JClass VIEW = refClass(CanonicalNameConstants.VIEW);
 		public final JClass VIEW_ON_CLICK_LISTENER = refClass(CanonicalNameConstants.VIEW_ON_CLICK_LISTENER);
@@ -141,13 +144,19 @@ public class EBeansHolder {
 
 	private final Classes classes;
 
+	private final Map<String, Element> originatingElementsByGeneratedClassQualifiedName = new HashMap<String, Element>();
+
 	public EBeansHolder(JCodeModel codeModel) {
 		this.codeModel = codeModel;
 		classes = new Classes();
 	}
 
-	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation) {
-		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation);
+	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
+
+		String qualifiedName = generatedClass.fullName();
+		originatingElementsByGeneratedClassQualifiedName.put(qualifiedName, element);
+
+		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation, generatedClass);
 		eBeanHolders.put(element, activityHolder);
 		return activityHolder;
 	}
@@ -167,11 +176,7 @@ public class EBeansHolder {
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 
 		if (refClass == null) {
-			try {
-				refClass = codeModel.ref(fullyQualifiedClassName);
-			} catch (Throwable ignored) {
-				refClass = codeModel.directClass(fullyQualifiedClassName);
-			}
+			refClass = codeModel.directClass(fullyQualifiedClassName);
 			loadedClasses.put(fullyQualifiedClassName, refClass);
 		}
 
@@ -192,6 +197,10 @@ public class EBeansHolder {
 
 	public Classes classes() {
 		return classes;
+	}
+
+	public Map<String, Element> getOriginatingElementsByGeneratedClassQualifiedName() {
+		return originatingElementsByGeneratedClassQualifiedName;
 	}
 
 }

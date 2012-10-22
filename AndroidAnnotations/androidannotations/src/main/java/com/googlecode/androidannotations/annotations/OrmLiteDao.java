@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Injects and OrmLite Dao, configured with the provided mode and helper classes
+ * Injects an OrmLite Dao, configured with the provided mode and helper classes
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

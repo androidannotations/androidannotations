@@ -31,6 +31,7 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 
@@ -44,26 +45,25 @@ public class EApplicationProcessor implements GeneratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget());
-
 		TypeElement typeElement = (TypeElement) element;
 
 		String annotatedComponentQualifiedName = typeElement.getQualifiedName().toString();
 
 		String generatedComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
-		holder.eBean = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
+		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 
-		holder.eBean._extends(annotatedComponent);
+		holder.generatedClass._extends(annotatedComponent);
 
 		holder.contextRef = _this();
 
-		holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
 		{
 			// onCreate
-			JMethod onCreate = holder.eBean.method(PUBLIC, codeModel.VOID, "onCreate");
+			JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
 			onCreate.annotate(Override.class);
 			JBlock onCreateBody = onCreate.body();
 			onCreateBody.invoke(holder.init);

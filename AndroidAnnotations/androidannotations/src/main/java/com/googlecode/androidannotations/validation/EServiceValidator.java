@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import com.googlecode.androidannotations.annotations.EService;
 import com.googlecode.androidannotations.helper.AndroidManifest;
@@ -48,11 +47,9 @@ public class EServiceValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsService((TypeElement) element, valid);
+		validatorHelper.extendsService(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-		
-		validatorHelper.isNotAbstract(element, valid);
 
 		validatorHelper.componentRegistered(element, androidManifest, valid);
 

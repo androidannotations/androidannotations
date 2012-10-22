@@ -86,7 +86,7 @@ public class OptionsMenuProcessor implements DecoratingElementProcessor {
 			returnType = codeModel.BOOLEAN;
 		}
 
-		JMethod method = holder.eBean.method(PUBLIC, returnType, "onCreateOptionsMenu");
+		JMethod method = holder.generatedClass.method(PUBLIC, returnType, "onCreateOptionsMenu");
 		method.annotate(Override.class);
 		JVar menuParam = method.param(menuClass, "menu");
 

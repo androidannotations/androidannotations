@@ -59,7 +59,7 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 
 			if (holder.handler == null) {
 				JClass handlerClass = holder.classes().HANDLER;
-				holder.handler = holder.eBean.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
+				holder.handler = holder.generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
 			}
 
 			if (delay == 0) {

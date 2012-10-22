@@ -33,6 +33,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
+import com.googlecode.androidannotations.annotations.OnActivityResult;
 import com.googlecode.androidannotations.annotations.OptionsItem;
 import com.googlecode.androidannotations.annotations.ResId;
 import com.googlecode.androidannotations.processing.EBeanHolder;
@@ -292,6 +293,9 @@ public class AnnotationHelper {
 	public String actionName(Class<? extends Annotation> target) {
 		if (target == OptionsItem.class) {
 			return "Selected";
+		}
+		if (target == OnActivityResult.class) {
+			return "Result";
 		}
 		String annotationSimpleName = target.getSimpleName();
 		if (annotationSimpleName.endsWith("e")) {

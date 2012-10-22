@@ -111,13 +111,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void isNotAbstract(Element element, IsValid valid) {
-		if (annotationHelper.isAbstract(element)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s cannot be used on an abstract element");
-		}
-	}
-
 	public void isInterface(TypeElement element, IsValid valid) {
 		if (!annotationHelper.isInterface(element)) {
 			valid.invalidate();
@@ -588,6 +581,11 @@ public class ValidatorHelper {
 	}
 
 	public void upperclassOfRegisteredApplication(Element element, AndroidManifest manifest, IsValid valid) {
+
+		if (manifest.isLibraryProject()) {
+			return;
+		}
+
 		String applicationClassName = manifest.getApplicationClassName();
 		if (applicationClassName != null) {
 			if (applicationClassName.endsWith(GENERATION_SUFFIX)) {
@@ -606,6 +604,10 @@ public class ValidatorHelper {
 	}
 
 	public void applicationRegistered(Element element, AndroidManifest manifest, IsValid valid) {
+
+		if (manifest.isLibraryProject()) {
+			return;
+		}
 
 		String applicationClassName = manifest.getApplicationClassName();
 		if (applicationClassName != null) {
@@ -964,6 +966,33 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void hasEmptyOrContextConstructor(Element element, IsValid valid) {
+		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
+
+		if (constructors.size() == 1) {
+			ExecutableElement constructor = constructors.get(0);
+
+			if (!annotationHelper.isPrivate(constructor)) {
+				if (constructor.getParameters().size() > 1) {
+					annotationHelper.printAnnotationError(element, "%s annotated element should have a constructor with one parameter max, of type " + CanonicalNameConstants.CONTEXT);
+					valid.invalidate();
+				} else if (constructor.getParameters().size() == 1) {
+					VariableElement parameter = constructor.getParameters().get(0);
+					if (!parameter.asType().toString().equals(CanonicalNameConstants.CONTEXT)) {
+						annotationHelper.printAnnotationError(element, "%s annotated element should have a constructor with one parameter max, of type " + CanonicalNameConstants.CONTEXT);
+						valid.invalidate();
+					}
+				}
+			} else {
+				annotationHelper.printAnnotationError(element, "%s annotated element should not have a private constructor");
+				valid.invalidate();
+			}
+		} else {
+			annotationHelper.printAnnotationError(element, "%s annotated element should have only one constructor");
+			valid.invalidate();
+		}
+	}
+
 	public void hasEmptyConstructor(Element element, IsValid valid) {
 
 		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
@@ -1065,6 +1094,10 @@ public class ValidatorHelper {
 		TypeElement typeElement = (TypeElement) element;
 
 		if (typeElement.getModifiers().contains(Modifier.ABSTRACT)) {
+			return;
+		}
+
+		if (androidManifest.isLibraryProject()) {
 			return;
 		}
 

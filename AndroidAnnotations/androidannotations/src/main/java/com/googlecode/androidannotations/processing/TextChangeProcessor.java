@@ -27,6 +27,7 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.TextChange;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
+import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.helper.TextWatcherHelper;
 import com.googlecode.androidannotations.rclass.IRClass;
 import com.googlecode.androidannotations.rclass.IRClass.Res;
@@ -77,9 +78,9 @@ public class TextChangeProcessor implements DecoratingElementProcessor {
 			String parameterName = parameter.toString();
 			TypeMirror parameterType = parameter.asType();
 
-			if ("java.lang.CharSequence".equals(parameterType.toString())) {
+			if (CanonicalNameConstants.CHAR_SEQUENCE.equals(parameterType.toString())) {
 				charSequenceParameterPosition = i;
-			} else if (parameterType.getKind() == TypeKind.INT || "java.lang.integer".equals(parameterType.toString())) {
+			} else if (parameterType.getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType.toString())) {
 				if ("start".equals(parameterName)) {
 					startParameterPosition = i;
 				} else if ("count".equals(parameterName)) {
@@ -88,7 +89,7 @@ public class TextChangeProcessor implements DecoratingElementProcessor {
 					beforeParameterPosition = i;
 				}
 			} else {
-				TypeMirror textViewType = helper.typeElementFromQualifiedName("android.widget.TextView").asType();
+				TypeMirror textViewType = helper.typeElementFromQualifiedName(CanonicalNameConstants.TEXT_VIEW).asType();
 				if (helper.isSubtype(parameterType, textViewType)) {
 					viewParameterPosition = i;
 					viewParameterType = parameterType;
@@ -108,7 +109,7 @@ public class TextChangeProcessor implements DecoratingElementProcessor {
 			JBlock methodBody = methodToCall.body();
 
 			methodBody.add(previousBody);
-			JExpression activityRef = holder.eBean.staticRef("this");
+			JExpression activityRef = holder.generatedClass.staticRef("this");
 			textChangeCall = methodBody.invoke(activityRef, methodName);
 
 			for (int i = 0; i < parameters.size(); i++) {

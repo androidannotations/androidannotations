@@ -21,8 +21,10 @@
     android:versionCode="1"
     android:versionName="2.1-SNAPSHOT" >
 
-    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8" />
-    
+    <uses-sdk
+        android:minSdkVersion="3"
+        android:targetSdkVersion="8" />
+
     <application
         android:name="com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication_"
         android:icon="@drawable/icon"
@@ -68,12 +70,15 @@
         <activity android:name="com.googlecode.androidannotations.test15.efragment.MyFragmentActivity_" />
         <activity android:name="com.googlecode.androidannotations.test15.afterviews.AfterViewsActivity_" />
         <activity android:name=".SSLConnection_" />
+        <activity android:name="com.googlecode.androidannotations.test15.SeekBarChangeListenedActivity_" />
+        <activity android:name="com.googlecode.androidannotations.test15.AwaitingResultActivity_" />
 
         <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
 
         <provider
             android:name="com.googlecode.androidannotations.test15.eprovider.MyProvider_"
-            android:authorities="" />
+            android:authorities=""
+            android:exported="false" />
 
         <service
             android:name="com.googlecode.androidannotations.test15.eservice.MyService_"

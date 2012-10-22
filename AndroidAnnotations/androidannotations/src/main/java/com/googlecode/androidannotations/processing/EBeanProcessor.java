@@ -25,9 +25,12 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.api.Scope;
@@ -37,6 +40,7 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
@@ -53,30 +57,30 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget());
-
 		TypeElement typeElement = (TypeElement) element;
 
 		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
 
 		String generatedBeanQualifiedName = eBeanQualifiedName + GENERATION_SUFFIX;
 
-		holder.eBean = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
+		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
+
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
-		holder.eBean._extends(eBeanClass);
+		holder.generatedClass._extends(eBeanClass);
 
 		Classes classes = holder.classes();
 
-		JFieldVar contextField = holder.eBean.field(PRIVATE, classes.CONTEXT, "context_");
+		JFieldVar contextField = holder.generatedClass.field(PRIVATE, classes.CONTEXT, "context_");
 
 		holder.contextRef = contextField;
 
 		{
 			// afterSetContentView
 
-			holder.afterSetContentView = holder.eBean.method(PUBLIC, codeModel.VOID, "afterSetContentView_");
+			holder.afterSetContentView = holder.generatedClass.method(PUBLIC, codeModel.VOID, "afterSetContentView_");
 
 			JBlock afterSetContentViewBody = holder.afterSetContentView.body();
 
@@ -86,7 +90,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 		{
 			// findViewById
 
-			JMethod findViewById = holder.eBean.method(PUBLIC, classes.VIEW, "findViewById");
+			JMethod findViewById = holder.generatedClass.method(PUBLIC, classes.VIEW, "findViewById");
 			JVar idParam = findViewById.param(codeModel.INT, "id");
 
 			findViewById.javadoc().add("You should check that context is an activity before calling this method");
@@ -100,7 +104,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 		{
 			// init
-			holder.init = holder.eBean.method(PRIVATE, codeModel.VOID, "init_");
+			holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
 		}
 
 		{
@@ -118,11 +122,19 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 		{
 			// Constructor
 
-			JMethod constructor = holder.eBean.constructor(PRIVATE);
+			JMethod constructor = holder.generatedClass.constructor(PRIVATE);
 
 			JVar constructorContextParam = constructor.param(classes.CONTEXT, "context");
 
 			JBlock constructorBody = constructor.body();
+
+			List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
+
+			ExecutableElement superConstructor = constructors.get(0);
+
+			if (superConstructor.getParameters().size() == 1) {
+				constructorBody.invoke("super").arg(constructorContextParam);
+			}
 
 			constructorBody.assign(contextField, constructorContextParam);
 
@@ -136,7 +148,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 		{
 			// Factory method
 
-			JMethod factoryMethod = holder.eBean.method(PUBLIC | STATIC, holder.eBean, GET_INSTANCE_METHOD_NAME);
+			JMethod factoryMethod = holder.generatedClass.method(PUBLIC | STATIC, holder.generatedClass, GET_INSTANCE_METHOD_NAME);
 
 			JVar factoryMethodContextParam = factoryMethod.param(classes.CONTEXT, "context");
 
@@ -147,22 +159,22 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			 */
 			if (hasSingletonScope) {
 
-				JFieldVar instanceField = holder.eBean.field(PRIVATE | STATIC, holder.eBean, "instance_");
+				JFieldVar instanceField = holder.generatedClass.field(PRIVATE | STATIC, holder.generatedClass, "instance_");
 
 				factoryMethodBody //
 						._if(instanceField.eq(_null())) //
 						._then() //
-						.assign(instanceField, _new(holder.eBean).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+						.assign(instanceField, _new(holder.generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
 
 				factoryMethodBody._return(instanceField);
 			} else {
-				factoryMethodBody._return(_new(holder.eBean).arg(factoryMethodContextParam));
+				factoryMethodBody._return(_new(holder.generatedClass).arg(factoryMethodContextParam));
 			}
 		}
 
 		{
 			// rebind(Context)
-			JMethod rebindMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "rebind");
+			JMethod rebindMethod = holder.generatedClass.method(PUBLIC, codeModel.VOID, "rebind");
 			JVar contextParam = rebindMethod.param(classes.CONTEXT, "context");
 
 			/*

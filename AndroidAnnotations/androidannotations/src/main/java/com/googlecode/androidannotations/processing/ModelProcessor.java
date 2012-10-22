@@ -18,6 +18,7 @@ package com.googlecode.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -31,6 +32,16 @@ import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
 
+	public static class ProcessResult {
+		public final JCodeModel codeModel;
+		public final Map<String, Element> originatingElementsByGeneratedClassQualifiedName;
+
+		public ProcessResult(JCodeModel codeModel, Map<String, Element> originatingElementsByGeneratedClassQualifiedName) {
+			this.codeModel = codeModel;
+			this.originatingElementsByGeneratedClassQualifiedName = originatingElementsByGeneratedClassQualifiedName;
+		}
+	}
+
 	private final List<DecoratingElementProcessor> enclosedProcessors = new ArrayList<DecoratingElementProcessor>();
 	private final List<GeneratingElementProcessor> typeProcessors = new ArrayList<GeneratingElementProcessor>();
 
@@ -42,7 +53,7 @@ public class ModelProcessor {
 		typeProcessors.add(processor);
 	}
 
-	public JCodeModel process(AnnotationElements validatedModel) throws Exception {
+	public ProcessResult process(AnnotationElements validatedModel) throws Exception {
 
 		JCodeModel codeModel = new JCodeModel();
 
@@ -109,7 +120,7 @@ public class ModelProcessor {
 			}
 		}
 
-		return codeModel;
+		return new ProcessResult(codeModel, eBeansHolder.getOriginatingElementsByGeneratedClassQualifiedName());
 	}
 
 	private boolean isAbstractClass(Element annotatedElement) {

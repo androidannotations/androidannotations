@@ -61,7 +61,7 @@ public class TransactionalProcessor implements DecoratingElementProcessor {
 
 		JTryBlock tryBlock = body._try();
 
-		JExpression activitySuper = holder.eBean.staticRef("super");
+		JExpression activitySuper = holder.generatedClass.staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, method);
 
 		for (JVar param : method.params()) {
@@ -86,7 +86,7 @@ public class TransactionalProcessor implements DecoratingElementProcessor {
 
 		JInvocation errorInvoke = catchBody.staticInvoke(holder.classes().LOG, "e");
 
-		errorInvoke.arg(holder.eBean.name());
+		errorInvoke.arg(holder.generatedClass.name());
 		errorInvoke.arg("Error in transaction");
 		errorInvoke.arg(exceptionParam);
 

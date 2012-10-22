@@ -133,7 +133,7 @@ public class InstanceStateProcessor implements DecoratingElementProcessor {
 
 		if (holder.restoreSavedInstanceStateMethod == null) {
 
-			holder.restoreSavedInstanceStateMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "restoreSavedInstanceState_");
+			holder.restoreSavedInstanceStateMethod = holder.generatedClass.method(PRIVATE, codeModel.VOID, "restoreSavedInstanceState_");
 
 			JVar savedInstanceState = holder.restoreSavedInstanceStateMethod.param(holder.classes().BUNDLE, "savedInstanceState");
 
@@ -151,7 +151,7 @@ public class InstanceStateProcessor implements DecoratingElementProcessor {
 	private JBlock getSaveStateMethodBody(JCodeModel codeModel, EBeanHolder holder) {
 
 		if (holder.saveInstanceStateBlock == null) {
-			JMethod method = holder.eBean.method(PUBLIC, codeModel.VOID, "onSaveInstanceState");
+			JMethod method = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onSaveInstanceState");
 			method.annotate(Override.class);
 			method.param(holder.classes().BUNDLE, BUNDLE_PARAM_NAME);
 

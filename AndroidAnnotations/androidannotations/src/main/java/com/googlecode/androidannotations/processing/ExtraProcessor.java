@@ -108,7 +108,7 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 
 		JInvocation logError = classes.LOG.staticInvoke("e");
 
-		logError.arg(holder.eBean.name());
+		logError.arg(holder.generatedClass.name());
 		logError.arg("Could not cast extra to expected type, the field is left to its default value");
 		logError.arg(exceptionParam);
 
@@ -153,7 +153,7 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 
 	private void generateCastMethod(JCodeModel codeModel, EBeanHolder holder) {
 		JType objectType = codeModel._ref(Object.class);
-		JMethod method = holder.eBean.method(JMod.PRIVATE, objectType, "cast_");
+		JMethod method = holder.generatedClass.method(JMod.PRIVATE, objectType, "cast_");
 		JTypeVar genericType = method.generify("T");
 		method.type(genericType);
 		JVar objectParam = method.param(objectType, "object");
@@ -169,7 +169,7 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 
 		Classes classes = holder.classes();
 
-		JMethod injectExtrasMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "injectExtras_");
+		JMethod injectExtrasMethod = holder.generatedClass.method(PRIVATE, codeModel.VOID, "injectExtras_");
 
 		overrideSetIntent(holder, codeModel, injectExtrasMethod);
 
@@ -188,7 +188,7 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 	private void overrideSetIntent(EBeanHolder holder, JCodeModel codeModel, JMethod initIntentMethod) {
 		if (holder.intentBuilderClass != null) {
 
-			JMethod setIntentMethod = holder.eBean.method(PUBLIC, codeModel.VOID, "setIntent");
+			JMethod setIntentMethod = holder.generatedClass.method(PUBLIC, codeModel.VOID, "setIntent");
 			setIntentMethod.annotate(Override.class);
 			JVar methodParam = setIntentMethod.param(holder.classes().INTENT, "newIntent");
 

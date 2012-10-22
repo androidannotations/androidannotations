@@ -70,7 +70,7 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 			ncHolder = new NonConfigurationHolder();
 			holder.nonConfigurationHolder = ncHolder;
 
-			ncHolder.holderClass = holder.eBean._class(JMod.PRIVATE | JMod.STATIC, "NonConfigurationInstancesHolder");
+			ncHolder.holderClass = holder.generatedClass._class(JMod.PRIVATE | JMod.STATIC, "NonConfigurationInstancesHolder");
 
 			JFieldVar superNonConfigurationInstanceField = ncHolder.holderClass.field(PUBLIC | FINAL, Object.class, "superNonConfigurationInstance");
 
@@ -82,7 +82,7 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 					.assign(_this().ref(superNonConfigurationInstanceField), superNonConfigurationInstanceParam);
 
 			TypeMirror fragmentActivityType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY).asType();
-			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.eBean._extends().fullName());
+			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
 
 			String getLastNonConfigurationInstanceName = "getLastNonConfigurationInstance";
 			String onRetainNonConfigurationInstanceName = "onRetainNonConfigurationInstance";
@@ -100,7 +100,7 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 
 			{
 				// getLastNonConfigurationInstance()
-				JMethod getLastNonConfigurationInstance = holder.eBean.method(PUBLIC, Object.class, getLastNonConfigurationInstanceName);
+				JMethod getLastNonConfigurationInstance = holder.generatedClass.method(PUBLIC, Object.class, getLastNonConfigurationInstanceName);
 
 				getLastNonConfigurationInstance.annotate(Override.class);
 				JBlock body = getLastNonConfigurationInstance.body();
@@ -114,7 +114,7 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 
 			{
 				// onRetainNonConfigurationInstance()
-				JMethod onRetainNonConfigurationInstance = holder.eBean.method(PUBLIC, ncHolder.holderClass, onRetainNonConfigurationInstanceName);
+				JMethod onRetainNonConfigurationInstance = holder.generatedClass.method(PUBLIC, ncHolder.holderClass, onRetainNonConfigurationInstanceName);
 
 				onRetainNonConfigurationInstance.annotate(Override.class);
 				ncHolder.newHolder = _new(ncHolder.holderClass);
