@@ -160,7 +160,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 		JClass bundleClass = holder.classes().BUNDLE;
 
 		{
-			holder.fragmentBuilderClass = holder.eBean._class(PUBLIC | STATIC, "FragmentBuilder_");
+			holder.fragmentBuilderClass = holder.generatedClass._class(PUBLIC | STATIC, "FragmentBuilder_");
 			holder.fragmentArgumentsBuilderField = holder.fragmentBuilderClass.field(PRIVATE, bundleClass, "args_");
 
 			{
@@ -175,14 +175,14 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 				JMethod method = holder.fragmentBuilderClass.method(PUBLIC, eBeanClass, "build");
 				JBlock body = method.body();
 
-				JVar fragment = body.decl(holder.eBean, "fragment_", _new(holder.eBean));
+				JVar fragment = body.decl(holder.generatedClass, "fragment_", _new(holder.generatedClass));
 				body.invoke(fragment, "setArguments").arg(holder.fragmentArgumentsBuilderField);
 				body._return(fragment);
 			}
 
 			{
 				// create()
-				JMethod method = holder.eBean.method(STATIC | PUBLIC, holder.fragmentBuilderClass, "builder");
+				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.fragmentBuilderClass, "builder");
 				method.body()._return(_new(holder.fragmentBuilderClass));
 			}
 		}

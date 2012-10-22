@@ -92,7 +92,7 @@ public class FragmentArgProcessor implements DecoratingElementProcessor {
 
 		JInvocation logError = classes.LOG.staticInvoke("e");
 
-		logError.arg(holder.eBean.name());
+		logError.arg(holder.generatedClass.name());
 		logError.arg("Could not cast argument to the expected type, the field is left to its default value");
 		logError.arg(exceptionParam);
 
@@ -118,7 +118,7 @@ public class FragmentArgProcessor implements DecoratingElementProcessor {
 
 		Classes classes = holder.classes();
 
-		holder.fragmentArgumentsInjectMethod = holder.eBean.method(PRIVATE, codeModel.VOID, "injectFragmentArguments_");
+		holder.fragmentArgumentsInjectMethod = holder.generatedClass.method(PRIVATE, codeModel.VOID, "injectFragmentArguments_");
 
 		injectArgumentsOnInit(holder, classes.INTENT, holder.fragmentArgumentsInjectMethod);
 
