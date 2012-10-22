@@ -961,6 +961,33 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void hasEmptyOrContextConstructor(Element element, IsValid valid) {
+		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
+
+		if (constructors.size() == 1) {
+			ExecutableElement constructor = constructors.get(0);
+
+			if (!annotationHelper.isPrivate(constructor)) {
+				if (constructor.getParameters().size() > 1) {
+					annotationHelper.printAnnotationError(element, "%s annotated element should have a constructor with one parameter max, of type " + CanonicalNameConstants.CONTEXT);
+					valid.invalidate();
+				} else if (constructor.getParameters().size() == 1) {
+					VariableElement parameter = constructor.getParameters().get(0);
+					if (!parameter.asType().toString().equals(CanonicalNameConstants.CONTEXT)) {
+						annotationHelper.printAnnotationError(element, "%s annotated element should have a constructor with one parameter max, of type " + CanonicalNameConstants.CONTEXT);
+						valid.invalidate();
+					}
+				}
+			} else {
+				annotationHelper.printAnnotationError(element, "%s annotated element should not have a private constructor");
+				valid.invalidate();
+			}
+		} else {
+			annotationHelper.printAnnotationError(element, "%s annotated element should have only one constructor");
+			valid.invalidate();
+		}
+	}
+
 	public void hasEmptyConstructor(Element element, IsValid valid) {
 
 		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
