@@ -25,9 +25,12 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.api.Scope;
@@ -124,6 +127,14 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			JVar constructorContextParam = constructor.param(classes.CONTEXT, "context");
 
 			JBlock constructorBody = constructor.body();
+
+			List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
+
+			ExecutableElement superConstructor = constructors.get(0);
+
+			if (superConstructor.getParameters().size() == 1) {
+				constructorBody.invoke("super").arg(constructorContextParam);
+			}
 
 			constructorBody.assign(contextField, constructorContextParam);
 
