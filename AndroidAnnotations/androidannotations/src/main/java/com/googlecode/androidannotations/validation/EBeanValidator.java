@@ -48,7 +48,7 @@ public class EBeanValidator implements ElementValidator {
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.hasEmptyConstructor(element, valid);
+		validatorHelper.hasEmptyOrContextConstructor(element, valid);
 
 		return valid.isValid();
 	}
