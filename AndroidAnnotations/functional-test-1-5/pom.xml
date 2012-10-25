@@ -27,8 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>
-			<artifactId>androidannotations</artifactId>
-			<classifier>api</classifier>
+			<artifactId>androidannotations-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>

@@ -13,18 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ebean;
+package com.googlecode.androidannotations.annotations;
 
-import android.content.Context;
-import android.widget.ArrayAdapter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.googlecode.androidannotations.annotations.EBean;
+/**
+ * Use on fields in fragments. This String value field corresponds to the
+ * argument name.
+ * 
+ * When {@link FragmentArg} is used on fields in a Fragment, the fragment
+ * builder will hold dedicated methods for these arguments.
+ * 
+ */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.FIELD)
+public @interface FragmentArg {
 
-@EBean
-public class SomeArrayAdapter extends ArrayAdapter<String> {
-
-	public SomeArrayAdapter(Context context) {
-		super(context, android.R.layout.simple_list_item_1);
-	}
-
+	String value() default "";
 }
