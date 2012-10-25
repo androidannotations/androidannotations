@@ -22,14 +22,14 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 public class NonConfigurationHolder {
-	
+
 	public JDefinedClass holderClass;
 
 	public JMethod holderConstructor;
 
 	public JInvocation newHolder;
 
-	public JBlock initIfNonConfiguration;
+	public JBlock initIfNonConfigurationNotNullBody;
 
 	public JVar initNonConfigurationInstance;
 
