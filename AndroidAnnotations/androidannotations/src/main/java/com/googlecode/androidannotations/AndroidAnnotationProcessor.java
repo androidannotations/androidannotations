@@ -464,6 +464,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new FullscreenValidator(processingEnv));
 		modelValidator.register(new RestServiceValidator(processingEnv));
 		modelValidator.register(new RootContextValidator(processingEnv));
+		modelValidator.register(new NonConfigurationInstanceValidator(processingEnv));
 		modelValidator.register(new BeanValidator(processingEnv));
 		modelValidator.register(new AfterInjectValidator(processingEnv));
 		modelValidator.register(new BeforeTextChangeValidator(processingEnv, rClass));
@@ -481,7 +482,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
-		modelValidator.register(new NonConfigurationInstanceValidator(processingEnv));
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		modelValidator.register(new FragmentArgValidator(processingEnv));
@@ -554,6 +554,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new RestServiceProcessor());
 		modelProcessor.register(new OrmLiteDaoProcessor(processingEnv));
 		modelProcessor.register(new RootContextProcessor());
+		modelProcessor.register(new NonConfigurationInstanceProcessor(processingEnv));
 		modelProcessor.register(new BeanProcessor(processingEnv));
 		modelProcessor.register(new BeforeTextChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new TextChangeProcessor(processingEnv, rClass));
@@ -573,7 +574,6 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
-		modelProcessor.register(new NonConfigurationInstanceProcessor(processingEnv));
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		modelProcessor.register(new OnActivityResultProcessor(processingEnv, rClass));
 		return modelProcessor;

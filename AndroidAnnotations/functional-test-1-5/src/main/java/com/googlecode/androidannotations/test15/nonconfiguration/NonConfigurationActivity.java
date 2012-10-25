@@ -28,11 +28,14 @@ import com.googlecode.androidannotations.test15.ebean.EmptyDependency;
 @EActivity
 public class NonConfigurationActivity extends Activity {
 
-	@NonConfigurationInstance
 	@Bean
-	public EmptyDependency dependency;
+	@NonConfigurationInstance
+	EmptyDependency maintainedDependency;
+
+	@Bean
+	EmptyDependency recreatedDependency;
 
 	@NonConfigurationInstance
-	public Object someObject;
+	Object someObject;
 
 }

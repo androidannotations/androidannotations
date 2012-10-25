@@ -95,7 +95,7 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 				// init()
 				JBlock initBody = holder.init.body();
 				ncHolder.initNonConfigurationInstance = initBody.decl(ncHolder.holderClass, "nonConfigurationInstance", cast(ncHolder.holderClass, _super().invoke(getLastNonConfigurationInstanceName)));
-				ncHolder.initIfNonConfiguration = initBody._if(ncHolder.initNonConfigurationInstance.ne(_null()))._then();
+				ncHolder.initIfNonConfigurationNotNullBody = initBody._if(ncHolder.initNonConfigurationInstance.ne(_null()))._then();
 			}
 
 			{
@@ -134,13 +134,13 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 
 		ncHolder.newHolder.arg(field);
 
-		ncHolder.initIfNonConfiguration.assign(field, ncHolder.initNonConfigurationInstance.ref(field));
+		ncHolder.initIfNonConfigurationNotNullBody.assign(field, ncHolder.initNonConfigurationInstance.ref(field));
 
 		boolean hasBeanAnnotation = element.getAnnotation(Bean.class) != null;
 		if (hasBeanAnnotation) {
 			JClass fieldGeneratedBeanClass = holder.refClass(fieldType.fullName() + GENERATION_SUFFIX);
 
-			ncHolder.initIfNonConfiguration.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
+			ncHolder.initIfNonConfigurationNotNullBody.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}
 
 	}
