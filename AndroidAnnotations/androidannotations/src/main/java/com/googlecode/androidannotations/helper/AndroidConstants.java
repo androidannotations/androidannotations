@@ -13,18 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ebean;
+package com.googlecode.androidannotations.helper;
 
-import android.content.Context;
-import android.widget.ArrayAdapter;
+public abstract class AndroidConstants {
 
-import com.googlecode.androidannotations.annotations.EBean;
+	public static final int LOG_VERBOSE = 2;
+	public static final int LOG_DEBUG = 3;
+	public static final int LOG_INFO = 4;
+	public static final int LOG_WARN = 5;
+	public static final int LOG_ERROR = 6;
 
-@EBean
-public class SomeArrayAdapter extends ArrayAdapter<String> {
-
-	public SomeArrayAdapter(Context context) {
-		super(context, android.R.layout.simple_list_item_1);
+	private AndroidConstants() {
 	}
 
 }

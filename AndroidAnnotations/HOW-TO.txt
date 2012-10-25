@@ -1,3 +1,0 @@
-To get started with AndroidAnnotations... read the GettingStarted wiki page!
-
-https://github.com/excilys/androidannotations/wiki/GettingStarted

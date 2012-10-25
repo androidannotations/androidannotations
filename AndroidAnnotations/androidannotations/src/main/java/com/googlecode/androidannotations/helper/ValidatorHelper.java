@@ -15,6 +15,11 @@
  */
 package com.googlecode.androidannotations.helper;
 
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_WARN;
 import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static java.util.Arrays.asList;
 
@@ -39,8 +44,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
-
-import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.EApplication;
@@ -83,7 +86,7 @@ public class ValidatorHelper {
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
-	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR);
+	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(LOG_VERBOSE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR);
 
 	@SuppressWarnings("unchecked")
 	private static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
