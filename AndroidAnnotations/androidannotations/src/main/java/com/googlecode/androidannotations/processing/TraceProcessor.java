@@ -15,12 +15,16 @@
  */
 package com.googlecode.androidannotations.processing;
 
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_WARN;
+
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-
-import android.util.Log;
 
 import com.googlecode.androidannotations.annotations.Trace;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
@@ -102,15 +106,15 @@ public class TraceProcessor implements DecoratingElementProcessor {
 
 	private String logMethodNameFromLevel(int level) {
 		switch (level) {
-		case Log.DEBUG:
+		case LOG_DEBUG:
 			return "d";
-		case Log.VERBOSE:
+		case LOG_VERBOSE:
 			return "v";
-		case Log.INFO:
+		case LOG_INFO:
 			return "i";
-		case Log.WARN:
+		case LOG_WARN:
 			return "w";
-		case Log.ERROR:
+		case LOG_ERROR:
 			return "e";
 		default:
 			throw new IllegalArgumentException("Unrecognized Log level : " + level);
@@ -119,15 +123,15 @@ public class TraceProcessor implements DecoratingElementProcessor {
 
 	private JFieldRef logLevelFromInt(int level, JClass logClass) {
 		switch (level) {
-		case Log.DEBUG:
+		case LOG_DEBUG:
 			return logClass.staticRef("DEBUG");
-		case Log.VERBOSE:
+		case LOG_VERBOSE:
 			return logClass.staticRef("VERBOSE");
-		case Log.INFO:
+		case LOG_INFO:
 			return logClass.staticRef("INFO");
-		case Log.WARN:
+		case LOG_WARN:
 			return logClass.staticRef("WARN");
-		case Log.ERROR:
+		case LOG_ERROR:
 			return logClass.staticRef("ERROR");
 		default:
 			throw new IllegalArgumentException("Unrecognized log level. Given value:" + level);

@@ -14,9 +14,9 @@
 	<version>2.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Android Annotations Parent</name>
+	<name>AndroidAnnotations Parent</name>
 	<description>Simplifying Android using annotations and annotation processing tools</description>
-	<url>http://androidannotations.googlecode.com</url>
+	<url>http://androidannotations.org</url>
 
 	<inceptionYear>2010</inceptionYear>
 
@@ -89,8 +89,11 @@
 
 	<modules>
 		<module>androidannotations</module>
+		<module>androidannotations-api</module>
 		<module>functional-test-1-5</module>
 		<module>functional-test-1-5-tests</module>
+		<module>androidannotations-with-codemodel</module>
+		<module>androidannotations-bundle</module>
 	</modules>
 
 	<dependencyManagement>
@@ -103,9 +106,37 @@
 			</dependency>
 			<dependency>
 				<groupId>com.googlecode.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>javadoc</classifier>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
-				<classifier>api</classifier>
+				<classifier>javadoc</classifier>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.androidannotations</groupId>
+				<artifactId>androidannotations</artifactId>
+				<version>${project.version}</version>
+				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.androidannotations</groupId>
+				<artifactId>androidannotations-with-codemodel</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.googlecode.androidannotations</groupId>
