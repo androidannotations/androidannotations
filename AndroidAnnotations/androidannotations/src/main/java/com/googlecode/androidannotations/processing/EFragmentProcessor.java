@@ -17,12 +17,14 @@ package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 
@@ -38,6 +40,7 @@ import com.googlecode.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldRef;
@@ -150,5 +153,38 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			holder.initActivityRef = holder.contextRef;
 		}
 
+		addFragmentBuilder(codeModel, holder, eBeanClass);
+	}
+
+	private void addFragmentBuilder(JCodeModel codeModel, EBeanHolder holder, JClass eBeanClass) throws JClassAlreadyExistsException {
+		JClass bundleClass = holder.classes().BUNDLE;
+
+		{
+			holder.fragmentBuilderClass = holder.generatedClass._class(PUBLIC | STATIC, "FragmentBuilder_");
+			holder.fragmentArgumentsBuilderField = holder.fragmentBuilderClass.field(PRIVATE, bundleClass, "args_");
+
+			{
+				// Constructor
+				JMethod constructor = holder.fragmentBuilderClass.constructor(PRIVATE);
+				JBlock constructorBody = constructor.body();
+				constructorBody.assign(holder.fragmentArgumentsBuilderField, _new(bundleClass));
+			}
+
+			{
+				// build()
+				JMethod method = holder.fragmentBuilderClass.method(PUBLIC, eBeanClass, "build");
+				JBlock body = method.body();
+
+				JVar fragment = body.decl(holder.generatedClass, "fragment_", _new(holder.generatedClass));
+				body.invoke(fragment, "setArguments").arg(holder.fragmentArgumentsBuilderField);
+				body._return(fragment);
+			}
+
+			{
+				// create()
+				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.fragmentBuilderClass, "builder");
+				method.body()._return(_new(holder.fragmentBuilderClass));
+			}
+		}
 	}
 }

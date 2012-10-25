@@ -36,6 +36,7 @@ import com.googlecode.androidannotations.annotations.AfterInject;
 import com.googlecode.androidannotations.annotations.AfterTextChange;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.App;
+import com.googlecode.androidannotations.annotations.FragmentArg;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.BeforeTextChange;
@@ -119,6 +120,7 @@ import com.googlecode.androidannotations.processing.AfterInjectProcessor;
 import com.googlecode.androidannotations.processing.AfterTextChangeProcessor;
 import com.googlecode.androidannotations.processing.AfterViewsProcessor;
 import com.googlecode.androidannotations.processing.AppProcessor;
+import com.googlecode.androidannotations.processing.FragmentArgProcessor;
 import com.googlecode.androidannotations.processing.BackgroundProcessor;
 import com.googlecode.androidannotations.processing.BeanProcessor;
 import com.googlecode.androidannotations.processing.BeforeTextChangeProcessor;
@@ -183,6 +185,7 @@ import com.googlecode.androidannotations.validation.AfterInjectValidator;
 import com.googlecode.androidannotations.validation.AfterTextChangeValidator;
 import com.googlecode.androidannotations.validation.AfterViewsValidator;
 import com.googlecode.androidannotations.validation.AppValidator;
+import com.googlecode.androidannotations.validation.FragmentArgValidator;
 import com.googlecode.androidannotations.validation.BeanValidator;
 import com.googlecode.androidannotations.validation.BeforeTextChangeValidator;
 import com.googlecode.androidannotations.validation.ClickValidator;
@@ -311,6 +314,7 @@ import com.googlecode.androidannotations.validation.rest.RestValidator;
 		AfterTextChange.class, //
 		OrmLiteDao.class, //
 		HttpsClient.class, //
+		FragmentArg.class, //
 		OnActivityResult.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -480,6 +484,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new InstanceStateValidator(processingEnv));
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
+		modelValidator.register(new FragmentArgValidator(processingEnv));
 		modelValidator.register(new OnActivityResultValidator(processingEnv, rClass));
 		return modelValidator;
 	}
@@ -531,6 +536,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		}
 		modelProcessor.register(new TransactionalProcessor());
 		modelProcessor.register(new ExtraProcessor(processingEnv));
+		modelProcessor.register(new FragmentArgProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
 		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
 		modelProcessor.register(new RestProcessor(restImplementationHolder));
