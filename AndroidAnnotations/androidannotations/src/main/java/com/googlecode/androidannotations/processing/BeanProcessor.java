@@ -17,6 +17,7 @@ package com.googlecode.androidannotations.processing;
 
 import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.googlecode.androidannotations.processing.EBeanProcessor.GET_INSTANCE_METHOD_NAME;
+import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
@@ -28,10 +29,12 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
 import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 
 public class BeanProcessor implements DecoratingElementProcessor {
@@ -65,12 +68,19 @@ public class BeanProcessor implements DecoratingElementProcessor {
 
 		JClass injectedClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
 
+		JFieldRef beanField = ref(fieldName);
 		{
 			// getInstance
 			JBlock body = holder.init.body();
 
+			boolean hasNonConfigurationInstanceAnnotation = element.getAnnotation(NonConfigurationInstance.class) != null;
+
+			if (hasNonConfigurationInstanceAnnotation) {
+				body = body._if(beanField.eq(_null()))._then();
+			}
+
 			JInvocation getInstance = injectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
-			body.assign(ref(fieldName), getInstance);
+			body.assign(beanField, getInstance);
 		}
 
 		{
@@ -78,7 +88,7 @@ public class BeanProcessor implements DecoratingElementProcessor {
 			if (holder.afterSetContentView != null) {
 				JBlock body = holder.afterSetContentView.body();
 
-				body.invoke(cast(injectedClass, ref(fieldName)), holder.afterSetContentView);
+				body.invoke(cast(injectedClass, beanField), holder.afterSetContentView);
 			}
 		}
 
