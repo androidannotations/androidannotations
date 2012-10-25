@@ -96,6 +96,12 @@ public class EBeanHolder {
 	 */
 	public final HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListeners = new HashMap<String, OnSeekBarChangeListenerHolder>();
 
+	public JVar fragmentArguments;
+	public JFieldVar fragmentArgumentsBuilderField;
+	public JMethod fragmentArgumentsInjectMethod;
+	public JBlock fragmentArgumentsNotNullBlock;
+	public JDefinedClass fragmentBuilderClass;
+
 	public JMethod findNativeFragmentById;
 	public JMethod findSupportFragmentById;
 	public JMethod findNativeFragmentByTag;

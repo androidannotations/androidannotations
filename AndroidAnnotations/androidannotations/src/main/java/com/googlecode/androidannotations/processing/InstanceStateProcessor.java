@@ -29,15 +29,11 @@ import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.InstanceState;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.AnnotationHelper;
+import com.googlecode.androidannotations.helper.BundleHelper;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -110,84 +106,19 @@ public class InstanceStateProcessor implements DecoratingElementProcessor {
 		JBlock saveStateBody = getSaveStateMethodBody(codeModel, holder);
 		JBlock restoreStateBody = getRestoreStateBody(codeModel, holder);
 
-		String typeString = element.asType().toString();
-		TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
+		BundleHelper bundleHelper = new BundleHelper(annotationHelper, element);
 
-		String methodNameToSave;
-		String methodNameToRestore;
-		boolean restoreCallNeedCastStatement = false;
+		JFieldRef ref = ref(fieldName);
+		saveStateBody.invoke(ref(BUNDLE_PARAM_NAME), bundleHelper.getMethodNameToSave()).arg(fieldName).arg(ref);
 
-		boolean restoreCallNeedsSuppressWarning = false;
-
-		if (methodSuffixNameByTypeName.containsKey(typeString)) {
-
-			methodNameToSave = "put" + methodSuffixNameByTypeName.get(typeString);
-			methodNameToRestore = "get" + methodSuffixNameByTypeName.get(typeString);
-
-		} else if (element.asType().getKind() == TypeKind.ARRAY) {
-
-			ArrayType arrayType = (ArrayType) element.asType();
-
-			boolean hasTypeArguments = false;
-			if (arrayType.getComponentType() instanceof DeclaredType) {
-				DeclaredType declaredType = (DeclaredType) arrayType.getComponentType();
-				typeString = declaredType.asElement().toString();
-				hasTypeArguments = declaredType.getTypeArguments().size() > 0;
-			} else {
-				typeString = arrayType.getComponentType().toString();
-			}
-
-			elementType = annotationHelper.typeElementFromQualifiedName(typeString);
-
-			if (isTypeParcelable(elementType)) {
-				methodNameToSave = "put" + "ParcelableArray";
-				methodNameToRestore = "get" + "ParcelableArray";
-				restoreCallNeedCastStatement = true;
-
-				if (hasTypeArguments) {
-					restoreCallNeedsSuppressWarning = true;
-				}
-			} else {
-				methodNameToSave = "put" + "Serializable";
-				methodNameToRestore = "get" + "Serializable";
-				restoreCallNeedCastStatement = true;
-			}
-		} else {
-
-			TypeMirror elementAsType = element.asType();
-			boolean hasTypeArguments = false;
-			if (elementAsType instanceof DeclaredType) {
-				DeclaredType declaredType = (DeclaredType) elementAsType;
-				typeString = declaredType.asElement().toString();
-				elementType = annotationHelper.typeElementFromQualifiedName(typeString);
-				hasTypeArguments = declaredType.getTypeArguments().size() > 0;
-			}
-
-			if (isTypeParcelable(elementType)) {
-				methodNameToSave = "put" + "Parcelable";
-				methodNameToRestore = "get" + "Parcelable";
-			} else {
-				methodNameToSave = "put" + "Serializable";
-				methodNameToRestore = "get" + "Serializable";
-				restoreCallNeedCastStatement = true;
-
-				if (hasTypeArguments) {
-					restoreCallNeedsSuppressWarning = true;
-				}
-			}
-		}
-
-		JFieldRef ref = JExpr.ref(fieldName);
-		saveStateBody.invoke(JExpr.ref(BUNDLE_PARAM_NAME), methodNameToSave).arg(fieldName).arg(ref);
-
-		JInvocation restoreMethodCall = JExpr.invoke(ref("savedInstanceState"), methodNameToRestore).arg(fieldName);
-		if (restoreCallNeedCastStatement) {
+		JInvocation restoreMethodCall = JExpr.invoke(ref("savedInstanceState"), bundleHelper.getMethodNameToRestore()).arg(fieldName);
+		if (bundleHelper.restoreCallNeedCastStatement()) {
 
 			JClass jclass = helper.typeMirrorToJClass(element.asType(), holder);
 			JExpression castStatement = JExpr.cast(jclass, restoreMethodCall);
 			restoreStateBody.assign(ref, castStatement);
 
-			if (restoreCallNeedsSuppressWarning) {
+			if (bundleHelper.restoreCallNeedsSuppressWarning()) {
 				if (holder.restoreSavedInstanceStateMethod.annotations().size() == 0) {
 					holder.restoreSavedInstanceStateMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
 				}
@@ -230,13 +161,6 @@ public class InstanceStateProcessor implements DecoratingElementProcessor {
 		}
 
 		return holder.saveInstanceStateBlock;
-	}
-
-	private boolean isTypeParcelable(TypeElement elementType) {
-
-		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName("android.os.Parcelable");
-
-		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
 	}
 
 }
