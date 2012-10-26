@@ -29,6 +29,8 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
@@ -137,7 +139,19 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 
 		boolean hasBeanAnnotation = element.getAnnotation(Bean.class) != null;
 		if (hasBeanAnnotation) {
-			JClass fieldGeneratedBeanClass = holder.refClass(fieldType.fullName() + GENERATION_SUFFIX);
+
+			DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element, Bean.class);
+
+			TypeMirror elementType;
+			if (targetAnnotationClassValue != null) {
+				elementType = targetAnnotationClassValue;
+			} else {
+				elementType = element.asType();
+			}
+
+			String typeQualifiedName = elementType.toString();
+
+			JClass fieldGeneratedBeanClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
 
 			ncHolder.initIfNonConfigurationNotNullBody.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}

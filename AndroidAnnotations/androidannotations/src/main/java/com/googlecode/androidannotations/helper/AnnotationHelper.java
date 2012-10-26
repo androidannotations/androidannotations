@@ -20,13 +20,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -302,6 +306,29 @@ public class AnnotationHelper {
 			return target.getSimpleName() + "d";
 		}
 		return target.getSimpleName() + "ed";
+	}
+
+	public DeclaredType extractAnnotationClassParameter(Element element, Class<? extends Annotation> target) {
+
+		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
+
+		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
+
+		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
+			/*
+			 * "value" is unset when the default value is used
+			 */
+			if ("value".equals(entry.getKey().getSimpleName().toString())) {
+
+				AnnotationValue annotationValue = entry.getValue();
+
+				DeclaredType annotationClass = (DeclaredType) annotationValue.getValue();
+
+				return annotationClass;
+			}
+		}
+
+		return null;
 	}
 
 }

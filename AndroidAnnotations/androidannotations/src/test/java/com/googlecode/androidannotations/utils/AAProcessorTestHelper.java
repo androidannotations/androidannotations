@@ -13,7 +13,7 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 	}
 
 	public File toGeneratedFile(Class<?> compiledClass) {
-		File output = new File(OUTPUT_DIRECTORY, toPath(compiledClass.getPackage()) + "/" + compiledClass + ModelConstants.GENERATION_SUFFIX + SOURCE_FILE_SUFFIX);
+		File output = new File(OUTPUT_DIRECTORY, toPath(compiledClass.getPackage()) + "/" + compiledClass.getSimpleName() + ModelConstants.GENERATION_SUFFIX + SOURCE_FILE_SUFFIX);
 		return output;
 	}
 
