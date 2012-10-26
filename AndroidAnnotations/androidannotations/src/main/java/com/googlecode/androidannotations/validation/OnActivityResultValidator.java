@@ -65,11 +65,6 @@ public class OnActivityResultValidator implements ElementValidator {
 		OnActivityResult onResultAnnotation = element.getAnnotation(OnActivityResult.class);
 		validatorHelper.annotationValuePositiveAndInAShort(element, valid, onResultAnnotation.value());
 
-		if (onResultAnnotation.value() == OnActivityResult.DEFAULT_VALUE) {
-			annotationHelper.printAnnotationError(element, "A value has to be filled into the annotation parameter");
-			valid.invalidate();
-		}
-
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
