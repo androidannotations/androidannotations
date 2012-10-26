@@ -13,6 +13,6 @@ Export-Package: com.googlecode.androidannotations.annotations,
 Bundle-Vendor: androidannotations
 Bundle-Activator: com.googlecode.androidannotations.api.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  org.eclipse.jdt.apt.core;bundle-version="3.3.500",
  androidannotations-dependencies;bundle-version="1.0.0"
