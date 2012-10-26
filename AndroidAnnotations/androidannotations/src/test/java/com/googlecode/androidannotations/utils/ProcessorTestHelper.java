@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -123,22 +124,24 @@ public class ProcessorTestHelper {
 
 	private final List<String> compilerOptions = new ArrayList<String>();
 
-	private final List<Processor> processors = new ArrayList<Processor>();
+	private final List<Class<? extends Processor>> processorsClasses = new ArrayList<Class<? extends Processor>>();
 
 	public ProcessorTestHelper() {
-		compilerOptions.add("-proc:only");
 		compilerOptions.add("-classpath");
 		compilerOptions.add(getClassPath());
 		compilerOptions.add("-s");
-		compilerOptions.add(ensureOutputDirectory().getAbsolutePath());
+		String outputPath = ensureOutputDirectory().getAbsolutePath();
+		compilerOptions.add(outputPath);
+		compilerOptions.add("-d");
+		compilerOptions.add(outputPath);
 	}
 
 	public File getOuputDirectory() {
 		return ensureOutputDirectory();
 	}
 
-	public void addProcessor(Processor processor) {
-		processors.add(processor);
+	public void addProcessor(Class<? extends Processor> processorClass) {
+		processorsClasses.add(processorClass);
 	}
 
 	public void addProcessorParameter(String key, String value) {
@@ -182,6 +185,10 @@ public class ProcessorTestHelper {
 		return compileFiles(files);
 	}
 
+	public CompileResult compileFiles(File... compilationUnits) {
+		return compileFiles(Arrays.asList(compilationUnits));
+	}
+
 	public CompileResult compileFiles(Collection<File> compilationUnits) {
 		DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<JavaFileObject>();
 
@@ -189,19 +196,18 @@ public class ProcessorTestHelper {
 
 		StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnosticCollector, null, null);
 
-		/*
-		 * Call the compiler with the "-proc:only" option. The "class names"
-		 * option (which could, in principle, be used instead of compilation
-		 * units for annotation processing) isn't useful in this case because
-		 * only annotations on the classes being compiled are accessible.
-		 * 
-		 * Information about the classes being compiled (such as what they are
-		 * annotated with) is *not* available via the RoundEnvironment. However,
-		 * if these classes are annotations, they certainly need to be
-		 * validated.
-		 */
-
 		CompilationTask task = compiler.getTask(null, fileManager, diagnosticCollector, compilerOptions, null, fileManager.getJavaFileObjectsFromFiles(compilationUnits));
+
+		List<Processor> processors = new ArrayList<Processor>();
+
+		for (Class<? extends Processor> processorClass : processorsClasses) {
+			try {
+				processors.add(processorClass.newInstance());
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
 		task.setProcessors(processors);
 
 		task.call();
