@@ -120,4 +120,10 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
+	public void annotationValuePositiveAndInAShort(Element element, IsValid valid, int value) {
+		if (value < 0 || value > 0xFFFF) {
+			annotationHelper.printAnnotationError(element, "The requestCode must be positive and inferior or equal to 32767");
+			valid.invalidate();
+		}
+	}
 }
