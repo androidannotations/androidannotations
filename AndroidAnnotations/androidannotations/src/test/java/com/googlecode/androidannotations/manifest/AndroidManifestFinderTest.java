@@ -17,7 +17,7 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 
 	@Before
 	public void setup() {
-		addProcessor(new AndroidAnnotationProcessor());
+		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test

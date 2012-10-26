@@ -13,7 +13,7 @@ public class AndroidManifestErrorsTest extends AAProcessorTestHelper {
 	@Before
 	public void setup() {
 		addManifestProcessorParameter(AndroidManifestErrorsTest.class);
-		addProcessor(new AndroidAnnotationProcessor());
+		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
