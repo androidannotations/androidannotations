@@ -42,12 +42,12 @@ import android.content.Intent;
  * <li>An int or an java.lang.Integer to get the resultCode
  * </ul>
  * 
- * Some usage examples of &#064;OnResult annotation: <blockquote>
+ * Some usage examples of &#064;OnActivityResult annotation: <blockquote>
  * 
  * </blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>REQUEST_CODE</b>)
+ * &#064;OnActivityResult(<b>REQUEST_CODE</b>)
  * void onResult(int resultCode, Intent data) {
  * 	// Something Here
  * }
@@ -56,7 +56,7 @@ import android.content.Intent;
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>REQUEST_CODE</b>)
+ * &#064;OnActivityResult(<b>REQUEST_CODE</b>)
  * void onResult(int resultCode) {
  * 	// Something Here
  * }
@@ -65,7 +65,7 @@ import android.content.Intent;
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>ANOTHER_REQUEST_CODE</b>)
+ * &#064;OnActivityResult(<b>ANOTHER_REQUEST_CODE</b>)
  * void onResult(Intent data) {
  * 	// Something Here
  * }
@@ -74,7 +74,7 @@ import android.content.Intent;
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnResult(<b>ANOTHER_REQUEST_CODE</b>)
+ * &#064;OnActivityResult(<b>ANOTHER_REQUEST_CODE</b>)
  * void onResult() {
  * 	// Something Here
  * }
