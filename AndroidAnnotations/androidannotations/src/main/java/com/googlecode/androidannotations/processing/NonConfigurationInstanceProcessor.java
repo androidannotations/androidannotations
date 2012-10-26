@@ -29,7 +29,6 @@ import java.lang.annotation.Annotation;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
@@ -81,12 +80,12 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 			ncHolder.holderConstructor.body() //
 					.assign(_this().ref(superNonConfigurationInstanceField), superNonConfigurationInstanceParam);
 
-			TypeMirror fragmentActivityType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY).asType();
+			TypeElement fragmentActivityTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
 			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
 
 			String getLastNonConfigurationInstanceName = "getLastNonConfigurationInstance";
 			String onRetainNonConfigurationInstanceName = "onRetainNonConfigurationInstance";
-			if (annotationHelper.isSubtype(typeElement.asType(), fragmentActivityType)) {
+			if (fragmentActivityTypeElement != null && annotationHelper.isSubtype(typeElement.asType(), fragmentActivityTypeElement.asType())) {
 				getLastNonConfigurationInstanceName = "getLastCustomNonConfigurationInstance";
 				onRetainNonConfigurationInstanceName = "onRetainCustomNonConfigurationInstance";
 			}
