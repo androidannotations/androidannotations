@@ -120,4 +120,10 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
+	public void annotationValuePositiveAndInAShort(Element element, IsValid valid, int value) {
+		if (value < 0 || value > 0xFFFF) {
+			annotationHelper.printAnnotationError(element, "Due to a restriction in the fragment API, the requestCode has to be a positive integer inferior or equal to 0xFFFF");
+			valid.invalidate();
+		}
+	}
 }
