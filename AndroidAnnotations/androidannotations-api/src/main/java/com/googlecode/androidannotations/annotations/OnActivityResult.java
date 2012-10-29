@@ -49,7 +49,6 @@ import android.content.Intent;
  * <pre>
  * &#064;OnActivityResult(<b>REQUEST_CODE</b>)
  * void onResult(int resultCode, Intent data) {
- * 	// Something Here
  * }
  * </pre>
  * 
@@ -58,7 +57,6 @@ import android.content.Intent;
  * <pre>
  * &#064;OnActivityResult(<b>REQUEST_CODE</b>)
  * void onResult(int resultCode) {
- * 	// Something Here
  * }
  * </pre>
  * 
@@ -67,7 +65,6 @@ import android.content.Intent;
  * <pre>
  * &#064;OnActivityResult(<b>ANOTHER_REQUEST_CODE</b>)
  * void onResult(Intent data) {
- * 	// Something Here
  * }
  * </pre>
  * 
@@ -76,7 +73,6 @@ import android.content.Intent;
  * <pre>
  * &#064;OnActivityResult(<b>ANOTHER_REQUEST_CODE</b>)
  * void onResult() {
- * 	// Something Here
  * }
  * </pre>
  * 

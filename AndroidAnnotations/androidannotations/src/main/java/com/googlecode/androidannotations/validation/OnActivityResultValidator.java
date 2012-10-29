@@ -68,12 +68,12 @@ public class OnActivityResultValidator implements ElementValidator {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		haveOnResultMethodParameters(executableElement, valid);
+		hasOnResultMethodParameters(executableElement, valid);
 
 		return valid.isValid();
 	}
 
-	private void haveOnResultMethodParameters(ExecutableElement executableElement, IsValid valid) {
+	private void hasOnResultMethodParameters(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		boolean resultCodeParameterFound = false;
 		boolean intentParameterFound = false;
