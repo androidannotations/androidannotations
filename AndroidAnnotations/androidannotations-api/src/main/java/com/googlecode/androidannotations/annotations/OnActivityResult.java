@@ -25,70 +25,54 @@ import android.content.Intent;
 /**
  * <blockquote>
  * 
- * This annotation is intended to be used on a method to receive results from a
+ * This annotation is intended to be used on methods to receive results from a
  * previously started activity using
  * {@link android.app.Activity#startActivityForResult(Intent, int)}
  * 
  * </blockquote> <blockquote>
  * 
- * The annotation value must be a resource id that represents the
- * <b>requestCode</b> associated with the given result. This id can be declared
- * into xml values as follows :
- * 
- * <b>&lt;item type="id" name="myRequest"/&gt;</b>
+ * The annotation value must be an integer constant that represents the
+ * <b>requestCode</b> associated with the given result.
  * 
  * </blockquote> <blockquote>
  * 
- * The method may have multiple parameters :
+ * The method may have multiple parameter :
  * <ul>
- * <li>A android.content.Intent that contains data returned by the previously
- * launched activity
- * <li>An int or an java.lang.Integer to get the resultCode.
+ * <li>A android.content.Intent that contains data
+ * <li>An int or an java.lang.Integer to get the resultCode
+ * </ul>
  * 
- * Some usage examples of &#064;OnActivityResult annotation : <blockquote>
+ * Some usage examples of &#064;OnActivityResult annotation: <blockquote>
  * 
- * </blockquote> <blockquote>
+ * </blockquote>
  * 
  * <pre>
- * &#064;OnActivityResult(<b>R.id.myRequest</b>)
+ * &#064;OnActivityResult(<b>REQUEST_CODE</b>)
  * void onResult(int resultCode, Intent data) {
- * 	// Use resultCode and data
  * }
  * </pre>
  * 
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnActivityResult(<b>R.id.myRequest</b>)
+ * &#064;OnActivityResult(<b>REQUEST_CODE</b>)
  * void onResult(int resultCode) {
- * 	// Only use resultCode 
  * }
  * </pre>
  * 
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnActivityResult(<b>R.id.myRequest</b>)
+ * &#064;OnActivityResult(<b>ANOTHER_REQUEST_CODE</b>)
  * void onResult(Intent data) {
- * 	// Only use data
  * }
  * </pre>
  * 
  * </blockquote> <blockquote>
  * 
  * <pre>
- * &#064;OnActivityResult
- * void <b>myRequest</b>Result() {
- * 	// The method name contains the res id
- * }
- * </pre>
- * 
- * </blockquote> <blockquote>
- * 
- * <pre>
- * &#064;OnActivityResult(<b>resName = &quot;myRequest&quot;</b>)
- * void anotherResult() {
- * 	// Usually for library projects
+ * &#064;OnActivityResult(<b>ANOTHER_REQUEST_CODE</b>)
+ * void onResult() {
  * }
  * </pre>
  * 
@@ -96,8 +80,6 @@ import android.content.Intent;
  * 
  * @see android.app.Activity#startActivityForResult(Intent, int)
  * @see android.app.Activity#onActivityResult(int, int, Intent)
- * @see android.app.Activity#RESULT_CANCELED
- * @see android.app.Activity#RESULT_OK
  * 
  * 
  * @author Mathieu Boniface < mat.boniface@gmail.com >
@@ -108,8 +90,6 @@ import android.content.Intent;
 @Target(ElementType.METHOD)
 public @interface OnActivityResult {
 
-	int[] value() default ResId.DEFAULT_VALUE;
-
-	String[] resName() default "";
+	int value();
 
 }
