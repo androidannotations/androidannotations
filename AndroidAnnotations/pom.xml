@@ -9,7 +9,7 @@
 		<version>7</version>
 	</parent>
 
-	<groupId>com.googlecode.androidannotations</groupId>
+	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
 	<version>2.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -99,47 +99,47 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-api</artifactId>
 				<version>${project.version}</version>
 				<classifier>javadoc</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-api</artifactId>
 				<version>${project.version}</version>
 				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<classifier>javadoc</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-with-codemodel</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>functional-test-1-5</artifactId>
 				<version>${project.version}</version>
 			</dependency>

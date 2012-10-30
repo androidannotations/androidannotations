@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.googlecode.androidannotations</groupId>
+		<groupId>org.androidannotations</groupId>
 		<artifactId>androidannotations-parent</artifactId>
 		<version>2.7-SNAPSHOT</version>
 	</parent>
@@ -15,7 +15,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.googlecode.androidannotations</groupId>
+			<groupId>org.androidannotations</groupId>
 			<artifactId>androidannotations-api</artifactId>
 		</dependency>
 		<dependency>
