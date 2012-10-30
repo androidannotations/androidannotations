@@ -40,7 +40,7 @@ import org.w3c.dom.NodeList;
 
 public class AndroidManifestFinder {
 
-	private static final String ANDROID_MANIFEST_FILE = "androidManifestFile";
+	private static final String ANDROID_MANIFEST_FILE_OPTION = "androidManifestFile";
 
 	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
 
@@ -87,7 +87,7 @@ public class AndroidManifestFinder {
 	}
 
 	private File findManifestFileThrowing() throws Exception {
-		if (processingEnv.getOptions().containsKey(ANDROID_MANIFEST_FILE)) {
+		if (processingEnv.getOptions().containsKey(ANDROID_MANIFEST_FILE_OPTION)) {
 			return findManifestInSpecifiedPath();
 		} else {
 			return findManifestInParentsDirectories();
@@ -95,8 +95,8 @@ public class AndroidManifestFinder {
 	}
 
 	private File findManifestInSpecifiedPath() {
-		String path = processingEnv.getOptions().get(ANDROID_MANIFEST_FILE);
-		File androidManifestFile = new File(path, "AndroidManifest.xml");
+		String path = processingEnv.getOptions().get(ANDROID_MANIFEST_FILE_OPTION);
+		File androidManifestFile = new File(path);
 		Messager messager = processingEnv.getMessager();
 		if (!androidManifestFile.exists()) {
 			throw new IllegalStateException("Could not find the AndroidManifest.xml file in specified path : " + path);

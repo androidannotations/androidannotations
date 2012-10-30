@@ -8,8 +8,7 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 
 	public void addManifestProcessorParameter(Class<?> classOfPackagingContainingManifest) {
 		String manifestPath = classOfPackagingContainingManifest.getResource("AndroidManifest.xml").getPath();
-		String manifestPackagePath = manifestPath.substring(0, manifestPath.lastIndexOf("/"));
-		addProcessorParameter("androidManifestFile", manifestPackagePath);
+		addProcessorParameter("androidManifestFile", manifestPath);
 	}
 
 	public File toGeneratedFile(Class<?> compiledClass) {
