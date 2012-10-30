@@ -1,6 +1,6 @@
-package com.googlecode.androidannotations.ebean;
+package org.androidannotations.ebean;
 
-import com.googlecode.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EBean;
 
 @EBean
 public class SomeImplementation implements SomeInterface {

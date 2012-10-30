@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.helper;
+package org.androidannotations.helper;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.processing.EBeanHolder;
+import org.androidannotations.processing.EBeanHolder;
 
 /**
  * @author Eric Kok

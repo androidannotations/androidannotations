@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.afterinject;
+package org.androidannotations.test15.afterinject;
 
 import android.app.Activity;
 import android.app.NotificationManager;
 
-import com.googlecode.androidannotations.annotations.AfterInject;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.SystemService;
 
 @EActivity
 public class AfterInjectActivity extends Activity {

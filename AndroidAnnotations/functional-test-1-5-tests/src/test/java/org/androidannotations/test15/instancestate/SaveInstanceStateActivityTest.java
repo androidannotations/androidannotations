@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.instancestate;
+package org.androidannotations.test15.instancestate;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 
 import android.os.Bundle;
 
-import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.CustomShadowBundle;
 

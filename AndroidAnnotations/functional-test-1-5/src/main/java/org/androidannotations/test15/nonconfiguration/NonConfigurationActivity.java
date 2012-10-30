@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.nonconfiguration;
+package org.androidannotations.test15.nonconfiguration;
 
 import android.app.Activity;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
-import com.googlecode.androidannotations.test15.ebean.EmptyDependency;
-import com.googlecode.androidannotations.test15.ebean.SomeImplementation;
-import com.googlecode.androidannotations.test15.ebean.SomeInterface;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.NonConfigurationInstance;
+import org.androidannotations.test15.ebean.EmptyDependency;
+import org.androidannotations.test15.ebean.SomeImplementation;
+import org.androidannotations.test15.ebean.SomeInterface;
 
 /**
  * TODO test that on configuration changes, the fields are reinjected

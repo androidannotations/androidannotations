@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.roboguice;
+package org.androidannotations.test15.roboguice;
 
 public class Counter {
 	public int count = 0;

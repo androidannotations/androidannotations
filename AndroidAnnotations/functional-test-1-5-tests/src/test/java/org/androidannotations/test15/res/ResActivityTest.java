@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.res;
+package org.androidannotations.test15.res;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -27,8 +27,8 @@ import android.content.res.Resources;
 import android.text.Html;
 import android.view.animation.AnimationUtils;
 
-import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.R;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.ShadowHtml;
 

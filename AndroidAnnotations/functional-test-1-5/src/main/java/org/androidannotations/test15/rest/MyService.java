@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.rest;
+package org.androidannotations.test15.rest;
 
 import java.util.Set;
 
@@ -23,15 +23,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.googlecode.androidannotations.annotations.rest.Accept;
-import com.googlecode.androidannotations.annotations.rest.Delete;
-import com.googlecode.androidannotations.annotations.rest.Get;
-import com.googlecode.androidannotations.annotations.rest.Head;
-import com.googlecode.androidannotations.annotations.rest.Options;
-import com.googlecode.androidannotations.annotations.rest.Post;
-import com.googlecode.androidannotations.annotations.rest.Put;
-import com.googlecode.androidannotations.annotations.rest.Rest;
-import com.googlecode.androidannotations.api.rest.MediaType;
+import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.annotations.rest.Delete;
+import org.androidannotations.annotations.rest.Get;
+import org.androidannotations.annotations.rest.Head;
+import org.androidannotations.annotations.rest.Options;
+import org.androidannotations.annotations.rest.Post;
+import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.api.rest.MediaType;
 
 @Rest("http://company.com/ajax/services")
 // if defined, the url will be added as a prefix to every request

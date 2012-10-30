@@ -1,10 +1,10 @@
-package com.googlecode.androidannotations.ebean;
+package org.androidannotations.ebean;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.googlecode.androidannotations.AndroidAnnotationProcessor;
-import com.googlecode.androidannotations.utils.AAProcessorTestHelper;
+import org.androidannotations.AndroidAnnotationProcessor;
+import org.androidannotations.utils.AAProcessorTestHelper;
 
 public class EBeanTest extends AAProcessorTestHelper {
 

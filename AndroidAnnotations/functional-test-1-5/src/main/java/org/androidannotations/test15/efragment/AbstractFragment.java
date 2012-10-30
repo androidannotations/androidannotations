@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.efragment;
+package org.androidannotations.test15.efragment;
 
 import android.app.Fragment;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.test15.ebean.SomeBean;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.test15.ebean.SomeBean;
 
 @EFragment
 public abstract class AbstractFragment extends Fragment {

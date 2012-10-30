@@ -13,21 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.eview;
+package org.androidannotations.test15.eview;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.widget.Button;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.EView;
-import com.googlecode.androidannotations.annotations.Trace;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.res.AnimationRes;
-import com.googlecode.androidannotations.annotations.res.StringRes;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.res.AnimationRes;
+import org.androidannotations.annotations.res.StringRes;
+import org.androidannotations.test15.R;
 
 @EView
 public class CustomButton extends Button {

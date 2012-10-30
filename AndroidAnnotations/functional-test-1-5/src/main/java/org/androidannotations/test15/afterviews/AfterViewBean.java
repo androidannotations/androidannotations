@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.afterviews;
+package org.androidannotations.test15.afterviews;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EBean;
 
 @EBean
 public class AfterViewBean {

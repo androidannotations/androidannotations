@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ebean;
+package org.androidannotations.test15.ebean;
 
 import android.app.Activity;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
 
 @EActivity
 public class BeanInjectedActivity extends Activity {

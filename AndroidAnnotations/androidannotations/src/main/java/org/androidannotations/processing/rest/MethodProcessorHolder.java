@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing.rest;
+package org.androidannotations.processing.rest;
 
 import java.util.TreeMap;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.processing.EBeanHolder;
+import org.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;

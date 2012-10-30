@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
 import android.view.View;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.LongClick;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.LongClick;
 
 @EActivity(R.layout.clickable_widgets)
 public class LongClicksHandledActivity extends EventsHandledAbstractActivity {

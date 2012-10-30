@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -38,7 +38,7 @@ public class ServiceInjectionTest {
 		@SuppressWarnings("unchecked")
 		Map<String, String> SYSTEM_SERVICE_MAP = (Map<String, String>) serviceMapField.get(null);
 
-		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "com.googlecode.androidannotations.test15.FakeClipboardManager");
+		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "org.androidannotations.test15.FakeClipboardManager");
 	}
 
 	@Test

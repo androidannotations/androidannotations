@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -25,11 +25,11 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.LongClick;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
-import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.annotations.LongClick;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.processing.EBeansHolder.Classes;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;

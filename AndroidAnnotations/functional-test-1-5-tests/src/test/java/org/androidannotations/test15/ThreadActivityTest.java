@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
 //import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import com.googlecode.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.api.BackgroundExecutor;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ThreadActivityTest {

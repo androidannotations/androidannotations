@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.CanonicalNameConstants;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;

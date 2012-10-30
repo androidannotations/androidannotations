@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
-import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
@@ -32,11 +32,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
-import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.processing.EBeansHolder.Classes;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;

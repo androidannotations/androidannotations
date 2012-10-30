@@ -1,6 +1,6 @@
-package com.googlecode.androidannotations.manifest;
+package org.androidannotations.manifest;
 
-import com.googlecode.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EBean;
 
 @EBean
 public class SomeClass {

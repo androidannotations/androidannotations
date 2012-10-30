@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.roboguice;
+package org.androidannotations.test15.roboguice;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -25,10 +25,10 @@ import android.app.Activity;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.RoboGuice;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.RoboGuice;
+import org.androidannotations.test15.R;
 
 /**
  * Adapted from http://pivotal.github.com/robolectric/roboguice.html

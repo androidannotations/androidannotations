@@ -13,19 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package org.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.HttpsClient;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
-import com.googlecode.androidannotations.helper.IdValidatorHelper;
-import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.annotations.HttpsClient;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
 
 /**
  * @author Nabil Hachicha

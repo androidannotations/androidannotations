@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing.rest;
+package org.androidannotations.processing.rest;
 
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;

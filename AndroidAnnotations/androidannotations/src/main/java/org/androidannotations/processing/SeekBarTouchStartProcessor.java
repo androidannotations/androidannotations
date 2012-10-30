@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
-import com.googlecode.androidannotations.annotations.SeekBarTouchStart;
-import com.googlecode.androidannotations.rclass.IRClass;
+import org.androidannotations.annotations.SeekBarTouchStart;
+import org.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JMethod;
 
 /**

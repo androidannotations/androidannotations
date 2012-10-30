@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.api.sharedpreferences;
+package org.androidannotations.api.sharedpreferences;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

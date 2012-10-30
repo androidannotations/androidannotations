@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.instancestate;
+package org.androidannotations.test15.instancestate;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.InstanceState;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.InstanceState;
+import org.androidannotations.test15.R;
 
 @EActivity(R.layout.main)
 public class SaveInstanceStateActivity extends Activity {

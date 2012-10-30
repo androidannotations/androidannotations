@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations.res;
+package org.androidannotations.annotations.res;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.googlecode.androidannotations.annotations.ResId;
+import org.androidannotations.annotations.ResId;
 
 /**
  * Use on fields in activity classes that should be injected with this specific

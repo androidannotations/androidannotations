@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing.rest;
+package org.androidannotations.processing.rest;
 
 import static com.sun.codemodel.JExpr._this;
 
@@ -27,10 +27,10 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
-import com.googlecode.androidannotations.annotations.rest.Rest;
-import com.googlecode.androidannotations.helper.ModelConstants;
-import com.googlecode.androidannotations.processing.EBeansHolder;
-import com.googlecode.androidannotations.processing.GeneratingElementProcessor;
+import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeansHolder;
+import org.androidannotations.processing.GeneratingElementProcessor;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.helper;
+package org.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.validation.IsValid;
+import org.androidannotations.validation.IsValid;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
@@ -24,10 +24,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.annotations.EView;
-import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.helper.ModelConstants;
-import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
+import org.androidannotations.annotations.EView;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;

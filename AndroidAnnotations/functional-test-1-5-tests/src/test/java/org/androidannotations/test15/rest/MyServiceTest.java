@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.rest;
+package org.androidannotations.test15.rest;
 
 import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
@@ -28,7 +28,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
-import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class MyServiceTest {

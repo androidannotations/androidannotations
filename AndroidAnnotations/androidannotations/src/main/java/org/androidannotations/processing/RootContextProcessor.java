@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.CONTEXT;
+import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.RootContext;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;

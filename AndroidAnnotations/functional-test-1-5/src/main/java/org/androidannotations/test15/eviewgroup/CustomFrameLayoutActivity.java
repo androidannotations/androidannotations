@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.eviewgroup;
+package org.androidannotations.test15.eviewgroup;
 
 import android.app.Activity;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.test15.R;
 
 @EActivity(R.layout.main)
 public class CustomFrameLayoutActivity extends Activity {

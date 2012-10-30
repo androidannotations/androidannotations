@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ereceiver;
+package org.androidannotations.test15.ereceiver;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -22,14 +22,14 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EReceiver;
-import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.annotations.Trace;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.test15.ebean.EnhancedClass;
-import com.googlecode.androidannotations.test15.eservice.MyService;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EReceiver;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.test15.ebean.EnhancedClass;
+import org.androidannotations.test15.eservice.MyService;
 
 @EReceiver
 public class MyReceiver extends BroadcastReceiver {

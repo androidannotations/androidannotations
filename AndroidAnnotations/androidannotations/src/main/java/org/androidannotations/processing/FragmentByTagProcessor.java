@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
@@ -28,9 +28,9 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.annotations.FragmentByTag;
-import com.googlecode.androidannotations.helper.AnnotationHelper;
-import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
+import org.androidannotations.annotations.FragmentByTag;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JMethod;

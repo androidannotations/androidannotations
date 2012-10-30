@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.annotations;
+package org.androidannotations.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -86,8 +86,8 @@ import java.lang.annotation.Target;
  * 
  * @since 2.7
  * 
- * @see com.googlecode.androidannotations.annotations.SeekBarTouchStart
- * @see com.googlecode.androidannotations.annotations.SeekBarTouchStop
+ * @see org.androidannotations.annotations.SeekBarTouchStart
+ * @see org.androidannotations.annotations.SeekBarTouchStop
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

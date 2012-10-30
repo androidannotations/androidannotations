@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.invoke;
 
@@ -21,7 +21,7 @@ import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.Fullscreen;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;

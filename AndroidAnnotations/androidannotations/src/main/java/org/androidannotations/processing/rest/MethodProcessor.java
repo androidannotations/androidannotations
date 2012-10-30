@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing.rest;
+package org.androidannotations.processing.rest;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -26,11 +26,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import com.googlecode.androidannotations.annotations.rest.Accept;
-import com.googlecode.androidannotations.helper.CanonicalNameConstants;
-import com.googlecode.androidannotations.helper.RestAnnotationHelper;
-import com.googlecode.androidannotations.processing.EBeanHolder;
-import com.googlecode.androidannotations.processing.DecoratingElementProcessor;
+import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.RestAnnotationHelper;
+import org.androidannotations.processing.EBeanHolder;
+import org.androidannotations.processing.DecoratingElementProcessor;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;

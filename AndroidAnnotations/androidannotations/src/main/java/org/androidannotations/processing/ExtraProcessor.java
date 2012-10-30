@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.STRING;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
@@ -34,9 +34,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.helper.APTCodeModelHelper;
-import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.processing.EBeansHolder.Classes;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;

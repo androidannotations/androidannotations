@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
-import static com.googlecode.androidannotations.test15.MyAssertions.assertThat;
+import static org.androidannotations.test15.MyAssertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Before;

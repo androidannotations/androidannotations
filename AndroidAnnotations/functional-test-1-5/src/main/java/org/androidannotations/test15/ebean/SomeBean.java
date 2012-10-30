@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ebean;
+package org.androidannotations.test15.ebean;
 
 import android.content.Context;
 
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 
 @EBean
 public class SomeBean {

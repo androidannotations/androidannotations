@@ -1,10 +1,10 @@
-package com.googlecode.androidannotations.ebean;
+package org.androidannotations.ebean;
 
 import android.app.Activity;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.NonConfigurationInstance;
 
 @EActivity
 public class SomeActivity extends Activity {

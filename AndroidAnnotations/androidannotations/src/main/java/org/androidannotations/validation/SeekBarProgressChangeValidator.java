@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package org.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -24,14 +24,14 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
-import com.googlecode.androidannotations.annotations.SeekBarProgressChange;
-import com.googlecode.androidannotations.helper.CanonicalNameConstants;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
-import com.googlecode.androidannotations.helper.IdValidatorHelper;
-import com.googlecode.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
-import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.annotations.SeekBarProgressChange;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
 
 public class SeekBarProgressChangeValidator implements ElementValidator {
 

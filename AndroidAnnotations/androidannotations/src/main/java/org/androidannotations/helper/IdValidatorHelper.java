@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.helper;
+package org.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -21,10 +21,10 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.ResId;
-import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.validation.IsValid;
+import org.androidannotations.annotations.ResId;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.validation.IsValid;
 
 public class IdValidatorHelper extends ValidatorHelper {
 

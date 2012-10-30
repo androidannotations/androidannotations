@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.eprovider;
+package org.androidannotations.test15.eprovider;
 
 import android.app.NotificationManager;
 import android.content.ContentProvider;
@@ -23,16 +23,16 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EProvider;
-import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.annotations.Trace;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
-import com.googlecode.androidannotations.test15.ebean.EnhancedClass;
-import com.googlecode.androidannotations.test15.eservice.MyService;
-import com.googlecode.androidannotations.test15.prefs.SomePrefs_;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EProvider;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.androidannotations.test15.ebean.EnhancedClass;
+import org.androidannotations.test15.eservice.MyService;
+import org.androidannotations.test15.prefs.SomePrefs_;
 
 @EProvider
 public class MyProvider extends ContentProvider {

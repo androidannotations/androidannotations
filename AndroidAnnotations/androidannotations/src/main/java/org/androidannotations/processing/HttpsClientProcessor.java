@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
@@ -27,12 +27,12 @@ import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.HttpsClient;
-import com.googlecode.androidannotations.annotations.ResId;
-import com.googlecode.androidannotations.processing.EBeansHolder.Classes;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
+import org.androidannotations.annotations.HttpsClient;
+import org.androidannotations.annotations.ResId;
+import org.androidannotations.processing.EBeansHolder.Classes;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JCodeModel;

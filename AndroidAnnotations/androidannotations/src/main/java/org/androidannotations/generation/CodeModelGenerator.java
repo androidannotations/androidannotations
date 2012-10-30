@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.generation;
+package org.androidannotations.generation;
 
 import java.io.IOException;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 
-import com.googlecode.androidannotations.processing.ModelProcessor.ProcessResult;
+import org.androidannotations.processing.ModelProcessor.ProcessResult;
 import com.sun.codemodel.writer.PrologCodeWriter;
 
 public class CodeModelGenerator {

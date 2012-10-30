@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.generation;
+package org.androidannotations.generation;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package org.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -24,10 +24,10 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
-import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
-import com.googlecode.androidannotations.model.AnnotationElements;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.helper.TargetAnnotationHelper;
+import org.androidannotations.helper.ValidatorHelper;
+import org.androidannotations.model.AnnotationElements;
 
 public class SharedPrefValidator implements ElementValidator {
 

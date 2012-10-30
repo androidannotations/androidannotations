@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
 import java.util.List;
 import java.util.Map;
@@ -21,10 +21,10 @@ import java.util.Set;
 
 import android.app.Activity;
 
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.test15.instancestate.MySerializableBean;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.test15.instancestate.MySerializableBean;
 
 @EActivity
 public class ThreadActivity extends Activity {

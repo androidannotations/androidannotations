@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package org.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
-import com.googlecode.androidannotations.annotations.SeekBarTouchStop;
-import com.googlecode.androidannotations.rclass.IRClass;
+import org.androidannotations.annotations.SeekBarTouchStop;
+import org.androidannotations.rclass.IRClass;
 
 public class SeekBarTouchStopValidator extends AbstractSeekBarTouchValidator {
 

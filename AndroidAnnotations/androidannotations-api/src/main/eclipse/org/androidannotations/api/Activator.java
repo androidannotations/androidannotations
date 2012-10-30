@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.api;
+package org.androidannotations.api;
 /**
  * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
@@ -25,7 +25,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends Plugin {
 
         // The plug-in ID
-        public static final String PLUGIN_ID = "com.googlecode.androidannotations-api";
+        public static final String PLUGIN_ID = "org.androidannotations-api";
 
         // The shared instance
         private static Activator plugin;

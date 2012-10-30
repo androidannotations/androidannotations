@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.ebean;
+package org.androidannotations.test15.ebean;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -22,21 +22,21 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.TextView;
 
-import com.googlecode.androidannotations.annotations.AfterInject;
-import com.googlecode.androidannotations.annotations.App;
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.RootContext;
-import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.annotations.Trace;
-import com.googlecode.androidannotations.annotations.Transactional;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.res.StringRes;
-import com.googlecode.androidannotations.test15.ThreadActivity;
-import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.App;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.Transactional;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
+import org.androidannotations.test15.ThreadActivity;
+import org.androidannotations.test15.roboguice.SampleRoboApplication;
 
 /**
  * This class doesn't have any test, currently it's just there to show that

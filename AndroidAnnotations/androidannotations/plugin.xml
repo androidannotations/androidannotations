@@ -21,7 +21,7 @@
    <extension
          point="org.eclipse.jdt.apt.core.annotationProcessorFactory">
         	<java6processors enableDefault="true">
-                <java6processor class="com.googlecode.androidannotations.AndroidAnnotationProcessor"/>
+                <java6processor class="org.androidannotations.AndroidAnnotationProcessor"/>
          </java6processors>         
    </extension>
 

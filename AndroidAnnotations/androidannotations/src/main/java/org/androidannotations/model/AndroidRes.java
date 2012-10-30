@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.model;
+package org.androidannotations.model;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -22,24 +22,24 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.res.AnimationRes;
-import com.googlecode.androidannotations.annotations.res.BooleanRes;
-import com.googlecode.androidannotations.annotations.res.ColorRes;
-import com.googlecode.androidannotations.annotations.res.ColorStateListRes;
-import com.googlecode.androidannotations.annotations.res.DimensionPixelOffsetRes;
-import com.googlecode.androidannotations.annotations.res.DimensionPixelSizeRes;
-import com.googlecode.androidannotations.annotations.res.DimensionRes;
-import com.googlecode.androidannotations.annotations.res.DrawableRes;
-import com.googlecode.androidannotations.annotations.res.HtmlRes;
-import com.googlecode.androidannotations.annotations.res.IntArrayRes;
-import com.googlecode.androidannotations.annotations.res.IntegerRes;
-import com.googlecode.androidannotations.annotations.res.LayoutRes;
-import com.googlecode.androidannotations.annotations.res.MovieRes;
-import com.googlecode.androidannotations.annotations.res.StringArrayRes;
-import com.googlecode.androidannotations.annotations.res.StringRes;
-import com.googlecode.androidannotations.annotations.res.TextArrayRes;
-import com.googlecode.androidannotations.annotations.res.TextRes;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.annotations.res.AnimationRes;
+import org.androidannotations.annotations.res.BooleanRes;
+import org.androidannotations.annotations.res.ColorRes;
+import org.androidannotations.annotations.res.ColorStateListRes;
+import org.androidannotations.annotations.res.DimensionPixelOffsetRes;
+import org.androidannotations.annotations.res.DimensionPixelSizeRes;
+import org.androidannotations.annotations.res.DimensionRes;
+import org.androidannotations.annotations.res.DrawableRes;
+import org.androidannotations.annotations.res.HtmlRes;
+import org.androidannotations.annotations.res.IntArrayRes;
+import org.androidannotations.annotations.res.IntegerRes;
+import org.androidannotations.annotations.res.LayoutRes;
+import org.androidannotations.annotations.res.MovieRes;
+import org.androidannotations.annotations.res.StringArrayRes;
+import org.androidannotations.annotations.res.StringRes;
+import org.androidannotations.annotations.res.TextArrayRes;
+import org.androidannotations.annotations.res.TextRes;
+import org.androidannotations.rclass.IRClass.Res;
 
 public enum AndroidRes {
 

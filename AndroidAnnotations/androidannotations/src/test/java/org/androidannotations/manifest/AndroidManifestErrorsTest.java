@@ -1,12 +1,12 @@
-package com.googlecode.androidannotations.manifest;
+package org.androidannotations.manifest;
 
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.googlecode.androidannotations.AndroidAnnotationProcessor;
-import com.googlecode.androidannotations.utils.AAProcessorTestHelper;
+import org.androidannotations.AndroidAnnotationProcessor;
+import org.androidannotations.utils.AAProcessorTestHelper;
 
 public class AndroidManifestErrorsTest extends AAProcessorTestHelper {
 

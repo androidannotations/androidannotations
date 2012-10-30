@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.ebean;
+package org.androidannotations.ebean;
 
 public interface SomeInterface {
 

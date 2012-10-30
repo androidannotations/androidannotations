@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.helper;
+package org.androidannotations.helper;
 
-import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_DEBUG;
-import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_ERROR;
-import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_INFO;
-import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
-import static com.googlecode.androidannotations.helper.AndroidConstants.LOG_WARN;
-import static com.googlecode.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static java.util.Arrays.asList;
 
 import java.lang.annotation.Annotation;
@@ -45,35 +45,35 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.EApplication;
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.annotations.EProvider;
-import com.googlecode.androidannotations.annotations.EReceiver;
-import com.googlecode.androidannotations.annotations.EService;
-import com.googlecode.androidannotations.annotations.EView;
-import com.googlecode.androidannotations.annotations.EViewGroup;
-import com.googlecode.androidannotations.annotations.Trace;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.rest.Delete;
-import com.googlecode.androidannotations.annotations.rest.Get;
-import com.googlecode.androidannotations.annotations.rest.Head;
-import com.googlecode.androidannotations.annotations.rest.Options;
-import com.googlecode.androidannotations.annotations.rest.Post;
-import com.googlecode.androidannotations.annotations.rest.Put;
-import com.googlecode.androidannotations.annotations.rest.Rest;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultBoolean;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultFloat;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultInt;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultLong;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
-import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
-import com.googlecode.androidannotations.model.AndroidSystemServices;
-import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.processing.InstanceStateProcessor;
-import com.googlecode.androidannotations.validation.IsValid;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EProvider;
+import org.androidannotations.annotations.EReceiver;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.rest.Delete;
+import org.androidannotations.annotations.rest.Get;
+import org.androidannotations.annotations.rest.Head;
+import org.androidannotations.annotations.rest.Options;
+import org.androidannotations.annotations.rest.Post;
+import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
+import org.androidannotations.model.AndroidSystemServices;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.processing.InstanceStateProcessor;
+import org.androidannotations.validation.IsValid;
 
 public class ValidatorHelper {
 

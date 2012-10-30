@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package org.androidannotations.validation;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.helper.HasTarget;
-import com.googlecode.androidannotations.model.AnnotationElements;
+import org.androidannotations.helper.HasTarget;
+import org.androidannotations.model.AnnotationElements;
 
 public interface ElementValidator extends HasTarget {
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
@@ -31,26 +31,26 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultBoolean;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultFloat;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultInt;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultLong;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
-import com.googlecode.androidannotations.api.sharedpreferences.BooleanPrefEditorField;
-import com.googlecode.androidannotations.api.sharedpreferences.BooleanPrefField;
-import com.googlecode.androidannotations.api.sharedpreferences.EditorHelper;
-import com.googlecode.androidannotations.api.sharedpreferences.FloatPrefEditorField;
-import com.googlecode.androidannotations.api.sharedpreferences.FloatPrefField;
-import com.googlecode.androidannotations.api.sharedpreferences.IntPrefEditorField;
-import com.googlecode.androidannotations.api.sharedpreferences.IntPrefField;
-import com.googlecode.androidannotations.api.sharedpreferences.LongPrefEditorField;
-import com.googlecode.androidannotations.api.sharedpreferences.LongPrefField;
-import com.googlecode.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
-import com.googlecode.androidannotations.api.sharedpreferences.StringPrefEditorField;
-import com.googlecode.androidannotations.api.sharedpreferences.StringPrefField;
-import com.googlecode.androidannotations.helper.ModelConstants;
+import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
+import org.androidannotations.api.sharedpreferences.BooleanPrefEditorField;
+import org.androidannotations.api.sharedpreferences.BooleanPrefField;
+import org.androidannotations.api.sharedpreferences.EditorHelper;
+import org.androidannotations.api.sharedpreferences.FloatPrefEditorField;
+import org.androidannotations.api.sharedpreferences.FloatPrefField;
+import org.androidannotations.api.sharedpreferences.IntPrefEditorField;
+import org.androidannotations.api.sharedpreferences.IntPrefField;
+import org.androidannotations.api.sharedpreferences.LongPrefEditorField;
+import org.androidannotations.api.sharedpreferences.LongPrefField;
+import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
+import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
+import org.androidannotations.api.sharedpreferences.StringPrefField;
+import org.androidannotations.helper.ModelConstants;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;

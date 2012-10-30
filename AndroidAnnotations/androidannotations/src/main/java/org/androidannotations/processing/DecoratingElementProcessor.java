@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.helper.HasTarget;
+import org.androidannotations.helper.HasTarget;
 import com.sun.codemodel.JCodeModel;
 
 /**

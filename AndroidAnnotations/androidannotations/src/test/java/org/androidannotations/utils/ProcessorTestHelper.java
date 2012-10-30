@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.utils;
+package org.androidannotations.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

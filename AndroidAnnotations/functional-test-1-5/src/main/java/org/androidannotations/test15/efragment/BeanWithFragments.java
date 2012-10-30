@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.efragment;
+package org.androidannotations.test15.efragment;
 
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.FragmentById;
-import com.googlecode.androidannotations.annotations.FragmentByTag;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.FragmentById;
+import org.androidannotations.annotations.FragmentByTag;
+import org.androidannotations.test15.R;
 
 @EBean
 public class BeanWithFragments {

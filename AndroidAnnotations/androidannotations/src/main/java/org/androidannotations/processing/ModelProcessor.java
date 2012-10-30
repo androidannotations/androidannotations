@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -26,8 +26,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
 import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {

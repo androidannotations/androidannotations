@@ -13,20 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
 import java.util.ArrayList;
 
 import android.app.Fragment;
 import android.os.Bundle;
 
-import com.googlecode.androidannotations.annotations.AfterInject;
-import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.annotations.FragmentArg;
-import com.googlecode.androidannotations.test15.instancestate.MyGenericParcelableBean;
-import com.googlecode.androidannotations.test15.instancestate.MyGenericSerializableBean;
-import com.googlecode.androidannotations.test15.instancestate.MyParcelableBean;
-import com.googlecode.androidannotations.test15.instancestate.MySerializableBean;
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.test15.instancestate.MyGenericParcelableBean;
+import org.androidannotations.test15.instancestate.MyGenericSerializableBean;
+import org.androidannotations.test15.instancestate.MyParcelableBean;
+import org.androidannotations.test15.instancestate.MySerializableBean;
 
 @EFragment
 public class FragmentArguments extends Fragment {

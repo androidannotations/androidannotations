@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.helper;
+package org.androidannotations.helper;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -21,10 +21,10 @@ import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.processing.EBeanHolder;
-import com.googlecode.androidannotations.rclass.IRClass;
-import com.googlecode.androidannotations.rclass.IRClass.Res;
-import com.googlecode.androidannotations.rclass.IRInnerClass;
+import org.androidannotations.processing.EBeanHolder;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
+import org.androidannotations.rclass.IRInnerClass;
 import com.sun.codemodel.JFieldRef;
 
 public class IdAnnotationHelper extends TargetAnnotationHelper {

@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.prefs;
+package org.androidannotations.test15.prefs;
 
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 @SharedPref
 public interface DefaultPrefs {

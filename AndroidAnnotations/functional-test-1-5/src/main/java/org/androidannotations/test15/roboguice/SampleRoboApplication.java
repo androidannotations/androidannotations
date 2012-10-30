@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.roboguice;
+package org.androidannotations.test15.roboguice;
 
 import java.util.List;
 
 import roboguice.application.RoboApplication;
 
 import com.google.inject.Module;
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EApplication;
-import com.googlecode.androidannotations.test15.ebean.EmptyDependency;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EApplication;
+import org.androidannotations.test15.ebean.EmptyDependency;
 
 @EApplication
 public class SampleRoboApplication extends RoboApplication {

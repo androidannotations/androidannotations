@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.eservice;
+package org.androidannotations.test15.eservice;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -21,13 +21,13 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EService;
-import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.annotations.Trace;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.test15.ebean.EnhancedClass;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.test15.ebean.EnhancedClass;
 
 @EService
 public class MyService extends IntentService {

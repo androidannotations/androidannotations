@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/myFragment"
         android:tag="myFragmentTag"
-        android:name="com.googlecode.androidannotations.test15.efragment.MyFragment_"
+        android:name="org.androidannotations.test15.efragment.MyFragment_"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="1" />
@@ -32,7 +32,7 @@
     <fragment
         android:id="@+id/mySupportFragment"
         android:tag="mySupportFragmentTag"
-        android:name="com.googlecode.androidannotations.test15.efragment.MySupportFragment_"
+        android:name="org.androidannotations.test15.efragment.MySupportFragment_"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="1" />

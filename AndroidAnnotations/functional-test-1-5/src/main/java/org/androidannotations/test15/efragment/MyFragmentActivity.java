@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.efragment;
+package org.androidannotations.test15.efragment;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.FragmentById;
-import com.googlecode.androidannotations.annotations.FragmentByTag;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.FragmentById;
+import org.androidannotations.annotations.FragmentByTag;
+import org.androidannotations.test15.R;
 
 @EActivity(R.layout.fragments)
 public class MyFragmentActivity extends FragmentActivity {

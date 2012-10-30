@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.utils;
+package org.androidannotations.utils;
 
 import java.io.File;
 import java.io.FileFilter;

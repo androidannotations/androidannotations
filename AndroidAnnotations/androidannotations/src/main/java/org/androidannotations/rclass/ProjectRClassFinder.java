@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.rclass;
+package org.androidannotations.rclass;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -21,7 +21,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
 
-import com.googlecode.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.AndroidManifest;
 
 public class ProjectRClassFinder {
 

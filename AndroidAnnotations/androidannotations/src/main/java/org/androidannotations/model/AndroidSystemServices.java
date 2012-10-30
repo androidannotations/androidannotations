@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.model;
+package org.androidannotations.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.lang.model.type.TypeMirror;
 
-import com.googlecode.androidannotations.processing.EBeanHolder;
+import org.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JFieldRef;
 
 public class AndroidSystemServices {

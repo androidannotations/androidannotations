@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.roboguice;
+package org.androidannotations.test15.roboguice;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -26,7 +26,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.test15.R;
 
 @RunWith(InjectedTestRunner.class)
 public class InjectedActivityTest {

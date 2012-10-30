@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package org.androidannotations.validation;
 
 import java.lang.annotation.Annotation;
 
@@ -21,9 +21,9 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.helper.TargetAnnotationHelper;
-import com.googlecode.androidannotations.helper.ValidatorHelper;
-import com.googlecode.androidannotations.model.AnnotationElements;
+import org.androidannotations.helper.TargetAnnotationHelper;
+import org.androidannotations.helper.ValidatorHelper;
+import org.androidannotations.model.AnnotationElements;
 
 public class RunnableValidator implements ElementValidator {
 

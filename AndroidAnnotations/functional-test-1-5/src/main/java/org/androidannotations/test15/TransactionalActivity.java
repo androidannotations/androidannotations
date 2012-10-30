@@ -13,17 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
 import java.util.List;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Transactional;
-import com.googlecode.androidannotations.test15.instancestate.MySerializableBean;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Transactional;
+import org.androidannotations.test15.instancestate.MySerializableBean;
 
 @EActivity
 public class TransactionalActivity extends Activity {

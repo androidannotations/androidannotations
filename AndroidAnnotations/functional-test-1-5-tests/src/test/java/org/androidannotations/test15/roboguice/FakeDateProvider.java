@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.roboguice;
+package org.androidannotations.test15.roboguice;
 
 import java.text.DateFormat;
 import java.text.ParseException;

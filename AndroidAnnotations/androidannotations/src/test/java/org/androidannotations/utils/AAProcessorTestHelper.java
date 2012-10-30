@@ -1,8 +1,8 @@
-package com.googlecode.androidannotations.utils;
+package org.androidannotations.utils;
 
 import java.io.File;
 
-import com.googlecode.androidannotations.helper.ModelConstants;
+import org.androidannotations.helper.ModelConstants;
 
 public class AAProcessorTestHelper extends ProcessorTestHelper {
 

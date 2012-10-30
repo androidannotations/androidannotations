@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 
-import com.googlecode.androidannotations.annotations.NoTitle;
+import org.androidannotations.annotations.NoTitle;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 

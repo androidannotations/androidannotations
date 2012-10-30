@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.greendroid;
+package org.androidannotations.test15.greendroid;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.R;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class MyGreenDroidActivityTest {

@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15;
+package org.androidannotations.test15;
 
 import android.app.Activity;
 
-import com.googlecode.androidannotations.annotations.App;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
+import org.androidannotations.annotations.App;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.test15.roboguice.SampleRoboApplication;
 
 @EActivity
 public class ApplicationInjectedActivity extends Activity {

@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.prefs;
+package org.androidannotations.test15.prefs;
 
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultInt;
-import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
-import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
 
 @SharedPref(Scope.UNIQUE)
 public interface SomePrefs {

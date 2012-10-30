@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.roboguice;
+package org.androidannotations.test15.roboguice;
 
 import org.junit.runners.model.InitializationError;
 
@@ -21,7 +21,7 @@ import roboguice.inject.ContextScope;
 import android.app.Application;
 
 import com.google.inject.Injector;
-import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import com.xtremelabs.robolectric.Robolectric;
 
 public class InjectedTestRunner extends AndroidAnnotationsTestRunner {

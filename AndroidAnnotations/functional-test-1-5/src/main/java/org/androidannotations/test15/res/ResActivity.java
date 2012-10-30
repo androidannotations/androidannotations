@@ -13,17 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.res;
+package org.androidannotations.test15.res;
 
 import android.app.Activity;
 import android.content.res.XmlResourceParser;
 import android.text.Spanned;
 import android.view.animation.Animation;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.res.HtmlRes;
-import com.googlecode.androidannotations.annotations.res.StringRes;
-import com.googlecode.androidannotations.test15.R;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.res.HtmlRes;
+import org.androidannotations.annotations.res.StringRes;
+import org.androidannotations.test15.R;
 
 @EActivity(R.layout.main)
 public class ResActivity extends Activity {

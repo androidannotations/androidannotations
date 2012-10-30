@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.application;
+package org.androidannotations.test15.application;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.googlecode.androidannotations.test15.roboguice.InjectedTestRunner;
-import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication;
-import com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication_;
+import org.androidannotations.test15.roboguice.InjectedTestRunner;
+import org.androidannotations.test15.roboguice.SampleRoboApplication;
+import org.androidannotations.test15.roboguice.SampleRoboApplication_;
 
 @RunWith(InjectedTestRunner.class)
 public class GeneratedApplicationTest {

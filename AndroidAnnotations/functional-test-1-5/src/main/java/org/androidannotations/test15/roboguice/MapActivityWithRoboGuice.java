@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.roboguice;
+package org.androidannotations.test15.roboguice;
 
 import android.app.Activity;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.RoboGuice;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.RoboGuice;
 
 //Commented because Maps is not Open Source
 @RoboGuice

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.test15.efragment;
+package org.androidannotations.test15.efragment;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.googlecode.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 
 /**
  * Those test are disabled for now, we need to update Robolectric version for

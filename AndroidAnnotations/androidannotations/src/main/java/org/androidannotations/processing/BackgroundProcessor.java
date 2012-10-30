@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.api.BackgroundExecutor;
-import com.googlecode.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.helper.APTCodeModelHelper;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;

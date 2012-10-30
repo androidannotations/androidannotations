@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.api;
+package org.androidannotations.api;
 
 public enum Scope {
 

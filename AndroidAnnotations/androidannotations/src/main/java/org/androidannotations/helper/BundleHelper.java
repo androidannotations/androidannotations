@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.helper;
+package org.androidannotations.helper;
 
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static com.googlecode.androidannotations.helper.CanonicalNameConstants.STRING;
+import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import java.util.HashMap;
 import java.util.Map;
