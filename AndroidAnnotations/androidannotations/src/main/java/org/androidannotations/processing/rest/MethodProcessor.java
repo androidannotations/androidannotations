@@ -18,6 +18,7 @@ package org.androidannotations.processing.rest;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -81,7 +82,7 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		EBeanHolder eBeanHolder = methodHolder.getHolder();
 		JClass httpMethod = eBeanHolder.refClass(CanonicalNameConstants.HTTP_METHOD);
 		// add method type param
-		String restMethodInCapitalLetters = getTarget().getSimpleName().toUpperCase();
+		String restMethodInCapitalLetters = getTarget().getSimpleName().toUpperCase(Locale.ENGLISH);
 		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
 
 		TreeMap<String, JVar> methodParams = (TreeMap<String, JVar>) generateMethodParamsVar(eBeanHolder, method, executableElement, holder);
