@@ -15,12 +15,14 @@
  */
 package com.googlecode.androidannotations.rclass;
 
+import java.util.Locale;
+
 public interface IRClass {
 
 	public enum Res {
 		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU, RAW;
 		public String rName() {
-			return toString().toLowerCase();
+			return toString().toLowerCase(Locale.ENGLISH);
 		}
 	}
 
