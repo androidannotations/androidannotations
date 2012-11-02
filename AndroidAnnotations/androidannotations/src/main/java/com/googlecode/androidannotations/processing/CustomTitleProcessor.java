@@ -22,7 +22,7 @@ public class CustomTitleProcessor implements DecoratingElementProcessor {
         JFieldRef customTitleFeature = holder.classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
 
         holder.init.body().invoke("requestWindowFeature").arg(customTitleFeature);
-        holder.init.body().invoke("setFeatureInt").arg(customTitleFeature).arg(JExpr.lit(annotation.value()));
+        holder.init.body().directStatement("getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, " + annotation.value() + ");");
     }
 
 }
