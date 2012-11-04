@@ -149,6 +149,13 @@ public class EBeansHolder {
 	public EBeansHolder(JCodeModel codeModel) {
 		this.codeModel = codeModel;
 		classes = new Classes();
+		refClass(CanonicalNameConstants.STRING);
+		preloadJavaLangClasses();
+	}
+
+	private void preloadJavaLangClasses() {
+		loadedClasses.put(String.class.getName(), refClass(String.class));
+		loadedClasses.put(Object.class.getName(), refClass(Object.class));
 	}
 
 	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {

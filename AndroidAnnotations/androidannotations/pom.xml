@@ -36,6 +36,13 @@
 			<version>1.6_r2</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<!-- spring-android-rest-template is required to use the Rest API -->
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-rest-template</artifactId>
+			<version>1.0.0.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

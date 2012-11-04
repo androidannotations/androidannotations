@@ -41,10 +41,20 @@
 			</roles>
 		</developer>
 		<developer>
+			<id>mat.boniface</id>
+			<name>Mathieu Boniface	</name>
+			<email>mat.boniface@gmail.com</email>
+			<organization>eBusiness Information</organization>
+			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
+			<roles>
+				<role>Committer</role>
+			</roles>
+		</developer>
+		<developer>
 			<id>athomas.nc</id>
 			<name>Alexandre Thomas</name>
 			<email>athomas.nc@gmail.com</email>
-			<url>http://twitter.com/twikeuk</url>
+			<url>http://twitter.com/AleksThomas</url>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
@@ -65,16 +75,6 @@
 			<id>bluepyth</id>
 			<name>Romain Sertelon</name>
 			<email>bluepyth@gmail.com</email>
-			<organization>eBusiness Information</organization>
-			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
-			<roles>
-				<role>Committer</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>mat.boniface</id>
-			<name>Mathieu Boniface	</name>
-			<email>mat.boniface@gmail.com</email>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>

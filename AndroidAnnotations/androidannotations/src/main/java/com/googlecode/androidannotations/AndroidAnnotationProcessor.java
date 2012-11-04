@@ -539,7 +539,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new FragmentArgProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
 		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
-		modelProcessor.register(new RestProcessor(restImplementationHolder));
+		modelProcessor.register(new RestProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new PostProcessor(processingEnv, restImplementationHolder));
 		modelProcessor.register(new PutProcessor(processingEnv, restImplementationHolder));
