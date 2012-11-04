@@ -242,7 +242,7 @@
 					<header>src/etc/header.txt</header>
 					<excludes>
 						<exclude>.idea/**</exclude>
-						<exclude>HOW-TO.txt</exclude>
+						<exclude>src/etc/HOW-TO.txt</exclude>
 						<exclude>LICENSE.txt</exclude>
 						<exclude>.gitignore</exclude>
 						<exclude>**/R.java</exclude>
