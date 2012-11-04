@@ -20,6 +20,7 @@ import java.util.Set;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,8 +34,8 @@ import com.googlecode.androidannotations.annotations.rest.Put;
 import com.googlecode.androidannotations.annotations.rest.Rest;
 import com.googlecode.androidannotations.api.rest.MediaType;
 
-@Rest("http://company.com/ajax/services")
-// if defined, the url will be added as a prefix to every request
+// if defined, the rootUrl will be added as a prefix to every request
+@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class })
 public interface MyService {
 
 	// url variables are mapped to method parameter names.
@@ -56,13 +57,16 @@ public interface MyService {
 	 * You may (or may not) declare throwing RestClientException (as a reminder,
 	 * since it's a RuntimeException), but nothing else.
 	 */
-	ResponseEntity<EventList> getEvents2(String location, int year) throws RestClientException;
+	ResponseEntity<EventList> getEvents2(String location, int year)
+			throws RestClientException;
 
 	@Get("/events/{year}/{location}")
-	ResponseEntity<Event[]> getEventsArray2(String location, int year) throws RestClientException;
+	ResponseEntity<Event[]> getEventsArray2(String location, int year)
+			throws RestClientException;
 
 	@Get("/events/{year}/{location}")
-	ResponseEntity<Event[][]> getEventsArrayOfArrays2(String location, int year) throws RestClientException;
+	ResponseEntity<Event[][]> getEventsArrayOfArrays2(String location, int year)
+			throws RestClientException;
 
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
