@@ -26,13 +26,12 @@ public class CustomTitleValidator implements ElementValidator {
 
     @Override
     public boolean validate(Element element, AnnotationElements validatedElements) {
-/*        IsValid valid = new IsValid();
+        IsValid valid = new IsValid();
 
         validatorHelper.hasEActivity(element, validatedElements, valid);
-        validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);
-        validatorHelper.isNotFinal(element, valid);
 
-        return valid.isValid();*/
-        return true;
+        validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);
+
+        return valid.isValid();
     }
 }
