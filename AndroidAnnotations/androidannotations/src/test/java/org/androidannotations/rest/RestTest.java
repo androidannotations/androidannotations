@@ -13,24 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.ebean;
+package org.androidannotations.rest;
 
-import org.androidannotations.AndroidAnnotationProcessor;
-import org.androidannotations.utils.AAProcessorTestHelper;
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
-public class EBeanTest extends AAProcessorTestHelper {
+import org.androidannotations.AndroidAnnotationProcessor;
+import org.androidannotations.utils.AAProcessorTestHelper;
+
+public class RestTest extends AAProcessorTestHelper {
 
 	@Before
 	public void setup() {
-		addManifestProcessorParameter(EBeanTest.class);
+		addManifestProcessorParameter(RestTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void activity_subclass_in_manifest_compiles() {
-		assertCompilationSuccessful(compileFiles(SomeActivity.class, SomeImplementation.class));
+	public void class_client_does_not_compile() throws IOException {
+		CompileResult result = compileFiles(ClassClient.class);
+		assertCompilationErrorOn(ClassClient.class, "@Rest", result);
 	}
 
 }

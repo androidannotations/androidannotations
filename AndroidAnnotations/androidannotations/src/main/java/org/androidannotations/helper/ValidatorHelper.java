@@ -15,13 +15,14 @@
  */
 package org.androidannotations.helper;
 
+import static java.util.Arrays.asList;
 import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
 import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
 import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
 import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static java.util.Arrays.asList;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -860,7 +861,7 @@ public class ValidatorHelper {
 		checkDefaultAnnotation(method, DefaultString.class, "String", new DefaultAnnotationCondition() {
 			@Override
 			public boolean correctReturnType(TypeMirror returnType) {
-				return returnType.toString().equals("java.lang.String");
+				return returnType.toString().equals(CanonicalNameConstants.STRING);
 			}
 		});
 	}
@@ -1123,4 +1124,37 @@ public class ValidatorHelper {
 
 	}
 
+	public void validateConverters(Element element, IsValid valid) {
+		TypeMirror httpMessageConverterType = annotationHelper.typeElementFromQualifiedName(HTTP_MESSAGE_CONVERTER).asType();
+		TypeMirror httpMessageConverterTypeErased = annotationHelper.getTypeUtils().erasure(httpMessageConverterType);
+		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "converters");
+		for (DeclaredType converterType : converters) {
+			TypeMirror erasedConverterType = annotationHelper.getTypeUtils().erasure(converterType);
+			if (annotationHelper.isSubtype(erasedConverterType, httpMessageConverterTypeErased)) {
+				Element converterElement = converterType.asElement();
+				if (converterElement.getKind().isClass()) {
+					if (!annotationHelper.isAbstract(converterElement)) {
+						List<ExecutableElement> constructors = ElementFilter.constructorsIn(converterElement.getEnclosedElements());
+						for (ExecutableElement constructor : constructors) {
+							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
+								return;
+							}
+						}
+						valid.invalidate();
+						annotationHelper.printAnnotationError(element, "The converter class must have a public no argument constructor");
+					} else {
+						valid.invalidate();
+						annotationHelper.printAnnotationError(element, "The converter class must not be abstract");
+					}
+				} else {
+					valid.invalidate();
+					annotationHelper.printAnnotationError(element, "The converter class must be a class");
+				}
+			} else {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "The converter class must be a subtype of " + HTTP_MESSAGE_CONVERTER);
+			}
+		}
+
+	}
 }

@@ -20,10 +20,8 @@
     package="org.androidannotations.testprocessor"
     android:versionCode="1"
     android:versionName="1.0" >
-    
+
     <application>
-    		<activity android:name="org.androidannotations.manifest.ActivityInManifest" />
-    		<activity android:name="org.androidannotations.manifest.ActivitySubclassInManifest_" />
     </application>
 
 </manifest>

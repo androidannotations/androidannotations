@@ -44,7 +44,6 @@ public class RestValidator implements ElementValidator {
 
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
-
 		IsValid valid = new IsValid();
 
 		TypeElement typeElement = (TypeElement) element;
@@ -60,6 +59,8 @@ public class RestValidator implements ElementValidator {
 		validatorHelper.doesNotExtendOtherInterfaces(typeElement, valid);
 
 		validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, valid);
+
+		validatorHelper.validateConverters(element, valid);
 
 		return valid.isValid();
 	}

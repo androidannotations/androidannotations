@@ -58,7 +58,6 @@ public class AnnotationHelper {
 	 * be a subtype of itself.
 	 */
 	public boolean isSubtype(TypeMirror potentialSubtype, TypeMirror potentialSupertype) {
-
 		return processingEnv.getTypeUtils().isSubtype(potentialSubtype, potentialSupertype);
 	}
 
@@ -113,6 +112,10 @@ public class AnnotationHelper {
 
 	public boolean isPrivate(Element element) {
 		return element.getModifiers().contains(Modifier.PRIVATE);
+	}
+
+	public boolean isPublic(Element element) {
+		return element.getModifiers().contains(Modifier.PUBLIC);
 	}
 
 	public boolean isAbstract(Element element) {
@@ -308,17 +311,45 @@ public class AnnotationHelper {
 		return target.getSimpleName() + "ed";
 	}
 
-	public DeclaredType extractAnnotationClassParameter(Element element, Class<? extends Annotation> target) {
-
+	public List<DeclaredType> extractAnnotationClassArrayParameter(Element element, Class<? extends Annotation> target, String methodName) {
 		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
 
 		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
 
 		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
 			/*
-			 * "value" is unset when the default value is used
+			 * "methodName" is unset when the default value is used
 			 */
-			if ("value".equals(entry.getKey().getSimpleName().toString())) {
+			if (methodName.equals(entry.getKey().getSimpleName().toString())) {
+
+				AnnotationValue annotationValue = entry.getValue();
+
+				@SuppressWarnings("unchecked")
+				List<AnnotationValue> annotationClassArray = (List<AnnotationValue>) annotationValue.getValue();
+
+				List<DeclaredType> result = new ArrayList<DeclaredType>(annotationClassArray.size());
+
+				for (AnnotationValue annotationClassValue : annotationClassArray) {
+					result.add((DeclaredType) annotationClassValue.getValue());
+				}
+
+				return result;
+			}
+		}
+
+		return null;
+	}
+
+	public DeclaredType extractAnnotationClassParameter(Element element, Class<? extends Annotation> target, String methodName) {
+		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
+
+		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
+
+		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : elementValues.entrySet()) {
+			/*
+			 * "methodName" is unset when the default value is used
+			 */
+			if (methodName.equals(entry.getKey().getSimpleName().toString())) {
 
 				AnnotationValue annotationValue = entry.getValue();
 
@@ -329,6 +360,10 @@ public class AnnotationHelper {
 		}
 
 		return null;
+	}
+
+	public DeclaredType extractAnnotationClassParameter(Element element, Class<? extends Annotation> target) {
+		return extractAnnotationClassParameter(element, target, "value");
 	}
 
 }

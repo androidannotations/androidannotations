@@ -13,24 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.ebean;
+package org.androidannotations.rest;
 
-import org.androidannotations.AndroidAnnotationProcessor;
-import org.androidannotations.utils.AAProcessorTestHelper;
-import org.junit.Before;
-import org.junit.Test;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
 
-public class EBeanTest extends AAProcessorTestHelper {
-
-	@Before
-	public void setup() {
-		addManifestProcessorParameter(EBeanTest.class);
-		addProcessor(AndroidAnnotationProcessor.class);
-	}
-
-	@Test
-	public void activity_subclass_in_manifest_compiles() {
-		assertCompilationSuccessful(compileFiles(SomeActivity.class, SomeImplementation.class));
-	}
+public abstract class AbstractConverter<T> extends AbstractHttpMessageConverter<T> {
 
 }

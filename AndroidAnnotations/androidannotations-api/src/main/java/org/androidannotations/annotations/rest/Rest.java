@@ -23,5 +23,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Rest {
-	String value() default "";
+	String rootUrl() default "";
+	Class<?>[] converters();
 }

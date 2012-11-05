@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -11,7 +10,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>2.7-SNAPSHOT</version>
+	<version>3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -41,10 +40,20 @@
 			</roles>
 		</developer>
 		<developer>
+			<id>mat.boniface</id>
+			<name>Mathieu Boniface	</name>
+			<email>mat.boniface@gmail.com</email>
+			<organization>eBusiness Information</organization>
+			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
+			<roles>
+				<role>Committer</role>
+			</roles>
+		</developer>
+		<developer>
 			<id>athomas.nc</id>
 			<name>Alexandre Thomas</name>
 			<email>athomas.nc@gmail.com</email>
-			<url>http://twitter.com/twikeuk</url>
+			<url>http://twitter.com/AleksThomas</url>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
@@ -65,16 +74,6 @@
 			<id>bluepyth</id>
 			<name>Romain Sertelon</name>
 			<email>bluepyth@gmail.com</email>
-			<organization>eBusiness Information</organization>
-			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
-			<roles>
-				<role>Committer</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>mat.boniface</id>
-			<name>Mathieu Boniface	</name>
-			<email>mat.boniface@gmail.com</email>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
@@ -242,7 +241,7 @@
 					<header>src/etc/header.txt</header>
 					<excludes>
 						<exclude>.idea/**</exclude>
-						<exclude>HOW-TO.txt</exclude>
+						<exclude>src/etc/HOW-TO.txt</exclude>
 						<exclude>LICENSE.txt</exclude>
 						<exclude>.gitignore</exclude>
 						<exclude>**/R.java</exclude>

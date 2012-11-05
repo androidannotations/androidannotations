@@ -99,6 +99,7 @@ public final class CanonicalNameConstants {
 	public static final String HTTP_METHOD = "org.springframework.http.HttpMethod";
 	public static final String HTTP_ENTITY = "org.springframework.http.HttpEntity";
 	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
+	public static final String HTTP_MESSAGE_CONVERTER = "org.springframework.http.converter.HttpMessageConverter";
 
 	/*
 	 * RoboGuice
