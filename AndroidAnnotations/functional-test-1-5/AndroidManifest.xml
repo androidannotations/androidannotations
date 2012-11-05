@@ -17,7 +17,7 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.googlecode.androidannotations.test15"
+    package="org.androidannotations.test15"
     android:versionCode="1"
     android:versionName="2.1-SNAPSHOT" >
 
@@ -26,10 +26,10 @@
         android:targetSdkVersion="8" />
 
     <application
-        android:name="com.googlecode.androidannotations.test15.roboguice.SampleRoboApplication_"
+        android:name="org.androidannotations.test15.roboguice.SampleRoboApplication_"
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
-        <activity android:name="com.googlecode.androidannotations.test15.eviewgroup.CustomFrameLayoutActivity_" >
+        <activity android:name="org.androidannotations.test15.eviewgroup.CustomFrameLayoutActivity_" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,31 +57,31 @@
         <activity android:name=".TracedActivity_" />
         <activity android:name=".TextWatchedActivity_" />
         <activity android:name=".ormlite.OrmLiteActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.menu.OptionsMenuActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.NoTitleFullscreenActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.ExtendingActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.ebean.BeanInjectedActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.rest.MyServiceActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.afterinject.AfterInjectActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.greendroid.MyGreenDroidActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.nonconfiguration.NonConfigurationActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.sherlock.MySherlockActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.efragment.MyFragmentActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.afterviews.AfterViewsActivity_" />
+        <activity android:name="org.androidannotations.test15.menu.OptionsMenuActivity_" />
+        <activity android:name="org.androidannotations.test15.NoTitleFullscreenActivity_" />
+        <activity android:name="org.androidannotations.test15.ExtendingActivity_" />
+        <activity android:name="org.androidannotations.test15.ebean.BeanInjectedActivity_" />
+        <activity android:name="org.androidannotations.test15.rest.MyServiceActivity_" />
+        <activity android:name="org.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
+        <activity android:name="org.androidannotations.test15.afterinject.AfterInjectActivity_" />
+        <activity android:name="org.androidannotations.test15.greendroid.MyGreenDroidActivity_" />
+        <activity android:name="org.androidannotations.test15.nonconfiguration.NonConfigurationActivity_" />
+        <activity android:name="org.androidannotations.test15.sherlock.MySherlockActivity_" />
+        <activity android:name="org.androidannotations.test15.efragment.MyFragmentActivity_" />
+        <activity android:name="org.androidannotations.test15.afterviews.AfterViewsActivity_" />
         <activity android:name=".SSLConnection_" />
-        <activity android:name="com.googlecode.androidannotations.test15.SeekBarChangeListenedActivity_" />
-        <activity android:name="com.googlecode.androidannotations.test15.AwaitingResultActivity_" />
+        <activity android:name="org.androidannotations.test15.SeekBarChangeListenedActivity_" />
+        <activity android:name="org.androidannotations.test15.AwaitingResultActivity_" />
 
-        <receiver android:name="com.googlecode.androidannotations.test15.ereceiver.MyReceiver_" />
+        <receiver android:name="org.androidannotations.test15.ereceiver.MyReceiver_" />
 
         <provider
-            android:name="com.googlecode.androidannotations.test15.eprovider.MyProvider_"
+            android:name="org.androidannotations.test15.eprovider.MyProvider_"
             android:authorities=""
             android:exported="false" />
 
         <service
-            android:name="com.googlecode.androidannotations.test15.eservice.MyService_"
+            android:name="org.androidannotations.test15.eservice.MyService_"
             exported="false" />
     </application>
 
