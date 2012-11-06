@@ -31,8 +31,8 @@
 			<useProjectArtifact>false</useProjectArtifact>
 			<includes>
 				<include>com.sun.codemodel:codemodel</include>
-				<include>com.googlecode.androidannotations:androidannotations</include>
-				<include>com.googlecode.androidannotations:androidannotations-api</include>
+				<include>org.androidannotations:androidannotations</include>
+				<include>org.androidannotations:androidannotations-api</include>
 			</includes>
 		</dependencySet>	
 	</dependencySets>

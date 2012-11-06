@@ -1,4 +1,4 @@
 <factorypath>
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="PLUGIN" id="com.googlecode.androidannotations" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="PLUGIN" id="org.androidannotations" enabled="true" runInBatchMode="false"/>
 </factorypath>
