@@ -20,18 +20,21 @@ import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
+import static javax.lang.model.util.ElementFilter.methodsIn;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.util.ElementFilter;
 
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.api.SdkVersionHelper;
@@ -107,6 +110,9 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 		holder.generatedClass._extends(annotatedActivity);
 
 		holder.contextRef = _this();
+
+        //Constructors
+        copyConstructors(holder, element);
 
 		// onCreate
 		JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
@@ -198,7 +204,43 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 	}
 
-	private void setContentViewMethod(String setContentViewMethodName, JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
+    private void copyConstructors(EBeanHolder holder, Element element) {
+            List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
+            for (Element e : element.getEnclosedElements()) {
+                if (e.getKind() == CONSTRUCTOR && canOverride(e)) {
+                    constructors.add((ExecutableElement) e);
+                }
+            }
+
+            for (ExecutableElement userConstructor : constructors) {
+                JMethod copyConstructor = holder.generatedClass.constructor(getModifier(userConstructor.getModifiers()));
+                JBlock body = copyConstructor.body();
+                JInvocation superCall = body.invoke("super");
+                JInvocation newInvocation = JExpr._new(holder.generatedClass);
+                for (VariableElement param : userConstructor.getParameters()) {
+                    String paramName = param.getSimpleName().toString();
+                    String paramType = param.asType().toString();
+                    copyConstructor.param(holder.refClass(paramType), paramName);
+                    superCall.arg(JExpr.ref(paramName));
+                    newInvocation.arg(JExpr.ref(paramName));
+                }
+            }
+    }
+
+    private boolean canOverride(Element e) {
+        return !e.getModifiers().contains(Modifier.PRIVATE);
+    }
+
+    private int getModifier(Set<Modifier> modifiers) {
+        if (modifiers.contains(Modifier.PUBLIC))
+            return JMod.PUBLIC;
+        else if (modifiers.contains(Modifier.PROTECTED))
+            return JMod.PROTECTED;
+        else
+            return JMod.NONE;
+    }
+
+    private void setContentViewMethod(String setContentViewMethodName, JCodeModel codeModel, EBeanHolder holder, JType[] paramTypes, String[] paramNames) {
 		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, setContentViewMethodName);
 		method.annotate(Override.class);
 
@@ -219,7 +261,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
 
-		List<ExecutableElement> activityInheritedMethods = ElementFilter.methodsIn(allMembers);
+		List<ExecutableElement> activityInheritedMethods = methodsIn(allMembers);
 
 		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
 			if (isCustomOnBackPressedMethod(activityInheritedMethod)) {
