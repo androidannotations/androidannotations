@@ -26,7 +26,6 @@ import javax.lang.model.type.TypeMirror;
 
 import com.googlecode.androidannotations.annotations.rest.Post;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
-import com.googlecode.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JClass;
 
 public class PostProcessor extends GetPostProcessor {
@@ -41,7 +40,7 @@ public class PostProcessor extends GetPostProcessor {
 	}
 
 	@Override
-	public void retrieveReturnClass(EBeanHolder holder, TypeMirror returnType, MethodProcessorHolder processorHolder) {
+	public void retrieveReturnClass(TypeMirror returnType, MethodProcessorHolder processorHolder) {
 		String returnTypeString = returnType.toString();
 		JClass expectedClass = null;
 		JClass generatedReturnClass = null;

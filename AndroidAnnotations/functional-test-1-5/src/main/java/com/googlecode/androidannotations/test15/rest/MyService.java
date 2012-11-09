@@ -38,6 +38,8 @@ import com.googlecode.androidannotations.api.rest.MediaType;
 @Rest("http://company.com/ajax/services")
 // if defined, the url will be added as a prefix to every request
 public interface MyService {
+	
+	// *** GET ***
 
 	// url variables are mapped to method parameter names.
 	@Get("/events/{year}/{location}")
@@ -69,14 +71,22 @@ public interface MyService {
 	List<Event> getEventsGenericsList(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
+	List<Event[]> getEventsGenericsListArray(String location, int year) throws RestClientException;
+
+	@Get("/events/{year}/{location}")
 	Set<Event> getEventsGenericsSet(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
 	GenericEvent<GenericEvent<GenericEvent<String>>> getEventsGenericsInception(String location, int year) throws RestClientException;
-
+	
 	@Get("/events/{year}/{location}")
 	Map<String, Event> getEventsGenericsMap(String location, int year) throws RestClientException;
 
+	@Get("/events/{year}/{location}")
+	void getEventsVoid(String location, int year) throws RestClientException;
+
+	// *** POST ***
+	
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
 	@Post("/events/")
@@ -124,15 +134,23 @@ public interface MyService {
 	@Accept(MediaType.APPLICATION_JSON)
 	ResponseEntity<Event> addEvent2(Event event, int year);
 
+	// *** PUT ***
+
 	@Put("/events/{id}")
 	void updateEvent(Event event, int id);
+	
+	// *** DELETE ***
 
 	// url variables are mapped to method parameter names.
 	@Delete("/events/{id}")
 	void removeEvent(long id);
+	
+	// *** HEAD ***
 
 	@Head("/events/{year}/{location}")
 	HttpHeaders getEventHeaders(String location, int year);
+
+	// *** OPTIONS ***
 
 	@Options("/events/{year}/{location}")
 	Set<HttpMethod> getEventOptions(String location, int year);

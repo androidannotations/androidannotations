@@ -43,10 +43,10 @@ public class RestProcessor implements GeneratingElementProcessor {
 
 	private static final String SPRING_REST_TEMPLATE_QUALIFIED_NAME = "org.springframework.web.client.RestTemplate";
 	private static final String JAVA_STRING_QUALIFIED_NAME = "java.lang.String";
-	private final RestImplementationsHolder restImplementationHolder;
+	private final RestImplementationsHolder restImplementationsHolder;
 
-	public RestProcessor(RestImplementationsHolder restImplementationHolder) {
-		this.restImplementationHolder = restImplementationHolder;
+	public RestProcessor(RestImplementationsHolder restImplementationsHolder) {
+		this.restImplementationsHolder = restImplementationsHolder;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class RestProcessor implements GeneratingElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
 		eBeansHolder.create(element, getTarget());
-		RestImplementationHolder holder = restImplementationHolder.create(element);
+		RestImplementationHolder holder = restImplementationsHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 		String interfaceName = typeElement.getQualifiedName().toString();
