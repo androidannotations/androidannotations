@@ -38,7 +38,7 @@ import com.googlecode.androidannotations.api.rest.MediaType;
 @Rest("http://company.com/ajax/services")
 // if defined, the url will be added as a prefix to every request
 public interface MyService {
-	
+
 	// *** GET ***
 
 	// url variables are mapped to method parameter names.
@@ -74,11 +74,23 @@ public interface MyService {
 	List<Event[]> getEventsGenericsListArray(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
+	List<Event[][]> getEventsGenericsListArrayArray(String location, int year) throws RestClientException;
+
+	@Get("/events/{year}/{location}")
 	Set<Event> getEventsGenericsSet(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
-	GenericEvent<GenericEvent<GenericEvent<String>>> getEventsGenericsInception(String location, int year) throws RestClientException;
+	GenericEvent<String> getEventsGenericString(String location, int year) throws RestClientException;
 	
+	@Get("/events/{year}/{location}")
+	GenericEvent<Integer> getEventsGenericInteger(String location, int year) throws RestClientException;
+
+	@Get("/events/{year}/{location}")
+	GenericEvent<List<Event>> getEventsGenericListEvent(String location, int year) throws RestClientException;
+
+	@Get("/events/{year}/{location}")
+	GenericEvent<GenericEvent<GenericEvent<String>>> getEventsGenericsInception(String location, int year) throws RestClientException;
+
 	@Get("/events/{year}/{location}")
 	Map<String, Event> getEventsGenericsMap(String location, int year) throws RestClientException;
 
@@ -86,7 +98,7 @@ public interface MyService {
 	void getEventsVoid(String location, int year) throws RestClientException;
 
 	// *** POST ***
-	
+
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
 	@Post("/events/")
@@ -104,6 +116,9 @@ public interface MyService {
 	 */
 	@Post("/events/")
 	ResponseEntity<String> addEvent3(Event event);
+
+	@Post("/events/")
+	List<? extends Event> addEventGenericsListWildcardExtends(Event event);
 
 	@Post("/events/")
 	List<Event> addEventGenericsList(Event event);
@@ -138,13 +153,13 @@ public interface MyService {
 
 	@Put("/events/{id}")
 	void updateEvent(Event event, int id);
-	
+
 	// *** DELETE ***
 
 	// url variables are mapped to method parameter names.
 	@Delete("/events/{id}")
 	void removeEvent(long id);
-	
+
 	// *** HEAD ***
 
 	@Head("/events/{year}/{location}")

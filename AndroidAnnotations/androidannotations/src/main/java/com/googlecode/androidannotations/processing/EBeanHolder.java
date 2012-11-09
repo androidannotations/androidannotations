@@ -119,4 +119,8 @@ public class EBeanHolder {
 		return eBeansHolder.refClass(clazz);
 	}
 
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		return eBeansHolder.definedClass(fullyQualifiedClassName);
+	}
+
 }

@@ -56,19 +56,19 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
 		EBeanHolder eBeanHolder = methodHolder.getHolder();
 		JClass expectedClass = methodHolder.getExpectedClass();
-		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
+		JClass methodReturnClass = methodHolder.getMethodReturnClass();
 
 		// Creating method signature
 		JMethod method;
 		String methodName = executableElement.getSimpleName().toString();
-		boolean methodReturnVoid = generatedReturnType == null && expectedClass == null;
+		boolean methodReturnVoid = methodReturnClass == null && expectedClass == null;
 		if (methodReturnVoid) {
 			method = holder.restImplementationClass.method(JMod.PUBLIC, void.class, methodName);
 		} else {
-			method = holder.restImplementationClass.method(JMod.PUBLIC, methodHolder.getGeneratedReturnType(), methodName);
+			method = holder.restImplementationClass.method(JMod.PUBLIC, methodHolder.getMethodReturnClass(), methodName);
 		}
 		method.annotate(Override.class);
-		if (expectedClass != generatedReturnType && !generatedReturnType.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+		if (expectedClass != methodReturnClass && !methodReturnClass.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 			method.annotate(SuppressWarnings.class).param("value", "unchecked");
 		}
 

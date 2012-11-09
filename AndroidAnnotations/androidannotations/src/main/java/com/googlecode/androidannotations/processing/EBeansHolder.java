@@ -27,7 +27,9 @@ import javax.lang.model.element.Element;
 
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JType;
 
 public class EBeansHolder {
@@ -221,6 +223,19 @@ public class EBeansHolder {
 
 	public JClass refClass(Class<?> clazz) {
 		return codeModel.ref(clazz);
+	}
+
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		JDefinedClass refClass = (JDefinedClass) loadedClasses.get(fullyQualifiedClassName);
+		if (refClass == null) {
+			try {
+				refClass = codeModel._class(fullyQualifiedClassName);
+			} catch (JClassAlreadyExistsException e) {
+				refClass = (JDefinedClass) refClass(fullyQualifiedClassName);
+			}
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+		return refClass;
 	}
 
 	public JCodeModel codeModel() {
