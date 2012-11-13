@@ -183,9 +183,9 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		if (decoratedClassName != null) {
 			log(2, "enclosingJClass " + currentClass.fullName() + " has a known parent : " + decoratedClassName);
 
-			String decoratedClassNameSuffix = "";
 			// Configure the super class of the final decorated class
-			JClass decoratedSuperJClass = holder.parseClass(decoratedClassName);
+			String decoratedClassNameSuffix = "";
+			JClass decoratedSuperClass = holder.parseClass(decoratedClassName);
 			for (TypeMirror typeArgument : declaredType.getTypeArguments()) {
 				String typeArgumentName = typeArgument.toString();
 				if (typeArgument instanceof WildcardType) {
@@ -199,8 +199,8 @@ public abstract class GetPostProcessor extends MethodProcessor {
 					}
 				}
 				JClass narrowJClass = holder.parseClass(typeArgumentName);
-				decoratedSuperJClass = decoratedSuperJClass.narrow(narrowJClass);
-				decoratedClassNameSuffix += narrowJClass.name();
+				decoratedSuperClass = decoratedSuperClass.narrow(narrowJClass);
+				decoratedClassNameSuffix += plainName(narrowJClass);
 			}
 
 			// TODO: Retrieve or generate decorated classes
@@ -209,7 +209,7 @@ public abstract class GetPostProcessor extends MethodProcessor {
 			decoratedFinalClassName = decoratedFinalClassName.replaceAll("\\[\\]", "s");
 			decoratedFinalClassName = restClientPackage.name() + "." + decoratedFinalClassName;
 			JDefinedClass decoratedJClass = holder.definedClass(decoratedFinalClassName);
-			decoratedJClass._extends(decoratedSuperJClass);
+			decoratedJClass._extends(decoratedSuperClass);
 
 			log(2, "decoratedJClass = " + decoratedJClass.fullName());
 
@@ -228,6 +228,18 @@ public abstract class GetPostProcessor extends MethodProcessor {
 
 		// Falling back to the current enclosingJClass if Class can't be found
 		return null;
+	}
+
+	protected String plainName(JClass jClass) {
+		String plainName = jClass.erasure().name();
+		List<JClass> typeParameters = jClass.getTypeParameters();
+		if (typeParameters.size() > 0) {
+			plainName += "_";
+			for (JClass typeParameter : typeParameters) {
+				plainName += plainName(typeParameter);
+			}
+		}
+		return plainName;
 	}
 
 	@Override
