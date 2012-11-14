@@ -177,14 +177,18 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		// Looking for basic java.util interfaces to set a default
 		// implementation
 		String decoratedClassName = null;
-		if (currentClass.fullName().equals(CanonicalNameConstants.MAP)) {
-			decoratedClassName = LinkedHashMap.class.getCanonicalName();
-		} else if (currentClass.fullName().equals(CanonicalNameConstants.SET)) {
-			decoratedClassName = TreeSet.class.getCanonicalName();
-		} else if (currentClass.fullName().equals(CanonicalNameConstants.LIST)) {
-			decoratedClassName = ArrayList.class.getCanonicalName();
-		} else if (currentClass.fullName().equals(CanonicalNameConstants.COLLECTION)) {
-			decoratedClassName = ArrayList.class.getCanonicalName();
+		if (currentClass.isInterface() || currentClass.isAbstract()) {
+			if (currentClass.fullName().equals(CanonicalNameConstants.MAP)) {
+				decoratedClassName = LinkedHashMap.class.getCanonicalName();
+			} else if (currentClass.fullName().equals(CanonicalNameConstants.SET)) {
+				decoratedClassName = TreeSet.class.getCanonicalName();
+			} else if (currentClass.fullName().equals(CanonicalNameConstants.LIST)) {
+				decoratedClassName = ArrayList.class.getCanonicalName();
+			} else if (currentClass.fullName().equals(CanonicalNameConstants.COLLECTION)) {
+				decoratedClassName = ArrayList.class.getCanonicalName();
+			}
+		} else {
+			decoratedClassName = currentClass.erasure().fullName();
 		}
 
 		if (decoratedClassName != null) {
@@ -225,13 +229,13 @@ public abstract class GetPostProcessor extends MethodProcessor {
 
 		// Try to find the superclass and make a recursive call to the this
 		// method
-		log(2, "Try to find a parent for " + currentClass.toString());
+		log(2, "Try to find a parent for " + currentClass.fullName());
 		JClass enclosingSuperJClass = currentClass._extends();
 		if (enclosingSuperJClass != null) {
 			return retrieveDecoratedExpectedClass(declaredType, enclosingSuperJClass);
 		}
 
-		log(2, "Falling back to " + currentClass.toString());
+		log(2, "Falling back to " + currentClass.fullName());
 
 		// Falling back to the current enclosingJClass if Class can't be found
 		return null;
