@@ -28,18 +28,6 @@ import com.sun.codemodel.JPackage;
 
 public abstract class GetPostProcessor extends MethodProcessor {
 
-	private void log(String message) {
-		System.out.println("GetPostProcessor INFO : " + message);
-	}
-
-	private void log(int level, String message) {
-		System.out.print("GetPostProcessor INFO : ");
-		for (int i = 0; i < level; i++) {
-			System.out.print("  ");
-		}
-		System.out.println(message);
-	}
-
 	protected EBeanHolder holder;
 	protected JPackage restClientPackage;
 
@@ -85,8 +73,6 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		String returnTypeString = returnType.toString();
 		JClass expectedClass = null;
 
-		log("\n--------- " + returnTypeString.toString() + " ---------");
-
 		if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 			DeclaredType declaredReturnType = (DeclaredType) returnType;
 			if (declaredReturnType.getTypeArguments().size() > 0) {
@@ -97,8 +83,6 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		} else {
 			expectedClass = resolveExpectedClass(returnType);
 		}
-
-		log("expectedClass = " + expectedClass.fullName() + " extends " + expectedClass._extends().fullName());
 
 		processorHolder.setExpectedClass(expectedClass);
 		processorHolder.setMethodReturnClass(holder.parseClass(returnTypeString));
@@ -128,37 +112,26 @@ public abstract class GetPostProcessor extends MethodProcessor {
 	 * @param expectedType
 	 */
 	private JClass resolveExpectedClass(TypeMirror expectedType) {
-		log("Resolving class for " + expectedType.toString());
-
 		// is a class or an interface
 		if (expectedType.getKind() == TypeKind.DECLARED) {
 			DeclaredType declaredType = (DeclaredType) expectedType;
 			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 
-			log(1, "typeArguments = " + typeArguments.toString());
-
 			// is NOT a generics
 			if (typeArguments.size() == 0) {
-				log(expectedType.toString() + " is NOT a generics");
-
 				return holder.parseClass(expectedType.toString());
 			}
 
 			// is a generics
-			log(1, expectedType.toString() + " is a generics");
-
 			JClass baseClass = holder.parseClass(declaredType.toString()).erasure();
 			JClass decoratedExpectedClass = retrieveDecoratedExpectedClass(declaredType, baseClass);
 			return decoratedExpectedClass == null ? baseClass : decoratedExpectedClass;
 		} else if (expectedType.getKind() == TypeKind.ARRAY) {
 			ArrayType arrayType = (ArrayType) expectedType;
-			log(1, arrayType.toString() + " is an array");
-
 			return resolveExpectedClass(arrayType.getComponentType()).array();
 		}
 
 		// is not a class nor an interface
-		log(1, expectedType.toString() + " is a primitive or an array");
 		return holder.parseClass(expectedType.toString());
 	}
 
@@ -172,8 +145,6 @@ public abstract class GetPostProcessor extends MethodProcessor {
 	 * @return
 	 */
 	private JClass retrieveDecoratedExpectedClass(DeclaredType declaredType, JClass currentClass) {
-		log(2, "retrieveDecoratedExpectedClass(" + declaredType.toString() + ", " + currentClass.fullName() + ")");
-
 		// Looking for basic java.util interfaces to set a default
 		// implementation
 		String decoratedClassName = null;
@@ -192,8 +163,6 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		}
 
 		if (decoratedClassName != null) {
-			log(2, "enclosingJClass " + currentClass.fullName() + " has a known parent : " + decoratedClassName);
-
 			// Configure the super class of the final decorated class
 			String decoratedClassNameSuffix = "";
 			JClass decoratedSuperClass = holder.parseClass(decoratedClassName);
@@ -214,28 +183,21 @@ public abstract class GetPostProcessor extends MethodProcessor {
 				decoratedClassNameSuffix += plainName(narrowJClass);
 			}
 
-			// TODO: Retrieve or generate decorated classes
-
 			String decoratedFinalClassName = currentClass.name() + "_" + decoratedClassNameSuffix;
 			decoratedFinalClassName = decoratedFinalClassName.replaceAll("\\[\\]", "s");
 			decoratedFinalClassName = restClientPackage.name() + "." + decoratedFinalClassName;
 			JDefinedClass decoratedJClass = holder.definedClass(decoratedFinalClassName);
 			decoratedJClass._extends(decoratedSuperClass);
 
-			log(2, "decoratedJClass = " + decoratedJClass.fullName());
-
 			return decoratedJClass;
 		}
 
 		// Try to find the superclass and make a recursive call to the this
 		// method
-		log(2, "Try to find a parent for " + currentClass.fullName());
 		JClass enclosingSuperJClass = currentClass._extends();
 		if (enclosingSuperJClass != null) {
 			return retrieveDecoratedExpectedClass(declaredType, enclosingSuperJClass);
 		}
-
-		log(2, "Falling back to " + currentClass.fullName());
 
 		// Falling back to the current enclosingJClass if Class can't be found
 		return null;
