@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -84,6 +85,8 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		String returnTypeString = returnType.toString();
 		JClass expectedClass = null;
 
+		log("\n--------- " + returnTypeString.toString() + " ---------");
+
 		if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 			DeclaredType declaredReturnType = (DeclaredType) returnType;
 			if (declaredReturnType.getTypeArguments().size() > 0) {
@@ -125,7 +128,6 @@ public abstract class GetPostProcessor extends MethodProcessor {
 	 * @param expectedType
 	 */
 	private JClass resolveExpectedClass(TypeMirror expectedType) {
-		log("---------");
 		log("Resolving class for " + expectedType.toString());
 
 		// is a class or an interface
@@ -148,6 +150,11 @@ public abstract class GetPostProcessor extends MethodProcessor {
 			JClass baseClass = holder.parseClass(declaredType.toString()).erasure();
 			JClass decoratedExpectedClass = retrieveDecoratedExpectedClass(declaredType, baseClass);
 			return decoratedExpectedClass == null ? baseClass : decoratedExpectedClass;
+		} else if (expectedType.getKind() == TypeKind.ARRAY) {
+			ArrayType arrayType = (ArrayType) expectedType;
+			log(1, arrayType.toString() + " is an array");
+
+			return resolveExpectedClass(arrayType.getComponentType()).array();
 		}
 
 		// is not a class nor an interface
