@@ -16,5 +16,5 @@
 package com.googlecode.androidannotations.test15.rest;
 
 public class GenericEvent<T extends Object> {
-
+	T value;
 }
