@@ -62,6 +62,7 @@ import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.annotations.LongClick;
 import org.androidannotations.annotations.NoTitle;
+import org.androidannotations.annotations.CustomTitle;
 import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
@@ -148,6 +149,7 @@ import org.androidannotations.processing.LongClickProcessor;
 import org.androidannotations.processing.ModelProcessor;
 import org.androidannotations.processing.ModelProcessor.ProcessResult;
 import org.androidannotations.processing.NoTitleProcessor;
+import org.androidannotations.processing.CustomTitleProcessor;
 import org.androidannotations.processing.NonConfigurationInstanceProcessor;
 import org.androidannotations.processing.OnActivityResultProcessor;
 import org.androidannotations.processing.OptionsItemProcessor;
@@ -211,6 +213,7 @@ import org.androidannotations.validation.ItemSelectedValidator;
 import org.androidannotations.validation.LongClickValidator;
 import org.androidannotations.validation.ModelValidator;
 import org.androidannotations.validation.NoTitleValidator;
+import org.androidannotations.validation.CustomTitleValidator;
 import org.androidannotations.validation.NonConfigurationInstanceValidator;
 import org.androidannotations.validation.OnActivityResultValidator;
 import org.androidannotations.validation.OptionsItemValidator;
@@ -290,6 +293,7 @@ import org.androidannotations.validation.rest.RestValidator;
 		OptionsItem.class, //
 		HtmlRes.class, //
 		NoTitle.class, //
+        CustomTitle.class, //
 		Fullscreen.class, //
 		RestService.class, //
 		EBean.class, //
@@ -462,6 +466,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
+        modelValidator.register(new CustomTitleValidator(processingEnv, rClass));
 		modelValidator.register(new FullscreenValidator(processingEnv));
 		modelValidator.register(new RestServiceValidator(processingEnv));
 		modelValidator.register(new RootContextValidator(processingEnv));
@@ -550,6 +555,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
 		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
+        modelProcessor.register(new CustomTitleProcessor());
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
 		modelProcessor.register(new OrmLiteDaoProcessor(processingEnv));

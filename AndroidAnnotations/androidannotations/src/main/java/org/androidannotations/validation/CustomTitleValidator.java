@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.validation;
+package org.androidannotations.validation;
 
-import com.googlecode.androidannotations.annotations.CustomTitle;
-import com.googlecode.androidannotations.helper.IdAnnotationHelper;
-import com.googlecode.androidannotations.helper.IdValidatorHelper;
-import com.googlecode.androidannotations.model.AnnotationElements;
-import com.googlecode.androidannotations.rclass.IRClass;
+import org.androidannotations.annotations.CustomTitle;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.rclass.IRClass;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

@@ -13,14 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.androidannotations.processing;
+package org.androidannotations.processing;
 
-import com.googlecode.androidannotations.annotations.CustomTitle;
+import org.androidannotations.annotations.CustomTitle;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 
 import javax.lang.model.element.Element;
 import java.lang.annotation.Annotation;
+
+import static com.sun.codemodel.JExpr.lit;
 
 
 public class CustomTitleProcessor implements DecoratingElementProcessor {
@@ -36,7 +38,6 @@ public class CustomTitleProcessor implements DecoratingElementProcessor {
         JFieldRef customTitleFeature = holder.classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
 
         holder.init.body().invoke("requestWindowFeature").arg(customTitleFeature);
-        holder.afterSetContentView.body().directStatement("getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, " + annotation.value() + ");");
+        holder.afterSetContentView.body().add(holder.contextRef.invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(lit(annotation.value())));
     }
-
 }
