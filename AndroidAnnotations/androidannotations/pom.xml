@@ -3,18 +3,20 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.googlecode.androidannotations</groupId>
+		<groupId>org.androidannotations</groupId>
 		<artifactId>androidannotations-parent</artifactId>
-		<version>2.7-SNAPSHOT</version>
+		<version>3.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>androidannotations</artifactId>
-
-	<name>Android Annotations</name>
-	<description>Simplifying Android using annotations and annotation processing tools</description>
-	<url>http://androidannotations.googlecode.com</url>
+	<name>AndroidAnnotations Annotation Processor</name>
+	<description>The Annotation Processor jar that generates code</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.androidannotations</groupId>
+			<artifactId>androidannotations-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.sun.codemodel</groupId>
 			<artifactId>codemodel</artifactId>
@@ -24,41 +26,26 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>1.6_r2</version>
-			<scope>provided</scope>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- spring-android-rest-template is required to use the Rest API -->
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-rest-template</artifactId>
+			<version>1.0.0.RELEASE</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>jarjar-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jarjar</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>com.sun.codemodel:codemodel</include>
-							</includes>
-							<rules>
-								<rule>
-									<pattern>com.sun.codemodel.**</pattern>
-									<result>com.googlecode.androidannotations.internal.codemodel.@1</result>
-								</rule>
-								<keep>
-									<pattern>com.googlecode.androidannotations.**</pattern>
-								</keep>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -67,25 +54,6 @@
 					<target>1.6</target>
 					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<classifier>api</classifier>
-							<includes>
-								<include>com/googlecode/androidannotations/annotations/**</include>
-								<include>com/googlecode/androidannotations/api/**</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -109,26 +77,15 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/distribution.xml</descriptor>
-					</descriptors>
-					<finalName>${project.build.finalName}</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>rebel.xml</exclude>
+				</excludes>
+			</resource>
+		</resources>
 	</build>
 
 </project>

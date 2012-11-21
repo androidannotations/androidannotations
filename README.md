@@ -9,6 +9,4 @@ It takes care of the **plumbing**, and lets you concentrate on what's really imp
 
 ### [**Read more**](https://github.com/excilys/androidannotations/wiki/Home)
 
-***
-
-[![Supported by eBusiness Information (Excilys Group)](https://github.com/excilys/androidannotations/wiki/img/supportedbylogo.png)](http://www.ebusinessinformation.fr)
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/a2b0e064a3f1d4fb3d5406cc596797f2 "githalytics.com")](http://githalytics.com/excilys/androidannotations)

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,14 +8,14 @@
 		<version>7</version>
 	</parent>
 
-	<groupId>com.googlecode.androidannotations</groupId>
+	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>2.7-SNAPSHOT</version>
+	<version>3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Android Annotations Parent</name>
+	<name>AndroidAnnotations Parent</name>
 	<description>Simplifying Android using annotations and annotation processing tools</description>
-	<url>http://androidannotations.googlecode.com</url>
+	<url>http://androidannotations.org</url>
 
 	<inceptionYear>2010</inceptionYear>
 
@@ -41,10 +40,21 @@
 			</roles>
 		</developer>
 		<developer>
+			<id>mat.boniface</id>
+			<name>Mathieu Boniface</name>
+			<email>mat.boniface@gmail.com</email>
+			<url>http://twitter.com/matboniface</url>
+			<organization>eBusiness Information</organization>
+			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
+			<roles>
+				<role>Committer</role>
+			</roles>
+		</developer>
+		<developer>
 			<id>athomas.nc</id>
 			<name>Alexandre Thomas</name>
 			<email>athomas.nc@gmail.com</email>
-			<url>http://twitter.com/twikeuk</url>
+			<url>http://twitter.com/AleksThomas</url>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
@@ -71,16 +81,6 @@
 				<role>Committer</role>
 			</roles>
 		</developer>
-		<developer>
-			<id>mat.boniface</id>
-			<name>Mathieu Boniface	</name>
-			<email>mat.boniface@gmail.com</email>
-			<organization>eBusiness Information</organization>
-			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
-			<roles>
-				<role>Committer</role>
-			</roles>
-		</developer>
 	</developers>
 
 	<properties>
@@ -89,26 +89,57 @@
 
 	<modules>
 		<module>androidannotations</module>
+		<module>androidannotations-api</module>
 		<module>functional-test-1-5</module>
 		<module>functional-test-1-5-tests</module>
+		<module>androidannotations-with-codemodel</module>
+		<module>androidannotations-bundle</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
-				<artifactId>androidannotations</artifactId>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
 				<version>${project.version}</version>
-				<classifier>api</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>javadoc</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations</artifactId>
+				<version>${project.version}</version>
+				<classifier>javadoc</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations</artifactId>
+				<version>${project.version}</version>
+				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-with-codemodel</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>functional-test-1-5</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -122,6 +153,12 @@
 				<artifactId>junit</artifactId>
 				<version>4.8.1</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+			    <groupId>com.google.guava</groupId>
+			    <artifactId>guava</artifactId>
+			    <version>13.0.1</version>
+			    <scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -205,7 +242,7 @@
 					<header>src/etc/header.txt</header>
 					<excludes>
 						<exclude>.idea/**</exclude>
-						<exclude>HOW-TO.txt</exclude>
+						<exclude>src/etc/HOW-TO.txt</exclude>
 						<exclude>LICENSE.txt</exclude>
 						<exclude>.gitignore</exclude>
 						<exclude>**/R.java</exclude>

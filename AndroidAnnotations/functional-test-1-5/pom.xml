@@ -4,8 +4,8 @@
 
 	<parent>
 		<artifactId>androidannotations-parent</artifactId>
-		<groupId>com.googlecode.androidannotations</groupId>
-		<version>2.7-SNAPSHOT</version>
+		<groupId>org.androidannotations</groupId>
+		<version>3.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>functional-test-1-5</artifactId>
@@ -13,7 +13,7 @@
 	<name>functional-test-1-5</name>
 
 	<properties>
-		<spring-android-version>1.0.0.M2</spring-android-version>
+		<spring-android-version>1.0.0.RELEASE</spring-android-version>
 		<jackson-version>1.7.2</jackson-version>
 		<simple-version>2.4.1</simple-version>
 		<android-rome-version>1.0.0-r2</android-rome-version>
@@ -21,14 +21,13 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.googlecode.androidannotations</groupId>
+			<groupId>org.androidannotations</groupId>
 			<artifactId>androidannotations</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.androidannotations</groupId>
-			<artifactId>androidannotations</artifactId>
-			<classifier>api</classifier>
+			<groupId>org.androidannotations</groupId>
+			<artifactId>androidannotations-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
@@ -80,12 +79,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<!-- Using ROME for RSS and ATOM feeds -->
-			<groupId>com.google.code.android-rome-feed-reader</groupId>
-			<artifactId>android-rome-feed-reader</artifactId>
-			<version>${android-rome-version}</version>
-		</dependency>
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
@@ -130,35 +123,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<!-- For developing with Android ROME Feed Reader -->
-		<repository>
-			<id>android-rome-feed-reader-repository</id>
-			<name>Android ROME Feed Reader Repository</name>
-			<url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
-		</repository>
-		<!-- For testing against latest Spring snapshots -->
-		<repository>
-			<id>org.springframework.maven.snapshot</id>
-			<name>Spring Maven Snapshot Repository</name>
-			<url>http://maven.springframework.org/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<!-- For developing against latest Spring milestones -->
-		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 </project>
