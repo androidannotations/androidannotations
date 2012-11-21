@@ -10,7 +10,9 @@ import java.util.TreeSet;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -29,6 +31,10 @@ import com.sun.codemodel.JPackage;
 public abstract class GetPostProcessor extends MethodProcessor {
 
 	protected EBeanHolder holder;
+
+	/**
+	 * Will be use to generate specific classes
+	 */
 	protected JPackage restClientPackage;
 
 	public GetPostProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
@@ -71,21 +77,23 @@ public abstract class GetPostProcessor extends MethodProcessor {
 	 */
 	public void retrieveReturnAndExpectedClasses(TypeMirror returnType, MethodProcessorHolder processorHolder) {
 		String returnTypeString = returnType.toString();
+
 		JClass expectedClass = null;
+		JClass returnClass = holder.refClass(returnTypeString);
 
 		if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 			DeclaredType declaredReturnType = (DeclaredType) returnType;
 			if (declaredReturnType.getTypeArguments().size() > 0) {
 				expectedClass = resolveExpectedClass(declaredReturnType.getTypeArguments().get(0));
 			} else {
-				expectedClass = holder.parseClass(CanonicalNameConstants.RESPONSE_ENTITY);
+				expectedClass = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY);
 			}
 		} else {
 			expectedClass = resolveExpectedClass(returnType);
 		}
 
 		processorHolder.setExpectedClass(expectedClass);
-		processorHolder.setMethodReturnClass(holder.parseClass(returnTypeString));
+		processorHolder.setMethodReturnClass(returnClass);
 	}
 
 	/**
@@ -115,24 +123,30 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		// is a class or an interface
 		if (expectedType.getKind() == TypeKind.DECLARED) {
 			DeclaredType declaredType = (DeclaredType) expectedType;
+
 			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 
-			// is NOT a generics
-			if (typeArguments.size() == 0) {
-				return holder.parseClass(expectedType.toString());
+			// is NOT a generics, return directly
+			if (typeArguments.isEmpty()) {
+				return holder.refClass(declaredType.toString());
 			}
 
-			// is a generics
-			JClass baseClass = holder.parseClass(declaredType.toString()).erasure();
-			JClass decoratedExpectedClass = retrieveDecoratedExpectedClass(declaredType, baseClass);
-			return decoratedExpectedClass == null ? baseClass : decoratedExpectedClass;
+			// is a generics, must generate a new super class
+			TypeElement declaredElement = (TypeElement) declaredType.asElement();
+
+			JClass baseClass = holder.refClass(declaredType.toString()).erasure();
+			JClass decoratedExpectedClass = retrieveDecoratedExpectedClass(declaredType, declaredElement);
+			if (decoratedExpectedClass == null) {
+				decoratedExpectedClass = baseClass;
+			}
+			return decoratedExpectedClass;
 		} else if (expectedType.getKind() == TypeKind.ARRAY) {
 			ArrayType arrayType = (ArrayType) expectedType;
 			return resolveExpectedClass(arrayType.getComponentType()).array();
 		}
 
-		// is not a class nor an interface
-		return holder.parseClass(expectedType.toString());
+		// is not a class nor an interface, return directly
+		return holder.refClass(expectedType.toString());
 	}
 
 	/**
@@ -144,28 +158,31 @@ public abstract class GetPostProcessor extends MethodProcessor {
 	 * @param currentClass
 	 * @return
 	 */
-	private JClass retrieveDecoratedExpectedClass(DeclaredType declaredType, JClass currentClass) {
+	private JClass retrieveDecoratedExpectedClass(DeclaredType declaredType, TypeElement typeElement) {
+		String classTypeBaseName = typeElement.toString();
+
 		// Looking for basic java.util interfaces to set a default
 		// implementation
 		String decoratedClassName = null;
-		if (currentClass.isInterface() || currentClass.isAbstract()) {
-			if (currentClass.fullName().equals(CanonicalNameConstants.MAP)) {
+
+		if (typeElement.getKind() == ElementKind.INTERFACE) {
+			if (classTypeBaseName.equals(CanonicalNameConstants.MAP)) {
 				decoratedClassName = LinkedHashMap.class.getCanonicalName();
-			} else if (currentClass.fullName().equals(CanonicalNameConstants.SET)) {
+			} else if (classTypeBaseName.equals(CanonicalNameConstants.SET)) {
 				decoratedClassName = TreeSet.class.getCanonicalName();
-			} else if (currentClass.fullName().equals(CanonicalNameConstants.LIST)) {
+			} else if (classTypeBaseName.equals(CanonicalNameConstants.LIST)) {
 				decoratedClassName = ArrayList.class.getCanonicalName();
-			} else if (currentClass.fullName().equals(CanonicalNameConstants.COLLECTION)) {
+			} else if (classTypeBaseName.equals(CanonicalNameConstants.COLLECTION)) {
 				decoratedClassName = ArrayList.class.getCanonicalName();
 			}
 		} else {
-			decoratedClassName = currentClass.erasure().fullName();
+			decoratedClassName = typeElement.getQualifiedName().toString();
 		}
 
 		if (decoratedClassName != null) {
 			// Configure the super class of the final decorated class
 			String decoratedClassNameSuffix = "";
-			JClass decoratedSuperClass = holder.parseClass(decoratedClassName);
+			JClass decoratedSuperClass = holder.refClass(decoratedClassName);
 			for (TypeMirror typeArgument : declaredType.getTypeArguments()) {
 				String typeArgumentName = typeArgument.toString();
 				if (typeArgument instanceof WildcardType) {
@@ -178,12 +195,12 @@ public abstract class GetPostProcessor extends MethodProcessor {
 						typeArgumentName = CanonicalNameConstants.OBJECT;
 					}
 				}
-				JClass narrowJClass = holder.parseClass(typeArgumentName);
+				JClass narrowJClass = holder.refClass(typeArgumentName);
 				decoratedSuperClass = decoratedSuperClass.narrow(narrowJClass);
 				decoratedClassNameSuffix += plainName(narrowJClass);
 			}
 
-			String decoratedFinalClassName = currentClass.name() + "_" + decoratedClassNameSuffix;
+			String decoratedFinalClassName = classTypeBaseName + "_" + decoratedClassNameSuffix;
 			decoratedFinalClassName = decoratedFinalClassName.replaceAll("\\[\\]", "s");
 			decoratedFinalClassName = restClientPackage.name() + "." + decoratedFinalClassName;
 			JDefinedClass decoratedJClass = holder.definedClass(decoratedFinalClassName);
@@ -194,9 +211,10 @@ public abstract class GetPostProcessor extends MethodProcessor {
 
 		// Try to find the superclass and make a recursive call to the this
 		// method
-		JClass enclosingSuperJClass = currentClass._extends();
-		if (enclosingSuperJClass != null) {
-			return retrieveDecoratedExpectedClass(declaredType, enclosingSuperJClass);
+		TypeMirror enclosingSuperJClass = typeElement.getSuperclass();
+		if (enclosingSuperJClass != null && enclosingSuperJClass.getKind() == TypeKind.DECLARED) {
+			DeclaredType declaredEnclosingSuperJClass = (DeclaredType) enclosingSuperJClass;
+			return retrieveDecoratedExpectedClass(declaredType, (TypeElement) declaredEnclosingSuperJClass.asElement());
 		}
 
 		// Falling back to the current enclosingJClass if Class can't be found

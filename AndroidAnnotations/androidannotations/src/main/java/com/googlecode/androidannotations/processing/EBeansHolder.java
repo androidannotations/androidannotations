@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -30,7 +32,6 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JType;
 
 public class EBeansHolder {
 
@@ -140,15 +141,12 @@ public class EBeansHolder {
 
 	private final JCodeModel codeModel;
 
-	private final BufferedJCodeModel bufferedCodeModel;
-
 	private final Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
 
 	private final Classes classes;
 
 	public EBeansHolder(JCodeModel codeModel) {
 		this.codeModel = codeModel;
-		bufferedCodeModel = new BufferedJCodeModel(this, codeModel);
 		classes = new Classes();
 	}
 
@@ -162,67 +160,17 @@ public class EBeansHolder {
 		return eBeanHolders.get(element);
 	}
 
-	public JClass refClass(String fullyQualifiedClassName) {
-
-		int arrayCounter = 0;
-		while (fullyQualifiedClassName.endsWith("[]")) {
-			arrayCounter++;
-			fullyQualifiedClassName = fullyQualifiedClassName.substring(0, fullyQualifiedClassName.length() - 2);
-		}
-
-		JClass refClass = uniqueRefClass(fullyQualifiedClassName);
-
-		for (int i = 0; i < arrayCounter; i++) {
-			refClass = refClass.array();
-		}
-
-		return refClass;
-	}
-
-	/**
-	 * Return a unique JClass reference by using {@link JCodeModel#ref(String)}
-	 * and keeping a buffer.
-	 * 
-	 * @param fullyQualifiedClassName
-	 * @return
-	 */
-	JClass uniqueRefClass(String fullyQualifiedClassName) {
-		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
-		if (refClass == null) {
-			refClass = codeModel.ref(fullyQualifiedClassName);
-			loadedClasses.put(fullyQualifiedClassName, refClass);
-		}
-		return refClass;
-	}
-
-	/**
-	 * Parse the fully qualified class name and return a JClass instance. This
-	 * method support both generics (it'll return a {@link JNarrowedClass}) and
-	 * primitives (it'll autobox it to a {@link JClass})
-	 * 
-	 * @param fullyQualifiedClassName
-	 * @return
-	 */
-	public JClass parseClass(String fullyQualifiedClassName) {
-		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
-		if (refClass == null) {
-			try {
-				JType jType = bufferedCodeModel.parseType(fullyQualifiedClassName);
-				if (jType.isPrimitive()) {
-					refClass = jType.boxify();
-				}
-				refClass = (JClass) jType;
-			} catch (Throwable e) {
-				refClass = refClass(fullyQualifiedClassName);
-			}
-
-			loadedClasses.put(fullyQualifiedClassName, refClass);
-		}
-		return refClass;
-	}
-
 	public JClass refClass(Class<?> clazz) {
 		return codeModel.ref(clazz);
+	}
+
+	public JClass refClass(String fullyQualifiedClassName) {
+		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
+		if (refClass == null) {
+			refClass = new TypeNameParser(fullyQualifiedClassName).parseTypeName();
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+		return refClass;
 	}
 
 	public JDefinedClass definedClass(String fullyQualifiedClassName) {
@@ -236,6 +184,138 @@ public class EBeansHolder {
 			loadedClasses.put(fullyQualifiedClassName, refClass);
 		}
 		return refClass;
+	}
+
+	/**
+	 * Return a unique JClass reference by using {@link JCodeModel#ref(String)}
+	 * and keeping a buffer.
+	 * 
+	 * @param fullyQualifiedClassName
+	 * @return
+	 */
+	JClass uniqueClass(String fullyQualifiedClassName) {
+		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
+		if (refClass == null) {
+			refClass = codeModel.directClass(fullyQualifiedClassName);
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+		return refClass;
+	}
+
+	private final class TypeNameParser {
+		private final String s;
+		private int idx;
+
+		public TypeNameParser(String s) {
+			this.s = s;
+		}
+
+		/**
+		 * Parses a type name token T (which can be potentially of the form
+		 * Tr&ly;T1,T2,...>, or "? extends/super T".)
+		 * 
+		 * @return the index of the character next to T.
+		 */
+		JClass parseTypeName() {
+			int start = idx;
+
+			if (s.charAt(idx) == '?') {
+				// wildcard
+				idx++;
+				ws();
+				String head = s.substring(idx);
+				if (head.startsWith("extends")) {
+					idx += 7;
+					ws();
+					return parseTypeName().wildcard();
+				} else if (head.startsWith("super")) {
+					throw new UnsupportedOperationException("? super T not implemented");
+				} else {
+					// not supported
+					throw new IllegalArgumentException("only extends/super can follow ?, but found " + s.substring(idx));
+				}
+			}
+
+			while (idx < s.length()) {
+				char ch = s.charAt(idx);
+				if (Character.isJavaIdentifierStart(ch) || Character.isJavaIdentifierPart(ch) || ch == '.') {
+					idx++;
+				} else {
+					break;
+				}
+			}
+
+			JClass clazz = uniqueClass(s.substring(start, idx));
+
+			return parseSuffix(clazz);
+		}
+
+		/**
+		 * Parses additional left-associative suffixes, like type arguments and
+		 * array specifiers.
+		 */
+		private JClass parseSuffix(JClass clazz) {
+			if (idx == s.length()) {
+				return clazz; // hit EOL
+			}
+
+			char ch = s.charAt(idx);
+
+			if (ch == '<') {
+				return parseSuffix(parseArguments(clazz));
+			}
+
+			if (ch == '[') {
+				if (s.charAt(idx + 1) == ']') {
+					idx += 2;
+					return parseSuffix(clazz.array());
+				}
+				throw new IllegalArgumentException("Expected ']' but found " + s.substring(idx + 1));
+			}
+
+			return clazz;
+		}
+
+		/**
+		 * Skips whitespaces
+		 */
+		private void ws() {
+			while (Character.isWhitespace(s.charAt(idx)) && idx < s.length()) {
+				idx++;
+			}
+		}
+
+		/**
+		 * Parses '&lt;T1,T2,...,Tn>'
+		 * 
+		 * @return the index of the character next to '>'
+		 */
+		private JClass parseArguments(JClass rawType) {
+			if (s.charAt(idx) != '<') {
+				throw new IllegalArgumentException();
+			}
+			idx++;
+
+			List<JClass> args = new ArrayList<JClass>();
+
+			while (true) {
+				args.add(parseTypeName());
+				if (idx == s.length()) {
+					throw new IllegalArgumentException("Missing '>' in " + s);
+				}
+				char ch = s.charAt(idx);
+				if (ch == '>') {
+					idx++;
+					return rawType.narrow(args.toArray(new JClass[args.size()]));
+				}
+
+				if (ch != ',') {
+					throw new IllegalArgumentException(s);
+				}
+				idx++;
+			}
+
+		}
 	}
 
 	public JCodeModel codeModel() {

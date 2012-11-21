@@ -107,10 +107,6 @@ public class EBeanHolder {
 		return eBeansHolder.codeModel();
 	}
 
-	public JClass parseClass(String fullyQualifiedClassName) {
-		return eBeansHolder.parseClass(fullyQualifiedClassName);
-	}
-
 	public JClass refClass(String fullyQualifiedClassName) {
 		return eBeansHolder.refClass(fullyQualifiedClassName);
 	}
