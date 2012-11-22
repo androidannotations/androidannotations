@@ -1,10 +1,20 @@
+# Maven
 target
+
+#Android
 gen
+bin
+
+# Eclipse
 .classpath
 .apt_generated
+.factorypath
+.settings
 .project
 org.eclipse.jdt.core.prefs
 org.maven.ide.eclipse.prefs
+
+# Idea
 *.ipr
 *.iws
 *.iml
