@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Activity classes that must have custom title layout.
+ * Use it on activities to set a custom title layout.
  *
  * The activity must be annotated with {@link EActivity}.
  *

@@ -18,14 +18,22 @@ package org.androidannotations.processing;
 import org.androidannotations.annotations.CustomTitle;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import java.lang.annotation.Annotation;
 
-import static com.sun.codemodel.JExpr.lit;
-
-
 public class CustomTitleProcessor implements DecoratingElementProcessor {
+    private final AnnotationHelper annotationHelper;
+    private final IRClass rClass;
+
+    public CustomTitleProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+        annotationHelper = new AnnotationHelper(processingEnv);
+        this.rClass = rClass;
+    }
 
     @Override
     public Class<? extends Annotation> getTarget() {
@@ -34,10 +42,10 @@ public class CustomTitleProcessor implements DecoratingElementProcessor {
 
     @Override
     public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
-        CustomTitle annotation = element.getAnnotation(CustomTitle.class);
         JFieldRef customTitleFeature = holder.classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
 
         holder.init.body().invoke("requestWindowFeature").arg(customTitleFeature);
-        holder.afterSetContentView.body().add(holder.contextRef.invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(lit(annotation.value())));
+        JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(holder, element, CustomTitle.class, rClass.get(Res.LAYOUT), false).get(0);
+        holder.afterSetContentView.body().add(holder.contextRef.invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(contentViewId));
     }
 }
