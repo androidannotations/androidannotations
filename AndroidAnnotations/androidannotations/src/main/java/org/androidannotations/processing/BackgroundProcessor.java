@@ -23,6 +23,7 @@ import javax.lang.model.element.ExecutableElement;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.helper.APTCodeModelHelper;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -44,6 +45,8 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws JClassAlreadyExistsException {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
+
+		holder.ensureApiClassIsGenerated(element, BackgroundExecutor.class);
 
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 

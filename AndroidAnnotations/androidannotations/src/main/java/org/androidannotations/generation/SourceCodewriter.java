@@ -17,6 +17,7 @@ package org.androidannotations.generation;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.processing.Filer;
@@ -35,7 +36,7 @@ public class SourceCodewriter extends CodeWriter {
 	private final Messager message;
 
 	private static final VoidOutputStream VOID_OUTPUT_STREAM = new VoidOutputStream();
-	private Map<String, Element> originatingElementsByGeneratedClassQualifiedName;
+	private Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName;
 
 	private static class VoidOutputStream extends OutputStream {
 		@Override
@@ -44,7 +45,7 @@ public class SourceCodewriter extends CodeWriter {
 		}
 	}
 
-	public SourceCodewriter(Filer filer, Messager message, Map<String, Element> originatingElementsByGeneratedClassQualifiedName) {
+	public SourceCodewriter(Filer filer, Messager message, Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName) {
 		this.filer = filer;
 		this.message = message;
 		this.originatingElementsByGeneratedClassQualifiedName = originatingElementsByGeneratedClassQualifiedName;
@@ -55,12 +56,12 @@ public class SourceCodewriter extends CodeWriter {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
 		message.printMessage(Kind.NOTE, "Generating source file: " + qualifiedClassName);
 
-		Element originatingElement = originatingElementsByGeneratedClassQualifiedName.get(qualifiedClassName);
+		List<Element> originatingElements = originatingElementsByGeneratedClassQualifiedName.get(qualifiedClassName);
 
 		try {
 			JavaFileObject sourceFile;
-			if (originatingElement != null) {
-				sourceFile = filer.createSourceFile(qualifiedClassName, originatingElement);
+			if (originatingElements != null) {
+				sourceFile = filer.createSourceFile(qualifiedClassName, originatingElements.toArray(new Element[originatingElements.size()]));
 			} else {
 				message.printMessage(Kind.NOTE, "Generating class with no originating element: " + qualifiedClassName);
 				sourceFile = filer.createSourceFile(qualifiedClassName);

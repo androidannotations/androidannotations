@@ -20,12 +20,17 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Element;
 
 import org.androidannotations.helper.CanonicalNameConstants;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -144,7 +149,9 @@ public class EBeansHolder {
 
 	private final Classes classes;
 
-	private final Map<String, Element> originatingElementsByGeneratedClassQualifiedName = new HashMap<String, Element>();
+	private final Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName = new HashMap<String, List<Element>>();
+
+	private final Set<Class<?>> apiClassesToGenerate = new HashSet<Class<?>>();
 
 	public EBeansHolder(JCodeModel codeModel) {
 		this.codeModel = codeModel;
@@ -161,11 +168,21 @@ public class EBeansHolder {
 	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
 
 		String qualifiedName = generatedClass.fullName();
-		originatingElementsByGeneratedClassQualifiedName.put(qualifiedName, element);
+
+		addAsOriginatingElement(qualifiedName, element);
 
 		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation, generatedClass);
 		eBeanHolders.put(element, activityHolder);
 		return activityHolder;
+	}
+
+	private void addAsOriginatingElement(String qualifiedName, Element element) {
+		List<Element> originatingElements = originatingElementsByGeneratedClassQualifiedName.get(qualifiedName);
+		if (originatingElements == null) {
+			originatingElements = new ArrayList<Element>();
+			originatingElementsByGeneratedClassQualifiedName.put(qualifiedName, originatingElements);
+		}
+		originatingElements.add(element);
 	}
 
 	public EBeanHolder getEBeanHolder(Element element) {
@@ -206,8 +223,17 @@ public class EBeansHolder {
 		return classes;
 	}
 
-	public Map<String, Element> getOriginatingElementsByGeneratedClassQualifiedName() {
+	public Map<String, List<Element>> getOriginatingElementsByGeneratedClassQualifiedName() {
 		return originatingElementsByGeneratedClassQualifiedName;
+	}
+
+	public Set<Class<?>> getApiClassesToGenerate() {
+		return apiClassesToGenerate;
+	}
+
+	public void ensureApiClassIsGenerated(Element originatingElement, Class<?> apiClass) {
+		addAsOriginatingElement(apiClass.getCanonicalName(), originatingElement);
+		apiClassesToGenerate.add(apiClass);
 	}
 
 }

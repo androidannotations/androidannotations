@@ -15,11 +15,11 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -167,7 +168,11 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 		setContentViewMethod(setContentViewMethodName, codeModel, holder, new JType[] { holder.classes().VIEW }, new String[] { "view" });
 
 		// Handling onBackPressed
-		if (hasOnBackPressedMethod(typeElement)) {
+		Element declaredOnBackPressedMethod = getOnBackPressedMethod(typeElement);
+		if (declaredOnBackPressedMethod != null) {
+
+			eBeansHolder.ensureApiClassIsGenerated(declaredOnBackPressedMethod, SdkVersionHelper.class);
+
 			JMethod onKeyDownMethod = holder.generatedClass.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
 			onKeyDownMethod.annotate(Override.class);
 			JVar keyCodeParam = onKeyDownMethod.param(codeModel.INT, "keyCode");
@@ -215,7 +220,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 		body.invoke(holder.afterSetContentView);
 	}
 
-	private boolean hasOnBackPressedMethod(TypeElement activityElement) {
+	private ExecutableElement getOnBackPressedMethod(TypeElement activityElement) {
 
 		List<? extends Element> allMembers = annotationHelper.getElementUtils().getAllMembers(activityElement);
 
@@ -223,10 +228,10 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		for (ExecutableElement activityInheritedMethod : activityInheritedMethods) {
 			if (isCustomOnBackPressedMethod(activityInheritedMethod)) {
-				return true;
+				return activityInheritedMethod;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	private boolean isCustomOnBackPressedMethod(ExecutableElement method) {

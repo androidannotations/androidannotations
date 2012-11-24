@@ -28,17 +28,25 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
+
 import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
 
 	public static class ProcessResult {
-		public final JCodeModel codeModel;
-		public final Map<String, Element> originatingElementsByGeneratedClassQualifiedName;
 
-		public ProcessResult(JCodeModel codeModel, Map<String, Element> originatingElementsByGeneratedClassQualifiedName) {
+		public final JCodeModel codeModel;
+		public final Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName;
+		public final Set<Class<?>> apiClassesToGenerate;
+
+		public ProcessResult(//
+				JCodeModel codeModel, //
+				Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName, //
+				Set<Class<?>> apiClassesToGenerate) {
+
 			this.codeModel = codeModel;
 			this.originatingElementsByGeneratedClassQualifiedName = originatingElementsByGeneratedClassQualifiedName;
+			this.apiClassesToGenerate = apiClassesToGenerate;
 		}
 	}
 
@@ -89,7 +97,6 @@ public class ModelProcessor {
 				if (annotatedElement instanceof TypeElement) {
 					enclosingElement = annotatedElement;
 				} else {
-
 					enclosingElement = annotatedElement.getEnclosingElement();
 				}
 
@@ -120,7 +127,10 @@ public class ModelProcessor {
 			}
 		}
 
-		return new ProcessResult(codeModel, eBeansHolder.getOriginatingElementsByGeneratedClassQualifiedName());
+		return new ProcessResult(//
+				codeModel, //
+				eBeansHolder.getOriginatingElementsByGeneratedClassQualifiedName(), //
+				eBeansHolder.getApiClassesToGenerate());
 	}
 
 	private boolean isAbstractClass(Element annotatedElement) {

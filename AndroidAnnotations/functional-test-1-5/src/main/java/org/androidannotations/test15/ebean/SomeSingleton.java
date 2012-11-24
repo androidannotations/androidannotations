@@ -15,14 +15,13 @@
  */
 package org.androidannotations.test15.ebean;
 
-import static org.androidannotations.api.Scope.Singleton;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EBean.Scope;
+import org.androidannotations.annotations.RootContext;
 
 import android.content.Context;
 
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.RootContext;
-
-@EBean(scope = Singleton)
+@EBean(scope = Scope.Singleton)
 public class SomeSingleton {
 	
 	@RootContext

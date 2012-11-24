@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
@@ -23,6 +22,7 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -33,9 +33,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.EBean;
-import org.androidannotations.api.Scope;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -142,8 +142,8 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 		}
 
 		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
-		Scope eBeanScope = eBeanAnnotation.scope();
-		boolean hasSingletonScope = eBeanScope == Scope.Singleton;
+		EBean.Scope eBeanScope = eBeanAnnotation.scope();
+		boolean hasSingletonScope = eBeanScope == EBean.Scope.Singleton;
 
 		{
 			// Factory method
