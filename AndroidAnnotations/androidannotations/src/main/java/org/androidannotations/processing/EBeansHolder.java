@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.helper.CanonicalNameConstants;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -182,8 +183,12 @@ public class EBeansHolder {
 	public JClass refClass(String fullyQualifiedClassName) {
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
 		if (refClass == null) {
-			refClass = new TypeNameParser(fullyQualifiedClassName).parseTypeName();
-			loadedClasses.put(fullyQualifiedClassName, refClass);
+			if (fullyQualifiedClassName.endsWith("[]")) {
+				return refClass(fullyQualifiedClassName.substring(0, fullyQualifiedClassName.length() - 2)).array();
+			} else {
+				refClass = new TypeNameParser(fullyQualifiedClassName).parseTypeName();
+				loadedClasses.put(fullyQualifiedClassName, refClass);
+			}
 		}
 		return refClass;
 	}
@@ -233,35 +238,44 @@ public class EBeansHolder {
 		 */
 		JClass parseTypeName() {
 			int start = idx;
+			String typeName = null;
 
+			// wildcard
 			if (s.charAt(idx) == '?') {
-				// wildcard
 				idx++;
 				ws();
-				String head = s.substring(idx);
-				if (head.startsWith("extends")) {
-					idx += 7;
-					ws();
-					return parseTypeName().wildcard();
-				} else if (head.startsWith("super")) {
-					throw new UnsupportedOperationException("? super T not implemented");
-				} else {
-					// not supported
-					throw new IllegalArgumentException("only extends/super can follow ?, but found " + s.substring(idx));
-				}
-			}
 
-			while (idx < s.length()) {
+				// Handle simple '?'
 				char ch = s.charAt(idx);
-				if (Character.isJavaIdentifierStart(ch) || Character.isJavaIdentifierPart(ch) || ch == '.') {
-					idx++;
-				} else {
-					break;
+				if (ch == '>' || ch == ',') {
+					return refClass(Object.class).wildcard();
 				}
+			} else {
+				while (idx < s.length()) {
+					char ch = s.charAt(idx);
+					if (Character.isJavaIdentifierStart(ch) || Character.isJavaIdentifierPart(ch) || ch == '.') {
+						idx++;
+					} else {
+						break;
+					}
+				}
+				typeName = s.substring(start, idx);
 			}
 
-			JClass clazz = uniqueClass(s.substring(start, idx));
+			ws();
+			String head = s.substring(idx);
+			if (head.startsWith("extends")) {
+				idx += 7;
+				ws();
+				if (typeName != null) {
+					throw new UnsupportedOperationException("T extends MyObject not implemented (" + s + ")");
+				}
+				return parseTypeName().wildcard();
+			} else if (head.startsWith("super")) {
+				throw new UnsupportedOperationException("? super MyObject not implemented (" + s + ")");
+			}
 
+			JClass clazz = uniqueClass(typeName);
 			return parseSuffix(clazz);
 		}
 
@@ -295,7 +309,7 @@ public class EBeansHolder {
 		 * Skips whitespaces
 		 */
 		private void ws() {
-			while (Character.isWhitespace(s.charAt(idx)) && idx < s.length()) {
+			while (idx < s.length() && Character.isWhitespace(s.charAt(idx))) {
 				idx++;
 			}
 		}
@@ -310,6 +324,7 @@ public class EBeansHolder {
 				throw new IllegalArgumentException();
 			}
 			idx++;
+			ws();
 
 			List<JClass> args = new ArrayList<JClass>();
 
@@ -321,6 +336,7 @@ public class EBeansHolder {
 				char ch = s.charAt(idx);
 				if (ch == '>') {
 					idx++;
+					ws();
 					return rawType.narrow(args.toArray(new JClass[args.size()]));
 				}
 
@@ -328,6 +344,7 @@ public class EBeansHolder {
 					throw new IllegalArgumentException(s);
 				}
 				idx++;
+				ws();
 			}
 
 		}
