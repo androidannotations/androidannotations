@@ -42,10 +42,6 @@ public class ApiCodeGenerator {
 					apiClassStream = getClass().getClassLoader().getResourceAsStream('/' + apiClassFileName);
 				}
 
-				if (apiClassStream == null) {
-					printError("Unable to retrive api sources from processor jar. Are you using the proper processor jar ? [searching:" + apiClassFileName + "]");
-				}
-
 				List<Element> originatingElements = originatingElementsByGeneratedClassQualifiedName.get(cannonicalApiClassName);
 
 				JavaFileObject targetedClassFile;
