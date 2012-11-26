@@ -3,8 +3,6 @@ package org.androidannotations.generation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.Filer;
@@ -12,6 +10,8 @@ import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+
+import org.androidannotations.processing.OriginatingElementsHolder;
 
 public class ApiCodeGenerator {
 
@@ -25,7 +25,7 @@ public class ApiCodeGenerator {
 		this.messager = messager;
 	}
 
-	public void writeApiClasses(Set<Class<?>> apiClassesToGenerate, Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName) {
+	public void writeApiClasses(Set<Class<?>> apiClassesToGenerate, OriginatingElementsHolder originatingElementsHolder) {
 
 		for (Class<?> apiClassToGenerate : apiClassesToGenerate) {
 
@@ -42,13 +42,13 @@ public class ApiCodeGenerator {
 					apiClassStream = getClass().getClassLoader().getResourceAsStream('/' + apiClassFileName);
 				}
 
-				List<Element> originatingElements = originatingElementsByGeneratedClassQualifiedName.get(cannonicalApiClassName);
+				Element[] originatingElements = originatingElementsHolder.getOriginatingElements(cannonicalApiClassName);
 
 				JavaFileObject targetedClassFile;
 				if (originatingElements == null) {
 					targetedClassFile = filer.createSourceFile(cannonicalApiClassName);
 				} else {
-					targetedClassFile = filer.createSourceFile(cannonicalApiClassName, originatingElements.toArray(new Element[originatingElements.size()]));
+					targetedClassFile = filer.createSourceFile(cannonicalApiClassName, originatingElements);
 				}
 
 				OutputStream classFileOutputStream = targetedClassFile.openOutputStream();

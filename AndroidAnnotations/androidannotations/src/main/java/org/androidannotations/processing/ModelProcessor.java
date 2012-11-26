@@ -18,7 +18,6 @@ package org.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -36,16 +35,16 @@ public class ModelProcessor {
 	public static class ProcessResult {
 
 		public final JCodeModel codeModel;
-		public final Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName;
+		public final OriginatingElementsHolder originatingElementsHolder;
 		public final Set<Class<?>> apiClassesToGenerate;
 
 		public ProcessResult(//
 				JCodeModel codeModel, //
-				Map<String, List<Element>> originatingElementsByGeneratedClassQualifiedName, //
+				OriginatingElementsHolder originatingElementsHolder, //
 				Set<Class<?>> apiClassesToGenerate) {
 
 			this.codeModel = codeModel;
-			this.originatingElementsByGeneratedClassQualifiedName = originatingElementsByGeneratedClassQualifiedName;
+			this.originatingElementsHolder = originatingElementsHolder;
 			this.apiClassesToGenerate = apiClassesToGenerate;
 		}
 	}
@@ -129,7 +128,7 @@ public class ModelProcessor {
 
 		return new ProcessResult(//
 				codeModel, //
-				eBeansHolder.getOriginatingElementsByGeneratedClassQualifiedName(), //
+				eBeansHolder.getOriginatingElementsHolder(), //
 				eBeansHolder.getApiClassesToGenerate());
 	}
 
