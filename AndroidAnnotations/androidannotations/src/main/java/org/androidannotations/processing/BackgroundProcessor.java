@@ -46,7 +46,7 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		holder.ensureApiClassIsGenerated(element, BackgroundExecutor.class);
+		holder.generateApiClass(element, BackgroundExecutor.class);
 
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 

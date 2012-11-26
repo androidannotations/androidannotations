@@ -97,7 +97,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		ensureApiClassGenerated(element, eBeansHolder);
+		generateApiClass(element, eBeansHolder);
 
 		TypeElement typeElement = (TypeElement) element;
 		String interfaceQualifiedName = typeElement.getQualifiedName().toString();
@@ -276,21 +276,21 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 		return getLocalClassName;
 	}
 
-	private void ensureApiClassGenerated(Element originatingElement, EBeansHolder eBeansHolder) {
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, AbstractPrefEditorField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, AbstractPrefField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, BooleanPrefEditorField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, BooleanPrefField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, EditorHelper.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, FloatPrefEditorField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, FloatPrefField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, IntPrefEditorField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, IntPrefField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, LongPrefEditorField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, LongPrefField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, SharedPreferencesCompat.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, SharedPreferencesHelper.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, StringPrefEditorField.class);
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, StringPrefField.class);
+	private void generateApiClass(Element originatingElement, EBeansHolder eBeansHolder) {
+		eBeansHolder.generateApiClass(originatingElement, AbstractPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, AbstractPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, BooleanPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, BooleanPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, EditorHelper.class);
+		eBeansHolder.generateApiClass(originatingElement, FloatPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, FloatPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, IntPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, IntPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, LongPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, LongPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, SharedPreferencesCompat.class);
+		eBeansHolder.generateApiClass(originatingElement, SharedPreferencesHelper.class);
+		eBeansHolder.generateApiClass(originatingElement, StringPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, StringPrefField.class);
 	}
 }

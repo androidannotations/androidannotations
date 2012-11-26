@@ -171,7 +171,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 		Element declaredOnBackPressedMethod = getOnBackPressedMethod(typeElement);
 		if (declaredOnBackPressedMethod != null) {
 
-			eBeansHolder.ensureApiClassIsGenerated(declaredOnBackPressedMethod, SdkVersionHelper.class);
+			eBeansHolder.generateApiClass(declaredOnBackPressedMethod, SdkVersionHelper.class);
 
 			JMethod onKeyDownMethod = holder.generatedClass.method(PUBLIC, codeModel.BOOLEAN, "onKeyDown");
 			onKeyDownMethod.annotate(Override.class);

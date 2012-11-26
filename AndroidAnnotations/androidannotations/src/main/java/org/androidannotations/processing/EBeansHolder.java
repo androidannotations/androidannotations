@@ -231,7 +231,7 @@ public class EBeansHolder {
 		return apiClassesToGenerate;
 	}
 
-	public void ensureApiClassIsGenerated(Element originatingElement, Class<?> apiClass) {
+	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
 		addAsOriginatingElement(apiClass.getCanonicalName(), originatingElement);
 		apiClassesToGenerate.add(apiClass);
 	}

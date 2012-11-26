@@ -140,8 +140,8 @@ public class EBeanHolder {
 		return eBeansHolder.refClass(clazz);
 	}
 
-	public void ensureApiClassIsGenerated(Element originatingElement, Class<?> apiClass) {
-		eBeansHolder.ensureApiClassIsGenerated(originatingElement, apiClass);
+	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
+		eBeansHolder.generateApiClass(originatingElement, apiClass);
 	}
 
 }
