@@ -33,8 +33,7 @@ public class ApiCodeGenerator {
 			try {
 
 				if (apiClassStream == null) {
-					// The processor is not executed from a Jar. In this case,
-					// we have to add a magic '/'
+					// The processor is not executed from a Jar.
 					apiClassStream = getClass().getClassLoader().getResourceAsStream('/' + apiClassFileName);
 				}
 
