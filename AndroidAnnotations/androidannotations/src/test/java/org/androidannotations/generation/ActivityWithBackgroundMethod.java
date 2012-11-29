@@ -13,21 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotations.sharedpreferences;
+package org.androidannotations.generation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
 
-/**
- * Injects a {@link SharedPref}
- * 
- * The field MUST be of a type that is generated using {@link SharedPref} and
- * therefore extends {@link SharedPreferencesHelper}.
- * 
- */
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
-public @interface Pref {
+import android.app.Activity;
+
+@EActivity
+public class ActivityWithBackgroundMethod extends Activity {
+
+	@Background
+	public void executingOnBackground() {
+
+	}
+
 }
