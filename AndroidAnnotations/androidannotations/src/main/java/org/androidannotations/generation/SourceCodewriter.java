@@ -25,7 +25,7 @@ import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 
-import org.androidannotations.processing.OriginatingElementsHolder;
+import org.androidannotations.processing.OriginatingElements;
 
 import com.sun.codemodel.CodeWriter;
 import com.sun.codemodel.JPackage;
@@ -36,7 +36,7 @@ public class SourceCodewriter extends CodeWriter {
 	private final Messager message;
 
 	private static final VoidOutputStream VOID_OUTPUT_STREAM = new VoidOutputStream();
-	private OriginatingElementsHolder originatingElementsHolder;
+	private OriginatingElements originatingElements;
 
 	private static class VoidOutputStream extends OutputStream {
 		@Override
@@ -45,10 +45,10 @@ public class SourceCodewriter extends CodeWriter {
 		}
 	}
 
-	public SourceCodewriter(Filer filer, Messager message, OriginatingElementsHolder originatingElementsHolder) {
+	public SourceCodewriter(Filer filer, Messager message, OriginatingElements originatingElements) {
 		this.filer = filer;
 		this.message = message;
-		this.originatingElementsHolder = originatingElementsHolder;
+		this.originatingElements = originatingElements;
 	}
 
 	@Override
@@ -56,16 +56,16 @@ public class SourceCodewriter extends CodeWriter {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
 		message.printMessage(Kind.NOTE, "Generating source file: " + qualifiedClassName);
 
-		Element[] originatingElements = originatingElementsHolder.getOriginatingElements(qualifiedClassName);
+		Element[] classOriginatingElements = originatingElements.getClassOriginatingElements(qualifiedClassName);
 
 		try {
 			JavaFileObject sourceFile;
 
-			if (originatingElements.length == 0) {
+			if (classOriginatingElements.length == 0) {
 				message.printMessage(Kind.NOTE, "Generating class with no originating element: " + qualifiedClassName);
 			}
 
-			sourceFile = filer.createSourceFile(qualifiedClassName, originatingElements);
+			sourceFile = filer.createSourceFile(qualifiedClassName, classOriginatingElements);
 
 			return sourceFile.openOutputStream();
 		} catch (FilerException e) {

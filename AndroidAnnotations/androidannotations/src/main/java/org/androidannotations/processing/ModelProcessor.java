@@ -35,16 +35,16 @@ public class ModelProcessor {
 	public static class ProcessResult {
 
 		public final JCodeModel codeModel;
-		public final OriginatingElementsHolder originatingElementsHolder;
+		public final OriginatingElements originatingElements;
 		public final Set<Class<?>> apiClassesToGenerate;
 
 		public ProcessResult(//
 				JCodeModel codeModel, //
-				OriginatingElementsHolder originatingElementsHolder, //
+				OriginatingElements originatingElements, //
 				Set<Class<?>> apiClassesToGenerate) {
 
 			this.codeModel = codeModel;
-			this.originatingElementsHolder = originatingElementsHolder;
+			this.originatingElements = originatingElements;
 			this.apiClassesToGenerate = apiClassesToGenerate;
 		}
 	}
@@ -128,7 +128,7 @@ public class ModelProcessor {
 
 		return new ProcessResult(//
 				codeModel, //
-				eBeansHolder.getOriginatingElementsHolder(), //
+				eBeansHolder.getOriginatingElements(), //
 				eBeansHolder.getApiClassesToGenerate());
 	}
 
