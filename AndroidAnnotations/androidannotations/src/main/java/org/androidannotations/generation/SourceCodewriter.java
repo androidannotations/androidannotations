@@ -17,7 +17,6 @@ package org.androidannotations.generation;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Map;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
@@ -25,6 +24,8 @@ import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
+
+import org.androidannotations.processing.OriginatingElements;
 
 import com.sun.codemodel.CodeWriter;
 import com.sun.codemodel.JPackage;
@@ -35,7 +36,7 @@ public class SourceCodewriter extends CodeWriter {
 	private final Messager message;
 
 	private static final VoidOutputStream VOID_OUTPUT_STREAM = new VoidOutputStream();
-	private Map<String, Element> originatingElementsByGeneratedClassQualifiedName;
+	private OriginatingElements originatingElements;
 
 	private static class VoidOutputStream extends OutputStream {
 		@Override
@@ -44,10 +45,10 @@ public class SourceCodewriter extends CodeWriter {
 		}
 	}
 
-	public SourceCodewriter(Filer filer, Messager message, Map<String, Element> originatingElementsByGeneratedClassQualifiedName) {
+	public SourceCodewriter(Filer filer, Messager message, OriginatingElements originatingElements) {
 		this.filer = filer;
 		this.message = message;
-		this.originatingElementsByGeneratedClassQualifiedName = originatingElementsByGeneratedClassQualifiedName;
+		this.originatingElements = originatingElements;
 	}
 
 	@Override
@@ -55,16 +56,16 @@ public class SourceCodewriter extends CodeWriter {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
 		message.printMessage(Kind.NOTE, "Generating source file: " + qualifiedClassName);
 
-		Element originatingElement = originatingElementsByGeneratedClassQualifiedName.get(qualifiedClassName);
+		Element[] classOriginatingElements = originatingElements.getClassOriginatingElements(qualifiedClassName);
 
 		try {
 			JavaFileObject sourceFile;
-			if (originatingElement != null) {
-				sourceFile = filer.createSourceFile(qualifiedClassName, originatingElement);
-			} else {
+
+			if (classOriginatingElements.length == 0) {
 				message.printMessage(Kind.NOTE, "Generating class with no originating element: " + qualifiedClassName);
-				sourceFile = filer.createSourceFile(qualifiedClassName);
 			}
+
+			sourceFile = filer.createSourceFile(qualifiedClassName, classOriginatingElements);
 
 			return sourceFile.openOutputStream();
 		} catch (FilerException e) {

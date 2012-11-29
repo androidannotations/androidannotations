@@ -25,7 +25,7 @@ import android.content.SharedPreferences.Editor;
  * Reflection utils to call SharedPreferences$Editor.apply when possible,
  * falling back to commit when apply isn't available.
  */
-abstract class SharedPreferencesCompat {
+public abstract class SharedPreferencesCompat {
 
 	private SharedPreferencesCompat() {
 	}
