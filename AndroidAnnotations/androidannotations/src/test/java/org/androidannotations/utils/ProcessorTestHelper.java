@@ -68,6 +68,31 @@ public class ProcessorTestHelper {
 		}
 	}
 
+	public static void assertClassSourcesGeneratedToOutput(Class<?> clazz) {
+
+		String canonicalName = clazz.getCanonicalName();
+		String filePath = canonicalName.replace(".", "/").concat(".java");
+
+		File generatedSourcesDir = new File(OUTPUT_DIRECTORY);
+		File generatedSourceFile = new File(generatedSourcesDir, filePath);
+
+		File sourcesDir = new File(MAIN_SOURCE_FOLDER);
+		File expectedResult = new File(sourcesDir, filePath);
+
+		assertOutput(expectedResult, generatedSourceFile);
+	}
+
+	public static void assertClassSourcesNotGeneratedToOutput(Class<?> clazz) {
+
+		String canonicalName = clazz.getCanonicalName();
+		String filePath = canonicalName.replace(".", "/").concat(".java");
+
+		File generatedSourcesDir = new File(OUTPUT_DIRECTORY);
+		File output = new File(generatedSourcesDir, filePath);
+
+		assertFalse(output.exists());
+	}
+
 	public static void assertCompilationSuccessful(CompileResult result) {
 		for (Diagnostic<? extends JavaFileObject> diagnostic : result.diagnostics) {
 			assertFalse("Expected no errors, found " + diagnostic, diagnostic.getKind().equals(Kind.ERROR));
@@ -244,12 +269,37 @@ public class ProcessorTestHelper {
 	}
 
 	private File ensureOutputDirectory() {
-		File file = new File(OUTPUT_DIRECTORY);
-		if (!file.exists()) {
-			file.mkdirs();
+		File outputDir = new File(OUTPUT_DIRECTORY);
+		if (!outputDir.exists()) {
+			outputDir.mkdirs();
 		}
 
-		return file;
+		return outputDir;
+	}
+
+	public void ensureOutputDirectoryIsEmpty() {
+		File outputDir = new File(OUTPUT_DIRECTORY);
+
+		String[] childs = outputDir.list();
+
+		if (childs != null && childs.length > 0) {
+			deleteDirectoryRecursively(outputDir);
+			outputDir.mkdirs();
+		}
+	}
+
+	private void deleteDirectoryRecursively(File directory) {
+		File[] childs = directory.listFiles();
+		if (childs != null) {
+			for (File file : childs) {
+				if (file.isDirectory()) {
+					deleteDirectoryRecursively(file);
+				} else {
+					file.delete();
+				}
+			}
+		}
+		directory.delete();
 	}
 
 	private <T extends AnnotatedElement> void addCollection(List<File> files, Collection<T> compilationUnits) {
