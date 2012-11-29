@@ -18,31 +18,31 @@ package org.androidannotations.generation;
 import java.io.IOException;
 
 import org.androidannotations.AndroidAnnotationProcessor;
-import org.androidannotations.api.SdkVersionHelper;
+import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-public class OnBackPressedApiDependenciesTest extends AAProcessorTestHelper {
+public class OnBackgroundApiDependenciesTest extends AAProcessorTestHelper {
 
 	@Before
 	public void setup() {
-		addManifestProcessorParameter(OnBackPressedApiDependenciesTest.class);
+		addManifestProcessorParameter(OnBackgroundApiDependenciesTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 		ensureOutputDirectoryIsEmpty();
 	}
 
 	@Test
-	public void activity_with_on_back_pressed_generate_api_dependency() throws IOException {
-		CompileResult result = compileFiles(ActivityWithOnBackPressedMethod.class);
-		assertClassSourcesGeneratedToOutput(SdkVersionHelper.class);
+	public void activity_with_background_annotated_method_generate_api_dependency() throws IOException {
+		CompileResult result = compileFiles(ActivityWithBackgroundMethod.class);
+		assertClassSourcesGeneratedToOutput(BackgroundExecutor.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void activity_without_on_back_pressed_do_not_generate_api_dependency() throws IOException {
-		CompileResult result = compileFiles(ActivityWithBackgroundMethod.class);
-		assertClassSourcesNotGeneratedToOutput(SdkVersionHelper.class);
+	public void activity_without_background_annotated_method_generate_api_dependency() throws IOException {
+		CompileResult result = compileFiles(ActivityWithOnBackPressedMethod.class);
+		assertClassSourcesNotGeneratedToOutput(BackgroundExecutor.class);
 		assertCompilationSuccessful(result);
 	}
 

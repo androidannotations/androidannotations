@@ -23,7 +23,7 @@
     
     <application>
     		<activity android:name="org.androidannotations.generation.ActivityWithOnBackPressedMethod_" />
-    		<activity android:name="org.androidannotations.generation.ActivityWithoutOnBackPressedMethod_" />
+    		<activity android:name="org.androidannotations.generation.ActivityWithBackgroundMethod_" />
    	</application>
 
 </manifest>
