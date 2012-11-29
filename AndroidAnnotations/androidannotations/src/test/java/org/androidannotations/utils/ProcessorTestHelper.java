@@ -158,10 +158,9 @@ public class ProcessorTestHelper {
 						}
 					}
 				}
-
 			}
 		}
-		fail("Expected a compilation " + expectedDiagnosticKind + ", diagnostics: " + result.diagnostics);
+		fail("Expected a compilation " + expectedDiagnosticKind + " in " + expectedErrorClassFile.toString() + " on " + expectedContentInError + ", diagnostics: " + result.diagnostics);
 	}
 
 	private static String[] getContents(File file) {

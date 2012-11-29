@@ -36,7 +36,7 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void fails_if_no_manifest() throws Exception {
+	public void fails_if_no_manifest() {
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
 		assertCompilationErrorCount(1, result);

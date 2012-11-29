@@ -364,7 +364,13 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AndroidManifest androidManifest = androidManifestOption.get();
 
-		IRClass rClass = findRClasses(androidManifest);
+		Option<IRClass> rClassOption = findRClasses(androidManifest);
+
+		if (rClassOption.isAbsent()) {
+			return;
+		}
+
+		IRClass rClass = rClassOption.get();
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
 
@@ -395,20 +401,25 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return manifest;
 	}
 
-	private IRClass findRClasses(AndroidManifest androidManifest) throws IOException {
+	private Option<IRClass> findRClasses(AndroidManifest androidManifest) throws IOException {
 		timeStats.start("Find R Classes");
 		ProjectRClassFinder rClassFinder = new ProjectRClassFinder(processingEnv);
-		IRClass rClass = rClassFinder.find(androidManifest);
+
+		Option<IRClass> rClass = rClassFinder.find(androidManifest);
 
 		AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
 
-		IRClass androidRClass = androidRClassFinder.find();
+		Option<IRClass> androidRClass = androidRClassFinder.find();
 
-		CoumpoundRClass coumpoundRClass = new CoumpoundRClass(rClass, androidRClass);
+		if (rClass.isAbsent() || androidRClass.isAbsent()) {
+			return Option.absent();
+		}
+
+		IRClass coumpoundRClass = new CoumpoundRClass(rClass.get(), androidRClass.get());
 
 		timeStats.stop("Find R Classes");
 
-		return coumpoundRClass;
+		return Option.of(coumpoundRClass);
 	}
 
 	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
