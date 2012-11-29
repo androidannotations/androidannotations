@@ -110,6 +110,7 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
+import org.androidannotations.helper.Option;
 import org.androidannotations.helper.TimeStats;
 import org.androidannotations.model.AndroidRes;
 import org.androidannotations.model.AndroidSystemServices;
@@ -355,19 +356,29 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
-		AndroidManifest androidManifest = extractAndroidManifest();
+		Option<AndroidManifest> androidManifestOption = extractAndroidManifest();
 
-		IRClass rClass = findRClasses(androidManifest);
+		if (androidManifestOption.isAbsent()) {
+			return;
+		}
+
+		AndroidManifest androidManifest = androidManifestOption.get();
+
+		Option<IRClass> rClassOption = findRClasses(androidManifest);
+
+		if (rClassOption.isAbsent()) {
+			return;
+		}
+
+		IRClass rClass = rClassOption.get();
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
 
-		if (validatedModel != null) {
-			ProcessResult processResult = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
+		ProcessResult processResult = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
 
-			generateSources(processResult);
-		}
+		generateSources(processResult);
 	}
 
 	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -382,39 +393,39 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return extractedModel;
 	}
 
-	private AndroidManifest extractAndroidManifest() {
+	private Option<AndroidManifest> extractAndroidManifest() {
 		timeStats.start("Extract Manifest");
 		AndroidManifestFinder finder = new AndroidManifestFinder(processingEnv);
-		AndroidManifest manifest = finder.extractAndroidManifest();
+		Option<AndroidManifest> manifest = finder.extractAndroidManifest();
 		timeStats.stop("Extract Manifest");
 		return manifest;
 	}
 
-	private IRClass findRClasses(AndroidManifest androidManifest) throws IOException {
+	private Option<IRClass> findRClasses(AndroidManifest androidManifest) throws IOException {
 		timeStats.start("Find R Classes");
 		ProjectRClassFinder rClassFinder = new ProjectRClassFinder(processingEnv);
-		IRClass rClass = rClassFinder.find(androidManifest);
+
+		Option<IRClass> rClass = rClassFinder.find(androidManifest);
 
 		AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
 
-		IRClass androidRClass = androidRClassFinder.find();
+		Option<IRClass> androidRClass = androidRClassFinder.find();
 
-		CoumpoundRClass coumpoundRClass = new CoumpoundRClass(rClass, androidRClass);
+		if (rClass.isAbsent() || androidRClass.isAbsent()) {
+			return Option.absent();
+		}
+
+		IRClass coumpoundRClass = new CoumpoundRClass(rClass.get(), androidRClass.get());
 
 		timeStats.stop("Find R Classes");
 
-		return coumpoundRClass;
+		return Option.of(coumpoundRClass);
 	}
 
 	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		timeStats.start("Validate Annotations");
-		AnnotationElements validatedAnnotations;
-		if (rClass != null) {
-			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
-			validatedAnnotations = modelValidator.validate(extractedModel);
-		} else {
-			validatedAnnotations = null;
-		}
+		ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
+		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;
 	}
