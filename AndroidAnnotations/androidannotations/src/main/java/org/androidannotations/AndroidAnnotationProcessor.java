@@ -110,6 +110,7 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
+import org.androidannotations.helper.Option;
 import org.androidannotations.helper.TimeStats;
 import org.androidannotations.model.AndroidRes;
 import org.androidannotations.model.AndroidSystemServices;
@@ -355,7 +356,13 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
-		AndroidManifest androidManifest = extractAndroidManifest();
+		Option<AndroidManifest> androidManifestOption = extractAndroidManifest();
+
+		if (androidManifestOption.isAbsent()) {
+			return;
+		}
+
+		AndroidManifest androidManifest = androidManifestOption.get();
 
 		IRClass rClass = findRClasses(androidManifest);
 
@@ -363,11 +370,9 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
 
-		if (validatedModel != null) {
-			ProcessResult processResult = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
+		ProcessResult processResult = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
 
-			generateSources(processResult);
-		}
+		generateSources(processResult);
 	}
 
 	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -382,10 +387,10 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		return extractedModel;
 	}
 
-	private AndroidManifest extractAndroidManifest() {
+	private Option<AndroidManifest> extractAndroidManifest() {
 		timeStats.start("Extract Manifest");
 		AndroidManifestFinder finder = new AndroidManifestFinder(processingEnv);
-		AndroidManifest manifest = finder.extractAndroidManifest();
+		Option<AndroidManifest> manifest = finder.extractAndroidManifest();
 		timeStats.stop("Extract Manifest");
 		return manifest;
 	}
@@ -408,13 +413,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		timeStats.start("Validate Annotations");
-		AnnotationElements validatedAnnotations;
-		if (rClass != null) {
-			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
-			validatedAnnotations = modelValidator.validate(extractedModel);
-		} else {
-			validatedAnnotations = null;
-		}
+		ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
+		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;
 	}

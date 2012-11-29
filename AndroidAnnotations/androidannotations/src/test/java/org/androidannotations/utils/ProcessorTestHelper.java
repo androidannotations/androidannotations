@@ -109,6 +109,28 @@ public class ProcessorTestHelper {
 		fail("Expected a compilation error, diagnostics: " + result.diagnostics);
 	}
 
+	public static void assertCompilationErrorWithNoSource(CompileResult result) {
+		for (Diagnostic<? extends JavaFileObject> diagnostic : result.diagnostics) {
+			if (diagnostic.getKind() == Kind.ERROR && diagnostic.getSource() == null) {
+				return;
+			}
+		}
+		fail("Expected a compilation error with no source, diagnostics: " + result.diagnostics);
+	}
+
+	public static void assertCompilationErrorCount(int expectedErrorCount, CompileResult result) {
+		int errorCount = 0;
+		for (Diagnostic<? extends JavaFileObject> diagnostic : result.diagnostics) {
+			if (diagnostic.getKind() == Kind.ERROR) {
+				errorCount++;
+			}
+		}
+
+		if (errorCount != expectedErrorCount) {
+			fail("Expected " + expectedErrorCount + " compilation error, found " + errorCount + " diagnostics: " + result.diagnostics);
+		}
+	}
+
 	public static void assertCompilationErrorOn(File expectedErrorClassFile, String expectedContentInError, CompileResult result) throws IOException {
 		assertCompilationDiagnostingOn(Kind.ERROR, expectedErrorClassFile, expectedContentInError, result);
 	}

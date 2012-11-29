@@ -38,7 +38,8 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	@Test
 	public void fails_if_no_manifest() throws Exception {
 		CompileResult result = compileFiles(SomeClass.class);
-		assertCompilationError(result);
+		assertCompilationErrorWithNoSource(result);
+		assertCompilationErrorCount(1, result);
 	}
 
 	@Test
@@ -49,11 +50,27 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
+	public void fails_if_cannot_find_specified_manifest() {
+		addProcessorParameter("androidManifestFile", "/some/random/path/AndroidManifest.xml");
+		CompileResult result = compileFiles(SomeClass.class);
+		assertCompilationErrorWithNoSource(result);
+		assertCompilationErrorCount(1, result);
+	}
+
+	@Test
 	public void finds_manifest_in_generated_source_parent_folder() throws Exception {
 		copyManifestToParentOfOutputDirectory();
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationSuccessful(result);
 		deleteManifestFromParentOfOutputDirectory();
+	}
+
+	@Test
+	public void fails_if_cannot_parse_manifest() {
+		addManifestProcessorParameter(AndroidManifestFinderTest.class, "ParseErrorManifest.xml");
+		CompileResult result = compileFiles(SomeClass.class);
+		assertCompilationErrorWithNoSource(result);
+		assertCompilationErrorCount(1, result);
 	}
 
 	private void deleteManifestFromParentOfOutputDirectory() {
