@@ -33,7 +33,7 @@
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>1.6_r2</version>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<!-- spring-android-rest-template is required to use the Rest API -->
@@ -84,6 +84,12 @@
 				<excludes>
 					<exclude>rebel.xml</exclude>
 				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+				    <include>org/androidannotations/api/**</include>
+				</includes>
 			</resource>
 		</resources>
 	</build>

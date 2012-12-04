@@ -22,7 +22,11 @@ import org.androidannotations.helper.ModelConstants;
 public class AAProcessorTestHelper extends ProcessorTestHelper {
 
 	public void addManifestProcessorParameter(Class<?> classOfPackagingContainingManifest) {
-		String manifestPath = classOfPackagingContainingManifest.getResource("AndroidManifest.xml").getPath();
+		addManifestProcessorParameter(classOfPackagingContainingManifest, "AndroidManifest.xml");
+	}
+
+	public void addManifestProcessorParameter(Class<?> classOfPackagingContainingManifest, String manifestFileName) {
+		String manifestPath = classOfPackagingContainingManifest.getResource(manifestFileName).getPath();
 		addProcessorParameter("androidManifestFile", manifestPath);
 	}
 

@@ -13,21 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotations.sharedpreferences;
+package org.androidannotations.generation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
-/**
- * Injects a {@link SharedPref}
- * 
- * The field MUST be of a type that is generated using {@link SharedPref} and
- * therefore extends {@link SharedPreferencesHelper}.
- * 
- */
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
-public @interface Pref {
+@SharedPref
+public interface SharedPrefs {
+
+	// The field name will have default value "John"
+	@DefaultString("John")
+	String name();
+
+	// The field age will have default value 42
+	@DefaultInt(42)
+	int age();
+
+	// The field lastUpdated will have default value 0
+	long lastUpdated();
+
 }

@@ -18,9 +18,12 @@ package org.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
+import javax.lang.model.element.Element;
+
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
@@ -139,6 +142,10 @@ public class EBeanHolder {
 
 	public JDefinedClass definedClass(String fullyQualifiedClassName) {
 		return eBeansHolder.definedClass(fullyQualifiedClassName);
+	}
+
+	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
+		eBeansHolder.generateApiClass(originatingElement, apiClass);
 	}
 
 }

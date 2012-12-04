@@ -22,8 +22,10 @@ import java.lang.annotation.Annotation;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Element;
 
@@ -148,7 +150,9 @@ public class EBeansHolder {
 
 	private final Classes classes;
 
-	private final Map<String, Element> originatingElementsByGeneratedClassQualifiedName = new HashMap<String, Element>();
+	private final Set<Class<?>> apiClassesToGenerate = new HashSet<Class<?>>();
+
+	private final OriginatingElements originatingElements = new OriginatingElements();
 
 	public EBeansHolder(JCodeModel codeModel) {
 		this.codeModel = codeModel;
@@ -165,7 +169,8 @@ public class EBeansHolder {
 	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
 
 		String qualifiedName = generatedClass.fullName();
-		originatingElementsByGeneratedClassQualifiedName.put(qualifiedName, element);
+
+		originatingElements.add(qualifiedName, element);
 
 		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation, generatedClass);
 		eBeanHolders.put(element, activityHolder);
@@ -358,8 +363,17 @@ public class EBeansHolder {
 		return classes;
 	}
 
-	public Map<String, Element> getOriginatingElementsByGeneratedClassQualifiedName() {
-		return originatingElementsByGeneratedClassQualifiedName;
+	public OriginatingElements getOriginatingElements() {
+		return originatingElements;
+	}
+
+	public Set<Class<?>> getApiClassesToGenerate() {
+		return apiClassesToGenerate;
+	}
+
+	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
+		originatingElements.add(apiClass.getCanonicalName(), originatingElement);
+		apiClassesToGenerate.add(apiClass);
 	}
 
 }
