@@ -88,6 +88,22 @@ public class ModelProcessor {
 		for (DecoratingElementProcessor processor : enclosedProcessors) {
 			Class<? extends Annotation> target = processor.getTarget();
 
+			/*
+			 * For ancestors, the processor manipulates the annotated elements,
+			 * but uses the holder for the root element
+			 */
+			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(target.getName());
+			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
+				EBeanHolder holder = eBeansHolder.getEBeanHolder(elements.rootTypeElement);
+				/*
+				 * Annotations coming from ancestors may be applied to root
+				 * elements that are not validated, and therefore not available.
+				 */
+				if (holder != null) {
+					processor.process(elements.annotatedElement, codeModel, holder);
+				}
+			}
+
 			Set<? extends Element> rootAnnotatedElements = validatedModel.getRootAnnotatedElements(target.getName());
 
 			for (Element annotatedElement : rootAnnotatedElements) {
@@ -109,21 +125,6 @@ public class ModelProcessor {
 				}
 			}
 
-			/*
-			 * For ancestors, the processor manipulates the annotated elements,
-			 * but uses the holder for the root element
-			 */
-			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(target.getName());
-			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
-				EBeanHolder holder = eBeansHolder.getEBeanHolder(elements.rootTypeElement);
-				/*
-				 * Annotations coming from ancestors may be applied to root
-				 * elements that are not validated, and therefore not available.
-				 */
-				if (holder != null) {
-					processor.process(elements.annotatedElement, codeModel, holder);
-				}
-			}
 		}
 
 		return new ProcessResult(//
