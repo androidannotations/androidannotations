@@ -29,6 +29,7 @@ import com.googlecode.androidannotations.annotations.OnActivityResult;
 import com.googlecode.androidannotations.helper.APTCodeModelHelper;
 import com.googlecode.androidannotations.helper.CanonicalNameConstants;
 import com.googlecode.androidannotations.rclass.IRClass;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
@@ -83,10 +84,10 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 		int requestCode = executableElement.getAnnotation(OnActivityResult.class).value();
 
-		JCase onActivityResultCase = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCode);
+		JBlock onActivityResultCase = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCode);
 
 		JExpression activityRef = holder.generatedClass.staticRef("this");
-		JInvocation onResultInvocation = onActivityResultCase.body().invoke(activityRef, methodName);
+		JInvocation onResultInvocation = onActivityResultCase.invoke(activityRef, methodName);
 
 		for (int i = 0; i < parameters.size(); i++) {
 			if (i == intentParameterPosition) {
@@ -100,7 +101,7 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 	}
 
-	public JCase getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, int requestCode) {
+	public JBlock getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, int requestCode) {
 		JClass intentClass = holder.classes().INTENT;
 
 		if (holder.onActivityResultSwitch == null) {
@@ -120,16 +121,20 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 		JSwitch onActivityResultSwitch = holder.onActivityResultSwitch;
 
-		JCase onActivityResultCase = holder.onActivityResultCases.get(requestCode);
+		JBlock onActivityResultCaseBlock = holder.onActivityResultCases.get(requestCode);
 
-		if (onActivityResultCase == null) {
+		if (onActivityResultCaseBlock == null) {
 
-			onActivityResultCase = onActivityResultSwitch._case(JExpr.lit(requestCode));
+			JCase onActivityResultCase = onActivityResultSwitch._case(JExpr.lit(requestCode));
 
-			holder.onActivityResultCases.put(requestCode, onActivityResultCase);
+			onActivityResultCaseBlock = onActivityResultCase.body().block();
+
+			onActivityResultCase.body()._break();
+
+			holder.onActivityResultCases.put(requestCode, onActivityResultCaseBlock);
 
 		}
 
-		return onActivityResultCase;
+		return onActivityResultCaseBlock;
 	}
 }
