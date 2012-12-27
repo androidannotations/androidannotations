@@ -56,4 +56,8 @@ public class CaseHelper {
 		}
 	}
 
+	public static String camelCaseToUpperSnakeCase(String camelCase) {
+		return camelCaseToSnakeCase(camelCase).toUpperCase();
+	}
+
 }
