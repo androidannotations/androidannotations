@@ -1,6 +1,6 @@
 # Fast Android Development. Easy maintainance.
 
-### Note: we presented AndroidAnnotations at [Devoxx 2012](http://devoxx.com/display/DV12/Android+DDD+%28Diet+Driven+Development%29%21), video available soon!
+### Note: we presented AndroidAnnotations at [Devoxx 2012](http://devoxx.com/display/DV12/Android+DDD+%28Diet+Driven+Development%29%21), video available on [Parleys.com](http://www.parleys.com/#st=5&id=3550)!
 
 [![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/Home) 
 
