@@ -128,10 +128,24 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 						.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
 			}
 
-			body.invoke(holder.afterSetContentView);
-
 			body._return(contentView);
 		}
+
+		{
+			// onViewCreated
+
+			JMethod onViewCreated = holder.generatedClass.method(PUBLIC, classes.VIEW, "onViewCreated");
+			onViewCreated.annotate(Override.class);
+			JVar view = onViewCreated.param(classes.VIEW, "view");
+			JVar savedInstanceState = onViewCreated.param(classes.BUNDLE, "savedInstanceState");
+
+			JBlock body = onViewCreated.body();
+
+			body.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
+			
+			body.invoke(holder.afterSetContentView);
+		}
+
 
 		{
 			// findViewById
