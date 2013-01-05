@@ -15,24 +15,30 @@
  */
 package org.androidannotations.test15.efragment;
 
-import org.androidannotations.annotations.EBean;
+import android.support.v4.app.FragmentActivity;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.test15.R;
 
-@EBean
-public class BeanWithFragments {
+@EActivity(R.layout.support_fragments)
+public class MySupportFragmentActivity extends FragmentActivity {
 
 	@FragmentById
-	public MyFragment myFragment;
-	
-	@FragmentById(R.id.myFragment)
-	public MyFragment myFragment2;
+	public MySupportFragment mySupportFragment;
+
+	@FragmentById(R.id.mySupportFragment)
+	public MySupportFragment mySupportFragment2;
 
 	@FragmentByTag
-	public MyFragment myFragmentTag;
-	
-	@FragmentByTag("myFragmentTag")
-	public MyFragment myFragmentTag2;
-	
+	public MySupportFragment mySupportFragmentTag;
+
+	@FragmentByTag("mySupportFragmentTag")
+	public MySupportFragment mySupportFragmentTag2;
+
+	@Bean
+	public BeanWithSupportFragments beanWithSupportFragments;
+
 }

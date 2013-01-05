@@ -21,18 +21,18 @@ import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.test15.R;
 
 @EBean
-public class BeanWithFragments {
+public class BeanWithSupportFragments {
 
 	@FragmentById
-	public MyFragment myFragment;
-	
-	@FragmentById(R.id.myFragment)
-	public MyFragment myFragment2;
+	public MySupportFragment mySupportFragment;
+
+	@FragmentById(R.id.mySupportFragment)
+	public MySupportFragment mySupportFragment2;
 
 	@FragmentByTag
-	public MyFragment myFragmentTag;
-	
-	@FragmentByTag("myFragmentTag")
-	public MyFragment myFragmentTag2;
-	
+	public MySupportFragment mySupportFragmentTag;
+
+	@FragmentByTag("mySupportFragmentTag")
+	public MySupportFragment mySupportFragmentTag2;
+
 }
