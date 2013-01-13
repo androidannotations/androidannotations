@@ -34,9 +34,11 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
 
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -78,6 +80,16 @@ public class APTCodeModelHelper {
 			}
 
 			return declaredClass;
+		} else if (type instanceof WildcardType) {
+			// TODO : At his time (01/2013), it is not possible to handle the
+			// super bound because code model does not offer a way to model
+			// statement like " ? super X"
+			// (see http://java.net/jira/browse/CODEMODEL-11)
+			WildcardType wildcardType = (WildcardType) type;
+
+			TypeMirror extendsBound = wildcardType.getExtendsBound();
+
+			return typeMirrorToJClass(extendsBound, holder).wildcard();
 		} else if (type instanceof ArrayType) {
 			ArrayType arrayType = (ArrayType) type;
 
