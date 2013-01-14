@@ -15,45 +15,31 @@
  */
 package org.androidannotations.processing;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.invoke;
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.Click;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
-import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Mathieu Boniface
- * @author Pierre-Yves
+ * @author Rostislav Chekan
  */
-public class ClickProcessor implements DecoratingElementProcessor {
-
-	private final AnnotationHelper helper;
-	private final IRClass rClass;
+public class ClickProcessor extends AbstractListenerProcessor {
 
 	public ClickProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
-		this.rClass = rClass;
-		helper = new AnnotationHelper(processingEnv);
+		super(processingEnv, rClass);
 	}
 
 	@Override
@@ -62,38 +48,34 @@ public class ClickProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
-		Classes classes = holder.classes();
+	protected void makeCall(JBlock listenerMethodBody, JInvocation call, TypeMirror returnType) {
+		listenerMethodBody.add(call);
+	}
 
-		String methodName = element.getSimpleName().toString();
+	@Override
+	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
+		boolean hasItemParameter = parameters.size() == 1;
 
-		ExecutableElement executableElement = (ExecutableElement) element;
-		List<? extends VariableElement> parameters = executableElement.getParameters();
+		JVar viewParam = listenerMethod.param(classes.VIEW, "view");
 
-		boolean hasViewParameter = parameters.size() == 1;
-
-		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(Res.ID), true);
-
-		JDefinedClass onClickListenerClass = codeModel.anonymousClass(classes.VIEW_ON_CLICK_LISTENER);
-		JMethod onClickMethod = onClickListenerClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");
-		onClickMethod.annotate(Override.class);
-		JVar onClickViewParam = onClickMethod.param(classes.VIEW, "view");
-
-		JExpression activityRef = holder.generatedClass.staticRef("this");
-		JInvocation clickCall = onClickMethod.body().invoke(activityRef, methodName);
-
-		if (hasViewParameter) {
-			clickCall.arg(onClickViewParam);
+		if (hasItemParameter) {
+			call.arg(viewParam);
 		}
+	}
 
-		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
+	@Override
+	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
+		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel.VOID, "onClick");
+	}
 
-			JInvocation findViewById = invoke("findViewById");
-			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
-			block._if(view.ne(_null()))._then().invoke(view, "setOnClickListener").arg(_new(onClickListenerClass));
-		}
+	@Override
+	protected String getSetterName() {
+		return "setOnClickListener";
+	}
 
+	@Override
+	protected JClass getListenerClass() {
+		return classes.VIEW_ON_CLICK_LISTENER;
 	}
 
 }
