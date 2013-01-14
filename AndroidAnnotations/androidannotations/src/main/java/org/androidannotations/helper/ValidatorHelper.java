@@ -450,7 +450,7 @@ public class ValidatorHelper {
 
 		TypeKind returnKind = returnType.getKind();
 
-		if (returnKind != TypeKind.BOOLEAN && returnKind != TypeKind.VOID && !returnType.toString().equals("java.lang.Boolean")) {
+		if (returnKind != TypeKind.BOOLEAN && returnKind != TypeKind.VOID && !returnType.toString().equals(CanonicalNameConstants.BOOLEAN)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with a boolean or a void return type");
 		}
@@ -714,7 +714,7 @@ public class ValidatorHelper {
 
 			TypeKind parameterKind = firstParameter.asType().getKind();
 
-			if (parameterKind != TypeKind.BOOLEAN && !firstParameter.toString().equals("java.lang.Boolean")) {
+			if (parameterKind != TypeKind.BOOLEAN && !firstParameter.toString().equals(CanonicalNameConstants.BOOLEAN)) {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(executableElement, "the first parameter should be a boolean");
 			}
@@ -1071,7 +1071,7 @@ public class ValidatorHelper {
 			}
 
 			if (elementType != null) {
-				TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName("android.os.Parcelable");
+				TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE);
 				TypeElement serializableType = annotationHelper.typeElementFromQualifiedName("java.io.Serializable");
 				if (!annotationHelper.isSubtype(elementType, parcelableType) && !annotationHelper.isSubtype(elementType, serializableType)) {
 					annotationHelper.printAnnotationError(element, "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
