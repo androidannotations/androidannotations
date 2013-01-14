@@ -159,7 +159,7 @@ public class BundleHelper {
 
 	private boolean isTypeParcelable(TypeElement elementType) {
 
-		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName("android.os.Parcelable");
+		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE);
 
 		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
 	}

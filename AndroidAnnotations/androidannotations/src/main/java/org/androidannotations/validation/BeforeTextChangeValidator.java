@@ -25,6 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 import org.androidannotations.annotations.BeforeTextChange;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
@@ -75,7 +76,7 @@ public class BeforeTextChangeValidator implements ElementValidator {
 		boolean textViewParameterFound = false;
 		for (VariableElement parameter : parameters) {
 			String parameterType = parameter.asType().toString();
-			if (parameterType.equals("java.lang.CharSequence")) {
+			if (parameterType.equals(CanonicalNameConstants.CHAR_SEQUENCE)) {
 				if (charSequenceParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type java.lang.CharSequence");
 					valid.invalidate();
@@ -83,7 +84,7 @@ public class BeforeTextChangeValidator implements ElementValidator {
 				charSequenceParameterFound = true;
 				continue;
 			}
-			if (parameterType.equals("android.widget.TextView")) {
+			if (parameterType.equals(CanonicalNameConstants.TEXT_VIEW)) {
 				if (textViewParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.widget.TextView");
 					valid.invalidate();
@@ -91,7 +92,7 @@ public class BeforeTextChangeValidator implements ElementValidator {
 				textViewParameterFound = true;
 				continue;
 			}
-			if (parameter.asType().getKind() == TypeKind.INT || "java.lang.Integer".equals(parameterType)) {
+			if (parameter.asType().getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType)) {
 				String parameterName = parameter.toString();
 				if ("start".equals(parameterName) || "count".equals(parameterName) || "after".equals(parameterName)) {
 					continue;

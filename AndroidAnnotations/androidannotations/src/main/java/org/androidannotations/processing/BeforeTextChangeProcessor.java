@@ -27,9 +27,11 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.BeforeTextChange;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TextWatcherHelper;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpression;
@@ -77,9 +79,9 @@ public class BeforeTextChangeProcessor implements DecoratingElementProcessor {
 			String parameterName = parameter.toString();
 			TypeMirror parameterType = parameter.asType();
 
-			if ("java.lang.CharSequence".equals(parameterType.toString())) {
+			if (CanonicalNameConstants.CHAR_SEQUENCE.equals(parameterType.toString())) {
 				charSequenceParameterPosition = i;
-			} else if (parameterType.getKind() == TypeKind.INT || "java.lang.Integer".equals(parameterType.toString())) {
+			} else if (parameterType.getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType.toString())) {
 				if ("start".equals(parameterName)) {
 					startParameterPosition = i;
 				} else if ("count".equals(parameterName)) {
@@ -88,7 +90,7 @@ public class BeforeTextChangeProcessor implements DecoratingElementProcessor {
 					afterParameterPosition = i;
 				}
 			} else {
-				TypeMirror textViewType = helper.typeElementFromQualifiedName("android.widget.TextView").asType();
+				TypeMirror textViewType = helper.typeElementFromQualifiedName(CanonicalNameConstants.TEXT_VIEW).asType();
 				if (helper.isSubtype(parameterType, textViewType)) {
 					viewParameterPosition = i;
 					viewParameterType = parameterType;
