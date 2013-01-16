@@ -55,7 +55,7 @@ public class TransactionalValidator implements ElementValidator {
 
 		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.hasOneOrTwoParametersAndFirstIsDb(executableElement, valid);
+		validatorHelper.param.hasOneOrTwoParametersAndFirstIsDb(executableElement, valid);
 
 		return valid.isValid();
 	}

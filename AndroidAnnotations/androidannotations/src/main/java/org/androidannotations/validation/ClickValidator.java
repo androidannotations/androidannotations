@@ -61,7 +61,7 @@ public class ClickValidator implements ElementValidator {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.zeroOrOneViewParameters(executableElement, valid);
+		validatorHelper.param.zeroOrOneViewParameters(executableElement, valid);
 
 		return valid.isValid();
 	}

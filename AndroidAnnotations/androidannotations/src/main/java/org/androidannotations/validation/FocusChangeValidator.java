@@ -61,8 +61,7 @@ public class FocusChangeValidator implements ElementValidator {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		// validatorHelper.zeroOrOneViewParameters(executableElement, valid);
-		int i = 0;
+		validatorHelper.param.hasZeroOrOneViewOrTwoViewBooleanParameters(executableElement, valid);
 
 		return valid.isValid();
 	}

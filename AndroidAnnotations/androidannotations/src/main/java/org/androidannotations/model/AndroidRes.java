@@ -46,7 +46,8 @@ public enum AndroidRes {
 	STRING(Res.STRING, StringRes.class, "getString", "java.lang.String"), //
 	STRING_ARRAY(Res.ARRAY, StringArrayRes.class, "getStringArray", "java.lang.String[]"), //
 	ANIMATION(Res.ANIM, AnimationRes.class, "getAnimation", "android.content.res.XmlResourceParser", "android.view.animation.Animation"), //
-	HTML(Res.STRING, HtmlRes.class, "getString", "java.lang.CharSequence", "android.text.Spanned"), BOOLEAN(Res.BOOL, BooleanRes.class, "getBoolean", "java.lang.Boolean", "boolean"), //
+	HTML(Res.STRING, HtmlRes.class, "getString", "java.lang.CharSequence", "android.text.Spanned"), //
+	BOOLEAN(Res.BOOL, BooleanRes.class, "getBoolean", "java.lang.Boolean", "boolean"), //
 	COLOR_STATE_LIST(Res.COLOR, ColorStateListRes.class, "getColorStateList", "android.content.res.ColorStateList"), //
 	DIMENSION(Res.DIMEN, DimensionRes.class, "getDimension", "java.lang.Float", "float"), //
 	DIMENSION_PIXEL_OFFSET(Res.DIMEN, DimensionPixelOffsetRes.class, "getDimensionPixelOffset", "java.lang.Integer", "int"), //

@@ -39,8 +39,11 @@ public class FocusChangeProcessor extends AbstractListenerProcessor {
 		JVar viewParam = listenerMethod.param(classes.VIEW, "view");
 		JVar hasFocusParam = listenerMethod.param(codeModel.BOOLEAN, "hasFocus");
 		boolean hasFocusParamExists = parameters.size() == 2;
+		boolean viewParamExists = parameters.size() >= 1;
 
-		call.arg(viewParam);
+		if (viewParamExists) {
+			call.arg(viewParam);
+		}
 		if (hasFocusParamExists) {
 			call.arg(hasFocusParam);
 		}

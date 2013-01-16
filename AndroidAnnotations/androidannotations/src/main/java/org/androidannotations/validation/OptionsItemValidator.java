@@ -70,7 +70,7 @@ public class OptionsItemValidator implements ElementValidator {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.zeroOrOneMenuItemParameters(executableElement, valid);
+		validatorHelper.param.zeroOrOneMenuItemParameters(executableElement, valid);
 
 		return valid.isValid();
 	}

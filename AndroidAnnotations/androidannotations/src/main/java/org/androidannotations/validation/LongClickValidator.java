@@ -66,7 +66,7 @@ public class LongClickValidator implements ElementValidator {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.zeroOrOneViewParameters(executableElement, valid);
+		validatorHelper.param.zeroOrOneViewParameters(executableElement, valid);
 
 		return valid.isValid();
 	}

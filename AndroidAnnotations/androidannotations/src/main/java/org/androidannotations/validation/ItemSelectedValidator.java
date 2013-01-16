@@ -65,7 +65,7 @@ public class ItemSelectedValidator implements ElementValidator {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.hasOneOrTwoParametersAndFirstIsBoolean(executableElement, valid);
+		validatorHelper.param.hasOneOrTwoParametersAndFirstIsBoolean(executableElement, valid);
 
 		return valid.isValid();
 	}
