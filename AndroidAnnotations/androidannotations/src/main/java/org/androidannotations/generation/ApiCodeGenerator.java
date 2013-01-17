@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.Set;
 
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.FilerException;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 
@@ -65,15 +66,25 @@ public class ApiCodeGenerator {
 				Element[] apiClassOriginatingElements = originatingElements.getClassOriginatingElements(canonicalApiClassName);
 
 				JavaFileObject targetedClassFile;
-				if (apiClassOriginatingElements == null) {
-					targetedClassFile = filer.createSourceFile(canonicalApiClassName);
-				} else {
-					targetedClassFile = filer.createSourceFile(canonicalApiClassName, apiClassOriginatingElements);
-				}
 
-				OutputStream classFileOutputStream = targetedClassFile.openOutputStream();
-				copyStream(apiClassStream, classFileOutputStream);
-				classFileOutputStream.close();
+				try {
+					if (apiClassOriginatingElements == null) {
+						targetedClassFile = filer.createSourceFile(canonicalApiClassName);
+					} else {
+						targetedClassFile = filer.createSourceFile(canonicalApiClassName, apiClassOriginatingElements);
+					}
+
+					OutputStream classFileOutputStream = targetedClassFile.openOutputStream();
+					copyStream(apiClassStream, classFileOutputStream);
+					classFileOutputStream.close();
+
+				} catch (FilerException e) {
+					// This exception is thrown when we are trying to generate
+					// an already generated file. This is happening on an
+					// incremental build.
+					// Unfortunately there is no way to check if a file has
+					// already been generated.
+				}
 
 			} catch (IOException e) {
 				throw new RuntimeException(e);
