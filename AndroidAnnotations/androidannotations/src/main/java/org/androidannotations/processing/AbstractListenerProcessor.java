@@ -52,15 +52,17 @@ public abstract class AbstractListenerProcessor implements DecoratingElementProc
 	private IdAnnotationHelper helper;
 	protected Classes classes;
 	protected JCodeModel codeModel;
+	protected EBeanHolder holder;
 
 	public AbstractListenerProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
-	public void process(Element element, JCodeModel jcodeModel, EBeanHolder holder) {
+	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		classes = holder.classes();
-		codeModel = jcodeModel;
+		this.codeModel = codeModel;
+		this.holder = holder;
 
 		String methodName = element.getSimpleName().toString();
 
@@ -88,7 +90,7 @@ public abstract class AbstractListenerProcessor implements DecoratingElementProc
 			JInvocation findViewById = invoke("findViewById");
 
 			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
-			block._if(view.ne(_null()))._then().invoke(view, getSetterName()).arg(_new(listenerAnonymousClass));
+			block._if(view.ne(_null()))._then().invoke(castWidget(view), getSetterName()).arg(_new(listenerAnonymousClass));
 		}
 	}
 
@@ -101,5 +103,9 @@ public abstract class AbstractListenerProcessor implements DecoratingElementProc
 	protected abstract String getSetterName();
 
 	protected abstract JClass getListenerClass();
+
+	protected JExpression castWidget(JVar view) {
+		return view;
+	}
 
 }

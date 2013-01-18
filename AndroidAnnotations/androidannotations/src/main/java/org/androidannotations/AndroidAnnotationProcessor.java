@@ -39,6 +39,7 @@ import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.BeforeTextChange;
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
@@ -125,6 +126,7 @@ import org.androidannotations.processing.AppProcessor;
 import org.androidannotations.processing.BackgroundProcessor;
 import org.androidannotations.processing.BeanProcessor;
 import org.androidannotations.processing.BeforeTextChangeProcessor;
+import org.androidannotations.processing.CheckedChangeProcessor;
 import org.androidannotations.processing.ClickProcessor;
 import org.androidannotations.processing.EActivityProcessor;
 import org.androidannotations.processing.EApplicationProcessor;
@@ -190,6 +192,7 @@ import org.androidannotations.validation.AfterViewsValidator;
 import org.androidannotations.validation.AppValidator;
 import org.androidannotations.validation.BeanValidator;
 import org.androidannotations.validation.BeforeTextChangeValidator;
+import org.androidannotations.validation.CheckedChangeValidator;
 import org.androidannotations.validation.ClickValidator;
 import org.androidannotations.validation.EActivityValidator;
 import org.androidannotations.validation.EApplicationValidator;
@@ -258,6 +261,7 @@ import org.androidannotations.validation.rest.RestValidator;
 		ItemLongClick.class, //
 		Touch.class, //
 		FocusChange.class, //
+		CheckedChange.class, //
 		ItemSelect.class, //
 		UiThread.class, //
 		Transactional.class, //
@@ -454,6 +458,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
 		modelValidator.register(new TouchValidator(processingEnv, rClass));
 		modelValidator.register(new FocusChangeValidator(processingEnv, rClass));
+		modelValidator.register(new CheckedChangeValidator(processingEnv, rClass));
 		modelValidator.register(new ItemClickValidator(processingEnv, rClass));
 		modelValidator.register(new ItemSelectedValidator(processingEnv, rClass));
 		modelValidator.register(new ItemLongClickValidator(processingEnv, rClass));
@@ -545,6 +550,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new LongClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new TouchProcessor(processingEnv, rClass));
 		modelProcessor.register(new FocusChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new CheckedChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemSelectedProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemLongClickProcessor(processingEnv, rClass));

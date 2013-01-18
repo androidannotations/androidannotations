@@ -116,6 +116,32 @@ public class ValidatorParameterHelper {
 		}
 	}
 
+	public void hasZeroOrOneCompoundButtonOrTwoCompoundButtonBooleanParameters(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+
+		if (parameters.size() == 0) {
+			return;
+		} else if (parameters.size() > 2) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with 0 or 1(CompoundButton) or 2(CompoundButton, boolean) parameter, instead of " + parameters.size());
+		} else {
+			VariableElement firstParameter = parameters.get(0);
+			String firstParameterType = firstParameter.asType().toString();
+			if (!firstParameterType.equals(CanonicalNameConstants.COMPOUND_BUTTON)) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.COMPOUND_BUTTON + ", not a " + firstParameterType);
+			}
+			if (parameters.size() == 2) {
+				VariableElement secondParameter = parameters.get(1);
+				String secondParameterType = secondParameter.asType().toString();
+				if (!secondParameterType.equals(CanonicalNameConstants.BOOLEAN) && !secondParameterType.equals("boolean")) {
+					valid.invalidate();
+					annotationHelper.printAnnotationError(executableElement, "the second parameter must be a " + CanonicalNameConstants.BOOLEAN + " or boolean, not a " + secondParameterType);
+				}
+			}
+		}
+	}
+
 	public void hasOneMotionEventOrTwoMotionEventViewParameters(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 

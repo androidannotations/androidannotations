@@ -15,41 +15,43 @@
  */
 package org.androidannotations.test15;
 
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FocusChange;
 
 import android.view.View;
+import android.widget.CompoundButton;
 
 @EActivity(R.layout.clickable_widgets)
-public class FocusChangeHandledActivity extends EventsHandledAbstractActivity {
+public class CheckedChangeHandledActivity extends EventsHandledAbstractActivity {
 
-	@FocusChange
-	public void conventionButton(View evt, boolean hasFocus) {
+	@CheckedChange
+	public void conventionButton(CompoundButton evt, boolean hasFocus) {
 
 	}
 
-	@FocusChange
+	@CheckedChange
 	public void snakeCaseButton() {
 
 	}
 
-	@FocusChange
-	public void extendedConventionButton(View evt) {
+	@CheckedChange
+	public void extendedConventionButton(CompoundButton evt) {
 
 	}
 
-	@FocusChange(R.id.configurationOverConventionButton)
+	@CheckedChange(R.id.configurationOverConventionButton)
 	public void overridenConventionButton() {
 
 	}
 
-	@FocusChange
+	@CheckedChange
 	public void buttonWithViewArgument() {
 
 	}
 
-	@FocusChange({ R.id.button1, R.id.button2 })
-	public void multipleButtonWithViewArgument(View v, boolean hasFocus) {
+	@CheckedChange({ R.id.button1, R.id.button2 })
+	public void multipleButtonWithViewArgument(CompoundButton v, boolean hasFocus) {
 
 	}
 

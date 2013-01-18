@@ -48,6 +48,7 @@ public final class CanonicalNameConstants {
 	public static final String SEEKBAR = "android.widget.SeekBar";
 	public static final String ON_SEEKBAR_CHANGE_LISTENER = "android.widget.SeekBar.OnSeekBarChangeListener";
 	public static final String TEXT_VIEW = "android.widget.TextView";
+	public static final String COMPOUND_BUTTON = "android.widget.CompoundButton";
 	public static final String VIEW = "android.view.View";
 	public static final String VIEW_ON_CLICK_LISTENER = "android.view.View.OnClickListener";
 	public static final String VIEW_ON_TOUCH_LISTENER = "android.view.View.OnTouchListener";

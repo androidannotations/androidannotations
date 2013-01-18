@@ -7,12 +7,14 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.annotations.FocusChange;
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -23,15 +25,15 @@ import com.sun.codemodel.JVar;
  * @author Rostislav Chekan
  * 
  */
-public class FocusChangeProcessor extends AbstractListenerProcessor {
+public class CheckedChangeProcessor extends AbstractListenerProcessor {
 
-	public FocusChangeProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public CheckedChangeProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv, rClass);
 	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
-		return FocusChange.class;
+		return CheckedChange.class;
 	}
 
 	@Override
@@ -41,31 +43,36 @@ public class FocusChangeProcessor extends AbstractListenerProcessor {
 
 	@Override
 	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
-		JVar viewParam = listenerMethod.param(classes.VIEW, "view");
-		JVar hasFocusParam = listenerMethod.param(codeModel.BOOLEAN, "hasFocus");
-		boolean hasFocusParamExists = parameters.size() == 2;
-		boolean viewParamExists = parameters.size() >= 1;
+		JVar btnParam = listenerMethod.param(classes.COMPOUND_BUTTON, "buttonView");
+		JVar isCheckedParam = listenerMethod.param(codeModel.BOOLEAN, "isChecked");
+		boolean isCheckedParamExists = parameters.size() == 2;
+		boolean btnParamExists = parameters.size() >= 1;
 
-		if (viewParamExists) {
-			call.arg(viewParam);
+		if (btnParamExists) {
+			call.arg(btnParam);
 		}
-		if (hasFocusParamExists) {
-			call.arg(hasFocusParam);
+		if (isCheckedParamExists) {
+			call.arg(isCheckedParam);
 		}
 	}
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel.VOID, "onFocusChange");
+		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel.VOID, "onCheckedChanged");
 	}
 
 	@Override
 	protected String getSetterName() {
-		return "setOnFocusChangeListener";
+		return "setOnCheckedChangeListener";
 	}
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes.VIEW_ON_FOCUS_CHANGE_LISTENER;
+		return holder.refClass("android.widget.CompoundButton.OnCheckedChangeListener");
+	}
+
+	@Override
+	protected JExpression castWidget(JVar view) {
+		return JExpr.cast(classes.COMPOUND_BUTTON, view);
 	}
 }
