@@ -48,7 +48,7 @@ public class OrmLiteDaoValidator implements ElementValidator {
 
 		validatorHelper.hasOrmLiteJars(element, valid);
 
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
