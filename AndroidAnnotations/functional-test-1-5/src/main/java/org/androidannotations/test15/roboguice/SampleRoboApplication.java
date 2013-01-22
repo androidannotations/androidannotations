@@ -22,13 +22,20 @@ import roboguice.application.RoboApplication;
 import com.google.inject.Module;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.test15.ebean.EmptyDependency;
+import org.androidannotations.test15.ormlite.DatabaseHelper;
+import org.androidannotations.test15.ormlite.User;
+import org.androidannotations.test15.ormlite.UserDao;
 
 @EApplication
 public class SampleRoboApplication extends RoboApplication {
 	
 	@Bean
 	public EmptyDependency someDependency;
+
+	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	UserDao userDao;
 
 	private Module module = new RobolectricSampleModule();
 
