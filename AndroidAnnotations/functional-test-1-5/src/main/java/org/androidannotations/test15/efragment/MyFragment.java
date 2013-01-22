@@ -24,12 +24,16 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.test15.R;
+import org.androidannotations.test15.ormlite.DatabaseHelper;
+import org.androidannotations.test15.ormlite.User;
+import org.androidannotations.test15.ormlite.UserDao;
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
 
 @EFragment(R.layout.injected)
@@ -43,6 +47,9 @@ public class MyFragment extends AbstractFragment {
 	
 	@SystemService
 	ActivityManager activityManager;
+
+	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	UserDao userDao;
 	
 	@Click
 	void myButton() {
