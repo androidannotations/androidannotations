@@ -114,6 +114,10 @@ public class EBeanHolder {
 	public JMethod findNativeFragmentByTag;
 	public JMethod findSupportFragmentByTag;
 
+	public JBlock onCreateOptionMenuMethodBody;
+	public JVar onCreateOptionMenuMenuInflaterVariable;
+	public JVar onCreateOptionMenuMenuParam;
+
 	private final EBeansHolder eBeansHolder;
 	public final Class<? extends Annotation> eBeanAnnotation;
 
