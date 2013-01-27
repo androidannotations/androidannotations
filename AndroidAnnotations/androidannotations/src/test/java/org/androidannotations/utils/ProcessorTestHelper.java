@@ -149,10 +149,15 @@ public class ProcessorTestHelper {
 					if (expectedErrorPath.endsWith(source.toUri().toString())) {
 
 						CharSequence sourceContent = source.getCharContent(true);
-
 						if (diagnostic.getPosition() != Diagnostic.NOPOS) {
 							CharSequence contentInError = sourceContent.subSequence((int) diagnostic.getStartPosition(), (int) diagnostic.getEndPosition());
-							if (expectedContentInError.equals(contentInError.toString())) {
+							String contentInErrorString = contentInError.toString();
+							int parenIndex = contentInErrorString.indexOf("(");
+							if (parenIndex != -1)
+							{
+								    contentInErrorString = contentInErrorString.substring(0, parenIndex);
+							}
+							if (expectedContentInError.equals(contentInErrorString)) {
 								return;
 							}
 						}
