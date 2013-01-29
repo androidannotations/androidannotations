@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -30,8 +31,9 @@ import javax.lang.model.element.VariableElement;
 import org.androidannotations.annotations.rest.Accept;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.RestAnnotationHelper;
-import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.DecoratingElementProcessor;
+import org.androidannotations.processing.EBeanHolder;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -127,13 +129,14 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		TreeMap<String, JVar> methodParams = methodHolder.getMethodParams();
 		JVar hashMapVar = null;
 
-		List<String> urlVariables = restAnnotationHelper.extractUrlVariableNames(element);
+		Set<String> urlVariables = restAnnotationHelper.extractUrlVariableNames(element);
 		JClass hashMapClass = codeModel.ref(HashMap.class).narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
 			hashMapVar = body.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
 
 			for (String urlVariable : urlVariables) {
-				body.invoke(hashMapVar, "put").arg(urlVariable).arg(methodParams.get(urlVariable));
+				JVar urlValue = methodParams.get(urlVariable);
+				body.invoke(hashMapVar, "put").arg(urlVariable).arg(urlValue);
 				methodParams.remove(urlVariable);
 			}
 		}
