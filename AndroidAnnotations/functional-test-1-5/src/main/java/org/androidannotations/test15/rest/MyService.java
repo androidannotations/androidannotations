@@ -47,6 +47,11 @@ public interface MyService {
 	@Accept("application/json")
 	Event[] getEventsArray(String location, int year);
 
+
+	@Get("/events/{year}/{year}")
+	@Accept(MediaType.APPLICATION_JSON)
+	Event[][] urlWithAParameterDeclaredTwice(int year);
+
 	@Get("/events/{year}/{location}")
 	@Accept(MediaType.APPLICATION_JSON)
 	Event[][] getEventsArrayOfArrays(String location, int year);
