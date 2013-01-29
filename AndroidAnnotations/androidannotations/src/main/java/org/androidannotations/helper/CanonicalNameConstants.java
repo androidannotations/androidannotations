@@ -82,6 +82,12 @@ public final class CanonicalNameConstants {
 	public static final String SQLITE_DATABASE = "android.database.sqlite.SQLiteDatabase";
 	public static final String KEY_STORE = "java.security.KeyStore";
 	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
+	public static final String VIEW_SERVER = "org.androidannotations.api.ViewServer";
+
+	/*
+	 * Android permission
+	 */
+	public static final String INTERNET_PERMISSION = "android.permission.INTERNET";
 
 	/*
 	 * Sherlock

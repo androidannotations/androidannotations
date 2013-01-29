@@ -91,6 +91,7 @@ public class EBeansHolder {
 		public final JClass ON_TOUCH_LISTENER = refClass(CanonicalNameConstants.ON_TOUCH_LISTENER);
 		public final JClass HANDLER = refClass(CanonicalNameConstants.HANDLER);
 		public final JClass KEY_STORE = refClass(CanonicalNameConstants.KEY_STORE);
+		public final JClass VIEW_SERVER = refClass(CanonicalNameConstants.VIEW_SERVER);
 
 		/*
 		 * Sherlock

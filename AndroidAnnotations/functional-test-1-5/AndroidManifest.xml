@@ -24,10 +24,13 @@
     <uses-sdk
         android:minSdkVersion="3"
         android:targetSdkVersion="8" />
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name="org.androidannotations.test15.roboguice.SampleRoboApplication_"
         android:icon="@drawable/icon"
+        android:debuggable="true"
         android:label="@string/app_name" >
         <activity android:name="org.androidannotations.test15.eviewgroup.CustomFrameLayoutActivity_" >
             <intent-filter>
@@ -74,6 +77,7 @@
         <activity android:name=".SSLConnection_" />
         <activity android:name="org.androidannotations.test15.SeekBarChangeListenedActivity_" />
         <activity android:name="org.androidannotations.test15.AwaitingResultActivity_" />
+        <activity android:name=".HierarchyViewerActivity_" />
 
         <receiver android:name="org.androidannotations.test15.ereceiver.MyReceiver_" />
 
