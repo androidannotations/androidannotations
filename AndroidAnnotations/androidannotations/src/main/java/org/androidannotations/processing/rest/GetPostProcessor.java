@@ -34,6 +34,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.processing.EBeanHolder;
 
@@ -53,8 +54,11 @@ public abstract class GetPostProcessor extends MethodProcessor {
 	 */
 	protected JPackage restClientPackage;
 
+	protected APTCodeModelHelper helper;
+
 	public GetPostProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		super(processingEnv, restImplementationsHolder);
+		helper = new APTCodeModelHelper();
 	}
 
 	@Override
@@ -95,7 +99,7 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		String returnTypeString = returnType.toString();
 
 		JClass expectedClass = null;
-		JClass returnClass = holder.refClass(returnTypeString);
+		JClass returnClass = helper.typeMirrorToJClass(returnType, holder);
 
 		if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
 			DeclaredType declaredReturnType = (DeclaredType) returnType;
@@ -144,13 +148,13 @@ public abstract class GetPostProcessor extends MethodProcessor {
 
 			// is NOT a generics, return directly
 			if (typeArguments.isEmpty()) {
-				return holder.refClass(declaredType.toString());
+				return helper.typeMirrorToJClass(declaredType, holder);
 			}
 
 			// is a generics, must generate a new super class
 			TypeElement declaredElement = (TypeElement) declaredType.asElement();
 
-			JClass baseClass = holder.refClass(declaredType.toString()).erasure();
+			JClass baseClass = helper.typeMirrorToJClass(declaredType, holder).erasure();
 			JClass decoratedExpectedClass = retrieveDecoratedExpectedClass(declaredType, declaredElement);
 			if (decoratedExpectedClass == null) {
 				decoratedExpectedClass = baseClass;
@@ -162,7 +166,7 @@ public abstract class GetPostProcessor extends MethodProcessor {
 		}
 
 		// is not a class nor an interface, return directly
-		return holder.refClass(expectedType.toString());
+		return helper.typeMirrorToJClass(expectedType, holder);
 	}
 
 	/**
@@ -200,18 +204,15 @@ public abstract class GetPostProcessor extends MethodProcessor {
 			String decoratedClassNameSuffix = "";
 			JClass decoratedSuperClass = holder.refClass(decoratedClassName);
 			for (TypeMirror typeArgument : declaredType.getTypeArguments()) {
-				String typeArgumentName = typeArgument.toString();
 				if (typeArgument instanceof WildcardType) {
 					WildcardType wildcardType = (WildcardType) typeArgument;
 					if (wildcardType.getExtendsBound() != null) {
-						typeArgumentName = wildcardType.getExtendsBound().toString();
+						typeArgument = wildcardType.getExtendsBound();
 					} else if (wildcardType.getSuperBound() != null) {
-						typeArgumentName = wildcardType.getSuperBound().toString();
-					} else {
-						typeArgumentName = CanonicalNameConstants.OBJECT;
+						typeArgument = wildcardType.getSuperBound();
 					}
 				}
-				JClass narrowJClass = holder.refClass(typeArgumentName);
+				JClass narrowJClass = helper.typeMirrorToJClass(typeArgument, holder);
 				decoratedSuperClass = decoratedSuperClass.narrow(narrowJClass);
 				decoratedClassNameSuffix += plainName(narrowJClass);
 			}
