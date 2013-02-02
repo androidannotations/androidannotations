@@ -13,17 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotations.rest;
+package org.androidannotations.rest;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.androidannotations.annotations.rest.Rest;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
-public @interface Rest {
-	String rootUrl() default "";
-	Class<?>[] converters();
-	Class<?>[] interceptors() default {};
+@Rest(converters = { MappingJacksonHttpMessageConverter.class }, interceptors = { WrongConstructorInterceptor.class })
+public interface ClientWithWrongConstructorInterceptor {
+
 }

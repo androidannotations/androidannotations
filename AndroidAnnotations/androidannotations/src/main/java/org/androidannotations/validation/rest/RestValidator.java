@@ -62,6 +62,8 @@ public class RestValidator implements ElementValidator {
 
 		validatorHelper.validateConverters(element, valid);
 
+		validatorHelper.validateInterceptors(element, valid);
+
 		return valid.isValid();
 	}
 
