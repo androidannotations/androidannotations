@@ -35,7 +35,7 @@ import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.api.rest.MediaType;
 
 // if defined, the rootUrl will be added as a prefix to every request
-@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class })
+@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class }, interceptors = { RequestInterceptor.class })
 public interface MyService {
 
 	// url variables are mapped to method parameter names.

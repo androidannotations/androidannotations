@@ -13,17 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotations.rest;
+package org.androidannotations.rest;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
-public @interface Rest {
-	String rootUrl() default "";
-	Class<?>[] converters();
-	Class<?>[] interceptors() default {};
+public abstract class AbstractInterceptor implements ClientHttpRequestInterceptor {
+
 }
