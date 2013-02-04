@@ -23,18 +23,13 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.rest.Delete;
 import org.androidannotations.processing.EBeanHolder;
-import com.sun.codemodel.JBlock;
+
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JVar;
 
 public class DeleteProcessor extends MethodProcessor {
 
-	private EBeanHolder holder;
-
-	public DeleteProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
-		super(processingEnv, restImplementationHolder);
+	public DeleteProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
+		super(processingEnv, restImplementationsHolder);
 	}
 
 	@Override
@@ -45,34 +40,12 @@ public class DeleteProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
 
-		this.holder = holder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		Delete deleteAnnotation = element.getAnnotation(Delete.class);
 		String urlSuffix = deleteAnnotation.value();
 
 		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, null, null, codeModel));
-	}
-
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
-	}
-
-	@Override
-	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
-
-	}
-
-	@Override
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall;
-	}
-
-	@Override
-	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(holder, body, executableElement);
 	}
 
 }
