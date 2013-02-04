@@ -33,6 +33,7 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -110,10 +111,10 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	private void onResumeMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onResume");
 		method.annotate(Override.class);
-		JBlock body = method.body();
-		body.invoke(scope, "enter").arg(_this());
-		body.invoke(_super(), method);
-		fireEvent(holder, eventManager, body, holder.classes().ON_RESUME_EVENT);
+		holder.onResumeBlock = method.body();
+		holder.onResumeBlock.invoke(scope, "enter").arg(_this());
+		holder.onResumeBlock.invoke(_super(), method);
+		fireEvent(holder, eventManager, holder.onResumeBlock, holder.classes().ON_RESUME_EVENT);
 	}
 
 	private void onPauseMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
@@ -159,10 +160,10 @@ public class RoboGuiceProcessor implements DecoratingElementProcessor {
 	private void onDestroyMethod(JCodeModel codeModel, EBeanHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JMethod method = holder.generatedClass.method(JMod.PUBLIC, codeModel.VOID, "onDestroy");
 		method.annotate(Override.class);
-		JBlock body = method.body();
-		body.invoke(scope, "enter").arg(_this());
+		holder.onDestroyBlock = method.body();
+		holder.onDestroyBlock.invoke(scope, "enter").arg(_this());
 
-		JTryBlock tryBlock = body._try();
+		JTryBlock tryBlock = holder.onDestroyBlock._try();
 		fireEvent(holder, eventManager, tryBlock.body(), holder.classes().ON_DESTROY_EVENT);
 		JBlock finallyBody = tryBlock._finally();
 
