@@ -31,21 +31,21 @@ public class HierarchyViewerActivityTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void activity_subclass_in_manifest_compiles() {
+	public void hierarchy_viewer_activity_compiles() {
 		addManifestProcessorParameter(HierarchyViewerActivityTest.class, "AndroidManifest.xml");
 		CompileResult result = compileFiles(HierarchyViewerActivity.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void activity_in_manifest_does_not_compile() throws IOException {
+	public void hierarchy_viewer_activity_with_no_debbugable_does_not_compile() throws IOException {
 		addManifestProcessorParameter(HierarchyViewerActivityTest.class, "NoDebbugableManifest.xml");
 		CompileResult result = compileFiles(HierarchyViewerActivity.class);
 		assertCompilationErrorOn(HierarchyViewerActivity.class, "@HierarchyViewerSupport", result);
 	}
 
 	@Test
-	public void activity_not_in_manifest_compiles_with_warning() throws IOException {
+	public void hierarchy_viewer_activity_with_no_internet_permission_does_not_compile() throws IOException {
 		addManifestProcessorParameter(HierarchyViewerActivityTest.class, "NoInternetPermissionManifest.xml");
 		CompileResult result = compileFiles(HierarchyViewerActivity.class);
 		assertCompilationErrorOn(HierarchyViewerActivity.class, "@HierarchyViewerSupport", result);
