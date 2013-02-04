@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
 import org.androidannotations.model.AnnotationElements;
@@ -31,8 +32,10 @@ import org.androidannotations.validation.IsValid;
 public class RestValidator implements ElementValidator {
 
 	private final ValidatorHelper validatorHelper;
+	private final AndroidManifest androidManifest;
 
-	public RestValidator(ProcessingEnvironment processingEnv) {
+	public RestValidator(ProcessingEnvironment processingEnv, AndroidManifest androidManifest) {
+		this.androidManifest = androidManifest;
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
@@ -63,6 +66,8 @@ public class RestValidator implements ElementValidator {
 		validatorHelper.validateConverters(element, valid);
 
 		validatorHelper.validateInterceptors(element, valid);
+
+		validatorHelper.hasInternetPermission(typeElement, androidManifest, valid);
 
 		return valid.isValid();
 	}
