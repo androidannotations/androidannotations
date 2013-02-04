@@ -20,6 +20,7 @@ import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 import static org.androidannotations.helper.CanonicalNameConstants.ARRAYLIST;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
@@ -108,6 +109,8 @@ public class RestProcessor implements GeneratingElementProcessor {
 				List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "interceptors");
 				if (interceptors != null) {
 					JClass listClass = eBeansHolder.refClass(ARRAYLIST);
+					JClass clientInterceptorClass = eBeansHolder.refClass(CLIENT_HTTP_REQUEST_INTERCEPTOR);
+					listClass = listClass.narrow(clientInterceptorClass);
 					constructorBody.add(invoke(holder.restTemplateField, "setInterceptors").arg(_new(listClass)));
 					for (DeclaredType interceptorType : interceptors) {
 						JClass interceptorClass = eBeansHolder.refClass(interceptorType.toString());
