@@ -219,22 +219,6 @@ public class EBeansHolder {
 		return refClass;
 	}
 
-	/**
-	 * Return a unique JClass reference by using {@link JCodeModel#ref(String)}
-	 * and keeping a buffer.
-	 * 
-	 * @param fullyQualifiedClassName
-	 * @return
-	 */
-	JClass uniqueClass(String fullyQualifiedClassName) {
-		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
-		if (refClass == null) {
-			refClass = codeModel.directClass(fullyQualifiedClassName);
-			loadedClasses.put(fullyQualifiedClassName, refClass);
-		}
-		return refClass;
-	}
-
 	public JCodeModel codeModel() {
 		return codeModel;
 	}
