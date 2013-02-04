@@ -17,6 +17,7 @@ package org.androidannotations.helper;
 
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public final class CanonicalNameConstants {
 	public static final String SQL_EXCEPTION = SQLException.class.getCanonicalName();
 	public static final String INTEGER = Integer.class.getCanonicalName();
 	public static final String BOOLEAN = Boolean.class.getCanonicalName();
+	public static final String ARRAYLIST = ArrayList.class.getCanonicalName();
 
 	/*
 	 * Android
@@ -106,6 +108,7 @@ public final class CanonicalNameConstants {
 	public static final String HTTP_ENTITY = "org.springframework.http.HttpEntity";
 	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
 	public static final String HTTP_MESSAGE_CONVERTER = "org.springframework.http.converter.HttpMessageConverter";
+	public static final String CLIENT_HTTP_REQUEST_INTERCEPTOR = "org.springframework.http.client.ClientHttpRequestInterceptor";
 
 	/*
 	 * RoboGuice

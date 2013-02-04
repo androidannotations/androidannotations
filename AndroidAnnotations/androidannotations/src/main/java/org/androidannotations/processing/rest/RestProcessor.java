@@ -19,6 +19,7 @@ import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
+import static org.androidannotations.helper.CanonicalNameConstants.ARRAYLIST;
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
@@ -99,6 +100,19 @@ public class RestProcessor implements GeneratingElementProcessor {
 				for (DeclaredType converterType : converters) {
 					JClass converterClass = eBeansHolder.refClass(converterType.toString());
 					constructorBody.add(invoke(holder.restTemplateField, "getMessageConverters").invoke("add").arg(_new(converterClass)));
+				}
+			}
+
+			{
+				// Interceptors
+				List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "interceptors");
+				if (interceptors != null) {
+					JClass listClass = eBeansHolder.refClass(ARRAYLIST);
+					constructorBody.add(invoke(holder.restTemplateField, "setInterceptors").arg(_new(listClass)));
+					for (DeclaredType interceptorType : interceptors) {
+						JClass interceptorClass = eBeansHolder.refClass(interceptorType.toString());
+						constructorBody.add(invoke(holder.restTemplateField, "getInterceptors").invoke("add").arg(_new(interceptorClass)));
+					}
 				}
 			}
 			constructorBody.assign(holder.rootUrlField, lit(typeElement.getAnnotation(Rest.class).rootUrl()));
