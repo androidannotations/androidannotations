@@ -69,9 +69,6 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 			method = holder.restImplementationClass.method(JMod.PUBLIC, methodHolder.getMethodReturnClass(), methodName);
 		}
 		method.annotate(Override.class);
-		if (expectedClass != methodReturnClass && !methodReturnClass.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
-			method.annotate(SuppressWarnings.class).param("value", "unchecked");
-		}
 
 		// Keep a reference on method's body
 		JBlock body = method.body();

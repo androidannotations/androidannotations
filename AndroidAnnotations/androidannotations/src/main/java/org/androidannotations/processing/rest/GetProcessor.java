@@ -19,8 +19,18 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.rest.Get;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.processing.EBeanHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 
 public class GetProcessor extends GetPostProcessor {
 
@@ -39,4 +49,30 @@ public class GetProcessor extends GetPostProcessor {
 		return getAnnotation.value();
 	}
 
+	@Override
+	protected JVar generateHttpEntityVar(MethodProcessorHolder methodHolder) {
+		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
+		EBeanHolder holder = methodHolder.getHolder();
+		JClass httpEntity = holder.refClass(CanonicalNameConstants.HTTP_ENTITY);
+		JExpression httpEntityValue;
+
+		JBlock body = methodHolder.getBody();
+		JVar httpHeadersVar = generateHttpHeadersVar(holder, body, executableElement);
+
+		boolean hasHeaders = httpHeadersVar != null;
+
+		if (hasHeaders) {
+			JInvocation newHttpEntityVarCall = JExpr._new(httpEntity.narrow(Object.class));
+			newHttpEntityVarCall.arg(httpHeadersVar);
+			httpEntityValue = newHttpEntityVarCall;
+		} else {
+			httpEntityValue = httpEntity.staticRef("EMPTY");
+		}
+
+		JVar httpEntityVar;
+		String httpEntityVarName = "requestEntity";
+		httpEntityVar = body.decl(httpEntity.narrow(Object.class), httpEntityVarName, httpEntityValue);
+
+		return httpEntityVar;
+	}
 }
