@@ -22,6 +22,7 @@ import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
 import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
 import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
+import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import java.lang.annotation.Annotation;
@@ -1156,5 +1157,22 @@ public class ValidatorHelper {
 			}
 		}
 
+	}
+
+	public void isDebuggable(Element element, AndroidManifest androidManifest, IsValid valid) {
+		if (!androidManifest.isDebuggable()) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "The application must be in debuggable mode. Please set android:debuggable to true in your AndroidManifest.xml file.");
+		}
+	}
+
+	public void hasInternetPermission(Element element, AndroidManifest androidManifest, IsValid valid) {
+		String internetPermissionQualifiedName = INTERNET_PERMISSION;
+
+		List<String> permissionQualifiedNames = androidManifest.getPermissionQualifiedNames();
+		if (!permissionQualifiedNames.contains(internetPermissionQualifiedName)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "Your application must require the INTERNET permission.");
+		}
 	}
 }

@@ -62,6 +62,9 @@ public class EBeanHolder {
 	public JMethod restoreSavedInstanceStateMethod;
 	public JBlock saveInstanceStateBlock;
 
+	public JBlock onResumeBlock;
+	public JBlock onDestroyBlock;
+
 	public JExpression contextRef;
 	/**
 	 * Should not be used by inner annotations that target services, broadcast
