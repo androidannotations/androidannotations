@@ -30,6 +30,7 @@ import javax.lang.model.element.Element;
 import org.androidannotations.helper.CanonicalNameConstants;
 
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 
@@ -179,6 +180,10 @@ public class EBeansHolder {
 		return eBeanHolders.get(element);
 	}
 
+	public JClass refClass(Class<?> clazz) {
+		return codeModel.ref(clazz);
+	}
+
 	public JClass refClass(String fullyQualifiedClassName) {
 
 		int arrayCounter = 0;
@@ -201,8 +206,33 @@ public class EBeansHolder {
 		return refClass;
 	}
 
-	public JClass refClass(Class<?> clazz) {
-		return codeModel.ref(clazz);
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		JDefinedClass refClass = (JDefinedClass) loadedClasses.get(fullyQualifiedClassName);
+		if (refClass == null) {
+			try {
+				refClass = codeModel._class(fullyQualifiedClassName);
+			} catch (JClassAlreadyExistsException e) {
+				refClass = (JDefinedClass) refClass(fullyQualifiedClassName);
+			}
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+		return refClass;
+	}
+
+	/**
+	 * Return a unique JClass reference by using {@link JCodeModel#ref(String)}
+	 * and keeping a buffer.
+	 * 
+	 * @param fullyQualifiedClassName
+	 * @return
+	 */
+	JClass uniqueClass(String fullyQualifiedClassName) {
+		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
+		if (refClass == null) {
+			refClass = codeModel.directClass(fullyQualifiedClassName);
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+		return refClass;
 	}
 
 	public JCodeModel codeModel() {

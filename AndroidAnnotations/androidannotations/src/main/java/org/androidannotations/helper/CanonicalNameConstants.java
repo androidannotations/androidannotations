@@ -18,7 +18,10 @@ package org.androidannotations.helper;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public final class CanonicalNameConstants {
@@ -26,8 +29,12 @@ public final class CanonicalNameConstants {
 	/*
 	 * Java
 	 */
+	public static final String OBJECT = Object.class.getCanonicalName();
 	public static final String URI = URI.class.getCanonicalName();
+	public static final String MAP = Map.class.getCanonicalName();
 	public static final String SET = Set.class.getCanonicalName();
+	public static final String LIST = List.class.getCanonicalName();
+	public static final String COLLECTION = Collection.class.getCanonicalName();
 	public static final String COLLECTIONS = Collections.class.getCanonicalName();
 	public static final String STRING = String.class.getCanonicalName();
 	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();

@@ -26,19 +26,16 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.rest.Options;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.processing.EBeanHolder;
-import com.sun.codemodel.JBlock;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JVar;
 
 public class OptionsProcessor extends MethodProcessor {
 
-	private EBeanHolder holder;
-
-	public OptionsProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
-		super(processingEnv, restImplementationHolder);
+	public OptionsProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
+		super(processingEnv, restImplementationsHolder);
 	}
 
 	@Override
@@ -49,7 +46,6 @@ public class OptionsProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
 
-		this.holder = holder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
@@ -73,21 +69,6 @@ public class OptionsProcessor extends MethodProcessor {
 		restCall = JExpr.invoke(restCall, "getHeaders");
 		restCall = JExpr.invoke(restCall, "getAllow");
 		return restCall;
-	}
-
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
-	}
-
-	@Override
-	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
-	}
-
-	@Override
-	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(holder, body, executableElement);
 	}
 
 }

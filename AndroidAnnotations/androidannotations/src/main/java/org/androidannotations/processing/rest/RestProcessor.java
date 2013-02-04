@@ -52,12 +52,12 @@ import com.sun.codemodel.JVar;
 
 public class RestProcessor implements GeneratingElementProcessor {
 
-	private final RestImplementationsHolder restImplementationHolder;
+	private final RestImplementationsHolder restImplementationsHolder;
 	private AnnotationHelper annotationHelper;
 
-	public RestProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
+	public RestProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		annotationHelper = new AnnotationHelper(processingEnv);
-		this.restImplementationHolder = restImplementationHolder;
+		this.restImplementationsHolder = restImplementationsHolder;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class RestProcessor implements GeneratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		RestImplementationHolder holder = restImplementationHolder.create(element);
+		RestImplementationHolder holder = restImplementationsHolder.create(element);
 
 		TypeElement typeElement = (TypeElement) element;
 		String interfaceName = typeElement.getQualifiedName().toString();
@@ -169,5 +169,4 @@ public class RestProcessor implements GeneratingElementProcessor {
 		}
 
 	}
-
 }

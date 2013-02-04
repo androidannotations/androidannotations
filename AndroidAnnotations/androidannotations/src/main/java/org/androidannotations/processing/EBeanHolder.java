@@ -146,6 +146,10 @@ public class EBeanHolder {
 		return eBeansHolder.refClass(clazz);
 	}
 
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		return eBeansHolder.definedClass(fullyQualifiedClassName);
+	}
+
 	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
 		eBeansHolder.generateApiClass(originatingElement, apiClass);
 	}
