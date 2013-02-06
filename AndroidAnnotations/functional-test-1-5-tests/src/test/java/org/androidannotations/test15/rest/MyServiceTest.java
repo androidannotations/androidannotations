@@ -143,4 +143,24 @@ public class MyServiceTest {
 		assertEquals(event2, eventsMap.get("event2"));
 	}
 
+	@Test
+	public void urlWithAParameterDeclaredTwiceTest() {
+		addPendingResponse("[[{'id':1,'name':'event1'},{'id':2,'name':'event2'}],[{'id':1,'name':'event1'},{'id':2,'name':'event2'}]]");
+		Event[][] results = myService.urlWithAParameterDeclaredTwice(1985);
+
+		Event event1 = new Event(1, "event1");
+		Event event2 = new Event(2, "event2");
+		Event[][] events = new Event[][] {{event1, event2}, {event1, event2}};
+
+		for (int i = 0 ; i < events.length ; i++) {
+
+			assertEquals(results[i].length, events[i].length);
+
+			for (int j = 0 ; j < events[i].length ; j++) {
+				assertEquals(events[i][j].getName(), results[i][j].getName());
+				assertEquals(events[i][j].getId(), results[i][j].getId());
+			}
+		}
+	}
+
 }
