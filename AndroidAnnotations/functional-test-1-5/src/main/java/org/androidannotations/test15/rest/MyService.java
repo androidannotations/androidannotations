@@ -126,6 +126,9 @@ public interface MyService {
 	@Post("/events/{year}/")
 	Event addEvent(Event event, int year);
 
+	@Post("/events/{year}/")
+	Event addEvent(int year);
+
 	@Post("/events/")
 	ResponseEntity<Event> addEvent2(Event event);
 
@@ -172,6 +175,9 @@ public interface MyService {
 	@Put("/events/{id}")
 	void updateEvent(Event event, int id);
 
+	@Put("/events/{date}")
+	void updateEvent(long date);
+
 	// *** DELETE ***
 
 	// url variables are mapped to method parameter names.
@@ -183,10 +189,16 @@ public interface MyService {
 	@Head("/events/{year}/{location}")
 	HttpHeaders getEventHeaders(String location, int year);
 
+	@Head("/events/{date}")
+	HttpHeaders getEventheaders(long date);
+
 	// *** OPTIONS ***
 
 	@Options("/events/{year}/{location}")
 	Set<HttpMethod> getEventOptions(String location, int year);
+
+	@Options("/events/{date}")
+	Set<HttpMethod> getEventOptions(long date);
 
 	// if you need to add some configuration to the Spring RestTemplate.
 	RestTemplate getRestTemplate();
