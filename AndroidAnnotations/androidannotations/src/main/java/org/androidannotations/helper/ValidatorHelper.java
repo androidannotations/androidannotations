@@ -169,6 +169,13 @@ public class ValidatorHelper {
 		hasClassAnnotation(element, enclosingElement, validatedElements, EActivity.class, valid);
 	}
 
+	public void enclosingElementHasEActivityOrEService(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		@SuppressWarnings("unchecked")
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EService.class);
+		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
+	}
+
 	public void enclosingElementHasEActivityOrEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		@SuppressWarnings("unchecked")
@@ -1181,7 +1188,7 @@ public class ValidatorHelper {
 		TypeMirror clientHttpRequestInterceptorType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_INTERCEPTOR).asType();
 		TypeMirror clientHttpRequestInterceptorTypeErased = annotationHelper.getTypeUtils().erasure(clientHttpRequestInterceptorType);
 		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "interceptors");
-		if(interceptors == null) {
+		if (interceptors == null) {
 			return;
 		}
 		for (DeclaredType interceptorType : interceptors) {

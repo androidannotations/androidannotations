@@ -53,8 +53,18 @@ public class EBeanHolder {
 	 */
 	public JMethod afterSetContentView;
 	public JBlock extrasNotNullBlock;
+	public JMethod injectExtrasMethod;
+	public JMethod injectExtrasSimpleMethod;
 	public JVar extras;
 	public JVar resources;
+
+	/**
+	 * Only defined in services
+	 */
+	public JMethod initStartCommand;
+	public JVar initStartCommandIntent;
+	public JMethod onStartCommandMethod;
+	public JVar onStartCommandMethodIntent;
 
 	public JMethod cast;
 

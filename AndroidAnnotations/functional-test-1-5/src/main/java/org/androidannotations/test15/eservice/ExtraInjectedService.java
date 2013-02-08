@@ -15,42 +15,44 @@
  */
 package org.androidannotations.test15.eservice;
 
+import java.util.List;
+
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.OrmLiteDao;
-import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
-import org.androidannotations.test15.ebean.EnhancedClass;
-import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.User;
-import org.androidannotations.test15.ormlite.UserDao;
+import org.androidannotations.test15.CustomData;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 @EService
-public class MyService extends IntentService {
+public class ExtraInjectedService extends IntentService {
 
-	@SystemService
-	NotificationManager notificationManager;
+	@Extra("stringExtra")
+	String stringExtra;
 
-	@Bean
-	EnhancedClass dependency;
+	@Extra("arrayExtra")
+	CustomData[] arrayExtra;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
-	UserDao userDao;
-	
+	@Extra("listExtra")
+	List<String> listExtra;
+
+	@Extra("intExtra")
+	int intExtra;
+
+	@Extra("byteArrayExtra")
+	byte[] byteArrayExtra;
+
 	@Extra
-	Long someId;
+	String extraWithoutValue;
 
-	public MyService() {
-		super(MyService.class.getSimpleName());
+	public ExtraInjectedService() {
+		super(ExtraInjectedService.class.getSimpleName());
 	}
 
 	@Override
@@ -66,11 +68,16 @@ public class MyService extends IntentService {
 	void showToast() {
 		Toast.makeText(getApplicationContext(), "Hello World!", Toast.LENGTH_LONG).show();
 	}
-	
+
 	@Trace
 	@Background
 	void workInBackground() {
-		Log.d(MyService.class.getSimpleName(), "Doing some background work.");
+		Log.d(ExtraInjectedService.class.getSimpleName(), "Doing some background work.");
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
 	}
 
 }

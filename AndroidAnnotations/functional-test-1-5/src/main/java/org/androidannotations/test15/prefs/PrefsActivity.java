@@ -32,7 +32,7 @@ public class PrefsActivity extends Activity {
 
 	@Pref
 	ActivityPrefs_ activityPrefs;
-
+ 
 	@Pref
 	ApplicationDefaultPrefs_ applicationDefaultPrefs;
 
