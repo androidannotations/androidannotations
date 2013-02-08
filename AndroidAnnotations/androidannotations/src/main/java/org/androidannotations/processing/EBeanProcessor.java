@@ -34,6 +34,7 @@ import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
 import com.sun.codemodel.ClassType;
@@ -65,7 +66,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass, GeneratedClassType.BEAN);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 

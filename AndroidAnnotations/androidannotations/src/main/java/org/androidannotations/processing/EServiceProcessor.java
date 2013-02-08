@@ -28,6 +28,8 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -60,7 +62,7 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass, GeneratedClassType.SERVICE);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 

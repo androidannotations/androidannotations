@@ -36,6 +36,11 @@ import com.sun.codemodel.JVar;
 
 public class EBeanHolder {
 
+	public static enum GeneratedClassType {
+		ACTIVITY, APPLICATION, BEAN, FRAGMENT, PROVIDER, RECEIVER, SERVICE, VIEW_GROUP, VIEW, REST, SHARED_PREF
+	}
+
+	public final GeneratedClassType classType;
 	public final JDefinedClass generatedClass;
 	/**
 	 * Only defined on activities
@@ -124,10 +129,11 @@ public class EBeanHolder {
 	private final EBeansHolder eBeansHolder;
 	public final Class<? extends Annotation> eBeanAnnotation;
 
-	public EBeanHolder(EBeansHolder eBeansHolder, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
+	public EBeanHolder(EBeansHolder eBeansHolder, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass, GeneratedClassType classType) {
 		this.eBeansHolder = eBeansHolder;
 		this.eBeanAnnotation = eBeanAnnotation;
 		this.generatedClass = generatedClass;
+		this.classType = classType;
 	}
 
 	public Classes classes() {

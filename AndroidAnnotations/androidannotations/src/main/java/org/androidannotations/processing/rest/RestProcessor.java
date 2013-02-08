@@ -39,6 +39,7 @@ import javax.lang.model.util.ElementFilter;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
 import org.androidannotations.processing.EBeansHolder;
 import org.androidannotations.processing.GeneratingElementProcessor;
 
@@ -76,7 +77,7 @@ public class RestProcessor implements GeneratingElementProcessor {
 		String implementationName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
 		holder.restImplementationClass = codeModel._class(JMod.PUBLIC, implementationName, ClassType.CLASS);
-		eBeansHolder.create(element, getTarget(), holder.restImplementationClass);
+		eBeansHolder.create(element, getTarget(), holder.restImplementationClass, GeneratedClassType.REST);
 
 		JClass interfaceClass = eBeansHolder.refClass(interfaceName);
 		holder.restImplementationClass._implements(interfaceClass);

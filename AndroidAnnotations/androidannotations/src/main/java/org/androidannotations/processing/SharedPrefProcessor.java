@@ -55,6 +55,7 @@ import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
 
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
@@ -106,7 +107,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 
 		String helperQualifiedName = interfaceQualifiedName + ModelConstants.GENERATION_SUFFIX;
 		JDefinedClass helperClass = codeModel._class(JMod.PUBLIC | JMod.FINAL, helperQualifiedName, ClassType.CLASS);
-		eBeansHolder.create(typeElement, getTarget(), helperClass);
+		eBeansHolder.create(typeElement, getTarget(), helperClass, GeneratedClassType.SHARED_PREF);
 
 		helperClass._extends(SharedPreferencesHelper.class);
 

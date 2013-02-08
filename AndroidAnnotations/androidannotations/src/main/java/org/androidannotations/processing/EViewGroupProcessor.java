@@ -30,9 +30,11 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -95,7 +97,7 @@ public class EViewGroupProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass, GeneratedClassType.VIEW_GROUP);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
