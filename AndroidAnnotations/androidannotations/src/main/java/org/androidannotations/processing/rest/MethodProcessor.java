@@ -98,10 +98,11 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 
 		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
 
+		JVar hashMapVar = generateHashMapVar(methodHolder);
+
 		restCall = addHttpEntityVar(restCall, methodHolder);
 		restCall = addResponseEntityArg(restCall, methodHolder);
 
-		JVar hashMapVar = generateHashMapVar(methodHolder);
 		if (hashMapVar != null) {
 			restCall.arg(hashMapVar);
 		}
