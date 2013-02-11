@@ -533,7 +533,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new EFragmentProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewProcessor());
-		modelProcessor.register(new EBeanProcessor());
+		modelProcessor.register(new EBeanProcessor(processingEnv));
 		modelProcessor.register(new SharedPrefProcessor());
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());

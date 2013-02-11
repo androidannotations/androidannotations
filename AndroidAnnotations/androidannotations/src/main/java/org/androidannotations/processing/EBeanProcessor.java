@@ -27,6 +27,7 @@ import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -34,6 +35,7 @@ import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.RestAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
 import com.sun.codemodel.ClassType;
@@ -43,11 +45,19 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class EBeanProcessor implements GeneratingElementProcessor {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
+	protected final RestAnnotationHelper restAnnotationHelper;
+	protected final APTCodeModelHelper helper;
+
+	public EBeanProcessor(ProcessingEnvironment processingEnv) {
+		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
+		helper = new APTCodeModelHelper();
+	}
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -68,6 +78,16 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
+
+		{
+			// Handle generics
+			holder.typedArguments = helper.extractTypedArguments(typeElement, holder);
+
+			for (String typedArgument : holder.typedArguments.keySet()) {
+				JTypeVar typeVar = holder.generatedClass.generify(typedArgument, holder.typedArguments.get(typedArgument));
+				eBeanClass = eBeanClass.narrow(typeVar);
+			}
+		}
 
 		holder.generatedClass._extends(eBeanClass);
 
@@ -147,8 +167,14 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 		{
 			// Factory method
+			JMethod factoryMethod = holder.generatedClass.method(PUBLIC | STATIC, Object.class, GET_INSTANCE_METHOD_NAME);
 
-			JMethod factoryMethod = holder.generatedClass.method(PUBLIC | STATIC, holder.generatedClass, GET_INSTANCE_METHOD_NAME);
+			JClass factoryMethodReturnClass = holder.generatedClass;
+			for (String typedArgument : holder.typedArguments.keySet()) {
+				JTypeVar typeVar = factoryMethod.generify(typedArgument, holder.typedArguments.get(typedArgument));
+				factoryMethodReturnClass = factoryMethodReturnClass.narrow(typeVar);
+			}
+			factoryMethod.type(factoryMethodReturnClass);
 
 			JVar factoryMethodContextParam = factoryMethod.param(classes.CONTEXT, "context");
 
@@ -164,11 +190,11 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 				factoryMethodBody //
 						._if(instanceField.eq(_null())) //
 						._then() //
-						.assign(instanceField, _new(holder.generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+						.assign(instanceField, _new(factoryMethodReturnClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
 
 				factoryMethodBody._return(instanceField);
 			} else {
-				factoryMethodBody._return(_new(holder.generatedClass).arg(factoryMethodContextParam));
+				factoryMethodBody._return(_new(factoryMethodReturnClass).arg(factoryMethodContextParam));
 			}
 		}
 

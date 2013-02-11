@@ -17,6 +17,7 @@ package org.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 
@@ -37,6 +38,8 @@ import com.sun.codemodel.JVar;
 public class EBeanHolder {
 
 	public final JDefinedClass generatedClass;
+	public Map<String, JClass> typedArguments;
+
 	/**
 	 * Only defined on activities
 	 */

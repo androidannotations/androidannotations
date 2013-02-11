@@ -26,14 +26,18 @@ import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 
 import org.androidannotations.processing.EBeanHolder;
@@ -99,6 +103,37 @@ public class APTCodeModelHelper {
 		} else {
 			return holder.refClass(type.toString());
 		}
+	}
+
+	/**
+	 * Extract all typed argument from a generic class.
+	 * <p/>
+	 * <b>Exemple :</b> <code>class GenericBean&lt;A extends Object, B super
+	 * Number&gt; {...}</code> will return a set of two typed argument (A and B)
+	 * <p/>
+	 * Note : The name of a typed argument can be retrieved with the toString()
+	 * method.
+	 * 
+	 * @param typeElement
+	 * @return a {@link List} of arguments if any exists else an empty
+	 *         {@link List}
+	 */
+	public Map<String, JClass> extractTypedArguments(TypeElement typeElement, EBeanHolder holder) {
+		Map<String, JClass> result = new HashMap<String, JClass>();
+
+		TypeMirror typeMirror = typeElement.asType();
+		if (typeMirror instanceof DeclaredType) {
+			DeclaredType declaredType = (DeclaredType) typeMirror;
+			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+
+			for (TypeMirror typeArgument : typeArguments) {
+				if (typeArgument instanceof TypeVariable) {
+					TypeVariable typeVariable = (TypeVariable) typeArgument;
+					result.put(typeVariable.toString(), typeMirrorToJClass(typeVariable.getUpperBound(), holder));
+				}
+			}
+		}
+		return result;
 	}
 
 	public static class Parameter {
