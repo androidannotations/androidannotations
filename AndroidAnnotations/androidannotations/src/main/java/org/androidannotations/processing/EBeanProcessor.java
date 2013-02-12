@@ -18,7 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
@@ -30,7 +29,6 @@ import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.EBean;
@@ -39,17 +37,15 @@ import org.androidannotations.helper.APTCodeModelHelper.Parameter;
 import org.androidannotations.helper.RestAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
-import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
-public class EBeanProcessor implements GeneratingElementProcessor {
+public class EBeanProcessor extends GeneratingElementProcessor {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
 	protected final RestAnnotationHelper restAnnotationHelper;
@@ -66,31 +62,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
-
-		TypeElement typeElement = (TypeElement) element;
-
-		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
-
-		String generatedBeanQualifiedName = eBeanQualifiedName + GENERATION_SUFFIX;
-
-		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
-
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
-
-		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
-
-		{
-			// Handle generics
-			holder.typedParameters = helper.extractTypedParameters(typeElement.asType(), holder);
-
-			for (Parameter typedParameter : holder.typedParameters) {
-				JTypeVar typeVar = holder.generatedClass.generify(typedParameter.name, typedParameter.jClass);
-				eBeanClass = eBeanClass.narrow(typeVar);
-			}
-		}
-
-		holder.generatedClass._extends(eBeanClass);
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder, EBeanHolder holder) throws Exception {
 
 		Classes classes = holder.classes();
 
@@ -170,6 +142,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			// Factory method
 			JMethod factoryMethod = holder.generatedClass.method(PUBLIC | STATIC, Object.class, GET_INSTANCE_METHOD_NAME);
 
+			// Handle generics
 			JClass factoryMethodReturnClass = holder.generatedClass;
 			for (Parameter typedParameter : holder.typedParameters) {
 				JTypeVar typeVar = factoryMethod.generify(typedParameter.name, typedParameter.jClass);

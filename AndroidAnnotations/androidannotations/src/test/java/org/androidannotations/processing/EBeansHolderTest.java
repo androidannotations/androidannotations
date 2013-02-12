@@ -62,8 +62,8 @@ public class EBeansHolderTest {
 		checkForFullyQualifiedClassName("java.util.Map<java.lang.String[],java.lang.Integer[]>");
 		checkForFullyQualifiedClassName("java.util.Map<java.lang.String[],java.lang.Integer>[]");
 
-		checkForFullyQualifiedClassName("java.util.Map<java.lang.String, java.lang.Integer>");
-		checkForFullyQualifiedClassName("java.util.Map<java.lang.String[], java.lang.Integer>[]");
+		checkForFullyQualifiedClassName("java.util.Map<java.lang.String, java.lang.Integer>", "java.util.Map<java.lang.String,java.lang.Integer>");
+		checkForFullyQualifiedClassName("java.util.Map<java.lang.String[], java.lang.Integer>[]", "java.util.Map<java.lang.String[],java.lang.Integer>[]");
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class EBeansHolderTest {
 		checkForFullyQualifiedClassName("java.util.Map<java.util.Set<java.lang.String>[],java.lang.Integer>");
 		checkForFullyQualifiedClassName("java.util.Map<java.util.Set<java.lang.String>[],java.lang.Integer>[]");
 
-		checkForFullyQualifiedClassName("java.util.Map < java.util.Set < java.lang.String > , java.lang.Integer >");
+		checkForFullyQualifiedClassName("java.util.Map < java.util.Set < java.lang.String > , java.lang.Integer >", "java.util.Map <java.util.Set <java.lang.String>,java.lang.Integer>");
 	}
 
 }

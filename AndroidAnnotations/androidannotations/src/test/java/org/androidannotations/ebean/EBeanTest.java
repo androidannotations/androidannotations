@@ -35,7 +35,7 @@ public class EBeanTest extends AAProcessorTestHelper {
 
 	@Test
 	public void activity_with_generic_beans() {
-		assertCompilationSuccessful(compileFiles(SomeActivityWithGenericBeans.class));
+		assertCompilationSuccessful(compileFiles(GenericBean.class, SomeActivityWithGenericBeans.class));
 	}
 
 	@Test

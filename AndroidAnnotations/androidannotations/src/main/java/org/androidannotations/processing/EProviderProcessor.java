@@ -17,25 +17,20 @@ package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
 import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EProvider;
-import org.androidannotations.helper.ModelConstants;
-import com.sun.codemodel.ClassType;
+
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JMethod;
 
-public class EProviderProcessor implements GeneratingElementProcessor {
+public class EProviderProcessor extends GeneratingElementProcessor {
 
 	@Override
 	public Class<? extends Annotation> getTarget() {
@@ -43,21 +38,7 @@ public class EProviderProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
-
-		TypeElement typeElement = (TypeElement) element;
-
-		String annotatedComponentQualifiedName = typeElement.getQualifiedName().toString();
-
-		String generatedComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
-
-		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
-
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
-
-		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
-
-		holder.generatedClass._extends(annotatedComponent);
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder, EBeanHolder holder) throws Exception {
 
 		holder.contextRef = invoke("getContext");
 

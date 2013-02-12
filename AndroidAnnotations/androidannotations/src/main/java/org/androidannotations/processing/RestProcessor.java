@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
@@ -39,8 +39,8 @@ import javax.lang.model.util.ElementFilter;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.ModelConstants;
-import org.androidannotations.processing.EBeansHolder;
-import org.androidannotations.processing.GeneratingElementProcessor;
+import org.androidannotations.processing.rest.RestImplementationHolder;
+import org.androidannotations.processing.rest.RestImplementationsHolder;
 
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
@@ -50,7 +50,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class RestProcessor implements GeneratingElementProcessor {
+public class RestProcessor extends GeneratingElementProcessor {
 
 	private final RestImplementationsHolder restImplementationsHolder;
 	private AnnotationHelper annotationHelper;
@@ -168,5 +168,10 @@ public class RestProcessor implements GeneratingElementProcessor {
 			}
 		}
 
+	}
+
+	@Override
+	void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder, EBeanHolder holder) throws Exception {
+		// Do nothing
 	}
 }

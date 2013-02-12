@@ -58,6 +58,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
@@ -106,7 +107,7 @@ public class APTCodeModelHelper {
 	/**
 	 * Extract all typed parameter from a generic class.
 	 * <p/>
-	 * <b>Exemple :</b> <code>class GenericBean&lt;A extends Object, B super
+	 * <b>Example :</b> <code>class GenericBean&lt;A extends Object, B super
 	 * Number&gt; {...}</code> will return a list of two typed parameter (A and
 	 * B)
 	 * <p/>
@@ -134,6 +135,14 @@ public class APTCodeModelHelper {
 		return result;
 	}
 
+	/**
+	 * Get the generated version (with the _) of a class and take care of
+	 * generics parts
+	 * 
+	 * @param typeMirror
+	 * @param holder
+	 * @return
+	 */
 	public JClass getGeneratedClass(TypeMirror typeMirror, EBeanHolder holder) {
 		String typeQualifiedName = typeMirror.toString();
 		String generatedClassName;
@@ -327,9 +336,18 @@ public class APTCodeModelHelper {
 		for (ExecutableElement userConstructor : constructors) {
 			JMethod copyConstructor = holder.generatedClass.constructor(PUBLIC);
 			JMethod staticHelper = holder.generatedClass.method(PUBLIC | STATIC, eBeanClass, "build");
+
+			// Handle generics
+			JClass factoryMethodReturnClass = holder.generatedClass;
+			for (Parameter typedParameter : holder.typedParameters) {
+				JTypeVar typeVar = staticHelper.generify(typedParameter.name, typedParameter.jClass);
+				factoryMethodReturnClass = factoryMethodReturnClass.narrow(typeVar);
+			}
+			staticHelper.type(factoryMethodReturnClass);
+
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");
-			JInvocation newInvocation = JExpr._new(holder.generatedClass);
+			JInvocation newInvocation = JExpr._new(factoryMethodReturnClass);
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
 				String paramType = param.asType().toString();
@@ -339,7 +357,7 @@ public class APTCodeModelHelper {
 				newInvocation.arg(JExpr.ref(paramName));
 			}
 
-			JVar newCall = staticHelper.body().decl(holder.generatedClass, "instance", newInvocation);
+			JVar newCall = staticHelper.body().decl(factoryMethodReturnClass, "instance", newInvocation);
 			staticHelper.body().invoke(newCall, "onFinishInflate");
 			staticHelper.body()._return(newCall);
 			body.invoke(holder.init);

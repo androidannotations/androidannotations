@@ -15,13 +15,11 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
@@ -30,25 +28,23 @@ import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
-import com.sun.codemodel.ClassType;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class EFragmentProcessor implements GeneratingElementProcessor {
+public class EFragmentProcessor extends GeneratingElementProcessor {
 
 	private final IdAnnotationHelper helper;
 
@@ -62,21 +58,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
-
-		TypeElement typeElement = (TypeElement) element;
-
-		String beanQualifiedName = typeElement.getQualifiedName().toString();
-
-		String generatedBeanQualifiedName = beanQualifiedName + GENERATION_SUFFIX;
-
-		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
-
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
-
-		JClass eBeanClass = codeModel.directClass(beanQualifiedName);
-
-		holder.generatedClass._extends(eBeanClass);
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder, EBeanHolder holder) throws Exception {
 
 		Classes classes = holder.classes();
 
@@ -142,10 +124,9 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			JBlock onViewCreatedBody = onViewCreated.body();
 
 			onViewCreatedBody.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
-			
+
 			onViewCreatedBody.invoke(holder.afterSetContentView);
 		}
-
 
 		{
 			// findViewById
@@ -167,7 +148,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			holder.initActivityRef = holder.contextRef;
 		}
 
-		addFragmentBuilder(codeModel, holder, eBeanClass);
+		addFragmentBuilder(codeModel, holder, holder.generatedClass._extends());
 	}
 
 	private void addFragmentBuilder(JCodeModel codeModel, EBeanHolder holder, JClass eBeanClass) throws JClassAlreadyExistsException {

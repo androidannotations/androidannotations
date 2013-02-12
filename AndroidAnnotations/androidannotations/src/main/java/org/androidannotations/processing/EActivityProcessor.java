@@ -38,15 +38,12 @@ import org.androidannotations.api.SdkVersionHelper;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 
-import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
@@ -55,7 +52,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class EActivityProcessor implements GeneratingElementProcessor {
+public class EActivityProcessor extends GeneratingElementProcessor {
 
 	private final IRClass rClass;
 	private List<TypeElement> greendroidActivityElements;
@@ -86,26 +83,11 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder, EBeanHolder holder) throws Exception {
 
 		TypeElement typeElement = (TypeElement) element;
 
-		// Activity
-		String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
-
-		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
-
 		boolean usesGreenDroid = usesGreenDroid(typeElement);
-
-		int modifiers = JMod.PUBLIC | JMod.FINAL;
-
-		JDefinedClass generatedClass = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
-
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
-
-		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
-
-		holder.generatedClass._extends(annotatedActivity);
 
 		holder.contextRef = _this();
 
