@@ -18,7 +18,6 @@ package org.androidannotations.test15;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;

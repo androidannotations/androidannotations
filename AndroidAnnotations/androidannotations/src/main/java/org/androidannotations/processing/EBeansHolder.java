@@ -20,8 +20,10 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -185,20 +187,57 @@ public class EBeansHolder {
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {
-
+		// Array
 		int arrayCounter = 0;
 		while (fullyQualifiedClassName.endsWith("[]")) {
 			arrayCounter++;
 			fullyQualifiedClassName = fullyQualifiedClassName.substring(0, fullyQualifiedClassName.length() - 2);
 		}
 
+		// Load from cache or create a JDirectClass
 		JClass refClass = loadedClasses.get(fullyQualifiedClassName);
-
 		if (refClass == null) {
 			refClass = codeModel.directClass(fullyQualifiedClassName);
+
+			// Generics
+			int suffixStart;
+			if ((suffixStart = fullyQualifiedClassName.indexOf('<')) > -1) {
+				refClass = codeModel.directClass(fullyQualifiedClassName.substring(0, suffixStart));
+
+				String parameters = fullyQualifiedClassName.substring(suffixStart + 1, fullyQualifiedClassName.lastIndexOf('>'));
+
+				List<JClass> typeArgs = new ArrayList<JClass>();
+
+				int paramStart = 0;
+				int innerParams = 0;
+				for (int i = 0; i < parameters.length(); i++) {
+					switch (parameters.charAt(i)) {
+					case '<':
+						innerParams++;
+						break;
+					case '>':
+						innerParams--;
+						break;
+					case ',':
+						if (innerParams == 0) {
+							typeArgs.add(refClass(parameters.substring(paramStart, i).trim()));
+							paramStart = i + 1;
+						}
+						break;
+					default:
+					}
+				}
+				typeArgs.add(refClass(parameters.substring(paramStart).trim()));
+
+				refClass = refClass.narrow(typeArgs);
+			} else {
+				refClass = codeModel.directClass(fullyQualifiedClassName);
+			}
+
 			loadedClasses.put(fullyQualifiedClassName, refClass);
 		}
 
+		// Array
 		for (int i = 0; i < arrayCounter; i++) {
 			refClass = refClass.array();
 		}

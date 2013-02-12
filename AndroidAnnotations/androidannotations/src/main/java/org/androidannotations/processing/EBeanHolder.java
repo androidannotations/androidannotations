@@ -17,12 +17,13 @@ package org.androidannotations.processing;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.helper.APTCodeModelHelper.Parameter;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
 import com.sun.codemodel.JBlock;
@@ -38,7 +39,12 @@ import com.sun.codemodel.JVar;
 public class EBeanHolder {
 
 	public final JDefinedClass generatedClass;
-	public Map<String, JClass> typedArguments;
+
+	/**
+	 * Contains typed parameters of the annotated class like :
+	 * <code>&lt;T extends Number&gt;</code>
+	 */
+	public List<Parameter> typedParameters;
 
 	/**
 	 * Only defined on activities

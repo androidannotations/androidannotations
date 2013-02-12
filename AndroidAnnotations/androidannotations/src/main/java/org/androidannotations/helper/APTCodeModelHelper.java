@@ -23,16 +23,14 @@ import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
@@ -106,22 +104,22 @@ public class APTCodeModelHelper {
 	}
 
 	/**
-	 * Extract all typed argument from a generic class.
+	 * Extract all typed parameter from a generic class.
 	 * <p/>
 	 * <b>Exemple :</b> <code>class GenericBean&lt;A extends Object, B super
-	 * Number&gt; {...}</code> will return a set of two typed argument (A and B)
+	 * Number&gt; {...}</code> will return a list of two typed parameter (A and
+	 * B)
 	 * <p/>
-	 * Note : The name of a typed argument can be retrieved with the toString()
+	 * Note : The name of a typed parameter can be retrieved with the toString()
 	 * method.
 	 * 
-	 * @param typeElement
-	 * @return a {@link List} of arguments if any exists else an empty
+	 * @param typeMirror
+	 * @return a {@link List} of {@link Parameter} if any exists else an empty
 	 *         {@link List}
 	 */
-	public Map<String, JClass> extractTypedArguments(TypeElement typeElement, EBeanHolder holder) {
-		Map<String, JClass> result = new HashMap<String, JClass>();
+	public List<Parameter> extractTypedParameters(TypeMirror typeMirror, EBeanHolder holder) {
+		List<Parameter> result = new ArrayList<Parameter>();
 
-		TypeMirror typeMirror = typeElement.asType();
 		if (typeMirror instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) typeMirror;
 			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
@@ -129,11 +127,26 @@ public class APTCodeModelHelper {
 			for (TypeMirror typeArgument : typeArguments) {
 				if (typeArgument instanceof TypeVariable) {
 					TypeVariable typeVariable = (TypeVariable) typeArgument;
-					result.put(typeVariable.toString(), typeMirrorToJClass(typeVariable.getUpperBound(), holder));
+					result.add(new Parameter(typeVariable.toString(), typeMirrorToJClass(typeVariable.getUpperBound(), holder)));
 				}
 			}
 		}
 		return result;
+	}
+
+	public JClass getGeneratedClass(TypeMirror typeMirror, EBeanHolder holder) {
+		String typeQualifiedName = typeMirror.toString();
+		String generatedClassName;
+
+		int argsIndex;
+		if ((argsIndex = typeQualifiedName.indexOf('<')) > -1) {
+			// Handle generics
+			generatedClassName = typeQualifiedName.substring(0, argsIndex) + GENERATION_SUFFIX + typeQualifiedName.substring(argsIndex);
+		} else {
+			generatedClassName = typeQualifiedName + GENERATION_SUFFIX;
+		}
+
+		return holder.refClass(generatedClassName);
 	}
 
 	public static class Parameter {

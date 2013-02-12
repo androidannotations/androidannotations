@@ -35,6 +35,7 @@ import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.APTCodeModelHelper.Parameter;
 import org.androidannotations.helper.RestAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
@@ -81,10 +82,10 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 		{
 			// Handle generics
-			holder.typedArguments = helper.extractTypedArguments(typeElement, holder);
+			holder.typedParameters = helper.extractTypedParameters(typeElement.asType(), holder);
 
-			for (String typedArgument : holder.typedArguments.keySet()) {
-				JTypeVar typeVar = holder.generatedClass.generify(typedArgument, holder.typedArguments.get(typedArgument));
+			for (Parameter typedParameter : holder.typedParameters) {
+				JTypeVar typeVar = holder.generatedClass.generify(typedParameter.name, typedParameter.jClass);
 				eBeanClass = eBeanClass.narrow(typeVar);
 			}
 		}
@@ -170,8 +171,8 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			JMethod factoryMethod = holder.generatedClass.method(PUBLIC | STATIC, Object.class, GET_INSTANCE_METHOD_NAME);
 
 			JClass factoryMethodReturnClass = holder.generatedClass;
-			for (String typedArgument : holder.typedArguments.keySet()) {
-				JTypeVar typeVar = factoryMethod.generify(typedArgument, holder.typedArguments.get(typedArgument));
+			for (Parameter typedParameter : holder.typedParameters) {
+				JTypeVar typeVar = factoryMethod.generify(typedParameter.name, typedParameter.jClass);
 				factoryMethodReturnClass = factoryMethodReturnClass.narrow(typeVar);
 			}
 			factoryMethod.type(factoryMethodReturnClass);
