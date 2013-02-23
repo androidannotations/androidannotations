@@ -349,16 +349,13 @@ public class APTCodeModelHelper {
 				body._return(_this());
 			}
 
-			{
+			if (isActivity) {
 				// start()
 				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
-				String startComponentName = isActivity ? "startActivity" : "startService";
-				method.body().invoke(contextField, startComponentName).arg(holder.intentField);
-			}
+				method.body().invoke(contextField, "startActivity").arg(holder.intentField);
 
-			if (isActivity) {
 				// startForResult()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
+				method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
 				JVar requestCode = method.param(codeModel.INT, "requestCode");
 
 				JBlock body = method.body();
@@ -368,6 +365,14 @@ public class APTCodeModelHelper {
 						.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.intentField).arg(requestCode);
 				condition._else() //
 						.invoke(contextField, "startActivity").arg(holder.intentField);
+			} else {
+				// start()
+				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.classes().COMPONENT_NAME, "start");
+				method.body()._return(contextField.invoke("startService").arg(holder.intentField));
+
+				// stop()
+				method = holder.intentBuilderClass.method(PUBLIC, codeModel.BOOLEAN, "stop");
+				method.body()._return(contextField.invoke("stopService").arg(holder.intentField));
 			}
 
 			{
@@ -378,5 +383,4 @@ public class APTCodeModelHelper {
 			}
 		}
 	}
-
 }
