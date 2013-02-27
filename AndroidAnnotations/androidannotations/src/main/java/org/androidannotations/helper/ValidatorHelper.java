@@ -645,7 +645,7 @@ public class ValidatorHelper {
 		/*
 		 * The type is not available yet because it has just been generated
 		 */
-		if (type instanceof ErrorType) {
+		if (type instanceof ErrorType  || type.getKind() == TypeKind.ERROR) {
 			String elementTypeName = type.toString();
 
 			boolean sharedPrefValidatedInRound = false;
