@@ -18,6 +18,6 @@ package org.androidannotations.test15.ebean;
 import org.androidannotations.annotations.EBean;
 
 @EBean
-public class GenericBean<T extends Object> {
+public class GenericBean<T extends Number> {
 
 }

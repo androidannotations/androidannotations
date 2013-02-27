@@ -23,7 +23,6 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.test15.ebean.GenericBean;
-import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
 
 import android.app.Activity;
@@ -62,7 +61,7 @@ public class ThreadActivity extends Activity {
 	}
 
 	@Background
-	void genericBackgroundMethod(Set<? extends GenericBean<? extends SomeBean>> param) {
+	void genericBackgroundMethod(Set<? extends GenericBean<? extends Integer>> param) {
 
 	}
 
