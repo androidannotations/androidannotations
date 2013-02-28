@@ -78,6 +78,7 @@
         <activity android:name="org.androidannotations.test15.SeekBarChangeListenedActivity_" />
         <activity android:name="org.androidannotations.test15.AwaitingResultActivity_" />
         <activity android:name=".HierarchyViewerActivity_" />
+        <activity android:name="org.androidannotations.test15.CustomTitleActivity_" />
 
         <receiver android:name="org.androidannotations.test15.ereceiver.MyReceiver_" />
 
