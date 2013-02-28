@@ -586,29 +586,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void upperclassOfRegisteredApplication(Element element, AndroidManifest manifest, IsValid valid) {
-
-		if (manifest.isLibraryProject()) {
-			return;
-		}
-
-		String applicationClassName = manifest.getApplicationClassName();
-		if (applicationClassName != null) {
-			if (applicationClassName.endsWith(GENERATION_SUFFIX)) {
-				applicationClassName = applicationClassName.substring(0, applicationClassName.length() - GENERATION_SUFFIX.length());
-			}
-			TypeMirror elementType = element.asType();
-			TypeMirror manifestType = annotationHelper.typeElementFromQualifiedName(applicationClassName).asType();
-			if (!annotationHelper.isSubtype(manifestType, elementType)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that is an instance of the following class (or one of it's superclass): " + applicationClassName);
-			}
-		} else {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "No application class is registered in the AndroidManifest.xml");
-		}
-	}
-
 	public void applicationRegistered(Element element, AndroidManifest manifest, IsValid valid) {
 
 		if (manifest.isLibraryProject()) {
@@ -645,7 +622,7 @@ public class ValidatorHelper {
 		/*
 		 * The type is not available yet because it has just been generated
 		 */
-		if (type instanceof ErrorType  || type.getKind() == TypeKind.ERROR) {
+		if (type instanceof ErrorType || type.getKind() == TypeKind.ERROR) {
 			String elementTypeName = type.toString();
 
 			boolean sharedPrefValidatedInRound = false;
@@ -1181,7 +1158,7 @@ public class ValidatorHelper {
 		TypeMirror clientHttpRequestInterceptorType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_INTERCEPTOR).asType();
 		TypeMirror clientHttpRequestInterceptorTypeErased = annotationHelper.getTypeUtils().erasure(clientHttpRequestInterceptorType);
 		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "interceptors");
-		if(interceptors == null) {
+		if (interceptors == null) {
 			return;
 		}
 		for (DeclaredType interceptorType : interceptors) {

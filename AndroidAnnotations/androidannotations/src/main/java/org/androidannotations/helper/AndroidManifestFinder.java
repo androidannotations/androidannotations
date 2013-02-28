@@ -195,18 +195,16 @@ public class AndroidManifestFinder {
 
 		NodeList applicationNodes = documentElement.getElementsByTagName("application");
 
-		String applicationQualifiedName = null;
+		String applicationClassQualifiedName = null;
 		boolean applicationDebuggableMode = false;
 
 		if (applicationNodes.getLength() > 0) {
 			Node applicationNode = applicationNodes.item(0);
 			Node nameAttribute = applicationNode.getAttributes().getNamedItem("android:name");
 
-			String qualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
+			applicationClassQualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
 
-			if (qualifiedName != null) {
-				applicationQualifiedName = qualifiedName;
-			} else {
+			if (applicationClassQualifiedName == null) {
 				Messager messager = processingEnv.getMessager();
 				if (nameAttribute != null) {
 					messager.printMessage(Kind.NOTE, String.format("The class application declared in the AndroidManifest.xml cannot be found in the compile path: [%s]", nameAttribute.getNodeValue()));
@@ -243,7 +241,7 @@ public class AndroidManifestFinder {
 		List<String> permissionQualifiedNames = new ArrayList<String>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
 
-		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationQualifiedName, componentQualifiedNames, permissionQualifiedNames, applicationDebuggableMode));
+		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames, applicationDebuggableMode));
 	}
 
 	private List<String> extractComponentNames(String applicationPackage, NodeList componentNodes) {
