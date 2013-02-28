@@ -62,6 +62,9 @@ public class EBeanHolder {
 	public JMethod restoreSavedInstanceStateMethod;
 	public JBlock saveInstanceStateBlock;
 
+	public JBlock onResumeBlock;
+	public JBlock onDestroyBlock;
+
 	public JExpression contextRef;
 	/**
 	 * Should not be used by inner annotations that target services, broadcast
@@ -114,6 +117,10 @@ public class EBeanHolder {
 	public JMethod findNativeFragmentByTag;
 	public JMethod findSupportFragmentByTag;
 
+	public JBlock onCreateOptionMenuMethodBody;
+	public JVar onCreateOptionMenuMenuInflaterVariable;
+	public JVar onCreateOptionMenuMenuParam;
+
 	private final EBeansHolder eBeansHolder;
 	public final Class<? extends Annotation> eBeanAnnotation;
 
@@ -137,6 +144,10 @@ public class EBeanHolder {
 
 	public JClass refClass(Class<?> clazz) {
 		return eBeansHolder.refClass(clazz);
+	}
+
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		return eBeansHolder.definedClass(fullyQualifiedClassName);
 	}
 
 	public void generateApiClass(Element originatingElement, Class<?> apiClass) {

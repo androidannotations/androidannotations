@@ -17,12 +17,6 @@ package org.androidannotations.test15.efragment;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-
 /**
  * Those test are disabled for now, we need to update Robolectric version for
  * fragment support, however we'll have to solve other issues to do so.
@@ -46,16 +40,6 @@ public class MyFragmentActivityTest {
 	// @Test
 	public void can_inject_native_fragment_with_id() {
 		assertThat(activity.myFragment2).isNotNull();
-	}
-
-	// @Test
-	public void can_inject_support_fragment_with_default_id() {
-		assertThat(activity.mySupportFragment).isNotNull();
-	}
-
-	// @Test
-	public void can_inject_support_fragment_with_id() {
-		assertThat(activity.mySupportFragment2).isNotNull();
 	}
 
 }

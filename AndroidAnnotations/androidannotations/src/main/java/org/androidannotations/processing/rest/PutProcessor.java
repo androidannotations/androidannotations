@@ -23,18 +23,14 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.rest.Put;
 import org.androidannotations.processing.EBeanHolder;
-import com.sun.codemodel.JBlock;
+
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JVar;
 
 public class PutProcessor extends MethodProcessor {
 
-	private EBeanHolder holder;
-
-	public PutProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
-		super(processingEnv, restImplementationHolder);
+	public PutProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
+		super(processingEnv, restImplementationsHolder);
 	}
 
 	@Override
@@ -45,7 +41,6 @@ public class PutProcessor extends MethodProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
 
-		this.holder = holder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		Put putAnnotation = element.getAnnotation(Put.class);
@@ -55,23 +50,8 @@ public class PutProcessor extends MethodProcessor {
 	}
 
 	@Override
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall;
-	}
-
-	@Override
 	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		return restCall.arg(generateHttpEntityVar(methodHolder));
-	}
-
-	@Override
-	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
-	}
-
-	@Override
-	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(holder, body, executableElement);
 	}
 
 }

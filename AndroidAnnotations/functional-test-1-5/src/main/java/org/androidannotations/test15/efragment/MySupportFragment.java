@@ -31,10 +31,11 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.test15.R;
 import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
 
-@EFragment
+@EFragment(R.layout.injected)
 public class MySupportFragment extends Fragment {
 
 	@Bean

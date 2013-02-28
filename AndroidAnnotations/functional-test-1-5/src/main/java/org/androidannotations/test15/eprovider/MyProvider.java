@@ -26,12 +26,16 @@ import android.widget.Toast;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EProvider;
+import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.test15.ebean.EnhancedClass;
 import org.androidannotations.test15.eservice.MyService;
+import org.androidannotations.test15.ormlite.DatabaseHelper;
+import org.androidannotations.test15.ormlite.User;
+import org.androidannotations.test15.ormlite.UserDao;
 import org.androidannotations.test15.prefs.SomePrefs_;
 
 @EProvider
@@ -43,6 +47,9 @@ public class MyProvider extends ContentProvider {
 	@Bean
 	EnhancedClass dependency;
 	
+	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	UserDao userDao;
+
 	@Pref
 	SomePrefs_ somePrefs;
 

@@ -55,6 +55,7 @@ import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.annotations.FromHtml;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.HierarchyViewerSupport;
 import org.androidannotations.annotations.HttpsClient;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ItemClick;
@@ -140,6 +141,7 @@ import org.androidannotations.processing.FragmentByIdProcessor;
 import org.androidannotations.processing.FragmentByTagProcessor;
 import org.androidannotations.processing.FromHtmlProcessor;
 import org.androidannotations.processing.FullscreenProcessor;
+import org.androidannotations.processing.HierarchyViewerSupportProcessor;
 import org.androidannotations.processing.HttpsClientProcessor;
 import org.androidannotations.processing.InstanceStateProcessor;
 import org.androidannotations.processing.ItemClickProcessor;
@@ -204,6 +206,7 @@ import org.androidannotations.validation.FragmentByIdValidator;
 import org.androidannotations.validation.FragmentByTagValidator;
 import org.androidannotations.validation.FromHtmlValidator;
 import org.androidannotations.validation.FullscreenValidator;
+import org.androidannotations.validation.HierarchyViewerSupportValidator;
 import org.androidannotations.validation.HttpsClientValidator;
 import org.androidannotations.validation.InstanceStateValidator;
 import org.androidannotations.validation.ItemClickValidator;
@@ -316,7 +319,8 @@ import org.androidannotations.validation.rest.RestValidator;
 		OrmLiteDao.class, //
 		HttpsClient.class, //
 		FragmentArg.class, //
-		OnActivityResult.class //
+		OnActivityResult.class, //
+		HierarchyViewerSupport.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
@@ -461,7 +465,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
 		modelValidator.register(new SharedPrefValidator(processingEnv));
 		modelValidator.register(new PrefValidator(processingEnv));
-		modelValidator.register(new RestValidator(processingEnv));
+		modelValidator.register(new RestValidator(processingEnv, androidManifest));
 		modelValidator.register(new DeleteValidator(processingEnv));
 		modelValidator.register(new GetValidator(processingEnv));
 		modelValidator.register(new HeadValidator(processingEnv));
@@ -497,6 +501,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		modelValidator.register(new OnActivityResultValidator(processingEnv, rClass));
+		modelValidator.register(new HierarchyViewerSupportValidator(processingEnv, androidManifest));
 		return modelValidator;
 	}
 
@@ -549,14 +554,14 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new ExtraProcessor(processingEnv));
 		modelProcessor.register(new FragmentArgProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
-		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
-		modelProcessor.register(new RestProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new PostProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new PutProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new DeleteProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new HeadProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationHolder));
+		RestImplementationsHolder restImplementationsHolder = new RestImplementationsHolder();
+		modelProcessor.register(new RestProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new GetProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new PostProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new PutProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new DeleteProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new HeadProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationsHolder));
 		modelProcessor.register(new AppProcessor());
 		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
 		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
@@ -587,6 +592,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		modelProcessor.register(new OnActivityResultProcessor(processingEnv, rClass));
+		modelProcessor.register(new HierarchyViewerSupportProcessor());
 		return modelProcessor;
 	}
 

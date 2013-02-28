@@ -18,13 +18,16 @@ package org.androidannotations.test15;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import android.app.Activity;
+import java.util.SortedSet;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
+import org.androidannotations.test15.ebean.GenericBean;
+import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
+
+import android.app.Activity;
 
 @EActivity
 public class ThreadActivity extends Activity {
@@ -56,6 +59,11 @@ public class ThreadActivity extends Activity {
 
 	@Background
 	void genericBackgroundMethod(List<Map<String, List<Set<MySerializableBean[]>>>> param) {
+
+	}
+
+	@Background
+	void genericBackgroundMethod(Set<? extends GenericBean<? extends SomeBean>> param) {
 
 	}
 

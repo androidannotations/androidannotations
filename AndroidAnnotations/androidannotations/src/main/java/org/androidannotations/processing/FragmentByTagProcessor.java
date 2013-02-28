@@ -30,7 +30,9 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JMethod;
@@ -65,7 +67,7 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 			tagValue = fieldName;
 		}
 
-		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName("android.app.Fragment").asType();
+		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT).asType();
 
 		JMethod findFragmentByTag;
 		if (annotationHelper.isSubtype(elementType, nativeFragmentType)) {
