@@ -27,6 +27,8 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -52,7 +54,7 @@ public class EApplicationProcessor implements GeneratingElementProcessor {
 		String generatedComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass, GeneratedClassType.APPLICATION);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 

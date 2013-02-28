@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
@@ -25,6 +24,7 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import java.lang.annotation.Annotation;
 
@@ -34,9 +34,11 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -72,7 +74,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass, GeneratedClassType.FRAGMENT);
 
 		JClass eBeanClass = codeModel.directClass(beanQualifiedName);
 
@@ -142,10 +144,9 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			JBlock onViewCreatedBody = onViewCreated.body();
 
 			onViewCreatedBody.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
-			
+
 			onViewCreatedBody.invoke(holder.afterSetContentView);
 		}
-
 
 		{
 			// findViewById

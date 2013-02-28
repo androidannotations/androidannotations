@@ -40,6 +40,7 @@ import javax.lang.model.util.Types;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CaseHelper;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
 import com.sun.codemodel.JBlock;
@@ -93,6 +94,10 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 
 		if (holder.extras == null) {
 			injectExtras(holder, codeModel);
+			injectExtrasSimple(holder, codeModel);
+			injectOrOverrideSetIntent(holder, codeModel);
+			injectExtrasOnInit(holder);
+			injectExtrasOnStartCommand(holder);
 		}
 
 		String staticFieldName;
@@ -178,43 +183,73 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 	}
 
 	/**
-	 * Adds call to injectExtras_() in onCreate and setIntent() methods.
+	 * Adds call to injectExtras_(Bundle) in onStartCommand and setIntent()
+	 * methods methods.
 	 */
 	private void injectExtras(EBeanHolder holder, JCodeModel codeModel) {
-
 		Classes classes = holder.classes();
 
-		JMethod injectExtrasMethod = holder.generatedClass.method(PRIVATE, codeModel.VOID, "injectExtras_");
+		holder.injectExtrasMethod = holder.generatedClass.method(PRIVATE, codeModel.VOID, "injectExtras_");
+		holder.extras = holder.injectExtrasMethod.param(classes.BUNDLE, "extras_");
 
-		overrideSetIntent(holder, codeModel, injectExtrasMethod);
-
-		injectExtrasOnInit(holder, classes.INTENT, injectExtrasMethod);
-
-		JBlock injectExtrasBody = injectExtrasMethod.body();
-
-		JVar intent = injectExtrasBody.decl(classes.INTENT, "intent_", invoke("getIntent"));
-
-		holder.extras = injectExtrasBody.decl(classes.BUNDLE, "extras_");
-		holder.extras.init(intent.invoke("getExtras"));
+		JBlock injectExtrasBody = holder.injectExtrasMethod.body();
 
 		holder.extrasNotNullBlock = injectExtrasBody._if(holder.extras.ne(_null()))._then();
 	}
 
-	private void overrideSetIntent(EBeanHolder holder, JCodeModel codeModel, JMethod initIntentMethod) {
-		if (holder.intentBuilderClass != null) {
+	/**
+	 * Adds call to injectExtras_() in onCreate method.
+	 */
+	private void injectExtrasSimple(EBeanHolder holder, JCodeModel codeModel) {
+		if (holder.classType == GeneratedClassType.SERVICE) {
+			return;
+		}
 
+		Classes classes = holder.classes();
+
+		holder.injectExtrasSimpleMethod = holder.generatedClass.method(PRIVATE, codeModel.VOID, "injectExtras_");
+
+		JBlock injectExtrasBody = holder.injectExtrasSimpleMethod.body();
+
+		JVar intent = injectExtrasBody.decl(classes.INTENT, "intent_", invoke("getIntent"));
+
+		JVar extras = injectExtrasBody.decl(classes.BUNDLE, "extras_");
+		extras.init(intent.invoke("getExtras"));
+
+		injectExtrasBody.invoke(holder.injectExtrasMethod).arg(extras);
+	}
+
+	private void injectOrOverrideSetIntent(EBeanHolder holder, JCodeModel codeModel) {
+		if (holder.intentBuilderClass != null) {
 			JMethod setIntentMethod = holder.generatedClass.method(PUBLIC, codeModel.VOID, "setIntent");
-			setIntentMethod.annotate(Override.class);
 			JVar methodParam = setIntentMethod.param(holder.classes().INTENT, "newIntent");
 
 			JBlock setIntentBody = setIntentMethod.body();
 
-			setIntentBody.invoke(_super(), setIntentMethod).arg(methodParam);
-			setIntentBody.invoke(initIntentMethod);
+			// Override only if it's an activity
+			if (holder.classType == GeneratedClassType.ACTIVITY) {
+				setIntentMethod.annotate(Override.class);
+				setIntentBody.invoke(_super(), setIntentMethod).arg(methodParam);
+			}
+
+			JInvocation extras = methodParam.invoke("getExtras");
+			setIntentBody.invoke(holder.injectExtrasMethod).arg(extras);
 		}
 	}
 
-	private void injectExtrasOnInit(EBeanHolder holder, JClass intentClass, JMethod injectExtrasMethod) {
-		holder.init.body().invoke(injectExtrasMethod);
+	private void injectExtrasOnInit(EBeanHolder holder) {
+		if (holder.classType == GeneratedClassType.ACTIVITY) {
+			holder.init.body().invoke(holder.injectExtrasMethod);
+		}
+	}
+
+	private void injectExtrasOnStartCommand(EBeanHolder holder) {
+		if (holder.classType == GeneratedClassType.SERVICE && holder.onStartCommandMethod != null) {
+			JVar intent = holder.onStartCommandMethodIntent;
+			JBlock body = holder.initStartCommand.body();
+
+			body._if(intent.ne(JExpr._null())) //
+					._then().invoke(holder.injectExtrasMethod).arg(intent.invoke("getExtras"));
+		}
 	}
 }

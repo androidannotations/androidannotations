@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -166,13 +167,13 @@ public class EBeansHolder {
 		loadedClasses.put(Object.class.getName(), refClass(Object.class));
 	}
 
-	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
+	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass, GeneratedClassType classType) {
 
 		String qualifiedName = generatedClass.fullName();
 
 		originatingElements.add(qualifiedName, element);
 
-		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation, generatedClass);
+		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation, generatedClass, classType);
 		eBeanHolders.put(element, activityHolder);
 		return activityHolder;
 	}

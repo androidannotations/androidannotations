@@ -28,6 +28,8 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.processing.EBeanHolder.GeneratedClassType;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -35,6 +37,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public class EServiceProcessor implements GeneratingElementProcessor {
 
@@ -60,7 +63,7 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass, GeneratedClassType.SERVICE);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 
@@ -78,6 +81,21 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 			onCreateBody.invoke(JExpr._super(), onCreate);
 		}
 
+		holder.initStartCommand = holder.generatedClass.method(PRIVATE, codeModel.VOID, "initStartCommand_");
+		holder.initStartCommandIntent = holder.initStartCommand.param(eBeansHolder.classes().INTENT, "intent");
+		{
+			// onStartCommand
+			holder.onStartCommandMethod = holder.generatedClass.method(PUBLIC, codeModel.INT, "onStartCommand");
+			holder.onStartCommandMethod.annotate(Override.class);
+			holder.onStartCommandMethodIntent = holder.onStartCommandMethod.param(eBeansHolder.classes().INTENT, "intent");
+			JVar flag = holder.onStartCommandMethod.param(codeModel.INT, "flag");
+			JVar startId = holder.onStartCommandMethod.param(codeModel.INT, "startId");
+
+			JBlock onStartCommandBody = holder.onStartCommandMethod.body();
+			onStartCommandBody.invoke(holder.initStartCommand).arg(holder.onStartCommandMethodIntent);
+			onStartCommandBody._return(JExpr._super().invoke(holder.onStartCommandMethod).arg(holder.onStartCommandMethodIntent).arg(flag).arg(startId));
+		}
+
 		{
 			/*
 			 * Setting to null shouldn't be a problem as long as we don't allow
@@ -91,5 +109,4 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 		aptCodeModelHelper.addServiceIntentBuilder(codeModel, holder);
 
 	}
-
 }
