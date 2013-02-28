@@ -22,19 +22,16 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.processing.EBeanHolder;
 
-/**
- * @author Eric Kok
- */
-public class HoloEverywhereHelper {
+public class ThirdPartyLibHelper {
 
 	private final AnnotationHelper annotationHelper;
 
-	public HoloEverywhereHelper(AnnotationHelper annotationHelper) {
+	public ThirdPartyLibHelper(AnnotationHelper annotationHelper) {
 		this.annotationHelper = annotationHelper;
 	}
 
 	/**
-	 * Checks whether the Activity extends one of the ActionBarSherlock Activity
+	 * Checks whether the Activity extends one of the HoloEverywhere Activity
 	 * types
 	 */
 	public boolean usesHoloEverywhere(EBeanHolder holder) {
@@ -45,6 +42,31 @@ public class HoloEverywhereHelper {
 			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
 			String qName = typeElement.getQualifiedName().toString();
 			if (qName.startsWith("org.holoeverywhere")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether the Activity extends one of the ActionBarSherlock Activity
+	 * types
+	 */
+	public boolean usesActionBarSherlock(EBeanHolder holder) {
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
+
+		TypeMirror superType;
+		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {
+			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
+			String qName = typeElement.getQualifiedName().toString();
+			if (qName.startsWith("com.actionbarsherlock.app")) {
+				return true;
+			}
+			if (qName.startsWith("org.holoeverywhere")) {
+				/*
+				 * HoloEverywhere depends on ABS and uses its own provided
+				 * activity classes
+				 */
 				return true;
 			}
 		}

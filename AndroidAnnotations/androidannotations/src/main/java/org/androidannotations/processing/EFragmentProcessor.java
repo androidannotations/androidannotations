@@ -33,8 +33,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.helper.HoloEverywhereHelper;
 import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.ThirdPartyLibHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
@@ -53,11 +53,11 @@ import com.sun.codemodel.JVar;
 public class EFragmentProcessor implements GeneratingElementProcessor {
 
 	private final IdAnnotationHelper helper;
-	private HoloEverywhereHelper holoEverywhereHelper;
+	private ThirdPartyLibHelper holoEverywhereHelper;
 
 	public EFragmentProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-		holoEverywhereHelper = new HoloEverywhereHelper(helper);
+		holoEverywhereHelper = new ThirdPartyLibHelper(helper);
 
 	}
 
@@ -118,11 +118,14 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			// onCreateView()
 			JMethod onCreateView = holder.generatedClass.method(PUBLIC, classes.VIEW, "onCreateView");
 			onCreateView.annotate(Override.class);
-			JClass inflaterClass = classes.LAYOUT_INFLATER;
 
+			JClass inflaterClass;
 			if (holoEverywhereHelper.usesHoloEverywhere(holder)) {
 				inflaterClass = classes.HOLO_EVERYWHERE_LAYOUT_INFLATER;
+			} else {
+				inflaterClass = classes.LAYOUT_INFLATER;
 			}
+
 			JVar inflater = onCreateView.param(inflaterClass, "inflater");
 
 			JVar container = onCreateView.param(classes.VIEW_GROUP, "container");
@@ -153,10 +156,9 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			JBlock onViewCreatedBody = onViewCreated.body();
 
 			onViewCreatedBody.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
-			
+
 			onViewCreatedBody.invoke(holder.afterSetContentView);
 		}
-
 
 		{
 			// findViewById
