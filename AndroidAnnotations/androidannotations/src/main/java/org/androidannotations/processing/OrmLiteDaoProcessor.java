@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JCodeModel;
@@ -37,8 +38,6 @@ import com.sun.codemodel.JVar;
 
 /**
  * This class generates the code that creates DAOs with ORMLite
- * 
- * @author Johan Poirier <johan.poirier@gmail.com>
  */
 public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 
