@@ -477,7 +477,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new PostValidator(processingEnv));
 		modelValidator.register(new PutValidator(processingEnv));
 		modelValidator.register(new AcceptValidator(processingEnv));
-		modelValidator.register(new AppValidator(processingEnv, androidManifest));
+		modelValidator.register(new AppValidator(processingEnv));
 		modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
