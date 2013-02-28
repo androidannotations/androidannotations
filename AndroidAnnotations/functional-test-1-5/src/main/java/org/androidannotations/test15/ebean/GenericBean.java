@@ -15,7 +15,9 @@
  */
 package org.androidannotations.test15.ebean;
 
+import org.androidannotations.annotations.EBean;
 
-public class GenericBean<T> {
+@EBean
+public class GenericBean<T extends Number> {
 
 }

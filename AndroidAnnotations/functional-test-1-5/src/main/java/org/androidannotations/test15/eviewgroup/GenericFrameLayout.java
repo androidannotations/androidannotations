@@ -13,31 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.ebean;
+package org.androidannotations.test15.eviewgroup;
 
-import java.util.Map;
+import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.test15.R;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EActivity;
+import android.content.Context;
+import android.util.AttributeSet;
 
-import android.app.Activity;
+@EViewGroup(R.layout.component)
+public class GenericFrameLayout<T extends Number> extends CustomFrameLayout {
 
-@EActivity
-public class BeanInjectedActivity extends Activity {
+	public GenericFrameLayout(Context context, int i) {
+		super(context, i);
+	}
 
-	@Bean
-	public EmptyDependency dependency;
-
-	@Bean(SomeImplementation.class)
-	public SomeInterface interfaceDependency;
-
-	@Bean
-	public SomeSingleton singletonDependency;
-
-	@Bean
-	public GenericBeanExtendsNumber<Integer> genericBeanInteger;
-
-	@Bean
-	public GenericBeanExtendsMap<Integer, Map<String, Integer>> genericBeanMap;
+	public GenericFrameLayout(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
 }

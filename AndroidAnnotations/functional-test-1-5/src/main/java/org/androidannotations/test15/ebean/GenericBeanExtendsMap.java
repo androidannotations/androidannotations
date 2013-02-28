@@ -17,27 +17,10 @@ package org.androidannotations.test15.ebean;
 
 import java.util.Map;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
 
-import android.app.Activity;
-
-@EActivity
-public class BeanInjectedActivity extends Activity {
-
-	@Bean
-	public EmptyDependency dependency;
-
-	@Bean(SomeImplementation.class)
-	public SomeInterface interfaceDependency;
-
-	@Bean
-	public SomeSingleton singletonDependency;
-
-	@Bean
-	public GenericBeanExtendsNumber<Integer> genericBeanInteger;
-
-	@Bean
-	public GenericBeanExtendsMap<Integer, Map<String, Integer>> genericBeanMap;
+@EBean
+public class GenericBeanExtendsMap<S extends Number, T extends Map<String, S>> {
 
 }
+ 

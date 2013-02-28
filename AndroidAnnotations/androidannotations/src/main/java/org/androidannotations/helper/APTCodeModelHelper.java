@@ -23,6 +23,7 @@ import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 
 import org.androidannotations.processing.EBeanHolder;
@@ -56,6 +58,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
@@ -99,6 +102,60 @@ public class APTCodeModelHelper {
 		} else {
 			return holder.refClass(type.toString());
 		}
+	}
+
+	/**
+	 * Extract all typed parameter from a generic class.
+	 * <p/>
+	 * <b>Example :</b> <code>class GenericBean&lt;A extends Object, B super
+	 * Number&gt; {...}</code> will return a list of two typed parameter (A and
+	 * B)
+	 * <p/>
+	 * Note : The name of a typed parameter can be retrieved with the toString()
+	 * method.
+	 * 
+	 * @param typeMirror
+	 * @return a {@link List} of {@link Parameter} if any exists else an empty
+	 *         {@link List}
+	 */
+	public List<Parameter> extractTypedParameters(TypeMirror typeMirror, EBeanHolder holder) {
+		List<Parameter> result = new ArrayList<Parameter>();
+
+		if (typeMirror instanceof DeclaredType) {
+			DeclaredType declaredType = (DeclaredType) typeMirror;
+			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+
+			for (TypeMirror typeArgument : typeArguments) {
+				if (typeArgument instanceof TypeVariable) {
+					TypeVariable typeVariable = (TypeVariable) typeArgument;
+					result.add(new Parameter(typeVariable.toString(), typeMirrorToJClass(typeVariable.getUpperBound(), holder)));
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Get the generated version (with the _) of a class and take care of
+	 * generics parts
+	 * 
+	 * @param typeMirror
+	 * @param holder
+	 * @return
+	 */
+	public JClass getGeneratedClass(TypeMirror typeMirror, EBeanHolder holder) {
+		String typeQualifiedName = typeMirror.toString();
+		String generatedClassName;
+
+		int argsIndex;
+		if ((argsIndex = typeQualifiedName.indexOf('<')) > -1) {
+			// Handle generics
+			generatedClassName = typeQualifiedName.substring(0, argsIndex) + GENERATION_SUFFIX + typeQualifiedName.substring(argsIndex);
+		} else {
+			generatedClassName = typeQualifiedName + GENERATION_SUFFIX;
+		}
+
+		return holder.refClass(generatedClassName);
 	}
 
 	public static class Parameter {
@@ -279,9 +336,18 @@ public class APTCodeModelHelper {
 		for (ExecutableElement userConstructor : constructors) {
 			JMethod copyConstructor = holder.generatedClass.constructor(PUBLIC);
 			JMethod staticHelper = holder.generatedClass.method(PUBLIC | STATIC, eBeanClass, "build");
+
+			// Handle generics
+			JClass factoryMethodReturnClass = holder.generatedClass;
+			for (Parameter typedParameter : holder.typedParameters) {
+				JTypeVar typeVar = staticHelper.generify(typedParameter.name, typedParameter.jClass);
+				factoryMethodReturnClass = factoryMethodReturnClass.narrow(typeVar);
+			}
+			staticHelper.type(factoryMethodReturnClass);
+
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");
-			JInvocation newInvocation = JExpr._new(holder.generatedClass);
+			JInvocation newInvocation = JExpr._new(factoryMethodReturnClass);
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
 				String paramType = param.asType().toString();
@@ -291,7 +357,7 @@ public class APTCodeModelHelper {
 				newInvocation.arg(JExpr.ref(paramName));
 			}
 
-			JVar newCall = staticHelper.body().decl(holder.generatedClass, "instance", newInvocation);
+			JVar newCall = staticHelper.body().decl(factoryMethodReturnClass, "instance", newInvocation);
 			staticHelper.body().invoke(newCall, "onFinishInflate");
 			staticHelper.body()._return(newCall);
 			body.invoke(holder.init);

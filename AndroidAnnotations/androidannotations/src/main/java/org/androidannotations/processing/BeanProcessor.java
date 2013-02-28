@@ -15,11 +15,10 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static org.androidannotations.processing.EBeanProcessor.GET_INSTANCE_METHOD_NAME;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
+import static org.androidannotations.processing.EBeanProcessor.GET_INSTANCE_METHOD_NAME;
 
 import java.lang.annotation.Annotation;
 
@@ -30,7 +29,9 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.NonConfigurationInstance;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.TargetAnnotationHelper;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -40,9 +41,11 @@ import com.sun.codemodel.JInvocation;
 public class BeanProcessor implements DecoratingElementProcessor {
 
 	private TargetAnnotationHelper annotationHelper;
+	protected final APTCodeModelHelper helper;
 
 	public BeanProcessor(ProcessingEnvironment processingEnv) {
 		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		helper = new APTCodeModelHelper();
 	}
 
 	@Override
@@ -62,12 +65,10 @@ public class BeanProcessor implements DecoratingElementProcessor {
 			elementType = element.asType();
 		}
 
+		JClass generatedClass = helper.getGeneratedClass(elementType, holder);
+		JClass rawInjectedClass = generatedClass.erasure();
+
 		String fieldName = element.getSimpleName().toString();
-
-		String typeQualifiedName = elementType.toString();
-
-		JClass injectedClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
-
 		JFieldRef beanField = ref(fieldName);
 		{
 			// getInstance
@@ -79,7 +80,7 @@ public class BeanProcessor implements DecoratingElementProcessor {
 				body = body._if(beanField.eq(_null()))._then();
 			}
 
-			JInvocation getInstance = injectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
+			JInvocation getInstance = rawInjectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
 			body.assign(beanField, getInstance);
 		}
 
@@ -88,10 +89,9 @@ public class BeanProcessor implements DecoratingElementProcessor {
 			if (holder.afterSetContentView != null) {
 				JBlock body = holder.afterSetContentView.body();
 
-				body.invoke(cast(injectedClass, beanField), holder.afterSetContentView);
+				body.invoke(cast(generatedClass, beanField), holder.afterSetContentView);
 			}
 		}
 
 	}
-
 }

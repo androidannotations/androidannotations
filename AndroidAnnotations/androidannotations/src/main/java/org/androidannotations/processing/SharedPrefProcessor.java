@@ -67,7 +67,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class SharedPrefProcessor implements GeneratingElementProcessor {
+public class SharedPrefProcessor extends GeneratingElementProcessor {
 
 	private static class EditorFieldHolder {
 		public final Class<?> fieldClass;
@@ -243,6 +243,11 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 			}
 		}
 
+	}
+
+	@Override
+	void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder, EBeanHolder holder) throws Exception {
+		// TODO Auto-generated method stub
 	}
 
 	private void addFieldHelperMethod(JDefinedClass helperClass, String fieldName, JExpression defaultValue, Class<?> prefFieldHelperClass, String fieldHelperMethodName) {

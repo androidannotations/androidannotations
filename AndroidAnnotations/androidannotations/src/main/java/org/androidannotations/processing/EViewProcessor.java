@@ -22,24 +22,20 @@ import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EView;
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.processing.EBeansHolder.Classes;
-import com.sun.codemodel.ClassType;
+
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 
-public class EViewProcessor implements GeneratingElementProcessor {
+public class EViewProcessor extends GeneratingElementProcessor {
 
 	private static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
@@ -67,29 +63,18 @@ public class EViewProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
+	public int getGeneratedClassModifiers(Element element) {
+		if (element.getModifiers().contains(Modifier.ABSTRACT)) {
+			return JMod.PUBLIC | JMod.ABSTRACT;
+		} else {
+			return JMod.PUBLIC | JMod.FINAL;
+		}
+	}
+
+	@Override
+	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder, EBeanHolder holder) throws Exception {
 
 		Classes classes = eBeansHolder.classes();
-
-		TypeElement typeElement = (TypeElement) element;
-
-		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
-
-		String generatedBeanQualifiedName = eBeanQualifiedName + ModelConstants.GENERATION_SUFFIX;
-
-		int modifiers;
-		if (element.getModifiers().contains(Modifier.ABSTRACT)) {
-			modifiers = JMod.PUBLIC | JMod.ABSTRACT;
-		} else {
-			modifiers = JMod.PUBLIC | JMod.FINAL;
-		}
-
-		JDefinedClass generatedClass = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
-
-		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
-
-		holder.generatedClass._extends(eBeanClass);
 
 		holder.generatedClass.annotate(SuppressWarnings.class).param("value", "unused");
 		holder.generatedClass.javadoc().append(SUPPRESS_WARNING_COMMENT);
@@ -124,7 +109,7 @@ public class EViewProcessor implements GeneratingElementProcessor {
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
-		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, eBeanClass, holder, onFinishInflate);
+		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, holder.generatedClass._extends(), holder, onFinishInflate);
 
 		{
 			// init if activity

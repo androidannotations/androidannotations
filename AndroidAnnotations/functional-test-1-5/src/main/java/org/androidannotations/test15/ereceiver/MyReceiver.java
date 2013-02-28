@@ -36,7 +36,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 	@SystemService
 	NotificationManager notificationManager;
-	
+
 	@Bean
 	EnhancedClass dependency;
 
@@ -46,13 +46,12 @@ public class MyReceiver extends BroadcastReceiver {
 		workInBackground();
 	}
 
-
 	@Trace
 	@UiThread
 	void showToast(Context context) {
 		Toast.makeText(context, "Hello World!", Toast.LENGTH_LONG).show();
 	}
-	
+
 	@Trace
 	@Background
 	void workInBackground() {

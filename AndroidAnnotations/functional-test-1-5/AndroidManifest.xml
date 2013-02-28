@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-
     Copyright (C) 2010-2012 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,7 +13,6 @@
     WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     License for the specific language governing permissions and limitations under
     the License.
-
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.androidannotations.test15"
@@ -24,13 +22,13 @@
     <uses-sdk
         android:minSdkVersion="3"
         android:targetSdkVersion="8" />
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="org.androidannotations.test15.roboguice.SampleRoboApplication_"
-        android:icon="@drawable/icon"
         android:debuggable="true"
+        android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity android:name="org.androidannotations.test15.eviewgroup.CustomFrameLayoutActivity_" >
             <intent-filter>
@@ -47,6 +45,7 @@
         <activity android:name=".TouchesHandledActivity_" />
         <activity android:name=".ItemClicksHandledActivity_" />
         <activity android:name=".ActivityWithServices_" />
+        <activity android:name=".GenericActivity_" />
         <activity android:name=".ExtraInjectedActivity_" />
         <activity android:name=".BackpressedActivity_" />
         <activity android:name=".TransactionalActivity_" />
@@ -64,6 +63,7 @@
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuSubActivity_" />
         <activity android:name="org.androidannotations.test15.NoTitleFullscreenActivity_" />
         <activity android:name="org.androidannotations.test15.ExtendingActivity_" />
+        <activity android:name="org.androidannotations.test15.ExtendingGenericActivity_" />
         <activity android:name="org.androidannotations.test15.ebean.BeanInjectedActivity_" />
         <activity android:name="org.androidannotations.test15.rest.MyServiceActivity_" />
         <activity android:name="org.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
@@ -85,9 +85,16 @@
             android:name="org.androidannotations.test15.eprovider.MyProvider_"
             android:authorities=""
             android:exported="false" />
+        <provider
+            android:name="org.androidannotations.test15.eprovider.GenericProvider_"
+            android:authorities=""
+            android:exported="false" />
 
         <service
             android:name="org.androidannotations.test15.eservice.MyService_"
+            android:exported="false" />
+        <service
+            android:name="org.androidannotations.test15.eservice.GenericService_"
             android:exported="false" />
     </application>
 

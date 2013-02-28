@@ -13,31 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.ebean;
-
-import java.util.Map;
+package org.androidannotations.test15.eprovider;
 
 import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EProvider;
+import org.androidannotations.test15.ebean.GenericBean;
 
-import android.app.Activity;
-
-@EActivity
-public class BeanInjectedActivity extends Activity {
-
-	@Bean
-	public EmptyDependency dependency;
-
-	@Bean(SomeImplementation.class)
-	public SomeInterface interfaceDependency;
+@EProvider
+public class GenericProvider<T extends Number> extends MyProvider {
 
 	@Bean
-	public SomeSingleton singletonDependency;
-
-	@Bean
-	public GenericBeanExtendsNumber<Integer> genericBeanInteger;
-
-	@Bean
-	public GenericBeanExtendsMap<Integer, Map<String, Integer>> genericBeanMap;
+	GenericBean<T> genericBean;
 
 }
