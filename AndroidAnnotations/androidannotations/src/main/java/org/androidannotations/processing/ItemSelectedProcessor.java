@@ -48,8 +48,6 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
  */
 public class ItemSelectedProcessor implements DecoratingElementProcessor {
 

@@ -27,6 +27,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JCodeModel;
@@ -37,8 +38,6 @@ import com.sun.codemodel.JVar;
 
 /**
  * This class generates the code that creates DAOs with ORMLite
- * 
- * @author Johan Poirier <johan.poirier@gmail.com>
  */
 public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 

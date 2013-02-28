@@ -31,7 +31,6 @@ import java.lang.annotation.Target;
  * Its main purpose is to be safe from renaming annotations targeted by an
  * annotation processor.
  * 
- * @author Pierre-Yves Ricau
  */
 @Documented
 @Target(ElementType.TYPE)

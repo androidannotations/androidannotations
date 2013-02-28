@@ -30,6 +30,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -41,11 +42,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-/**
- * @author Benjamin Fellous
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
- */
 public class LongClickProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;

@@ -82,8 +82,6 @@ import android.content.Intent;
  * @see android.app.Activity#onActivityResult(int, int, Intent)
  * 
  * 
- * @author Mathieu Boniface < mat.boniface@gmail.com >
- * 
  */
 
 @Retention(RetentionPolicy.CLASS)

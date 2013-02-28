@@ -35,8 +35,6 @@ import java.lang.annotation.Target;
  * The annotation value should be one of R.id.* fields. If not set, the method
  * name will be used as the R.id.* field name.
  * 
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

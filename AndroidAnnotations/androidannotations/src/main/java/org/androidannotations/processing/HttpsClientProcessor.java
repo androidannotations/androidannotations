@@ -33,6 +33,7 @@ import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 import org.androidannotations.rclass.IRInnerClass;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JCodeModel;
@@ -45,9 +46,6 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
-/**
- * @author Nabil Hachicha
- */
 public class HttpsClientProcessor implements DecoratingElementProcessor {
 
 	private final IRClass rClass;

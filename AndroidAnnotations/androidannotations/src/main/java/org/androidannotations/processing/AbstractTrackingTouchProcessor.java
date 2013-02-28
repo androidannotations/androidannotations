@@ -38,7 +38,6 @@ import com.sun.codemodel.JVar;
  * Note: this could probably be moved to a helper, rather then being an abstract
  * class (favor composition over inheritance)
  * 
- * @author Mathieu Boniface
  */
 public abstract class AbstractTrackingTouchProcessor implements DecoratingElementProcessor {
 

@@ -36,10 +36,6 @@ import java.lang.annotation.Target;
  * void, it will be considered as returning true (ie the method has handled the
  * event).
  * 
- * @author Benjamin Fellous
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
- * 
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

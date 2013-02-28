@@ -33,7 +33,6 @@ import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
 
 /**
- * @author Mathieu Boniface
  */
 public class OnActivityResultValidator implements ElementValidator {
 

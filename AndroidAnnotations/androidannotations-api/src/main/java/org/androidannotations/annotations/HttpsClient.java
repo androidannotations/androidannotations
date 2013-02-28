@@ -53,8 +53,6 @@ import java.lang.annotation.Target;
  * <b>Note</b>:
  * <tt>Prior to ICS, Android accepts [Key|Trust]store only in BKS format
  * (Bouncycastle Key Store)</tt>
- * 
- * @author Nabil Hachicha
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

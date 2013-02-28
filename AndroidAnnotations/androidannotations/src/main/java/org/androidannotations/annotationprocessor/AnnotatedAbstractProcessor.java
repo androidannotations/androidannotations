@@ -29,7 +29,6 @@ import javax.tools.Diagnostic;
  * {@link AbstractProcessor#getSupportedAnnotationTypes()}, enabling usage of
  * {@link SupportedAnnotationClasses} on a {@link Processor}.
  * 
- * @author Pierre-Yves Ricau
  */
 public abstract class AnnotatedAbstractProcessor extends AbstractProcessor {
 

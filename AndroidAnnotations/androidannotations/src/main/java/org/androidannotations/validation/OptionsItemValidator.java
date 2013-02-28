@@ -30,7 +30,6 @@ import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 
 /**
- * @author Pierre-Yves Ricau
  */
 public class OptionsItemValidator implements ElementValidator {
 

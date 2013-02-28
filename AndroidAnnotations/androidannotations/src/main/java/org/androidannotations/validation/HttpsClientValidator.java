@@ -27,9 +27,6 @@ import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 
-/**
- * @author Nabil Hachicha
- */
 public class HttpsClientValidator implements ElementValidator {
 
 	private IdValidatorHelper validatorHelper;

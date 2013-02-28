@@ -24,7 +24,6 @@ import org.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JMethod;
 
 /**
- * @author Mathieu Boniface
  */
 public class SeekBarTouchStartProcessor extends AbstractTrackingTouchProcessor {
 

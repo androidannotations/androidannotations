@@ -32,7 +32,6 @@ import android.util.Log;
  * <i>level</i> (optional) : the log level used for the log message. (default :
  * LOG.INFO).
  * 
- * @author Mathieu Boniface
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

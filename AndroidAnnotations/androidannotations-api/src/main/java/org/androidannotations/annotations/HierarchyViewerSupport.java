@@ -8,8 +8,6 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to enable the use of HierarchyViewer inside the
  * application.
- * 
- * @author Thomas Fondrillon
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

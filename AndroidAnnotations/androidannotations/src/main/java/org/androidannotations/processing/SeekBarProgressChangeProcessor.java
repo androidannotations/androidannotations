@@ -40,7 +40,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Mathieu Boniface
  */
 public class SeekBarProgressChangeProcessor implements DecoratingElementProcessor {
 
