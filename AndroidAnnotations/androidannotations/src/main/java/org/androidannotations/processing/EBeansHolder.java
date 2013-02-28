@@ -103,6 +103,11 @@ public class EBeansHolder {
 		public final JClass SHERLOCK_MENU_INFLATER = refClass(CanonicalNameConstants.SHERLOCK_MENU_INFLATER);
 
 		/*
+		 * HoloEverywhre
+		 */
+		public final JClass HOLO_EVERYWHERE_LAYOUT_INFLATER = refClass(CanonicalNameConstants.HOLO_EVERYWHERE_LAYOUT_INFLATER);
+
+		/*
 		 * RoboGuice
 		 */
 		public final JClass INJECTOR_PROVIDER = refClass(CanonicalNameConstants.INJECTOR_PROVIDER);

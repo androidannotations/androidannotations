@@ -25,11 +25,11 @@ import org.androidannotations.processing.EBeanHolder;
 /**
  * @author Eric Kok
  */
-public class SherlockHelper {
+public class HoloEverywhereHelper {
 
 	private final AnnotationHelper annotationHelper;
 
-	public SherlockHelper(AnnotationHelper annotationHelper) {
+	public HoloEverywhereHelper(AnnotationHelper annotationHelper) {
 		this.annotationHelper = annotationHelper;
 	}
 
@@ -37,16 +37,13 @@ public class SherlockHelper {
 	 * Checks whether the Activity extends one of the ActionBarSherlock Activity
 	 * types
 	 */
-	public boolean usesSherlock(EBeanHolder holder) {
+	public boolean usesHoloEverywhere(EBeanHolder holder) {
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
 
 		TypeMirror superType;
 		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {
 			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
 			String qName = typeElement.getQualifiedName().toString();
-			if (qName.startsWith("com.actionbarsherlock.app")) {
-				return true;
-			}
 			if (qName.startsWith("org.holoeverywhere")) {
 				return true;
 			}
