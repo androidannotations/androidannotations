@@ -13,19 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.api;
+package org.androidannotations.test15.efragment;
 
-public enum Scope {
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.FragmentById;
+import org.androidannotations.annotations.FragmentByTag;
+import org.androidannotations.test15.R;
 
-	/**
-	 * A new instance of the bean is created each time it is needed
-	 */
-	Default, //
+@EBean
+public class BeanWithSupportFragments {
 
-	/**
-	 * A new instance of the bean is created the first time it is needed, it is
-	 * then retained and the same instance is always returned.
-	 */
-	Singleton, //
-	;
+	@FragmentById
+	public MySupportFragment mySupportFragment;
+
+	@FragmentById(R.id.mySupportFragment)
+	public MySupportFragment mySupportFragment2;
+
+	@FragmentByTag
+	public MySupportFragment mySupportFragmentTag;
+
+	@FragmentByTag("mySupportFragmentTag")
+	public MySupportFragment mySupportFragmentTag2;
+
 }

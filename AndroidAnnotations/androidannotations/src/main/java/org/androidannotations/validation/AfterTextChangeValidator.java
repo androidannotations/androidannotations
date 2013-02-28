@@ -24,6 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.AfterTextChange;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
@@ -74,7 +75,7 @@ public class AfterTextChangeValidator implements ElementValidator {
 		boolean textViewParameterFound = false;
 		for (VariableElement parameter : parameters) {
 			String parameterType = parameter.asType().toString();
-			if (parameterType.equals("android.text.Editable")) {
+			if (parameterType.equals(CanonicalNameConstants.EDITABLE)) {
 				if (editableParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.text.Editable");
 					valid.invalidate();
@@ -82,7 +83,7 @@ public class AfterTextChangeValidator implements ElementValidator {
 				editableParameterFound = true;
 				continue;
 			}
-			if (parameterType.equals("android.widget.TextView")) {
+			if (parameterType.equals(CanonicalNameConstants.TEXT_VIEW)) {
 				if (textViewParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.widget.TextView");
 					valid.invalidate();

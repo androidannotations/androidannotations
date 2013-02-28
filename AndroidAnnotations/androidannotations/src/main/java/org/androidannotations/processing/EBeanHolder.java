@@ -18,11 +18,13 @@ package org.androidannotations.processing;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
+import javax.lang.model.element.Element;
+
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -60,6 +62,9 @@ public class EBeanHolder {
 	public JMethod restoreSavedInstanceStateMethod;
 	public JBlock saveInstanceStateBlock;
 
+	public JBlock onResumeBlock;
+	public JBlock onDestroyBlock;
+
 	public JExpression contextRef;
 	/**
 	 * Should not be used by inner annotations that target services, broadcast
@@ -91,7 +96,7 @@ public class EBeanHolder {
 	/**
 	 * OnActivityResult byResultCode
 	 */
-	public final HashMap<Integer, JCase> onActivityResultCases = new HashMap<Integer, JCase>();
+	public final HashMap<Integer, JBlock> onActivityResultCases = new HashMap<Integer, JBlock>();
 
 	public JSwitch onActivityResultSwitch;
 	public JMethod onActivityResultMethod;
@@ -111,6 +116,10 @@ public class EBeanHolder {
 	public JMethod findSupportFragmentById;
 	public JMethod findNativeFragmentByTag;
 	public JMethod findSupportFragmentByTag;
+
+	public JBlock onCreateOptionMenuMethodBody;
+	public JVar onCreateOptionMenuMenuInflaterVariable;
+	public JVar onCreateOptionMenuMenuParam;
 
 	private final EBeansHolder eBeansHolder;
 	public final Class<? extends Annotation> eBeanAnnotation;
@@ -135,6 +144,14 @@ public class EBeanHolder {
 
 	public JClass refClass(Class<?> clazz) {
 		return eBeansHolder.refClass(clazz);
+	}
+
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		return eBeansHolder.definedClass(fullyQualifiedClassName);
+	}
+
+	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
+		eBeansHolder.generateApiClass(originatingElement, apiClass);
 	}
 
 }

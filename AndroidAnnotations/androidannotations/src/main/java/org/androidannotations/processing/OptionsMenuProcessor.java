@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PUBLIC;
 
@@ -29,13 +27,15 @@ import javax.lang.model.element.Element;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.SherlockHelper;
+import org.androidannotations.helper.ThirdPartyLibHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -44,13 +44,13 @@ import com.sun.codemodel.JVar;
 
 public class OptionsMenuProcessor implements DecoratingElementProcessor {
 
-	private final SherlockHelper sherlockHelper;
+	private final ThirdPartyLibHelper libHelper;
 
 	private IdAnnotationHelper annotationHelper;
 
 	public OptionsMenuProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-		sherlockHelper = new SherlockHelper(annotationHelper);
+		libHelper = new ThirdPartyLibHelper(annotationHelper);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class OptionsMenuProcessor implements DecoratingElementProcessor {
 		JClass menuClass;
 		JClass menuInflaterClass;
 		String getMenuInflaterMethodName;
-		if (sherlockHelper.usesSherlock(holder)) {
+		if (libHelper.usesActionBarSherlock(holder)) {
 			menuClass = classes.SHERLOCK_MENU;
 			menuInflaterClass = classes.SHERLOCK_MENU_INFLATER;
 			getMenuInflaterMethodName = "getSupportMenuInflater";
@@ -86,33 +86,48 @@ public class OptionsMenuProcessor implements DecoratingElementProcessor {
 			returnType = codeModel.BOOLEAN;
 		}
 
-		JMethod method = holder.generatedClass.method(PUBLIC, returnType, "onCreateOptionsMenu");
-		method.annotate(Override.class);
-		JVar menuParam = method.param(menuClass, "menu");
+		JBlock body = holder.onCreateOptionMenuMethodBody;
+		JVar menuInflater = holder.onCreateOptionMenuMenuInflaterVariable;
+		JVar menuParam = holder.onCreateOptionMenuMenuParam;
 
-		JBlock body = method.body();
+		if (body == null) {
+			JMethod method = holder.generatedClass.method(PUBLIC, returnType, "onCreateOptionsMenu");
+			method.annotate(Override.class);
 
-		JVar menuInflater;
-		if (isFragment) {
-			menuInflater = method.param(menuInflaterClass, "inflater");
-		} else {
-			menuInflater = body.decl(menuInflaterClass, "menuInflater", invoke(getMenuInflaterMethodName));
+			menuParam = method.param(menuClass, "menu");
+
+			JBlock methodBody = method.body();
+
+			if (isFragment) {
+				menuInflater = method.param(menuInflaterClass, "inflater");
+			} else {
+				menuInflater = methodBody.decl(menuInflaterClass, "menuInflater", invoke(getMenuInflaterMethodName));
+			}
+
+			body = methodBody.block();
+
+			JInvocation superCall = invoke(JExpr._super(), method);
+			superCall.arg(menuParam);
+
+			if (isFragment) {
+				superCall.arg(menuInflater);
+				methodBody.add(superCall);
+			} else {
+				methodBody._return(superCall);
+			}
+
+			if (isFragment) {
+				holder.init.body().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
+			}
+
+			holder.onCreateOptionMenuMethodBody = body;
+			holder.onCreateOptionMenuMenuInflaterVariable = menuInflater;
+			holder.onCreateOptionMenuMenuParam = menuParam;
 		}
 
 		for (JFieldRef optionsMenuRefId : fieldRefs) {
 			body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam);
 		}
 
-		JInvocation superCall = invoke(_super(), method).arg(menuParam);
-		if (isFragment) {
-			superCall.arg(menuInflater);
-			body.add(superCall);
-		} else {
-			body._return(superCall);
-		}
-
-		if (isFragment) {
-			holder.init.body().invoke("setHasOptionsMenu").arg(TRUE);
-		}
 	}
 }

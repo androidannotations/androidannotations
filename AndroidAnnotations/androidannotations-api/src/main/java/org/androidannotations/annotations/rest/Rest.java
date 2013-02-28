@@ -25,4 +25,5 @@ import java.lang.annotation.Target;
 public @interface Rest {
 	String rootUrl() default "";
 	Class<?>[] converters();
+	Class<?>[] interceptors() default {};
 }

@@ -48,7 +48,7 @@ public class ModelExtractor {
 
 		AnnotationElementsHolder extractedModel = new AnnotationElementsHolder();
 
-		Set<DeclaredType> annotationTypesToCheck = buildAnnotationTypes();
+		Set<String> annotationTypesToCheck = buildAnnotationTypes();
 
 		Set<? extends Element> rootElements = roundEnv.getRootElements();
 
@@ -61,11 +61,11 @@ public class ModelExtractor {
 		return extractedModel;
 	}
 
-	private Set<DeclaredType> buildAnnotationTypes() {
-		Set<DeclaredType> annotationTypesToCheck = new HashSet<DeclaredType>();
+	private Set<String> buildAnnotationTypes() {
+		Set<String> annotationTypesToCheck = new HashSet<String>();
 		for (Class<? extends Annotation> annotation : lookupAnnotations) {
 			TypeElement typeElement = processingEnv.getElementUtils().getTypeElement(annotation.getName());
-			annotationTypesToCheck.add((DeclaredType) typeElement.asType());
+			annotationTypesToCheck.add(typeElement.asType().toString());
 		}
 		return annotationTypesToCheck;
 	}
@@ -90,7 +90,7 @@ public class ModelExtractor {
 		return rootTypeElements;
 	}
 
-	private void extractAncestorsAnnotations(AnnotationElementsHolder extractedModel, Set<DeclaredType> annotationTypesToCheck, Set<TypeElement> rootTypeElements) {
+	private void extractAncestorsAnnotations(AnnotationElementsHolder extractedModel, Set<String> annotationTypesToCheck, Set<TypeElement> rootTypeElements) {
 		for (TypeElement rootTypeElement : rootTypeElements) {
 			Set<TypeElement> ancestors = new HashSet<TypeElement>();
 			addAncestorsElements(ancestors, rootTypeElement);
@@ -110,12 +110,11 @@ public class ModelExtractor {
 		}
 	}
 
-	private void extractAnnotations(AnnotationElementsHolder extractedModel, Set<DeclaredType> annotationTypesToCheck, TypeElement rootTypeElement, Element ancestorEnclosedElement) {
+	private void extractAnnotations(AnnotationElementsHolder extractedModel, Set<String> annotationTypesToCheck, TypeElement rootTypeElement, Element ancestorEnclosedElement) {
 		List<? extends AnnotationMirror> ancestorEnclosedElementAnnotations = ancestorEnclosedElement.getAnnotationMirrors();
 		for (AnnotationMirror annotationMirror : ancestorEnclosedElementAnnotations) {
 			DeclaredType annotationType = annotationMirror.getAnnotationType();
-			if (annotationTypesToCheck.contains(annotationType)) {
-
+			if (annotationTypesToCheck.contains(annotationType.toString())) {
 				TypeElement annotation = (TypeElement) annotationType.asElement();
 
 				/*

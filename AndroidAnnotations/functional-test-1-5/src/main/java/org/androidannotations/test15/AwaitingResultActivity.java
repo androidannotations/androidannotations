@@ -24,32 +24,45 @@ import org.androidannotations.annotations.OnActivityResult;
 @EActivity(R.layout.views_injected)
 public class AwaitingResultActivity extends Activity {
 
-	private static final int FIRST_REQUEST = 11;
-	private static final int SECOND_REQUEST = 22;
-	private static final int THIRD_REQUEST = 33;
+	static final int FIRST_REQUEST = 11;
+	static final int SECOND_REQUEST = 22;
+	static final int THIRD_REQUEST = 33;
+
+	boolean	onResultCalled = false;
+	boolean	onResultWithDataCalled = false;
+	boolean	onActivityResultWithResultCodeAndDataCalled = false;
+	boolean	onActivityResultWithDataAndResultCodeCalled = false;
+	boolean	onResultWithIntResultCodeCalled = false;
+	boolean	onResultWithIntegerResultCodeCalled = false;
 
 	@OnActivityResult(FIRST_REQUEST)
 	void onResult() {
+		onResultCalled = true;
 	}
 
 	@OnActivityResult(SECOND_REQUEST)
 	void onResultWithData(Intent intentData) {
+		onResultWithDataCalled = true;
 	}
 
 	@OnActivityResult(SECOND_REQUEST)
 	void onActivityResultWithResultCodeAndData(int result, Intent intentData) {
+		onActivityResultWithResultCodeAndDataCalled = true;
 	}
 
 	@OnActivityResult(SECOND_REQUEST)
 	void onActivityResultWithDataAndResultCode(Intent intentData, int result) {
+		onActivityResultWithDataAndResultCodeCalled = true;
 	}
 
 	@OnActivityResult(THIRD_REQUEST)
 	void onResultWithIntResultCode(int resultCode) {
+		onResultWithIntResultCodeCalled = true;
 	}
 
 	@OnActivityResult(THIRD_REQUEST)
 	void onResultWithIntegerResultCode(Integer resultCodeInteger) {
+		onResultWithIntegerResultCodeCalled = true;
 	}
 
 }

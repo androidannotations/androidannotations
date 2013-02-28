@@ -26,27 +26,13 @@ public class BeanWithFragments {
 	@FragmentById
 	public MyFragment myFragment;
 	
-	@FragmentById
-	public MySupportFragment mySupportFragment;
-
 	@FragmentById(R.id.myFragment)
 	public MyFragment myFragment2;
 
-	@FragmentById(R.id.mySupportFragment)
-	public MySupportFragment mySupportFragment2;
-	
 	@FragmentByTag
 	public MyFragment myFragmentTag;
 	
-	@FragmentByTag
-	public MySupportFragment mySupportFragmentTag;
-	
 	@FragmentByTag("myFragmentTag")
 	public MyFragment myFragmentTag2;
-	
-	@FragmentByTag("mySupportFragmentTag")
-	public MySupportFragment mySupportFragmentTag2;
-	
-	
 	
 }
