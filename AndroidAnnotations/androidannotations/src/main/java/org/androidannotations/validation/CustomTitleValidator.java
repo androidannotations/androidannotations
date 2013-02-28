@@ -15,38 +15,39 @@
  */
 package org.androidannotations.validation;
 
+import java.lang.annotation.Annotation;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+
 import org.androidannotations.annotations.CustomTitle;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import java.lang.annotation.Annotation;
-
 public class CustomTitleValidator implements ElementValidator {
 
-    private IdValidatorHelper validatorHelper;
+	private IdValidatorHelper validatorHelper;
 
-    public CustomTitleValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
-        IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-        validatorHelper = new IdValidatorHelper(annotationHelper);
-    }
+	public CustomTitleValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+		validatorHelper = new IdValidatorHelper(annotationHelper);
+	}
 
-    @Override
-    public Class<? extends Annotation> getTarget() {
-        return CustomTitle.class;
-    }
+	@Override
+	public Class<? extends Annotation> getTarget() {
+		return CustomTitle.class;
+	}
 
-    @Override
-    public boolean validate(Element element, AnnotationElements validatedElements) {
-        IsValid valid = new IsValid();
+	@Override
+	public boolean validate(Element element, AnnotationElements validatedElements) {
+		IsValid valid = new IsValid();
 
-        validatorHelper.hasEActivity(element, validatedElements, valid);
+		validatorHelper.hasEActivity(element, validatedElements, valid);
 
-        validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);
+		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);
 
-        return valid.isValid();
-    }
+		return valid.isValid();
+	}
 }
