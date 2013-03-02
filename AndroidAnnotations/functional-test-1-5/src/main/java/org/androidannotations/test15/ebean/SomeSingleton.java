@@ -15,16 +15,28 @@
  */
 package org.androidannotations.test15.ebean;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EBean.Scope;
 import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.ViewById;
 
 import android.content.Context;
+import android.view.View;
 
 @EBean(scope = Scope.Singleton)
 public class SomeSingleton {
-	
+
 	@RootContext
 	public Context context;
-	
+
+	/*
+	 * Should not be injected (singleton)
+	 */
+	@ViewById
+	public View myTextView;
+
+	@Bean
+	public BeanWithView beanWithView;
+
 }

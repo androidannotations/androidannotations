@@ -61,13 +61,14 @@ public class EProviderProcessor implements GeneratingElementProcessor {
 
 		holder.contextRef = invoke("getContext");
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onCreate
 			JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.BOOLEAN, "onCreate");
 			onCreate.annotate(Override.class);
 			JBlock onCreateBody = onCreate.body();
-			onCreateBody.invoke(holder.init);
+			onCreateBody.invoke(init);
 			onCreateBody._return(invoke(_super(), onCreate));
 		}
 

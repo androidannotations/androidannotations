@@ -46,8 +46,8 @@ public class CustomTitleProcessor implements DecoratingElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		JFieldRef customTitleFeature = holder.classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
 
-		holder.init.body().invoke("requestWindowFeature").arg(customTitleFeature);
+		holder.initBody.invoke("requestWindowFeature").arg(customTitleFeature);
 		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(holder, element, CustomTitle.class, rClass.get(Res.LAYOUT), false).get(0);
-		holder.afterSetContentView.body().add(holder.contextRef.invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(contentViewId));
+		holder.onViewChanged().body().add(holder.contextRef.invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(contentViewId));
 	}
 }

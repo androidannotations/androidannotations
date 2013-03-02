@@ -18,6 +18,8 @@ package org.androidannotations.test15.inheritance;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import org.androidannotations.api.view.HasViews;
+import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,8 +38,10 @@ public class InheritanceTest {
 	
 	@Test
 	public void after_views_mother_calls_first() {
+		OnViewChangedNotifier notifier = new OnViewChangedNotifier();
+		OnViewChangedNotifier.replaceNotifier(notifier);
 		Child_ child = Child_.getInstance_(mock(Activity.class));
-		child.afterSetContentView_();
+		notifier.notifyViewChanged(mock(HasViews.class));
 		assertThat(child.motherInitViewsWasCalled).isTrue();
 	}
 

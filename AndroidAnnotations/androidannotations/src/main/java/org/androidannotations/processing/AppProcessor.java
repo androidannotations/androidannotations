@@ -42,7 +42,7 @@ public class AppProcessor implements DecoratingElementProcessor {
 
 		String fieldName = element.getSimpleName().toString();
 
-		holder.init.body().assign(ref(fieldName), applicationClass.staticInvoke(EApplicationProcessor.GET_APPLICATION_INSTANCE));
+		holder.initBody.assign(ref(fieldName), applicationClass.staticInvoke(EApplicationProcessor.GET_APPLICATION_INSTANCE));
 
 	}
 

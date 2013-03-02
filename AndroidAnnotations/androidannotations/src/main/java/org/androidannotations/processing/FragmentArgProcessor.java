@@ -146,6 +146,6 @@ public class FragmentArgProcessor implements DecoratingElementProcessor {
 	}
 
 	private void injectArgumentsOnInit(EBeanHolder holder, JClass intentClass, JMethod injectArgumentsMethod) {
-		holder.init.body().invoke(injectArgumentsMethod);
+		holder.initBody.invoke(injectArgumentsMethod);
 	}
 }

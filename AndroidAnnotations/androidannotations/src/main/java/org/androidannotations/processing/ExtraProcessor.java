@@ -215,6 +215,6 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 	}
 
 	private void injectExtrasOnInit(EBeanHolder holder, JClass intentClass, JMethod injectExtrasMethod) {
-		holder.init.body().invoke(injectExtrasMethod);
+		holder.initBody.invoke(injectExtrasMethod);
 	}
 }

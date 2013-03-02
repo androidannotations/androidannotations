@@ -15,9 +15,9 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
+import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 
 import java.lang.annotation.Annotation;
 
@@ -25,6 +25,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.RootContext;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -45,7 +46,7 @@ public class RootContextProcessor implements DecoratingElementProcessor {
 
 		String typeQualifiedName = elementType.toString();
 
-		JBlock body = holder.init.body();
+		JBlock body = holder.initBody;
 		if (CONTEXT.equals(typeQualifiedName)) {
 			body.assign(ref(fieldName), holder.contextRef);
 		} else {
