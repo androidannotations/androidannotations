@@ -268,7 +268,7 @@ public class APTCodeModelHelper {
 		return methodBody._if(holder.contextRef._instanceof(holder.classes().ACTIVITY))._then();
 	}
 
-	public void copyConstructorsAndAddStaticEViewBuilders(Element element, JCodeModel codeModel, JClass eBeanClass, EBeanHolder holder, JMethod setContentViewMethod) {
+	public void copyConstructorsAndAddStaticEViewBuilders(Element element, JCodeModel codeModel, JClass eBeanClass, EBeanHolder holder, JMethod setContentViewMethod, JMethod init) {
 		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
 		for (Element e : element.getEnclosedElements()) {
 			if (e.getKind() == CONSTRUCTOR) {
@@ -294,7 +294,7 @@ public class APTCodeModelHelper {
 			JVar newCall = staticHelper.body().decl(holder.generatedClass, "instance", newInvocation);
 			staticHelper.body().invoke(newCall, "onFinishInflate");
 			staticHelper.body()._return(newCall);
-			body.invoke(holder.init);
+			body.invoke(init);
 		}
 	}
 

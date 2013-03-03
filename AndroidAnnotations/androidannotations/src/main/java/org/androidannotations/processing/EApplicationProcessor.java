@@ -15,6 +15,7 @@
  */
 package org.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
@@ -34,7 +35,6 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -79,15 +79,16 @@ public class EApplicationProcessor implements GeneratingElementProcessor {
 			setInstance.body().assign(staticInstanceField, applicationParam);
 		}
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onCreate
 			JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
 			onCreate.annotate(Override.class);
 			JBlock onCreateBody = onCreate.body();
 			onCreateBody.assign(staticInstanceField, _this());
-			onCreateBody.invoke(holder.init);
-			onCreateBody.invoke(JExpr._super(), onCreate);
+			onCreateBody.invoke(init);
+			onCreateBody.invoke(_super(), onCreate);
 		}
 
 		{

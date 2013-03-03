@@ -31,6 +31,7 @@ import org.androidannotations.model.AndroidRes;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
@@ -61,7 +62,7 @@ public class ResProcessor implements DecoratingElementProcessor {
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, resInnerClass, true);
 
-		JBlock methodBody = holder.init.body();
+		JBlock methodBody = holder.initBody;
 
 		TypeMirror fieldTypeMirror = element.asType();
 		String fieldType = fieldTypeMirror.toString();

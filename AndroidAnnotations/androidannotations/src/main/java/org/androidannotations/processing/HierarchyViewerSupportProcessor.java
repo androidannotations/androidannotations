@@ -44,16 +44,14 @@ public class HierarchyViewerSupportProcessor implements DecoratingElementProcess
 		holder.generateApiClass(element, ViewServer.class);
 
 		// Methods
-		afterSetContentView(codeModel, holder);
+		onViewChanged(codeModel, holder);
 		onDestroyMethod(codeModel, holder);
 		onResumeMethod(codeModel, holder);
 	}
 
-	private void afterSetContentView(JCodeModel codeModel, EBeanHolder holder) {
-		JBlock afterSetContentViewBody = holder.afterSetContentView.body();
-
+	private void onViewChanged(JCodeModel codeModel, EBeanHolder holder) {
 		JInvocation viewServerInvocation = holder.classes().VIEW_SERVER.staticInvoke("get").arg(_this());
-		afterSetContentViewBody.invoke(viewServerInvocation, "addWindow").arg(_this());
+		holder.onViewChanged().body().invoke(viewServerInvocation, "addWindow").arg(_this());
 	}
 
 	private void onDestroyMethod(JCodeModel codeModel, EBeanHolder holder) {

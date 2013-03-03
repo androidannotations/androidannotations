@@ -16,7 +16,6 @@
 package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.ref;
 
 import java.lang.annotation.Annotation;
@@ -29,6 +28,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
@@ -55,9 +55,9 @@ public class ViewByIdProcessor implements DecoratingElementProcessor {
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.ID, true);
 
-		JBlock methodBody = holder.afterSetContentView.body();
-
-		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke("findViewById").arg(idRef)));
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
+		JBlock methodBody = onViewChanged.body();
+		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), onViewChanged.findViewById(idRef)));
 	}
 
 }

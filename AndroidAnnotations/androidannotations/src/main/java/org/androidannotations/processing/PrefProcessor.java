@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.model.AnnotationElements;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
@@ -74,7 +75,7 @@ public class PrefProcessor implements DecoratingElementProcessor {
 
 		}
 
-		JBlock methodBody = holder.init.body();
+		JBlock methodBody = holder.initBody;
 
 		JFieldRef field = JExpr.ref(fieldName);
 

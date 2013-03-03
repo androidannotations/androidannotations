@@ -36,6 +36,7 @@ public class MyGreenDroidActivityTest {
 	@Test
 	public void afterViews_method_is_called_in_setActionBarContentView() {
 		MyGreenDroidActivity_ activity = new MyGreenDroidActivity_();
+		activity.onCreate(null);
 		activity.setActionBarContentView(0);
 		assertThat(activity.afterViewsCalled).isTrue();
 	}

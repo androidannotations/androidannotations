@@ -17,7 +17,6 @@ package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.invoke;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -83,11 +82,10 @@ public class ClickProcessor implements DecoratingElementProcessor {
 			clickCall.arg(onClickViewParam);
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-
-			JInvocation findViewById = invoke("findViewById");
-			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
+			JBlock block = onViewChanged.body().block();
+			JVar view = block.decl(classes.VIEW, "view", onViewChanged.findViewById(idRef));
 			block._if(view.ne(_null()))._then().invoke(view, "setOnClickListener").arg(_new(onClickListenerClass));
 		}
 

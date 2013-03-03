@@ -85,10 +85,12 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 
 		Classes classes = holder.classes();
 
+		JMethod init;
 		{
 			// init
-			holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
-			holder.init.param(holder.classes().BUNDLE, "savedInstanceState");
+			init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+			init.param(holder.classes().BUNDLE, "savedInstanceState");
+			holder.initBody = init.body();
 		}
 
 		{
@@ -99,20 +101,19 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			JVar onCreateSavedInstanceState = onCreate.param(classes.BUNDLE, "savedInstanceState");
 			JBlock onCreateBody = onCreate.body();
 
-			onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
+			JVar previousNotifier = holder.replacePreviousNotifier(onCreateBody);
+
+			onCreateBody.invoke(init).arg(onCreateSavedInstanceState);
 
 			onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
+
+			holder.resetPreviousNotifier(onCreateBody, previousNotifier);
 		}
 
 		holder.contextRef = invoke("getActivity");
 
 		// contentView
 		JFieldVar contentView = holder.generatedClass.field(PRIVATE, classes.VIEW, "contentView_");
-
-		{
-			// afterSetContentView
-			holder.afterSetContentView = holder.generatedClass.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
-		}
 
 		{
 			// onCreateView()
@@ -157,7 +158,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 
 			onViewCreatedBody.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
 
-			onViewCreatedBody.invoke(holder.afterSetContentView);
+			holder.invokeViewChanged(onViewCreatedBody);
 		}
 
 		{
@@ -176,7 +177,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 
 		{
 			// init if activity
-			holder.initIfActivityBody = holder.init.body();
+			holder.initIfActivityBody = holder.initBody;
 			holder.initActivityRef = holder.contextRef;
 		}
 

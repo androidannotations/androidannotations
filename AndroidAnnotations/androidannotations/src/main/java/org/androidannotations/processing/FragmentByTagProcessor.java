@@ -79,9 +79,8 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 				holder.findNativeFragmentByTag = holder.generatedClass.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentByTag");
 				JVar tagParam = holder.findNativeFragmentByTag.param(classes.STRING, "tag");
 
-				holder.findNativeFragmentByTag.javadoc().add("You should check that context is an activity before calling this method");
-
 				JBlock body = holder.findNativeFragmentByTag.body();
+				body._if(holder.contextRef._instanceof(classes.ACTIVITY).not())._then()._return(_null());
 
 				JVar activityVar = body.decl(classes.ACTIVITY, "activity_", cast(classes.ACTIVITY, holder.contextRef));
 
@@ -109,7 +108,7 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 			findFragmentByTag = holder.findSupportFragmentByTag;
 		}
 
-		JBlock methodBody = holder.afterSetContentView.body();
+		JBlock methodBody = holder.onViewChanged().body();
 		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke(findFragmentByTag).arg(lit(tagValue))));
 	}
 }

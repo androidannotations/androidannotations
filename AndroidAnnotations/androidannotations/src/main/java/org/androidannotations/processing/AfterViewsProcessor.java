@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.AfterViews;
+
 import com.sun.codemodel.JCodeModel;
 
 public class AfterViewsProcessor implements DecoratingElementProcessor {
@@ -33,7 +34,7 @@ public class AfterViewsProcessor implements DecoratingElementProcessor {
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		String methodName = element.getSimpleName().toString();
 
-		holder.afterSetContentView.body().invoke(methodName);
+		holder.onViewChanged().body().invoke(methodName);
 	}
 
 }

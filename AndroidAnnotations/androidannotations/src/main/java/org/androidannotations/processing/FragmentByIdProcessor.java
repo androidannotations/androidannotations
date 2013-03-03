@@ -34,6 +34,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
@@ -74,9 +75,8 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 				holder.findNativeFragmentById = holder.generatedClass.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentById");
 				JVar idParam = holder.findNativeFragmentById.param(codeModel.INT, "id");
 
-				holder.findNativeFragmentById.javadoc().add("You should check that context is an activity before calling this method");
-
 				JBlock body = holder.findNativeFragmentById.body();
+				body._if(holder.contextRef._instanceof(classes.ACTIVITY).not())._then()._return(_null());
 
 				JVar activityVar = body.decl(classes.ACTIVITY, "activity_", cast(classes.ACTIVITY, holder.contextRef));
 
@@ -104,7 +104,7 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 			findFragmentById = holder.findSupportFragmentById;
 		}
 
-		JBlock methodBody = holder.afterSetContentView.body();
+		JBlock methodBody = holder.onViewChanged().body();
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.ID, true);
 
