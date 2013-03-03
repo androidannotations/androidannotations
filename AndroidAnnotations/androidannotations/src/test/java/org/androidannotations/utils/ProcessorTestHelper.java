@@ -149,10 +149,9 @@ public class ProcessorTestHelper {
 					if (expectedErrorPath.endsWith(source.toUri().toString())) {
 
 						CharSequence sourceContent = source.getCharContent(true);
-
 						if (diagnostic.getPosition() != Diagnostic.NOPOS) {
 							CharSequence contentInError = sourceContent.subSequence((int) diagnostic.getStartPosition(), (int) diagnostic.getEndPosition());
-							if (expectedContentInError.equals(contentInError.toString())) {
+							if (contentInError.toString().contains(expectedContentInError)) {
 								return;
 							}
 						}
