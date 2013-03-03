@@ -19,11 +19,17 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
 import org.androidannotations.test15.roboguice.SampleRoboApplication_;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ApplicationInjectedActivityTest {
+	
+	@Before
+	public void setup() {
+		new SampleRoboApplication().onCreate();
+	}
 
 	@Test
 	public void should_have_application_after_create() {
