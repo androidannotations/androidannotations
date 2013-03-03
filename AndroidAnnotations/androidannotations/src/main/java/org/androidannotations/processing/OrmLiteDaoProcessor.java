@@ -66,7 +66,7 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 		// connection source field
 		boolean connectionSourceInjected = holder.generatedClass.fields().containsKey(CONNECTION_SOURCE_FIELD_NAME);
 
-		JBlock initBody = holder.init.body();
+		JBlock initBody = holder.initBody;
 
 		JFieldVar connectionSourceRef;
 		if (connectionSourceInjected) {

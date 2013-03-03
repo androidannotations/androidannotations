@@ -108,9 +108,10 @@ public class ItemLongClickProcessor implements DecoratingElementProcessor {
 			}
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-			JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, JExpr.invoke("findViewById").arg(idRef)));
+			JBlock block = onViewChanged.body().block();
+			JVar view = block.decl(narrowAdapterViewClass, "view", cast(narrowAdapterViewClass, onViewChanged.findViewById(idRef)));
 			block._if(view.ne(_null()))._then().invoke(view, "setOnItemLongClickListener").arg(_new(onItemLongClickListenerClass));
 		}
 	}

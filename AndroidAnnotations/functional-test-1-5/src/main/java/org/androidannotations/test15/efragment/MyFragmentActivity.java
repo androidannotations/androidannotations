@@ -26,7 +26,7 @@ import android.app.Activity;
 
 @EActivity(R.layout.fragments)
 public class MyFragmentActivity extends Activity {
-
+	
 	@FragmentById
 	public MyFragment myFragment;
 	

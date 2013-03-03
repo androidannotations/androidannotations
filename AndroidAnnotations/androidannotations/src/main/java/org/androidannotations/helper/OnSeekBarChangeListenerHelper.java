@@ -15,6 +15,8 @@
  */
 package org.androidannotations.helper;
 
+import static com.sun.codemodel.JExpr.cast;
+
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -23,6 +25,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.OnSeekBarChangeListenerHolder;
 import org.androidannotations.rclass.IRClass;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -74,14 +77,14 @@ public class OnSeekBarChangeListenerHelper extends IdAnnotationHelper {
 			onStopTrackingTouchMethod.param(seekBarClass, "seekBar");
 			onStopTrackingTouchMethod.annotate(Override.class);
 
-			JBlock block = holder.afterSetContentView.body().block();
+			JBlock block = holder.onViewChanged().body().block();
 
 			TypeMirror viewParameterType = typeElementFromQualifiedName(CanonicalNameConstants.SEEKBAR).asType();
 
 			String viewParameterTypeString = viewParameterType.toString();
 			JClass viewClass = holder.refClass(viewParameterTypeString);
 
-			JExpression findViewById = JExpr.cast(viewClass, JExpr.invoke("findViewById").arg(idRef));
+			JExpression findViewById = cast(viewClass, holder.onViewChanged().findViewById(idRef));
 
 			JVar viewVariable = block.decl(JMod.FINAL, viewClass, "view", findViewById);
 			block._if(viewVariable.ne(JExpr._null()))._then().invoke(viewVariable, "setOnSeekBarChangeListener").arg(JExpr._new(onSeekbarChangeListenerClass));

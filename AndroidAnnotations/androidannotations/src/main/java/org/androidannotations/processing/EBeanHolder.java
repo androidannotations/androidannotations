@@ -15,13 +15,21 @@
  */
 package org.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 
 import javax.lang.model.element.Element;
 
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.api.view.HasViews;
+import org.androidannotations.api.view.OnViewChangedListener;
+import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
 import com.sun.codemodel.JBlock;
@@ -41,12 +49,8 @@ public class EBeanHolder {
 	 * Only defined on activities
 	 */
 	public JVar beforeCreateSavedInstanceStateParam;
-	public JMethod init;
-	/**
-	 * Only defined on activities and components potentially depending on
-	 * activity ( {@link EViewGroup}, {@link EBean}
-	 */
-	public JMethod afterSetContentView;
+	public JBlock initBody;
+
 	public JBlock extrasNotNullBlock;
 	public JVar extras;
 	public JVar resources;
@@ -124,6 +128,13 @@ public class EBeanHolder {
 	private final EBeansHolder eBeansHolder;
 	public final Class<? extends Annotation> eBeanAnnotation;
 
+	private ViewChangedHolder viewChangedHolder;
+
+	/**
+	 * Only defined in beans that implement {@link HasViews}
+	 */
+	private JExpression notifier;
+
 	public EBeanHolder(EBeansHolder eBeansHolder, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
 		this.eBeansHolder = eBeansHolder;
 		this.eBeanAnnotation = eBeanAnnotation;
@@ -152,6 +163,55 @@ public class EBeanHolder {
 
 	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
 		eBeansHolder.generateApiClass(originatingElement, apiClass);
+	}
+
+	public ViewChangedHolder onViewChanged() {
+
+		if (viewChangedHolder == null) {
+			JCodeModel codeModel = eBeansHolder.codeModel();
+
+			generatedClass._implements(OnViewChangedListener.class);
+			JMethod onViewChanged = generatedClass.method(PUBLIC, codeModel.VOID, "onViewChanged");
+			onViewChanged.annotate(Override.class);
+			JVar onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
+			JClass notifierClass = refClass(OnViewChangedNotifier.class);
+			initBody.staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
+
+			viewChangedHolder = new ViewChangedHolder(onViewChanged, onViewChangedHasViewsParam);
+		}
+		return viewChangedHolder;
+	}
+
+	public void invokeViewChanged(JBlock block) {
+		block.invoke(notifier, "notifyViewChanged").arg(_this());
+	}
+
+	public JVar replacePreviousNotifier(JBlock block) {
+		JClass notifierClass = refClass(OnViewChangedNotifier.class);
+		if (notifier == null) {
+			notifier = generatedClass.field(PRIVATE | FINAL, notifierClass, "onViewChangedNotifier_", _new(notifierClass));
+			generatedClass._implements(HasViews.class);
+		}
+		JVar previousNotifier = block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(notifier));
+		return previousNotifier;
+	}
+
+	public JVar replacePreviousNotifierWithNull(JBlock block) {
+		JClass notifierClass = refClass(OnViewChangedNotifier.class);
+		JVar previousNotifier = block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(_null()));
+		return previousNotifier;
+	}
+
+	public void resetPreviousNotifier(JBlock block, JVar previousNotifier) {
+		JClass notifierClass = refClass(OnViewChangedNotifier.class);
+		block.staticInvoke(notifierClass, "replaceNotifier").arg(previousNotifier);
+	}
+
+	public void wrapInitWithNotifier() {
+		JBlock initBlock = initBody;
+		JVar previousNotifier = replacePreviousNotifier(initBlock);
+		initBody = initBody.block();
+		resetPreviousNotifier(initBlock, previousNotifier);
 	}
 
 }

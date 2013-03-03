@@ -39,7 +39,7 @@ public class FullscreenProcessor implements DecoratingElementProcessor {
 		JFieldRef fullScreen = holder.classes().WINDOW_MANAGER_LAYOUT_PARAMS.staticRef("FLAG_FULLSCREEN");
 
 		JInvocation arg = invoke(invoke("getWindow"), "setFlags").arg(fullScreen).arg(fullScreen);
-		holder.init.body().add(arg);
+		holder.initBody.add(arg);
 	}
 
 }

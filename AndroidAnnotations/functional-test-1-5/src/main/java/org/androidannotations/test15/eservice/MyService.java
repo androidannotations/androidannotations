@@ -60,9 +60,10 @@ public class MyService extends IntentService {
 	@Trace
 	@UiThread
 	void showToast() {
-		Toast.makeText(getApplicationContext(), "Hello World!", Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), "Hello World!",
+				Toast.LENGTH_LONG).show();
 	}
-	
+
 	@Trace
 	@Background
 	void workInBackground() {

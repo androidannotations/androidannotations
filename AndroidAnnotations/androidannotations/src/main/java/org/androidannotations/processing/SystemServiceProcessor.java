@@ -25,6 +25,7 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.model.AndroidSystemServices;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
@@ -52,7 +53,7 @@ public class SystemServiceProcessor implements DecoratingElementProcessor {
 
 		JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
 
-		JBlock methodBody = holder.init.body();
+		JBlock methodBody = holder.initBody;
 
 		methodBody.assign(ref(fieldName), cast(holder.refClass(fieldTypeQualifiedName), holder.contextRef.invoke("getSystemService").arg(serviceRef)));
 	}

@@ -28,7 +28,7 @@ public class ApplicationInjectedActivityTest {
 	@Test
 	public void should_have_application_after_create() {
 		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
-
+		
 		activity.onCreate(null);
 
 		assertThat(activity.customApplication).isNotNull();

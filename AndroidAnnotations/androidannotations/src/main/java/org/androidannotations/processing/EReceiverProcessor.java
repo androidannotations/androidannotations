@@ -27,6 +27,7 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -66,7 +67,8 @@ public class EReceiverProcessor implements GeneratingElementProcessor {
 		JFieldVar contextField = holder.generatedClass.field(PRIVATE, classes.CONTEXT, "context_");
 		holder.contextRef = contextField;
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onReceive
 			JMethod onReceive = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onReceive");
@@ -75,7 +77,7 @@ public class EReceiverProcessor implements GeneratingElementProcessor {
 			onReceive.annotate(Override.class);
 			JBlock onReceiveBody = onReceive.body();
 			onReceiveBody.assign(contextField, contextParam);
-			onReceiveBody.invoke(holder.init);
+			onReceiveBody.invoke(init);
 			onReceiveBody.invoke(JExpr._super(), onReceive).arg(contextParam).arg(intentParam);
 		}
 

@@ -28,6 +28,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
@@ -53,7 +54,7 @@ public class FromHtmlProcessor implements DecoratingElementProcessor {
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.STRING, true);
 
-		JBlock methodBody = holder.afterSetContentView.body();
+		JBlock methodBody = holder.onViewChanged().body();
 
 		//
 		methodBody. //

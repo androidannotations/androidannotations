@@ -15,6 +15,10 @@
  */
 package org.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -88,16 +92,16 @@ public class ItemClickProcessor implements DecoratingElementProcessor {
 				itemClickCall.arg(onItemClickPositionParam);
 			} else {
 				String parameterTypeQualifiedName = parameterType.toString();
-				itemClickCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				itemClickCall.arg(cast(holder.refClass(parameterTypeQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 			}
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-			JInvocation findViewById = JExpr.invoke("findViewById");
+			JBlock block = onViewChanged.body().block();
 
-			JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)));
-			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(JExpr._new(onItemClickListenerAnonymousClass));
+			JVar view = block.decl(narrowAdapterViewClass, "view", cast(narrowAdapterViewClass, onViewChanged.findViewById(idRef)));
+			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(_new(onItemClickListenerAnonymousClass));
 		}
 	}
 

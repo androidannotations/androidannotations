@@ -117,7 +117,7 @@ public class OptionsMenuProcessor implements DecoratingElementProcessor {
 			}
 
 			if (isFragment) {
-				holder.init.body().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
+				holder.initBody.invoke("setHasOptionsMenu").arg(JExpr.TRUE);
 			}
 
 			holder.onCreateOptionMenuMethodBody = body;

@@ -15,6 +15,10 @@
  */
 package org.androidannotations.helper;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JMod.FINAL;
+
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -23,6 +27,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.TextWatcherHolder;
 import org.androidannotations.rclass.IRClass;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -78,7 +83,7 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 			beforeTextChangedMethod.param(codeModel.INT, "after");
 			beforeTextChangedMethod.annotate(Override.class);
 
-			JBlock block = holder.afterSetContentView.body().block();
+			JBlock block = holder.onViewChanged().body().block();
 
 			JClass viewClass;
 			if (viewParameterType != null) {
@@ -87,10 +92,10 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 			} else {
 				viewClass = holder.classes().TEXT_VIEW;
 			}
-			JExpression findViewById = JExpr.cast(viewClass, JExpr.invoke("findViewById").arg(idRef));
+			JExpression findViewById = cast(viewClass, holder.onViewChanged().findViewById(idRef));
 
-			JVar viewVariable = block.decl(JMod.FINAL, viewClass, "view", findViewById);
-			block._if(viewVariable.ne(JExpr._null()))._then().invoke(viewVariable, "addTextChangedListener").arg(JExpr._new(onTextChangeListenerClass));
+			JVar viewVariable = block.decl(FINAL, viewClass, "view", findViewById);
+			block._if(viewVariable.ne(JExpr._null()))._then().invoke(viewVariable, "addTextChangedListener").arg(_new(onTextChangeListenerClass));
 
 			textWatcherHolder = new TextWatcherHolder(//
 					afterTextChangedMethod, //

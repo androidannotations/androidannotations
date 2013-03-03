@@ -22,7 +22,7 @@ import org.androidannotations.test15.R;
 
 @EBean
 public class BeanWithFragments {
-
+	
 	@FragmentById
 	public MyFragment myFragment;
 	

@@ -75,7 +75,7 @@ public class HttpsClientProcessor implements DecoratingElementProcessor {
 		boolean useCustomKeyStore = ResId.DEFAULT_VALUE != keyStoreRawId ? true : false;
 
 		String fieldName = element.getSimpleName().toString();
-		JBlock methodBody = holder.init.body();
+		JBlock methodBody = holder.initBody;
 
 		Classes classes = holder.classes();
 

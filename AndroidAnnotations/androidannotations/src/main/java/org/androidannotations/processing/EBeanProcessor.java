@@ -17,7 +17,6 @@ package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
@@ -77,34 +76,11 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 		holder.contextRef = contextField;
 
-		{
-			// afterSetContentView
-
-			holder.afterSetContentView = holder.generatedClass.method(PUBLIC, codeModel.VOID, "afterSetContentView_");
-
-			JBlock afterSetContentViewBody = holder.afterSetContentView.body();
-
-			afterSetContentViewBody._if(holder.contextRef._instanceof(classes.ACTIVITY).not())._then()._return();
-		}
-
-		{
-			// findViewById
-
-			JMethod findViewById = holder.generatedClass.method(PUBLIC, classes.VIEW, "findViewById");
-			JVar idParam = findViewById.param(codeModel.INT, "id");
-
-			findViewById.javadoc().add("You should check that context is an activity before calling this method");
-
-			JBlock findViewByIdBody = findViewById.body();
-
-			JVar activityVar = findViewByIdBody.decl(classes.ACTIVITY, "activity_", cast(classes.ACTIVITY, holder.contextRef));
-
-			findViewByIdBody._return(activityVar.invoke(findViewById).arg(idParam));
-		}
-
+		JMethod init;
 		{
 			// init
-			holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+			init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+			holder.initBody = init.body();
 		}
 
 		{
@@ -113,9 +89,9 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			 * We suppress all warnings because we generate an unused warning
 			 * that may or may not valid
 			 */
-			holder.init.annotate(SuppressWarnings.class).param("value", "all");
+			init.annotate(SuppressWarnings.class).param("value", "all");
 			APTCodeModelHelper helper = new APTCodeModelHelper();
-			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
+			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.initBody);
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
 
@@ -138,7 +114,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 			constructorBody.assign(contextField, constructorContextParam);
 
-			constructorBody.invoke(holder.init);
+			constructorBody.invoke(init);
 		}
 
 		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
@@ -161,10 +137,12 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 				JFieldVar instanceField = holder.generatedClass.field(PRIVATE | STATIC, holder.generatedClass, "instance_");
 
-				factoryMethodBody //
+				JBlock creationBlock = factoryMethodBody //
 						._if(instanceField.eq(_null())) //
-						._then() //
-						.assign(instanceField, _new(holder.generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+						._then();
+				JVar previousNotifier = holder.replacePreviousNotifierWithNull(creationBlock);
+				creationBlock.assign(instanceField, _new(holder.generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+				holder.resetPreviousNotifier(creationBlock, previousNotifier);
 
 				factoryMethodBody._return(instanceField);
 			} else {
@@ -184,7 +162,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			if (!hasSingletonScope) {
 				JBlock body = rebindMethod.body();
 				body.assign(contextField, contextParam);
-				body.invoke(holder.init);
+				body.invoke(init);
 			}
 		}
 

@@ -13,27 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing;
+package org.androidannotations.test15.ebean;
 
-import java.lang.annotation.Annotation;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.ViewById;
 
-import javax.lang.model.element.Element;
+import android.view.View;
 
-import org.androidannotations.annotations.AfterInject;
-import com.sun.codemodel.JCodeModel;
+@EBean
+public class BeanWithView {
 
-public class AfterInjectProcessor implements DecoratingElementProcessor {
-
-	@Override
-	public Class<? extends Annotation> getTarget() {
-		return AfterInject.class;
-	}
-
-	@Override
-	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
-		String methodName = element.getSimpleName().toString();
-
-		holder.initBody.invoke(methodName);
-	}
+	@ViewById
+	public View myTextView;
 
 }

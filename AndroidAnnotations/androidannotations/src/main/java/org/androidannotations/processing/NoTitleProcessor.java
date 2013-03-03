@@ -35,7 +35,7 @@ public class NoTitleProcessor implements DecoratingElementProcessor {
 
 		JFieldRef noTitle = holder.classes().WINDOW.staticRef("FEATURE_NO_TITLE");
 
-		holder.init.body().invoke("requestWindowFeature").arg(noTitle);
+		holder.initBody.invoke("requestWindowFeature").arg(noTitle);
 	}
 
 }

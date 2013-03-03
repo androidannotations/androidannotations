@@ -33,6 +33,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -97,11 +98,11 @@ public class TouchProcessor implements DecoratingElementProcessor {
 			call.arg(viewParam);
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-			JInvocation findViewById = JExpr.invoke("findViewById");
+			JBlock block = onViewChanged.body().block();
 
-			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
+			JVar view = block.decl(classes.VIEW, "view", onViewChanged.findViewById(idRef));
 			block._if(view.ne(_null()))._then().invoke(view, "setOnTouchListener").arg(_new(listenerClass));
 		}
 	}

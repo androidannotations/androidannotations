@@ -36,6 +36,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -122,10 +123,10 @@ public class ItemSelectedProcessor implements DecoratingElementProcessor {
 			}
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock body = holder.afterSetContentView.body();
-			JInvocation findViewById = invoke("findViewById");
-			body.add(invoke(cast(narrowAdapterViewClass, findViewById.arg(idRef)), "setOnItemSelectedListener").arg(_new(onItemSelectedListenerClass)));
+			JBlock body = onViewChanged.body();
+			body.add(invoke(cast(narrowAdapterViewClass, onViewChanged.findViewById(idRef)), "setOnItemSelectedListener").arg(_new(onItemSelectedListenerClass)));
 		}
 	}
 

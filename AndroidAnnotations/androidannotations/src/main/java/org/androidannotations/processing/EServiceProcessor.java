@@ -28,6 +28,7 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ModelConstants;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -68,13 +69,14 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 
 		holder.contextRef = _this();
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onCreate
 			JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
 			onCreate.annotate(Override.class);
 			JBlock onCreateBody = onCreate.body();
-			onCreateBody.invoke(holder.init);
+			onCreateBody.invoke(init);
 			onCreateBody.invoke(JExpr._super(), onCreate);
 		}
 
