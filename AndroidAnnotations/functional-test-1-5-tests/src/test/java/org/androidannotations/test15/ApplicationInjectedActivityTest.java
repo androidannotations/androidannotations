@@ -26,13 +26,9 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ApplicationInjectedActivityTest {
 	
-	@Before
-	public void setup() {
-		new SampleRoboApplication().onCreate();
-	}
-
 	@Test
 	public void should_have_application_after_create() {
+		new SampleRoboApplication().onCreate();
 		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
 		
 		activity.onCreate(null);
