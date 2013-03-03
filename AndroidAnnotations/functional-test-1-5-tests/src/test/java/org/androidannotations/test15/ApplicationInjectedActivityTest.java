@@ -27,7 +27,7 @@ public class ApplicationInjectedActivityTest {
 	
 	@Test
 	public void should_have_application_after_create() {
-		new SampleRoboApplication().onCreate();
+		new SampleRoboApplication_().onCreate();
 		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
 		
 		activity.onCreate(null);
