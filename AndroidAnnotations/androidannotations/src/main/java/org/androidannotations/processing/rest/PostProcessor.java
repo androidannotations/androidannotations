@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing.rest;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -29,8 +27,8 @@ public class PostProcessor extends GetPostProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Post.class;
+	public String getTarget() {
+		return Post.class.getName();
 	}
 
 	@Override

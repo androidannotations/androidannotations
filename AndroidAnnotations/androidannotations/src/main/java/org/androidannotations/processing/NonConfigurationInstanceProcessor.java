@@ -24,8 +24,6 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -58,8 +56,8 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return NonConfigurationInstance.class;
+	public String getTarget() {
+		return NonConfigurationInstance.class.getName();
 	}
 
 	@Override
@@ -141,7 +139,7 @@ public class NonConfigurationInstanceProcessor implements DecoratingElementProce
 		boolean hasBeanAnnotation = element.getAnnotation(Bean.class) != null;
 		if (hasBeanAnnotation) {
 
-			DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element, Bean.class);
+			DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element, Bean.class.getName());
 
 			TypeMirror elementType;
 			if (targetAnnotationClassValue != null) {

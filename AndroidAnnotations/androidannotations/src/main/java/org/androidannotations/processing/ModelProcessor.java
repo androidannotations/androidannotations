@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -67,8 +66,8 @@ public class ModelProcessor {
 		EBeansHolder eBeansHolder = new EBeansHolder(codeModel);
 
 		for (GeneratingElementProcessor processor : typeProcessors) {
-			Class<? extends Annotation> target = processor.getTarget();
-			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(target.getName());
+			String annotationName = processor.getTarget();
+			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
 			for (Element annotatedElement : annotatedElements) {
 				/*
 				 * We do not generate code for abstract classes, because the
@@ -86,13 +85,13 @@ public class ModelProcessor {
 		}
 
 		for (DecoratingElementProcessor processor : enclosedProcessors) {
-			Class<? extends Annotation> target = processor.getTarget();
+			String annotationName = processor.getTarget();
 
 			/*
 			 * For ancestors, the processor manipulates the annotated elements,
 			 * but uses the holder for the root element
 			 */
-			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(target.getName());
+			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(annotationName);
 			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
 				EBeanHolder holder = eBeansHolder.getEBeanHolder(elements.rootTypeElement);
 				/*
@@ -104,7 +103,7 @@ public class ModelProcessor {
 				}
 			}
 
-			Set<? extends Element> rootAnnotatedElements = validatedModel.getRootAnnotatedElements(target.getName());
+			Set<? extends Element> rootAnnotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
 
 			for (Element annotatedElement : rootAnnotatedElements) {
 

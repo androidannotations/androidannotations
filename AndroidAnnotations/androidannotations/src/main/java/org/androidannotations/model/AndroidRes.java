@@ -60,13 +60,13 @@ public enum AndroidRes {
 	TEXT_ARRAY(Res.ARRAY, TextArrayRes.class, "getTextArray", "java.lang.CharSequence"), //
 	COLOR(Res.COLOR, ColorRes.class, "getColor", "int", "java.lang.Integer");
 
-	private final Class<? extends Annotation> target;
+	private final Class<? extends Annotation> annotationClass;
 	private final String resourceMethodName;
 	private final List<String> allowedTypes;
 	private final Res rInnerClass;
 
-	AndroidRes(Res rInnerClass, Class<? extends Annotation> target, String resourceMethodName, String... allowedTypes) {
-		this.target = target;
+	AndroidRes(Res rInnerClass, Class<? extends Annotation> annotationClass, String resourceMethodName, String... allowedTypes) {
+		this.annotationClass = annotationClass;
 		this.resourceMethodName = resourceMethodName;
 		this.allowedTypes = Arrays.asList(allowedTypes);
 		this.rInnerClass = rInnerClass;
@@ -76,8 +76,8 @@ public enum AndroidRes {
 		return rInnerClass;
 	}
 
-	public Class<? extends Annotation> getTarget() {
-		return target;
+	public String getTarget() {
+		return annotationClass.getName();
 	}
 
 	public String getResourceMethodName() {
@@ -89,8 +89,8 @@ public enum AndroidRes {
 	}
 
 	public int idFromElement(Element element) {
-		Annotation annotation = element.getAnnotation(target);
-		Method valueMethod = target.getMethods()[0];
+		Annotation annotation = element.getAnnotation(annotationClass);
+		Method valueMethod = annotationClass.getMethods()[0];
 		try {
 			return (Integer) valueMethod.invoke(annotation);
 		} catch (Exception e) {

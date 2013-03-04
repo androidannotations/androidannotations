@@ -15,7 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,13 +43,13 @@ public class ModelValidator {
 		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
 		for (ElementValidator validator : validators) {
-			Class<? extends Annotation> target = validator.getTarget();
+			String annotationName = validator.getTarget();
 
-			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(target.getName());
+			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(annotationName);
 
 			Set<Element> validatedAnnotatedElements = new HashSet<Element>();
 
-			validatedElements.putRootAnnotatedElements(target.getName(), validatedAnnotatedElements);
+			validatedElements.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 
 			for (Element annotatedElement : annotatedElements) {
 				if (validator.validate(annotatedElement, validatedElements)) {

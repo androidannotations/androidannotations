@@ -26,8 +26,6 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -62,8 +60,8 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EFragment.class;
+	public String getTarget() {
+		return EFragment.class.getName();
 	}
 
 	@Override
@@ -77,7 +75,7 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EFragment.class, generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(beanQualifiedName);
 

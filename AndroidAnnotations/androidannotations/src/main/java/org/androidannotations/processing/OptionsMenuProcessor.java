@@ -18,7 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -54,8 +53,8 @@ public class OptionsMenuProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return OptionsMenu.class;
+	public String getTarget() {
+		return OptionsMenu.class.getName();
 	}
 
 	@Override

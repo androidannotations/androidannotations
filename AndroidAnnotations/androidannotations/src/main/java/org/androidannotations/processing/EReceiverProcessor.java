@@ -19,8 +19,6 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -41,8 +39,8 @@ import com.sun.codemodel.JVar;
 public class EReceiverProcessor implements GeneratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EReceiver.class;
+	public String getTarget() {
+		return EReceiver.class.getName();
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class EReceiverProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EReceiver.class, generatedClass);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 

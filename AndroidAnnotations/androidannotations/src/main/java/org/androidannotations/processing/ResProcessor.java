@@ -18,8 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.ref;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -48,7 +46,7 @@ public class ResProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
+	public String getTarget() {
 		return androidValue.getTarget();
 	}
 

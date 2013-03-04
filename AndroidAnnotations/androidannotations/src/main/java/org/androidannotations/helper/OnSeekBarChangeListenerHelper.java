@@ -17,8 +17,6 @@ package org.androidannotations.helper;
 
 import static com.sun.codemodel.JExpr.cast;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.TypeMirror;
 
@@ -43,11 +41,11 @@ public class OnSeekBarChangeListenerHelper extends IdAnnotationHelper {
 
 	public OnSeekBarChangeListenerHelper(//
 			ProcessingEnvironment processingEnv, //
-			Class<? extends Annotation> target, //
+			String annotationName, //
 			IRClass rClass, //
 			APTCodeModelHelper codeModelHelper) {
 
-		super(processingEnv, target, rClass);
+		super(processingEnv, annotationName, rClass);
 
 		this.codeModelHelper = codeModelHelper;
 

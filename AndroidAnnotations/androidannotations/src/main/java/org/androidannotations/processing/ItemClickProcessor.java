@@ -19,7 +19,6 @@ import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -55,8 +54,8 @@ public class ItemClickProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ItemClick.class;
+	public String getTarget() {
+		return ItemClick.class.getName();
 	}
 
 	@Override

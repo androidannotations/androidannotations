@@ -19,8 +19,6 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
@@ -33,8 +31,8 @@ import com.sun.codemodel.JCodeModel;
 public class RootContextProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return RootContext.class;
+	public String getTarget() {
+		return RootContext.class.getName();
 	}
 
 	@Override

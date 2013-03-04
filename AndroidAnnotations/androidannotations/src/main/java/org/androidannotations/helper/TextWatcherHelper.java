@@ -19,8 +19,6 @@ import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.FINAL;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.TypeMirror;
 
@@ -45,11 +43,11 @@ public class TextWatcherHelper extends IdAnnotationHelper {
 
 	public TextWatcherHelper(//
 			ProcessingEnvironment processingEnv, //
-			Class<? extends Annotation> target, //
+			String annotationName, //
 			IRClass rClass, //
 			APTCodeModelHelper codeModelHelper) {
 
-		super(processingEnv, target, rClass);
+		super(processingEnv, annotationName, rClass);
 
 		this.codeModelHelper = codeModelHelper;
 

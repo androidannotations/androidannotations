@@ -15,18 +15,17 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.AfterInject;
+
 import com.sun.codemodel.JCodeModel;
 
 public class AfterInjectProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return AfterInject.class;
+	public String getTarget() {
+		return AfterInject.class.getName();
 	}
 
 	@Override

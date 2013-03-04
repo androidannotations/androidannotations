@@ -18,8 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -42,8 +40,8 @@ public class ViewByIdProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ViewById.class;
+	public String getTarget() {
+		return ViewById.class.getName();
 	}
 
 	@Override

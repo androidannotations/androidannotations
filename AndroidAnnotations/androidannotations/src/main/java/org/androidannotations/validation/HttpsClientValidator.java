@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -37,8 +35,8 @@ public class HttpsClientValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return HttpsClient.class;
+	public String getTarget() {
+		return HttpsClient.class.getName();
 	}
 
 	@Override
