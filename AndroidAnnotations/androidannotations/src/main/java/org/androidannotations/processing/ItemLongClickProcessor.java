@@ -20,7 +20,6 @@ import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -56,8 +55,8 @@ public class ItemLongClickProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ItemLongClick.class;
+	public String getTarget() {
+		return ItemLongClick.class.getName();
 	}
 
 	@Override

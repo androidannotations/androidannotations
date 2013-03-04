@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -51,8 +50,8 @@ public class LongClickProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return LongClick.class;
+	public String getTarget() {
+		return LongClick.class.getName();
 	}
 
 	@Override

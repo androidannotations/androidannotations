@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 
 import org.androidannotations.annotations.SeekBarTouchStart;
@@ -29,8 +27,8 @@ public class SeekBarTouchStartValidator extends AbstractSeekBarTouchValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SeekBarTouchStart.class;
+	public String getTarget() {
+		return SeekBarTouchStart.class.getName();
 	}
 
 }

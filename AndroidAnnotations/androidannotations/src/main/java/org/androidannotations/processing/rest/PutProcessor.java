@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing.rest;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -34,8 +32,8 @@ public class PutProcessor extends MethodProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Put.class;
+	public String getTarget() {
+		return Put.class.getName();
 	}
 
 	@Override

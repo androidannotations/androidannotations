@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.AfterViews;
@@ -26,8 +24,8 @@ import com.sun.codemodel.JCodeModel;
 public class AfterViewsProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return AfterViews.class;
+	public String getTarget() {
+		return AfterViews.class.getName();
 	}
 
 	@Override

@@ -28,8 +28,6 @@ import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeKind;
@@ -68,8 +66,8 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Extra.class;
+	public String getTarget() {
+		return Extra.class.getName();
 	}
 
 	@Override

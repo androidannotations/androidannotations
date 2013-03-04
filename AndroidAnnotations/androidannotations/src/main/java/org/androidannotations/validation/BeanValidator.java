@@ -15,17 +15,14 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
 import org.androidannotations.model.AnnotationElements;
-
 
 public class BeanValidator implements ElementValidator {
 
@@ -37,8 +34,8 @@ public class BeanValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Bean.class;
+	public String getTarget() {
+		return Bean.class.getName();
 	}
 
 	@Override

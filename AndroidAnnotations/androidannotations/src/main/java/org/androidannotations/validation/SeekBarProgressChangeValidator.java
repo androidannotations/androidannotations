@@ -15,7 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -45,8 +44,8 @@ public class SeekBarProgressChangeValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SeekBarProgressChange.class;
+	public String getTarget() {
+		return SeekBarProgressChange.class.getName();
 	}
 
 	@Override

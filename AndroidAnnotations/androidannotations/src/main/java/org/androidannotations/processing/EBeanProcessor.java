@@ -23,7 +23,6 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
@@ -49,8 +48,8 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EBean.class;
+	public String getTarget() {
+		return EBean.class.getName();
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EBean.class, generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 

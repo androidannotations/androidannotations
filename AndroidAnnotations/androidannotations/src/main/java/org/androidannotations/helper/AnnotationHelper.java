@@ -43,6 +43,7 @@ import org.androidannotations.annotations.ResId;
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
+
 import com.sun.codemodel.JFieldRef;
 
 public class AnnotationHelper {
@@ -73,32 +74,32 @@ public class AnnotationHelper {
 		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
 	}
 
-	public AnnotationMirror findAnnotationMirror(Element annotatedElement, Class<? extends Annotation> annotationClass) {
+	public AnnotationMirror findAnnotationMirror(Element annotatedElement, String annotationName) {
 		List<? extends AnnotationMirror> annotationMirrors = annotatedElement.getAnnotationMirrors();
 
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
 			TypeElement annotationElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
-			if (isAnnotation(annotationElement, annotationClass)) {
+			if (isAnnotation(annotationElement, annotationName)) {
 				return annotationMirror;
 			}
 		}
 		return null;
 	}
 
-	public boolean isAnnotation(TypeElement annotation, Class<? extends Annotation> annotationClass) {
-		return annotation.getQualifiedName().toString().equals(annotationClass.getName());
+	public boolean isAnnotation(TypeElement annotation, String annotationName) {
+		return annotation.getQualifiedName().toString().equals(annotationName);
 	}
 
-	public void printAnnotationError(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
-		printAnnotationMessage(Diagnostic.Kind.ERROR, annotatedElement, annotationClass, message);
+	public void printAnnotationError(Element annotatedElement, String annotationName, String message) {
+		printAnnotationMessage(Diagnostic.Kind.ERROR, annotatedElement, annotationName, message);
 	}
 
-	public void printAnnotationWarning(Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
-		printAnnotationMessage(Diagnostic.Kind.WARNING, annotatedElement, annotationClass, message);
+	public void printAnnotationWarning(Element annotatedElement, String annotationName, String message) {
+		printAnnotationMessage(Diagnostic.Kind.WARNING, annotatedElement, annotationName, message);
 	}
 
-	public void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, Class<? extends Annotation> annotationClass, String message) {
-		AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationClass);
+	public void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, String annotationName, String message) {
+		AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationName);
 		if (annotationMirror != null) {
 			processingEnv.getMessager().printMessage(diagnosticKind, message, annotatedElement, annotationMirror);
 		} else {
@@ -152,10 +153,10 @@ public class AnnotationHelper {
 	 * 
 	 * @see #extractAnnotationResources(Element, Class, IRInnerClass, boolean)
 	 */
-	public List<JFieldRef> extractAnnotationFieldRefs(EBeanHolder holder, Element element, Class<? extends Annotation> target, IRInnerClass rInnerClass, boolean useElementName) {
+	public List<JFieldRef> extractAnnotationFieldRefs(EBeanHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
 		List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
 
-		for (String refQualifiedName : extractAnnotationResources(element, target, rInnerClass, useElementName)) {
+		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName)) {
 			fieldRefs.add(RInnerClass.extractIdStaticRef(holder, refQualifiedName));
 		}
 
@@ -180,8 +181,8 @@ public class AnnotationHelper {
 	 * @return the qualified names of the matching resources in the R inner
 	 *         class
 	 */
-	public List<String> extractAnnotationResources(Element element, Class<? extends Annotation> target, IRInnerClass rInnerClass, boolean useElementName) {
-		int[] values = extractAnnotationResIdValueParameter(element, target);
+	public List<String> extractAnnotationResources(Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
+		int[] values = extractAnnotationResIdValueParameter(element, annotationName);
 
 		List<String> resourceIdQualifiedNames = new ArrayList<String>();
 		/*
@@ -190,7 +191,7 @@ public class AnnotationHelper {
 		 */
 		if (defaultResIdValue(values)) {
 
-			String[] resNames = extractAnnotationResNameParameter(element, target);
+			String[] resNames = extractAnnotationResNameParameter(element, annotationName);
 
 			if (defaultResName(resNames)) {
 				/*
@@ -201,7 +202,7 @@ public class AnnotationHelper {
 					/*
 					 * fallback, using element name
 					 */
-					String elementName = extractElementName(element, target);
+					String elementName = extractElementName(element, annotationName);
 					String clickQualifiedId = rInnerClass.getIdQualifiedName(elementName);
 					resourceIdQualifiedNames.add(clickQualifiedId);
 				}
@@ -229,9 +230,9 @@ public class AnnotationHelper {
 		return resourceIdQualifiedNames;
 	}
 
-	public String extractElementName(Element element, Class<? extends Annotation> target) {
+	public String extractElementName(Element element, String annotationName) {
 		String elementName = element.getSimpleName().toString();
-		int lastIndex = elementName.lastIndexOf(actionName(target));
+		int lastIndex = elementName.lastIndexOf(actionName(annotationName));
 		if (lastIndex != -1) {
 			elementName = elementName.substring(0, lastIndex);
 		}
@@ -246,11 +247,11 @@ public class AnnotationHelper {
 		return values.length == 0 || values.length == 1 && values[0] == ResId.DEFAULT_VALUE;
 	}
 
-	public String[] extractAnnotationResNameParameter(Element element, Class<? extends Annotation> target) {
+	public String[] extractAnnotationResNameParameter(Element element, String annotationName) {
 		/*
 		 * Annotation resName() parameter can be a String or a String[]
 		 */
-		Object annotationResName = extractAnnotationParameter(element, target, "resName");
+		Object annotationResName = extractAnnotationParameter(element, annotationName, "resName");
 
 		String[] resNames;
 		if (annotationResName.getClass().isArray()) {
@@ -262,11 +263,11 @@ public class AnnotationHelper {
 		return resNames;
 	}
 
-	public int[] extractAnnotationResIdValueParameter(Element element, Class<? extends Annotation> target) {
+	public int[] extractAnnotationResIdValueParameter(Element element, String annotationName) {
 		/*
 		 * Annotation value() parameter can be an int or an int[]
 		 */
-		Object annotationValue = extractAnnotationParameter(element, target, "value");
+		Object annotationValue = extractAnnotationParameter(element, annotationName, "value");
 
 		int[] values;
 		if (annotationValue.getClass().isArray()) {
@@ -279,8 +280,13 @@ public class AnnotationHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T extractAnnotationParameter(Element element, Class<? extends Annotation> target, String methodName) {
-		Annotation annotation = element.getAnnotation(target);
+	public <T> T extractAnnotationParameter(Element element, String annotationName, String methodName) {
+		Annotation annotation;
+		try {
+			annotation = element.getAnnotation((Class<? extends Annotation>) Class.forName(annotationName));
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Could not load annotation class " + annotationName, e);
+		}
 		Method method;
 		try {
 			method = annotation.getClass().getMethod(methodName);
@@ -297,22 +303,22 @@ public class AnnotationHelper {
 		}
 	}
 
-	public String actionName(Class<? extends Annotation> target) {
-		if (target == OptionsItem.class) {
+	public String actionName(String annotationName) {
+		if (OptionsItem.class.getName().equals(annotationName)) {
 			return "Selected";
 		}
-		if (target == OnActivityResult.class) {
+		if (OnActivityResult.class.getName().equals(annotationName)) {
 			return "Result";
 		}
-		String annotationSimpleName = target.getSimpleName();
+		String annotationSimpleName = annotationName.substring(annotationName.lastIndexOf('.') + 1);
 		if (annotationSimpleName.endsWith("e")) {
-			return target.getSimpleName() + "d";
+			return annotationSimpleName + "d";
 		}
-		return target.getSimpleName() + "ed";
+		return annotationSimpleName + "ed";
 	}
 
-	public List<DeclaredType> extractAnnotationClassArrayParameter(Element element, Class<? extends Annotation> target, String methodName) {
-		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
+	public List<DeclaredType> extractAnnotationClassArrayParameter(Element element, String annotationName, String methodName) {
+		AnnotationMirror annotationMirror = findAnnotationMirror(element, annotationName);
 
 		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
 
@@ -340,8 +346,8 @@ public class AnnotationHelper {
 		return null;
 	}
 
-	public DeclaredType extractAnnotationClassParameter(Element element, Class<? extends Annotation> target, String methodName) {
-		AnnotationMirror annotationMirror = findAnnotationMirror(element, target);
+	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName, String methodName) {
+		AnnotationMirror annotationMirror = findAnnotationMirror(element, annotationName);
 
 		Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
 
@@ -362,8 +368,8 @@ public class AnnotationHelper {
 		return null;
 	}
 
-	public DeclaredType extractAnnotationClassParameter(Element element, Class<? extends Annotation> target) {
-		return extractAnnotationClassParameter(element, target, "value");
+	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName) {
+		return extractAnnotationClassParameter(element, annotationName, "value");
 	}
 
 }

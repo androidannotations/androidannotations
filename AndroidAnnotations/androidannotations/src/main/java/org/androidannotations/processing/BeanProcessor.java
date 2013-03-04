@@ -20,8 +20,6 @@ import static com.sun.codemodel.JExpr.ref;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static org.androidannotations.processing.EBeanProcessor.GET_INSTANCE_METHOD_NAME;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
@@ -46,8 +44,8 @@ public class BeanProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Bean.class;
+	public String getTarget() {
+		return Bean.class.getName();
 	}
 
 	@Override

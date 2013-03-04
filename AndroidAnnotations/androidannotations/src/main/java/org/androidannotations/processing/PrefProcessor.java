@@ -17,7 +17,6 @@ package org.androidannotations.processing;
 
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -44,8 +43,8 @@ public class PrefProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Pref.class;
+	public String getTarget() {
+		return Pref.class.getName();
 	}
 
 	@Override

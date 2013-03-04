@@ -18,13 +18,12 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.lit;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.helper.APTCodeModelHelper;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -38,8 +37,8 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return UiThread.class;
+	public String getTarget() {
+		return UiThread.class.getName();
 	}
 
 	@Override

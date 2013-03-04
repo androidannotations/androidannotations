@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -36,8 +34,8 @@ public class RestServiceValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return RestService.class;
+	public String getTarget() {
+		return RestService.class.getName();
 	}
 
 	@Override
@@ -50,7 +48,7 @@ public class RestServiceValidator implements ElementValidator {
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.typeHasAnnotation(Rest.class, element, valid);
-		
+
 		return valid.isValid();
 	}
 

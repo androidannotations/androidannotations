@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -31,6 +30,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.OnSeekBarChangeListenerHelper;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpression;
@@ -53,8 +53,8 @@ public class SeekBarProgressChangeProcessor implements DecoratingElementProcesso
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SeekBarProgressChange.class;
+	public String getTarget() {
+		return SeekBarProgressChange.class.getName();
 	}
 
 	@Override

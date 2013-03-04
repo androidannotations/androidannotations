@@ -18,8 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.HierarchyViewerSupport;
@@ -34,8 +32,8 @@ import com.sun.codemodel.JMod;
 public class HierarchyViewerSupportProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return HierarchyViewerSupport.class;
+	public String getTarget() {
+		return HierarchyViewerSupport.class.getName();
 	}
 
 	@Override

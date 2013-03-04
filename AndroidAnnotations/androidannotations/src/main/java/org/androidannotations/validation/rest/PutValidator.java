@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation.rest;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -41,8 +39,8 @@ public class PutValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Put.class;
+	public String getTarget() {
+		return Put.class.getName();
 	}
 
 	@Override
