@@ -19,6 +19,8 @@ public abstract class ModelConstants {
 
 	public static final String GENERATION_SUFFIX = "_";
 
+	public static final String TRACE_OPTION = "trace";
+
 	private ModelConstants() {
 	}
 
