@@ -21,7 +21,6 @@ import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +48,8 @@ import com.sun.codemodel.JVar;
 public class RoboGuiceProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return RoboGuice.class;
+	public String getTarget() {
+		return RoboGuice.class.getName();
 	}
 
 	@Override

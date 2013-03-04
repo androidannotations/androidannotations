@@ -15,12 +15,11 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 
 import org.androidannotations.annotations.SeekBarTouchStop;
 import org.androidannotations.rclass.IRClass;
+
 import com.sun.codemodel.JMethod;
 
 /**
@@ -32,8 +31,8 @@ public class SeekBarTouchStopProcessor extends AbstractTrackingTouchProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SeekBarTouchStop.class;
+	public String getTarget() {
+		return SeekBarTouchStop.class.getName();
 	}
 
 	@Override

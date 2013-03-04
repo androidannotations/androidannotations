@@ -15,12 +15,10 @@
  */
 package org.androidannotations.model;
 
-import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -32,23 +30,13 @@ import javax.lang.model.type.TypeMirror;
 
 public class ModelExtractor {
 
-	private final ProcessingEnvironment processingEnv;
-	private final Set<Class<? extends Annotation>> lookupAnnotations;
-
-	public ModelExtractor(ProcessingEnvironment processingEnv, Set<Class<? extends Annotation>> lookupAnnotations) {
-		this.processingEnv = processingEnv;
-		this.lookupAnnotations = lookupAnnotations;
-	}
-
 	/**
 	 * Extracts annotated elements on elements given to the annotation processor
 	 * as well as annotations in their superclasses
 	 */
-	public AnnotationElementsHolder extract(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+	public AnnotationElementsHolder extract(Set<? extends TypeElement> annotations, Set<String> annotationTypesToCheck, RoundEnvironment roundEnv) {
 
 		AnnotationElementsHolder extractedModel = new AnnotationElementsHolder();
-
-		Set<String> annotationTypesToCheck = buildAnnotationTypes();
 
 		Set<? extends Element> rootElements = roundEnv.getRootElements();
 
@@ -59,15 +47,6 @@ public class ModelExtractor {
 		extractRootElementsAnnotations(annotations, roundEnv, extractedModel);
 
 		return extractedModel;
-	}
-
-	private Set<String> buildAnnotationTypes() {
-		Set<String> annotationTypesToCheck = new HashSet<String>();
-		for (Class<? extends Annotation> annotation : lookupAnnotations) {
-			TypeElement typeElement = processingEnv.getElementUtils().getTypeElement(annotation.getName());
-			annotationTypesToCheck.add(typeElement.asType().toString());
-		}
-		return annotationTypesToCheck;
 	}
 
 	/**

@@ -21,14 +21,13 @@ import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
 import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -46,8 +45,8 @@ public class TraceProcessor implements DecoratingElementProcessor {
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Trace.class;
+	public String getTarget() {
+		return Trace.class.getName();
 	}
 
 	@Override

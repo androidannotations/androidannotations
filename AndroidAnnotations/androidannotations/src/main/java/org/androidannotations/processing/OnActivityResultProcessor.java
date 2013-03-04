@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -53,8 +52,8 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return OnActivityResult.class;
+	public String getTarget() {
+		return OnActivityResult.class.getName();
 	}
 
 	@Override

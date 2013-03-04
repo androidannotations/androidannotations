@@ -22,8 +22,6 @@ import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -47,8 +45,8 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FragmentByTag.class;
+	public String getTarget() {
+		return FragmentByTag.class.getName();
 	}
 
 	@Override

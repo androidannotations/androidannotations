@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -26,18 +24,17 @@ import org.androidannotations.helper.ValidatorHelper;
 import org.androidannotations.model.AnnotationElements;
 
 public class NonConfigurationInstanceValidator implements ElementValidator {
-	
+
 	private ValidatorHelper validatorHelper;
 
-	
 	public NonConfigurationInstanceValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return NonConfigurationInstance.class;
+	public String getTarget() {
+		return NonConfigurationInstance.class.getName();
 	}
 
 	@Override

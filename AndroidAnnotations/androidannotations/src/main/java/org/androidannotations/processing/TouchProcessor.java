@@ -18,7 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -55,8 +54,8 @@ public class TouchProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Touch.class;
+	public String getTarget() {
+		return Touch.class.getName();
 	}
 
 	@Override

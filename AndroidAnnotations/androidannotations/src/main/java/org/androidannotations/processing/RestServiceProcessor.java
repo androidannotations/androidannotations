@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
@@ -31,8 +29,8 @@ import com.sun.codemodel.JFieldRef;
 public class RestServiceProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return RestService.class;
+	public String getTarget() {
+		return RestService.class.getName();
 	}
 
 	@Override

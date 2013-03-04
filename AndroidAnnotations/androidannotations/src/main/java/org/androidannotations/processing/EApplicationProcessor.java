@@ -22,8 +22,6 @@ import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
@@ -45,8 +43,8 @@ public class EApplicationProcessor implements GeneratingElementProcessor {
 	public static final String GET_APPLICATION_INSTANCE = "getInstance";
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EApplication.class;
+	public String getTarget() {
+		return EApplication.class.getName();
 	}
 
 	@Override
@@ -59,7 +57,7 @@ public class EApplicationProcessor implements GeneratingElementProcessor {
 		String generatedComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EApplication.class, generatedClass);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 

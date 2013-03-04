@@ -17,8 +17,6 @@ package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.ref;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.App;
@@ -30,8 +28,8 @@ import com.sun.codemodel.JCodeModel;
 public class AppProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return App.class;
+	public String getTarget() {
+		return App.class.getName();
 	}
 
 	@Override

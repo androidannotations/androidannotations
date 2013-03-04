@@ -24,7 +24,6 @@ import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_R
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -61,8 +60,8 @@ public class RestProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Rest.class;
+	public String getTarget() {
+		return Rest.class.getName();
 	}
 
 	@Override
@@ -76,7 +75,7 @@ public class RestProcessor implements GeneratingElementProcessor {
 		String implementationName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
 		holder.restImplementationClass = codeModel._class(JMod.PUBLIC, implementationName, ClassType.CLASS);
-		eBeansHolder.create(element, getTarget(), holder.restImplementationClass);
+		eBeansHolder.create(element, Rest.class, holder.restImplementationClass);
 
 		JClass interfaceClass = eBeansHolder.refClass(interfaceName);
 		holder.restImplementationClass._implements(interfaceClass);

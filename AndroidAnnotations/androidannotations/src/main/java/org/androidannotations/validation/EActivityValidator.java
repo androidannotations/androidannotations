@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -41,8 +39,8 @@ public class EActivityValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EActivity.class;
+	public String getTarget() {
+		return EActivity.class.getName();
 	}
 
 	@Override

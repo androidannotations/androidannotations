@@ -15,11 +15,8 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EView;
 import org.androidannotations.helper.TargetAnnotationHelper;
@@ -37,8 +34,8 @@ public class EViewValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EView.class;
+	public String getTarget() {
+		return EView.class.getName();
 	}
 
 	@Override
@@ -46,7 +43,7 @@ public class EViewValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.extendsView((TypeElement) element, valid);
+		validatorHelper.extendsView(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
 

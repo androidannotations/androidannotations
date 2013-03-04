@@ -94,7 +94,8 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		JClass httpMethod = eBeanHolder.refClass(CanonicalNameConstants.HTTP_METHOD);
 
 		// add method type param
-		String restMethodInCapitalLetters = getTarget().getSimpleName().toUpperCase(Locale.ENGLISH);
+		String simpleName = getTarget().substring(getTarget().lastIndexOf('.') + 1);
+		String restMethodInCapitalLetters = simpleName.toUpperCase(Locale.ENGLISH);
 
 		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
 

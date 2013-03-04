@@ -15,7 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -45,8 +44,8 @@ public class BeforeTextChangeValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return BeforeTextChange.class;
+	public String getTarget() {
+		return BeforeTextChange.class.getName();
 	}
 
 	@Override

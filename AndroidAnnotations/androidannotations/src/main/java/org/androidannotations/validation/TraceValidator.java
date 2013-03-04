@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -35,13 +33,13 @@ public class TraceValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Trace.class;
+	public String getTarget() {
+		return Trace.class.getName();
 	}
 
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
-		
+
 		IsValid valid = new IsValid();
 
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);

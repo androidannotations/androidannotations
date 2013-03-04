@@ -22,8 +22,6 @@ import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -33,6 +31,7 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -55,8 +54,8 @@ public class FragmentArgProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FragmentArg.class;
+	public String getTarget() {
+		return FragmentArg.class.getName();
 	}
 
 	@Override

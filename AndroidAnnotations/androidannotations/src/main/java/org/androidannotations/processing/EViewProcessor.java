@@ -18,8 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -63,8 +61,8 @@ public class EViewProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EView.class;
+	public String getTarget() {
+		return EView.class.getName();
 	}
 
 	@Override
@@ -86,7 +84,7 @@ public class EViewProcessor implements GeneratingElementProcessor {
 		}
 
 		JDefinedClass generatedClass = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EView.class, generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 

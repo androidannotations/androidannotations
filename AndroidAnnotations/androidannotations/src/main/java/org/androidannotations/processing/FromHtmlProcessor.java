@@ -18,8 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.ref;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -42,8 +40,8 @@ public class FromHtmlProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FromHtml.class;
+	public String getTarget() {
+		return FromHtml.class.getName();
 	}
 
 	@Override

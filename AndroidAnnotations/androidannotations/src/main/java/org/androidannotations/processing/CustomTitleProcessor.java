@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -38,8 +36,8 @@ public class CustomTitleProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return CustomTitle.class;
+	public String getTarget() {
+		return CustomTitle.class.getName();
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class CustomTitleProcessor implements DecoratingElementProcessor {
 		JFieldRef customTitleFeature = holder.classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
 
 		holder.initBody.invoke("requestWindowFeature").arg(customTitleFeature);
-		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(holder, element, CustomTitle.class, rClass.get(Res.LAYOUT), false).get(0);
+		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(Res.LAYOUT), false).get(0);
 		holder.onViewChanged().body().add(holder.contextRef.invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(contentViewId));
 	}
 }

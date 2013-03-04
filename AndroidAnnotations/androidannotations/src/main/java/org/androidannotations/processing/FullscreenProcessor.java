@@ -17,11 +17,10 @@ package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.invoke;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.Fullscreen;
+
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
@@ -29,8 +28,8 @@ import com.sun.codemodel.JInvocation;
 public class FullscreenProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Fullscreen.class;
+	public String getTarget() {
+		return Fullscreen.class.getName();
 	}
 
 	@Override

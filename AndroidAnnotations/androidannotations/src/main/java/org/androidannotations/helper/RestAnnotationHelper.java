@@ -15,7 +15,6 @@
  */
 package org.androidannotations.helper;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,8 +30,8 @@ import org.androidannotations.validation.IsValid;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
-	public RestAnnotationHelper(ProcessingEnvironment processingEnv, Class<? extends Annotation> target) {
-		super(processingEnv, target);
+	public RestAnnotationHelper(ProcessingEnvironment processingEnv, String annotationName) {
+		super(processingEnv, annotationName);
 	}
 
 	public void urlVariableNamesExistInParameters(ExecutableElement element, Set<String> variableNames, IsValid valid) {

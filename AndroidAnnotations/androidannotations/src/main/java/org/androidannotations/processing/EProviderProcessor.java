@@ -21,13 +21,12 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EProvider;
 import org.androidannotations.helper.ModelConstants;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -38,8 +37,8 @@ import com.sun.codemodel.JMethod;
 public class EProviderProcessor implements GeneratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EProvider.class;
+	public String getTarget() {
+		return EProvider.class.getName();
 	}
 
 	@Override
@@ -53,7 +52,7 @@ public class EProviderProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EProvider.class, generatedClass);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 

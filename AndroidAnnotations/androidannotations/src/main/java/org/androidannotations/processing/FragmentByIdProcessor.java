@@ -21,8 +21,6 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -50,8 +48,8 @@ public class FragmentByIdProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FragmentById.class;
+	public String getTarget() {
+		return FragmentById.class.getName();
 	}
 
 	@Override

@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
@@ -37,8 +35,8 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Background.class;
+	public String getTarget() {
+		return Background.class.getName();
 	}
 
 	@Override

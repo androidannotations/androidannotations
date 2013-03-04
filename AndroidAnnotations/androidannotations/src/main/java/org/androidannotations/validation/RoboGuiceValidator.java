@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
@@ -35,8 +33,8 @@ public class RoboGuiceValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return RoboGuice.class;
+	public String getTarget() {
+		return RoboGuice.class.getName();
 	}
 
 	@Override

@@ -19,8 +19,6 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -72,8 +70,8 @@ public class EViewGroupProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EViewGroup.class;
+	public String getTarget() {
+		return EViewGroup.class.getName();
 	}
 
 	@Override
@@ -96,7 +94,7 @@ public class EViewGroupProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EViewGroup.class, generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
