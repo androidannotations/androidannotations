@@ -15,6 +15,9 @@
  */
 package org.androidannotations;
 
+import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
+import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,6 +27,7 @@ import java.util.Set;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -327,6 +331,7 @@ import org.androidannotations.validation.rest.RestValidator;
 		HierarchyViewerSupport.class //
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })
 public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private final TimeStats timeStats = new TimeStats();
@@ -512,8 +517,8 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private boolean traceActivated() {
 		Map<String, String> options = processingEnv.getOptions();
-		if (options.containsKey("trace")) {
-			String trace = options.get("trace");
+		if (options.containsKey(TRACE_OPTION)) {
+			String trace = options.get(TRACE_OPTION);
 			return !"false".equals(trace);
 		} else {
 			return true;
