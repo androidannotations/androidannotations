@@ -16,6 +16,8 @@
 package org.androidannotations;
 
 import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
+import static org.androidannotations.helper.CanonicalNameConstants.PRODUCE;
+import static org.androidannotations.helper.CanonicalNameConstants.SUBSCRIBE;
 import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
 
 import java.io.IOException;
@@ -164,6 +166,7 @@ import org.androidannotations.processing.OptionsItemProcessor;
 import org.androidannotations.processing.OptionsMenuProcessor;
 import org.androidannotations.processing.OrmLiteDaoProcessor;
 import org.androidannotations.processing.PrefProcessor;
+import org.androidannotations.processing.ProduceProcessor;
 import org.androidannotations.processing.ResProcessor;
 import org.androidannotations.processing.RestServiceProcessor;
 import org.androidannotations.processing.RoboGuiceProcessor;
@@ -172,6 +175,7 @@ import org.androidannotations.processing.SeekBarProgressChangeProcessor;
 import org.androidannotations.processing.SeekBarTouchStartProcessor;
 import org.androidannotations.processing.SeekBarTouchStopProcessor;
 import org.androidannotations.processing.SharedPrefProcessor;
+import org.androidannotations.processing.SubscribeProcessor;
 import org.androidannotations.processing.SystemServiceProcessor;
 import org.androidannotations.processing.TextChangeProcessor;
 import org.androidannotations.processing.TouchProcessor;
@@ -229,6 +233,7 @@ import org.androidannotations.validation.OptionsItemValidator;
 import org.androidannotations.validation.OptionsMenuValidator;
 import org.androidannotations.validation.OrmLiteDaoValidator;
 import org.androidannotations.validation.PrefValidator;
+import org.androidannotations.validation.ProduceValidator;
 import org.androidannotations.validation.ResValidator;
 import org.androidannotations.validation.RestServiceValidator;
 import org.androidannotations.validation.RoboGuiceValidator;
@@ -238,6 +243,7 @@ import org.androidannotations.validation.SeekBarProgressChangeValidator;
 import org.androidannotations.validation.SeekBarTouchStartValidator;
 import org.androidannotations.validation.SeekBarTouchStopValidator;
 import org.androidannotations.validation.SharedPrefValidator;
+import org.androidannotations.validation.SubscribeValidator;
 import org.androidannotations.validation.SystemServiceValidator;
 import org.androidannotations.validation.TextChangeValidator;
 import org.androidannotations.validation.TouchValidator;
@@ -429,6 +435,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		 */
 		modelValidator.register(new AfterViewsValidator(processingEnv));
 		modelValidator.register(new TraceValidator(processingEnv));
+		modelValidator.register(new SubscribeValidator(processingEnv));
+		modelValidator.register(new ProduceValidator(processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class.getName(), processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class.getName(), processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
@@ -436,6 +444,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		modelValidator.register(new OnActivityResultValidator(processingEnv, rClass));
 		modelValidator.register(new HierarchyViewerSupportValidator(processingEnv, androidManifest));
+
 		return modelValidator;
 	}
 
@@ -521,6 +530,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		if (traceActivated()) {
 			modelProcessor.register(new TraceProcessor());
 		}
+		modelProcessor.register(new SubscribeProcessor());
+		modelProcessor.register(new ProduceProcessor());
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());
@@ -651,6 +662,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			for (Class<?> annotationClass : annotationClassesArray) {
 				set.add(annotationClass.getName());
 			}
+
+			set.add(SUBSCRIBE);
+			set.add(PRODUCE);
 
 			supportedAnnotationNames = Collections.unmodifiableSet(set);
 		}

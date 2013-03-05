@@ -159,6 +159,13 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void isPublic(Element element, IsValid valid) {
+		if (!annotationHelper.isPublic(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a non public element");
+		}
+	}
+
 	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EBean.class, valid);
@@ -467,6 +474,15 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void returnTypeIsNotVoid(ExecutableElement executableElement, IsValid valid) {
+		TypeMirror returnType = executableElement.getReturnType();
+
+		if (returnType.getKind() == TypeKind.VOID) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with a return type non void");
+		}
+	}
+
 	public void zeroOrOneParameter(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
@@ -679,6 +695,14 @@ public class ValidatorHelper {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
 			}
+		}
+	}
+
+	public void hasExactlyOneParameter(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		if (parameters.size() != 1) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with exactly one parameter, instead of " + parameters.size());
 		}
 	}
 
