@@ -16,6 +16,7 @@
 package org.androidannotations.helper;
 
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -380,6 +381,20 @@ public class AnnotationHelper {
 		 */
 		Element enclosingElement = element.getEnclosingElement();
 		return enclosingElement.getSimpleName().toString().endsWith(GENERATION_SUFFIX);
+	}
+
+	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
+		Element enclosingElement = element.getEnclosingElement();
+		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
+	}
+
+	public boolean hasOneOfClassAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations) {
+		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
+			if (element.getAnnotation(validAnnotation) != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
