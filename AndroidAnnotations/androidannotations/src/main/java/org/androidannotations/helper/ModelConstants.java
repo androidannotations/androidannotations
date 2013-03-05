@@ -15,11 +15,32 @@
  */
 package org.androidannotations.helper;
 
+import static java.util.Arrays.asList;
+
+import java.lang.annotation.Annotation;
+import java.util.List;
+
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EProvider;
+import org.androidannotations.annotations.EReceiver;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.EViewGroup;
+
 public abstract class ModelConstants {
 
 	public static final String GENERATION_SUFFIX = "_";
 
 	public static final String TRACE_OPTION = "trace";
+
+	@SuppressWarnings("unchecked")
+	public static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
+
+	@SuppressWarnings("unchecked")
+	public static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class, EReceiver.class, EProvider.class, EFragment.class);
 
 	private ModelConstants() {
 	}
