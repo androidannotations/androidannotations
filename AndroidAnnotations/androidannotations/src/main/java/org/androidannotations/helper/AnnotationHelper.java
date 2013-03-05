@@ -15,6 +15,9 @@
  */
 package org.androidannotations.helper;
 
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -370,6 +373,28 @@ public class AnnotationHelper {
 
 	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName) {
 		return extractAnnotationClassParameter(element, annotationName, "value");
+	}
+
+	public boolean enclosingElementIsGenerated(Element element) {
+		/*
+		 * TODO This isn't really safe, can we find a better way?
+		 */
+		Element enclosingElement = element.getEnclosingElement();
+		return enclosingElement.getSimpleName().toString().endsWith(GENERATION_SUFFIX);
+	}
+
+	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
+		Element enclosingElement = element.getEnclosingElement();
+		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
+	}
+
+	public boolean hasOneOfClassAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations) {
+		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
+			if (element.getAnnotation(validAnnotation) != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

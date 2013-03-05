@@ -162,6 +162,12 @@ public final class CanonicalNameConstants {
 	public static final String SCHEME_REGISTRY = "org.apache.http.conn.scheme.SchemeRegistry";
 	public static final String SINGLE_CLIENT_CONN_MANAGER = "org.apache.http.impl.conn.SingleClientConnManager";
 
+	/*
+	 * Otto
+	 */
+	public static final String SUBSCRIBE = "com.squareup.otto.Subscribe";
+	public static final String PRODUCE = "com.squareup.otto.Produce";
+
 	private CanonicalNameConstants() {
 	}
 

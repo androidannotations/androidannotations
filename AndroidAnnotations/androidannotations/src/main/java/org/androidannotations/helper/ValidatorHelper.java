@@ -25,6 +25,8 @@ import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_R
 import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
 import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -49,14 +51,8 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.EProvider;
-import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.EView;
-import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.rest.Delete;
@@ -90,12 +86,6 @@ public class ValidatorHelper {
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
 	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(LOG_VERBOSE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR);
-
-	@SuppressWarnings("unchecked")
-	private static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
-
-	@SuppressWarnings("unchecked")
-	private static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class, EReceiver.class, EProvider.class, EFragment.class);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -156,6 +146,13 @@ public class ValidatorHelper {
 		if (annotationHelper.isPrivate(element)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a private element");
+		}
+	}
+
+	public void isPublic(Element element, IsValid valid) {
+		if (!annotationHelper.isPublic(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a non public element");
 		}
 	}
 
@@ -467,6 +464,15 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void returnTypeIsNotVoid(ExecutableElement executableElement, IsValid valid) {
+		TypeMirror returnType = executableElement.getReturnType();
+
+		if (returnType.getKind() == TypeKind.VOID) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with a return type non void");
+		}
+	}
+
 	public void zeroOrOneParameter(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
@@ -679,6 +685,14 @@ public class ValidatorHelper {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
 			}
+		}
+	}
+
+	public void hasExactlyOneParameter(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		if (parameters.size() != 1) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with exactly one parameter, instead of " + parameters.size());
 		}
 	}
 
