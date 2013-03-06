@@ -18,7 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.lit;
 
-import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
@@ -30,10 +29,8 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 
 public class BackgroundProcessor implements DecoratingElementProcessor {
 
@@ -61,18 +58,15 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 			long delay = annotation.delay();
 
 			JClass backgroundExecutorClass = holder.refClass(BackgroundExecutor.class);
-			JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(_new(anonymousRunnableClass));
+			JInvocation executeCall;
 
 			if (delay == 0) {
-				delegatingMethod.body().add(executeCall);
+				executeCall = backgroundExecutorClass.staticInvoke("execute").arg(_new(anonymousRunnableClass));
 			} else {
-				JDefinedClass anonymousExecutorRunnableClass = helper.createAnonymousRunnableClass(holder, executeCall);
-				if (holder.handler == null) {
-					JClass handlerClass = holder.classes().HANDLER;
-					holder.handler = holder.generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", _new(handlerClass));
-				}
-				delegatingMethod.body().invoke(holder.handler, "postDelayed").arg(_new(anonymousExecutorRunnableClass)).arg(lit(delay));
+				executeCall = backgroundExecutorClass.staticInvoke("executeDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
 			}
+
+			delegatingMethod.body().add(executeCall);
 
 		}
 

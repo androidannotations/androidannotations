@@ -17,17 +17,27 @@ package org.androidannotations.api;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class BackgroundExecutor {
 
 	private static Executor executor = Executors.newCachedThreadPool();
+	private static ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
 
 	public static void execute(Runnable runnable) {
 		executor.execute(runnable);
 	}
-	
+
 	public static void setExecutor(Executor executor) {
 		BackgroundExecutor.executor = executor;
 	}
 
+	public static void executeDelayed(Runnable runnable, long delay) {
+		scheduledExecutor.schedule(runnable, delay, TimeUnit.MILLISECONDS);
+	}
+
+	public static void setScheduledExecutor(ScheduledExecutorService scheduledExecutor) {
+		BackgroundExecutor.scheduledExecutor = scheduledExecutor;
+	}
 }
