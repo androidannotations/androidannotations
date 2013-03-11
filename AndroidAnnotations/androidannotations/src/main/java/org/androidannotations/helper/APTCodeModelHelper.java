@@ -228,19 +228,6 @@ public class APTCodeModelHelper {
 		throw new IllegalStateException("Unable to extract target name from JFieldRef");
 	}
 
-	public JDefinedClass createAnonymousRunnableClass(EBeanHolder holder, JStatement block) {
-		JCodeModel codeModel = holder.codeModel();
-		JDefinedClass anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
-
-		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
-		runMethod.annotate(Override.class);
-
-		JBlock runMethodBody = runMethod.body();
-		runMethodBody.add(block);
-
-		return anonymousRunnableClass;
-	}
-
 	public JDefinedClass createDelegatingAnonymousRunnableClass(EBeanHolder holder, JMethod delegatedMethod) {
 
 		JCodeModel codeModel = holder.codeModel();
