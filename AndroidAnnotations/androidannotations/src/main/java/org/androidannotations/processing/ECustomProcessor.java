@@ -69,7 +69,7 @@ public class ECustomProcessor implements GeneratingElementProcessor {
 
 		String generatedBeanQualifiedName = eCustomQualifiedName + GENERATION_SUFFIX;
 
-		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
+		JDefinedClass generatedClass = codeModel._class(getModifiers(superConstructor.getModifiers()), generatedBeanQualifiedName, ClassType.CLASS);
 
 		EBeanHolder holder = eBeansHolder.create(element, ECustom.class, generatedClass);
 
