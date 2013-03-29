@@ -83,7 +83,7 @@ public class ValidatorHelper {
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
 
-	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING);
+	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING, CanonicalNameConstants.STRING_SET);
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
@@ -839,6 +839,7 @@ public class ValidatorHelper {
 			} else {
 
 				String returnType = executableElement.getReturnType().toString();
+
 				if (!VALID_PREF_RETURN_TYPES.contains(returnType)) {
 					annotationHelper.printError(element, "Method " + methodName + " should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
 				} else {

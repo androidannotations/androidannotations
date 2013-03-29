@@ -29,6 +29,7 @@ public final class CanonicalNameConstants {
 	public static final String SET = Set.class.getCanonicalName();
 	public static final String COLLECTIONS = Collections.class.getCanonicalName();
 	public static final String STRING = String.class.getCanonicalName();
+	public static final String STRING_SET = "java.util.Set<java.lang.String>";
 	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();
 	public static final String SQL_EXCEPTION = SQLException.class.getCanonicalName();
 	public static final String INTEGER = Integer.class.getCanonicalName();

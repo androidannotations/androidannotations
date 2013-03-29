@@ -50,7 +50,10 @@ import org.androidannotations.api.sharedpreferences.LongPrefField;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
+import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
+import org.androidannotations.api.sharedpreferences.StringSetPrefField;
 import org.androidannotations.helper.ModelConstants;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -82,6 +85,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 			put("int", new EditorFieldHolder(IntPrefEditorField.class, "intField"));
 			put("long", new EditorFieldHolder(LongPrefEditorField.class, "longField"));
 			put("java.lang.String", new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
+			put("java.util.Set<java.lang.String>", new EditorFieldHolder(StringSetPrefEditorField.class, "stringSetField"));
 		}
 	};
 
@@ -234,9 +238,16 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 					defaultValue = JExpr.lit("");
 				}
 				addFieldHelperMethod(helperClass, fieldName, defaultValue, StringPrefField.class, "stringField");
+			} else if ("java.util.Set<java.lang.String>".equals(returnType)) {
+				addFieldHelperMethod(helperClass, fieldName, StringSetPrefField.class, "stringSetField");
 			}
 		}
 
+	}
+
+	private void addFieldHelperMethod(JDefinedClass helperClass, String fieldName, Class<?> prefFieldHelperClass, String fieldHelperMethodName) {
+		JMethod fieldMethod = helperClass.method(JMod.PUBLIC, prefFieldHelperClass, fieldName);
+		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(fieldName));
 	}
 
 	private void addFieldHelperMethod(JDefinedClass helperClass, String fieldName, JExpression defaultValue, Class<?> prefFieldHelperClass, String fieldHelperMethodName) {
