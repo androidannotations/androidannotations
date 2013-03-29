@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.annotations.ItemLongClick;
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
@@ -27,18 +27,23 @@ import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 
-public class ItemLongClickValidator implements ElementValidator {
+/**
+ * 
+ * @author Rostislav Chekan
+ * 
+ */
+public class CheckedChangeValidator implements ElementValidator {
 
 	private IdValidatorHelper validatorHelper;
 
-	public ItemLongClickValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public CheckedChangeValidator(ProcessingEnvironment processingEnv, IRClass rClass) {
 		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
 	@Override
 	public String getTarget() {
-		return ItemLongClick.class.getName();
+		return CheckedChange.class.getName();
 	}
 
 	@Override
@@ -57,11 +62,11 @@ public class ItemLongClickValidator implements ElementValidator {
 		validatorHelper.uniqueId(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
+		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
-
-		validatorHelper.param.zeroOrOneParameter(executableElement, valid);
+		validatorHelper.param.hasZeroOrOneCompoundButtonOrTwoCompoundButtonBooleanParameters(executableElement, valid);
 
 		return valid.isValid();
 	}
+
 }
