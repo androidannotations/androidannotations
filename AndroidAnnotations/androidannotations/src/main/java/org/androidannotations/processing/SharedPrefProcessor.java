@@ -302,5 +302,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 		eBeansHolder.generateApiClass(originatingElement, SharedPreferencesHelper.class);
 		eBeansHolder.generateApiClass(originatingElement, StringPrefEditorField.class);
 		eBeansHolder.generateApiClass(originatingElement, StringPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, StringSetPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, StringSetPrefField.class);
 	}
 }
