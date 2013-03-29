@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,8 +22,6 @@ import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -33,6 +31,7 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -55,8 +54,8 @@ public class FragmentArgProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FragmentArg.class;
+	public String getTarget() {
+		return FragmentArg.class.getName();
 	}
 
 	@Override
@@ -146,6 +145,6 @@ public class FragmentArgProcessor implements DecoratingElementProcessor {
 	}
 
 	private void injectArgumentsOnInit(EBeanHolder holder, JClass intentClass, JMethod injectArgumentsMethod) {
-		holder.init.body().invoke(injectArgumentsMethod);
+		holder.initBody.invoke(injectArgumentsMethod);
 	}
 }

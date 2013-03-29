@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -29,6 +28,7 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.rclass.IRClass;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JClass;
@@ -42,7 +42,6 @@ import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Mathieu Boniface
  */
 public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
@@ -53,8 +52,8 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return OnActivityResult.class;
+	public String getTarget() {
+		return OnActivityResult.class.getName();
 	}
 
 	@Override
@@ -83,10 +82,10 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 		int requestCode = executableElement.getAnnotation(OnActivityResult.class).value();
 
-		JCase onActivityResultCase = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCode);
+		JBlock onActivityResultCase = getOrCreateOnActivityResultMethodBody(codeModel, holder, requestCode);
 
 		JExpression activityRef = holder.generatedClass.staticRef("this");
-		JInvocation onResultInvocation = onActivityResultCase.body().invoke(activityRef, methodName);
+		JInvocation onResultInvocation = onActivityResultCase.invoke(activityRef, methodName);
 
 		for (int i = 0; i < parameters.size(); i++) {
 			if (i == intentParameterPosition) {
@@ -100,7 +99,7 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 	}
 
-	public JCase getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, int requestCode) {
+	public JBlock getOrCreateOnActivityResultMethodBody(JCodeModel codeModel, EBeanHolder holder, int requestCode) {
 		JClass intentClass = holder.classes().INTENT;
 
 		if (holder.onActivityResultSwitch == null) {
@@ -120,16 +119,20 @@ public class OnActivityResultProcessor implements DecoratingElementProcessor {
 
 		JSwitch onActivityResultSwitch = holder.onActivityResultSwitch;
 
-		JCase onActivityResultCase = holder.onActivityResultCases.get(requestCode);
+		JBlock onActivityResultCaseBlock = holder.onActivityResultCases.get(requestCode);
 
-		if (onActivityResultCase == null) {
+		if (onActivityResultCaseBlock == null) {
 
-			onActivityResultCase = onActivityResultSwitch._case(JExpr.lit(requestCode));
+			JCase onActivityResultCase = onActivityResultSwitch._case(JExpr.lit(requestCode));
 
-			holder.onActivityResultCases.put(requestCode, onActivityResultCase);
+			onActivityResultCaseBlock = onActivityResultCase.body().block();
+
+			onActivityResultCase.body()._break();
+
+			holder.onActivityResultCases.put(requestCode, onActivityResultCaseBlock);
 
 		}
 
-		return onActivityResultCase;
+		return onActivityResultCaseBlock;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,12 @@
  */
 package org.androidannotations.rclass;
 
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic.Kind;
+
+import org.androidannotations.helper.Option;
 
 public class AndroidRClassFinder {
 
@@ -26,9 +30,13 @@ public class AndroidRClassFinder {
 		this.processingEnv = processingEnv;
 	}
 
-	public IRClass find() {
+	public Option<IRClass> find() {
 		TypeElement androidRType = processingEnv.getElementUtils().getTypeElement("android.R");
-		return new RClass(androidRType);
+		if (androidRType == null) {
+			Messager messager = processingEnv.getMessager();
+			messager.printMessage(Kind.ERROR, "The android.R class cannot be found");
+			return Option.absent();
+		}
+		return Option.<IRClass> of(new RClass(androidRType));
 	}
-
 }

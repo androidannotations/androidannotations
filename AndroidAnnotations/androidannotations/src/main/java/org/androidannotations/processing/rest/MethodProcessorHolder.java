@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,7 @@ public class MethodProcessorHolder {
 	private Element element;
 	private String urlSuffix;
 	private JClass expectedClass;
-	private JClass generatedReturnType;
+	private JClass methodReturnClass;
 	private JCodeModel codeModel;
 
 	private JBlock body;
@@ -42,7 +42,7 @@ public class MethodProcessorHolder {
 		this.element = element;
 		this.urlSuffix = urlSuffix;
 		this.expectedClass = expectedClass;
-		this.generatedReturnType = generatedReturnType;
+		this.methodReturnClass = generatedReturnType;
 		this.codeModel = codeModel;
 	}
 
@@ -58,8 +58,16 @@ public class MethodProcessorHolder {
 		return expectedClass;
 	}
 
-	public JClass getGeneratedReturnType() {
-		return generatedReturnType;
+	public void setExpectedClass(JClass expectedClass) {
+		this.expectedClass = expectedClass;
+	}
+
+	public JClass getMethodReturnClass() {
+		return methodReturnClass;
+	}
+
+	public void setMethodReturnClass(JClass methodReturnClass) {
+		this.methodReturnClass = methodReturnClass;
 	}
 
 	public JCodeModel getCodeModel() {

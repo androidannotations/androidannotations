@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,15 +22,15 @@ import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JMethod;
@@ -45,8 +45,8 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FragmentByTag.class;
+	public String getTarget() {
+		return FragmentByTag.class.getName();
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 			tagValue = fieldName;
 		}
 
-		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName("android.app.Fragment").asType();
+		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT).asType();
 
 		JMethod findFragmentByTag;
 		if (annotationHelper.isSubtype(elementType, nativeFragmentType)) {
@@ -77,9 +77,8 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 				holder.findNativeFragmentByTag = holder.generatedClass.method(PRIVATE, classes.FRAGMENT, "findNativeFragmentByTag");
 				JVar tagParam = holder.findNativeFragmentByTag.param(classes.STRING, "tag");
 
-				holder.findNativeFragmentByTag.javadoc().add("You should check that context is an activity before calling this method");
-
 				JBlock body = holder.findNativeFragmentByTag.body();
+				body._if(holder.contextRef._instanceof(classes.ACTIVITY).not())._then()._return(_null());
 
 				JVar activityVar = body.decl(classes.ACTIVITY, "activity_", cast(classes.ACTIVITY, holder.contextRef));
 
@@ -107,7 +106,7 @@ public class FragmentByTagProcessor implements DecoratingElementProcessor {
 			findFragmentByTag = holder.findSupportFragmentByTag;
 		}
 
-		JBlock methodBody = holder.afterSetContentView.body();
+		JBlock methodBody = holder.onViewChanged().body();
 		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke(findFragmentByTag).arg(lit(tagValue))));
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 
 import org.androidannotations.annotations.SeekBarTouchStart;
@@ -29,8 +27,8 @@ public class SeekBarTouchStartValidator extends AbstractSeekBarTouchValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SeekBarTouchStart.class;
+	public String getTarget() {
+		return SeekBarTouchStart.class.getName();
 	}
 
 }

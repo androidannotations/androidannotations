@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,8 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -28,17 +26,25 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
+
 import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
 
 	public static class ProcessResult {
-		public final JCodeModel codeModel;
-		public final Map<String, Element> originatingElementsByGeneratedClassQualifiedName;
 
-		public ProcessResult(JCodeModel codeModel, Map<String, Element> originatingElementsByGeneratedClassQualifiedName) {
+		public final JCodeModel codeModel;
+		public final OriginatingElements originatingElements;
+		public final Set<Class<?>> apiClassesToGenerate;
+
+		public ProcessResult(//
+				JCodeModel codeModel, //
+				OriginatingElements originatingElements, //
+				Set<Class<?>> apiClassesToGenerate) {
+
 			this.codeModel = codeModel;
-			this.originatingElementsByGeneratedClassQualifiedName = originatingElementsByGeneratedClassQualifiedName;
+			this.originatingElements = originatingElements;
+			this.apiClassesToGenerate = apiClassesToGenerate;
 		}
 	}
 
@@ -60,8 +66,8 @@ public class ModelProcessor {
 		EBeansHolder eBeansHolder = new EBeansHolder(codeModel);
 
 		for (GeneratingElementProcessor processor : typeProcessors) {
-			Class<? extends Annotation> target = processor.getTarget();
-			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(target.getName());
+			String annotationName = processor.getTarget();
+			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
 			for (Element annotatedElement : annotatedElements) {
 				/*
 				 * We do not generate code for abstract classes, because the
@@ -79,9 +85,25 @@ public class ModelProcessor {
 		}
 
 		for (DecoratingElementProcessor processor : enclosedProcessors) {
-			Class<? extends Annotation> target = processor.getTarget();
+			String annotationName = processor.getTarget();
 
-			Set<? extends Element> rootAnnotatedElements = validatedModel.getRootAnnotatedElements(target.getName());
+			/*
+			 * For ancestors, the processor manipulates the annotated elements,
+			 * but uses the holder for the root element
+			 */
+			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(annotationName);
+			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
+				EBeanHolder holder = eBeansHolder.getEBeanHolder(elements.rootTypeElement);
+				/*
+				 * Annotations coming from ancestors may be applied to root
+				 * elements that are not validated, and therefore not available.
+				 */
+				if (holder != null) {
+					processor.process(elements.annotatedElement, codeModel, holder);
+				}
+			}
+
+			Set<? extends Element> rootAnnotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
 
 			for (Element annotatedElement : rootAnnotatedElements) {
 
@@ -89,7 +111,6 @@ public class ModelProcessor {
 				if (annotatedElement instanceof TypeElement) {
 					enclosingElement = annotatedElement;
 				} else {
-
 					enclosingElement = annotatedElement.getEnclosingElement();
 				}
 
@@ -103,24 +124,12 @@ public class ModelProcessor {
 				}
 			}
 
-			/*
-			 * For ancestors, the processor manipulates the annotated elements,
-			 * but uses the holder for the root element
-			 */
-			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(target.getName());
-			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
-				EBeanHolder holder = eBeansHolder.getEBeanHolder(elements.rootTypeElement);
-				/*
-				 * Annotations coming from ancestors may be applied to root
-				 * elements that are not validated, and therefore not available.
-				 */
-				if (holder != null) {
-					processor.process(elements.annotatedElement, codeModel, holder);
-				}
-			}
 		}
 
-		return new ProcessResult(codeModel, eBeansHolder.getOriginatingElementsByGeneratedClassQualifiedName());
+		return new ProcessResult(//
+				codeModel, //
+				eBeansHolder.getOriginatingElements(), //
+				eBeansHolder.getApiClassesToGenerate());
 	}
 
 	private boolean isAbstractClass(Element annotatedElement) {

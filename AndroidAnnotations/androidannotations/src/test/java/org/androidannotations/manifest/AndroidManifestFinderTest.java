@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,9 +36,10 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void fails_if_no_manifest() throws Exception {
+	public void fails_if_no_manifest() {
 		CompileResult result = compileFiles(SomeClass.class);
-		assertCompilationError(result);
+		assertCompilationErrorWithNoSource(result);
+		assertCompilationErrorCount(1, result);
 	}
 
 	@Test
@@ -49,11 +50,27 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
+	public void fails_if_cannot_find_specified_manifest() {
+		addProcessorParameter("androidManifestFile", "/some/random/path/AndroidManifest.xml");
+		CompileResult result = compileFiles(SomeClass.class);
+		assertCompilationErrorWithNoSource(result);
+		assertCompilationErrorCount(1, result);
+	}
+
+	@Test
 	public void finds_manifest_in_generated_source_parent_folder() throws Exception {
 		copyManifestToParentOfOutputDirectory();
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationSuccessful(result);
 		deleteManifestFromParentOfOutputDirectory();
+	}
+
+	@Test
+	public void fails_if_cannot_parse_manifest() {
+		addManifestProcessorParameter(AndroidManifestFinderTest.class, "ParseErrorManifest.xml");
+		CompileResult result = compileFiles(SomeClass.class);
+		assertCompilationErrorWithNoSource(result);
+		assertCompilationErrorCount(1, result);
 	}
 
 	private void deleteManifestFromParentOfOutputDirectory() {

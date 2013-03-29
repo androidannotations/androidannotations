@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -30,6 +29,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -41,11 +41,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-/**
- * @author Benjamin Fellous
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
- */
 public class LongClickProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;
@@ -55,8 +50,8 @@ public class LongClickProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return LongClick.class;
+	public String getTarget() {
+		return LongClick.class.getName();
 	}
 
 	@Override
@@ -95,11 +90,11 @@ public class LongClickProcessor implements DecoratingElementProcessor {
 			call.arg(viewParam);
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-			JInvocation findViewById = JExpr.invoke("findViewById");
+			JBlock block = onViewChanged.body().block();
 
-			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
+			JVar view = block.decl(classes.VIEW, "view", onViewChanged.findViewById(idRef));
 			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnLongClickListener").arg(JExpr._new(listenerAnonymousClass));
 		}
 	}

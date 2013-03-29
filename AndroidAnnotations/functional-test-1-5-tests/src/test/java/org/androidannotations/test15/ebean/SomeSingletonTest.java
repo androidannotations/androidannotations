@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,17 +16,28 @@
 package org.androidannotations.test15.ebean;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
+import java.lang.reflect.Field;
+
+import org.androidannotations.api.view.HasViews;
+import org.androidannotations.api.view.OnViewChangedNotifier;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.EmptyActivityWithoutLayout_;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.Context;
-
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.androidannotations.test15.EmptyActivityWithoutLayout_;
+import android.view.View;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class SomeSingletonTest {
+	
+	@Before
+	public void setup() throws Exception {
+		resetSingletonToNull();
+	}
 
 	@Test
 	public void getInstance_returns_same_instance() {
@@ -40,12 +51,37 @@ public class SomeSingletonTest {
 	public void rebind_does_not_rebind() {
 		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
 		SomeSingleton_ singleton = SomeSingleton_.getInstance_(context);
-		
+
 		Context initialContext = singleton.context;
-		
+
 		EmptyActivityWithoutLayout_ context2 = new EmptyActivityWithoutLayout_();
 		singleton.rebind(context2);
 		assertThat(singleton.context).isSameAs(initialContext);
+	}
+
+	@Test
+	public void views_are_not_injected() throws Exception {
+		Context context = mock(Context.class);
+		OnViewChangedNotifier notifier = new OnViewChangedNotifier();
+		OnViewChangedNotifier.replaceNotifier(notifier);
+		SomeSingleton singleton = SomeSingleton_.getInstance_(context);
+		notifier.notifyViewChanged(new HasViews() {
+
+			@Override
+			public View findViewById(int id) {
+				return mock(View.class);
+			}
+		});
+
+		assertThat(singleton.myTextView).isNull();
+		assertThat(singleton.beanWithView.myTextView).isNull();
+	}
+
+	private void resetSingletonToNull() throws IllegalAccessException,
+			NoSuchFieldException {
+		Field instanceField = SomeSingleton_.class.getDeclaredField("instance_");
+		instanceField.setAccessible(true);
+		instanceField.set(null, null);
 	}
 
 }

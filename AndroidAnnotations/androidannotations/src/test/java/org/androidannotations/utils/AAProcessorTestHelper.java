@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,11 @@ import org.androidannotations.helper.ModelConstants;
 public class AAProcessorTestHelper extends ProcessorTestHelper {
 
 	public void addManifestProcessorParameter(Class<?> classOfPackagingContainingManifest) {
-		String manifestPath = classOfPackagingContainingManifest.getResource("AndroidManifest.xml").getPath();
+		addManifestProcessorParameter(classOfPackagingContainingManifest, "AndroidManifest.xml");
+	}
+
+	public void addManifestProcessorParameter(Class<?> classOfPackagingContainingManifest, String manifestFileName) {
+		String manifestPath = classOfPackagingContainingManifest.getResource(manifestFileName).getPath();
 		addProcessorParameter("androidManifestFile", manifestPath);
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,10 +16,7 @@
 package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.ref;
-
-import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -29,6 +26,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
@@ -42,8 +40,8 @@ public class ViewByIdProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ViewById.class;
+	public String getTarget() {
+		return ViewById.class.getName();
 	}
 
 	@Override
@@ -55,9 +53,9 @@ public class ViewByIdProcessor implements DecoratingElementProcessor {
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.ID, true);
 
-		JBlock methodBody = holder.afterSetContentView.body();
-
-		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke("findViewById").arg(idRef)));
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
+		JBlock methodBody = onViewChanged.body();
+		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), onViewChanged.findViewById(idRef)));
 	}
 
 }

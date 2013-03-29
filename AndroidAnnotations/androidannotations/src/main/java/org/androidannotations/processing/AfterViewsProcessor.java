@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,25 +15,24 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.AfterViews;
+
 import com.sun.codemodel.JCodeModel;
 
 public class AfterViewsProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return AfterViews.class;
+	public String getTarget() {
+		return AfterViews.class.getName();
 	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		String methodName = element.getSimpleName().toString();
 
-		holder.afterSetContentView.body().invoke(methodName);
+		holder.onViewChanged().body().invoke(methodName);
 	}
 
 }

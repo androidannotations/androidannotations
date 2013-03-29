@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -33,6 +32,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -44,8 +44,6 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
  */
 public class TouchProcessor implements DecoratingElementProcessor {
 
@@ -56,8 +54,8 @@ public class TouchProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Touch.class;
+	public String getTarget() {
+		return Touch.class.getName();
 	}
 
 	@Override
@@ -99,11 +97,11 @@ public class TouchProcessor implements DecoratingElementProcessor {
 			call.arg(viewParam);
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-			JInvocation findViewById = JExpr.invoke("findViewById");
+			JBlock block = onViewChanged.body().block();
 
-			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
+			JVar view = block.decl(classes.VIEW, "view", onViewChanged.findViewById(idRef));
 			block._if(view.ne(_null()))._then().invoke(view, "setOnTouchListener").arg(_new(listenerClass));
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,10 +31,11 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.test15.R;
 import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
 
-@EFragment
+@EFragment(R.layout.injected)
 public class MySupportFragment extends Fragment {
 
 	@Bean

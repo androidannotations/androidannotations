@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,8 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.Scope;
-
 /**
  * Should be used on custom classes to enable usage of AndroidAnnotations
  * 
@@ -36,6 +34,20 @@ import org.androidannotations.api.Scope;
 @Target(ElementType.TYPE)
 public @interface EBean {
 	
+	public enum Scope {
+
+		/**
+		 * A new instance of the bean is created each time it is needed
+		 */
+		Default, //
+
+		/**
+		 * A new instance of the bean is created the first time it is needed, it is
+		 * then retained and the same instance is always returned.
+		 */
+		Singleton, //
+	}
+
 	Scope scope() default Scope.Default;
 	
 }

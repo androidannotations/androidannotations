@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -25,6 +24,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 import org.androidannotations.annotations.TextChange;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
@@ -44,8 +44,8 @@ public class TextChangeValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return TextChange.class;
+	public String getTarget() {
+		return TextChange.class.getName();
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class TextChangeValidator implements ElementValidator {
 		boolean textViewParameterFound = false;
 		for (VariableElement parameter : parameters) {
 			String parameterType = parameter.asType().toString();
-			if (parameterType.equals("java.lang.CharSequence")) {
+			if (parameterType.equals(CanonicalNameConstants.CHAR_SEQUENCE)) {
 				if (charSequenceParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type java.lang.CharSequence");
 					valid.invalidate();
@@ -83,7 +83,7 @@ public class TextChangeValidator implements ElementValidator {
 				charSequenceParameterFound = true;
 				continue;
 			}
-			if (parameterType.equals("android.widget.TextView")) {
+			if (parameterType.equals(CanonicalNameConstants.TEXT_VIEW)) {
 				if (textViewParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.widget.TextView");
 					valid.invalidate();
@@ -91,7 +91,7 @@ public class TextChangeValidator implements ElementValidator {
 				textViewParameterFound = true;
 				continue;
 			}
-			if (parameter.asType().getKind() == TypeKind.INT || "java.lang.Integer".equals(parameterType)) {
+			if (parameter.asType().getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType)) {
 				String parameterName = parameter.toString();
 				if ("start".equals(parameterName) || "before".equals(parameterName) || "count".equals(parameterName)) {
 					continue;

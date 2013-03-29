@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,6 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -36,6 +35,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -48,8 +48,6 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
  */
 public class ItemSelectedProcessor implements DecoratingElementProcessor {
 
@@ -60,8 +58,8 @@ public class ItemSelectedProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ItemSelect.class;
+	public String getTarget() {
+		return ItemSelect.class.getName();
 	}
 
 	@Override
@@ -124,10 +122,10 @@ public class ItemSelectedProcessor implements DecoratingElementProcessor {
 			}
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock body = holder.afterSetContentView.body();
-			JInvocation findViewById = invoke("findViewById");
-			body.add(invoke(cast(narrowAdapterViewClass, findViewById.arg(idRef)), "setOnItemSelectedListener").arg(_new(onItemSelectedListenerClass)));
+			JBlock body = onViewChanged.body();
+			body.add(invoke(cast(narrowAdapterViewClass, onViewChanged.findViewById(idRef)), "setOnItemSelectedListener").arg(_new(onItemSelectedListenerClass)));
 		}
 	}
 

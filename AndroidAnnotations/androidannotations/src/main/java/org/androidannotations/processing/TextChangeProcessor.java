@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -31,6 +30,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TextWatcherHelper;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpression;
@@ -40,7 +40,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Mathieu Boniface
  */
 public class TextChangeProcessor implements DecoratingElementProcessor {
 
@@ -54,8 +53,8 @@ public class TextChangeProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return TextChange.class;
+	public String getTarget() {
+		return TextChange.class.getName();
 	}
 
 	@Override

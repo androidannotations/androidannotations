@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
 
 import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.Option;
 
 public class ProjectRClassFinder {
 
@@ -31,7 +32,7 @@ public class ProjectRClassFinder {
 		this.processingEnv = processingEnv;
 	}
 
-	public IRClass find(AndroidManifest manifest) {
+	public Option<IRClass> find(AndroidManifest manifest) {
 
 		Elements elementUtils = processingEnv.getElementUtils();
 		String rClass = manifest.getApplicationPackage() + ".R";
@@ -39,11 +40,10 @@ public class ProjectRClassFinder {
 
 		if (rType == null) {
 			Messager messager = processingEnv.getMessager();
-			messager.printMessage(Kind.WARNING, "The AndroidManifest.xml file was found, but not the compiled R class: " + rClass);
-			return IRClass.EMPTY_R_CLASS;
+			messager.printMessage(Kind.ERROR, "The generated " + rClass + " class cannot be found");
+			return Option.absent();
 		}
 
-		return new RClass(rType);
+		return Option.<IRClass> of(new RClass(rType));
 	}
-
 }

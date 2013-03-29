@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +23,6 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JExpr.ref;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.HttpsClient;
@@ -33,6 +31,7 @@ import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 import org.androidannotations.rclass.IRInnerClass;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JCodeModel;
@@ -45,9 +44,6 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
-/**
- * @author Nabil Hachicha
- */
 public class HttpsClientProcessor implements DecoratingElementProcessor {
 
 	private final IRClass rClass;
@@ -57,8 +53,8 @@ public class HttpsClientProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return HttpsClient.class;
+	public String getTarget() {
+		return HttpsClient.class.getName();
 	}
 
 	@Override
@@ -77,7 +73,7 @@ public class HttpsClientProcessor implements DecoratingElementProcessor {
 		boolean useCustomKeyStore = ResId.DEFAULT_VALUE != keyStoreRawId ? true : false;
 
 		String fieldName = element.getSimpleName().toString();
-		JBlock methodBody = holder.init.body();
+		JBlock methodBody = holder.initBody;
 
 		Classes classes = holder.classes();
 

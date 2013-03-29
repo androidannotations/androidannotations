@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,12 +21,16 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Element;
 
 import org.androidannotations.helper.CanonicalNameConstants;
+
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 
@@ -65,6 +69,7 @@ public class EBeansHolder {
 		public final JClass KEY_EVENT = refClass(CanonicalNameConstants.KEY_EVENT);
 		public final JClass CONTEXT = refClass(CanonicalNameConstants.CONTEXT);
 		public final JClass INTENT = refClass(CanonicalNameConstants.INTENT);
+		public final JClass COMPONENT_NAME = refClass(CanonicalNameConstants.COMPONENT_NAME);
 		public final JClass VIEW_GROUP = refClass(CanonicalNameConstants.VIEW_GROUP);
 		public final JClass LAYOUT_INFLATER = refClass(CanonicalNameConstants.LAYOUT_INFLATER);
 		public final JClass FRAGMENT_ACTIVITY = refClass(CanonicalNameConstants.FRAGMENT_ACTIVITY);
@@ -88,6 +93,7 @@ public class EBeansHolder {
 		public final JClass ON_TOUCH_LISTENER = refClass(CanonicalNameConstants.ON_TOUCH_LISTENER);
 		public final JClass HANDLER = refClass(CanonicalNameConstants.HANDLER);
 		public final JClass KEY_STORE = refClass(CanonicalNameConstants.KEY_STORE);
+		public final JClass VIEW_SERVER = refClass(CanonicalNameConstants.VIEW_SERVER);
 
 		/*
 		 * Sherlock
@@ -95,6 +101,11 @@ public class EBeansHolder {
 		public final JClass SHERLOCK_MENU = refClass(CanonicalNameConstants.SHERLOCK_MENU);
 		public final JClass SHERLOCK_MENU_ITEM = refClass(CanonicalNameConstants.SHERLOCK_MENU_ITEM);
 		public final JClass SHERLOCK_MENU_INFLATER = refClass(CanonicalNameConstants.SHERLOCK_MENU_INFLATER);
+
+		/*
+		 * HoloEverywhre
+		 */
+		public final JClass HOLO_EVERYWHERE_LAYOUT_INFLATER = refClass(CanonicalNameConstants.HOLO_EVERYWHERE_LAYOUT_INFLATER);
 
 		/*
 		 * RoboGuice
@@ -144,7 +155,9 @@ public class EBeansHolder {
 
 	private final Classes classes;
 
-	private final Map<String, Element> originatingElementsByGeneratedClassQualifiedName = new HashMap<String, Element>();
+	private final Set<Class<?>> apiClassesToGenerate = new HashSet<Class<?>>();
+
+	private final OriginatingElements originatingElements = new OriginatingElements();
 
 	public EBeansHolder(JCodeModel codeModel) {
 		this.codeModel = codeModel;
@@ -161,7 +174,8 @@ public class EBeansHolder {
 	public EBeanHolder create(Element element, Class<? extends Annotation> eBeanAnnotation, JDefinedClass generatedClass) {
 
 		String qualifiedName = generatedClass.fullName();
-		originatingElementsByGeneratedClassQualifiedName.put(qualifiedName, element);
+
+		originatingElements.add(qualifiedName, element);
 
 		EBeanHolder activityHolder = new EBeanHolder(this, eBeanAnnotation, generatedClass);
 		eBeanHolders.put(element, activityHolder);
@@ -170,6 +184,10 @@ public class EBeansHolder {
 
 	public EBeanHolder getEBeanHolder(Element element) {
 		return eBeanHolders.get(element);
+	}
+
+	public JClass refClass(Class<?> clazz) {
+		return codeModel.ref(clazz);
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {
@@ -194,8 +212,17 @@ public class EBeansHolder {
 		return refClass;
 	}
 
-	public JClass refClass(Class<?> clazz) {
-		return codeModel.ref(clazz);
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		JDefinedClass refClass = (JDefinedClass) loadedClasses.get(fullyQualifiedClassName);
+		if (refClass == null) {
+			try {
+				refClass = codeModel._class(fullyQualifiedClassName);
+			} catch (JClassAlreadyExistsException e) {
+				refClass = (JDefinedClass) refClass(fullyQualifiedClassName);
+			}
+			loadedClasses.put(fullyQualifiedClassName, refClass);
+		}
+		return refClass;
 	}
 
 	public JCodeModel codeModel() {
@@ -206,8 +233,17 @@ public class EBeansHolder {
 		return classes;
 	}
 
-	public Map<String, Element> getOriginatingElementsByGeneratedClassQualifiedName() {
-		return originatingElementsByGeneratedClassQualifiedName;
+	public OriginatingElements getOriginatingElements() {
+		return originatingElements;
+	}
+
+	public Set<Class<?>> getApiClassesToGenerate() {
+		return apiClassesToGenerate;
+	}
+
+	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
+		originatingElements.add(apiClass.getCanonicalName(), originatingElement);
+		apiClassesToGenerate.add(apiClass);
 	}
 
 }

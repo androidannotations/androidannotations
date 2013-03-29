@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,8 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -27,6 +25,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JCodeModel;
@@ -37,8 +36,6 @@ import com.sun.codemodel.JVar;
 
 /**
  * This class generates the code that creates DAOs with ORMLite
- * 
- * @author Johan Poirier <johan.poirier@gmail.com>
  */
 public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 
@@ -50,8 +47,8 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return OrmLiteDao.class;
+	public String getTarget() {
+		return OrmLiteDao.class.getName();
 	}
 
 	@Override
@@ -67,7 +64,7 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 		// connection source field
 		boolean connectionSourceInjected = holder.generatedClass.fields().containsKey(CONNECTION_SOURCE_FIELD_NAME);
 
-		JBlock initBody = holder.init.body();
+		JBlock initBody = holder.initBody;
 
 		JFieldVar connectionSourceRef;
 		if (connectionSourceInjected) {

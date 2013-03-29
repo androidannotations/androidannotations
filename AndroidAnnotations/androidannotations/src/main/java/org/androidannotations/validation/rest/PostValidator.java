@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,8 +14,6 @@
  * the License.
  */
 package org.androidannotations.validation.rest;
-
-import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -41,8 +39,8 @@ public class PostValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Post.class;
+	public String getTarget() {
+		return Post.class.getName();
 	}
 
 	@Override
@@ -57,10 +55,8 @@ public class PostValidator implements ElementValidator {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
-		
+
 		validatorHelper.doesNotReturnPrimitive(executableElement, valid);
-		
-		validatorHelper.returnTypeNotGenericUnlessResponseEntity(executableElement, valid);
 
 		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);
 

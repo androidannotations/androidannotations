@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,14 +19,13 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -40,8 +39,8 @@ import com.sun.codemodel.JVar;
 public class EReceiverProcessor implements GeneratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EReceiver.class;
+	public String getTarget() {
+		return EReceiver.class.getName();
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class EReceiverProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EReceiver.class, generatedClass);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 
@@ -66,7 +65,8 @@ public class EReceiverProcessor implements GeneratingElementProcessor {
 		JFieldVar contextField = holder.generatedClass.field(PRIVATE, classes.CONTEXT, "context_");
 		holder.contextRef = contextField;
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onReceive
 			JMethod onReceive = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onReceive");
@@ -75,7 +75,7 @@ public class EReceiverProcessor implements GeneratingElementProcessor {
 			onReceive.annotate(Override.class);
 			JBlock onReceiveBody = onReceive.body();
 			onReceiveBody.assign(contextField, contextParam);
-			onReceiveBody.invoke(holder.init);
+			onReceiveBody.invoke(init);
 			onReceiveBody.invoke(JExpr._super(), onReceive).arg(contextParam).arg(intentParam);
 		}
 

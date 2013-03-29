@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,23 +15,30 @@
  */
 package org.androidannotations;
 
+import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
+import static org.androidannotations.helper.CanonicalNameConstants.PRODUCE;
+import static org.androidannotations.helper.CanonicalNameConstants.SUBSCRIBE;
+import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
-import org.androidannotations.annotationprocessor.AnnotatedAbstractProcessor;
-import org.androidannotations.annotationprocessor.SupportedAnnotationClasses;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterTextChange;
 import org.androidannotations.annotations.AfterViews;
@@ -40,6 +47,7 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.BeforeTextChange;
 import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.CustomTitle;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
@@ -55,6 +63,7 @@ import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.annotations.FromHtml;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.HierarchyViewerSupport;
 import org.androidannotations.annotations.HttpsClient;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ItemClick;
@@ -110,6 +119,7 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
+import org.androidannotations.helper.Option;
 import org.androidannotations.helper.TimeStats;
 import org.androidannotations.model.AndroidRes;
 import org.androidannotations.model.AndroidSystemServices;
@@ -124,6 +134,7 @@ import org.androidannotations.processing.BackgroundProcessor;
 import org.androidannotations.processing.BeanProcessor;
 import org.androidannotations.processing.BeforeTextChangeProcessor;
 import org.androidannotations.processing.ClickProcessor;
+import org.androidannotations.processing.CustomTitleProcessor;
 import org.androidannotations.processing.EActivityProcessor;
 import org.androidannotations.processing.EApplicationProcessor;
 import org.androidannotations.processing.EBeanProcessor;
@@ -139,6 +150,7 @@ import org.androidannotations.processing.FragmentByIdProcessor;
 import org.androidannotations.processing.FragmentByTagProcessor;
 import org.androidannotations.processing.FromHtmlProcessor;
 import org.androidannotations.processing.FullscreenProcessor;
+import org.androidannotations.processing.HierarchyViewerSupportProcessor;
 import org.androidannotations.processing.HttpsClientProcessor;
 import org.androidannotations.processing.InstanceStateProcessor;
 import org.androidannotations.processing.ItemClickProcessor;
@@ -154,6 +166,7 @@ import org.androidannotations.processing.OptionsItemProcessor;
 import org.androidannotations.processing.OptionsMenuProcessor;
 import org.androidannotations.processing.OrmLiteDaoProcessor;
 import org.androidannotations.processing.PrefProcessor;
+import org.androidannotations.processing.ProduceProcessor;
 import org.androidannotations.processing.ResProcessor;
 import org.androidannotations.processing.RestServiceProcessor;
 import org.androidannotations.processing.RoboGuiceProcessor;
@@ -162,6 +175,7 @@ import org.androidannotations.processing.SeekBarProgressChangeProcessor;
 import org.androidannotations.processing.SeekBarTouchStartProcessor;
 import org.androidannotations.processing.SeekBarTouchStopProcessor;
 import org.androidannotations.processing.SharedPrefProcessor;
+import org.androidannotations.processing.SubscribeProcessor;
 import org.androidannotations.processing.SystemServiceProcessor;
 import org.androidannotations.processing.TextChangeProcessor;
 import org.androidannotations.processing.TouchProcessor;
@@ -188,6 +202,7 @@ import org.androidannotations.validation.AppValidator;
 import org.androidannotations.validation.BeanValidator;
 import org.androidannotations.validation.BeforeTextChangeValidator;
 import org.androidannotations.validation.ClickValidator;
+import org.androidannotations.validation.CustomTitleValidator;
 import org.androidannotations.validation.EActivityValidator;
 import org.androidannotations.validation.EApplicationValidator;
 import org.androidannotations.validation.EBeanValidator;
@@ -203,6 +218,7 @@ import org.androidannotations.validation.FragmentByIdValidator;
 import org.androidannotations.validation.FragmentByTagValidator;
 import org.androidannotations.validation.FromHtmlValidator;
 import org.androidannotations.validation.FullscreenValidator;
+import org.androidannotations.validation.HierarchyViewerSupportValidator;
 import org.androidannotations.validation.HttpsClientValidator;
 import org.androidannotations.validation.InstanceStateValidator;
 import org.androidannotations.validation.ItemClickValidator;
@@ -217,6 +233,7 @@ import org.androidannotations.validation.OptionsItemValidator;
 import org.androidannotations.validation.OptionsMenuValidator;
 import org.androidannotations.validation.OrmLiteDaoValidator;
 import org.androidannotations.validation.PrefValidator;
+import org.androidannotations.validation.ProduceValidator;
 import org.androidannotations.validation.ResValidator;
 import org.androidannotations.validation.RestServiceValidator;
 import org.androidannotations.validation.RoboGuiceValidator;
@@ -226,6 +243,7 @@ import org.androidannotations.validation.SeekBarProgressChangeValidator;
 import org.androidannotations.validation.SeekBarTouchStartValidator;
 import org.androidannotations.validation.SeekBarTouchStopValidator;
 import org.androidannotations.validation.SharedPrefValidator;
+import org.androidannotations.validation.SubscribeValidator;
 import org.androidannotations.validation.SystemServiceValidator;
 import org.androidannotations.validation.TextChangeValidator;
 import org.androidannotations.validation.TouchValidator;
@@ -241,86 +259,12 @@ import org.androidannotations.validation.rest.PostValidator;
 import org.androidannotations.validation.rest.PutValidator;
 import org.androidannotations.validation.rest.RestValidator;
 
-@SupportedAnnotationClasses({ EActivity.class, //
-		App.class, //
-		EViewGroup.class, //
-		EView.class, //
-		AfterViews.class, //
-		RoboGuice.class, //
-		ViewById.class, //
-		Click.class, //
-		LongClick.class, //
-		ItemClick.class, //
-		ItemLongClick.class, //
-		Touch.class, //
-		ItemSelect.class, //
-		UiThread.class, //
-		Transactional.class, //
-		Background.class, //
-		Extra.class, //
-		SystemService.class, //
-		SharedPref.class, //
-		Pref.class, //
-		StringRes.class, //
-		ColorRes.class, //
-		AnimationRes.class, //
-		BooleanRes.class, //
-		ColorStateListRes.class, //
-		DimensionRes.class, //
-		DimensionPixelOffsetRes.class, //
-		DimensionPixelSizeRes.class, //
-		DrawableRes.class, //
-		IntArrayRes.class, //
-		IntegerRes.class, //
-		LayoutRes.class, //
-		MovieRes.class, //
-		TextRes.class, //
-		TextArrayRes.class, //
-		StringArrayRes.class, //
-		Rest.class, //
-		Get.class, //
-		Head.class, //
-		Options.class, //
-		Post.class, //
-		Put.class, //
-		Delete.class, //
-		Accept.class, //
-		FromHtml.class, //
-		OptionsMenu.class, //
-		OptionsItem.class, //
-		HtmlRes.class, //
-		NoTitle.class, //
-		Fullscreen.class, //
-		RestService.class, //
-		EBean.class, //
-		RootContext.class, //
-		Bean.class, //
-		AfterInject.class, //
-		EService.class, //
-		EReceiver.class, //
-		EProvider.class, //
-		Trace.class, //
-		InstanceState.class, //
-		NonConfigurationInstance.class, //
-		EApplication.class, //
-		EFragment.class, //
-		FragmentById.class, //
-		FragmentByTag.class, //
-		BeforeTextChange.class, //
-		TextChange.class, //
-		SeekBarProgressChange.class, //
-		SeekBarTouchStart.class, //
-		SeekBarTouchStop.class, //
-		AfterTextChange.class, //
-		OrmLiteDao.class, //
-		HttpsClient.class, //
-		FragmentArg.class, //
-		OnActivityResult.class //
-})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
+@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })
+public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private final TimeStats timeStats = new TimeStats();
+	private Set<String> supportedAnnotationNames;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -355,19 +299,29 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
 
-		AndroidManifest androidManifest = extractAndroidManifest();
+		Option<AndroidManifest> androidManifestOption = extractAndroidManifest();
 
-		IRClass rClass = findRClasses(androidManifest);
+		if (androidManifestOption.isAbsent()) {
+			return;
+		}
+
+		AndroidManifest androidManifest = androidManifestOption.get();
+
+		Option<IRClass> rClassOption = findRClasses(androidManifest);
+
+		if (rClassOption.isAbsent()) {
+			return;
+		}
+
+		IRClass rClass = rClassOption.get();
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
 
-		if (validatedModel != null) {
-			ProcessResult processResult = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
+		ProcessResult processResult = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
 
-			generateSources(processResult);
-		}
+		generateSources(processResult);
 	}
 
 	private boolean nothingToDo(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -376,45 +330,45 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 
 	private AnnotationElementsHolder extractAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		timeStats.start("Extract Annotations");
-		ModelExtractor modelExtractor = new ModelExtractor(processingEnv, getSupportedAnnotationClasses());
-		AnnotationElementsHolder extractedModel = modelExtractor.extract(annotations, roundEnv);
+		ModelExtractor modelExtractor = new ModelExtractor();
+		AnnotationElementsHolder extractedModel = modelExtractor.extract(annotations, getSupportedAnnotationTypes(), roundEnv);
 		timeStats.stop("Extract Annotations");
 		return extractedModel;
 	}
 
-	private AndroidManifest extractAndroidManifest() {
+	private Option<AndroidManifest> extractAndroidManifest() {
 		timeStats.start("Extract Manifest");
 		AndroidManifestFinder finder = new AndroidManifestFinder(processingEnv);
-		AndroidManifest manifest = finder.extractAndroidManifest();
+		Option<AndroidManifest> manifest = finder.extractAndroidManifest();
 		timeStats.stop("Extract Manifest");
 		return manifest;
 	}
 
-	private IRClass findRClasses(AndroidManifest androidManifest) throws IOException {
+	private Option<IRClass> findRClasses(AndroidManifest androidManifest) throws IOException {
 		timeStats.start("Find R Classes");
 		ProjectRClassFinder rClassFinder = new ProjectRClassFinder(processingEnv);
-		IRClass rClass = rClassFinder.find(androidManifest);
+
+		Option<IRClass> rClass = rClassFinder.find(androidManifest);
 
 		AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
 
-		IRClass androidRClass = androidRClassFinder.find();
+		Option<IRClass> androidRClass = androidRClassFinder.find();
 
-		CoumpoundRClass coumpoundRClass = new CoumpoundRClass(rClass, androidRClass);
+		if (rClass.isAbsent() || androidRClass.isAbsent()) {
+			return Option.absent();
+		}
+
+		IRClass coumpoundRClass = new CoumpoundRClass(rClass.get(), androidRClass.get());
 
 		timeStats.stop("Find R Classes");
 
-		return coumpoundRClass;
+		return Option.of(coumpoundRClass);
 	}
 
 	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		timeStats.start("Validate Annotations");
-		AnnotationElements validatedAnnotations;
-		if (rClass != null) {
-			ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
-			validatedAnnotations = modelValidator.validate(extractedModel);
-		} else {
-			validatedAnnotations = null;
-		}
+		ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
+		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;
 	}
@@ -450,7 +404,7 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new SystemServiceValidator(processingEnv, androidSystemServices));
 		modelValidator.register(new SharedPrefValidator(processingEnv));
 		modelValidator.register(new PrefValidator(processingEnv));
-		modelValidator.register(new RestValidator(processingEnv));
+		modelValidator.register(new RestValidator(processingEnv, androidManifest));
 		modelValidator.register(new DeleteValidator(processingEnv));
 		modelValidator.register(new GetValidator(processingEnv));
 		modelValidator.register(new HeadValidator(processingEnv));
@@ -458,10 +412,11 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelValidator.register(new PostValidator(processingEnv));
 		modelValidator.register(new PutValidator(processingEnv));
 		modelValidator.register(new AcceptValidator(processingEnv));
-		modelValidator.register(new AppValidator(processingEnv, androidManifest));
+		modelValidator.register(new AppValidator(processingEnv));
 		modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
+		modelValidator.register(new CustomTitleValidator(processingEnv, rClass));
 		modelValidator.register(new FullscreenValidator(processingEnv));
 		modelValidator.register(new RestServiceValidator(processingEnv));
 		modelValidator.register(new RootContextValidator(processingEnv));
@@ -480,19 +435,23 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		 */
 		modelValidator.register(new AfterViewsValidator(processingEnv));
 		modelValidator.register(new TraceValidator(processingEnv));
-		modelValidator.register(new RunnableValidator(UiThread.class, processingEnv));
-		modelValidator.register(new RunnableValidator(Background.class, processingEnv));
+		modelValidator.register(new SubscribeValidator(processingEnv));
+		modelValidator.register(new ProduceValidator(processingEnv));
+		modelValidator.register(new RunnableValidator(UiThread.class.getName(), processingEnv));
+		modelValidator.register(new RunnableValidator(Background.class.getName(), processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
 		modelValidator.register(new OnActivityResultValidator(processingEnv, rClass));
+		modelValidator.register(new HierarchyViewerSupportValidator(processingEnv, androidManifest));
+
 		return modelValidator;
 	}
 
 	private boolean traceActivated() {
 		Map<String, String> options = processingEnv.getOptions();
-		if (options.containsKey("trace")) {
-			String trace = options.get("trace");
+		if (options.containsKey(TRACE_OPTION)) {
+			String trace = options.get(TRACE_OPTION);
 			return !"false".equals(trace);
 		} else {
 			return true;
@@ -538,18 +497,19 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		modelProcessor.register(new ExtraProcessor(processingEnv));
 		modelProcessor.register(new FragmentArgProcessor(processingEnv));
 		modelProcessor.register(new SystemServiceProcessor(androidSystemServices));
-		RestImplementationsHolder restImplementationHolder = new RestImplementationsHolder();
-		modelProcessor.register(new RestProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new GetProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new PostProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new PutProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new DeleteProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new HeadProcessor(processingEnv, restImplementationHolder));
-		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationHolder));
+		RestImplementationsHolder restImplementationsHolder = new RestImplementationsHolder();
+		modelProcessor.register(new RestProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new GetProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new PostProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new PutProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new DeleteProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new HeadProcessor(processingEnv, restImplementationsHolder));
+		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationsHolder));
 		modelProcessor.register(new AppProcessor());
 		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
 		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
+		modelProcessor.register(new CustomTitleProcessor(processingEnv, rClass));
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
 		modelProcessor.register(new OrmLiteDaoProcessor(processingEnv));
@@ -570,12 +530,15 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		if (traceActivated()) {
 			modelProcessor.register(new TraceProcessor());
 		}
+		modelProcessor.register(new SubscribeProcessor());
+		modelProcessor.register(new ProduceProcessor());
 		modelProcessor.register(new UiThreadProcessor());
 		modelProcessor.register(new BackgroundProcessor());
 		modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		modelProcessor.register(new OnActivityResultProcessor(processingEnv, rClass));
+		modelProcessor.register(new HierarchyViewerSupportProcessor());
 		return modelProcessor;
 	}
 
@@ -609,5 +572,102 @@ public class AndroidAnnotationProcessor extends AnnotatedAbstractProcessor {
 		PrintWriter pw = new PrintWriter(writer);
 		e.printStackTrace(pw);
 		return writer.toString();
+	}
+
+	@Override
+	public Set<String> getSupportedAnnotationTypes() {
+		if (supportedAnnotationNames == null) {
+			Class<?>[] annotationClassesArray = { //
+			//
+					EActivity.class, //
+					App.class, //
+					EViewGroup.class, //
+					EView.class, //
+					AfterViews.class, //
+					RoboGuice.class, //
+					ViewById.class, //
+					Click.class, //
+					LongClick.class, //
+					ItemClick.class, //
+					ItemLongClick.class, //
+					Touch.class, //
+					ItemSelect.class, //
+					UiThread.class, //
+					Transactional.class, //
+					Background.class, //
+					Extra.class, //
+					SystemService.class, //
+					SharedPref.class, //
+					Pref.class, //
+					StringRes.class, //
+					ColorRes.class, //
+					AnimationRes.class, //
+					BooleanRes.class, //
+					ColorStateListRes.class, //
+					DimensionRes.class, //
+					DimensionPixelOffsetRes.class, //
+					DimensionPixelSizeRes.class, //
+					DrawableRes.class, //
+					IntArrayRes.class, //
+					IntegerRes.class, //
+					LayoutRes.class, //
+					MovieRes.class, //
+					TextRes.class, //
+					TextArrayRes.class, //
+					StringArrayRes.class, //
+					Rest.class, //
+					Get.class, //
+					Head.class, //
+					Options.class, //
+					Post.class, //
+					Put.class, //
+					Delete.class, //
+					Accept.class, //
+					FromHtml.class, //
+					OptionsMenu.class, //
+					OptionsItem.class, //
+					HtmlRes.class, //
+					NoTitle.class, //
+					CustomTitle.class, //
+					Fullscreen.class, //
+					RestService.class, //
+					EBean.class, //
+					RootContext.class, //
+					Bean.class, //
+					AfterInject.class, //
+					EService.class, //
+					EReceiver.class, //
+					EProvider.class, //
+					Trace.class, //
+					InstanceState.class, //
+					NonConfigurationInstance.class, //
+					EApplication.class, //
+					EFragment.class, //
+					FragmentById.class, //
+					FragmentByTag.class, //
+					BeforeTextChange.class, //
+					TextChange.class, //
+					SeekBarProgressChange.class, //
+					SeekBarTouchStart.class, //
+					SeekBarTouchStop.class, //
+					AfterTextChange.class, //
+					OrmLiteDao.class, //
+					HttpsClient.class, //
+					FragmentArg.class, //
+					OnActivityResult.class, //
+					HierarchyViewerSupport.class //
+			};
+
+			Set<String> set = new HashSet<String>(annotationClassesArray.length);
+			for (Class<?> annotationClass : annotationClassesArray) {
+				set.add(annotationClass.getName());
+			}
+
+			set.add(SUBSCRIBE);
+			set.add(PRODUCE);
+
+			supportedAnnotationNames = Collections.unmodifiableSet(set);
+		}
+		return supportedAnnotationNames;
 	}
 }

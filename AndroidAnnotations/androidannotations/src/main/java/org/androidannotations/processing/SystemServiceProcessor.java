@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,13 +18,12 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.model.AndroidSystemServices;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
@@ -38,8 +37,8 @@ public class SystemServiceProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SystemService.class;
+	public String getTarget() {
+		return SystemService.class.getName();
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class SystemServiceProcessor implements DecoratingElementProcessor {
 
 		JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
 
-		JBlock methodBody = holder.init.body();
+		JBlock methodBody = holder.initBody;
 
 		methodBody.assign(ref(fieldName), cast(holder.refClass(fieldTypeQualifiedName), holder.contextRef.invoke("getSystemService").arg(serviceRef)));
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,6 @@ import static com.sun.codemodel.JExpr.TRUE;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -32,10 +31,11 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.SherlockHelper;
+import org.androidannotations.helper.ThirdPartyLibHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -47,22 +47,21 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 /**
- * @author Pierre-Yves Ricau
  */
 public class OptionsItemProcessor implements DecoratingElementProcessor {
 
 	private final IdAnnotationHelper helper;
 
-	private final SherlockHelper sherlockHelper;
+	private final ThirdPartyLibHelper libHelper;
 
 	public OptionsItemProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-		sherlockHelper = new SherlockHelper(helper);
+		libHelper = new ThirdPartyLibHelper(helper);
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return OptionsItem.class;
+	public String getTarget() {
+		return OptionsItem.class.getName();
 	}
 
 	@Override
@@ -72,7 +71,7 @@ public class OptionsItemProcessor implements DecoratingElementProcessor {
 		String methodName = element.getSimpleName().toString();
 
 		JClass menuItemClass;
-		if (sherlockHelper.usesSherlock(holder)) {
+		if (libHelper.usesActionBarSherlock(holder)) {
 			menuItemClass = classes.SHERLOCK_MENU_ITEM;
 		} else {
 			menuItemClass = classes.MENU_ITEM;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,18 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
-
-import java.lang.annotation.Annotation;
+import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -36,13 +37,16 @@ import javax.lang.model.util.Types;
 
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -62,8 +66,8 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Extra.class;
+	public String getTarget() {
+		return Extra.class.getName();
 	}
 
 	@Override
@@ -89,7 +93,16 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 			injectExtras(holder, codeModel);
 		}
 
-		JBlock ifContainsKey = holder.extrasNotNullBlock._if(JExpr.invoke(holder.extras, "containsKey").arg(extraKey))._then();
+		String staticFieldName;
+		if (fieldName.endsWith("Extra")) {
+			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName);
+		} else {
+			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName + "Extra");
+		}
+
+		JFieldVar extraKeyField = holder.generatedClass.field(PUBLIC | STATIC | FINAL, classes.STRING, staticFieldName, lit(extraKey));
+
+		JBlock ifContainsKey = holder.extrasNotNullBlock._if(JExpr.invoke(holder.extras, "containsKey").arg(extraKeyField))._then();
 
 		JTryBlock containsKeyTry = ifContainsKey._try();
 
@@ -98,9 +111,9 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 		if (isPrimitive) {
 			JPrimitiveType primitiveType = JType.parse(codeModel, elementType.toString());
 			JClass wrapperType = primitiveType.boxify();
-			containsKeyTry.body().assign(extraField, JExpr.cast(wrapperType, holder.extras.invoke("get").arg(extraKey)));
+			containsKeyTry.body().assign(extraField, JExpr.cast(wrapperType, holder.extras.invoke("get").arg(extraKeyField)));
 		} else {
-			containsKeyTry.body().assign(extraField, JExpr.invoke(holder.cast).arg(holder.extras.invoke("get").arg(extraKey)));
+			containsKeyTry.body().assign(extraField, JExpr.invoke(holder.cast).arg(holder.extras.invoke("get").arg(extraKeyField)));
 		}
 
 		JCatchBlock containsKeyCatch = containsKeyTry._catch(classes.CLASS_CAST_EXCEPTION);
@@ -139,7 +152,7 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 				JClass paramClass = helper.typeMirrorToJClass(extraType, holder);
 				JVar extraParam = method.param(paramClass, fieldName);
 				JBlock body = method.body();
-				JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKey);
+				JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKeyField);
 				if (castToSerializable) {
 					invocation.arg(cast(classes.SERIALIZABLE, extraParam));
 				} else {
@@ -200,6 +213,6 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 	}
 
 	private void injectExtrasOnInit(EBeanHolder holder, JClass intentClass, JMethod injectExtrasMethod) {
-		holder.init.body().invoke(injectExtrasMethod);
+		holder.initBody.invoke(injectExtrasMethod);
 	}
 }

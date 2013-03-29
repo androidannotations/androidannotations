@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,6 @@ import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.STATIC;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +37,8 @@ import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
+import org.androidannotations.api.sharedpreferences.AbstractPrefEditorField;
+import org.androidannotations.api.sharedpreferences.AbstractPrefField;
 import org.androidannotations.api.sharedpreferences.BooleanPrefEditorField;
 import org.androidannotations.api.sharedpreferences.BooleanPrefField;
 import org.androidannotations.api.sharedpreferences.EditorHelper;
@@ -47,11 +48,13 @@ import org.androidannotations.api.sharedpreferences.IntPrefEditorField;
 import org.androidannotations.api.sharedpreferences.IntPrefField;
 import org.androidannotations.api.sharedpreferences.LongPrefEditorField;
 import org.androidannotations.api.sharedpreferences.LongPrefField;
+import org.androidannotations.api.sharedpreferences.SharedPreferencesCompat;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
 import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringSetPrefField;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 
 import com.sun.codemodel.ClassType;
@@ -84,27 +87,28 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 			put("float", new EditorFieldHolder(FloatPrefEditorField.class, "floatField"));
 			put("int", new EditorFieldHolder(IntPrefEditorField.class, "intField"));
 			put("long", new EditorFieldHolder(LongPrefEditorField.class, "longField"));
-			put("java.lang.String", new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
+			put(CanonicalNameConstants.STRING, new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
 			put("java.util.Set<java.lang.String>", new EditorFieldHolder(StringSetPrefEditorField.class, "stringSetField"));
 		}
 	};
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return SharedPref.class;
+	public String getTarget() {
+		return SharedPref.class.getName();
 	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
 
-		TypeElement typeElement = (TypeElement) element;
+		generateApiClass(element, eBeansHolder);
 
+		TypeElement typeElement = (TypeElement) element;
 		String interfaceQualifiedName = typeElement.getQualifiedName().toString();
 		String interfaceSimpleName = typeElement.getSimpleName().toString();
 
 		String helperQualifiedName = interfaceQualifiedName + ModelConstants.GENERATION_SUFFIX;
 		JDefinedClass helperClass = codeModel._class(JMod.PUBLIC | JMod.FINAL, helperQualifiedName, ClassType.CLASS);
-		eBeansHolder.create(typeElement, getTarget(), helperClass);
+		eBeansHolder.create(typeElement, SharedPref.class, helperClass);
 
 		helperClass._extends(SharedPreferencesHelper.class);
 
@@ -138,7 +142,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 		}
 
 		// Helper constructor
-		JClass contextClass = eBeansHolder.refClass("android.content.Context");
+		JClass contextClass = eBeansHolder.refClass(CanonicalNameConstants.CONTEXT);
 
 		SharedPref sharedPrefAnnotation = typeElement.getAnnotation(SharedPref.class);
 		Scope scope = sharedPrefAnnotation.value();
@@ -229,7 +233,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 					defaultValue = JExpr.lit(0l);
 				}
 				addFieldHelperMethod(helperClass, fieldName, defaultValue, LongPrefField.class, "longField");
-			} else if ("java.lang.String".equals(returnType)) {
+			} else if (CanonicalNameConstants.STRING.equals(returnType)) {
 				JExpression defaultValue;
 				DefaultString defaultAnnotation = method.getAnnotation(DefaultString.class);
 				if (defaultAnnotation != null) {
@@ -259,7 +263,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 
 		JClass stringClass = eBeansHolder.refClass(String.class);
 		JMethod getLocalClassName = helperClass.method(PRIVATE | STATIC, stringClass, "getLocalClassName");
-		JClass contextClass = eBeansHolder.refClass("android.content.Context");
+		JClass contextClass = eBeansHolder.refClass(CanonicalNameConstants.CONTEXT);
 
 		JVar contextParam = getLocalClassName.param(contextClass, "context");
 
@@ -280,5 +284,23 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 		body._return(className.invoke("substring").arg(packageLen.plus(lit(1))));
 
 		return getLocalClassName;
+	}
+
+	private void generateApiClass(Element originatingElement, EBeansHolder eBeansHolder) {
+		eBeansHolder.generateApiClass(originatingElement, AbstractPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, AbstractPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, BooleanPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, BooleanPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, EditorHelper.class);
+		eBeansHolder.generateApiClass(originatingElement, FloatPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, FloatPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, IntPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, IntPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, LongPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, LongPrefField.class);
+		eBeansHolder.generateApiClass(originatingElement, SharedPreferencesCompat.class);
+		eBeansHolder.generateApiClass(originatingElement, SharedPreferencesHelper.class);
+		eBeansHolder.generateApiClass(originatingElement, StringPrefEditorField.class);
+		eBeansHolder.generateApiClass(originatingElement, StringPrefField.class);
 	}
 }

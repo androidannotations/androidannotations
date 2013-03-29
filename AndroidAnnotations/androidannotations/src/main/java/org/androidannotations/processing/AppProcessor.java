@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,41 +15,32 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.CanonicalNameConstants.APPLICATION;
-import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.App;
+import org.androidannotations.helper.ModelConstants;
+
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JInvocation;
 
 public class AppProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return App.class;
+	public String getTarget() {
+		return App.class.getName();
 	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 
+		String applicationQualifiedName = element.asType().toString();
+		JClass applicationClass = holder.refClass(applicationQualifiedName + ModelConstants.GENERATION_SUFFIX);
+
 		String fieldName = element.getSimpleName().toString();
 
-		TypeMirror elementType = element.asType();
-
-		JInvocation getApplication = holder.initActivityRef.invoke("getApplication");
-
-		String applicationTypeQualifiedName = elementType.toString();
-		if (APPLICATION.equals(applicationTypeQualifiedName)) {
-			holder.initIfActivityBody.assign(ref(fieldName), getApplication);
-		} else {
-			holder.initIfActivityBody.assign(ref(fieldName), cast(holder.refClass(applicationTypeQualifiedName), getApplication));
-		}
+		holder.initBody.assign(ref(fieldName), applicationClass.staticInvoke(EApplicationProcessor.GET_APPLICATION_INSTANCE));
 
 	}
 

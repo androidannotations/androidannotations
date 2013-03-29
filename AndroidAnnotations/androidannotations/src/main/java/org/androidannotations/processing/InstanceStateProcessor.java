@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,15 +15,14 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +33,7 @@ import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -95,8 +95,8 @@ public class InstanceStateProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return InstanceState.class;
+	public String getTarget() {
+		return InstanceState.class.getName();
 	}
 
 	@Override

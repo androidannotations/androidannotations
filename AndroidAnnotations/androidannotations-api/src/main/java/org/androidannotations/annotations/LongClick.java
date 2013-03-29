@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,10 +32,6 @@ import java.lang.annotation.Target;
  * The method may return a boolean, void, or a java.lang.Boolean. If returning
  * void, it will be considered as returning true (ie the method has handled the
  * event).
- * 
- * @author Benjamin Fellous
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
  * 
  */
 @Retention(RetentionPolicy.CLASS)

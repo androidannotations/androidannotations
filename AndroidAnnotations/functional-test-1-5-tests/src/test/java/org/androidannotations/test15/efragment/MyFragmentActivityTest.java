@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,12 +16,6 @@
 package org.androidannotations.test15.efragment;
 
 import static org.fest.assertions.Assertions.assertThat;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 
 /**
  * Those test are disabled for now, we need to update Robolectric version for
@@ -46,16 +40,6 @@ public class MyFragmentActivityTest {
 	// @Test
 	public void can_inject_native_fragment_with_id() {
 		assertThat(activity.myFragment2).isNotNull();
-	}
-
-	// @Test
-	public void can_inject_support_fragment_with_default_id() {
-		assertThat(activity.mySupportFragment).isNotNull();
-	}
-
-	// @Test
-	public void can_inject_support_fragment_with_id() {
-		assertThat(activity.mySupportFragment2).isNotNull();
 	}
 
 }

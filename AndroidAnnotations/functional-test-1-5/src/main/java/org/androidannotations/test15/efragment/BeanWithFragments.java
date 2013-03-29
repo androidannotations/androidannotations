@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,31 +22,17 @@ import org.androidannotations.test15.R;
 
 @EBean
 public class BeanWithFragments {
-
+	
 	@FragmentById
 	public MyFragment myFragment;
 	
-	@FragmentById
-	public MySupportFragment mySupportFragment;
-
 	@FragmentById(R.id.myFragment)
 	public MyFragment myFragment2;
 
-	@FragmentById(R.id.mySupportFragment)
-	public MySupportFragment mySupportFragment2;
-	
 	@FragmentByTag
 	public MyFragment myFragmentTag;
 	
-	@FragmentByTag
-	public MySupportFragment mySupportFragmentTag;
-	
 	@FragmentByTag("myFragmentTag")
 	public MyFragment myFragmentTag2;
-	
-	@FragmentByTag("mySupportFragmentTag")
-	public MySupportFragment mySupportFragmentTag2;
-	
-	
 	
 }
