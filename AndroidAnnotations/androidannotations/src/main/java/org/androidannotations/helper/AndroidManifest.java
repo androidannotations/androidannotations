@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,22 +22,26 @@ public class AndroidManifest {
 
 	private final String applicationPackage;
 	private final List<String> componentQualifiedNames;
+	private final List<String> permissionQualifiedNames;
 	private final String applicationClassName;
 	private final boolean libraryProject;
+	private final boolean debugabble;
 
-	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames) {
-		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames);
+	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, boolean debugabble) {
+		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, permissionQualifiedNames, debugabble);
 	}
 
 	public static AndroidManifest createLibraryManifest(String applicationPackage) {
-		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList());
+		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList(), Collections.<String> emptyList(), false);
 	}
 
-	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames) {
+	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, boolean debuggable) {
 		this.libraryProject = libraryProject;
 		this.applicationPackage = applicationPackage;
 		this.applicationClassName = applicationClassName;
 		this.componentQualifiedNames = componentQualifiedNames;
+		this.permissionQualifiedNames = permissionQualifiedNames;
+		this.debugabble = debuggable;
 	}
 
 	public String getApplicationPackage() {
@@ -48,12 +52,20 @@ public class AndroidManifest {
 		return Collections.unmodifiableList(componentQualifiedNames);
 	}
 
+	public List<String> getPermissionQualifiedNames() {
+		return Collections.unmodifiableList(permissionQualifiedNames);
+	}
+
 	public String getApplicationClassName() {
 		return applicationClassName;
 	}
 
 	public boolean isLibraryProject() {
 		return libraryProject;
+	}
+
+	public boolean isDebuggable() {
+		return debugabble;
 	}
 
 }

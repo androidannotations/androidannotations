@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package org.androidannotations.helper;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
@@ -41,18 +40,18 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 	public void resIdsExist(Element element, Res res, FallbackStrategy fallbackStrategy, IsValid valid) {
 
-		Class<? extends Annotation> target = idAnnotationHelper.getTarget();
-		int[] resIds = idAnnotationHelper.extractAnnotationResIdValueParameter(element, target);
+		String annotationName = idAnnotationHelper.getTarget();
+		int[] resIds = idAnnotationHelper.extractAnnotationResIdValueParameter(element, annotationName);
 
 		if (idAnnotationHelper.defaultResIdValue(resIds)) {
-			String[] resNames = idAnnotationHelper.extractAnnotationResNameParameter(element, target);
+			String[] resNames = idAnnotationHelper.extractAnnotationResNameParameter(element, annotationName);
 
 			if (idAnnotationHelper.defaultResName(resNames)) {
 				if (fallbackStrategy == FallbackStrategy.USE_ELEMENT_NAME) {
 					/*
 					 * fallback, using element name
 					 */
-					String elementName = idAnnotationHelper.extractElementName(element, target);
+					String elementName = idAnnotationHelper.extractElementName(element, annotationName);
 
 					if (!idAnnotationHelper.containsField(elementName, res)) {
 						valid.invalidate();
@@ -95,7 +94,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 			List<String> annotationQualifiedIds = idAnnotationHelper.extractAnnotationResources(element, Res.ID, true);
 
 			Element elementEnclosingElement = element.getEnclosingElement();
-			Set<? extends Element> annotatedElements = validatedElements.getRootAnnotatedElements(annotationHelper.getTarget().getName());
+			Set<? extends Element> annotatedElements = validatedElements.getRootAnnotatedElements(annotationHelper.getTarget());
 
 			for (Element uniqueCheckElement : annotatedElements) {
 				Element uniqueCheckEnclosingElement = uniqueCheckElement.getEnclosingElement();

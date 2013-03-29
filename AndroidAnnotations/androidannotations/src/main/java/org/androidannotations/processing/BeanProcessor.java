@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,10 @@
  */
 package org.androidannotations.processing;
 
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.ref;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static org.androidannotations.processing.EBeanProcessor.GET_INSTANCE_METHOD_NAME;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
-
-import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -31,6 +28,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.helper.TargetAnnotationHelper;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -46,8 +44,8 @@ public class BeanProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Bean.class;
+	public String getTarget() {
+		return Bean.class.getName();
 	}
 
 	@Override
@@ -71,7 +69,7 @@ public class BeanProcessor implements DecoratingElementProcessor {
 		JFieldRef beanField = ref(fieldName);
 		{
 			// getInstance
-			JBlock body = holder.init.body();
+			JBlock body = holder.initBody;
 
 			boolean hasNonConfigurationInstanceAnnotation = element.getAnnotation(NonConfigurationInstance.class) != null;
 
@@ -81,15 +79,6 @@ public class BeanProcessor implements DecoratingElementProcessor {
 
 			JInvocation getInstance = injectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
 			body.assign(beanField, getInstance);
-		}
-
-		{
-			// afterSetContentView
-			if (holder.afterSetContentView != null) {
-				JBlock body = holder.afterSetContentView.body();
-
-				body.invoke(cast(injectedClass, beanField), holder.afterSetContentView);
-			}
 		}
 
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,8 +14,6 @@
  * the License.
  */
 package org.androidannotations.processing;
-
-import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -37,8 +35,8 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Background.class;
+	public String getTarget() {
+		return Background.class.getName();
 	}
 
 	@Override

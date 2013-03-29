@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.processing.rest;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -24,30 +22,26 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.rest.Head;
 import org.androidannotations.processing.EBeanHolder;
-import com.sun.codemodel.JBlock;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JVar;
 
 public class HeadProcessor extends MethodProcessor {
 
-	private EBeanHolder holder;
-
-	public HeadProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
-		super(processingEnv, restImplementationHolder);
+	public HeadProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
+		super(processingEnv, restImplementationsHolder);
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Head.class;
+	public String getTarget() {
+		return Head.class.getName();
 	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
 
-		this.holder = holder;
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		TypeMirror returnType = executableElement.getReturnType();
@@ -63,21 +57,6 @@ public class HeadProcessor extends MethodProcessor {
 	@Override
 	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		return JExpr.invoke(restCall, "getHeaders");
-	}
-
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
-	}
-
-	@Override
-	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
-	}
-
-	@Override
-	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(holder, body, executableElement);
 	}
 
 }

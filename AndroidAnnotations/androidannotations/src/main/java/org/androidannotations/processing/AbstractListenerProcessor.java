@@ -85,11 +85,10 @@ public abstract class AbstractListenerProcessor implements DecoratingElementProc
 
 		processParameters(listenerMethod, call, parameters);
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-			JInvocation findViewById = invoke("findViewById");
-
-			JVar view = block.decl(classes.VIEW, "view", findViewById.arg(idRef));
+			JBlock block = onViewChanged.body().block();
+			JVar view = block.decl(classes.VIEW, "view", onViewChanged.findViewById(idRef));
 			block._if(view.ne(_null()))._then().invoke(castWidget(view), getSetterName()).arg(_new(listenerAnonymousClass));
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,11 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.App;
-import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.annotations.EApplication;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
 import org.androidannotations.model.AnnotationElements;
@@ -29,29 +27,24 @@ import org.androidannotations.model.AnnotationElements;
 public class AppValidator implements ElementValidator {
 
 	private ValidatorHelper validatorHelper;
-	private final AndroidManifest manifest;
 
-	public AppValidator(ProcessingEnvironment processingEnv, AndroidManifest manifest) {
-		this.manifest = manifest;
+	public AppValidator(ProcessingEnvironment processingEnv) {
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return App.class;
+	public String getTarget() {
+		return App.class.getName();
 	}
 
 	@Override
 	public boolean validate(Element element, AnnotationElements validatedElements) {
-
 		IsValid valid = new IsValid();
 
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
-		validatorHelper.extendsApplication(element, valid);
-
-		validatorHelper.upperclassOfRegisteredApplication(element, manifest, valid);
+		validatorHelper.typeHasAnnotation(EApplication.class, element, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

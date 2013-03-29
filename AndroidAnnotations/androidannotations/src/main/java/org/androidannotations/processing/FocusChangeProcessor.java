@@ -15,7 +15,6 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -45,8 +44,8 @@ public class FocusChangeProcessor extends AbstractListenerProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FocusChange.class;
+	public String getTarget() {
+		return FocusChange.class.getName();
 	}
 
 	@Override

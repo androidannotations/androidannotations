@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,14 +20,13 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EService;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ModelConstants;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -45,8 +44,8 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EService.class;
+	public String getTarget() {
+		return EService.class.getName();
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EService.class, generatedClass);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 
@@ -68,13 +67,14 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 
 		holder.contextRef = _this();
 
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
 		{
 			// onCreate
 			JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
 			onCreate.annotate(Override.class);
 			JBlock onCreateBody = onCreate.body();
-			onCreateBody.invoke(holder.init);
+			onCreateBody.invoke(init);
 			onCreateBody.invoke(JExpr._super(), onCreate);
 		}
 

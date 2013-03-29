@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,10 @@
  */
 package org.androidannotations.helper;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,11 +30,11 @@ import org.androidannotations.validation.IsValid;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
-	public RestAnnotationHelper(ProcessingEnvironment processingEnv, Class<? extends Annotation> target) {
-		super(processingEnv, target);
+	public RestAnnotationHelper(ProcessingEnvironment processingEnv, String annotationName) {
+		super(processingEnv, annotationName);
 	}
 
-	public void urlVariableNamesExistInParameters(ExecutableElement element, List<String> variableNames, IsValid valid) {
+	public void urlVariableNamesExistInParameters(ExecutableElement element, Set<String> variableNames, IsValid valid) {
 
 		List<? extends VariableElement> parameters = element.getParameters();
 
@@ -53,7 +54,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	public void urlVariableNamesExistInParametersAndHasNoOneMoreParameter(ExecutableElement element, IsValid valid) {
 		if (valid.isValid()) {
-			List<String> variableNames = extractUrlVariableNames(element);
+			Set<String> variableNames = extractUrlVariableNames(element);
 			urlVariableNamesExistInParameters(element, variableNames, valid);
 			if (valid.isValid()) {
 				List<? extends VariableElement> parameters = element.getParameters();
@@ -65,10 +66,10 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 	}
-	
+
 	public void urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(ExecutableElement element, IsValid valid) {
 		if (valid.isValid()) {
-			List<String> variableNames = extractUrlVariableNames(element);
+			Set<String> variableNames = extractUrlVariableNames(element);
 			urlVariableNamesExistInParameters(element, variableNames, valid);
 			if (valid.isValid()) {
 				List<? extends VariableElement> parameters = element.getParameters();
@@ -84,7 +85,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	/** Captures URI template variable names. */
 	private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
 
-	public List<String> extractUrlVariableNames(ExecutableElement element) {
+	public Set<String> extractUrlVariableNames(ExecutableElement element) {
 
 		// extract variables name from root url isn't really useful
 
@@ -94,7 +95,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		// String urlSuffix = extractAnnotationValue(element);
 		// String uriTemplate = urlPrefix + urlSuffix;
 
-		List<String> variableNames = new ArrayList<String>();
+		Set<String> variableNames = new HashSet<String>();
 		String uriTemplate = extractAnnotationValueParameter(element);
 
 		boolean hasValueInAnnotation = uriTemplate != null;

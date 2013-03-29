@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,29 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotationprocessor;
+package org.androidannotations.annotations;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * An annotation used to indicate what annotation classes an annotation
- * processor supports. The
- * {@link AnnotatedAbstractProcessor#getSupportedAnnotationTypes} method can
- * construct its result from the value of this annotation.
- * 
- * Its main purpose is to be safe from renaming annotations targeted by an
- * annotation processor.
- * 
- * @author Pierre-Yves Ricau
+ * Use this annotation to enable the use of HierarchyViewer inside the
+ * application.
  */
-@Documented
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface SupportedAnnotationClasses {
-	Class<? extends Annotation>[] value();
+public @interface HierarchyViewerSupport {
 }

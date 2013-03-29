@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,11 @@ package org.androidannotations.helper;
 
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public final class CanonicalNameConstants {
@@ -25,14 +29,19 @@ public final class CanonicalNameConstants {
 	/*
 	 * Java
 	 */
+	public static final String OBJECT = Object.class.getCanonicalName();
 	public static final String URI = URI.class.getCanonicalName();
+	public static final String MAP = Map.class.getCanonicalName();
 	public static final String SET = Set.class.getCanonicalName();
+	public static final String LIST = List.class.getCanonicalName();
+	public static final String COLLECTION = Collection.class.getCanonicalName();
 	public static final String COLLECTIONS = Collections.class.getCanonicalName();
 	public static final String STRING = String.class.getCanonicalName();
 	public static final String CHAR_SEQUENCE = CharSequence.class.getCanonicalName();
 	public static final String SQL_EXCEPTION = SQLException.class.getCanonicalName();
 	public static final String INTEGER = Integer.class.getCanonicalName();
 	public static final String BOOLEAN = Boolean.class.getCanonicalName();
+	public static final String ARRAYLIST = ArrayList.class.getCanonicalName();
 
 	/*
 	 * Android
@@ -40,6 +49,7 @@ public final class CanonicalNameConstants {
 	public static final String LOG = "android.util.Log";
 	public static final String PARCELABLE = "android.os.Parcelable";
 	public static final String INTENT = "android.content.Intent";
+	public static final String COMPONENT_NAME = "android.content.ComponentName";
 	public static final String BUNDLE = "android.os.Bundle";
 	public static final String APPLICATION = "android.app.Application";
 	public static final String ACTIVITY = "android.app.Activity";
@@ -84,6 +94,12 @@ public final class CanonicalNameConstants {
 	public static final String SQLITE_DATABASE = "android.database.sqlite.SQLiteDatabase";
 	public static final String KEY_STORE = "java.security.KeyStore";
 	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
+	public static final String VIEW_SERVER = "org.androidannotations.api.ViewServer";
+
+	/*
+	 * Android permission
+	 */
+	public static final String INTERNET_PERMISSION = "android.permission.INTERNET";
 
 	/*
 	 * Sherlock
@@ -91,6 +107,11 @@ public final class CanonicalNameConstants {
 	public static final String SHERLOCK_MENU = "com.actionbarsherlock.view.Menu";
 	public static final String SHERLOCK_MENU_ITEM = "com.actionbarsherlock.view.MenuItem";
 	public static final String SHERLOCK_MENU_INFLATER = "com.actionbarsherlock.view.MenuInflater";
+
+	/*
+	 * HoloEverywhere
+	 */
+	public static final String HOLO_EVERYWHERE_LAYOUT_INFLATER = "org.holoeverywhere.LayoutInflater";
 
 	/*
 	 * SpringFramework
@@ -102,6 +123,7 @@ public final class CanonicalNameConstants {
 	public static final String HTTP_ENTITY = "org.springframework.http.HttpEntity";
 	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
 	public static final String HTTP_MESSAGE_CONVERTER = "org.springframework.http.converter.HttpMessageConverter";
+	public static final String CLIENT_HTTP_REQUEST_INTERCEPTOR = "org.springframework.http.client.ClientHttpRequestInterceptor";
 
 	/*
 	 * RoboGuice
@@ -141,6 +163,12 @@ public final class CanonicalNameConstants {
 	public static final String SCHEME = "org.apache.http.conn.scheme.Scheme";
 	public static final String SCHEME_REGISTRY = "org.apache.http.conn.scheme.SchemeRegistry";
 	public static final String SINGLE_CLIENT_CONN_MANAGER = "org.apache.http.impl.conn.SingleClientConnManager";
+
+	/*
+	 * Otto
+	 */
+	public static final String SUBSCRIBE = "com.squareup.otto.Subscribe";
+	public static final String PRODUCE = "com.squareup.otto.Produce";
 
 	private CanonicalNameConstants() {
 	}

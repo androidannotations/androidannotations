@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -44,8 +42,8 @@ public class FocusChangeValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return FocusChange.class;
+	public String getTarget() {
+		return FocusChange.class.getName();
 	}
 
 	@Override

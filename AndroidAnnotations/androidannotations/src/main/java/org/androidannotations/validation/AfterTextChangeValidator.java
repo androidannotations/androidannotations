@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -24,6 +23,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.AfterTextChange;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
@@ -43,8 +43,8 @@ public class AfterTextChangeValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return AfterTextChange.class;
+	public String getTarget() {
+		return AfterTextChange.class.getName();
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class AfterTextChangeValidator implements ElementValidator {
 		boolean textViewParameterFound = false;
 		for (VariableElement parameter : parameters) {
 			String parameterType = parameter.asType().toString();
-			if (parameterType.equals("android.text.Editable")) {
+			if (parameterType.equals(CanonicalNameConstants.EDITABLE)) {
 				if (editableParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.text.Editable");
 					valid.invalidate();
@@ -82,7 +82,7 @@ public class AfterTextChangeValidator implements ElementValidator {
 				editableParameterFound = true;
 				continue;
 			}
-			if (parameterType.equals("android.widget.TextView")) {
+			if (parameterType.equals(CanonicalNameConstants.TEXT_VIEW)) {
 				if (textViewParameterFound) {
 					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.widget.TextView");
 					valid.invalidate();

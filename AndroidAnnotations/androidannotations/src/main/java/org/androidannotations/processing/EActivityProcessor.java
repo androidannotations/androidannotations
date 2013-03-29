@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,11 +17,11 @@ package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.GreenDroidConstants.GREENDROID_ACTIVITIES_LIST_CLASS;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +81,8 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EActivity.class;
+	public String getTarget() {
+		return EActivity.class.getName();
 	}
 
 	@Override
@@ -90,18 +90,13 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		TypeElement typeElement = (TypeElement) element;
 
-		// Activity
 		String annotatedActivityQualifiedName = typeElement.getQualifiedName().toString();
 
 		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
-		boolean usesGreenDroid = usesGreenDroid(typeElement);
+		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, subActivityQualifiedName, ClassType.CLASS);
 
-		int modifiers = JMod.PUBLIC | JMod.FINAL;
-
-		JDefinedClass generatedClass = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
-
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EActivity.class, generatedClass);
 
 		JClass annotatedActivity = codeModel.directClass(annotatedActivityQualifiedName);
 
@@ -109,47 +104,54 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		holder.contextRef = _this();
 
-		// onCreate
-		JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
-		onCreate.annotate(Override.class);
-
 		JClass bundleClass = holder.classes().BUNDLE;
 
 		// beforeSetContentView
-		holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
-		holder.beforeCreateSavedInstanceStateParam = holder.init.param(bundleClass, "savedInstanceState");
+		JMethod init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+		holder.initBody = init.body();
+		holder.beforeCreateSavedInstanceStateParam = init.param(bundleClass, "savedInstanceState");
 
 		{
 			// init if activity
-			holder.initIfActivityBody = holder.init.body();
+			holder.initIfActivityBody = holder.initBody;
 			holder.initActivityRef = _this();
 		}
 
-		// afterSetContentView
-		holder.afterSetContentView = holder.generatedClass.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
-
+		// onCreate
+		JMethod onCreate = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onCreate");
+		onCreate.annotate(Override.class);
 		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
-		JBlock onCreateBody = onCreate.body();
 
-		onCreateBody.invoke(holder.init).arg(onCreateSavedInstanceState);
+		boolean usesGreenDroid = usesGreenDroid(typeElement);
 
-		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
+		// onCreateBody
+		{
+			JBlock onCreateBody = onCreate.body();
 
-		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, EActivity.class, rClass.get(Res.LAYOUT), false);
+			JVar previousNotifier = holder.replacePreviousNotifier(onCreateBody);
 
-		JFieldRef contentViewId;
-		if (fieldRefs.size() == 1) {
-			contentViewId = fieldRefs.get(0);
-		} else {
-			contentViewId = null;
-		}
+			onCreateBody.invoke(init).arg(onCreateSavedInstanceState);
 
-		if (contentViewId != null) {
-			// GreenDroid support
-			if (usesGreenDroid) {
-				onCreateBody.invoke("setActionBarContentView").arg(contentViewId);
+			onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
+
+			holder.resetPreviousNotifier(onCreateBody, previousNotifier);
+
+			List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(Res.LAYOUT), false);
+
+			JFieldRef contentViewId;
+			if (fieldRefs.size() == 1) {
+				contentViewId = fieldRefs.get(0);
 			} else {
-				onCreateBody.invoke("setContentView").arg(contentViewId);
+				contentViewId = null;
+			}
+
+			if (contentViewId != null) {
+				// GreenDroid support
+				if (usesGreenDroid) {
+					onCreateBody.invoke("setActionBarContentView").arg(contentViewId);
+				} else {
+					onCreateBody.invoke("setContentView").arg(contentViewId);
+				}
 			}
 		}
 
@@ -217,7 +219,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 		for (JVar arg : params) {
 			superCall.arg(arg);
 		}
-		body.invoke(holder.afterSetContentView);
+		holder.invokeViewChanged(body);
 	}
 
 	private ExecutableElement getOnBackPressedMethod(TypeElement activityElement) {

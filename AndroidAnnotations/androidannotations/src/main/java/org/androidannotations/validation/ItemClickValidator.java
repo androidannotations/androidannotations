@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -29,10 +27,6 @@ import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 
-/**
- * @author Benjamin Fellous
- * @author Pierre-Yves Ricau
- */
 public class ItemClickValidator implements ElementValidator {
 
 	private IdAnnotationHelper annotationHelper;
@@ -44,8 +38,8 @@ public class ItemClickValidator implements ElementValidator {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ItemClick.class;
+	public String getTarget() {
+		return ItemClick.class.getName();
 	}
 
 	@Override

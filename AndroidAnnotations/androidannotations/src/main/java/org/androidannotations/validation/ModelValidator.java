@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package org.androidannotations.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,13 +43,13 @@ public class ModelValidator {
 		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
 		for (ElementValidator validator : validators) {
-			Class<? extends Annotation> target = validator.getTarget();
+			String annotationName = validator.getTarget();
 
-			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(target.getName());
+			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(annotationName);
 
 			Set<Element> validatedAnnotatedElements = new HashSet<Element>();
 
-			validatedElements.putRootAnnotatedElements(target.getName(), validatedAnnotatedElements);
+			validatedElements.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 
 			for (Element annotatedElement : annotatedElements) {
 				if (validator.validate(annotatedElement, validatedElements)) {

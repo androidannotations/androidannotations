@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,28 +22,51 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.processing.EBeanHolder;
 
-/**
- * @author Eric Kok
- */
-public class SherlockHelper {
+public class ThirdPartyLibHelper {
 
 	private final AnnotationHelper annotationHelper;
 
-	public SherlockHelper(AnnotationHelper annotationHelper) {
+	public ThirdPartyLibHelper(AnnotationHelper annotationHelper) {
 		this.annotationHelper = annotationHelper;
+	}
+
+	/**
+	 * Checks whether the Activity extends one of the HoloEverywhere Activity
+	 * types
+	 */
+	public boolean usesHoloEverywhere(EBeanHolder holder) {
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
+
+		TypeMirror superType;
+		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {
+			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
+			String qName = typeElement.getQualifiedName().toString();
+			if (qName.startsWith("org.holoeverywhere")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * Checks whether the Activity extends one of the ActionBarSherlock Activity
 	 * types
 	 */
-	public boolean usesSherlock(EBeanHolder holder) {
+	public boolean usesActionBarSherlock(EBeanHolder holder) {
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
 
 		TypeMirror superType;
 		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {
 			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
-			if (typeElement.getQualifiedName().toString().startsWith("com.actionbarsherlock.app")) {
+			String qName = typeElement.getQualifiedName().toString();
+			if (qName.startsWith("com.actionbarsherlock.app")) {
+				return true;
+			}
+			if (qName.startsWith("org.holoeverywhere")) {
+				/*
+				 * HoloEverywhere depends on ABS and uses its own provided
+				 * activity classes
+				 */
 				return true;
 			}
 		}

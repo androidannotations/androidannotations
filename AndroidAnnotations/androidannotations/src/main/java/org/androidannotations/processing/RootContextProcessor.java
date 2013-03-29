@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,15 @@
  */
 package org.androidannotations.processing;
 
-import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
-
-import java.lang.annotation.Annotation;
+import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.RootContext;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -32,8 +31,8 @@ import com.sun.codemodel.JCodeModel;
 public class RootContextProcessor implements DecoratingElementProcessor {
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return RootContext.class;
+	public String getTarget() {
+		return RootContext.class.getName();
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class RootContextProcessor implements DecoratingElementProcessor {
 
 		String typeQualifiedName = elementType.toString();
 
-		JBlock body = holder.init.body();
+		JBlock body = holder.initBody;
 		if (CONTEXT.equals(typeQualifiedName)) {
 			body.assign(ref(fieldName), holder.contextRef);
 		} else {

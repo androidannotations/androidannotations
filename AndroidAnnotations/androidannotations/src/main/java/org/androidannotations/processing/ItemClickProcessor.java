@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,10 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -30,6 +33,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -41,11 +45,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-/**
- * @author Benjamin Fellous
- * @author Pierre-Yves Ricau
- * @author Mathieu Boniface
- */
 public class ItemClickProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;
@@ -55,8 +54,8 @@ public class ItemClickProcessor implements DecoratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return ItemClick.class;
+	public String getTarget() {
+		return ItemClick.class.getName();
 	}
 
 	@Override
@@ -92,16 +91,16 @@ public class ItemClickProcessor implements DecoratingElementProcessor {
 				itemClickCall.arg(onItemClickPositionParam);
 			} else {
 				String parameterTypeQualifiedName = parameterType.toString();
-				itemClickCall.arg(JExpr.cast(holder.refClass(parameterTypeQualifiedName), JExpr.invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				itemClickCall.arg(cast(holder.refClass(parameterTypeQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 			}
 		}
 
+		ViewChangedHolder onViewChanged = holder.onViewChanged();
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.afterSetContentView.body().block();
-			JInvocation findViewById = JExpr.invoke("findViewById");
+			JBlock block = onViewChanged.body().block();
 
-			JVar view = block.decl(narrowAdapterViewClass, "view", JExpr.cast(narrowAdapterViewClass, findViewById.arg(idRef)));
-			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(JExpr._new(onItemClickListenerAnonymousClass));
+			JVar view = block.decl(narrowAdapterViewClass, "view", cast(narrowAdapterViewClass, onViewChanged.findViewById(idRef)));
+			block._if(view.ne(JExpr._null()))._then().invoke(view, "setOnItemClickListener").arg(_new(onItemClickListenerAnonymousClass));
 		}
 	}
 

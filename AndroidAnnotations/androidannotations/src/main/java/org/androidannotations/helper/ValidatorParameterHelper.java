@@ -92,6 +92,14 @@ public class ValidatorParameterHelper {
 		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.BUNDLE, valid);
 	}
 
+	public void hasExactlyOneParameter(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		if (parameters.size() != 1) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with exactly one parameter, instead of " + parameters.size());
+		}
+	}
+
 	public void hasOneOrTwoParametersAndFirstIsBoolean(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 

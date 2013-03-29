@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,12 @@
  */
 package org.androidannotations.processing;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.helper.APTCodeModelHelper;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -38,8 +37,8 @@ public class TransactionalProcessor implements DecoratingElementProcessor {
 	private final APTCodeModelHelper helper = new APTCodeModelHelper();
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Transactional.class;
+	public String getTarget() {
+		return Transactional.class.getName();
 	}
 
 	@Override

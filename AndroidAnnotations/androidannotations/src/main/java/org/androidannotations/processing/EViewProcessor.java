@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,8 +18,6 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -28,6 +26,7 @@ import org.androidannotations.annotations.EView;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -62,8 +61,8 @@ public class EViewProcessor implements GeneratingElementProcessor {
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return EView.class;
+	public String getTarget() {
+		return EView.class.getName();
 	}
 
 	@Override
@@ -85,7 +84,7 @@ public class EViewProcessor implements GeneratingElementProcessor {
 		}
 
 		JDefinedClass generatedClass = codeModel._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
-		EBeanHolder holder = eBeansHolder.create(element, getTarget(), generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EView.class, generatedClass);
 
 		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
 
@@ -98,15 +97,13 @@ public class EViewProcessor implements GeneratingElementProcessor {
 			holder.contextRef = holder.generatedClass.field(PRIVATE, classes.CONTEXT, "context_");
 		}
 
+		JMethod init;
 		{
 			// init
-			holder.init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
-			holder.init.body().assign((JFieldVar) holder.contextRef, JExpr.invoke("getContext"));
-		}
-
-		{
-			// afterSetContentView
-			holder.afterSetContentView = holder.generatedClass.method(PRIVATE, codeModel.VOID, "afterSetContentView_");
+			init = holder.generatedClass.method(PRIVATE, codeModel.VOID, "init_");
+			holder.initBody = init.body();
+			holder.wrapInitWithNotifier();
+			holder.initBody.assign((JFieldVar) holder.contextRef, JExpr.invoke("getContext"));
 		}
 
 		JFieldVar mAlreadyInflated_ = holder.generatedClass.field(PRIVATE, JType.parse(codeModel, "boolean"), "mAlreadyInflated_", JExpr.FALSE);
@@ -119,18 +116,17 @@ public class EViewProcessor implements GeneratingElementProcessor {
 		JBlock ifNotInflated = onFinishInflate.body()._if(JExpr.ref("mAlreadyInflated_").not())._then();
 		ifNotInflated.assign(mAlreadyInflated_, JExpr.TRUE);
 
-		ifNotInflated.invoke(holder.afterSetContentView);
+		holder.invokeViewChanged(ifNotInflated);
 
 		// finally
 		onFinishInflate.body().invoke(JExpr._super(), "onFinishInflate");
 
-		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, eBeanClass, holder, onFinishInflate);
+		codeModelHelper.copyConstructorsAndAddStaticEViewBuilders(element, codeModel, eBeanClass, holder, onFinishInflate, init);
 
 		{
 			// init if activity
-			APTCodeModelHelper helper = new APTCodeModelHelper();
-			holder.initIfActivityBody = helper.ifContextInstanceOfActivity(holder, holder.init.body());
-			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
+			holder.initIfActivityBody = codeModelHelper.ifContextInstanceOfActivity(holder, holder.initBody);
+			holder.initActivityRef = codeModelHelper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
 
 	}

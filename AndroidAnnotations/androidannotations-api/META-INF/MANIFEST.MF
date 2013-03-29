@@ -7,7 +7,8 @@ Export-Package: org.androidannotations.annotations,
  org.androidannotations.annotations.res,
  org.androidannotations.annotations.rest,
  org.androidannotations.annotations.sharedpreferences,
- org.androidannotations.api.rest
+ org.androidannotations.api.rest,
+ org.androidannotations.api.view
 Bundle-Vendor: androidannotations
 Bundle-Activator: org.androidannotations.api.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,99 +15,58 @@
  */
 package org.androidannotations.processing.rest;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.processing.EBeanHolder;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 
-public class GetProcessor extends MethodProcessor {
-
-	private EBeanHolder holder;
+public class GetProcessor extends GetPostProcessor {
 
 	public GetProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);
 	}
 
 	@Override
-	public Class<? extends Annotation> getTarget() {
-		return Get.class;
+	public String getTarget() {
+		return Get.class.getName();
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
-
-		this.holder = holder;
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		TypeMirror returnType = executableElement.getReturnType();
-
-		JClass generatedReturnType = null;
-		String returnTypeString = returnType.toString();
-		JClass expectedClass = null;
-
-		if (returnType.getKind() != TypeKind.VOID) {
-			if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
-				DeclaredType declaredReturnedType = (DeclaredType) returnType;
-				TypeMirror typeParameter = declaredReturnedType.getTypeArguments().get(0);
-				expectedClass = holder.refClass(typeParameter.toString());
-				generatedReturnType = holder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(expectedClass);
-			} else {
-				generatedReturnType = holder.refClass(returnTypeString);
-				expectedClass = generatedReturnType;
-			}
-		}
-
+	public String retrieveUrlSuffix(Element element) {
 		Get getAnnotation = element.getAnnotation(Get.class);
-		String urlSuffix = getAnnotation.value();
-
-		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
+		return getAnnotation.value();
 	}
 
 	@Override
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		JClass expectedClass = methodHolder.getExpectedClass();
-		JClass generatedReturnType = methodHolder.getGeneratedReturnType();
+	protected JExpression generateHttpEntityVar(MethodProcessorHolder methodHolder) {
+		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
+		EBeanHolder holder = methodHolder.getHolder();
+		JClass httpEntity = holder.refClass(CanonicalNameConstants.HTTP_ENTITY);
 
-		if (expectedClass == generatedReturnType) {
-			restCall = JExpr.invoke(restCall, "getBody");
-		}
+		JBlock body = methodHolder.getBody();
+		JVar httpHeadersVar = generateHttpHeadersVar(holder, body, executableElement);
 
-		return restCall;
-	}
+		boolean hasHeaders = httpHeadersVar != null;
 
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(generateHttpEntityVar(methodHolder));
-	}
+		if (hasHeaders) {
+			JInvocation newHttpEntityVarCall = JExpr._new(httpEntity.narrow(Object.class));
+			newHttpEntityVarCall.arg(httpHeadersVar);
 
-	@Override
-	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		JClass expectedClass = methodHolder.getExpectedClass();
+			String httpEntityVarName = "requestEntity";
 
-		if (expectedClass != null) {
-			return restCall.arg(expectedClass.dotclass());
+			return body.decl(httpEntity.narrow(Object.class), httpEntityVarName, newHttpEntityVarCall);
 		} else {
-			return restCall.arg(JExpr._null());
+			return JExpr._null();
 		}
 	}
-
-	@Override
-	protected JVar addHttpHeadersVar(JBlock body, ExecutableElement executableElement) {
-		return generateHttpHeadersVar(holder, body, executableElement);
-	}
-
 }

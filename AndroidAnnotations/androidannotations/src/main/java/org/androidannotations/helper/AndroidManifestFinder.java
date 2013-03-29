@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,7 +40,7 @@ import org.w3c.dom.NodeList;
 
 public class AndroidManifestFinder {
 
-	private static final String ANDROID_MANIFEST_FILE_OPTION = "androidManifestFile";
+	public static final String ANDROID_MANIFEST_FILE_OPTION = "androidManifestFile";
 
 	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
 
@@ -195,21 +195,25 @@ public class AndroidManifestFinder {
 
 		NodeList applicationNodes = documentElement.getElementsByTagName("application");
 
-		String applicationQualifiedName = null;
+		String applicationClassQualifiedName = null;
+		boolean applicationDebuggableMode = false;
 
 		if (applicationNodes.getLength() > 0) {
 			Node applicationNode = applicationNodes.item(0);
 			Node nameAttribute = applicationNode.getAttributes().getNamedItem("android:name");
 
-			String qualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
+			applicationClassQualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
 
-			if (qualifiedName != null) {
-				applicationQualifiedName = qualifiedName;
-			} else {
+			if (applicationClassQualifiedName == null) {
 				Messager messager = processingEnv.getMessager();
 				if (nameAttribute != null) {
 					messager.printMessage(Kind.NOTE, String.format("The class application declared in the AndroidManifest.xml cannot be found in the compile path: [%s]", nameAttribute.getNodeValue()));
 				}
+			}
+
+			Node debuggableAttribute = applicationNode.getAttributes().getNamedItem("android:debuggable");
+			if (debuggableAttribute != null) {
+				applicationDebuggableMode = debuggableAttribute.getNodeValue().equalsIgnoreCase("true") ? true : false;
 			}
 		}
 
@@ -231,7 +235,13 @@ public class AndroidManifestFinder {
 		componentQualifiedNames.addAll(receiverQualifiedNames);
 		componentQualifiedNames.addAll(providerQualifiedNames);
 
-		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationQualifiedName, componentQualifiedNames));
+		NodeList usesPermissionNodes = documentElement.getElementsByTagName("uses-permission");
+		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(applicationPackage, usesPermissionNodes);
+
+		List<String> permissionQualifiedNames = new ArrayList<String>();
+		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
+
+		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames, applicationDebuggableMode));
 	}
 
 	private List<String> extractComponentNames(String applicationPackage, NodeList componentNodes) {
@@ -293,6 +303,22 @@ public class AndroidManifestFinder {
 		} else {
 			return null;
 		}
+	}
+
+	private List<String> extractUsesPermissionNames(String applicationPackage, NodeList usesPermissionNodes) {
+		List<String> usesPermissionQualifiedNames = new ArrayList<String>();
+
+		for (int i = 0; i < usesPermissionNodes.getLength(); i++) {
+			Node usesPermissionNode = usesPermissionNodes.item(i);
+			Node nameAttribute = usesPermissionNode.getAttributes().getNamedItem("android:name");
+
+			if (nameAttribute == null) {
+				return null;
+			}
+
+			usesPermissionQualifiedNames.add(nameAttribute.getNodeValue());
+		}
+		return usesPermissionQualifiedNames;
 	}
 
 }

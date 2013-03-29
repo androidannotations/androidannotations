@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,9 +34,11 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
 
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.EBeansHolder.Classes;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -78,6 +80,16 @@ public class APTCodeModelHelper {
 			}
 
 			return declaredClass;
+		} else if (type instanceof WildcardType) {
+			// TODO : At his time (01/2013), it is not possible to handle the
+			// super bound because code model does not offer a way to model
+			// statement like " ? super X"
+			// (see http://java.net/jira/browse/CODEMODEL-11)
+			WildcardType wildcardType = (WildcardType) type;
+
+			TypeMirror extendsBound = wildcardType.getExtendsBound();
+
+			return typeMirrorToJClass(extendsBound, holder).wildcard();
 		} else if (type instanceof ArrayType) {
 			ArrayType arrayType = (ArrayType) type;
 
@@ -256,7 +268,7 @@ public class APTCodeModelHelper {
 		return methodBody._if(holder.contextRef._instanceof(holder.classes().ACTIVITY))._then();
 	}
 
-	public void copyConstructorsAndAddStaticEViewBuilders(Element element, JCodeModel codeModel, JClass eBeanClass, EBeanHolder holder, JMethod setContentViewMethod) {
+	public void copyConstructorsAndAddStaticEViewBuilders(Element element, JCodeModel codeModel, JClass eBeanClass, EBeanHolder holder, JMethod setContentViewMethod, JMethod init) {
 		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
 		for (Element e : element.getEnclosedElements()) {
 			if (e.getKind() == CONSTRUCTOR) {
@@ -282,7 +294,7 @@ public class APTCodeModelHelper {
 			JVar newCall = staticHelper.body().decl(holder.generatedClass, "instance", newInvocation);
 			staticHelper.body().invoke(newCall, "onFinishInflate");
 			staticHelper.body()._return(newCall);
-			body.invoke(holder.init);
+			body.invoke(init);
 		}
 	}
 
@@ -337,16 +349,13 @@ public class APTCodeModelHelper {
 				body._return(_this());
 			}
 
-			{
+			if (isActivity) {
 				// start()
 				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
-				String startComponentName = isActivity ? "startActivity" : "startService";
-				method.body().invoke(contextField, startComponentName).arg(holder.intentField);
-			}
+				method.body().invoke(contextField, "startActivity").arg(holder.intentField);
 
-			if (isActivity) {
 				// startForResult()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
+				method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
 				JVar requestCode = method.param(codeModel.INT, "requestCode");
 
 				JBlock body = method.body();
@@ -356,6 +365,14 @@ public class APTCodeModelHelper {
 						.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.intentField).arg(requestCode);
 				condition._else() //
 						.invoke(contextField, "startActivity").arg(holder.intentField);
+			} else {
+				// start()
+				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.classes().COMPONENT_NAME, "start");
+				method.body()._return(contextField.invoke("startService").arg(holder.intentField));
+
+				// stop()
+				method = holder.intentBuilderClass.method(PUBLIC, codeModel.BOOLEAN, "stop");
+				method.body()._return(contextField.invoke("stopService").arg(holder.intentField));
 			}
 
 			{
@@ -366,5 +383,4 @@ public class APTCodeModelHelper {
 			}
 		}
 	}
-
 }
