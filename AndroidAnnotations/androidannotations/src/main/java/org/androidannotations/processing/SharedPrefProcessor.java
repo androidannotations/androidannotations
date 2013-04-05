@@ -88,7 +88,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 			put("int", new EditorFieldHolder(IntPrefEditorField.class, "intField"));
 			put("long", new EditorFieldHolder(LongPrefEditorField.class, "longField"));
 			put(CanonicalNameConstants.STRING, new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
-			put("java.util.Set<java.lang.String>", new EditorFieldHolder(StringSetPrefEditorField.class, "stringSetField"));
+			put(CanonicalNameConstants.STRING_SET, new EditorFieldHolder(StringSetPrefEditorField.class, "stringSetField"));
 		}
 	};
 
@@ -242,7 +242,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 					defaultValue = JExpr.lit("");
 				}
 				addFieldHelperMethod(helperClass, fieldName, defaultValue, StringPrefField.class, "stringField");
-			} else if ("java.util.Set<java.lang.String>".equals(returnType)) {
+			} else if (CanonicalNameConstants.STRING_SET.equals(returnType)) {
 				addFieldHelperMethod(helperClass, fieldName, StringSetPrefField.class, "stringSetField");
 			}
 		}
