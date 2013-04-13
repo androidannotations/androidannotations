@@ -76,7 +76,6 @@ import org.androidannotations.validation.IsValid;
 
 public class ValidatorHelper {
 
-	private static final List<String> ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES = asList(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM);
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
@@ -89,8 +88,11 @@ public class ValidatorHelper {
 
 	protected final TargetAnnotationHelper annotationHelper;
 
+	public final ValidatorParameterHelper param;
+
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
 		annotationHelper = targetAnnotationHelper;
+		param = new ValidatorParameterHelper(annotationHelper);
 	}
 
 	public void isNotFinal(Element element, IsValid valid) {
@@ -491,14 +493,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void zeroOrOneViewParameters(ExecutableElement executableElement, IsValid valid) {
-		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.VIEW, valid);
-	}
-
-	public void zeroOrOneMenuItemParameters(ExecutableElement executableElement, IsValid valid) {
-		zeroOrOneSpecificParameter(executableElement, ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES, valid);
-	}
-
 	public void zeroOrOneSpecificParameter(ExecutableElement executableElement, String parameterTypeQualifiedName, IsValid valid) {
 		zeroOrOneSpecificParameter(executableElement, Arrays.asList(parameterTypeQualifiedName), valid);
 	}
@@ -696,24 +690,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void hasOneOrTwoParametersAndFirstIsBoolean(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() < 1 || parameters.size() > 2) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with 1 or 2 parameter, instead of " + parameters.size());
-		} else {
-			VariableElement firstParameter = parameters.get(0);
-
-			TypeKind parameterKind = firstParameter.asType().getKind();
-
-			if (parameterKind != TypeKind.BOOLEAN && !firstParameter.toString().equals(CanonicalNameConstants.BOOLEAN)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter should be a boolean");
-			}
-		}
-	}
-
 	public void allowedType(Element element, IsValid valid, TypeMirror fieldTypeMirror, List<String> allowedTypes) {
 
 		String qualifiedName = fieldTypeMirror.toString();
@@ -771,46 +747,6 @@ public class ValidatorHelper {
 		if (!androidSystemServices.contains(serviceType)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "Unknown service type: " + serviceType.toString());
-		}
-	}
-
-	public void hasOneMotionEventOrTwoMotionEventViewParameters(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() < 1 || parameters.size() > 2) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with 1 (MotionEvent) or 2 (MotionEvent, View) parameters, instead of " + parameters.size());
-		} else {
-			VariableElement firstParameter = parameters.get(0);
-			String firstParameterType = firstParameter.asType().toString();
-			if (!firstParameterType.equals(CanonicalNameConstants.MOTION_EVENT)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.MOTION_EVENT + ", not a " + firstParameterType);
-			}
-			if (parameters.size() == 2) {
-				VariableElement secondParameter = parameters.get(1);
-				String secondParameterType = secondParameter.asType().toString();
-				if (!secondParameterType.equals(CanonicalNameConstants.VIEW)) {
-					valid.invalidate();
-					annotationHelper.printAnnotationError(executableElement, "the second parameter must be a " + CanonicalNameConstants.VIEW + ", not a " + secondParameterType);
-				}
-			}
-		}
-	}
-
-	public void hasOneOrTwoParametersAndFirstIsDb(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() < 1) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "There should be at least 1 parameter: a " + CanonicalNameConstants.SQLITE_DATABASE);
-		} else {
-			VariableElement firstParameter = parameters.get(0);
-			String firstParameterType = firstParameter.asType().toString();
-			if (!firstParameterType.equals(CanonicalNameConstants.SQLITE_DATABASE)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.SQLITE_DATABASE + ", not a " + firstParameterType);
-			}
 		}
 	}
 

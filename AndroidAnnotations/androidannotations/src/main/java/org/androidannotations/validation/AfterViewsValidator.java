@@ -53,7 +53,7 @@ public class AfterViewsValidator implements ElementValidator {
 
 		validatorHelper.doesntThrowException(executableElement, valid);
 
-		validatorHelper.zeroParameter(executableElement, valid);
+		validatorHelper.param.zeroParameter(executableElement, valid);
 
 		return valid.isValid();
 	}
