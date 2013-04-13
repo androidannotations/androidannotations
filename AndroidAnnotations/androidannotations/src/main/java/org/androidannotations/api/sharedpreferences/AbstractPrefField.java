@@ -32,6 +32,10 @@ public abstract class AbstractPrefField {
 		return sharedPreferences.contains(key);
 	}
 
+	public String key() {
+		return this.key;
+	}
+
 	public final void remove() {
 		apply(edit().remove(key));
 	}
