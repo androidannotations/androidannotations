@@ -17,9 +17,7 @@ package org.androidannotations.test15;
 
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.FocusChange;
 
-import android.view.View;
 import android.widget.CompoundButton;
 
 @EActivity(R.layout.clickable_widgets)

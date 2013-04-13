@@ -27,11 +27,6 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.validation.IsValid;
 
-/**
- * 
- * @author Rostislav Chekan
- * 
- */
 public class ValidatorParameterHelper {
 
 	private static final List<String> ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES = asList(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM);
@@ -201,4 +196,13 @@ public class ValidatorParameterHelper {
 			}
 		}
 	}
+
+	public void hasExactlyOneParameter(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		if (parameters.size() != 1) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with exactly one parameter, instead of " + parameters.size());
+		}
+	}
+
 }

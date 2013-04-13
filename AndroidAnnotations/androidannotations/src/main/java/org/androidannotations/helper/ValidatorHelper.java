@@ -419,24 +419,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void urlVariableNamesExistInParameters(ExecutableElement element, List<String> variableNames, IsValid valid) {
-
-		List<? extends VariableElement> parameters = element.getParameters();
-
-		List<String> parametersName = new ArrayList<String>();
-		for (VariableElement parameter : parameters) {
-			parametersName.add(parameter.getSimpleName().toString());
-		}
-
-		for (String variableName : variableNames) {
-			if (!parametersName.contains(variableName)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s annotated method has an url variable which name could not be found in the method parameters: " + variableName);
-				return;
-			}
-		}
-	}
-
 	public void doesntThrowException(Element element, IsValid valid) {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
@@ -473,48 +455,6 @@ public class ValidatorHelper {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with a return type non void");
 		}
-	}
-
-	public void zeroOrOneParameter(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() > 1) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with zero or one parameter, instead of " + parameters.size());
-		}
-	}
-
-	public void zeroParameter(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() > 0) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with zero parameter, instead of " + parameters.size());
-		}
-	}
-
-	public void zeroOrOneSpecificParameter(ExecutableElement executableElement, String parameterTypeQualifiedName, IsValid valid) {
-		zeroOrOneSpecificParameter(executableElement, Arrays.asList(parameterTypeQualifiedName), valid);
-	}
-
-	public void zeroOrOneSpecificParameter(ExecutableElement executableElement, List<String> parameterTypeQualifiedNames, IsValid valid) {
-
-		zeroOrOneParameter(executableElement, valid);
-
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() == 1) {
-			VariableElement parameter = parameters.get(0);
-			TypeMirror parameterType = parameter.asType();
-			if (!parameterTypeQualifiedNames.contains(parameterType.toString())) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with no parameter or a parameter of type " + parameterTypeQualifiedNames + ", not " + parameterType);
-			}
-		}
-	}
-
-	public void zeroOrOneBundleParameter(ExecutableElement executableElement, IsValid valid) {
-		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.BUNDLE, valid);
 	}
 
 	public void extendsActivity(Element element, IsValid valid) {
@@ -679,14 +619,6 @@ public class ValidatorHelper {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
 			}
-		}
-	}
-
-	public void hasExactlyOneParameter(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-		if (parameters.size() != 1) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with exactly one parameter, instead of " + parameters.size());
 		}
 	}
 
