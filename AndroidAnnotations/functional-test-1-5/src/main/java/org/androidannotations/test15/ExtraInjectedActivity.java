@@ -43,6 +43,9 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra
 	String extraWithoutValue;
+	
+	@Extra
+	ParcelableSerializableData parcelableSerializableData;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -53,5 +56,6 @@ public class ExtraInjectedActivity extends Activity {
 		ExtraInjectedActivity_.intent(this).arrayExtra(null).start();
 		ExtraInjectedActivity_.intent(this).intExtra(42).get();
 		ExtraInjectedActivity_.intent(this).stringExtra("hello").startForResult(42);
+		ExtraInjectedActivity_.intent(this).parcelableSerializableData(new ParcelableSerializableData()).get();
 	}
 }
