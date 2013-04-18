@@ -17,7 +17,9 @@ package org.androidannotations.test15;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
@@ -44,6 +46,18 @@ public class ThreadActivity extends Activity {
 	@Background(delay = 1000)
 	void emptyDelayedBackgroundMethod() {
 		
+	}
+
+	@Background(serial="test")
+	void addSerializedBackgroundMethod(List<Integer> list, int i, Semaphore sem) {
+		/* wait a random delay to increase the probability of wrong order if buggy */
+		try {
+			/* wait between 0 and 20 milliseconds */
+			Thread.sleep(new Random().nextInt(20));
+		} catch (InterruptedException e) {}
+
+		list.add(i);
+		sem.release();
 	}
 
 	@UiThread
