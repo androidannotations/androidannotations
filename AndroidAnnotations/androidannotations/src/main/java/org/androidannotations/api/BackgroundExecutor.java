@@ -22,22 +22,54 @@ import java.util.concurrent.TimeUnit;
 
 public class BackgroundExecutor {
 
-	private static Executor executor = Executors.newCachedThreadPool();
-	private static ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(2 * Runtime.getRuntime().availableProcessors());
+	private static Executor executor = Executors.newScheduledThreadPool(2 * Runtime.getRuntime().availableProcessors());
 
-	public static void execute(Runnable runnable) {
-		executor.execute(runnable);
+	/**
+	 * Execute a task after the given delay.
+	 * 
+	 * @param runnable
+	 *            the task to execute
+	 * @param delay
+	 *            the time from now to delay execution, in milliseconds
+	 * @throws IllegalArgumentException
+	 *             if <code>delay</code> is strictly positive and the current
+	 *             executor does not support scheduling (if
+	 *             {@link #setExecutor(Executor)} has been called with such an
+	 *             executor)
+	 */
+	public static void execute(Runnable runnable, long delay) {
+		if (delay > 0) {
+			if (!(executor instanceof ScheduledExecutorService)) {
+				throw new IllegalArgumentException("The executor set does not support scheduling");
+			}
+			((ScheduledExecutorService) executor).schedule(runnable, delay, TimeUnit.MILLISECONDS);
+		} else {
+			/* execute now */
+			executor.execute(runnable);
+		}
 	}
 
+	/**
+	 * Execute a task.
+	 * 
+	 * @param runnable
+	 *            the task to execute
+	 */
+	public static void execute(Runnable runnable) {
+		execute(runnable, 0);
+	}
+
+	/**
+	 * Change the executor.
+	 * 
+	 * Note that if the given executor is not a {@link ScheduledExecutorService}
+	 * then executing a task after a delay will not be supported anymore.
+	 * 
+	 * @param executor
+	 *            the new executor
+	 */
 	public static void setExecutor(Executor executor) {
 		BackgroundExecutor.executor = executor;
 	}
 
-	public static void executeDelayed(Runnable runnable, long delay) {
-		scheduledExecutor.schedule(runnable, delay, TimeUnit.MILLISECONDS);
-	}
-
-	public static void setScheduledExecutor(ScheduledExecutorService scheduledExecutor) {
-		BackgroundExecutor.scheduledExecutor = scheduledExecutor;
-	}
 }
