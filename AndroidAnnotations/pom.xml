@@ -82,6 +82,16 @@
 				<role>Committer</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>dvilleneuve</id>
+			<name>Damien Villeneuve</name>
+			<email>contact@damien-villeneuve.fr</email>
+			<organization>Excilys</organization>
+			<organizationUrl>http://excilys.com</organizationUrl>
+			<roles>
+				<role>Committer</role>
+			</roles>
+		</developer>
 	</developers>
 
 	<properties>
