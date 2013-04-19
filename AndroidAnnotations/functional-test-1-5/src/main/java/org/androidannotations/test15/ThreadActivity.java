@@ -29,6 +29,7 @@ import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
 
 import android.app.Activity;
+import android.os.SystemClock;
 
 @EActivity
 public class ThreadActivity extends Activity {
@@ -50,12 +51,9 @@ public class ThreadActivity extends Activity {
 
 	@Background(serial="test")
 	void addSerializedBackgroundMethod(List<Integer> list, int i, Semaphore sem) {
-		/* wait a random delay to increase the probability of wrong order if buggy */
-		try {
-			/* wait between 0 and 20 milliseconds */
-			Thread.sleep(new Random().nextInt(20));
-		} catch (InterruptedException e) {}
-
+		/* wait a random delay (between 0 and 20 milliseconds) to increase the
+		 * probability of wrong order if buggy */
+		SystemClock.sleep(new Random().nextInt(20));
 		list.add(i);
 		sem.release();
 	}
