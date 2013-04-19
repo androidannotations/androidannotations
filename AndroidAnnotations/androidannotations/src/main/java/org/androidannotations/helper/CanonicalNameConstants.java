@@ -15,6 +15,7 @@
  */
 package org.androidannotations.helper;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public final class CanonicalNameConstants {
 	public static final String INTEGER = Integer.class.getCanonicalName();
 	public static final String BOOLEAN = Boolean.class.getCanonicalName();
 	public static final String ARRAYLIST = ArrayList.class.getCanonicalName();
+	public static final String SERIALIZABLE = Serializable.class.getCanonicalName();
 
 	/*
 	 * Android
