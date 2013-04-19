@@ -20,6 +20,7 @@ import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.Element;
@@ -115,6 +116,42 @@ public class BundleHelper {
 				methodNameToRestore = "get" + "Serializable";
 				restoreCallNeedCastStatement = true;
 			}
+		} else if (typeString.startsWith(CanonicalNameConstants.ARRAYLIST)) {
+
+			boolean hasTypeArguments = false;
+			TypeMirror elementAsType = element.asType();
+			if (elementAsType instanceof DeclaredType) {
+				DeclaredType declaredType = (DeclaredType) elementAsType;
+				List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+				if (typeArguments.size() == 1) {
+					TypeMirror typeArgument = typeArguments.get(0);
+					if (typeArgument instanceof DeclaredType) {
+						declaredType = (DeclaredType) typeArgument;
+						typeString = declaredType.asElement().toString();
+						elementType = annotationHelper.typeElementFromQualifiedName(typeString);
+						hasTypeArguments = declaredType.getTypeArguments().size() > 0;
+					}
+					if (isTypeParcelable(elementType)) {
+						methodNameToSave = "put" + "ParcelableArrayList";
+						methodNameToRestore = "get" + "ParcelableArrayList";
+
+						if (hasTypeArguments) {
+							restoreCallNeedsSuppressWarning = true;
+						}
+					}
+				}
+			}
+
+			if (methodNameToSave == null) {
+				methodNameToSave = "put" + "Serializable";
+				methodNameToRestore = "get" + "Serializable";
+				restoreCallNeedCastStatement = true;
+
+				if (hasTypeArguments) {
+					restoreCallNeedsSuppressWarning = true;
+				}
+			}
+
 		} else {
 
 			TypeMirror elementAsType = element.asType();
