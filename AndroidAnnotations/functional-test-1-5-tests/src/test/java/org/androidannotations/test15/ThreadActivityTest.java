@@ -59,7 +59,7 @@ public class ThreadActivityTest {
 
 	/**
 	 * Start several requests which add an item to a list in background, with
-	 * "@Background" serial attribute enabled, so the request must be executed
+	 * "@Background" serial attribute enabled, so the requests must be executed
 	 * sequentially.
 	 * 
 	 * Once all tasks have completed execution, check if the items in the list
