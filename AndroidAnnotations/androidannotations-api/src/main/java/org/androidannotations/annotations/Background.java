@@ -28,6 +28,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Background {
+	String id() default ""; /* used for task cancellation */
+
 	int delay() default 0; /* in milliseconds */
 
 	String serial() default "";
