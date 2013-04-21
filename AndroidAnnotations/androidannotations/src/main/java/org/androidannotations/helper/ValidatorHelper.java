@@ -78,6 +78,8 @@ public class ValidatorHelper {
 
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
+	private static final List<String> ANDROID_MENU_ITEM_QUALIFIED_NAMES = asList(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM);
+
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
 
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING);
@@ -495,6 +497,10 @@ public class ValidatorHelper {
 
 	public void extendsContext(Element element, IsValid valid) {
 		extendsType(element, CanonicalNameConstants.CONTEXT, valid);
+	}
+
+	public void extendsMenuItem(Element element, IsValid valid) {
+		extendsOneOfTypes(element, ANDROID_MENU_ITEM_QUALIFIED_NAMES, valid);
 	}
 
 	public void extendsOrmLiteDaoWithValidModelParameter(Element element, IsValid valid) {

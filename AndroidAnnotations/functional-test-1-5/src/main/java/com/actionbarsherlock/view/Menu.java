@@ -17,4 +17,6 @@ package com.actionbarsherlock.view;
 
 public interface Menu {
 
+	public MenuItem findItem(int id);
+	
 }
