@@ -43,19 +43,42 @@ public class ThreadActivity extends Activity {
 	void emptyBackgroundMethod() {
 
 	}
-	
+
 	@Background(delay = 1000)
 	void emptyDelayedBackgroundMethod() {
-		
+
 	}
 
-	@Background(serial="test")
-	void addSerializedBackgroundMethod(List<Integer> list, int i, Semaphore sem) {
-		/* wait a random delay (between 0 and 20 milliseconds) to increase the
-		 * probability of wrong order if buggy */
-		SystemClock.sleep(new Random().nextInt(20));
-		list.add(i);
-		sem.release();
+	private void add(List<Integer> list, int i, int delay, Semaphore sem) {
+		try {
+			if (delay > 0) {
+				Thread.sleep(delay);
+			}
+			list.add(i);
+			if (sem != null) {
+				sem.release();
+			}
+		} catch (InterruptedException e) {}
+	}
+
+	@Background
+	void addBackground(List<Integer> list, int i, int delay, Semaphore sem) {
+		add(list, i, delay, sem);
+	}
+
+	@Background(serial = "test")
+	void addSerializedBackground(List<Integer> list, int i, int delay, Semaphore sem) {
+		add(list, i, delay, sem);
+	}
+
+	@Background(id = "to_cancel")
+	void addCancellableBackground(List<Integer> list, int i, int interruptibleDelay) {
+		add(list, i, interruptibleDelay, null);
+	}
+
+	@Background(id = "to_cancel_serial", serial = "test")
+	void addCancellableSerializedBackground(List<Integer> list, int i, int delay) {
+		add(list, i, delay, null);
 	}
 
 	@UiThread
