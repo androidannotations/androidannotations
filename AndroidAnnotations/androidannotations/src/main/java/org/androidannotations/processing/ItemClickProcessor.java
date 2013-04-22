@@ -91,6 +91,8 @@ public class ItemClickProcessor implements DecoratingElementProcessor {
 				itemClickCall.arg(onItemClickPositionParam);
 			} else {
 				String parameterTypeQualifiedName = parameterType.toString();
+				/* Workaround a CodeModel bug when type have parameters */
+				parameterTypeQualifiedName = parameterTypeQualifiedName.replaceFirst("<.*", "");
 				itemClickCall.arg(cast(holder.refClass(parameterTypeQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 			}
 		}
