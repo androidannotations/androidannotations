@@ -24,7 +24,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.util.Log;
+
 public class BackgroundExecutor {
+
+	private static final String TAG = "BackgroundExecutor";
 
 	private static Executor executor = Executors.newScheduledThreadPool(2 * Runtime.getRuntime().availableProcessors());
 
@@ -82,9 +86,6 @@ public class BackgroundExecutor {
 		if (task.serial == null || !hasSerialRunning(task.serial)) {
 			task.executionAsked = true;
 			future = directExecute(task, task.delay);
-			if (task.id != null && future == null) {
-				throw new IllegalArgumentException("The executor set does not support task cancellation");
-			}
 		}
 		if (task.id != null || task.serial != null) {
 			/* keep task */
@@ -196,6 +197,8 @@ public class BackgroundExecutor {
 				tasks.remove(i);
 				if (task.future != null) {
 					task.future.cancel(mayInterruptIfRunning);
+				} else if (task.executionAsked) {
+					Log.w(TAG, "A task with id " + task.id + " cannot be cancelled (the executor set does not support it)");
 				}
 			}
 		}
