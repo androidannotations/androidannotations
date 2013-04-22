@@ -78,8 +78,6 @@ public class ValidatorHelper {
 
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
-	private static final List<String> ANDROID_MENU_ITEM_QUALIFIED_NAMES = asList(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM);
-
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
 
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING);
@@ -92,9 +90,12 @@ public class ValidatorHelper {
 
 	public final ValidatorParameterHelper param;
 
+	private final ThirdPartyLibHelper thirdPartyLibHelper;
+
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
 		annotationHelper = targetAnnotationHelper;
 		param = new ValidatorParameterHelper(annotationHelper);
+		thirdPartyLibHelper = new ThirdPartyLibHelper(annotationHelper);
 	}
 
 	public void isNotFinal(Element element, IsValid valid) {
@@ -500,7 +501,17 @@ public class ValidatorHelper {
 	}
 
 	public void extendsMenuItem(Element element, IsValid valid) {
-		extendsOneOfTypes(element, ANDROID_MENU_ITEM_QUALIFIED_NAMES, valid);
+		Element enclosingElement = element.getEnclosingElement();
+		String enclosingQualifiedName = enclosingElement.asType().toString();
+		TypeElement enclosingTypeElement = annotationHelper.typeElementFromQualifiedName(enclosingQualifiedName);
+
+		if (enclosingTypeElement != null) {
+			if (thirdPartyLibHelper.usesActionBarSherlock(enclosingTypeElement)) {
+				extendsType(element, CanonicalNameConstants.SHERLOCK_MENU_ITEM, valid);
+			} else {
+				extendsType(element, CanonicalNameConstants.MENU_ITEM, valid);
+			}
+		}
 	}
 
 	public void extendsOrmLiteDaoWithValidModelParameter(Element element, IsValid valid) {
