@@ -84,11 +84,17 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		// RestTemplate exchange() method call
 		JInvocation restCall = JExpr.invoke(holder.restTemplateField, "exchange");
 
-		// RestTemplate exchange() 1st arg : concat root url + suffix
-		JInvocation concatCall = JExpr.invoke(holder.rootUrlField, "concat");
+		final String urlSuffix = methodHolder.getUrlSuffix();
+		if (!(urlSuffix.startsWith("http://") || urlSuffix.startsWith("https://"))) {
+			// RestTemplate exchange() 1st arg : concat root url + suffix
+			JInvocation concatCall = JExpr.invoke(holder.rootUrlField, "concat");
 
-		// RestTemplate exchange() 2nd arg : add url param
-		restCall.arg(concatCall.arg(JExpr.lit(methodHolder.getUrlSuffix())));
+			// RestTemplate exchange() 2nd arg : add url param
+			restCall.arg(concatCall.arg(JExpr.lit(urlSuffix)));
+		} else {
+			// full url provided... don't prefix
+			restCall.arg(JExpr.lit(urlSuffix));
+		}
 
 		// RestTemplate exchange() 3rd arg : add HttpMethod type param
 		JClass httpMethod = eBeanHolder.refClass(CanonicalNameConstants.HTTP_METHOD);

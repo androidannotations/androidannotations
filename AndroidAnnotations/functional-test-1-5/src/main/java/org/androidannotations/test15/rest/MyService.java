@@ -33,8 +33,10 @@ import org.androidannotations.annotations.rest.Head;
 import org.androidannotations.annotations.rest.Options;
 import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.annotations.rest.RequiresAuthentication;
 import org.androidannotations.annotations.rest.RequiresCookie;
 import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.annotations.rest.SetsCookie;
 import org.androidannotations.api.rest.MediaType;
 
 // if defined, the rootUrl will be added as a prefix to every request
@@ -118,6 +120,10 @@ public interface MyService {
 	void getEventsVoid(String location, int year) throws RestClientException;
 
 	// *** POST ***
+	@RequiresAuthentication
+	@Post("http://company.com/oauth/token")
+    @SetsCookie({"xt", "sjsaid"})
+	void authenticate();
 
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
