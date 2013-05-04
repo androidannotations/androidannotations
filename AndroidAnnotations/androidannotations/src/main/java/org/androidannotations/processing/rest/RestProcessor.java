@@ -88,6 +88,15 @@ public class RestProcessor implements GeneratingElementProcessor {
 		JClass stringClass = eBeansHolder.refClass(STRING);
 		holder.rootUrlField = holder.restImplementationClass.field(JMod.PRIVATE, stringClass, "rootUrl");
 
+		// available headers/cookies
+		JClass mapClass = eBeansHolder.refClass("java.util.HashMap").narrow(stringClass, stringClass);
+		holder.availableHeadersField = holder.restImplementationClass.field(JMod.PRIVATE, mapClass, "availableHeaders");
+		holder.availableCookiesField = holder.restImplementationClass.field(JMod.PRIVATE, mapClass, "availableCookies");
+
+		// any auth
+		JClass httpAuthClass = eBeansHolder.refClass("org.springframework.http.HttpAuthentication");
+		holder.authenticationField = holder.restImplementationClass.field(JMod.PRIVATE, httpAuthClass, "authentication");
+
 		{
 			// Constructor
 			JMethod constructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
@@ -118,6 +127,9 @@ public class RestProcessor implements GeneratingElementProcessor {
 				}
 			}
 			constructorBody.assign(holder.rootUrlField, lit(typeElement.getAnnotation(Rest.class).rootUrl()));
+
+			constructorBody.assign(holder.availableHeadersField, _new(mapClass));
+			constructorBody.assign(holder.availableCookiesField, _new(mapClass));
 		}
 
 		// Implement getRestTemplate method

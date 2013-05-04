@@ -26,4 +26,10 @@ public class RestImplementationHolder {
 
 	public JFieldVar rootUrlField;
 
+	public JFieldVar availableHeadersField;
+
+	public JFieldVar availableCookiesField;
+
+	public JFieldVar authenticationField;
+
 }

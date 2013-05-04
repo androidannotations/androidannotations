@@ -33,6 +33,7 @@ import org.androidannotations.annotations.rest.Head;
 import org.androidannotations.annotations.rest.Options;
 import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.annotations.rest.RequiresCookie;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.api.rest.MediaType;
 
@@ -43,6 +44,7 @@ public interface MyService {
 	// *** GET ***
 
 	// url variables are mapped to method parameter names.
+	@RequiresCookie("xt")
 	@Get("/events/{year}/{location}")
 	@Accept(MediaType.APPLICATION_JSON)
 	EventList getEvents(String location, int year);
