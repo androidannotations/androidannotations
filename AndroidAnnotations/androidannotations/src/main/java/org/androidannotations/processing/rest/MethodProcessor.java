@@ -27,6 +27,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.annotations.rest.SetsCookie;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.RestAnnotationHelper;
@@ -114,7 +115,12 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 			restCall.arg(hashMapVar);
 		}
 
-		insertRestCallInBody(body, restCall, methodHolder, methodReturnVoid);
+		JClass voidClass = eBeanHolder.refClass(Void.class);
+		JClass responseEntityClass = eBeanHolder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(methodReturnVoid ? voidClass : expectedClass);
+		JVar responseEntity = body.decl(responseEntityClass, "response", restCall);
+
+		JExpression result = JExpr.ref(responseEntity.name());
+		insertRestCallInBody(body, result, methodHolder, methodReturnVoid);
 	}
 
 	/**
@@ -138,13 +144,13 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 	 * Add an extra method calls on the result of restTemplate.exchange(). By
 	 * default, just return the result
 	 */
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall;
+	protected JExpression addResultCallMethod(JExpression i, MethodProcessorHolder methodHolder) {
+		return i;
 	}
 
-	private void insertRestCallInBody(JBlock body, JInvocation restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid) {
+	private void insertRestCallInBody(JBlock body, JExpression restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid) {
 		if (methodReturnVoid) {
-			body.add(restCall);
+			// body.add(restCall);
 		} else {
 			restCall = addResultCallMethod(restCall, methodHolder);
 			body._return(restCall);
@@ -249,6 +255,18 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		}
 		if (acceptAnnotation != null) {
 			return acceptAnnotation.value();
+		} else {
+			return null;
+		}
+	}
+
+	private String[] retrieveSettingCookieNames(ExecutableElement executableElement) {
+		SetsCookie cookieAnnotation = executableElement.getAnnotation(SetsCookie.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(SetsCookie.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
 		} else {
 			return null;
 		}
