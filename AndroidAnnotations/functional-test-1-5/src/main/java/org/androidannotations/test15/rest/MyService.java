@@ -230,4 +230,6 @@ public interface MyService {
 	String getHeader(String headerName);
 	
 	void setAuthentication(HttpAuthentication auth);
+	
+	void setHttpBasicAuth(String username, String password);
 }

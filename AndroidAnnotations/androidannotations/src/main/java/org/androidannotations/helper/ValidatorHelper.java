@@ -824,7 +824,7 @@ public class ValidatorHelper {
 							VariableElement secondParameter = parameters.get(1);
 							if (!(firstParameter.asType().toString().equals(CanonicalNameConstants.STRING) && secondParameter.asType().toString().equals(CanonicalNameConstants.STRING))) {
 								valid.invalidate();
-								annotationHelper.printError(enclosedElement, "The method to set headers or cookies should have only String parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+								annotationHelper.printError(enclosedElement, "The method to set headers, cookies, or HTTP Basic Auth should have only String parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 							}
 						} else {
 							valid.invalidate();

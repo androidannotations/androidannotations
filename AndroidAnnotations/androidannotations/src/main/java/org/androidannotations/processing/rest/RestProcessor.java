@@ -182,6 +182,28 @@ public class RestProcessor implements GeneratingElementProcessor {
 			}
 		}
 
+		// Implement setHttpBasicAuth method
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 2 && method.getReturnType().getKind() == TypeKind.VOID) {
+				VariableElement firstParameter = parameters.get(0);
+				VariableElement secondParameter = parameters.get(1);
+				if (firstParameter.asType().toString().equals(STRING) && secondParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals("setHttpBasicAuth")) {
+					JMethod setBasicAuthMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
+					setBasicAuthMethod.annotate(Override.class);
+
+					JVar userParam = setBasicAuthMethod.param(stringClass, firstParameter.getSimpleName().toString());
+					JVar passParam = setBasicAuthMethod.param(stringClass, secondParameter.getSimpleName().toString());
+
+					JClass basicAuthClass = eBeansHolder.refClass("org.springframework.http.HttpBasicAuthentication");
+					JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(userParam).arg(passParam);
+
+					setBasicAuthMethod.body().assign(_this().ref(holder.authenticationField), basicAuthentication);
+					break; // Only one implementation
+				}
+			}
+		}
+
 		// Implement setAuthentication method
 		for (ExecutableElement method : methods) {
 			List<? extends VariableElement> parameters = method.getParameters();
