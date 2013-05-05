@@ -27,6 +27,9 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.annotations.rest.RequiresCookie;
+import org.androidannotations.annotations.rest.RequiresCookieInUrl;
+import org.androidannotations.annotations.rest.RequiresHeader;
 import org.androidannotations.annotations.rest.SetsCookie;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
@@ -108,7 +111,7 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 
 		restCall.arg(httpMethod.staticRef(restMethodInCapitalLetters));
 
-		JVar hashMapVar = generateHashMapVar(methodHolder);
+		JVar hashMapVar = generateHashMapVar(holder, methodHolder);
 
 		restCall = addHttpEntityVar(restCall, methodHolder);
 		restCall = addResponseEntityArg(restCall, methodHolder);
@@ -200,7 +203,7 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		}
 	}
 
-	private JVar generateHashMapVar(MethodProcessorHolder methodHolder) {
+	private JVar generateHashMapVar(RestImplementationHolder holder, MethodProcessorHolder methodHolder) {
 		ExecutableElement element = (ExecutableElement) methodHolder.getElement();
 		JCodeModel codeModel = methodHolder.getCodeModel();
 		JBlock body = methodHolder.getBody();
@@ -208,14 +211,29 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		JVar hashMapVar = null;
 
 		Set<String> urlVariables = restAnnotationHelper.extractUrlVariableNames(element);
+
+		// cookies in url?
+		String[] cookiesToUrl = retrieveRequiredUrlCookieNames(element);
+		if (cookiesToUrl != null) {
+			for (String cookie : cookiesToUrl) {
+				urlVariables.add(cookie);
+			}
+		}
+
 		JClass hashMapClass = codeModel.ref(HashMap.class).narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
 			hashMapVar = body.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
 
 			for (String urlVariable : urlVariables) {
-				JVar urlValue = methodParams.get(urlVariable);
-				body.invoke(hashMapVar, "put").arg(urlVariable).arg(urlValue);
-				methodParams.remove(urlVariable);
+				JVar methodParam = methodParams.get(urlVariable);
+				if (methodParam != null) {
+					body.invoke(hashMapVar, "put").arg(urlVariable).arg(methodParam);
+					methodParams.remove(urlVariable);
+				} else {
+					// cookie from url
+					JInvocation cookieValue = holder.availableCookiesField.invoke("get").arg(JExpr.lit(urlVariable));
+					body.invoke(hashMapVar, "put").arg(urlVariable).arg(cookieValue);
+				}
 			}
 		}
 		return hashMapVar;
@@ -298,6 +316,42 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		}
 		if (acceptAnnotation != null) {
 			return acceptAnnotation.value();
+		} else {
+			return null;
+		}
+	}
+
+	private String[] retrieveRequiredHeaderNames(ExecutableElement executableElement) {
+		RequiresHeader cookieAnnotation = executableElement.getAnnotation(RequiresHeader.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
+		} else {
+			return null;
+		}
+	}
+
+	private String[] retrieveRequiredCookieNames(ExecutableElement executableElement) {
+		RequiresCookie cookieAnnotation = executableElement.getAnnotation(RequiresCookie.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresCookie.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
+		} else {
+			return null;
+		}
+	}
+
+	private static String[] retrieveRequiredUrlCookieNames(ExecutableElement executableElement) {
+		RequiresCookieInUrl cookieAnnotation = executableElement.getAnnotation(RequiresCookieInUrl.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresCookieInUrl.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
 		} else {
 			return null;
 		}
