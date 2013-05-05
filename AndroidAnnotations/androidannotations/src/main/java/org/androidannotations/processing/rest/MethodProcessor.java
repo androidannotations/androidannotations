@@ -155,8 +155,15 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 			JForEach innerForEach = forLoopBody.forEach(stringClass, "thisCookieName", requestedCookiesVar);
 			JBlock innerBody = innerForEach.body();
 			JBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var()))._then();
+
+			// where does the cookie VALUE end?
+			JInvocation valueEnd = rawCookieVar.invoke("indexOf").arg(JExpr.lit(';'));
+			JVar valueEndVar = thenBlock.decl(methodHolder.getCodeModel().INT, "valueEnd", valueEnd);
+			JBlock fixValueEndBlock = thenBlock._if(valueEndVar.eq(JExpr.lit(-1)))._then();
+			fixValueEndBlock.assign(valueEndVar, rawCookieVar.invoke("length"));
+
 			JExpression indexOfValue = rawCookieVar.invoke("indexOf").arg("=").plus(JExpr.lit(1));
-			JInvocation cookieValue = rawCookieVar.invoke("substring").arg(indexOfValue);
+			JInvocation cookieValue = rawCookieVar.invoke("substring").arg(indexOfValue).arg(valueEndVar);
 			thenBlock.invoke(holder.availableCookiesField, "put").arg(innerForEach.var()).arg(cookieValue);
 			thenBlock._break();
 
