@@ -27,6 +27,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.annotations.rest.RequiresAuthentication;
 import org.androidannotations.annotations.rest.RequiresCookie;
 import org.androidannotations.annotations.rest.RequiresCookieInUrl;
 import org.androidannotations.annotations.rest.RequiresHeader;
@@ -342,6 +343,13 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 
 		}
 
+		boolean requiresAuth = requiresAuth(executableElement);
+		if (requiresAuth) {
+			// attach auth
+			RestImplementationHolder restHolder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
+			body.add(httpHeadersVar.invoke("setAuthorization").arg(restHolder.authenticationField));
+		}
+
 		return httpHeadersVar;
 	}
 
@@ -403,6 +411,14 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		} else {
 			return null;
 		}
+	}
+
+	private boolean requiresAuth(ExecutableElement executableElement) {
+		RequiresAuthentication basicAuthAnnotation = executableElement.getAnnotation(RequiresAuthentication.class);
+		if (basicAuthAnnotation == null) {
+			basicAuthAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresAuthentication.class);
+		}
+		return basicAuthAnnotation != null;
 	}
 
 	private TreeMap<String, JVar> extractMethodParamsVar(EBeanHolder eBeanHolder, JMethod method, ExecutableElement executableElement, RestImplementationHolder holder) {
