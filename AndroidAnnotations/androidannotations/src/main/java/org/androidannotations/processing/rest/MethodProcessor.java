@@ -34,11 +34,13 @@ import org.androidannotations.helper.RestAnnotationHelper;
 import org.androidannotations.processing.DecoratingElementProcessor;
 import org.androidannotations.processing.EBeanHolder;
 
+import com.sun.codemodel.JArray;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JForEach;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -115,12 +117,53 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 			restCall.arg(hashMapVar);
 		}
 
-		JClass voidClass = eBeanHolder.refClass(Void.class);
-		JClass responseEntityClass = eBeanHolder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(methodReturnVoid ? voidClass : expectedClass);
-		JVar responseEntity = body.decl(responseEntityClass, "response", restCall);
+		final JExpression result;
+		final boolean usesInstance; // do we have an instance of the entity?
 
-		JExpression result = JExpr.ref(responseEntity.name());
-		insertRestCallInBody(body, result, methodHolder, methodReturnVoid);
+		// attempt to retrieve cookies from the response
+		String[] settingCookies = retrieveSettingCookieNames(executableElement);
+		boolean setsCookies = settingCookies != null;
+		if (setsCookies) {
+
+			JClass voidClass = eBeanHolder.refClass(Void.class);
+			JClass responseEntityClass = eBeanHolder.refClass(CanonicalNameConstants.RESPONSE_ENTITY).narrow(methodReturnVoid ? voidClass : expectedClass);
+			JVar responseEntity = body.decl(responseEntityClass, "response", restCall);
+
+			// set cookies
+			JClass listClass = eBeanHolder.refClass(List.class).narrow(String.class);
+			JClass stringClass = eBeanHolder.refClass(CanonicalNameConstants.STRING);
+			JClass stringArrayClass = stringClass.array();
+			JArray cookiesArray = JExpr.newArray(stringClass);
+			for (String cookie : settingCookies) {
+				cookiesArray.add(JExpr.lit(cookie));
+			}
+			JVar requestedCookiesVar = body.decl(stringArrayClass, "requestedCookies", cookiesArray);
+
+			JInvocation setCookiesList = JExpr.invoke(responseEntity, "getHeaders").invoke("get").arg("Set-Cookie");
+			JVar allCookiesList = body.decl(listClass, "allCookies", setCookiesList);
+
+			// for loop over list... add if in string array
+			JForEach forEach = body.forEach(stringClass, "rawCookie", allCookiesList);
+			JVar rawCookieVar = forEach.var();
+
+			JBlock forLoopBody = forEach.body();
+
+			JForEach innerForEach = forLoopBody.forEach(stringClass, "thisCookieName", requestedCookiesVar);
+			JBlock innerBody = innerForEach.body();
+			JBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var()))._then();
+			JExpression indexOfValue = rawCookieVar.invoke("indexOf").arg("=").plus(JExpr.lit(1));
+			JInvocation cookieValue = rawCookieVar.invoke("substring").arg(indexOfValue);
+			thenBlock.invoke(holder.availableCookiesField, "put").arg(innerForEach.var()).arg(cookieValue);
+			thenBlock._break();
+
+			result = JExpr.ref(responseEntity.name());
+			usesInstance = true;
+		} else {
+			result = restCall;
+			usesInstance = false;
+		}
+
+		insertRestCallInBody(body, result, methodHolder, methodReturnVoid, usesInstance);
 	}
 
 	/**
@@ -148,10 +191,10 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		return i;
 	}
 
-	private void insertRestCallInBody(JBlock body, JExpression restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid) {
-		if (methodReturnVoid) {
-			// body.add(restCall);
-		} else {
+	private void insertRestCallInBody(JBlock body, JExpression restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid, boolean usesInstance) {
+		if (methodReturnVoid && !usesInstance && restCall instanceof JInvocation) {
+			body.add((JInvocation) restCall);
+		} else if (!methodReturnVoid) {
 			restCall = addResultCallMethod(restCall, methodHolder);
 			body._return(restCall);
 		}
