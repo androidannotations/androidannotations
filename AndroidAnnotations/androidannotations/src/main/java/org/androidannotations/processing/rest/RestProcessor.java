@@ -182,6 +182,24 @@ public class RestProcessor implements GeneratingElementProcessor {
 			}
 		}
 
+		// Implement setAuthentication method
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 1 && method.getReturnType().getKind() == TypeKind.VOID) {
+				VariableElement firstParameter = parameters.get(0);
+				if (firstParameter.asType().toString().equals("org.springframework.http.HttpAuthentication") && method.getSimpleName().toString().equals("setAuthentication")) {
+					JMethod setAuthMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
+					setAuthMethod.annotate(Override.class);
+
+					JClass authClass = eBeansHolder.refClass("org.springframework.http.HttpAuthentication");
+					JVar authParam = setAuthMethod.param(authClass, firstParameter.getSimpleName().toString());
+
+					setAuthMethod.body().assign(_this().ref(holder.authenticationField), authParam);
+					break; // Only one implementation
+				}
+			}
+		}
+
 		// Implement getCookie and getHeader methods
 		implementMapGetMethod(holder, stringClass, methods, holder.availableCookiesField, "getCookie");
 		implementMapGetMethod(holder, stringClass, methods, holder.availableHeadersField, "getHeader");

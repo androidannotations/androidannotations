@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -227,4 +228,6 @@ public interface MyService {
 	void setHeader(String headerName, String value);
 	
 	String getHeader(String headerName);
+	
+	void setAuthentication(HttpAuthentication auth);
 }

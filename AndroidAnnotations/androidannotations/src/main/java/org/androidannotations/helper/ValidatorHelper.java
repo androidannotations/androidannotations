@@ -79,6 +79,7 @@ public class ValidatorHelper {
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
+	private static final String METHOD_NAME_SET_AUTHENTICATION = "setAuthentication";
 	private static final String METHOD_NAME_GET_COOKIE = "getCookie";
 	private static final String METHOD_NAME_GET_HEADER = "getHeader";
 
@@ -764,6 +765,7 @@ public class ValidatorHelper {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
 		boolean foundGetRestTemplateMethod = false;
 		boolean foundSetRestTemplateMethod = false;
+		boolean foundSetAuthenticationMethod = false;
 		boolean foundSetRootUrlMethod = false;
 		boolean foundGetCookieMethod = false;
 		boolean foundGetHeaderMethod = false;
@@ -810,6 +812,8 @@ public class ValidatorHelper {
 								}
 							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_ROOT_URL) && !foundSetRootUrlMethod) {
 								foundSetRootUrlMethod = true;
+							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_AUTHENTICATION) && !foundSetAuthenticationMethod) {
+								foundSetAuthenticationMethod = true;
 							} else {
 								valid.invalidate();
 								annotationHelper.printError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
