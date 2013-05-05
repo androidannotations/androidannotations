@@ -304,7 +304,9 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		String headers[] = retrieveRequiredHeaderNames(executableElement);
 		boolean requiresHeaders = headers != null && headers.length > 0;
 
-		if (hasMediaTypeDefined || requiresCookies || requiresHeaders) {
+		boolean requiresAuth = requiresAuth(executableElement);
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
 			// we need the headers
 			httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
 		}
@@ -343,7 +345,6 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 
 		}
 
-		boolean requiresAuth = requiresAuth(executableElement);
 		if (requiresAuth) {
 			// attach auth
 			RestImplementationHolder restHolder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
@@ -389,7 +390,7 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		}
 	}
 
-	private static String[] retrieveRequiredUrlCookieNames(ExecutableElement executableElement) {
+	public static String[] retrieveRequiredUrlCookieNames(ExecutableElement executableElement) {
 		RequiresCookieInUrl cookieAnnotation = executableElement.getAnnotation(RequiresCookieInUrl.class);
 		if (cookieAnnotation == null) {
 			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresCookieInUrl.class);
