@@ -190,8 +190,8 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 	 * Add an extra method calls on the result of restTemplate.exchange(). By
 	 * default, just return the result
 	 */
-	protected JExpression addResultCallMethod(JExpression i, MethodProcessorHolder methodHolder) {
-		return i;
+	protected JExpression addResultCallMethod(JExpression restCall, MethodProcessorHolder methodHolder) {
+		return restCall;
 	}
 
 	private void insertRestCallInBody(JBlock body, JExpression restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid, boolean usesInstance) {
@@ -264,7 +264,7 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		}
 
 		JBlock body = methodHolder.getBody();
-		JVar httpHeadersVar = generateHttpHeadersVar(holder, body, executableElement);
+		JVar httpHeadersVar = generateHttpHeadersVar(methodHolder, holder, body, executableElement);
 
 		boolean hasHeaders = httpHeadersVar != null;
 
@@ -289,21 +289,57 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		return httpEntityVar;
 	}
 
-	protected JVar generateHttpHeadersVar(EBeanHolder holder, JBlock body, ExecutableElement executableElement) {
+	protected JVar generateHttpHeadersVar(MethodProcessorHolder methodHolder, EBeanHolder holder, JBlock body, ExecutableElement executableElement) {
 		JVar httpHeadersVar = null;
 
 		JClass httpHeadersClass = holder.refClass(CanonicalNameConstants.HTTP_HEADERS);
 
 		String mediaType = retrieveAcceptAnnotationValue(executableElement);
 		boolean hasMediaTypeDefined = mediaType != null;
-		if (hasMediaTypeDefined) {
-			httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
 
+		String cookies[] = retrieveRequiredCookieNames(executableElement);
+		boolean requiresCookies = cookies != null && cookies.length > 0;
+
+		String headers[] = retrieveRequiredHeaderNames(executableElement);
+		boolean requiresHeaders = headers != null && headers.length > 0;
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders) {
+			// we need the headers
+			httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
+		}
+
+		if (hasMediaTypeDefined) {
 			JClass collectionsClass = holder.refClass(CanonicalNameConstants.COLLECTIONS);
 			JClass mediaTypeClass = holder.refClass(CanonicalNameConstants.MEDIA_TYPE);
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
+		}
+
+		if (requiresCookies) {
+			RestImplementationHolder restHolder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
+
+			JClass stringClass = holder.refClass(CanonicalNameConstants.STRING);
+			JClass stringBuilderClass = holder.refClass("java.lang.StringBuilder");
+			JVar cookiesValueVar = body.decl(stringBuilderClass, "cookiesValue", JExpr._new(stringBuilderClass));
+			for (String cookie : cookies) {
+				JInvocation cookieValue = JExpr.invoke(restHolder.availableCookiesField, "get").arg(cookie);
+				JInvocation cookieFormatted = stringClass.staticInvoke("format").arg(String.format("%s=%%s;", cookie)).arg(cookieValue);
+				JInvocation appendCookie = JExpr.invoke(cookiesValueVar, "append").arg(cookieFormatted);
+				body.add(appendCookie);
+			}
+
+			JInvocation cookiesToString = cookiesValueVar.invoke("toString");
+			body.add(JExpr.invoke(httpHeadersVar, "set").arg("Cookie").arg(cookiesToString));
+		}
+
+		if (requiresHeaders) {
+			RestImplementationHolder restHolder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
+			for (String header : headers) {
+				JInvocation headerValue = JExpr.invoke(restHolder.availableHeadersField, "get").arg(header);
+				body.add(JExpr.invoke(httpHeadersVar, "set").arg(header).arg(headerValue));
+			}
+
 		}
 
 		return httpHeadersVar;

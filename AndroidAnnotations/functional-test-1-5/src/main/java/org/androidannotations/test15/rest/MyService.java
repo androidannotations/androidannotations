@@ -36,6 +36,7 @@ import org.androidannotations.annotations.rest.Put;
 import org.androidannotations.annotations.rest.RequiresAuthentication;
 import org.androidannotations.annotations.rest.RequiresCookie;
 import org.androidannotations.annotations.rest.RequiresCookieInUrl;
+import org.androidannotations.annotations.rest.RequiresHeader;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.SetsCookie;
 import org.androidannotations.api.rest.MediaType;
@@ -122,6 +123,7 @@ public interface MyService {
 
 	// *** POST ***
 	@RequiresAuthentication
+	@RequiresHeader("SomeFancyHeader")
 	@Post("http://company.com/oauth/token")
     @SetsCookie({"xt", "sjsaid"})
 	void authenticate();
@@ -130,6 +132,7 @@ public interface MyService {
 	// parameter will be used as the post entity.
 	@Post("/events/")
 	@Accept(MediaType.APPLICATION_JSON)
+	@RequiresCookie("sjsaid")
 	@RequiresCookieInUrl("xt")
 	Event addEvent(Event event);
 
