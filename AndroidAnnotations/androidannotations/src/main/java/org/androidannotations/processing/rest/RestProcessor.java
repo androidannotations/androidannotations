@@ -45,6 +45,9 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
@@ -179,5 +182,50 @@ public class RestProcessor implements GeneratingElementProcessor {
 			}
 		}
 
+		// Implement getCookie and getHeader methods
+		implementMapGetMethod(holder, stringClass, methods, holder.availableCookiesField, "getCookie");
+		implementMapGetMethod(holder, stringClass, methods, holder.availableHeadersField, "getHeader");
+
+		// Implement putCookie and putHeader methods
+		implementMapPutMethod(holder, stringClass, codeModel, methods, holder.availableCookiesField, "setCookie");
+		implementMapPutMethod(holder, stringClass, codeModel, methods, holder.availableHeadersField, "setHeader");
+	}
+
+	private void implementMapGetMethod(RestImplementationHolder holder, JClass stringClass, List<ExecutableElement> methods, JFieldVar field, String methodName) {
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 1 && method.getReturnType().toString().equals(STRING)) {
+				VariableElement firstParameter = parameters.get(0);
+				if (firstParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals(methodName)) {
+					JMethod getCookieMethod = holder.restImplementationClass.method(JMod.PUBLIC, stringClass, method.getSimpleName().toString());
+					getCookieMethod.annotate(Override.class);
+
+					JVar cookieNameParam = getCookieMethod.param(stringClass, firstParameter.getSimpleName().toString());
+					JInvocation cookieValue = JExpr.invoke(field, "get").arg(cookieNameParam);
+					getCookieMethod.body()._return(cookieValue);
+					break; // Only one implementation
+				}
+			}
+		}
+	}
+
+	private void implementMapPutMethod(RestImplementationHolder holder, JClass stringClass, JCodeModel codeModel, List<ExecutableElement> methods, JFieldVar field, String methodName) {
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 2 && method.getReturnType().getKind() == TypeKind.VOID) {
+				VariableElement firstParameter = parameters.get(0);
+				VariableElement secondParameter = parameters.get(1);
+				if (firstParameter.asType().toString().equals(STRING) && secondParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals(methodName)) {
+					JMethod putMapMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
+					putMapMethod.annotate(Override.class);
+
+					JVar keyParam = putMapMethod.param(stringClass, firstParameter.getSimpleName().toString());
+					JVar valParam = putMapMethod.param(stringClass, secondParameter.getSimpleName().toString());
+
+					putMapMethod.body().invoke(field, "put").arg(keyParam).arg(valParam);
+					break; // Only one implementation
+				}
+			}
+		}
 	}
 }
