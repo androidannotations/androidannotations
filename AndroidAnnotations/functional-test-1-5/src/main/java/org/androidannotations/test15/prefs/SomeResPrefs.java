@@ -15,32 +15,45 @@
  */
 package org.androidannotations.test15.prefs;
 
-import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
-import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
-import org.androidannotations.annotations.sharedpreferences.DefaultInt;
-import org.androidannotations.annotations.sharedpreferences.DefaultLong;
-import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.DefaultRes;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
+import org.androidannotations.test15.R;
 
 @SharedPref(Scope.UNIQUE)
-public interface SomePrefs {
-	
-	@DefaultString("John")
-	String name();
-	
-	@DefaultInt(42)
-	int age();
-	
-	@DefaultLong(400000L)
-	long ageLong();
+public interface SomeResPrefs {
 
-	@DefaultFloat(42f)
-	float ageFloat();
-	
-	@DefaultBoolean(true)
-	boolean isAwesome();
+	@DefaultRes
+	String prefDefaultString();
 
-	long lastUpdated();
+	@DefaultRes(R.string.prefDefaultString)
+	String nameResId();
+
+	@DefaultRes(resName = "prefDefaultString")
+	String nameResName();
+
+	@DefaultRes
+	int prefDefaultInt();
+
+	@DefaultRes(R.integer.prefDefaultInt)
+	int ageResId();
+
+	@DefaultRes
+	long prefDefaultLong();
+
+	@DefaultRes(R.integer.prefDefaultLong)
+	long ageLongResId();
+
+	@DefaultRes
+	float prefDefaultFloat();
+
+	@DefaultRes(R.integer.prefDefaultFloat)
+	float ageFloatResId();
+
+	@DefaultRes
+	boolean prefsDefaultBool();
+
+	@DefaultRes(R.bool.prefsDefaultBool)
+	boolean isAwesomeResId();
 
 }

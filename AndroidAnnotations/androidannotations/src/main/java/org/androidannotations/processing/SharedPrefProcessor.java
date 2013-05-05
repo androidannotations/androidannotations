@@ -19,12 +19,14 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -34,6 +36,7 @@ import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
+import org.androidannotations.annotations.sharedpreferences.DefaultRes;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
@@ -53,7 +56,10 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRClass.Res;
 
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
@@ -62,6 +68,8 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
@@ -89,6 +97,12 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 		}
 	};
 
+	private final IdAnnotationHelper annotationHelper;
+
+	public SharedPrefProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	}
+
 	@Override
 	public String getTarget() {
 		return SharedPref.class.getName();
@@ -96,7 +110,6 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeansHolder eBeansHolder) throws Exception {
-
 		generateApiClass(element, eBeansHolder);
 
 		TypeElement typeElement = (TypeElement) element;
@@ -105,7 +118,7 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 
 		String helperQualifiedName = interfaceQualifiedName + ModelConstants.GENERATION_SUFFIX;
 		JDefinedClass helperClass = codeModel._class(JMod.PUBLIC | JMod.FINAL, helperQualifiedName, ClassType.CLASS);
-		eBeansHolder.create(typeElement, SharedPref.class, helperClass);
+		EBeanHolder eBeanHolder = eBeansHolder.create(typeElement, SharedPref.class, helperClass);
 
 		helperClass._extends(SharedPreferencesHelper.class);
 
@@ -145,10 +158,9 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 		Scope scope = sharedPrefAnnotation.value();
 		int mode = sharedPrefAnnotation.mode();
 		JMethod constructor = helperClass.constructor(JMod.PUBLIC);
+		JVar contextParam = constructor.param(contextClass, "context");
 		switch (scope) {
 		case ACTIVITY_DEFAULT: {
-
-			JVar contextParam = constructor.param(contextClass, "context");
 			JMethod getLocalClassName = getLocalClassName(eBeansHolder, helperClass, codeModel);
 			constructor.body().invoke("super") //
 					.arg(contextParam.invoke("getSharedPreferences") //
@@ -157,7 +169,6 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 			break;
 		}
 		case ACTIVITY: {
-			JVar contextParam = constructor.param(contextClass, "context");
 			JMethod getLocalClassName = getLocalClassName(eBeansHolder, helperClass, codeModel);
 			constructor.body().invoke("super") //
 					.arg(contextParam.invoke("getSharedPreferences") //
@@ -167,7 +178,6 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 			break;
 		}
 		case UNIQUE: {
-			JVar contextParam = constructor.param(contextClass, "context");
 			constructor.body() //
 					.invoke("super") //
 					.arg(contextParam.invoke("getSharedPreferences") //
@@ -177,7 +187,6 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 		}
 		case APPLICATION_DEFAULT: {
 			JClass preferenceManagerClass = eBeansHolder.refClass("android.preference.PreferenceManager");
-			JVar contextParam = constructor.param(contextClass, "context");
 			constructor.body() //
 					.invoke("super") //
 					.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
@@ -185,6 +194,10 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 			break;
 		}
 		}
+
+		// Context field
+		JFieldVar contextField = helperClass.field(JMod.PRIVATE, eBeansHolder.refClass(CONTEXT), "context");
+		constructor.body().assign(JExpr._this().ref(contextField), contextParam);
 
 		// Helper edit method
 		JMethod editMethod = helperClass.method(JMod.PUBLIC, editorClass, "edit");
@@ -199,6 +212,8 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 				DefaultBoolean defaultAnnotation = method.getAnnotation(DefaultBoolean.class);
 				if (defaultAnnotation != null) {
 					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else if (method.getAnnotation(DefaultRes.class) != null) {
+					defaultValue = extractResValue(eBeanHolder, method, contextField, Res.BOOL);
 				} else {
 					defaultValue = JExpr.lit(false);
 				}
@@ -208,6 +223,8 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 				DefaultFloat defaultAnnotation = method.getAnnotation(DefaultFloat.class);
 				if (defaultAnnotation != null) {
 					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else if (method.getAnnotation(DefaultRes.class) != null) {
+					defaultValue = extractResValue(eBeanHolder, method, contextField, Res.INTEGER);
 				} else {
 					defaultValue = JExpr.lit(0f);
 				}
@@ -217,6 +234,8 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 				DefaultInt defaultAnnotation = method.getAnnotation(DefaultInt.class);
 				if (defaultAnnotation != null) {
 					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else if (method.getAnnotation(DefaultRes.class) != null) {
+					defaultValue = extractResValue(eBeanHolder, method, contextField, Res.INTEGER);
 				} else {
 					defaultValue = JExpr.lit(0);
 				}
@@ -226,6 +245,8 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 				DefaultLong defaultAnnotation = method.getAnnotation(DefaultLong.class);
 				if (defaultAnnotation != null) {
 					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else if (method.getAnnotation(DefaultRes.class) != null) {
+					defaultValue = extractResValue(eBeanHolder, method, contextField, Res.INTEGER);
 				} else {
 					defaultValue = JExpr.lit(0l);
 				}
@@ -235,13 +256,34 @@ public class SharedPrefProcessor implements GeneratingElementProcessor {
 				DefaultString defaultAnnotation = method.getAnnotation(DefaultString.class);
 				if (defaultAnnotation != null) {
 					defaultValue = JExpr.lit(defaultAnnotation.value());
+				} else if (method.getAnnotation(DefaultRes.class) != null) {
+					defaultValue = extractResValue(eBeanHolder, method, contextField, Res.STRING);
 				} else {
 					defaultValue = JExpr.lit("");
 				}
 				addFieldHelperMethod(helperClass, fieldName, defaultValue, StringPrefField.class, "stringField");
 			}
 		}
+	}
 
+	private JExpression extractResValue(EBeanHolder eBeanHolder, Element method, JFieldVar contextField, Res res) {
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(eBeanHolder, method, DefaultRes.class.getCanonicalName(), res, true);
+
+		String resourceGetMethodName = null;
+		switch (res) {
+		case BOOL:
+			resourceGetMethodName = "getBoolean";
+			break;
+		case INTEGER:
+			resourceGetMethodName = "getInteger";
+			break;
+		case STRING:
+			resourceGetMethodName = "getString";
+			break;
+		default:
+			break;
+		}
+		return contextField.invoke("getResources").invoke(resourceGetMethodName).arg(idRef);
 	}
 
 	private void addFieldHelperMethod(JDefinedClass helperClass, String fieldName, JExpression defaultValue, Class<?> prefFieldHelperClass, String fieldHelperMethodName) {
