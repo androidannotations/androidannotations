@@ -989,6 +989,12 @@ public class ValidatorHelper {
 		TypeMirror httpMessageConverterType = annotationHelper.typeElementFromQualifiedName(HTTP_MESSAGE_CONVERTER).asType();
 		TypeMirror httpMessageConverterTypeErased = annotationHelper.getTypeUtils().erasure(httpMessageConverterType);
 		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "converters");
+
+		if (converters == null) {
+			valid.invalidate();
+			return;
+		}
+
 		for (DeclaredType converterType : converters) {
 			TypeMirror erasedConverterType = annotationHelper.getTypeUtils().erasure(converterType);
 			if (annotationHelper.isSubtype(erasedConverterType, httpMessageConverterTypeErased)) {
