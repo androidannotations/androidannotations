@@ -55,7 +55,11 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public JFieldRef extractOneAnnotationFieldRef(EBeanHolder holder, Element element, Res res, boolean useElementName) {
-		List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, res, useElementName);
+		return extractOneAnnotationFieldRef(holder, element, getTarget(), res, useElementName);
+	}
+
+	public JFieldRef extractOneAnnotationFieldRef(EBeanHolder holder, Element element, String annotationName, Res res, boolean useElementName) {
+		List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, annotationName, rClass.get(res), useElementName);
 
 		if (jFieldRefs.size() == 1) {
 			return jFieldRefs.get(0);
