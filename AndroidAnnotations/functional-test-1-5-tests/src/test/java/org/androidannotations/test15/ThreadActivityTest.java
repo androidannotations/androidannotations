@@ -171,7 +171,7 @@ public class ThreadActivityTest {
 	 * half not cancelled.
 	 * 
 	 * Once all tasks have completed execution, check if and only if the items from the uncancelled
-	 * tasks are the list.
+	 * tasks are in the list.
 	 */
 	@Test
 	public void cancellableBackgroundTasks() {

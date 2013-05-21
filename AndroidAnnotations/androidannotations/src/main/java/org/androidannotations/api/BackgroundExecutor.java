@@ -188,7 +188,9 @@ public class BackgroundExecutor {
 	 * @param id
 	 *            the cancellation identifier
 	 * @param mayInterruptIfRunning
-	 *            <code>true<.code> if the thread executing this task should be interrupted; otherwise, in-progress tasks are allowed to complete
+	 *            <code>true</code> if the thread executing this task should be
+	 *            interrupted; otherwise, in-progress tasks are allowed to
+	 *            complete
 	 */
 	public static synchronized void cancelAll(String id, boolean mayInterruptIfRunning) {
 		for (int i = tasks.size() - 1; i >= 0; i--) {
