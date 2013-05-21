@@ -90,9 +90,12 @@ public class ValidatorHelper {
 
 	public final ValidatorParameterHelper param;
 
+	private final ThirdPartyLibHelper thirdPartyLibHelper;
+
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
 		annotationHelper = targetAnnotationHelper;
 		param = new ValidatorParameterHelper(annotationHelper);
+		thirdPartyLibHelper = new ThirdPartyLibHelper(annotationHelper);
 	}
 
 	public void isNotFinal(Element element, IsValid valid) {
@@ -495,6 +498,20 @@ public class ValidatorHelper {
 
 	public void extendsContext(Element element, IsValid valid) {
 		extendsType(element, CanonicalNameConstants.CONTEXT, valid);
+	}
+
+	public void extendsMenuItem(Element element, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		String enclosingQualifiedName = enclosingElement.asType().toString();
+		TypeElement enclosingTypeElement = annotationHelper.typeElementFromQualifiedName(enclosingQualifiedName);
+
+		if (enclosingTypeElement != null) {
+			if (thirdPartyLibHelper.usesActionBarSherlock(enclosingTypeElement)) {
+				extendsType(element, CanonicalNameConstants.SHERLOCK_MENU_ITEM, valid);
+			} else {
+				extendsType(element, CanonicalNameConstants.MENU_ITEM, valid);
+			}
+		}
 	}
 
 	public void extendsOrmLiteDaoWithValidModelParameter(Element element, IsValid valid) {
