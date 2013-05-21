@@ -39,7 +39,7 @@ import com.sun.codemodel.JVar;
  */
 public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 
-	private static final String CONNECTION_SOURCE_FIELD_NAME = "connectionSource_";
+	private static final String DATABASE_HELPER_FIELD_NAME = "helper_";
 	private TargetAnnotationHelper helper;
 
 	public OrmLiteDaoProcessor(ProcessingEnvironment processingEnv) {
@@ -61,37 +61,34 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 
 		TypeMirror databaseHelperTypeMirror = helper.extractAnnotationParameter(element, "helper");
 
-		// connection source field
-		boolean connectionSourceInjected = holder.generatedClass.fields().containsKey(CONNECTION_SOURCE_FIELD_NAME);
+		// database helper field
+		boolean databaseHelperInjected = holder.generatedClass.fields().containsKey(DATABASE_HELPER_FIELD_NAME);
 
 		JBlock initBody = holder.initBody;
 
-		JFieldVar connectionSourceRef;
-		if (connectionSourceInjected) {
-			connectionSourceRef = holder.generatedClass.fields().get(CONNECTION_SOURCE_FIELD_NAME);
+		JFieldVar databaseHelperRef;
+		if (databaseHelperInjected) {
+			databaseHelperRef = holder.generatedClass.fields().get(DATABASE_HELPER_FIELD_NAME);
 		} else {
-			connectionSourceRef = holder.generatedClass.field(PRIVATE, classes.CONNECTION_SOURCE, CONNECTION_SOURCE_FIELD_NAME);
+			databaseHelperRef = holder.generatedClass.field(PRIVATE, holder.refClass(databaseHelperTypeMirror.toString()), DATABASE_HELPER_FIELD_NAME);
 
-			// get connection source
+			// get database helper instance
 			JExpression dbHelperClass = holder.refClass(databaseHelperTypeMirror.toString()).dotclass();
 
-			initBody.assign(connectionSourceRef, //
+			initBody.assign(databaseHelperRef, //
 					classes.OPEN_HELPER_MANAGER //
 							.staticInvoke("getHelper") //
 							.arg(holder.contextRef) //
-							.arg(dbHelperClass) //
-							.invoke("getConnectionSource"));
+							.arg(dbHelperClass));
 		}
 
-		// create dao from dao manager
+		// create dao from database helper
 		JTryBlock tryBlock = initBody._try();
 
 		JExpression modelClass = holder.refClass(modelObjectTypeMirror.toString()).dotclass();
 		tryBlock.body().assign(ref(fieldName), //
-				classes.DAO_MANAGER //
-						.staticInvoke("createDao") //
-						.arg(connectionSourceRef) //
-						.arg(modelClass));
+				databaseHelperRef.invoke("getDao"). //
+						arg(modelClass));
 
 		JCatchBlock catchBlock = tryBlock._catch(classes.SQL_EXCEPTION);
 		JVar exception = catchBlock.param("e");
@@ -99,7 +96,7 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 		catchBlock.body() //
 				.staticInvoke(classes.LOG, "e") //
 				.arg(holder.generatedClass.name()) //
-				.arg("Could not create DAO") //
+				.arg("Could not create DAO " + fieldName) //
 				.arg(exception);
 	}
 }
