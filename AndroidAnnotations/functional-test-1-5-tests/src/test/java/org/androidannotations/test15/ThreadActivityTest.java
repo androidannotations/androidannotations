@@ -19,8 +19,14 @@ package org.androidannotations.test15;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +55,45 @@ public class ThreadActivityTest {
 		activity.emptyBackgroundMethod();
 		
 		verify(executor).execute(Mockito.<Runnable>any());
+	}
+
+	/**
+	 * Start several requests which add an item to a list in background, with
+	 * "@Background" serial attribute enabled, so the requests must be executed
+	 * sequentially.
+	 * 
+	 * Once all tasks have completed execution, check if the items in the list
+	 * are ordered.
+	 */
+	@Test
+	public void serializedBackgroundTasks() {
+		/* number of items to add to the list */
+		final int NB_ADD = 10;
+
+		/* set an executor with 4 threads */
+		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
+
+		/* the calls are serialized, but not necessarily on the same thread, so we
+		 * need to synchronize to avoid cache effects */
+		List<Integer> list = Collections.synchronizedList(new ArrayList<Integer>());
+
+		/* sem.acquire() will be unlocked exactly after NB_ADD releases */
+		Semaphore sem = new Semaphore(1 - NB_ADD);
+
+		/* execute NB_ADD requests to add an item to the list */
+		for (int i = 0; i < NB_ADD; i++) {
+			activity.addSerializedBackgroundMethod(list, i, sem);
+		}
+
+		try {
+			/* wait for all tasks to be completed */
+			sem.acquire();
+
+			/* check if list items are in the right order */
+			for (int i = 0; i < NB_ADD; i++) {
+				Assert.assertEquals("Items must be in order", i, (int) list.get(i));
+			}
+		} catch (InterruptedException e) {}
 	}
 
 }
