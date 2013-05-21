@@ -13,20 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.menu;
+package com.actionbarsherlock.view;
 
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OptionsMenu;
-import org.androidannotations.annotations.OptionsMenuItem;
-import org.androidannotations.test15.R;
-
-import android.view.MenuItem;
-
-@EActivity
-@OptionsMenu(R.menu.my_menu3)
-public class OptionsMenuSubActivity extends OptionsMenuActivity {
-
-	@OptionsMenuItem
-	MenuItem menu_settings;
-
+public interface MenuItem {
+	int getItemId();
 }

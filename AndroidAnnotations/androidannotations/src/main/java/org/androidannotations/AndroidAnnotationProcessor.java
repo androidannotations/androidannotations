@@ -75,6 +75,7 @@ import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.annotations.RootContext;
@@ -165,6 +166,7 @@ import org.androidannotations.processing.NoTitleProcessor;
 import org.androidannotations.processing.NonConfigurationInstanceProcessor;
 import org.androidannotations.processing.OnActivityResultProcessor;
 import org.androidannotations.processing.OptionsItemProcessor;
+import org.androidannotations.processing.OptionsMenuItemProcessor;
 import org.androidannotations.processing.OptionsMenuProcessor;
 import org.androidannotations.processing.OrmLiteDaoProcessor;
 import org.androidannotations.processing.PrefProcessor;
@@ -234,6 +236,7 @@ import org.androidannotations.validation.NoTitleValidator;
 import org.androidannotations.validation.NonConfigurationInstanceValidator;
 import org.androidannotations.validation.OnActivityResultValidator;
 import org.androidannotations.validation.OptionsItemValidator;
+import org.androidannotations.validation.OptionsMenuItemValidator;
 import org.androidannotations.validation.OptionsMenuValidator;
 import org.androidannotations.validation.OrmLiteDaoValidator;
 import org.androidannotations.validation.PrefValidator;
@@ -420,6 +423,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new AcceptValidator(processingEnv));
 		modelValidator.register(new AppValidator(processingEnv));
 		modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
+		modelValidator.register(new OptionsMenuItemValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
 		modelValidator.register(new CustomTitleValidator(processingEnv, rClass));
@@ -515,6 +519,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationsHolder));
 		modelProcessor.register(new AppProcessor());
 		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
+		modelProcessor.register(new OptionsMenuItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new CustomTitleProcessor(processingEnv, rClass));
@@ -633,6 +638,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					Accept.class, //
 					FromHtml.class, //
 					OptionsMenu.class, //
+					OptionsMenuItem.class, //
 					OptionsItem.class, //
 					HtmlRes.class, //
 					NoTitle.class, //
