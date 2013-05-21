@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <bool name="prefsDefaultBool">true</bool>
+    <string name="prefDefaultString">default pref</string>
+    <integer name="prefDefaultInt">42</integer>
+    <integer name="prefDefaultLong">4200</integer>
+    <integer name="prefDefaultFloat">42</integer>
+    
+</resources>
