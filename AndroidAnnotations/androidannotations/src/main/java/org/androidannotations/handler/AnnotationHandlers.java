@@ -16,7 +16,9 @@ public class AnnotationHandlers {
 	private List<AnnotationHandler<? extends GeneratedClassHolder>> decoratingAnnotationHandlers = new ArrayList<AnnotationHandler<? extends GeneratedClassHolder>>();
 	private Set<String> supportedAnnotationNames;
 
+    @SuppressWarnings("unchecked")
 	public AnnotationHandlers(ProcessingEnvironment processingEnvironment) {
+        add(new EBeanHandler(processingEnvironment));
 	}
 
 	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
