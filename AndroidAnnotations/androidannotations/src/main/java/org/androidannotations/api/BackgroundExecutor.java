@@ -86,7 +86,7 @@ public class BackgroundExecutor {
 		Future<?> future = null;
 		if (task.serial == null || !hasSerialRunning(task.serial)) {
 			task.executionAsked = true;
-			future = directExecute(task, task.delay);
+			future = directExecute(task, task.remainingDelay);
 		}
 		if (task.id != null || task.serial != null) {
 			/* keep task */
@@ -246,7 +246,7 @@ public class BackgroundExecutor {
 	public static abstract class Task implements Runnable {
 
 		private String id;
-		private int delay;
+		private int remainingDelay;
 		private long targetTimeMillis; /* since epoch */
 		private String serial;
 		private boolean executionAsked;
@@ -257,7 +257,7 @@ public class BackgroundExecutor {
 				this.id = id;
 			}
 			if (delay > 0) {
-				this.delay = delay;
+				remainingDelay = delay;
 				targetTimeMillis = System.currentTimeMillis() + delay;
 			}
 			if (!"".equals(serial)) {
@@ -289,9 +289,9 @@ public class BackgroundExecutor {
 				if (serial != null) {
 					Task next = take(serial);
 					if (next != null) {
-						if (next.delay != 0) {
-							/* compute remaining delay */
-							next.delay = Math.max(0, (int) (targetTimeMillis - System.currentTimeMillis()));
+						if (next.remainingDelay != 0) {
+							/* the delay may not have elapsed yet */
+							next.remainingDelay = Math.max(0, (int) (targetTimeMillis - System.currentTimeMillis()));
 						}
 						/* a task having the same serial was queued, execute it */
 						BackgroundExecutor.execute(next);
