@@ -58,7 +58,6 @@ public class BackgroundExecutor {
 			ScheduledExecutorService scheduledExecutorService = (ScheduledExecutorService) executor;
 			future = scheduledExecutorService.schedule(runnable, delay, TimeUnit.MILLISECONDS);
 		} else {
-			/* no serial, no delay: execute now */
 			if (executor instanceof ExecutorService) {
 				ExecutorService executorService = (ExecutorService) executor;
 				future = executorService.submit(runnable);
