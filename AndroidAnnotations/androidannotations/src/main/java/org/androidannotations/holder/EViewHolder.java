@@ -15,7 +15,7 @@ import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 public class EViewHolder extends EComponentHolder {
 
-	private static final String ALREADY_INFLATED_COMMENT = "" // +
+	protected static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
 			+ "which leads to infinite calls of onFinishInflate()\n" //
 			+ "when inflating a layout with a parent and using\n" //
@@ -29,9 +29,9 @@ public class EViewHolder extends EComponentHolder {
 			+ "are in a View." //
 			;
 
-	private ViewNotifierHelper viewNotifierHelper;
-	private JMethod onFinishInflate;
-	private JFieldVar alreadyInflated;
+	protected ViewNotifierHelper viewNotifierHelper;
+	protected JMethod onFinishInflate;
+	protected JFieldVar alreadyInflated;
 
 	public EViewHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -110,7 +110,7 @@ public class EViewHolder extends EComponentHolder {
 		return onFinishInflate;
 	}
 
-	private void setOnFinishInflate() {
+	protected void setOnFinishInflate() {
 		onFinishInflate = generatedClass.method(PUBLIC, codeModel().VOID, "onFinishInflate");
 		onFinishInflate.annotate(Override.class);
 		onFinishInflate.javadoc().append(ALREADY_INFLATED_COMMENT);
