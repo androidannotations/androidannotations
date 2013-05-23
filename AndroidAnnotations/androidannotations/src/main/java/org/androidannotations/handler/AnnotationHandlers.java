@@ -27,6 +27,7 @@ public class AnnotationHandlers {
 		add(new EBeanHandler(processingEnvironment));
 		add(new EViewGroupHandler(processingEnvironment));
 		add(new EViewHandler(processingEnvironment));
+		add(new SharedPrefHandler(processingEnvironment));
 		add(new AfterInjectHandler(processingEnvironment));
 	}
 

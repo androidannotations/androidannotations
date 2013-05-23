@@ -15,18 +15,17 @@
  */
 package org.androidannotations.validation;
 
-import java.util.List;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.helper.TargetAnnotationHelper;
+import org.androidannotations.helper.ValidatorHelper;
+import org.androidannotations.model.AnnotationElements;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-
-import org.androidannotations.annotations.sharedpreferences.SharedPref;
-import org.androidannotations.helper.TargetAnnotationHelper;
-import org.androidannotations.helper.ValidatorHelper;
-import org.androidannotations.model.AnnotationElements;
+import java.util.List;
 
 public class SharedPrefValidator implements ElementValidator {
 
@@ -57,11 +56,9 @@ public class SharedPrefValidator implements ElementValidator {
 
 		for (Element memberElement : inheritedMembers) {
 			if (!memberElement.getEnclosingElement().asType().toString().equals("java.lang.Object")) {
-				boolean isPrefMethod = validatorHelper.isPrefMethod(memberElement);
-				if (isPrefMethod) {
-					validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement);
-				} else {
-					valid.invalidate();
+				validatorHelper.isPrefMethod(memberElement, valid);
+				if (valid.isValid()) {
+					validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement, valid);
 				}
 			}
 		}

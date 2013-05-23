@@ -15,64 +15,26 @@
  */
 package org.androidannotations.helper;
 
-import static java.util.Arrays.asList;
-import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
-import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
-import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
-import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
-import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
-import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
-
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.annotations.rest.Head;
-import org.androidannotations.annotations.rest.Options;
-import org.androidannotations.annotations.rest.Post;
-import org.androidannotations.annotations.rest.Put;
-import org.androidannotations.annotations.rest.Rest;
-import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
-import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
-import org.androidannotations.annotations.sharedpreferences.DefaultInt;
-import org.androidannotations.annotations.sharedpreferences.DefaultLong;
-import org.androidannotations.annotations.sharedpreferences.DefaultString;
-import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.rest.*;
+import org.androidannotations.annotations.sharedpreferences.*;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.processing.InstanceStateProcessor;
 import org.androidannotations.validation.IsValid;
+
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
+import java.lang.annotation.Annotation;
+import java.util.*;
+
+import static java.util.Arrays.asList;
+import static org.androidannotations.helper.AndroidConstants.*;
+import static org.androidannotations.helper.CanonicalNameConstants.*;
+import static org.androidannotations.helper.ModelConstants.*;
 
 public class ValidatorHelper {
 
@@ -708,7 +670,7 @@ public class ValidatorHelper {
 		}
 	}
 
-	public boolean isPrefMethod(Element element) {
+	public void isPrefMethod(Element element, IsValid valid) {
 		if (!element.getKind().equals(ElementKind.METHOD)) {
 			annotationHelper.printError(element, "Only methods are allowed in an " + annotationHelper.annotationName() + " annotated interface");
 		} else {
@@ -725,25 +687,25 @@ public class ValidatorHelper {
 					if (INVALID_PREF_METHOD_NAMES.contains(methodName)) {
 						annotationHelper.printError(element, "The method name " + methodName + " is forbidden in an " + annotationHelper.annotationName() + " annotated interface");
 					} else {
-						return true;
+						return;
 					}
 				}
 			}
 		}
-		return false;
+		valid.invalidate();
 	}
 
-	public void hasCorrectDefaultAnnotation(ExecutableElement method) {
-		checkDefaultAnnotation(method, DefaultBoolean.class, "boolean", new TypeKindAnnotationCondition(TypeKind.BOOLEAN));
-		checkDefaultAnnotation(method, DefaultFloat.class, "float", new TypeKindAnnotationCondition(TypeKind.FLOAT));
-		checkDefaultAnnotation(method, DefaultInt.class, "int", new TypeKindAnnotationCondition(TypeKind.INT));
-		checkDefaultAnnotation(method, DefaultLong.class, "long", new TypeKindAnnotationCondition(TypeKind.LONG));
+	public void hasCorrectDefaultAnnotation(ExecutableElement method, IsValid valid) {
+		checkDefaultAnnotation(method, DefaultBoolean.class, "boolean", new TypeKindAnnotationCondition(TypeKind.BOOLEAN), valid);
+		checkDefaultAnnotation(method, DefaultFloat.class, "float", new TypeKindAnnotationCondition(TypeKind.FLOAT), valid);
+		checkDefaultAnnotation(method, DefaultInt.class, "int", new TypeKindAnnotationCondition(TypeKind.INT), valid);
+		checkDefaultAnnotation(method, DefaultLong.class, "long", new TypeKindAnnotationCondition(TypeKind.LONG), valid);
 		checkDefaultAnnotation(method, DefaultString.class, "String", new DefaultAnnotationCondition() {
 			@Override
 			public boolean correctReturnType(TypeMirror returnType) {
 				return returnType.toString().equals(CanonicalNameConstants.STRING);
 			}
-		});
+		}, valid);
 	}
 
 	private interface DefaultAnnotationCondition {
@@ -765,11 +727,12 @@ public class ValidatorHelper {
 
 	}
 
-	private <T extends Annotation> void checkDefaultAnnotation(ExecutableElement method, Class<T> annotationClass, String expectedReturnType, DefaultAnnotationCondition condition) {
+	private <T extends Annotation> void checkDefaultAnnotation(ExecutableElement method, Class<T> annotationClass, String expectedReturnType, DefaultAnnotationCondition condition, IsValid valid) {
 		T defaultAnnotation = method.getAnnotation(annotationClass);
 		if (defaultAnnotation != null) {
 			if (!condition.correctReturnType(method.getReturnType())) {
 				annotationHelper.printAnnotationError(method, annotationClass.getName(), TargetAnnotationHelper.annotationName(annotationClass) + " can only be used on a method that returns a " + expectedReturnType);
+				valid.invalidate();
 			}
 		}
 	}
