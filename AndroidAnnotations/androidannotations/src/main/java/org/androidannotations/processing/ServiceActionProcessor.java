@@ -73,10 +73,7 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		ExecutableElement executableElement = (ExecutableElement) element;
-
 		String methodName = element.getSimpleName().toString();
-
-		TypeMirror elementType = element.asType();
 
 		Classes classes = holder.classes();
 
@@ -128,11 +125,11 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 					String paramName = param.getSimpleName().toString();
 					String extraParamName = paramName + "Extra";
 					JClass extraParamClass = helper.typeMirrorToJClass(param.asType(), holder);
-					boolean isPrimitive = false; // param.getKind().isPrimitive();
+					boolean isPrimitive = param.asType().getKind().isPrimitive();
 
 					JExpression extraInvok;
 					if (isPrimitive) {
-						JPrimitiveType primitiveType = JType.parse(codeModel, elementType.toString());
+						JPrimitiveType primitiveType = JType.parse(codeModel, param.asType().toString());
 						JClass wrapperType = primitiveType.boxify();
 						extraInvok = JExpr.cast(wrapperType, extras.invoke("get").arg(paramName));
 					} else {
@@ -149,6 +146,8 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 			} else {
 				callActionBlock.add(callActionInvok);
 			}
+
+			callActionBlock._return();
 		}
 
 		/*
