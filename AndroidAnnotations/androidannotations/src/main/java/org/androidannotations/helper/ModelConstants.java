@@ -24,6 +24,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.EProvider;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
@@ -40,7 +41,7 @@ public abstract class ModelConstants {
 	public static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
 
 	@SuppressWarnings("unchecked")
-	public static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class, EReceiver.class, EProvider.class, EFragment.class);
+	public static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class, EIntentService.class, EReceiver.class, EProvider.class, EFragment.class);
 
 	private ModelConstants() {
 	}

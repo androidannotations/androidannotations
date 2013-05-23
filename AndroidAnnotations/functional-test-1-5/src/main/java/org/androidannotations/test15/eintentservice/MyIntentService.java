@@ -15,8 +15,10 @@
  */
 package org.androidannotations.test15.eintentservice;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.test15.ebean.EnhancedClass;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -24,8 +26,8 @@ import android.content.Intent;
 @EIntentService
 public class MyIntentService extends IntentService {
 
-	// @Bean
-	// EnhancedClass dependency;
+	@Bean
+	EnhancedClass dependency;
 
 	public MyIntentService() {
 		super(MyIntentService.class.getSimpleName());
