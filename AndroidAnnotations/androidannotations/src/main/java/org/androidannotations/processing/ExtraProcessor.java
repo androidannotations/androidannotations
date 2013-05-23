@@ -26,6 +26,7 @@ import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -137,6 +138,7 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, fieldName);
 
 				boolean castToSerializable = false;
+				boolean castToParcelable = false;
 				TypeMirror extraType = elementType;
 				if (extraType.getKind() == TypeKind.DECLARED) {
 					Elements elementUtils = processingEnv.getElementUtils();
@@ -147,6 +149,11 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 						if (!typeUtils.isSubtype(extraType, stringType)) {
 							castToSerializable = true;
 						}
+					} else {
+						TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
+						if (typeUtils.isSubtype(extraType, serializableType)) {
+							castToParcelable = true;
+						}
 					}
 				}
 				JClass paramClass = helper.typeMirrorToJClass(extraType, holder);
@@ -155,6 +162,8 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 				JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKeyField);
 				if (castToSerializable) {
 					invocation.arg(cast(classes.SERIALIZABLE, extraParam));
+				} else if (castToParcelable) {
+					invocation.arg(cast(classes.PARCELABLE, extraParam));
 				} else {
 					invocation.arg(extraParam);
 				}

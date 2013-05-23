@@ -60,7 +60,7 @@ public class ItemLongClickValidator implements ElementValidator {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.zeroOrOneParameter(executableElement, valid);
+		validatorHelper.param.zeroOrOneParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

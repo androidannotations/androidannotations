@@ -17,7 +17,10 @@ package org.androidannotations.test15.prefs;
 
 import java.util.Set;
 
+import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
@@ -27,9 +30,18 @@ public interface SomePrefs {
 	
 	@DefaultString("John")
 	String name();
-
+	
 	@DefaultInt(42)
 	int age();
+	
+	@DefaultLong(400000L)
+	long ageLong();
+
+	@DefaultFloat(42f)
+	float ageFloat();
+	
+	@DefaultBoolean(true)
+	boolean isAwesome();
 
 	long lastUpdated();
 

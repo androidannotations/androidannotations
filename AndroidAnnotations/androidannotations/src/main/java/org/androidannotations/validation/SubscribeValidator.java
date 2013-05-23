@@ -64,7 +64,7 @@ public class SubscribeValidator implements ElementValidator {
 
 		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.hasExactlyOneParameter(executableElement, valid);
+		validatorHelper.param.hasExactlyOneParameter(executableElement, valid);
 
 		return valid.isValid();
 	}

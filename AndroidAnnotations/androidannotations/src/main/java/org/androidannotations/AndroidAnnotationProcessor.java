@@ -75,6 +75,7 @@ import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.annotations.RootContext;
@@ -133,6 +134,7 @@ import org.androidannotations.processing.AppProcessor;
 import org.androidannotations.processing.BackgroundProcessor;
 import org.androidannotations.processing.BeanProcessor;
 import org.androidannotations.processing.BeforeTextChangeProcessor;
+import org.androidannotations.processing.CheckedChangeProcessor;
 import org.androidannotations.processing.ClickProcessor;
 import org.androidannotations.processing.CustomTitleProcessor;
 import org.androidannotations.processing.EActivityProcessor;
@@ -145,6 +147,7 @@ import org.androidannotations.processing.EServiceProcessor;
 import org.androidannotations.processing.EViewGroupProcessor;
 import org.androidannotations.processing.EViewProcessor;
 import org.androidannotations.processing.ExtraProcessor;
+import org.androidannotations.processing.FocusChangeProcessor;
 import org.androidannotations.processing.FragmentArgProcessor;
 import org.androidannotations.processing.FragmentByIdProcessor;
 import org.androidannotations.processing.FragmentByTagProcessor;
@@ -163,6 +166,7 @@ import org.androidannotations.processing.NoTitleProcessor;
 import org.androidannotations.processing.NonConfigurationInstanceProcessor;
 import org.androidannotations.processing.OnActivityResultProcessor;
 import org.androidannotations.processing.OptionsItemProcessor;
+import org.androidannotations.processing.OptionsMenuItemProcessor;
 import org.androidannotations.processing.OptionsMenuProcessor;
 import org.androidannotations.processing.OrmLiteDaoProcessor;
 import org.androidannotations.processing.PrefProcessor;
@@ -201,6 +205,7 @@ import org.androidannotations.validation.AfterViewsValidator;
 import org.androidannotations.validation.AppValidator;
 import org.androidannotations.validation.BeanValidator;
 import org.androidannotations.validation.BeforeTextChangeValidator;
+import org.androidannotations.validation.CheckedChangeValidator;
 import org.androidannotations.validation.ClickValidator;
 import org.androidannotations.validation.CustomTitleValidator;
 import org.androidannotations.validation.EActivityValidator;
@@ -213,6 +218,7 @@ import org.androidannotations.validation.EServiceValidator;
 import org.androidannotations.validation.EViewGroupValidator;
 import org.androidannotations.validation.EViewValidator;
 import org.androidannotations.validation.ExtraValidator;
+import org.androidannotations.validation.FocusChangeValidator;
 import org.androidannotations.validation.FragmentArgValidator;
 import org.androidannotations.validation.FragmentByIdValidator;
 import org.androidannotations.validation.FragmentByTagValidator;
@@ -230,6 +236,7 @@ import org.androidannotations.validation.NoTitleValidator;
 import org.androidannotations.validation.NonConfigurationInstanceValidator;
 import org.androidannotations.validation.OnActivityResultValidator;
 import org.androidannotations.validation.OptionsItemValidator;
+import org.androidannotations.validation.OptionsMenuItemValidator;
 import org.androidannotations.validation.OptionsMenuValidator;
 import org.androidannotations.validation.OrmLiteDaoValidator;
 import org.androidannotations.validation.PrefValidator;
@@ -392,6 +399,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new ClickValidator(processingEnv, rClass));
 		modelValidator.register(new LongClickValidator(processingEnv, rClass));
 		modelValidator.register(new TouchValidator(processingEnv, rClass));
+		modelValidator.register(new FocusChangeValidator(processingEnv, rClass));
+		modelValidator.register(new CheckedChangeValidator(processingEnv, rClass));
 		modelValidator.register(new ItemClickValidator(processingEnv, rClass));
 		modelValidator.register(new ItemSelectedValidator(processingEnv, rClass));
 		modelValidator.register(new ItemLongClickValidator(processingEnv, rClass));
@@ -414,6 +423,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new AcceptValidator(processingEnv));
 		modelValidator.register(new AppValidator(processingEnv));
 		modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
+		modelValidator.register(new OptionsMenuItemValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
 		modelValidator.register(new CustomTitleValidator(processingEnv, rClass));
@@ -477,7 +487,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewProcessor());
 		modelProcessor.register(new EBeanProcessor());
-		modelProcessor.register(new SharedPrefProcessor());
+		modelProcessor.register(new SharedPrefProcessor(processingEnv, rClass));
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewByIdProcessor(processingEnv, rClass));
@@ -487,6 +497,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new ClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new LongClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new TouchProcessor(processingEnv, rClass));
+		modelProcessor.register(new FocusChangeProcessor(processingEnv, rClass));
+		modelProcessor.register(new CheckedChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemClickProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemSelectedProcessor(processingEnv, rClass));
 		modelProcessor.register(new ItemLongClickProcessor(processingEnv, rClass));
@@ -507,6 +519,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationsHolder));
 		modelProcessor.register(new AppProcessor());
 		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
+		modelProcessor.register(new OptionsMenuItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
 		modelProcessor.register(new CustomTitleProcessor(processingEnv, rClass));
@@ -625,6 +638,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					Accept.class, //
 					FromHtml.class, //
 					OptionsMenu.class, //
+					OptionsMenuItem.class, //
 					OptionsItem.class, //
 					HtmlRes.class, //
 					NoTitle.class, //

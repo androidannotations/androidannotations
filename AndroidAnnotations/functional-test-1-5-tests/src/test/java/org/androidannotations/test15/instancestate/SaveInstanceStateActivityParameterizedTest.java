@@ -18,6 +18,7 @@ package org.androidannotations.test15.instancestate;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -38,7 +39,11 @@ public class SaveInstanceStateActivityParameterizedTest {
 
 	@Parameters
 	public static Collection<Object[]> generateTestCases() throws Exception {
-
+		ArrayList<MyGenericParcelableBean<Integer>> myGenericParcelableBeanArrayList = new ArrayList<MyGenericParcelableBean<Integer>>();
+		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>((Integer) 1));
+		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>((Integer) 2));
+		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>((Integer) 3));
+		
 		Object[][] testCases = { //
 		//
 				{ "myBoolean", true }, //
@@ -85,6 +90,9 @@ public class SaveInstanceStateActivityParameterizedTest {
 				{ "myGenericSerializableBeanArray", new MyGenericSerializableBean[] {new MyGenericSerializableBean<Integer>((Integer)3), new MyGenericSerializableBean<Integer>((Integer)5)} }, //
 				{ "myGenericParcelableBean", new MyGenericParcelableBean<String>("Plop !")}, //
 				{ "myGenericParcelableBeanArray", new MyGenericParcelableBean[] {new MyGenericParcelableBean<Integer>((Integer)3), new MyGenericParcelableBean<Integer>((Integer)5)} }, //
+				{ "myParcelableBeanArrayList", Lists.newArrayList(new MyParcelableBean(1), new MyParcelableBean(2), new MyParcelableBean(3)) }, //
+				{ "myGenericParcelableBeanArrayList", myGenericParcelableBeanArrayList }, //
+				{ "mySerializableBeanArrayList", Lists.newArrayList(new MySerializableBean(1), new MySerializableBean(2), new MySerializableBean(3)) }, //
 				{ "nullWrappedLong", null }, //
 		};
 		return Arrays.asList(testCases);

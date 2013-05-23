@@ -167,5 +167,14 @@ public class SaveInstanceStateActivity extends Activity {
 
 	@InstanceState
 	MyGenericParcelableBean<Integer>[] myGenericParcelableBeanArray;
+	
+	@InstanceState
+	ArrayList<MyParcelableBean> myParcelableBeanArrayList;
+	
+	@InstanceState
+	ArrayList<MyGenericParcelableBean<Integer>> myGenericParcelableBeanArrayList;
+	
+	@InstanceState
+	ArrayList<MySerializableBean> mySerializableBeanArrayList;
 
 }

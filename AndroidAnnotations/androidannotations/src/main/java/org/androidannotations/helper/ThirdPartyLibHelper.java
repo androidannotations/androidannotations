@@ -54,7 +54,14 @@ public class ThirdPartyLibHelper {
 	 */
 	public boolean usesActionBarSherlock(EBeanHolder holder) {
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
+		return usesActionBarSherlock(typeElement);
+	}
 
+	/**
+	 * Checks whether the Activity extends one of the ActionBarSherlock Activity
+	 * types
+	 */
+	public boolean usesActionBarSherlock(TypeElement typeElement) {
 		TypeMirror superType;
 		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {
 			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
