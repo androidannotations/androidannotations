@@ -22,6 +22,7 @@ public class AnnotationHandlers {
 		add(new EActivityHandler(processingEnvironment));
 		add(new EProviderHandler(processingEnvironment));
 		add(new EReceiverHandler(processingEnvironment));
+		add(new EServiceHandler(processingEnvironment));
 		add(new EFragmentHandler(processingEnvironment));
 		add(new EBeanHandler(processingEnvironment));
 	}
