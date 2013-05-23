@@ -20,6 +20,7 @@ public class AnnotationHandlers {
 	public AnnotationHandlers(ProcessingEnvironment processingEnvironment) {
 		add(new EApplicationHandler(processingEnvironment));
 		add(new EActivityHandler(processingEnvironment));
+		add(new EFragmentHandler(processingEnvironment));
 		add(new EBeanHandler(processingEnvironment));
 	}
 
