@@ -53,6 +53,7 @@ import javax.lang.model.util.Elements;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.rest.Delete;
@@ -181,6 +182,11 @@ public class ValidatorHelper {
 	public void enclosingElementHasEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EFragment.class, valid);
+	}
+
+	public void enclosingElementHasEIntentService(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasClassAnnotation(element, enclosingElement, validatedElements, EIntentService.class, valid);
 	}
 
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
@@ -470,6 +476,10 @@ public class ValidatorHelper {
 
 	public void extendsService(Element element, IsValid valid) {
 		extendsType(element, CanonicalNameConstants.SERVICE, valid);
+	}
+
+	public void extendsIntentService(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.INTENT_SERVICE, valid);
 	}
 
 	public void extendsReceiver(Element element, IsValid valid) {
