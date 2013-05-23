@@ -16,10 +16,14 @@
 package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +32,10 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -142,6 +149,62 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 			} else {
 				callActionBlock.add(callActionInvok);
 			}
+		}
+
+		/*
+		 * holder.intentBuilderClass may be null if the annotated component is
+		 * an abstract activity
+		 */
+		if (holder.intentBuilderClass != null) {
+			// flags()
+			JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, methodName);
+			JBlock body = method.body();
+
+			// setAction
+			body.invoke(holder.intentField, "setAction").arg(actionKeyField);
+
+			// For each method params, we get put value into extras
+			List<? extends VariableElement> methodParameters = executableElement.getParameters();
+			if (methodParameters.size() > 0) {
+
+				// Extras params
+				for (VariableElement param : methodParameters) {
+					String paramName = param.getSimpleName().toString();
+					String extraParamName = paramName + "Extra";
+
+					boolean castToSerializable = false;
+					boolean castToParcelable = false;
+					TypeMirror extraType = param.asType();
+					if (extraType.getKind() == TypeKind.DECLARED) {
+						Elements elementUtils = processingEnv.getElementUtils();
+						Types typeUtils = processingEnv.getTypeUtils();
+						TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
+						if (!typeUtils.isSubtype(extraType, parcelableType)) {
+							TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
+							if (!typeUtils.isSubtype(extraType, stringType)) {
+								castToSerializable = true;
+							}
+						} else {
+							TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
+							if (typeUtils.isSubtype(extraType, serializableType)) {
+								castToParcelable = true;
+							}
+						}
+					}
+					JClass paramClass = helper.typeMirrorToJClass(extraType, holder);
+					JVar extraParam = method.param(paramClass, extraParamName);
+					JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(paramName);
+					if (castToSerializable) {
+						invocation.arg(cast(classes.SERIALIZABLE, extraParam));
+					} else if (castToParcelable) {
+						invocation.arg(cast(classes.PARCELABLE, extraParam));
+					} else {
+						invocation.arg(extraParam);
+					}
+				}
+
+			}
+			body._return(JExpr._this());
 		}
 
 	}
