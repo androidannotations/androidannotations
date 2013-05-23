@@ -25,6 +25,7 @@ public class AnnotationHandlers {
 		add(new EServiceHandler(processingEnvironment));
 		add(new EFragmentHandler(processingEnvironment));
 		add(new EBeanHandler(processingEnvironment));
+		add(new EViewHandler(processingEnvironment));
 	}
 
 	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
