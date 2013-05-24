@@ -174,9 +174,9 @@ public class RestProcessor implements GeneratingElementProcessor {
 
 	private void implementGetRootUrl(RestImplementationHolder holder, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
 		for (ExecutableElement method : methods) {
-			if (method.getParameters().size() == 0 && method.getReturnType().toString().equals(STRING) && method.getSimpleName().toString().equals("getRootUrl")) {
-				String methodName = method.getSimpleName().toString();
+			String methodName = method.getSimpleName().toString();
 
+			if (method.getParameters().size() == 0 && method.getReturnType().toString().equals(STRING) && methodName.equals("getRootUrl")) {
 				JMethod getRootUrlMethod = holder.restImplementationClass.method(JMod.PUBLIC, eBeansHolder.refClass(STRING), methodName);
 
 				getRootUrlMethod.annotate(Override.class);

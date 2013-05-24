@@ -799,6 +799,7 @@ public class ValidatorHelper {
 				}
 
 				if (!hasRestAnnotation) {
+
 					ExecutableElement executableElement = (ExecutableElement) enclosedElement;
 					TypeMirror returnType = executableElement.getReturnType();
 					String simpleName = executableElement.getSimpleName().toString();
@@ -816,16 +817,21 @@ public class ValidatorHelper {
 							}
 						}
 					} else if (simpleName.equals(METHOD_NAME_GET_ROOT_URL)) {
-						if (!foundGetRootUrlMethod) {
-							foundGetRootUrlMethod = true;
-						} else {
+						if (!returnType.toString().equals(CanonicalNameConstants.STRING)) {
 							valid.invalidate();
-							annotationHelper.printError(enclosedElement, "The can be only one getRootUrl method on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+							annotationHelper.printError(enclosedElement, "The method getRootUrl must return String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 						}
 
 						if (executableElement.getParameters().size() != 0) {
 							valid.invalidate();
 							annotationHelper.printError(enclosedElement, "The method getRootUrl cannot have parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+						}
+
+						if (!foundGetRootUrlMethod) {
+							foundGetRootUrlMethod = true;
+						} else {
+							valid.invalidate();
+							annotationHelper.printError(enclosedElement, "The can be only one getRootUrl method on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 						}
 					} else if (returnType.getKind() == TypeKind.VOID) {
 						List<? extends VariableElement> parameters = executableElement.getParameters();
@@ -834,7 +840,6 @@ public class ValidatorHelper {
 							if (firstParameter.asType().toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
 								if (!foundSetRestTemplateMethod) {
 									foundSetRestTemplateMethod = true;
-									annotationHelper.printAnnotationWarning(executableElement, "Found SET URL");
 								} else {
 									valid.invalidate();
 									annotationHelper.printError(enclosedElement, "You can only have oneRestTemplate setter method on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
