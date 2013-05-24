@@ -16,14 +16,10 @@
 package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
-import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +28,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -50,10 +42,8 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPrimitiveType;
 import com.sun.codemodel.JType;
-import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class ServiceActionProcessor implements DecoratingElementProcessor {
@@ -84,12 +74,8 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 			extraKey = methodName;
 		}
 
-		String staticFieldName;
-		if (methodName.startsWith("action")) {
-			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(methodName);
-		} else {
-			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase("action_" + methodName);
-		}
+		String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase("action", methodName, null);
+
 		JFieldVar actionKeyField = holder.generatedClass.field(PUBLIC | STATIC | FINAL, classes.STRING, staticFieldName, lit(extraKey));
 
 		if (holder.onHandleIntentBody != null) {
@@ -108,7 +94,7 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 			List<? extends VariableElement> methodParameters = executableElement.getParameters();
 			if (methodParameters.size() > 0) {
 				if (holder.cast == null) {
-					generateCastMethod(codeModel, holder);
+					helper.addCastMethod(codeModel, holder);
 				}
 
 				// Extras
@@ -169,53 +155,13 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 				// Extras params
 				for (VariableElement param : methodParameters) {
 					String paramName = param.getSimpleName().toString();
-					String extraParamName = paramName + "Extra";
 
-					boolean castToSerializable = false;
-					boolean castToParcelable = false;
-					TypeMirror extraType = param.asType();
-					if (extraType.getKind() == TypeKind.DECLARED) {
-						Elements elementUtils = processingEnv.getElementUtils();
-						Types typeUtils = processingEnv.getTypeUtils();
-						TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
-						if (!typeUtils.isSubtype(extraType, parcelableType)) {
-							TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
-							if (!typeUtils.isSubtype(extraType, stringType)) {
-								castToSerializable = true;
-							}
-						} else {
-							TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
-							if (typeUtils.isSubtype(extraType, serializableType)) {
-								castToParcelable = true;
-							}
-						}
-					}
-					JClass paramClass = helper.typeMirrorToJClass(extraType, holder);
-					JVar extraParam = method.param(paramClass, extraParamName);
-					JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(paramName);
-					if (castToSerializable) {
-						invocation.arg(cast(classes.SERIALIZABLE, extraParam));
-					} else if (castToParcelable) {
-						invocation.arg(cast(classes.PARCELABLE, extraParam));
-					} else {
-						invocation.arg(extraParam);
-					}
+					helper.addIntentBuilderPutExtraMethod(codeModel, holder, helper, processingEnv, method, param.asType(), paramName, paramName);
 				}
 
 			}
 			body._return(JExpr._this());
 		}
 
-	}
-
-	private void generateCastMethod(JCodeModel codeModel, EBeanHolder holder) {
-		JType objectType = codeModel._ref(Object.class);
-		JMethod method = holder.generatedClass.method(JMod.PRIVATE, objectType, "cast_");
-		JTypeVar genericType = method.generify("T");
-		method.type(genericType);
-		JVar objectParam = method.param(objectType, "object");
-		method.annotate(SuppressWarnings.class).param("value", "unchecked");
-		method.body()._return(JExpr.cast(genericType, objectParam));
-		holder.cast = method;
 	}
 }
