@@ -20,13 +20,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.app.IntentService;
+
 /**
- * Use this annotation to enhance an Android Service
+ * Should be used on a method that must respond to a specific action in an
+ * enhanced {@link IntentService}. The method name will be used as action name
+ * unless the {@link #value()} field is set.
+ * <p/ >
+ * The method signature (with attributes) will be a part of the IntentBuilder
+ * generated for the {@link EIntentService}.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface ServiceAction {
 
+	/**
+	 * Define the action's name. If this field isn't set the annotated method
+	 * name will be used.
+	 */
 	String value() default "";
 
 }

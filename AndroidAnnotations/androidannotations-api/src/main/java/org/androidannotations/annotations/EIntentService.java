@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to enhance an Android Service
+ * Use this annotation to enhance an Android IntentService
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
