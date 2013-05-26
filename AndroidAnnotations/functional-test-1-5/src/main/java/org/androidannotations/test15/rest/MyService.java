@@ -119,22 +119,25 @@ public interface MyService {
 	@Get("/events/{year}/{location}")
 	Map<String, Event> getEventsGenericsMap(String location, int year) throws RestClientException;
 
-	@Get("/events/{year}/{location}")
+	@RequiresCookie("sjsaid")
+	@RequiresCookieInUrl("xt")
+	@Get("/events/{year}/{location}?xt={xt}")
 	void getEventsVoid(String location, int year) throws RestClientException;
 
 	// *** POST ***
-	@RequiresAuthentication
 	@RequiresHeader("SomeFancyHeader")
-	@Post("http://company.com/oauth/token")
+	@Post("/login")
     @SetsCookie({"xt", "sjsaid"})
 	void authenticate();
+	
+	@RequiresAuthentication
+	@Post("http://company.com/client/ping")
+	void ping();
 
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
 	@Post("/events/")
 	@Accept(MediaType.APPLICATION_JSON)
-	@RequiresCookie("sjsaid")
-	@RequiresCookieInUrl("xt")
 	Event addEvent(Event event);
 
 	@Post("/events/{year}/")
