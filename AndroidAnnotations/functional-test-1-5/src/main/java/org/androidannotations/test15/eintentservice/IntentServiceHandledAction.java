@@ -15,37 +15,34 @@
  */
 package org.androidannotations.test15.eintentservice;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
-import org.androidannotations.test15.ebean.EnhancedClass;
 
 import android.app.IntentService;
 import android.content.Intent;
 
 @EIntentService
-public class MyIntentService extends IntentService {
+public class IntentServiceHandledAction extends IntentService {
 
-	@Bean
-	EnhancedClass dependency;
+	public static boolean actionForTestHandled = false;
 
-	public MyIntentService() {
-		super(MyIntentService.class.getSimpleName());
+	public IntentServiceHandledAction() {
+		super(IntentServiceHandledAction.class.getSimpleName());
 	}
 
 	@ServiceAction
-	void myAction() {
-
+	void myActionForTests() {
+		actionForTestHandled = true;
 	}
 
 	@ServiceAction
-	void actionOne(String valueString) {
-
+	void actionOne() {
+		actionForTestHandled = false;
 	}
 
-	@ServiceAction("myAction")
-	void actionThree(String valueString, long valueLong) {
-
+	@ServiceAction
+	void myActionTwo() {
+		actionForTestHandled = false;
 	}
 
 	@Override

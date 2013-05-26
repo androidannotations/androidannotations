@@ -96,6 +96,9 @@
         <service
             android:name="org.androidannotations.test15.eintentservice.MyIntentService_"
             android:exported="false" />
+        <service
+            android:name="org.androidannotations.test15.eintentservice.IntentServiceHandledAction_"
+            android:exported="false" />
     </application>
 
 </manifest>
