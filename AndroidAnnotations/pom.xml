@@ -33,9 +33,9 @@
 			<id>py.ricau</id>
 			<name>Pierre-Yves Ricau</name>
 			<email>py.ricau@gmail.com</email>
-			<url>http://blog.piwai.info</url>
-			<organization>Siine Ltd</organization>
-			<organizationUrl>http://www.siine.com</organizationUrl>
+			<url>http://piwai.info</url>
+			<organization>Square, Inc</organization>
+			<organizationUrl>http://squareup.com</organizationUrl>
 			<roles>
 				<role>Owner</role>
 			</roles>
