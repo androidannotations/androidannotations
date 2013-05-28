@@ -37,6 +37,7 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JOp;
+import com.sun.codemodel.JStatement;
 
 public class UiThreadProcessor implements DecoratingElementProcessor {
 
@@ -58,11 +59,14 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 
+		//Need to clone the body to be put in the check. This is done here because the next line
+		//will remove the body from the method.
+		JBlock clonedBody = cloneMethodBody(delegatingMethod);
+
 		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
 
 		{
-			// Execute Runnable
-
+			//Execute Runnable
 			UiThread annotation = element.getAnnotation(UiThread.class);
 			long delay = annotation.delay();
 
@@ -71,7 +75,8 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 				holder.handler = holder.generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
 			}
 
-			addUIThreadCheck(delegatingMethod, codeModel);
+			//Put in the check for the UI thread.
+			addUIThreadCheck(delegatingMethod, clonedBody, codeModel);
 
 			if (delay == 0) {
 				delegatingMethod.body().invoke(holder.handler, "post").arg(_new(anonymousRunnableClass));
@@ -83,25 +88,47 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 	}
 
 	/**
+	 * Clone a method body.
+	 *
+	 * @param method the method to clone.
+	 * @return A new JBlock containing the method body.
+	 */
+	private JBlock cloneMethodBody(JMethod method) {
+		JBlock clonedBody = new JBlock(false, false);
+
+		for (Object statement : method.body().getContents()) {
+			clonedBody.add((JStatement) statement);
+		}
+
+		return clonedBody;
+	}
+
+	/**
 	 * Add the pre-check to see if we are already in the UI thread.
-	 * 
+	 *
 	 * @param delegatingMethod
 	 * @param codeModel
 	 * @throws JClassAlreadyExistsException
 	 */
-	private void addUIThreadCheck(JMethod delegatingMethod, JCodeModel codeModel) throws JClassAlreadyExistsException {
-		// Get the Thread and Looper class.
+	private void addUIThreadCheck(JMethod delegatingMethod, JBlock clonedBody, JCodeModel codeModel) throws JClassAlreadyExistsException {
+		//Get the Thread and Looper class.
 		JClass tClass = codeModel.ref(Thread.class);
 		JClass lClass = codeModel.ref(Looper.class);
 
-		// invoke the methods.
+		//invoke the methods.
 		JExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
 		JExpression rhs = lClass.staticInvoke(METHOD_MAIN_LOOPER).invoke(METHOD_GET_THREAD);
 
-		// create the conditional and the block.
+		//create the conditional and the block.
 		JConditional con = delegatingMethod.body()._if(JOp.eq(lhs, rhs));
 		JBlock block = con._then();
-		block.add(JExpr._super().invoke(delegatingMethod));
+
+		//Put the cloned method body in the if() block, this is necessary because the
+		//method may have parameters and a simple super.methodCall() won't work.
+		for (Object statement : clonedBody.getContents()) {
+			block.add((JStatement) statement);
+		}
+
 		block._return();
 	}
 }
