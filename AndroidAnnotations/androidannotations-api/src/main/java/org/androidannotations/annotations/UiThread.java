@@ -22,13 +22,22 @@ import java.lang.annotation.Target;
 
 /**
  * Should be used on method that must be run in the Ui thread
- * 
+ *
  * The annotation parameter delay is the delay (in milliseconds) until the
  * method will be executed. The default is 0 (no delay).
- * 
+ *
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface UiThread {
 	long delay() default 0;
+
+	/**
+	 * If useDirect = true, the method will check first if it is inside the UI
+	 * thread already. If so, it will directly call the method instead of using
+	 * the handler.
+	 *
+	 * @return
+	 */
+	boolean useDirect() default false;
 }
