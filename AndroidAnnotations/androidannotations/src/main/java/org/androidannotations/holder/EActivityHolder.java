@@ -2,12 +2,8 @@ package org.androidannotations.holder;
 
 import com.sun.codemodel.*;
 import org.androidannotations.api.SdkVersionHelper;
-import org.androidannotations.api.view.HasViews;
-import org.androidannotations.api.view.OnViewChangedListener;
-import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.helper.*;
 import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.processing.ViewChangedHolder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -176,13 +172,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	}
 
 	private void setViewChangedHolder() {
-		generatedClass._implements(OnViewChangedListener.class);
-		JMethod onViewChanged = generatedClass.method(PUBLIC, codeModel().VOID, "onViewChanged");
-		onViewChanged.annotate(Override.class);
-		JVar onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
-		JClass notifierClass = refClass(OnViewChangedNotifier.class);
-		getInit().body().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
-		viewChangedHolder = new ViewChangedHolder(onViewChanged, onViewChangedHasViewsParam);
+		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
 	}
 
 	public JMethod getSetContentViewLayout() {

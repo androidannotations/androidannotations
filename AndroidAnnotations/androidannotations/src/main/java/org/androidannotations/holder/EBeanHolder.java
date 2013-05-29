@@ -17,11 +17,12 @@ import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JMod.*;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
-public class EBeanHolder extends EComponentHolder {
+public class EBeanHolder extends EComponentHolder implements HasViewChanged {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
 
 	private ViewNotifierHelper viewNotifierHelper;
+	private ViewChangedHolder viewChangedHolder;
 	private JFieldVar contextField;
 	private JMethod constructor;
 
@@ -94,6 +95,18 @@ public class EBeanHolder extends EComponentHolder {
 		JBlock body = rebindMethod.body();
 		body.assign(getContextField(), contextParam);
 		body.invoke(getInit());
+	}
+
+	@Override
+	public ViewChangedHolder getOnViewChangedHolder() {
+		if (viewChangedHolder == null) {
+			setViewChangedHolder();
+		}
+		return viewChangedHolder;
+	}
+
+	private void setViewChangedHolder() {
+		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
 	}
 
 }

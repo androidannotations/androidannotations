@@ -8,9 +8,7 @@ import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.holder.EComponentHolder;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 
@@ -51,8 +49,6 @@ public class ViewNotifierHelper {
 	public void wrapInitWithNotifier() {
 		JBlock initBlock = holder.getInit().body();
 		JVar previousNotifier = replacePreviousNotifier(initBlock);
-	// TODO: see the effect of this
-	//	initBody = initBody.block();
 		resetPreviousNotifier(initBlock, previousNotifier);
 	}
 

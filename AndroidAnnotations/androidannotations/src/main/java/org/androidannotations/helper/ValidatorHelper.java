@@ -663,6 +663,13 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void isDeclaredType(Element element, IsValid valid) {
+		if (!(element.asType() instanceof DeclaredType)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on a field which is a declared type");
+		}
+	}
+
 	public void isDeclaredType(Element element, IsValid valid, TypeMirror uiFieldTypeMirror) {
 		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
 			valid.invalidate();

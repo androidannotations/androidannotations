@@ -30,6 +30,8 @@ public class AnnotationHandlers {
 		add(new SharedPrefHandler(processingEnvironment));
 		add(new PrefHandler(processingEnvironment));
 		add(new RoboGuiceHandler(processingEnvironment));
+		add(new ViewByIdHandler(processingEnvironment));
+
 		add(new AfterInjectHandler(processingEnvironment));
 	}
 

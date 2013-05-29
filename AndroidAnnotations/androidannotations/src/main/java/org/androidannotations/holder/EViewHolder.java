@@ -13,7 +13,7 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.*;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
-public class EViewHolder extends EComponentHolder {
+public class EViewHolder extends EComponentHolder implements HasViewChanged {
 
 	protected static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
@@ -32,6 +32,7 @@ public class EViewHolder extends EComponentHolder {
 	protected ViewNotifierHelper viewNotifierHelper;
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
+	private ViewChangedHolder viewChangedHolder;
 
 	public EViewHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -133,5 +134,17 @@ public class EViewHolder extends EComponentHolder {
 
 	private void setAlreadyInflated() {
 		alreadyInflated = generatedClass.field(PRIVATE, JType.parse(codeModel(), "boolean"), "alreadyInflated_", JExpr.FALSE);
+	}
+
+	@Override
+	public ViewChangedHolder getOnViewChangedHolder() {
+		if (viewChangedHolder == null) {
+			setViewChangedHolder();
+		}
+		return viewChangedHolder;
+	}
+
+	private void setViewChangedHolder() {
+		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
 	}
 }

@@ -10,7 +10,7 @@ import javax.lang.model.element.TypeElement;
 import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.*;
 
-public class EFragmentHolder extends EComponentHolder {
+public class EFragmentHolder extends EComponentHolder implements HasViewChanged {
 
 	private ViewNotifierHelper viewNotifierHelper;
 	private JFieldVar contentView;
@@ -19,6 +19,7 @@ public class EFragmentHolder extends EComponentHolder {
 	private JVar container;
 	private JDefinedClass fragmentBuilderClass;
 	private JFieldVar fragmentArgumentsBuilderField;
+	private ViewChangedHolder viewChangedHolder;
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -113,6 +114,18 @@ public class EFragmentHolder extends EComponentHolder {
 
 	private void setContentView() {
 		contentView = generatedClass.field(PRIVATE, classes().VIEW, "contentView_");
+	}
+
+	@Override
+	public ViewChangedHolder getOnViewChangedHolder() {
+		if (viewChangedHolder == null) {
+			setViewChangedHolder();
+		}
+		return viewChangedHolder;
+	}
+
+	private void setViewChangedHolder() {
+		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
 	}
 
 	private void setOnCreateView() {
