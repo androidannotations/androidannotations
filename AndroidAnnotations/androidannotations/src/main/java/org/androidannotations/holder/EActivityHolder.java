@@ -28,6 +28,8 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JDefinedClass intentBuilderClass;
 	private JFieldVar intentField;
 	private ViewChangedHolder viewChangedHolder;
+	private JMethod findNativeFragmentById;
+	private JMethod findSupportFragmentById;
 	private RoboGuiceHolder roboGuiceHolder;
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
@@ -173,6 +175,38 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 
 	private void setViewChangedHolder() {
 		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
+	}
+
+	@Override
+	public JMethod getFindNativeFragmentById() {
+		if (findNativeFragmentById == null) {
+			setFindNativeFragmentById();
+		}
+		return findNativeFragmentById;
+	}
+
+	private void setFindNativeFragmentById() {
+		JMethod method = generatedClass.method(PRIVATE, classes().FRAGMENT, "findNativeFragmentById");
+		JVar idParam = method.param(codeModel().INT, "id");
+		JBlock body = method.body();
+		body._return(invoke("getFragmentManager").invoke("findFragmentById").arg(idParam));
+		findNativeFragmentById = method;
+	}
+
+	@Override
+	public JMethod getFindSupportFragmentById() {
+		if (findSupportFragmentById == null) {
+			setFindSupportFragmentById();
+		}
+		return findSupportFragmentById;
+	}
+
+	private void setFindSupportFragmentById() {
+		JMethod method = generatedClass.method(PRIVATE, classes().SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
+		JVar idParam = method.param(codeModel().INT, "id");
+		JBlock body = method.body();
+		body._return(invoke("getSupportFragmentManager").invoke("findFragmentById").arg(idParam));
+		findSupportFragmentById = method;
 	}
 
 	public JMethod getSetContentViewLayout() {

@@ -4,6 +4,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
+import org.androidannotations.helper.FindFragmentHelper;
 import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
 
@@ -25,6 +26,8 @@ public class EBeanHolder extends EComponentHolder implements HasViewChanged {
 	private ViewChangedHolder viewChangedHolder;
 	private JFieldVar contextField;
 	private JMethod constructor;
+	private JMethod findNativeFragmentById;
+	private JMethod findSupportFragmentById;
 
 	public EBeanHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -109,4 +112,27 @@ public class EBeanHolder extends EComponentHolder implements HasViewChanged {
 		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
 	}
 
+	@Override
+	public JMethod getFindNativeFragmentById() {
+		if (findNativeFragmentById == null) {
+			setFindNativeFragmentById();
+		}
+		return findNativeFragmentById;
+	}
+
+	private void setFindNativeFragmentById() {
+		findNativeFragmentById = FindFragmentHelper.createFindNativeFragmentById(this);
+	}
+
+	@Override
+	public JMethod getFindSupportFragmentById() {
+		if (findSupportFragmentById == null) {
+			setFindSupportFragmentById();
+		}
+		return findSupportFragmentById;
+	}
+
+	private void setFindSupportFragmentById() {
+		findSupportFragmentById = FindFragmentHelper.createFindSupportFragmentById(this);
+	}
 }

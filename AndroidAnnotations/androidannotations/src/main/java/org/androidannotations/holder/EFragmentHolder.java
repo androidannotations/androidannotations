@@ -1,6 +1,7 @@
 package org.androidannotations.holder;
 
 import com.sun.codemodel.*;
+import org.androidannotations.helper.FindFragmentHelper;
 import org.androidannotations.helper.HoloEverywhereHelper;
 import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
@@ -20,6 +21,8 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged 
 	private JDefinedClass fragmentBuilderClass;
 	private JFieldVar fragmentArgumentsBuilderField;
 	private ViewChangedHolder viewChangedHolder;
+	private JMethod findNativeFragmentById;
+	private JMethod findSupportFragmentById;
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -126,6 +129,30 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged 
 
 	private void setViewChangedHolder() {
 		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
+	}
+
+	@Override
+	public JMethod getFindNativeFragmentById() {
+		if (findNativeFragmentById == null) {
+			setFindNativeFragmentById();
+		}
+		return findNativeFragmentById;
+	}
+
+	private void setFindNativeFragmentById() {
+		findNativeFragmentById = FindFragmentHelper.createFindNativeFragmentById(this);
+	}
+
+	@Override
+	public JMethod getFindSupportFragmentById() {
+		if (findSupportFragmentById == null) {
+			setFindSupportFragmentById();
+		}
+		return findSupportFragmentById;
+	}
+
+	private void setFindSupportFragmentById() {
+		findSupportFragmentById = FindFragmentHelper.createFindSupportFragmentById(this);
 	}
 
 	private void setOnCreateView() {
