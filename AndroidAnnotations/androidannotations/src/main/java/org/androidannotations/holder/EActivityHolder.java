@@ -2,8 +2,12 @@ package org.androidannotations.holder;
 
 import com.sun.codemodel.*;
 import org.androidannotations.api.SdkVersionHelper;
+import org.androidannotations.api.view.HasViews;
+import org.androidannotations.api.view.OnViewChangedListener;
+import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.helper.*;
 import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.processing.ViewChangedHolder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -14,12 +18,11 @@ import javax.lang.model.util.ElementFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-public class EActivityHolder extends EComponentHolder implements HasIntentBuilder {
+public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged {
 
 	private ViewNotifierHelper viewNotifierHelper;
 	private GreenDroidHelper greenDroidHelper;
@@ -28,6 +31,8 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
 	private JFieldVar intentField;
+	private ViewChangedHolder viewChangedHolder;
+	private RoboGuiceHolder roboGuiceHolder;
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -56,7 +61,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 		return onCreate;
 	}
 
-	private void setOnCreate() {
+	protected void setOnCreate() {
 		onCreate = generatedClass.method(PUBLIC, codeModel().VOID, "onCreate");
 		onCreate.annotate(Override.class);
 		JClass bundleClass = classes().BUNDLE;
@@ -66,6 +71,118 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 		onCreateBody.invoke(getInit()).arg(onCreateSavedInstanceState);
 		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 		viewNotifierHelper.resetPreviousNotifier(onCreateBody, previousNotifier);
+	}
+
+	protected void setOnStart() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStart");
+		method.annotate(Override.class);
+		JBlock body = method.body();
+		roboGuiceHolder.onStartBeforeSuperBlock = body.block();
+		body.invoke(_super(), method);
+		roboGuiceHolder.onStartAfterSuperBlock = body.block();
+	}
+
+	protected void setOnRestart() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onRestart");
+		method.annotate(Override.class);
+		JBlock body = method.body();
+		roboGuiceHolder.onRestartBeforeSuperBlock = body.block();
+		body.invoke(_super(), method);
+		roboGuiceHolder.onRestartAfterSuperBlock = body.block();
+	}
+
+	protected void setOnResume() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onResume");
+		method.annotate(Override.class);
+		JBlock body = method.body();
+		roboGuiceHolder.onResumeBeforeSuperBlock = body.block();
+		body.invoke(_super(), method);
+		roboGuiceHolder.onResumeAfterSuperBlock = body.block();
+	}
+
+	protected void setOnPause() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onPause");
+		method.annotate(Override.class);
+		JBlock body = method.body();
+		body.invoke(_super(), method);
+		roboGuiceHolder.onPauseAfterSuperBlock = body.block();
+	}
+
+	protected void setOnNewIntent() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
+		method.annotate(Override.class);
+		JVar intent = method.param(classes().INTENT, "intent");
+		JBlock body = method.body();
+		body.invoke(_super(), method).arg(intent);
+		roboGuiceHolder.onNewIntentAfterSuperBlock = body.block();
+	}
+
+	protected void setOnStop() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStop");
+		method.annotate(Override.class);
+		JBlock body = method.body();
+		roboGuiceHolder.onStopBeforeSuperBlock = body.block();
+		body.invoke(_super(), method);
+	}
+
+	protected void setOnDestroy() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onDestroy");
+		method.annotate(Override.class);
+		JBlock body = method.body();
+		roboGuiceHolder.onDestroyBeforeSuperBlock = body.block();
+		body.invoke(_super(), method);
+	}
+
+	protected void setOnConfigurationChanged() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onConfigurationChanged");
+		method.annotate(Override.class);
+		JClass configurationClass = classes().CONFIGURATION;
+		JVar newConfig = method.param(configurationClass, "newConfig");
+		roboGuiceHolder.newConfig = newConfig;
+		JBlock body = method.body();
+		roboGuiceHolder.currentConfig = body.decl(configurationClass, "currentConfig", JExpr.invoke("getResources").invoke("getConfiguration"));
+		body.invoke(_super(), method).arg(newConfig);
+		roboGuiceHolder.onConfigurationChangedAfterSuperBlock = body.block();
+	}
+
+	protected void setOnContentChanged() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onContentChanged");
+		method.annotate(Override.class);
+		JBlock body = method.body();
+		body.invoke(_super(), method);
+		roboGuiceHolder.onContentChangedAfterSuperBlock = body.block();
+	}
+
+	protected void setOnActivityResult() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onActivityResult");
+		method.annotate(Override.class);
+		JVar requestCode = method.param(codeModel().INT, "requestCode");
+		JVar resultCode = method.param(codeModel().INT, "resultCode");
+		JVar data = method.param(classes().INTENT, "data");
+		JBlock body = method.body();
+		body.invoke(_super(), method).arg(requestCode).arg(resultCode).arg(data);
+		roboGuiceHolder.onActivityResultAfterSuperBlock = body.block();
+		roboGuiceHolder.requestCode = requestCode;
+		roboGuiceHolder.resultCode = requestCode;
+		roboGuiceHolder.data = data;
+	}
+
+	@Override
+	public ViewChangedHolder getOnViewChangedHolder() {
+		if (viewChangedHolder == null) {
+			setViewChangedHolder();
+		}
+		return viewChangedHolder;
+	}
+
+	private void setViewChangedHolder() {
+		generatedClass._implements(OnViewChangedListener.class);
+		JMethod onViewChanged = generatedClass.method(PUBLIC, codeModel().VOID, "onViewChanged");
+		onViewChanged.annotate(Override.class);
+		JVar onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
+		JClass notifierClass = refClass(OnViewChangedNotifier.class);
+		getInit().body().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
+		viewChangedHolder = new ViewChangedHolder(onViewChanged, onViewChangedHasViewsParam);
 	}
 
 	public JMethod getSetContentViewLayout() {
@@ -111,7 +228,6 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	public JVar getInitSavedInstanceParam() {
 		return initSavedInstanceParam;
 	}
-
 
 	private boolean usesGreenDroid() {
 		if (greenDroidHelper == null) {
@@ -202,5 +318,28 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	@Override
 	public JFieldVar getIntentField() {
 		return intentField;
+	}
+
+	public RoboGuiceHolder getRoboGuiceHolder() {
+		if (roboGuiceHolder == null) {
+			roboGuiceHolder = new RoboGuiceHolder(this);
+		}
+		return roboGuiceHolder;
+	}
+
+	protected void  setScopeField() {
+		roboGuiceHolder.scope  = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope_");
+	}
+
+	protected void setEventManagerField() {
+		roboGuiceHolder.eventManager = generatedClass.field(JMod.PRIVATE, classes().EVENT_MANAGER, "eventManager_");
+	}
+
+	public void setGetInjector() {
+		JMethod method = generatedClass.method(JMod.PUBLIC, classes().INJECTOR, "getInjector");
+		method.annotate(Override.class);
+		JExpression castApplication = cast(classes().INJECTOR_PROVIDER, invoke("getApplication"));
+		method.body()._return(castApplication.invoke("getInjector"));
+		roboGuiceHolder.getInjector = method;
 	}
 }
