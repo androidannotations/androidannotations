@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -54,6 +55,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.rest.Delete;
@@ -1101,6 +1103,25 @@ public class ValidatorHelper {
 			} else {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "The interceptor class must be a subtype of " + CLIENT_HTTP_REQUEST_INTERCEPTOR);
+			}
+		}
+	}
+
+	public void hasNotMultipleAnnotatedMethodWithSameName(Element element, IsValid valid, Class<? extends Annotation> annotation) {
+		Set<String> actionNames = new TreeSet<String>();
+
+		List<? extends Element> enclosedElements = element.getEnclosedElements();
+		for (Element enclosedElement : enclosedElements) {
+			if (enclosedElement.getKind() != ElementKind.METHOD || !annotationHelper.hasOneOfClassAnnotations(enclosedElement, annotation)) {
+				continue;
+			}
+
+			String enclosedElementName = enclosedElement.getSimpleName().toString();
+			if (actionNames.contains(enclosedElementName)) {
+				valid.invalidate();
+				annotationHelper.printError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(ServiceAction.class) + " annotated method must have unique name even if the signature is not the same");
+			} else {
+				actionNames.add(enclosedElementName);
 			}
 		}
 	}

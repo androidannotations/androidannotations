@@ -19,6 +19,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
@@ -46,6 +47,8 @@ public class EIntentServiceValidator implements ElementValidator {
 		IsValid valid = new IsValid();
 
 		validatorHelper.extendsIntentService(element, valid);
+
+		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element, valid, ServiceAction.class);
 
 		validatorHelper.isNotFinal(element, valid);
 
