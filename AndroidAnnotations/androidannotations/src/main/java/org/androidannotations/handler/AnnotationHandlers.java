@@ -28,6 +28,7 @@ public class AnnotationHandlers {
 		add(new EViewGroupHandler(processingEnvironment));
 		add(new EViewHandler(processingEnvironment));
 		add(new SharedPrefHandler(processingEnvironment));
+		add(new PrefHandler(processingEnvironment));
 		add(new RoboGuiceHandler(processingEnvironment));
 		add(new AfterInjectHandler(processingEnvironment));
 	}
