@@ -32,6 +32,7 @@ public class AnnotationHandlers {
 		add(new RoboGuiceHandler(processingEnvironment));
 		add(new ViewByIdHandler(processingEnvironment));
 		add(new FragmentByIdHandler(processingEnvironment));
+		add(new FragmentByTagHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}

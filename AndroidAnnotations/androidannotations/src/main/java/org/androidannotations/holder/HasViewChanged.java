@@ -6,4 +6,6 @@ public interface HasViewChanged extends GeneratedClassHolder {
 	ViewChangedHolder getOnViewChangedHolder();
 	JMethod getFindNativeFragmentById();
 	JMethod getFindSupportFragmentById();
+	JMethod getFindNativeFragmentByTag();
+	JMethod getFindSupportFragmentByTag();
 }

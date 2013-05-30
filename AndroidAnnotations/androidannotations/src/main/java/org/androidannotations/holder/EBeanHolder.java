@@ -28,6 +28,8 @@ public class EBeanHolder extends EComponentHolder implements HasViewChanged {
 	private JMethod constructor;
 	private JMethod findNativeFragmentById;
 	private JMethod findSupportFragmentById;
+	private JMethod findNativeFragmentByTag;
+	private JMethod findSupportFragmentByTag;
 
 	public EBeanHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -134,5 +136,29 @@ public class EBeanHolder extends EComponentHolder implements HasViewChanged {
 
 	private void setFindSupportFragmentById() {
 		findSupportFragmentById = FindFragmentHelper.createFindSupportFragmentById(this);
+	}
+
+	@Override
+	public JMethod getFindNativeFragmentByTag() {
+		if (findNativeFragmentByTag == null) {
+			setFindNativeFragmentByTag();
+		}
+		return findNativeFragmentByTag;
+	}
+
+	private void setFindNativeFragmentByTag() {
+		findNativeFragmentByTag = FindFragmentHelper.createFindNativeFragmentByTag(this);
+	}
+
+	@Override
+	public JMethod getFindSupportFragmentByTag() {
+		if (findSupportFragmentByTag == null) {
+			setFindSupportFragmentByTag();
+		}
+		return findSupportFragmentByTag;
+	}
+
+	private void setFindSupportFragmentByTag() {
+		findSupportFragmentByTag = FindFragmentHelper.createFindSupportFragmentByTag(this);
 	}
 }
