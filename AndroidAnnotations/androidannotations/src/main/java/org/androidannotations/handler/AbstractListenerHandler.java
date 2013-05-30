@@ -25,6 +25,7 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<HasV
 
 	private IdAnnotationHelper helper;
 	private HasViewChanged  holder;
+	private String methodName;
 
 	public AbstractListenerHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
 		super(targetClass, processingEnvironment);
@@ -61,7 +62,7 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<HasV
 	public void process(Element element, HasViewChanged holder) {
 		this.holder = holder;
 
-		String methodName = element.getSimpleName().toString();
+		this.methodName = element.getSimpleName().toString();
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
@@ -120,5 +121,9 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<HasV
 
 	protected JClass refClass(String qualifiedClassName) {
 		return holder.refClass(qualifiedClassName);
+	}
+
+	protected String getMethodName() {
+		return methodName;
 	}
 }

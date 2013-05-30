@@ -40,6 +40,7 @@ public class AnnotationHandlers {
 		add(new FocusChangeHandler(processingEnvironment));
 		add(new CheckedChangeHandler(processingEnvironment));
 		add(new ItemClickHandler(processingEnvironment));
+		add(new ItemSelectHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}
