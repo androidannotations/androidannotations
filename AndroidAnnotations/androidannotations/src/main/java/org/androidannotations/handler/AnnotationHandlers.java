@@ -35,6 +35,7 @@ public class AnnotationHandlers {
 		add(new FragmentByTagHandler(processingEnvironment));
 		add(new FromHtmlHandler(processingEnvironment));
 		add(new ClickHandler(processingEnvironment));
+		add(new LongClickHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}
