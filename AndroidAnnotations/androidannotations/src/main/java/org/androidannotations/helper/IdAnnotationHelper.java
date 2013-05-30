@@ -49,7 +49,12 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 		return super.extractAnnotationResources(element, getTarget(), rClass.get(res), useElementName);
 	}
 
-	public List<JFieldRef> extractAnnotationFieldRefs(EBeanHolder holder, Element element, Res res, boolean useElementName) {
+    public List<JFieldRef> extractAnnotationFieldRefs(GeneratedClassHolder holder, Element element, Res res, boolean useElementName) {
+        return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
+    }
+
+
+    public List<JFieldRef> extractAnnotationFieldRefs(EBeanHolder holder, Element element, Res res, boolean useElementName) {
 		return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
 	}
 
