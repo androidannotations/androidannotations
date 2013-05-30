@@ -1,5 +1,6 @@
 package org.androidannotations.holder;
 
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 
 public interface HasViewChanged extends GeneratedClassHolder {
@@ -8,4 +9,5 @@ public interface HasViewChanged extends GeneratedClassHolder {
 	JMethod getFindSupportFragmentById();
 	JMethod getFindNativeFragmentByTag();
 	JMethod getFindSupportFragmentByTag();
+    JExpression getContextRef();
 }
