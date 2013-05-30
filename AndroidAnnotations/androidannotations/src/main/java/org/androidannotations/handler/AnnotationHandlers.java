@@ -41,6 +41,7 @@ public class AnnotationHandlers {
 		add(new CheckedChangeHandler(processingEnvironment));
 		add(new ItemClickHandler(processingEnvironment));
 		add(new ItemSelectHandler(processingEnvironment));
+		add(new ItemLongClickHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}
