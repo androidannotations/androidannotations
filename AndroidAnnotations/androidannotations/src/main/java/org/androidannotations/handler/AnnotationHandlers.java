@@ -37,6 +37,7 @@ public class AnnotationHandlers {
 		add(new ClickHandler(processingEnvironment));
 		add(new LongClickHandler(processingEnvironment));
 		add(new TouchHandler(processingEnvironment));
+		add(new FocusChangeHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}
