@@ -117,4 +117,8 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<HasV
 	protected JCodeModel codeModel() {
 		return holder.codeModel();
 	}
+
+	protected JClass refClass(String qualifiedClassName) {
+		return holder.refClass(qualifiedClassName);
+	}
 }
