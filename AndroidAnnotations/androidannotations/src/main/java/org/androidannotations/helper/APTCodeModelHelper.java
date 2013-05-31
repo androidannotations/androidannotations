@@ -15,18 +15,10 @@
  */
 package org.androidannotations.helper;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import com.sun.codemodel.*;
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.processing.EBeanHolder;
+import org.androidannotations.processing.EBeansHolder.Classes;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -35,30 +27,56 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.androidannotations.processing.EBeanHolder;
-import org.androidannotations.processing.EBeansHolder.Classes;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JStatement;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr.*;
+import static com.sun.codemodel.JMod.*;
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 public class APTCodeModelHelper {
+
+	public JClass typeMirrorToJClass(TypeMirror type, EComponentHolder holder) {
+
+		if (type instanceof DeclaredType) {
+			DeclaredType declaredType = (DeclaredType) type;
+
+			String declaredTypeName = declaredType.asElement().toString();
+
+			JClass declaredClass = holder.refClass(declaredTypeName);
+
+			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+
+			List<JClass> typeArgumentJClasses = new ArrayList<JClass>();
+			for (TypeMirror typeArgument : typeArguments) {
+				typeArgumentJClasses.add(typeMirrorToJClass(typeArgument, holder));
+			}
+			if (typeArgumentJClasses.size() > 0) {
+				declaredClass = declaredClass.narrow(typeArgumentJClasses);
+			}
+
+			return declaredClass;
+		} else if (type instanceof WildcardType) {
+			// TODO : At his time (01/2013), it is not possible to handle the
+			// super bound because code model does not offer a way to model
+			// statement like " ? super X"
+			// (see http://java.net/jira/browse/CODEMODEL-11)
+			WildcardType wildcardType = (WildcardType) type;
+
+			TypeMirror extendsBound = wildcardType.getExtendsBound();
+
+			return typeMirrorToJClass(extendsBound, holder).wildcard();
+		} else if (type instanceof ArrayType) {
+			ArrayType arrayType = (ArrayType) type;
+
+			JClass refClass = typeMirrorToJClass(arrayType.getComponentType(), holder);
+
+			return refClass.array();
+		} else {
+			return holder.refClass(type.toString());
+		}
+	}
 
 	public JClass typeMirrorToJClass(TypeMirror type, EBeanHolder holder) {
 
@@ -109,6 +127,44 @@ public class APTCodeModelHelper {
 			this.name = name;
 			this.jClass = jClass;
 		}
+	}
+
+	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EComponentHolder holder) {
+
+		String methodName = executableElement.getSimpleName().toString();
+
+		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder);
+
+		List<Parameter> parameters = new ArrayList<Parameter>();
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterName = parameter.getSimpleName().toString();
+			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
+			parameters.add(new Parameter(parameterName, parameterClass));
+		}
+
+		JMethod existingMethod = findAlreadyGeneratedMethod(holder.getGeneratedClass(), methodName, parameters);
+
+		if (existingMethod != null) {
+			return existingMethod;
+		}
+
+		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
+		method.annotate(Override.class);
+
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterName = parameter.getSimpleName().toString();
+			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
+			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
+		}
+
+		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
+			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
+			method._throws(thrownType);
+		}
+
+		callSuperMethod(method, holder, method.body());
+
+		return method;
 	}
 
 	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EBeanHolder holder) {
@@ -166,6 +222,22 @@ public class APTCodeModelHelper {
 			}
 		}
 		return null;
+	}
+
+	public void callSuperMethod(JMethod superMethod, EComponentHolder holder, JBlock callBlock) {
+		JExpression activitySuper = holder.getGeneratedClass().staticRef("super");
+		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
+
+		for (JVar param : superMethod.params()) {
+			superCall.arg(param);
+		}
+
+		JType returnType = superMethod.type();
+		if (returnType.fullName().equals("void")) {
+			callBlock.add(superCall);
+		} else {
+			callBlock._return(superCall);
+		}
 	}
 
 	public void callSuperMethod(JMethod superMethod, EBeanHolder holder, JBlock callBlock) {

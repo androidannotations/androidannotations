@@ -46,6 +46,7 @@ public class AnnotationHandlers {
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			add(new ResHandler(androidRes, processingEnvironment));
 		}
+		add(new TransactionalHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}
