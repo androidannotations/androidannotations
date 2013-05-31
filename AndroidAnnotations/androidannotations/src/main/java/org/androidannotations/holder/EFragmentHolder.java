@@ -25,6 +25,9 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged 
 	private JMethod findSupportFragmentById;
 	private JMethod findNativeFragmentByTag;
 	private JMethod findSupportFragmentByTag;
+	private JMethod injectArgsMethod;
+	private JBlock injectArgsBlock;
+	private JVar injectBundleArgs;
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -227,5 +230,41 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged 
 		return container;
 	}
 
+	public JDefinedClass getBuilderClass() {
+		return fragmentBuilderClass;
+	}
 
+	public JFieldVar getBuilderArgsField() {
+		return fragmentArgumentsBuilderField;
+	}
+
+	public JMethod getInjectArgsMethod() {
+		if (injectArgsMethod == null) {
+			setInjectArgs();
+		}
+		return injectArgsMethod;
+	}
+
+	public JBlock getInjectArgsBlock() {
+		if (injectArgsBlock == null) {
+			setInjectArgs();
+		}
+		return injectArgsBlock;
+	}
+
+	public JVar getInjectBundleArgs() {
+		if (injectBundleArgs == null) {
+			setInjectArgs();
+		}
+		return injectBundleArgs;
+	}
+
+	private void setInjectArgs() {
+		injectArgsMethod = generatedClass.method(PRIVATE, codeModel().VOID, "injectFragmentArguments_");
+		JBlock injectExtrasBody = injectArgsMethod.body();
+		injectBundleArgs = injectExtrasBody.decl(classes().BUNDLE, "args_", invoke("getArguments"));
+		injectArgsBlock = injectExtrasBody._if(injectBundleArgs.ne(_null()))._then();
+
+		getInit().body().invoke(injectArgsMethod);
+	}
 }
