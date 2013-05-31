@@ -49,6 +49,7 @@ public class AnnotationHandlers {
 		add(new TransactionalHandler(processingEnvironment));
 		add(new ExtraHandler(processingEnvironment));
 		add(new FragmentArgHandler(processingEnvironment));
+		add(new SystemServiceHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}
