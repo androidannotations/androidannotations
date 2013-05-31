@@ -47,6 +47,7 @@ public class AnnotationHandlers {
 			add(new ResHandler(androidRes, processingEnvironment));
 		}
 		add(new TransactionalHandler(processingEnvironment));
+		add(new ExtraHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}

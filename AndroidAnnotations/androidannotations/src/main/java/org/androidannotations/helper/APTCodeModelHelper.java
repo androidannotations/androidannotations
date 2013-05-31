@@ -17,6 +17,7 @@ package org.androidannotations.helper;
 
 import com.sun.codemodel.*;
 import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
@@ -37,7 +38,7 @@ import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 public class APTCodeModelHelper {
 
-	public JClass typeMirrorToJClass(TypeMirror type, EComponentHolder holder) {
+	public JClass typeMirrorToJClass(TypeMirror type, GeneratedClassHolder holder) {
 
 		if (type instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) type;

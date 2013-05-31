@@ -18,11 +18,12 @@ import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged {
+public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged, HasExtras {
 
 	private ViewNotifierHelper viewNotifierHelper;
 	private GreenDroidHelper greenDroidHelper;
 	private JMethod onCreate;
+	private JMethod setIntent;
 	private JMethod setContentViewLayout;
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
@@ -33,6 +34,9 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JMethod findNativeFragmentByTag;
 	private JMethod findSupportFragmentByTag;
 	private RoboGuiceHolder roboGuiceHolder;
+	private JMethod injectExtrasMethod;
+	private JBlock injectExtrasBlock;
+	private JVar injectExtras;
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -59,6 +63,13 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 			setOnCreate();
 		}
 		return onCreate;
+	}
+
+	public JMethod getSetIntent() {
+		if (setIntent == null) {
+			setSetIntent();
+		}
+		return setIntent;
 	}
 
 	protected void setOnCreate() {
@@ -115,6 +126,14 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 		JBlock body = method.body();
 		body.invoke(_super(), method).arg(intent);
 		roboGuiceHolder.onNewIntentAfterSuperBlock = body.block();
+	}
+
+	private void setSetIntent() {
+		setIntent = generatedClass.method(PUBLIC, codeModel().VOID, "setIntent");
+		setIntent.annotate(Override.class);
+		JVar methodParam = setIntent.param(classes().INTENT, "newIntent");
+		JBlock setIntentBody = setIntent.body();
+		setIntentBody.invoke(_super(), setIntent).arg(methodParam);
 	}
 
 	protected void setOnStop() {
@@ -399,5 +418,39 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 		JExpression castApplication = cast(classes().INJECTOR_PROVIDER, invoke("getApplication"));
 		method.body()._return(castApplication.invoke("getInjector"));
 		roboGuiceHolder.getInjector = method;
+	}
+
+	@Override
+	public JMethod getInjectExtrasMethod() {
+		if (injectExtrasMethod == null) {
+			setInjectExtras();
+		}
+		return injectExtrasMethod;
+	}
+
+	@Override
+	public JBlock getInjectExtrasBlock() {
+		if (injectExtrasBlock == null) {
+			setInjectExtras();
+		}
+		return injectExtrasBlock;
+	}
+
+	@Override
+	public JVar getInjectExtras() {
+		if (injectExtras == null) {
+			setInjectExtras();
+		}
+		return injectExtras;
+	}
+
+	private void setInjectExtras() {
+		injectExtrasMethod = generatedClass.method(PRIVATE, codeModel().VOID, "injectExtras_");
+		JBlock injectExtrasBody = injectExtrasMethod.body();
+		injectExtras = injectExtrasBody.decl(classes().BUNDLE, "extras_", invoke("getIntent").invoke("getExtras"));
+		injectExtrasBlock = injectExtrasBody._if(injectExtras.ne(_null()))._then();
+
+		getSetIntent().body().invoke(injectExtrasMethod);
+		getInit().body().invoke(injectExtrasMethod);
 	}
 }
