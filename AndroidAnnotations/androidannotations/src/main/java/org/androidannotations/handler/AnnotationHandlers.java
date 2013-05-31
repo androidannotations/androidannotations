@@ -2,6 +2,7 @@ package org.androidannotations.handler;
 
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.model.AndroidRes;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
@@ -42,6 +43,9 @@ public class AnnotationHandlers {
 		add(new ItemClickHandler(processingEnvironment));
 		add(new ItemSelectHandler(processingEnvironment));
 		add(new ItemLongClickHandler(processingEnvironment));
+		for (AndroidRes androidRes : AndroidRes.values()) {
+			add(new ResHandler(androidRes, processingEnvironment));
+		}
 
 		add(new AfterInjectHandler(processingEnvironment));
 	}
