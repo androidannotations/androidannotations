@@ -11,7 +11,7 @@ import javax.lang.model.element.TypeElement;
 import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.*;
 
-public class EFragmentHolder extends EComponentHolder implements HasViewChanged {
+public class EFragmentHolder extends EComponentHolder implements HasViewChanged, HasInstanceState {
 
 	private ViewNotifierHelper viewNotifierHelper;
 	private JFieldVar contentView;
@@ -28,10 +28,12 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged 
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
 	private JVar injectBundleArgs;
+    private InstanceStateHolder instanceStateHolder;
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
 		viewNotifierHelper = new ViewNotifierHelper(this);
+        instanceStateHolder = new InstanceStateHolder(this);
 		createOnCreate();
 		createOnViewCreated();
 		createFragmentBuilder();
@@ -267,4 +269,24 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged 
 
 		getInit().body().invoke(injectArgsMethod);
 	}
+
+    @Override
+    public JBlock getSaveStateMethodBody() {
+        return instanceStateHolder.getSaveStateMethodBody();
+    }
+
+    @Override
+    public JVar getSaveStateBundleParam() {
+        return instanceStateHolder.getSaveStateBundleParam();
+    }
+
+    @Override
+    public JMethod getRestoreStateMethod() {
+        return instanceStateHolder.getRestoreStateMethod();
+    }
+
+    @Override
+    public JVar getRestoreStateBundleParam() {
+        return instanceStateHolder.getRestoreStateBundleParam();
+    }
 }

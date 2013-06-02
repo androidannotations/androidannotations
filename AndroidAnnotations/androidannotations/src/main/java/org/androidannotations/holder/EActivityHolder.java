@@ -18,7 +18,7 @@ import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged, HasExtras {
+public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged, HasExtras, HasInstanceState {
 
 	private ViewNotifierHelper viewNotifierHelper;
 	private GreenDroidHelper greenDroidHelper;
@@ -33,6 +33,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JMethod findSupportFragmentById;
 	private JMethod findNativeFragmentByTag;
 	private JMethod findSupportFragmentByTag;
+    private InstanceStateHolder instanceStateHolder;
 	private RoboGuiceHolder roboGuiceHolder;
 	private JMethod injectExtrasMethod;
 	private JBlock injectExtrasBlock;
@@ -41,6 +42,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
 		viewNotifierHelper = new ViewNotifierHelper(this);
+        instanceStateHolder = new InstanceStateHolder(this);
 		createIntentBuilder();
 		handleBackPressed();
 	}
@@ -453,4 +455,24 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 		getSetIntent().body().invoke(injectExtrasMethod);
 		getInit().body().invoke(injectExtrasMethod);
 	}
+
+    @Override
+    public JBlock getSaveStateMethodBody() {
+        return instanceStateHolder.getSaveStateMethodBody();
+    }
+
+    @Override
+    public JVar getSaveStateBundleParam() {
+        return instanceStateHolder.getSaveStateBundleParam();
+    }
+
+    @Override
+    public JMethod getRestoreStateMethod() {
+        return instanceStateHolder.getRestoreStateMethod();
+    }
+
+    @Override
+    public JVar getRestoreStateBundleParam() {
+        return instanceStateHolder.getRestoreStateBundleParam();
+    }
 }
