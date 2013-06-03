@@ -18,7 +18,7 @@ import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged, HasExtras, HasInstanceState {
+public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged, HasExtras, HasInstanceState, HasOptionsMenu {
 
 	private ViewNotifierHelper viewNotifierHelper;
 	private GreenDroidHelper greenDroidHelper;
@@ -38,6 +38,9 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JMethod injectExtrasMethod;
 	private JBlock injectExtrasBlock;
 	private JVar injectExtras;
+	private JBlock onCreateOptionsMenuMethodBody;
+	private JVar onCreateOptionsMenuMenuInflaterVar;
+	private JVar onCreateOptionsMenuMenuParam;
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -186,6 +189,30 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 		roboGuiceHolder.requestCode = requestCode;
 		roboGuiceHolder.resultCode = requestCode;
 		roboGuiceHolder.data = data;
+	}
+
+	private void setOnCreateOptionsMenu() {
+		JClass menuClass = classes().MENU;
+		JClass menuInflaterClass = classes().MENU_INFLATER;
+		String getMenuInflaterMethodName = "getMenuInflater";
+		if (usesActionBarSherlock()) {
+			menuClass = classes().SHERLOCK_MENU;
+			menuInflaterClass = classes().SHERLOCK_MENU_INFLATER;
+			getMenuInflaterMethodName = "getSupportMenuInflater";
+		}
+
+
+		JMethod method = generatedClass.method(PUBLIC, codeModel().BOOLEAN, "onCreateOptionsMenu");
+		method.annotate(Override.class);
+		JBlock methodBody = method.body();
+		onCreateOptionsMenuMenuParam = method.param(menuClass, "menu");
+		onCreateOptionsMenuMenuInflaterVar = methodBody.decl(menuInflaterClass, "menuInflater", invoke(getMenuInflaterMethodName));
+		onCreateOptionsMenuMethodBody = methodBody.block();
+		methodBody._return(_super().invoke(method).arg(onCreateOptionsMenuMenuParam));
+	}
+
+	private boolean usesActionBarSherlock() {
+		return new ThirdPartyLibHelper(new AnnotationHelper(processingEnvironment())).usesActionBarSherlock(this);
 	}
 
 	@Override
@@ -475,4 +502,28 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
     public JVar getRestoreStateBundleParam() {
         return instanceStateHolder.getRestoreStateBundleParam();
     }
+
+	@Override
+	public JBlock getOnCreateOptionsMenuMethodBody() {
+		if (onCreateOptionsMenuMethodBody == null) {
+			setOnCreateOptionsMenu();
+		}
+		return onCreateOptionsMenuMethodBody;
+	}
+
+	@Override
+	public JVar getOnCreateOptionsMenuMenuInflaterVar() {
+		if (onCreateOptionsMenuMenuInflaterVar == null) {
+			setOnCreateOptionsMenu();
+		}
+		return onCreateOptionsMenuMenuInflaterVar;
+	}
+
+	@Override
+	public JVar getOnCreateOptionsMenuMenuParam() {
+		if (onCreateOptionsMenuMenuParam == null) {
+			setOnCreateOptionsMenu();
+		}
+		return onCreateOptionsMenuMenuParam;
+	}
 }

@@ -5,13 +5,14 @@ import org.androidannotations.helper.FindFragmentHelper;
 import org.androidannotations.helper.HoloEverywhereHelper;
 import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.helper.*;
 
 import javax.lang.model.element.TypeElement;
 
 import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.*;
 
-public class EFragmentHolder extends EComponentHolder implements HasViewChanged, HasInstanceState {
+public class EFragmentHolder extends EComponentHolder implements HasViewChanged, HasInstanceState, HasOptionsMenu {
 
 	private ViewNotifierHelper viewNotifierHelper;
 	private JFieldVar contentView;
@@ -29,6 +30,9 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged,
 	private JBlock injectArgsBlock;
 	private JVar injectBundleArgs;
     private InstanceStateHolder instanceStateHolder;
+	private JBlock onCreateOptionsMenuMethodBody;
+	private JVar onCreateOptionsMenuMenuInflaterVar;
+	private JVar onCreateOptionsMenuMenuParam;
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -98,9 +102,33 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged,
 		body.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);
 		body._return(fragment);
 	}
+
 	private void createFragmentBuilderCreate() {
 		JMethod method = generatedClass.method(STATIC | PUBLIC, fragmentBuilderClass, "builder");
 		method.body()._return(_new(fragmentBuilderClass));
+	}
+
+	private void setOnCreateOptionsMenu() {
+		JClass menuClass = classes().MENU;
+		JClass menuInflaterClass = classes().MENU_INFLATER;
+		if (usesActionBarSherlock()) {
+			menuClass = classes().SHERLOCK_MENU;
+			menuInflaterClass = classes().SHERLOCK_MENU_INFLATER;
+		}
+
+		JMethod method = generatedClass.method(PUBLIC, codeModel().VOID, "onCreateOptionsMenu");
+		method.annotate(Override.class);
+		JBlock methodBody = method.body();
+		onCreateOptionsMenuMenuParam = method.param(menuClass, "menu");
+		onCreateOptionsMenuMenuInflaterVar = method.param(menuInflaterClass, "inflater");
+		onCreateOptionsMenuMethodBody = methodBody.block();
+		methodBody.invoke(_super(), method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar);
+
+		getInit().body().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
+	}
+
+	private boolean usesActionBarSherlock() {
+		return new ThirdPartyLibHelper(new AnnotationHelper(processingEnvironment())).usesActionBarSherlock(this);
 	}
 
 	@Override
@@ -289,4 +317,28 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged,
     public JVar getRestoreStateBundleParam() {
         return instanceStateHolder.getRestoreStateBundleParam();
     }
+
+	@Override
+	public JBlock getOnCreateOptionsMenuMethodBody() {
+		if (onCreateOptionsMenuMethodBody == null) {
+			setOnCreateOptionsMenu();
+		}
+		return onCreateOptionsMenuMethodBody;
+	}
+
+	@Override
+	public JVar getOnCreateOptionsMenuMenuInflaterVar() {
+		if (onCreateOptionsMenuMenuInflaterVar == null) {
+			setOnCreateOptionsMenu();
+		}
+		return onCreateOptionsMenuMenuInflaterVar;
+	}
+
+	@Override
+	public JVar getOnCreateOptionsMenuMenuParam() {
+		if (onCreateOptionsMenuMenuParam == null) {
+			setOnCreateOptionsMenu();
+		}
+		return onCreateOptionsMenuMenuParam;
+	}
 }

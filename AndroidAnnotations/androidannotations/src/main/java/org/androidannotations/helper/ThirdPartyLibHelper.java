@@ -15,12 +15,13 @@
  */
 package org.androidannotations.helper;
 
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.processing.EBeanHolder;
+
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.processing.EBeanHolder;
 
 public class ThirdPartyLibHelper {
 
@@ -54,6 +55,15 @@ public class ThirdPartyLibHelper {
 	 */
 	public boolean usesActionBarSherlock(EBeanHolder holder) {
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
+		return usesActionBarSherlock(typeElement);
+	}
+
+	/**
+	 * Checks whether the Activity extends one of the ActionBarSherlock Activity
+	 * types
+	 */
+	public boolean usesActionBarSherlock(EComponentHolder holder) {
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.getGeneratedClass()._extends().fullName());
 		return usesActionBarSherlock(typeElement);
 	}
 
