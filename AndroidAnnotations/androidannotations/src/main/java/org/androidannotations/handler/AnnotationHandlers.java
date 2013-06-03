@@ -54,6 +54,7 @@ public class AnnotationHandlers {
 		add(new SystemServiceHandler(processingEnvironment));
 		add(new RestHandler(processingEnvironment));
 		add(new GetHandler(processingEnvironment));
+		add(new PostHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
