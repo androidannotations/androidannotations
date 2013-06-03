@@ -61,6 +61,7 @@ public class AnnotationHandlers {
 		add(new OptionsHandler(processingEnvironment));
 		add(new AppHandler(processingEnvironment));
 		add(new OptionsMenuHandler(processingEnvironment));
+		add(new OptionsMenuItemHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
