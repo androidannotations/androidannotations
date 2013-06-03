@@ -29,10 +29,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ProcessHolder {
 
@@ -51,6 +48,7 @@ public class ProcessHolder {
 		public final JClass INPUT_STREAM = refClass(InputStream.class);
 		public final JClass FILE_INPUT_STREAM = refClass(FileInputStream.class);
 		public final JClass SQL_EXCEPTION = refClass(SQLException.class);
+		public final JClass COLLECTIONS = refClass(Collections.class);
 
 		/*
 		 * Android
@@ -148,6 +146,16 @@ public class ProcessHolder {
 		public final JClass SCHEME = refClass(CanonicalNameConstants.SCHEME);
 		public final JClass SCHEME_REGISTRY = refClass(CanonicalNameConstants.SCHEME_REGISTRY);
 		public final JClass SINGLE_CLIENT_CONN_MANAGER = refClass(CanonicalNameConstants.SINGLE_CLIENT_CONN_MANAGER);
+
+		/*
+		 * SpringFramework
+		 */
+		public final JClass REST_TEMPLATE = refClass(CanonicalNameConstants.REST_TEMPLATE);
+		public final JClass HTTP_METHOD = refClass(CanonicalNameConstants.HTTP_METHOD);
+		public final JClass HTTP_ENTITY = refClass(CanonicalNameConstants.HTTP_ENTITY);
+		public final JClass HTTP_HEADERS = refClass(CanonicalNameConstants.HTTP_HEADERS);
+		public final JClass MEDIA_TYPE = refClass(CanonicalNameConstants.MEDIA_TYPE);
+		public final JClass RESPONSE_ENTITY = refClass(CanonicalNameConstants.RESPONSE_ENTITY);
 
 	}
 

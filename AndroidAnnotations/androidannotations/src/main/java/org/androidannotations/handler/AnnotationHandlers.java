@@ -1,5 +1,6 @@
 package org.androidannotations.handler;
 
+import org.androidannotations.handler.rest.RestHandler;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidRes;
@@ -50,6 +51,7 @@ public class AnnotationHandlers {
 		add(new ExtraHandler(processingEnvironment));
 		add(new FragmentArgHandler(processingEnvironment));
 		add(new SystemServiceHandler(processingEnvironment));
+		add(new RestHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
