@@ -41,6 +41,9 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JBlock onCreateOptionsMenuMethodBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
 	private JVar onCreateOptionsMenuMenuParam;
+	private JVar onOptionsItemSelectedItem;
+	private JVar onOptionsItemSelectedItemId;
+	private JBlock onOptionsItemSelectedIfElseBlock;
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -209,6 +212,23 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 		onCreateOptionsMenuMenuInflaterVar = methodBody.decl(menuInflaterClass, "menuInflater", invoke(getMenuInflaterMethodName));
 		onCreateOptionsMenuMethodBody = methodBody.block();
 		methodBody._return(_super().invoke(method).arg(onCreateOptionsMenuMenuParam));
+	}
+
+	private void setOnOptionsItemSelected() {
+		JClass menuItemClass = classes().MENU_ITEM;
+		if (usesActionBarSherlock()) {
+			menuItemClass = classes().SHERLOCK_MENU_ITEM;
+		}
+
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onOptionsItemSelected");
+		method.annotate(Override.class);
+		JBlock methodBody = method.body();
+		onOptionsItemSelectedItem = method.param(menuItemClass, "item");
+		JVar handled = methodBody.decl(codeModel().BOOLEAN, "handled", invoke(_super(), method).arg(onOptionsItemSelectedItem));
+		methodBody._if(handled)._then()._return(TRUE);
+		onOptionsItemSelectedItemId = methodBody.decl(codeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
+		onOptionsItemSelectedIfElseBlock = methodBody.block();
+		methodBody._return(FALSE);
 	}
 
 	private boolean usesActionBarSherlock() {
@@ -525,5 +545,29 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 			setOnCreateOptionsMenu();
 		}
 		return onCreateOptionsMenuMenuParam;
+	}
+
+	@Override
+	public JVar getOnOptionsItemSelectedItem() {
+		if (onOptionsItemSelectedItem == null) {
+			setOnOptionsItemSelected();
+		}
+		return onOptionsItemSelectedItem;
+	}
+
+	@Override
+	public JVar getOnOptionsItemSelectedItemId() {
+		if (onOptionsItemSelectedItemId == null) {
+			setOnOptionsItemSelected();
+		}
+		return onOptionsItemSelectedItemId;
+	}
+
+	@Override
+	public JBlock getOnOptionsItemSelectedIfElseBlock() {
+		if (onOptionsItemSelectedIfElseBlock == null) {
+			setOnOptionsItemSelected();
+		}
+		return onOptionsItemSelectedIfElseBlock;
 	}
 }

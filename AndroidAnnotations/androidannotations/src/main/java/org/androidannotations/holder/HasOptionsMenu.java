@@ -7,4 +7,8 @@ public interface HasOptionsMenu extends GeneratedClassHolder {
 	JBlock getOnCreateOptionsMenuMethodBody();
 	JVar getOnCreateOptionsMenuMenuInflaterVar();
 	JVar getOnCreateOptionsMenuMenuParam();
+
+	JVar getOnOptionsItemSelectedItem();
+	JVar getOnOptionsItemSelectedItemId();
+	JBlock getOnOptionsItemSelectedIfElseBlock();
 }
