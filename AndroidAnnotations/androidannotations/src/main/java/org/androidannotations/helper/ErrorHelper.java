@@ -14,12 +14,13 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.exception.ProcessingException;
 
 public class ErrorHelper {
 
 	public String getErrorMessage(ProcessingException e) {
-		String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations, with the following content and tell us if you can reproduce it or not. The error was thrown on:\n";
+		String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations " + AndroidAnnotationProcessor.ANDROIDANNOTATION_VERSION + ", with the following content and tell us if you can reproduce it or not. The error was thrown on:\n";
 		if (e.getElement() != null) {
 			errorMessage += elementFullString(e.getElement()) + "\n";
 		}

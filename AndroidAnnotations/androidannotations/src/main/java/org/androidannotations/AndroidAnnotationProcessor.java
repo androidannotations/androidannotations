@@ -270,6 +270,9 @@ import org.androidannotations.validation.rest.RestValidator;
 @SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
+	// TODO: We whould find a better way
+	public static final String ANDROIDANNOTATION_VERSION = "3.0-SNAPSHOT";
+
 	private final TimeStats timeStats = new TimeStats();
 	private final ErrorHelper errorHelper = new ErrorHelper();
 
