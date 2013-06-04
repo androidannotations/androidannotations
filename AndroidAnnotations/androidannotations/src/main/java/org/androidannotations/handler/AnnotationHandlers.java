@@ -18,7 +18,8 @@ public class AnnotationHandlers {
 
     @SuppressWarnings("unchecked")
 	public AnnotationHandlers(ProcessingEnvironment processingEnvironment) {
-        add(new EBeanHandler(processingEnvironment));
+		add(new EActivityHandler(processingEnvironment));
+		add(new EBeanHandler(processingEnvironment));
 	}
 
 	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {

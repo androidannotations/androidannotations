@@ -43,6 +43,7 @@ import javax.tools.Diagnostic;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
+import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
@@ -149,6 +150,22 @@ public class AnnotationHelper {
 	public Types getTypeUtils() {
 		return processingEnv.getTypeUtils();
 	}
+
+    /**
+     * Returns a list of {@link JFieldRef} linking to the R class, based on the
+     * given annotation
+     *
+     * @see #extractAnnotationResources(Element, Class, IRInnerClass, boolean)
+     */
+    public List<JFieldRef> extractAnnotationFieldRefs(GeneratedClassHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
+        List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
+
+        for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName)) {
+            fieldRefs.add(RInnerClass.extractIdStaticRef(holder, refQualifiedName));
+        }
+
+        return fieldRefs;
+    }
 
 	/**
 	 * Returns a list of {@link JFieldRef} linking to the R class, based on the

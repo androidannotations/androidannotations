@@ -15,22 +15,18 @@
  */
 package org.androidannotations.rclass;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JFieldRef;
+import org.androidannotations.helper.CaseHelper;
+import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.processing.EBeanHolder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
-
-import org.androidannotations.helper.CaseHelper;
-import org.androidannotations.processing.EBeanHolder;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
+import java.util.*;
 
 public class RInnerClass implements IRInnerClass {
 
@@ -114,6 +110,19 @@ public class RInnerClass implements IRInnerClass {
 		String layoutFieldQualifiedName = getIdQualifiedName(name);
 		return extractIdStaticRef(holder, layoutFieldQualifiedName);
 	}
+
+    public static JFieldRef extractIdStaticRef(GeneratedClassHolder holder, String layoutFieldQualifiedName) {
+        if (layoutFieldQualifiedName != null) {
+            int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
+            String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
+            String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
+
+            JClass refClass = holder.refClass(rInnerClassName);
+            return refClass.staticRef(fieldName);
+        } else {
+            return null;
+        }
+    }
 
 	public static JFieldRef extractIdStaticRef(EBeanHolder holder, String layoutFieldQualifiedName) {
 		if (layoutFieldQualifiedName != null) {
