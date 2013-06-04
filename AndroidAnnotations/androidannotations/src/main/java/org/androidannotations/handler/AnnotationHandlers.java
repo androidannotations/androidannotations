@@ -66,6 +66,7 @@ public class AnnotationHandlers {
         add(new NoTitleHandler(processingEnvironment));
         add(new CustomTitleHandler(processingEnvironment));
         add(new FullscreenHandler(processingEnvironment));
+        add(new RestServiceHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
