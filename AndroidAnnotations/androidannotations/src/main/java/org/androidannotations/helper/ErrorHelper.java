@@ -1,5 +1,8 @@
 package org.androidannotations.helper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
@@ -20,6 +23,7 @@ public class ErrorHelper {
 		if (e.getElement() != null) {
 			errorMessage += elementFullString(e.getElement()) + "\n";
 		}
+		errorMessage += "compiled with " + getJavaCompilerVersion() + "\n";
 		errorMessage += "with stacktrace: " + stackTraceToString(e.getCause());
 		return errorMessage;
 	}
@@ -50,6 +54,29 @@ public class ErrorHelper {
 			result += ")";
 		}
 		return result;
+	}
+
+	private String getJavaCompilerVersion() {
+		ProcessBuilder pb = new ProcessBuilder("javac", "-version");
+		pb.redirectErrorStream(true);
+
+		BufferedReader in = null;
+		try {
+			Process process = pb.start();
+			in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String buffer = in.readLine();
+			process.waitFor();
+			return buffer;
+		} catch (Exception e) {
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return "unknown";
 	}
 
 	private String stackTraceToString(Throwable e) {
