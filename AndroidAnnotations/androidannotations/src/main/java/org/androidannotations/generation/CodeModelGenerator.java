@@ -15,14 +15,12 @@
  */
 package org.androidannotations.generation;
 
-import java.io.IOException;
+import com.sun.codemodel.writer.PrologCodeWriter;
+import org.androidannotations.process.ModelProcessor;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
-
-import org.androidannotations.processing.ModelProcessor.ProcessResult;
-
-import com.sun.codemodel.writer.PrologCodeWriter;
+import java.io.IOException;
 
 public class CodeModelGenerator {
 
@@ -34,7 +32,7 @@ public class CodeModelGenerator {
 		this.messager = messager;
 	}
 
-	public void generate(ProcessResult processResult) throws IOException {
+	public void generate(ModelProcessor.ProcessResult processResult) throws IOException {
 
 		ApiCodeGenerator apiCodeGenerator = new ApiCodeGenerator(filer);
 		apiCodeGenerator.writeApiClasses(processResult.apiClassesToGenerate, processResult.originatingElements);

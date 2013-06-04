@@ -15,276 +15,53 @@
  */
 package org.androidannotations;
 
-import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
-import static org.androidannotations.helper.CanonicalNameConstants.PRODUCE;
-import static org.androidannotations.helper.CanonicalNameConstants.SUBSCRIBE;
-import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedOptions;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
-
-import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.AfterTextChange;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.BeforeTextChange;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.CustomTitle;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EApplication;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.EProvider;
-import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.EView;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.FragmentArg;
-import org.androidannotations.annotations.FragmentById;
-import org.androidannotations.annotations.FragmentByTag;
-import org.androidannotations.annotations.FromHtml;
-import org.androidannotations.annotations.Fullscreen;
-import org.androidannotations.annotations.HierarchyViewerSupport;
-import org.androidannotations.annotations.HttpsClient;
-import org.androidannotations.annotations.InstanceState;
-import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.annotations.ItemLongClick;
-import org.androidannotations.annotations.ItemSelect;
-import org.androidannotations.annotations.LongClick;
-import org.androidannotations.annotations.NoTitle;
-import org.androidannotations.annotations.NonConfigurationInstance;
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.OptionsItem;
-import org.androidannotations.annotations.OptionsMenu;
-import org.androidannotations.annotations.OptionsMenuItem;
-import org.androidannotations.annotations.OrmLiteDao;
-import org.androidannotations.annotations.RoboGuice;
-import org.androidannotations.annotations.RootContext;
-import org.androidannotations.annotations.SeekBarProgressChange;
-import org.androidannotations.annotations.SeekBarTouchStart;
-import org.androidannotations.annotations.SeekBarTouchStop;
-import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.TextChange;
-import org.androidannotations.annotations.Touch;
-import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.Transactional;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.WindowFeature;
-import org.androidannotations.annotations.res.AnimationRes;
-import org.androidannotations.annotations.res.BooleanRes;
-import org.androidannotations.annotations.res.ColorRes;
-import org.androidannotations.annotations.res.ColorStateListRes;
-import org.androidannotations.annotations.res.DimensionPixelOffsetRes;
-import org.androidannotations.annotations.res.DimensionPixelSizeRes;
-import org.androidannotations.annotations.res.DimensionRes;
-import org.androidannotations.annotations.res.DrawableRes;
-import org.androidannotations.annotations.res.HtmlRes;
-import org.androidannotations.annotations.res.IntArrayRes;
-import org.androidannotations.annotations.res.IntegerRes;
-import org.androidannotations.annotations.res.LayoutRes;
-import org.androidannotations.annotations.res.MovieRes;
-import org.androidannotations.annotations.res.StringArrayRes;
-import org.androidannotations.annotations.res.StringRes;
-import org.androidannotations.annotations.res.TextArrayRes;
-import org.androidannotations.annotations.res.TextRes;
-import org.androidannotations.annotations.rest.Accept;
-import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.annotations.rest.Head;
-import org.androidannotations.annotations.rest.Options;
-import org.androidannotations.annotations.rest.Post;
-import org.androidannotations.annotations.rest.Put;
-import org.androidannotations.annotations.rest.Rest;
-import org.androidannotations.annotations.rest.RestService;
-import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.generation.CodeModelGenerator;
+import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.Option;
 import org.androidannotations.helper.TimeStats;
-import org.androidannotations.model.AndroidRes;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
 import org.androidannotations.model.ModelExtractor;
-import org.androidannotations.processing.AfterInjectProcessor;
-import org.androidannotations.processing.AfterTextChangeProcessor;
-import org.androidannotations.processing.AfterViewsProcessor;
-import org.androidannotations.processing.AppProcessor;
-import org.androidannotations.processing.BackgroundProcessor;
-import org.androidannotations.processing.BeanProcessor;
-import org.androidannotations.processing.BeforeTextChangeProcessor;
-import org.androidannotations.processing.CheckedChangeProcessor;
-import org.androidannotations.processing.ClickProcessor;
-import org.androidannotations.processing.CustomTitleProcessor;
-import org.androidannotations.processing.EActivityProcessor;
-import org.androidannotations.processing.EApplicationProcessor;
-import org.androidannotations.processing.EBeanProcessor;
-import org.androidannotations.processing.EFragmentProcessor;
-import org.androidannotations.processing.EProviderProcessor;
-import org.androidannotations.processing.EReceiverProcessor;
-import org.androidannotations.processing.EServiceProcessor;
-import org.androidannotations.processing.EViewGroupProcessor;
-import org.androidannotations.processing.EViewProcessor;
-import org.androidannotations.processing.ExtraProcessor;
-import org.androidannotations.processing.FocusChangeProcessor;
-import org.androidannotations.processing.FragmentArgProcessor;
-import org.androidannotations.processing.FragmentByIdProcessor;
-import org.androidannotations.processing.FragmentByTagProcessor;
-import org.androidannotations.processing.FromHtmlProcessor;
-import org.androidannotations.processing.FullscreenProcessor;
-import org.androidannotations.processing.HierarchyViewerSupportProcessor;
-import org.androidannotations.processing.HttpsClientProcessor;
-import org.androidannotations.processing.InstanceStateProcessor;
-import org.androidannotations.processing.ItemClickProcessor;
-import org.androidannotations.processing.ItemLongClickProcessor;
-import org.androidannotations.processing.ItemSelectedProcessor;
-import org.androidannotations.processing.LongClickProcessor;
-import org.androidannotations.processing.ModelProcessor;
-import org.androidannotations.processing.ModelProcessor.ProcessResult;
-import org.androidannotations.processing.NoTitleProcessor;
-import org.androidannotations.processing.NonConfigurationInstanceProcessor;
-import org.androidannotations.processing.OnActivityResultProcessor;
-import org.androidannotations.processing.OptionsItemProcessor;
-import org.androidannotations.processing.OptionsMenuItemProcessor;
-import org.androidannotations.processing.OptionsMenuProcessor;
-import org.androidannotations.processing.OrmLiteDaoProcessor;
-import org.androidannotations.processing.PrefProcessor;
-import org.androidannotations.processing.ProduceProcessor;
-import org.androidannotations.processing.ResProcessor;
-import org.androidannotations.processing.RestServiceProcessor;
-import org.androidannotations.processing.RoboGuiceProcessor;
-import org.androidannotations.processing.RootContextProcessor;
-import org.androidannotations.processing.SeekBarProgressChangeProcessor;
-import org.androidannotations.processing.SeekBarTouchStartProcessor;
-import org.androidannotations.processing.SeekBarTouchStopProcessor;
-import org.androidannotations.processing.SharedPrefProcessor;
-import org.androidannotations.processing.SubscribeProcessor;
-import org.androidannotations.processing.SystemServiceProcessor;
-import org.androidannotations.processing.TextChangeProcessor;
-import org.androidannotations.processing.TouchProcessor;
-import org.androidannotations.processing.TraceProcessor;
-import org.androidannotations.processing.TransactionalProcessor;
-import org.androidannotations.processing.UiThreadProcessor;
-import org.androidannotations.processing.ViewByIdProcessor;
-import org.androidannotations.processing.WindowFeatureProcessor;
-import org.androidannotations.processing.rest.DeleteProcessor;
-import org.androidannotations.processing.rest.GetProcessor;
-import org.androidannotations.processing.rest.HeadProcessor;
-import org.androidannotations.processing.rest.OptionsProcessor;
-import org.androidannotations.processing.rest.PostProcessor;
-import org.androidannotations.processing.rest.PutProcessor;
-import org.androidannotations.processing.rest.RestImplementationsHolder;
-import org.androidannotations.processing.rest.RestProcessor;
+import org.androidannotations.process.ModelProcessor;
+import org.androidannotations.process.ModelValidator;
 import org.androidannotations.rclass.AndroidRClassFinder;
 import org.androidannotations.rclass.CoumpoundRClass;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.ProjectRClassFinder;
-import org.androidannotations.validation.AfterInjectValidator;
-import org.androidannotations.validation.AfterTextChangeValidator;
-import org.androidannotations.validation.AfterViewsValidator;
-import org.androidannotations.validation.AppValidator;
-import org.androidannotations.validation.BeanValidator;
-import org.androidannotations.validation.BeforeTextChangeValidator;
-import org.androidannotations.validation.CheckedChangeValidator;
-import org.androidannotations.validation.ClickValidator;
-import org.androidannotations.validation.CustomTitleValidator;
-import org.androidannotations.validation.EActivityValidator;
-import org.androidannotations.validation.EApplicationValidator;
-import org.androidannotations.validation.EBeanValidator;
-import org.androidannotations.validation.EFragmentValidator;
-import org.androidannotations.validation.EProviderValidator;
-import org.androidannotations.validation.EReceiverValidator;
-import org.androidannotations.validation.EServiceValidator;
-import org.androidannotations.validation.EViewGroupValidator;
-import org.androidannotations.validation.EViewValidator;
-import org.androidannotations.validation.ExtraValidator;
-import org.androidannotations.validation.FocusChangeValidator;
-import org.androidannotations.validation.FragmentArgValidator;
-import org.androidannotations.validation.FragmentByIdValidator;
-import org.androidannotations.validation.FragmentByTagValidator;
-import org.androidannotations.validation.FromHtmlValidator;
-import org.androidannotations.validation.FullscreenValidator;
-import org.androidannotations.validation.HierarchyViewerSupportValidator;
-import org.androidannotations.validation.HttpsClientValidator;
-import org.androidannotations.validation.InstanceStateValidator;
-import org.androidannotations.validation.ItemClickValidator;
-import org.androidannotations.validation.ItemLongClickValidator;
-import org.androidannotations.validation.ItemSelectedValidator;
-import org.androidannotations.validation.LongClickValidator;
-import org.androidannotations.validation.ModelValidator;
-import org.androidannotations.validation.NoTitleValidator;
-import org.androidannotations.validation.NonConfigurationInstanceValidator;
-import org.androidannotations.validation.OnActivityResultValidator;
-import org.androidannotations.validation.OptionsItemValidator;
-import org.androidannotations.validation.OptionsMenuItemValidator;
-import org.androidannotations.validation.OptionsMenuValidator;
-import org.androidannotations.validation.OrmLiteDaoValidator;
-import org.androidannotations.validation.PrefValidator;
-import org.androidannotations.validation.ProduceValidator;
-import org.androidannotations.validation.ResValidator;
-import org.androidannotations.validation.RestServiceValidator;
-import org.androidannotations.validation.RoboGuiceValidator;
-import org.androidannotations.validation.RootContextValidator;
-import org.androidannotations.validation.RunnableValidator;
-import org.androidannotations.validation.SeekBarProgressChangeValidator;
-import org.androidannotations.validation.SeekBarTouchStartValidator;
-import org.androidannotations.validation.SeekBarTouchStopValidator;
-import org.androidannotations.validation.SharedPrefValidator;
-import org.androidannotations.validation.SubscribeValidator;
-import org.androidannotations.validation.SystemServiceValidator;
-import org.androidannotations.validation.TextChangeValidator;
-import org.androidannotations.validation.TouchValidator;
-import org.androidannotations.validation.TraceValidator;
-import org.androidannotations.validation.TransactionalValidator;
-import org.androidannotations.validation.ViewByIdValidator;
-import org.androidannotations.validation.WindowFeatureValidator;
-import org.androidannotations.validation.rest.AcceptValidator;
-import org.androidannotations.validation.rest.DeleteValidator;
-import org.androidannotations.validation.rest.GetValidator;
-import org.androidannotations.validation.rest.HeadValidator;
-import org.androidannotations.validation.rest.OptionsValidator;
-import org.androidannotations.validation.rest.PostValidator;
-import org.androidannotations.validation.rest.PutValidator;
-import org.androidannotations.validation.rest.RestValidator;
+
+import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Map;
+import java.util.Set;
+
+import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
+import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private final TimeStats timeStats = new TimeStats();
-	private Set<String> supportedAnnotationNames;
+	private AnnotationHandlers annotationHandlers;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);
 
 		Messager messager = processingEnv.getMessager();
-
 		timeStats.setMessager(messager);
-
 		messager.printMessage(Diagnostic.Kind.NOTE, "Starting AndroidAnnotations annotation processing");
+
+		annotationHandlers = new AnnotationHandlers(processingEnv);
 	}
 
 	@Override
@@ -327,9 +104,11 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
 
-		AnnotationElements validatedModel = validateAnnotations(extractedModel, rClass, androidSystemServices, androidManifest);
+		annotationHandlers.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
 
-		ProcessResult processResult = processAnnotations(validatedModel, rClass, androidSystemServices, androidManifest);
+		AnnotationElements validatedModel = validateAnnotations(extractedModel);
+
+		ModelProcessor.ProcessResult processResult = processAnnotations(validatedModel);
 
 		generateSources(processResult);
 	}
@@ -375,14 +154,15 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return Option.of(coumpoundRClass);
 	}
 
-	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel) {
 		timeStats.start("Validate Annotations");
-		ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
+		ModelValidator modelValidator = new ModelValidator(annotationHandlers);
 		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;
 	}
 
+	/*
 	private ModelValidator buildModelValidator(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
 		ModelValidator modelValidator = new ModelValidator();
 		modelValidator.register(new EApplicationValidator(processingEnv, androidManifest));
@@ -446,7 +226,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		/*
 		 * Any view injection or listener binding should occur before
 		 * AfterViewsValidator
-		 */
+		 *
 		modelValidator.register(new AfterViewsValidator(processingEnv));
 		modelValidator.register(new TraceValidator(processingEnv));
 		modelValidator.register(new SubscribeValidator(processingEnv));
@@ -461,6 +241,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		return modelValidator;
 	}
+	*/
 
 	private boolean traceActivated() {
 		Map<String, String> options = processingEnv.getOptions();
@@ -472,14 +253,16 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 	}
 
-	private ProcessResult processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) throws Exception {
+	private ModelProcessor.ProcessResult processAnnotations(AnnotationElements validatedModel) throws Exception {
 		timeStats.start("Process Annotations");
-		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices, androidManifest, validatedModel);
-		ProcessResult processResult = modelProcessor.process(validatedModel);
+		annotationHandlers.setValidatedModel(validatedModel);
+		ModelProcessor modelProcessor = new ModelProcessor(processingEnv, annotationHandlers);
+		ModelProcessor.ProcessResult processResult = modelProcessor.process(validatedModel);
 		timeStats.stop("Process Annotations");
 		return processResult;
 	}
 
+	/*
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest, AnnotationElements validatedModel) {
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(new EApplicationProcessor());
@@ -543,7 +326,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		/*
 		 * Any view injection or listener binding should occur before
 		 * AfterViewsProcessor
-		 */
+		 *
 		modelProcessor.register(new AfterViewsProcessor());
 		if (traceActivated()) {
 			modelProcessor.register(new TraceProcessor());
@@ -559,8 +342,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new HierarchyViewerSupportProcessor());
 		return modelProcessor;
 	}
+	*/
 
-	private void generateSources(ProcessResult processResult) throws IOException {
+	private void generateSources(ModelProcessor.ProcessResult processResult) throws IOException {
 		timeStats.start("Generate Sources");
 		Messager messager = processingEnv.getMessager();
 		messager.printMessage(Diagnostic.Kind.NOTE, "Number of files generated by AndroidAnnotations: " + processResult.codeModel.countArtifacts());
@@ -589,11 +373,13 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		StringWriter writer = new StringWriter();
 		PrintWriter pw = new PrintWriter(writer);
 		e.printStackTrace(pw);
-		return writer.toString();
+		return writer.toString().replace("\n", "");
 	}
 
 	@Override
 	public Set<String> getSupportedAnnotationTypes() {
+		return annotationHandlers.getSupportedAnnotationTypes();
+	/*
 		if (supportedAnnotationNames == null) {
 			Class<?>[] annotationClassesArray = { //
 			//
@@ -689,5 +475,6 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			supportedAnnotationNames = Collections.unmodifiableSet(set);
 		}
 		return supportedAnnotationNames;
+	*/
 	}
 }
