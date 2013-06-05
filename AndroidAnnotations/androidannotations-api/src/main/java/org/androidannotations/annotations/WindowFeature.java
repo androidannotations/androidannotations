@@ -22,16 +22,14 @@ import java.lang.annotation.Target;
 
 /**
  * Should be used on Activity classes that must have no title.
- * <p/>
- * The activity must be annotated with {@link EActivity}.
- * <p/>
- * Note: This annotation has been deprecated. Please use
- * {@code WindowFeature(Window.FEATURE_NO_TITLE})} instead
  * 
- * @see WindowFeature
+ * The activity must be annotated with {@link EActivity}.
+ * 
  */
-@Deprecated
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface NoTitle {
+public @interface WindowFeature {
+
+	int[] value();
+
 }
