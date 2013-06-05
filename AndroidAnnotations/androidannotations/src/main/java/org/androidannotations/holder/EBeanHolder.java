@@ -4,8 +4,6 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.helper.FindFragmentHelper;
-import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.ExecutableElement;
@@ -18,22 +16,15 @@ import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JMod.*;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
-public class EBeanHolder extends EComponentHolder implements HasViewChanged {
+public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
 
-	private ViewNotifierHelper viewNotifierHelper;
-	private ViewChangedHolder viewChangedHolder;
 	private JFieldVar contextField;
 	private JMethod constructor;
-	private JMethod findNativeFragmentById;
-	private JMethod findSupportFragmentById;
-	private JMethod findNativeFragmentByTag;
-	private JMethod findSupportFragmentByTag;
 
 	public EBeanHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		viewNotifierHelper = new ViewNotifierHelper(this);
 		setConstructor();
 	}
 
@@ -100,65 +91,5 @@ public class EBeanHolder extends EComponentHolder implements HasViewChanged {
 		JBlock body = rebindMethod.body();
 		body.assign(getContextField(), contextParam);
 		body.invoke(getInit());
-	}
-
-	@Override
-	public ViewChangedHolder getOnViewChangedHolder() {
-		if (viewChangedHolder == null) {
-			setViewChangedHolder();
-		}
-		return viewChangedHolder;
-	}
-
-	private void setViewChangedHolder() {
-		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
-	}
-
-	@Override
-	public JMethod getFindNativeFragmentById() {
-		if (findNativeFragmentById == null) {
-			setFindNativeFragmentById();
-		}
-		return findNativeFragmentById;
-	}
-
-	private void setFindNativeFragmentById() {
-		findNativeFragmentById = FindFragmentHelper.createFindNativeFragmentById(this);
-	}
-
-	@Override
-	public JMethod getFindSupportFragmentById() {
-		if (findSupportFragmentById == null) {
-			setFindSupportFragmentById();
-		}
-		return findSupportFragmentById;
-	}
-
-	private void setFindSupportFragmentById() {
-		findSupportFragmentById = FindFragmentHelper.createFindSupportFragmentById(this);
-	}
-
-	@Override
-	public JMethod getFindNativeFragmentByTag() {
-		if (findNativeFragmentByTag == null) {
-			setFindNativeFragmentByTag();
-		}
-		return findNativeFragmentByTag;
-	}
-
-	private void setFindNativeFragmentByTag() {
-		findNativeFragmentByTag = FindFragmentHelper.createFindNativeFragmentByTag(this);
-	}
-
-	@Override
-	public JMethod getFindSupportFragmentByTag() {
-		if (findSupportFragmentByTag == null) {
-			setFindSupportFragmentByTag();
-		}
-		return findSupportFragmentByTag;
-	}
-
-	private void setFindSupportFragmentByTag() {
-		findSupportFragmentByTag = FindFragmentHelper.createFindSupportFragmentByTag(this);
 	}
 }

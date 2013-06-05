@@ -1,31 +1,24 @@
 package org.androidannotations.holder;
 
 import com.sun.codemodel.*;
-import org.androidannotations.helper.FindFragmentHelper;
+import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.HoloEverywhereHelper;
-import org.androidannotations.helper.ViewNotifierHelper;
+import org.androidannotations.helper.ThirdPartyLibHelper;
 import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.helper.*;
 
 import javax.lang.model.element.TypeElement;
 
 import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.*;
 
-public class EFragmentHolder extends EComponentHolder implements HasViewChanged, HasInstanceState, HasOptionsMenu {
+public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu {
 
-	private ViewNotifierHelper viewNotifierHelper;
 	private JFieldVar contentView;
 	private JBlock setContentViewBlock;
 	private JVar inflater;
 	private JVar container;
 	private JDefinedClass fragmentBuilderClass;
 	private JFieldVar fragmentArgumentsBuilderField;
-	private ViewChangedHolder viewChangedHolder;
-	private JMethod findNativeFragmentById;
-	private JMethod findSupportFragmentById;
-	private JMethod findNativeFragmentByTag;
-	private JMethod findSupportFragmentByTag;
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
 	private JVar injectBundleArgs;
@@ -39,7 +32,6 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged,
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		viewNotifierHelper = new ViewNotifierHelper(this);
         instanceStateHolder = new InstanceStateHolder(this);
 		createOnCreate();
 		createOnViewCreated();
@@ -172,66 +164,6 @@ public class EFragmentHolder extends EComponentHolder implements HasViewChanged,
 
 	private void setContentView() {
 		contentView = generatedClass.field(PRIVATE, classes().VIEW, "contentView_");
-	}
-
-	@Override
-	public ViewChangedHolder getOnViewChangedHolder() {
-		if (viewChangedHolder == null) {
-			setViewChangedHolder();
-		}
-		return viewChangedHolder;
-	}
-
-	private void setViewChangedHolder() {
-		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
-	}
-
-	@Override
-	public JMethod getFindNativeFragmentById() {
-		if (findNativeFragmentById == null) {
-			setFindNativeFragmentById();
-		}
-		return findNativeFragmentById;
-	}
-
-	private void setFindNativeFragmentById() {
-		findNativeFragmentById = FindFragmentHelper.createFindNativeFragmentById(this);
-	}
-
-	@Override
-	public JMethod getFindSupportFragmentById() {
-		if (findSupportFragmentById == null) {
-			setFindSupportFragmentById();
-		}
-		return findSupportFragmentById;
-	}
-
-	private void setFindSupportFragmentById() {
-		findSupportFragmentById = FindFragmentHelper.createFindSupportFragmentById(this);
-	}
-
-	@Override
-	public JMethod getFindNativeFragmentByTag() {
-		if (findNativeFragmentByTag == null) {
-			setFindNativeFragmentByTag();
-		}
-		return findNativeFragmentByTag;
-	}
-
-	private void setFindNativeFragmentByTag() {
-		findNativeFragmentByTag = FindFragmentHelper.createFindNativeFragmentByTag(this);
-	}
-
-	@Override
-	public JMethod getFindSupportFragmentByTag() {
-		if (findSupportFragmentByTag == null) {
-			setFindSupportFragmentByTag();
-		}
-		return findSupportFragmentByTag;
-	}
-
-	private void setFindSupportFragmentByTag() {
-		findSupportFragmentByTag = FindFragmentHelper.createFindSupportFragmentByTag(this);
 	}
 
 	private void setOnCreateView() {

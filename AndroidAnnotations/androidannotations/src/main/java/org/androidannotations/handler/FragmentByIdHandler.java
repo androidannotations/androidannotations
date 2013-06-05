@@ -8,7 +8,7 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.HasViewChanged;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
@@ -21,7 +21,7 @@ import javax.lang.model.type.TypeMirror;
 
 import static com.sun.codemodel.JExpr.*;
 
-public class FragmentByIdHandler extends BaseAnnotationHandler<HasViewChanged> {
+public class FragmentByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper annotationHelper;
 
@@ -51,7 +51,7 @@ public class FragmentByIdHandler extends BaseAnnotationHandler<HasViewChanged> {
 	}
 
 	@Override
-	public void process(Element element, HasViewChanged holder) {
+	public void process(Element element, EComponentWithViewSupportHolder holder) {
 
 		TypeMirror elementType = element.asType();
 		String typeQualifiedName = elementType.toString();
@@ -69,7 +69,7 @@ public class FragmentByIdHandler extends BaseAnnotationHandler<HasViewChanged> {
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.ID, true);
 
-		JBlock methodBody = holder.getOnViewChangedHolder().body();
+		JBlock methodBody = holder.getOnViewChangedBody();
 
 		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke(findFragmentById).arg(idRef)));
 

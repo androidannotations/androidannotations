@@ -18,9 +18,8 @@ import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-public class EActivityHolder extends EComponentHolder implements HasIntentBuilder, HasViewChanged, HasExtras, HasInstanceState, HasOptionsMenu {
+public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu {
 
-	private ViewNotifierHelper viewNotifierHelper;
 	private GreenDroidHelper greenDroidHelper;
 	private JMethod onCreate;
 	private JMethod setIntent;
@@ -28,11 +27,6 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
 	private JFieldVar intentField;
-	private ViewChangedHolder viewChangedHolder;
-	private JMethod findNativeFragmentById;
-	private JMethod findSupportFragmentById;
-	private JMethod findNativeFragmentByTag;
-	private JMethod findSupportFragmentByTag;
     private InstanceStateHolder instanceStateHolder;
 	private RoboGuiceHolder roboGuiceHolder;
 	private JMethod injectExtrasMethod;
@@ -53,7 +47,6 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		viewNotifierHelper = new ViewNotifierHelper(this);
         instanceStateHolder = new InstanceStateHolder(this);
 		createIntentBuilder();
 		handleBackPressed();
@@ -242,26 +235,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	}
 
 	@Override
-	public ViewChangedHolder getOnViewChangedHolder() {
-		if (viewChangedHolder == null) {
-			setViewChangedHolder();
-		}
-		return viewChangedHolder;
-	}
-
-	private void setViewChangedHolder() {
-		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
-	}
-
-	@Override
-	public JMethod getFindNativeFragmentById() {
-		if (findNativeFragmentById == null) {
-			setFindNativeFragmentById();
-		}
-		return findNativeFragmentById;
-	}
-
-	private void setFindNativeFragmentById() {
+	protected void setFindNativeFragmentById() {
 		JMethod method = generatedClass.method(PRIVATE, classes().FRAGMENT, "findNativeFragmentById");
 		JVar idParam = method.param(codeModel().INT, "id");
 		JBlock body = method.body();
@@ -270,14 +244,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	}
 
 	@Override
-	public JMethod getFindSupportFragmentById() {
-		if (findSupportFragmentById == null) {
-			setFindSupportFragmentById();
-		}
-		return findSupportFragmentById;
-	}
-
-	private void setFindSupportFragmentById() {
+	protected void setFindSupportFragmentById() {
 		JMethod method = generatedClass.method(PRIVATE, classes().SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
 		JVar idParam = method.param(codeModel().INT, "id");
 		JBlock body = method.body();
@@ -286,14 +253,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	}
 
 	@Override
-	public JMethod getFindNativeFragmentByTag() {
-		if (findNativeFragmentByTag == null) {
-			setFindNativeFragmentByTag();
-		}
-		return findNativeFragmentByTag;
-	}
-
-	private void setFindNativeFragmentByTag() {
+	protected void setFindNativeFragmentByTag() {
 		JMethod method = generatedClass.method(PRIVATE, classes().FRAGMENT, "findNativeFragmentByTag");
 		JVar tagParam = method.param(classes().STRING, "tag");
 		JBlock body = method.body();
@@ -302,14 +262,7 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	}
 
 	@Override
-	public JMethod getFindSupportFragmentByTag() {
-		if (findSupportFragmentByTag == null) {
-			setFindSupportFragmentByTag();
-		}
-		return findSupportFragmentByTag;
-	}
-
-	private void setFindSupportFragmentByTag() {
+	protected void setFindSupportFragmentByTag() {
 		JMethod method = generatedClass.method(PRIVATE, classes().SUPPORT_V4_FRAGMENT, "findSupportFragmentByTag");
 		JVar tagParam = method.param(classes().STRING, "tag");
 		JBlock body = method.body();

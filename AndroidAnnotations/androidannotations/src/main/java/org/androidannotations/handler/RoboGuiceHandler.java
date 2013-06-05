@@ -118,7 +118,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void afterSetContentView(EActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JBlock onViewChanged = holder.getOnViewChangedHolder().body();
+		JBlock onViewChanged = holder.getOnViewChangedBody();
 		onViewChanged.invoke(scope, "injectViews");
 		fireEvent(eventManager, onViewChanged, holder.classes().ON_CONTENT_VIEW_AVAILABLE_EVENT);
 	}

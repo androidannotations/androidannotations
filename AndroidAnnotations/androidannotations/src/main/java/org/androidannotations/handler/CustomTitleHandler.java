@@ -35,7 +35,7 @@ public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 
     @Override
     public void process(Element element, EActivityHolder holder) {
-        JBlock onViewChangedBody = holder.getOnViewChangedHolder().body();
+        JBlock onViewChangedBody = holder.getOnViewChangedBody();
 
         JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(IRClass.Res.LAYOUT), false).get(0);
 

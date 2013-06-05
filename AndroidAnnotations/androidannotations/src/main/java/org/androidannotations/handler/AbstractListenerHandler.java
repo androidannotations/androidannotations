@@ -4,8 +4,7 @@ import com.sun.codemodel.*;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.HasViewChanged;
-import org.androidannotations.holder.ViewChangedHolder;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ProcessHolder;
@@ -21,10 +20,10 @@ import java.util.List;
 
 import static com.sun.codemodel.JExpr.*;
 
-public abstract class AbstractListenerHandler extends BaseAnnotationHandler<HasViewChanged> {
+public abstract class AbstractListenerHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper helper;
-	private HasViewChanged  holder;
+	private EComponentWithViewSupportHolder holder;
 	private String methodName;
 
 	public AbstractListenerHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
@@ -59,7 +58,7 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<HasV
 	}
 
 	@Override
-	public void process(Element element, HasViewChanged holder) {
+	public void process(Element element, EComponentWithViewSupportHolder holder) {
 		this.holder = holder;
 
 		this.methodName = element.getSimpleName().toString();
@@ -84,10 +83,9 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<HasV
 		processParameters(listenerMethod, call, parameters);
 
 		for (JFieldRef idRef : idsRefs) {
-			ViewChangedHolder onViewChanged = holder.getOnViewChangedHolder();
-			JBlock block = onViewChanged.body().block();
+			JBlock block = holder.getOnViewChangedBody().block();
 
-			JExpression findViewExpression = onViewChanged.findViewById(idRef);
+			JExpression findViewExpression = holder.findViewById(idRef);
 			if (!getViewClass().equals(classes().VIEW)) {
 				findViewExpression = cast(getViewClass(), findViewExpression);
 			}

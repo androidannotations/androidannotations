@@ -6,7 +6,7 @@ import org.androidannotations.annotations.FromHtml;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.HasViewChanged;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ProcessHolder;
@@ -19,7 +19,7 @@ import javax.lang.model.element.Element;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.ref;
 
-public class FromHtmlHandler extends BaseAnnotationHandler<HasViewChanged> {
+public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper annotationHelper;
 
@@ -49,14 +49,14 @@ public class FromHtmlHandler extends BaseAnnotationHandler<HasViewChanged> {
 	}
 
 	@Override
-	public void process(Element element, HasViewChanged holder) {
+	public void process(Element element, EComponentWithViewSupportHolder holder) {
 		ProcessHolder.Classes classes = holder.classes();
 
 		String fieldName = element.getSimpleName().toString();
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.STRING, true);
 
-		JBlock methodBody = holder.getOnViewChangedHolder().body();
+		JBlock methodBody = holder.getOnViewChangedBody();
 		methodBody //
 				._if(ref(fieldName).ne(_null())) //
 				._then() //

@@ -1,9 +1,7 @@
 package org.androidannotations.holder;
 
 import com.sun.codemodel.*;
-import org.androidannotations.helper.FindFragmentHelper;
 import org.androidannotations.helper.ModelConstants;
-import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.*;
@@ -14,7 +12,7 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.*;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
-public class EViewHolder extends EComponentHolder implements HasViewChanged {
+public class EViewHolder extends EComponentWithViewSupportHolder {
 
 	protected static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
@@ -30,18 +28,11 @@ public class EViewHolder extends EComponentHolder implements HasViewChanged {
 			+ "are in a View." //
 			;
 
-	protected ViewNotifierHelper viewNotifierHelper;
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
-	private ViewChangedHolder viewChangedHolder;
-	private JMethod findNativeFragmentById;
-	private JMethod findSupportFragmentById;
-	private JMethod findNativeFragmentByTag;
-	private JMethod findSupportFragmentByTag;
 
 	public EViewHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		viewNotifierHelper = new ViewNotifierHelper(this);
 		addSuppressWarning();
 		createConstructorAndBuilder();
 	}
@@ -139,65 +130,5 @@ public class EViewHolder extends EComponentHolder implements HasViewChanged {
 
 	private void setAlreadyInflated() {
 		alreadyInflated = generatedClass.field(PRIVATE, JType.parse(codeModel(), "boolean"), "alreadyInflated_", JExpr.FALSE);
-	}
-
-	@Override
-	public ViewChangedHolder getOnViewChangedHolder() {
-		if (viewChangedHolder == null) {
-			setViewChangedHolder();
-		}
-		return viewChangedHolder;
-	}
-
-	private void setViewChangedHolder() {
-		viewChangedHolder = ViewChangedHolder.createViewChangedHolder(this);
-	}
-
-	@Override
-	public JMethod getFindNativeFragmentById() {
-		if (findNativeFragmentById == null) {
-			setFindNativeFragmentById();
-		}
-		return findNativeFragmentById;
-	}
-
-	private void setFindNativeFragmentById() {
-		findNativeFragmentById = FindFragmentHelper.createFindNativeFragmentById(this);
-	}
-
-	@Override
-	public JMethod getFindSupportFragmentById() {
-		if (findSupportFragmentById == null) {
-			setFindSupportFragmentById();
-		}
-		return findSupportFragmentById;
-	}
-
-	private void setFindSupportFragmentById() {
-		findSupportFragmentById = FindFragmentHelper.createFindSupportFragmentById(this);
-	}
-
-	@Override
-	public JMethod getFindNativeFragmentByTag() {
-		if (findNativeFragmentByTag == null) {
-			setFindNativeFragmentByTag();
-		}
-		return findNativeFragmentByTag;
-	}
-
-	private void setFindNativeFragmentByTag() {
-		findNativeFragmentByTag = FindFragmentHelper.createFindNativeFragmentByTag(this);
-	}
-
-	@Override
-	public JMethod getFindSupportFragmentByTag() {
-		if (findSupportFragmentByTag == null) {
-			setFindSupportFragmentByTag();
-		}
-		return findSupportFragmentByTag;
-	}
-
-	private void setFindSupportFragmentByTag() {
-		findSupportFragmentByTag = FindFragmentHelper.createFindSupportFragmentByTag(this);
 	}
 }

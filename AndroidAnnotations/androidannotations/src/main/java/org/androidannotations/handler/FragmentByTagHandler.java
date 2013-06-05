@@ -6,7 +6,7 @@ import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.holder.HasViewChanged;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
@@ -18,7 +18,7 @@ import javax.lang.model.type.TypeMirror;
 
 import static com.sun.codemodel.JExpr.*;
 
-public class FragmentByTagHandler extends BaseAnnotationHandler<HasViewChanged> {
+public class FragmentByTagHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper annotationHelper;
 
@@ -46,7 +46,7 @@ public class FragmentByTagHandler extends BaseAnnotationHandler<HasViewChanged> 
 	}
 
 	@Override
-	public void process(Element element, HasViewChanged holder) {
+	public void process(Element element, EComponentWithViewSupportHolder holder) {
 
 		TypeMirror elementType = element.asType();
 		String typeQualifiedName = elementType.toString();
@@ -67,7 +67,7 @@ public class FragmentByTagHandler extends BaseAnnotationHandler<HasViewChanged> 
 			tagValue = fieldName;
 		}
 
-		JBlock methodBody = holder.getOnViewChangedHolder().body();
+		JBlock methodBody = holder.getOnViewChangedBody();
 		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke(findFragmentByTag).arg(lit(tagValue))));
 	}
 }

@@ -6,8 +6,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.HasViewChanged;
-import org.androidannotations.holder.ViewChangedHolder;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.rclass.IRClass;
@@ -20,7 +19,7 @@ import javax.lang.model.type.TypeMirror;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
-public class ViewByIdHandler extends BaseAnnotationHandler<HasViewChanged> {
+public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper annotationHelper;
 
@@ -52,7 +51,7 @@ public class ViewByIdHandler extends BaseAnnotationHandler<HasViewChanged> {
 	}
 
 	@Override
-	public void process(Element element, HasViewChanged holder) {
+	public void process(Element element, EComponentWithViewSupportHolder holder) {
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror uiFieldTypeMirror = element.asType();
@@ -60,8 +59,7 @@ public class ViewByIdHandler extends BaseAnnotationHandler<HasViewChanged> {
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.ID, true);
 
-		ViewChangedHolder onViewChanged = holder.getOnViewChangedHolder();
-		JBlock methodBody = onViewChanged.body();
-		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), onViewChanged.findViewById(idRef)));
+		JBlock methodBody = holder.getOnViewChangedBody();
+		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), holder.findViewById(idRef)));
 	}
 }
