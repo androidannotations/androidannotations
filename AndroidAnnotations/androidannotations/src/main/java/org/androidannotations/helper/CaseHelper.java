@@ -60,4 +60,12 @@ public class CaseHelper {
 		return camelCaseToSnakeCase(camelCase).toUpperCase();
 	}
 
+	public static String lowerCaseFirst(String string) {
+		if (string.length() < 2)
+			return string.toLowerCase();
+		String first = string.substring(0, 1).toLowerCase();
+		String end = string.substring(1, string.length());
+		return first + end;
+	}
+
 }
