@@ -89,6 +89,7 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.WindowFeature;
 import org.androidannotations.annotations.res.AnimationRes;
 import org.androidannotations.annotations.res.BooleanRes;
 import org.androidannotations.annotations.res.ColorRes;
@@ -187,6 +188,7 @@ import org.androidannotations.processing.TraceProcessor;
 import org.androidannotations.processing.TransactionalProcessor;
 import org.androidannotations.processing.UiThreadProcessor;
 import org.androidannotations.processing.ViewByIdProcessor;
+import org.androidannotations.processing.WindowFeatureProcessor;
 import org.androidannotations.processing.rest.DeleteProcessor;
 import org.androidannotations.processing.rest.GetProcessor;
 import org.androidannotations.processing.rest.HeadProcessor;
@@ -257,6 +259,7 @@ import org.androidannotations.validation.TouchValidator;
 import org.androidannotations.validation.TraceValidator;
 import org.androidannotations.validation.TransactionalValidator;
 import org.androidannotations.validation.ViewByIdValidator;
+import org.androidannotations.validation.WindowFeatureValidator;
 import org.androidannotations.validation.rest.AcceptValidator;
 import org.androidannotations.validation.rest.DeleteValidator;
 import org.androidannotations.validation.rest.GetValidator;
@@ -426,6 +429,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new OptionsMenuItemValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
+		modelValidator.register(new WindowFeatureValidator(processingEnv));
 		modelValidator.register(new CustomTitleValidator(processingEnv, rClass));
 		modelValidator.register(new FullscreenValidator(processingEnv));
 		modelValidator.register(new RestServiceValidator(processingEnv));
@@ -522,6 +526,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new OptionsMenuItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
+		modelProcessor.register(new WindowFeatureProcessor());
 		modelProcessor.register(new CustomTitleProcessor(processingEnv, rClass));
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
@@ -642,6 +647,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					OptionsItem.class, //
 					HtmlRes.class, //
 					NoTitle.class, //
+					WindowFeature.class, //
 					CustomTitle.class, //
 					Fullscreen.class, //
 					RestService.class, //
