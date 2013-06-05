@@ -44,6 +44,12 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 	private JVar onOptionsItemSelectedItem;
 	private JVar onOptionsItemSelectedItemId;
 	private JBlock onOptionsItemSelectedIfElseBlock;
+	private NonConfigurationHolder nonConfigurationHolder;
+	private JBlock initIfNonConfigurationNotNullBlock;
+	private JVar initNonConfigurationInstance;
+	private JMethod getLastNonConfigurationInstance;
+	private JBlock onRetainNonConfigurationInstanceBindBlock;
+	private JVar onRetainNonConfigurationInstance;
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -569,5 +575,102 @@ public class EActivityHolder extends EComponentHolder implements HasIntentBuilde
 			setOnOptionsItemSelected();
 		}
 		return onOptionsItemSelectedIfElseBlock;
+	}
+
+	public NonConfigurationHolder getNonConfigurationHolder() throws JClassAlreadyExistsException {
+		if (nonConfigurationHolder == null) {
+			setNonConfigurationHolder();
+		}
+		return nonConfigurationHolder;
+	}
+
+	private void setNonConfigurationHolder() throws JClassAlreadyExistsException {
+		nonConfigurationHolder = new NonConfigurationHolder(this);
+	}
+
+	public JBlock getInitIfNonConfigurationNotNullBlock() throws JClassAlreadyExistsException {
+		if (initIfNonConfigurationNotNullBlock == null) {
+			setInitNonConfigurationInstance();
+		}
+		return initIfNonConfigurationNotNullBlock;
+	}
+
+	public JVar getInitNonConfigurationInstance() throws JClassAlreadyExistsException {
+		if (initNonConfigurationInstance == null) {
+			setInitNonConfigurationInstance();
+		}
+		return initNonConfigurationInstance;
+	}
+
+	private void setInitNonConfigurationInstance() throws JClassAlreadyExistsException {
+		JBlock initBody = getInit().body();
+		JDefinedClass ncHolderClass = getNonConfigurationHolder().getGeneratedClass();
+		initNonConfigurationInstance = initBody.decl(ncHolderClass, "nonConfigurationInstance", cast(ncHolderClass, _super().invoke(getGetLastNonConfigurationInstance())));
+		initIfNonConfigurationNotNullBlock = initBody._if(initNonConfigurationInstance.ne(_null()))._then();
+	}
+
+	public JMethod getGetLastNonConfigurationInstance() throws JClassAlreadyExistsException  {
+		if (getLastNonConfigurationInstance == null) {
+			setGetLastNonConfigurationInstance();
+		}
+		return getLastNonConfigurationInstance;
+	}
+
+	private void setGetLastNonConfigurationInstance() throws JClassAlreadyExistsException {
+		AnnotationHelper annotationHelper = new AnnotationHelper(processingEnvironment());
+		TypeElement fragmentActivityTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(generatedClass._extends().fullName());
+		String getLastNonConfigurationInstanceName = "getLastNonConfigurationInstance";
+		if (fragmentActivityTypeElement != null && annotationHelper.isSubtype(typeElement.asType(), fragmentActivityTypeElement.asType())) {
+			getLastNonConfigurationInstanceName = "getLastCustomNonConfigurationInstance";
+		}
+
+		NonConfigurationHolder ncHolder = getNonConfigurationHolder();
+		JDefinedClass ncHolderClass = ncHolder.getGeneratedClass();
+		JFieldVar superNonConfigurationInstanceField = ncHolder.getSuperNonConfigurationInstanceField();
+
+		getLastNonConfigurationInstance = generatedClass.method(PUBLIC, Object.class, getLastNonConfigurationInstanceName);
+		getLastNonConfigurationInstance.annotate(Override.class);
+		JBlock body = getLastNonConfigurationInstance.body();
+		JVar nonConfigurationInstance = body.decl(ncHolderClass, "nonConfigurationInstance", cast(ncHolderClass, _super().invoke(getLastNonConfigurationInstance)));
+		body._if(nonConfigurationInstance.eq(_null()))._then()._return(_null());
+		body._return(nonConfigurationInstance.ref(superNonConfigurationInstanceField));
+	}
+
+	public JBlock getOnRetainNonConfigurationInstanceBindBlock() throws JClassAlreadyExistsException {
+		if (onRetainNonConfigurationInstanceBindBlock == null) {
+			setOnRetainNonConfigurationInstance();
+		}
+		return onRetainNonConfigurationInstanceBindBlock;
+	}
+
+	public JVar getOnRetainNonConfigurationInstance() throws JClassAlreadyExistsException {
+		if (onRetainNonConfigurationInstance == null) {
+			setOnRetainNonConfigurationInstance();
+		}
+		return onRetainNonConfigurationInstance;
+	}
+
+	private void setOnRetainNonConfigurationInstance() throws JClassAlreadyExistsException {
+		AnnotationHelper annotationHelper = new AnnotationHelper(processingEnvironment());
+		TypeElement fragmentActivityTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(generatedClass._extends().fullName());
+
+		String onRetainNonConfigurationInstanceName = "onRetainNonConfigurationInstance";
+		if (fragmentActivityTypeElement != null && annotationHelper.isSubtype(typeElement.asType(), fragmentActivityTypeElement.asType())) {
+			onRetainNonConfigurationInstanceName = "onRetainCustomNonConfigurationInstance";
+		}
+
+		NonConfigurationHolder ncHolder = getNonConfigurationHolder();
+		JDefinedClass ncHolderClass = ncHolder.getGeneratedClass();
+
+		JMethod onRetainNonConfigurationInstanceMethod = generatedClass.method(PUBLIC, ncHolderClass, onRetainNonConfigurationInstanceName);
+		onRetainNonConfigurationInstanceMethod.annotate(Override.class);
+		JBlock methodBody = onRetainNonConfigurationInstanceMethod.body();
+		onRetainNonConfigurationInstance = methodBody.decl(ncHolderClass, "nonConfigurationInstanceState_", _new(ncHolderClass));
+		JExpression superCall = _super().invoke(onRetainNonConfigurationInstanceMethod);
+		methodBody.assign(onRetainNonConfigurationInstance.ref(ncHolder.getSuperNonConfigurationInstanceField()), superCall);
+		onRetainNonConfigurationInstanceBindBlock = methodBody.block();
+		methodBody._return(onRetainNonConfigurationInstance);
 	}
 }
