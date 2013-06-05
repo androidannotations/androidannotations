@@ -70,6 +70,7 @@ public class AnnotationHandlers {
 		add(new OrmLiteDaoHandler(processingEnvironment));
 		add(new RootContextHanlder(processingEnvironment));
 		add(new NonConfigurationInstanceHandler(processingEnvironment));
+		add(new BeanHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
