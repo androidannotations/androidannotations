@@ -1188,4 +1188,40 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void hasSeekBarProgressChangeMethodParameters(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		boolean seekBarParameterFound = false;
+		boolean fromUserParameterFound = false;
+		boolean progressParameterFound = false;
+		for (VariableElement parameter : parameters) {
+			String parameterType = parameter.asType().toString();
+			if (parameterType.equals(CanonicalNameConstants.SEEKBAR)) {
+				if (seekBarParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can declare only one parameter of type " + CanonicalNameConstants.SEEKBAR);
+					valid.invalidate();
+				}
+				seekBarParameterFound = true;
+				continue;
+			}
+			if (parameter.asType().getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType)) {
+				if (progressParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "You can have only one parameter of type " + CanonicalNameConstants.INTEGER);
+					valid.invalidate();
+				}
+				progressParameterFound = true;
+				continue;
+			}
+			if (parameter.asType().getKind() == TypeKind.BOOLEAN || CanonicalNameConstants.BOOLEAN.equals(parameterType)) {
+				if (fromUserParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "You can have only one parameter of type " + CanonicalNameConstants.BOOLEAN);
+					valid.invalidate();
+				}
+				fromUserParameterFound = true;
+				continue;
+			}
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
+			valid.invalidate();
+		}
+	}
+
 }

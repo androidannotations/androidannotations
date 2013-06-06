@@ -10,14 +10,10 @@ import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
-
 import java.util.HashMap;
 
 import static com.sun.codemodel.JExpr.*;
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.*;
 
 public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
@@ -30,6 +26,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	protected JMethod findNativeFragmentByTag;
 	protected JMethod findSupportFragmentByTag;
 	private HashMap<String, TextWatcherHolder> textWatcherHolders = new HashMap<String, TextWatcherHolder>();
+	private HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListenerHolders = new HashMap<String, OnSeekBarChangeListenerHolder>();
 
 	public EComponentWithViewSupportHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -170,5 +167,27 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 							.invoke(viewVariable, "addTextChangedListener").arg(_new(onTextChangeListenerClass));
 
 		return new TextWatcherHolder(this, viewVariable, onTextChangeListenerClass);
+	}
+
+	public OnSeekBarChangeListenerHolder getOnSeekBarChangeListenerHolder(JFieldRef idRef) {
+		String idRefString = codeModelHelper.getIdStringFromIdFieldRef(idRef);
+		OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = onSeekBarChangeListenerHolders.get(idRefString);
+		if (onSeekBarChangeListenerHolder == null) {
+			onSeekBarChangeListenerHolder = createOnSeekBarChangeListenerHolder(idRef);
+			onSeekBarChangeListenerHolders.put(idRefString, onSeekBarChangeListenerHolder);
+		}
+		return onSeekBarChangeListenerHolder;
+	}
+
+	private OnSeekBarChangeListenerHolder createOnSeekBarChangeListenerHolder(JFieldRef idRef) {
+		JDefinedClass onSeekbarChangeListenerClass = codeModel().anonymousClass(classes().ON_SEEKBAR_CHANGE_LISTENER);
+		JClass viewClass = classes().SEEKBAR;
+
+		JBlock onViewChangedBody = getOnViewChangedBody().block();
+		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));
+		onViewChangedBody._if(viewVariable.ne(JExpr._null()))._then() //
+				.invoke(viewVariable, "setOnSeekBarChangeListener").arg(_new(onSeekbarChangeListenerClass));
+
+		return new OnSeekBarChangeListenerHolder(this, onSeekbarChangeListenerClass);
 	}
 }
