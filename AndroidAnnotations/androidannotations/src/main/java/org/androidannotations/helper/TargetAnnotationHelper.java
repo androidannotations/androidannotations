@@ -15,13 +15,12 @@
  */
 package org.androidannotations.helper;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
+import java.lang.annotation.Annotation;
 
-public class TargetAnnotationHelper extends AnnotationHelper implements HasTarget {
+public class TargetAnnotationHelper extends AnnotationHelper {
 
 	private String annotationName;
 
@@ -44,7 +43,6 @@ public class TargetAnnotationHelper extends AnnotationHelper implements HasTarge
 		return extractAnnotationClassParameter(element, annotationName);
 	}
 
-	@Override
 	public String getTarget() {
 		return annotationName;
 	}

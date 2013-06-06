@@ -7,12 +7,11 @@ import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

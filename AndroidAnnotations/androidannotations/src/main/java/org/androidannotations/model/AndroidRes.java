@@ -18,9 +18,7 @@ package org.androidannotations.model;
 import org.androidannotations.annotations.res.*;
 import org.androidannotations.rclass.IRClass.Res;
 
-import javax.lang.model.element.Element;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,15 +73,4 @@ public enum AndroidRes {
 	public List<String> getAllowedTypes() {
 		return allowedTypes;
 	}
-
-	public int idFromElement(Element element) {
-		Annotation annotation = element.getAnnotation(annotationClass);
-		Method valueMethod = annotationClass.getMethods()[0];
-		try {
-			return (Integer) valueMethod.invoke(annotation);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 }

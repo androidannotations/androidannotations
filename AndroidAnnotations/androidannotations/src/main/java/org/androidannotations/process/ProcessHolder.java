@@ -21,7 +21,6 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.processing.OriginatingElements;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

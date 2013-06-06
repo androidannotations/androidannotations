@@ -17,7 +17,6 @@ package org.androidannotations.model;
 
 import com.sun.codemodel.JFieldRef;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.processing.EBeanHolder;
 
 import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
@@ -74,11 +73,7 @@ public class AndroidSystemServices {
 	}
 
 	public JFieldRef getServiceConstant(TypeMirror serviceType, EComponentHolder holder) {
-		return extractIdStaticRef(holder, registeredServices.get(serviceType.toString()));
-	}
-
-	public JFieldRef getServiceConstant(TypeMirror serviceType, EBeanHolder holder) {
-		return extractIdStaticRef(holder, registeredServices.get(serviceType.toString()));
+		return extractIdStaticRef(holder, getServiceConstant(serviceType));
 	}
 
 	private JFieldRef extractIdStaticRef(EComponentHolder holder, String staticFieldQualifiedName) {
@@ -92,17 +87,4 @@ public class AndroidSystemServices {
 			return null;
 		}
 	}
-
-	private JFieldRef extractIdStaticRef(EBeanHolder holder, String staticFieldQualifiedName) {
-		if (staticFieldQualifiedName != null) {
-			int fieldSuffix = staticFieldQualifiedName.lastIndexOf('.');
-			String fieldName = staticFieldQualifiedName.substring(fieldSuffix + 1);
-			String className = staticFieldQualifiedName.substring(0, fieldSuffix);
-
-			return holder.refClass(className).staticRef(fieldName);
-		} else {
-			return null;
-		}
-	}
-
 }

@@ -21,8 +21,7 @@ import org.androidannotations.annotations.sharedpreferences.*;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.processing.InstanceStateProcessor;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
@@ -54,12 +53,12 @@ public class ValidatorHelper {
 
 	public final ValidatorParameterHelper param;
 
-	private final ThirdPartyLibHelper thirdPartyLibHelper;
+	private final ActionBarSherlockHelper thirdPartyLibHelper;
 
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
 		annotationHelper = targetAnnotationHelper;
 		param = new ValidatorParameterHelper(annotationHelper);
-		thirdPartyLibHelper = new ThirdPartyLibHelper(annotationHelper);
+		thirdPartyLibHelper = new ActionBarSherlockHelper(annotationHelper);
 	}
 
 	public void isNotFinal(Element element, IsValid valid) {
@@ -101,13 +100,6 @@ public class ValidatorHelper {
 		if (element.getReturnType().getKind().isPrimitive()) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot return primitive");
-		}
-	}
-
-	public void doesNotReturnArray(ExecutableElement element, IsValid valid) {
-		if (element.getReturnType().getKind() == TypeKind.ARRAY) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s cannot return array");
 		}
 	}
 
@@ -221,23 +213,6 @@ public class ValidatorHelper {
 		elementHasAnnotation(ViewById.class, element, validatedElements, valid, error);
 	}
 
-	public void elementHasRestAnnotationOrEnclosingElementHasRestAnnotationAndElementHasMethodRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
-		String error = "can only be used in an interface annotated with";
-		elementHasAnnotation(Rest.class, element, validatedElements, valid, error);
-
-		if (!valid.isValid()) {
-			enclosingElementHasRestAnnotation(element, validatedElements, valid);
-			elementHasMethodRestAnnotation(element, validatedElements, valid);
-		}
-
-	}
-
-	public void elementHasMethodRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
-		String error = "can only be used on a method annotated with Rest methods.";
-		elementHasAnnotationContainsIn(REST_ANNOTATION_CLASSES, element, validatedElements, valid, error);
-
-	}
-
 	public void enclosingElementHasRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		String error = "can only be used in an interface annotated with";
 		enclosingElementHasAnnotation(Rest.class, element, validatedElements, valid, error);
@@ -260,21 +235,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void elementHasAnnotationContainsIn(List<Class<? extends Annotation>> annotations, Element element, AnnotationElements validatedElements, IsValid valid, String error) {
-		boolean isAnnoted = false;
-		for (Class<? extends Annotation> annotation : annotations) {
-			if (elementHasAnnotation(annotation, element, validatedElements)) {
-				isAnnoted = true;
-				break;
-			}
-		}
-
-		if (!isAnnoted) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s " + error);
-		}
-	}
-
 	public boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements) {
 		Set<? extends Element> layoutAnnotatedElements = validatedElements.getRootAnnotatedElements(annotation.getName());
 		return layoutAnnotatedElements.contains(element);
@@ -287,13 +247,6 @@ public class ValidatorHelper {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "%s annotated methods can only declare throwing a RestClientException");
 			}
-		}
-	}
-
-	public void elementHasGetOrPostAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
-
-		if (!elementHasAnnotation(Get.class, element) && !elementHasAnnotation(Post.class, element)) {
-			annotationHelper.printAnnotationError(element, "%s can only be used in an interface annotated with Get or Post annotation");
 		}
 	}
 
@@ -333,27 +286,6 @@ public class ValidatorHelper {
 			}
 		}
 		return false;
-	}
-
-	private boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element) {
-		return element.getAnnotation(annotation) != null;
-	}
-
-	public void elementHasRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
-		String error = "can only be used in an interface annotated with";
-		elementHasAnnotation(Rest.class, element, validatedElements, valid, error);
-	}
-
-	public void returnTypeNotGenericUnlessResponseEntity(ExecutableElement element, IsValid valid) {
-		TypeMirror returnType = element.getReturnType();
-		TypeKind returnKind = returnType.getKind();
-		if (returnKind == TypeKind.DECLARED) {
-			DeclaredType declaredReturnType = (DeclaredType) returnType;
-			if (!declaredReturnType.toString().startsWith("org.springframework.http.ResponseEntity<") && declaredReturnType.getTypeArguments().size() > 0) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s annotated methods cannot return parameterized types, except for ResponseEntity");
-			}
-		}
 	}
 
 	public void hasHttpHeadersReturnType(ExecutableElement element, IsValid valid) {
@@ -670,13 +602,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void isDeclaredType(Element element, IsValid valid, TypeMirror uiFieldTypeMirror) {
-		if (!(uiFieldTypeMirror instanceof DeclaredType)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on a field which is a declared type");
-		}
-	}
-
 	public void isPrefMethod(Element element, IsValid valid) {
 		if (!element.getKind().equals(ElementKind.METHOD)) {
 			annotationHelper.printError(element, "Only methods are allowed in an " + annotationHelper.annotationName() + " annotated interface");
@@ -959,7 +884,7 @@ public class ValidatorHelper {
 	}
 
 	private boolean isKnowInstanceStateType(String type) {
-		return InstanceStateProcessor.methodSuffixNameByTypeName.containsKey(type);
+		return BundleHelper.methodSuffixNameByTypeName.containsKey(type);
 	}
 
 	public void componentRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {

@@ -17,7 +17,6 @@ package org.androidannotations.helper;
 
 import com.sun.codemodel.JFieldRef;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 import org.androidannotations.rclass.IRInnerClass;
@@ -53,18 +52,9 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
         return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
     }
 
-
-    public List<JFieldRef> extractAnnotationFieldRefs(EBeanHolder holder, Element element, Res res, boolean useElementName) {
-		return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
-	}
-
     public JFieldRef extractOneAnnotationFieldRef(GeneratedClassHolder holder, Element element, Res res, boolean useElementName) {
         return extractOneAnnotationFieldRef(holder, element, getTarget(), res, useElementName);
     }
-
-	public JFieldRef extractOneAnnotationFieldRef(EBeanHolder holder, Element element, Res res, boolean useElementName) {
-		return extractOneAnnotationFieldRef(holder, element, getTarget(), res, useElementName);
-	}
 
     public JFieldRef extractOneAnnotationFieldRef(GeneratedClassHolder holder, Element element, String annotationName, Res res, boolean useElementName) {
         List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, annotationName, rClass.get(res), useElementName);
@@ -75,16 +65,4 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
             return null;
         }
     }
-
-	public JFieldRef extractOneAnnotationFieldRef(EBeanHolder holder, Element element, String annotationName, Res res, boolean useElementName) {
-		List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, annotationName, rClass.get(res), useElementName);
-
-		if (jFieldRefs.size() == 1) {
-			return jFieldRefs.get(0);
-		} else {
-			return null;
-		}
-
-	}
-
 }

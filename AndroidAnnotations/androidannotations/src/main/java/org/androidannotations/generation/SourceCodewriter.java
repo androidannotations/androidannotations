@@ -15,8 +15,9 @@
  */
 package org.androidannotations.generation;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import com.sun.codemodel.CodeWriter;
+import com.sun.codemodel.JPackage;
+import org.androidannotations.process.OriginatingElements;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
@@ -24,11 +25,8 @@ import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
-
-import org.androidannotations.processing.OriginatingElements;
-
-import com.sun.codemodel.CodeWriter;
-import com.sun.codemodel.JPackage;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class SourceCodewriter extends CodeWriter {
 

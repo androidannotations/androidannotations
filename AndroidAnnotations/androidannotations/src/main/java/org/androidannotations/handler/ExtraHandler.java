@@ -9,7 +9,7 @@ import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.HasExtras;
 import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

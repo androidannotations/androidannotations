@@ -15,23 +15,20 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.androidannotations.helper.CanonicalNameConstants.*;
 
 public class BundleHelper {
-	private static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
+	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
 
 	static {
 

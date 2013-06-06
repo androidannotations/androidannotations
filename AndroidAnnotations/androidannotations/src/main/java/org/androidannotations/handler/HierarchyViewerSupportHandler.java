@@ -5,7 +5,7 @@ import org.androidannotations.annotations.HierarchyViewerSupport;
 import org.androidannotations.api.ViewServer;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

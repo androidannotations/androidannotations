@@ -4,7 +4,7 @@ import com.sun.codemodel.JFieldRef;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

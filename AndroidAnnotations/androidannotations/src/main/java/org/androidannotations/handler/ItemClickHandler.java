@@ -3,7 +3,7 @@ package org.androidannotations.handler;
 import com.sun.codemodel.*;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

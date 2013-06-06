@@ -15,14 +15,10 @@
  */
 package org.androidannotations.helper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
@@ -32,11 +28,14 @@ import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class AndroidManifestFinder {
 
@@ -213,7 +212,7 @@ public class AndroidManifestFinder {
 
 			Node debuggableAttribute = applicationNode.getAttributes().getNamedItem("android:debuggable");
 			if (debuggableAttribute != null) {
-				applicationDebuggableMode = debuggableAttribute.getNodeValue().equalsIgnoreCase("true") ? true : false;
+				applicationDebuggableMode = debuggableAttribute.getNodeValue().equalsIgnoreCase("true");
 			}
 		}
 
@@ -236,7 +235,7 @@ public class AndroidManifestFinder {
 		componentQualifiedNames.addAll(providerQualifiedNames);
 
 		NodeList usesPermissionNodes = documentElement.getElementsByTagName("uses-permission");
-		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(applicationPackage, usesPermissionNodes);
+		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(usesPermissionNodes);
 
 		List<String> permissionQualifiedNames = new ArrayList<String>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
@@ -305,7 +304,7 @@ public class AndroidManifestFinder {
 		}
 	}
 
-	private List<String> extractUsesPermissionNames(String applicationPackage, NodeList usesPermissionNodes) {
+	private List<String> extractUsesPermissionNames(NodeList usesPermissionNodes) {
 		List<String> usesPermissionQualifiedNames = new ArrayList<String>();
 
 		for (int i = 0; i < usesPermissionNodes.getLength(); i++) {

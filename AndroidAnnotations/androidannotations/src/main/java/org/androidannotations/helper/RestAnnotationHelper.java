@@ -18,7 +18,7 @@ package org.androidannotations.helper;
 import com.sun.codemodel.*;
 import org.androidannotations.annotations.rest.Accept;
 import org.androidannotations.holder.RestHolder;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;

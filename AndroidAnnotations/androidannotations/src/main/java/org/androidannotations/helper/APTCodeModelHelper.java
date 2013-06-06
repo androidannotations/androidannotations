@@ -19,10 +19,7 @@ import com.sun.codemodel.*;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.processing.EBeanHolder;
-import org.androidannotations.processing.EBeansHolder.Classes;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
@@ -33,54 +30,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sun.codemodel.JExpr.*;
-import static com.sun.codemodel.JMod.*;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
-
 public class APTCodeModelHelper {
 
 	public JClass typeMirrorToJClass(TypeMirror type, GeneratedClassHolder holder) {
-
-		if (type instanceof DeclaredType) {
-			DeclaredType declaredType = (DeclaredType) type;
-
-			String declaredTypeName = declaredType.asElement().toString();
-
-			JClass declaredClass = holder.refClass(declaredTypeName);
-
-			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
-
-			List<JClass> typeArgumentJClasses = new ArrayList<JClass>();
-			for (TypeMirror typeArgument : typeArguments) {
-				typeArgumentJClasses.add(typeMirrorToJClass(typeArgument, holder));
-			}
-			if (typeArgumentJClasses.size() > 0) {
-				declaredClass = declaredClass.narrow(typeArgumentJClasses);
-			}
-
-			return declaredClass;
-		} else if (type instanceof WildcardType) {
-			// TODO : At his time (01/2013), it is not possible to handle the
-			// super bound because code model does not offer a way to model
-			// statement like " ? super X"
-			// (see http://java.net/jira/browse/CODEMODEL-11)
-			WildcardType wildcardType = (WildcardType) type;
-
-			TypeMirror extendsBound = wildcardType.getExtendsBound();
-
-			return typeMirrorToJClass(extendsBound, holder).wildcard();
-		} else if (type instanceof ArrayType) {
-			ArrayType arrayType = (ArrayType) type;
-
-			JClass refClass = typeMirrorToJClass(arrayType.getComponentType(), holder);
-
-			return refClass.array();
-		} else {
-			return holder.refClass(type.toString());
-		}
-	}
-
-	public JClass typeMirrorToJClass(TypeMirror type, EBeanHolder holder) {
 
 		if (type instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) type;
@@ -156,47 +108,7 @@ public class APTCodeModelHelper {
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterName = parameter.getSimpleName().toString();
 			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
-			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
-		}
-
-		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
-			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
-			method._throws(thrownType);
-		}
-
-		callSuperMethod(method, holder, method.body());
-
-		return method;
-	}
-
-	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EBeanHolder holder) {
-
-		String methodName = executableElement.getSimpleName().toString();
-
-		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder);
-
-		List<Parameter> parameters = new ArrayList<Parameter>();
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
-			parameters.add(new Parameter(parameterName, parameterClass));
-		}
-
-		JMethod existingMethod = findAlreadyGeneratedMethod(holder.generatedClass, methodName, parameters);
-
-		if (existingMethod != null) {
-			return existingMethod;
-		}
-
-		JMethod method = holder.generatedClass.method(JMod.PUBLIC, returnType, methodName);
-		method.annotate(Override.class);
-
-		List<JVar> methodParameters = new ArrayList<JVar>();
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
-			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
-			methodParameters.add(param);
+			method.param(JMod.FINAL, parameterClass, parameterName);
 		}
 
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
@@ -228,22 +140,6 @@ public class APTCodeModelHelper {
 
 	public void callSuperMethod(JMethod superMethod, EComponentHolder holder, JBlock callBlock) {
 		JExpression activitySuper = holder.getGeneratedClass().staticRef("super");
-		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
-
-		for (JVar param : superMethod.params()) {
-			superCall.arg(param);
-		}
-
-		JType returnType = superMethod.type();
-		if (returnType.fullName().equals("void")) {
-			callBlock.add(superCall);
-		} else {
-			callBlock._return(superCall);
-		}
-	}
-
-	public void callSuperMethod(JMethod superMethod, EBeanHolder holder, JBlock callBlock) {
-		JExpression activitySuper = holder.generatedClass.staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
 
 		for (JVar param : superMethod.params()) {
@@ -331,161 +227,5 @@ public class APTCodeModelHelper {
 
 		runCatch.body().add(errorInvoke);
 		return anonymousRunnableClass;
-	}
-
-	public JDefinedClass createDelegatingAnonymousRunnableClass(EBeanHolder holder, JMethod delegatedMethod) {
-
-		JCodeModel codeModel = holder.codeModel();
-		Classes classes = holder.classes();
-
-		JDefinedClass anonymousRunnableClass;
-		JBlock previousMethodBody = removeBody(delegatedMethod);
-
-		anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
-
-		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
-		runMethod.annotate(Override.class);
-
-		JBlock runMethodBody = runMethod.body();
-		JTryBlock runTry = runMethodBody._try();
-
-		runTry.body().add(previousMethodBody);
-
-		JCatchBlock runCatch = runTry._catch(classes.RUNTIME_EXCEPTION);
-		JVar exceptionParam = runCatch.param("e");
-
-		JInvocation errorInvoke = classes.LOG.staticInvoke("e");
-
-		errorInvoke.arg(holder.generatedClass.name());
-		errorInvoke.arg("A runtime exception was thrown while executing code in a runnable");
-		errorInvoke.arg(exceptionParam);
-
-		runCatch.body().add(errorInvoke);
-		return anonymousRunnableClass;
-	}
-
-	public JVar castContextToActivity(EBeanHolder holder, JBlock ifActivityBody) {
-		JClass activityClass = holder.classes().ACTIVITY;
-		return ifActivityBody.decl(activityClass, "activity", cast(activityClass, holder.contextRef));
-	}
-
-	public JBlock ifContextInstanceOfActivity(EBeanHolder holder, JBlock methodBody) {
-		return methodBody._if(holder.contextRef._instanceof(holder.classes().ACTIVITY))._then();
-	}
-
-	public void copyConstructorsAndAddStaticEViewBuilders(Element element, JCodeModel codeModel, JClass eBeanClass, EBeanHolder holder, JMethod setContentViewMethod, JMethod init) {
-		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
-		for (Element e : element.getEnclosedElements()) {
-			if (e.getKind() == CONSTRUCTOR) {
-				constructors.add((ExecutableElement) e);
-			}
-		}
-
-		for (ExecutableElement userConstructor : constructors) {
-			JMethod copyConstructor = holder.generatedClass.constructor(PUBLIC);
-			JMethod staticHelper = holder.generatedClass.method(PUBLIC | STATIC, eBeanClass, "build");
-			JBlock body = copyConstructor.body();
-			JInvocation superCall = body.invoke("super");
-			JInvocation newInvocation = JExpr._new(holder.generatedClass);
-			for (VariableElement param : userConstructor.getParameters()) {
-				String paramName = param.getSimpleName().toString();
-				String paramType = param.asType().toString();
-				copyConstructor.param(holder.refClass(paramType), paramName);
-				staticHelper.param(holder.refClass(paramType), paramName);
-				superCall.arg(JExpr.ref(paramName));
-				newInvocation.arg(JExpr.ref(paramName));
-			}
-
-			JVar newCall = staticHelper.body().decl(holder.generatedClass, "instance", newInvocation);
-			staticHelper.body().invoke(newCall, "onFinishInflate");
-			staticHelper.body()._return(newCall);
-			body.invoke(init);
-		}
-	}
-
-	public JVar findParameterByName(JMethod method, String name) {
-		for (JVar parameter : method.params()) {
-			if (parameter.name().equals(name)) {
-				return parameter;
-			}
-		}
-		return null;
-	}
-
-	public void addActivityIntentBuilder(JCodeModel codeModel, EBeanHolder holder) throws Exception {
-		addIntentBuilder(codeModel, holder, true);
-	}
-
-	public void addServiceIntentBuilder(JCodeModel codeModel, EBeanHolder holder) throws Exception {
-		addIntentBuilder(codeModel, holder, false);
-	}
-
-	private void addIntentBuilder(JCodeModel codeModel, EBeanHolder holder, boolean isActivity) throws JClassAlreadyExistsException {
-		JClass contextClass = holder.classes().CONTEXT;
-		JClass intentClass = holder.classes().INTENT;
-
-		{
-			holder.intentBuilderClass = holder.generatedClass._class(PUBLIC | STATIC, "IntentBuilder_");
-
-			JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
-
-			holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
-			{
-				// Constructor
-				JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
-				JVar constructorContextParam = constructor.param(contextClass, "context");
-				JBlock constructorBody = constructor.body();
-				constructorBody.assign(contextField, constructorContextParam);
-				constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.generatedClass.dotclass()));
-			}
-
-			{
-				// get()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
-				method.body()._return(holder.intentField);
-			}
-
-			{
-				// flags()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
-				JVar flagsParam = method.param(codeModel.INT, "flags");
-				JBlock body = method.body();
-				body.invoke(holder.intentField, "setFlags").arg(flagsParam);
-				body._return(_this());
-			}
-
-			if (isActivity) {
-				// start()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
-				method.body().invoke(contextField, "startActivity").arg(holder.intentField);
-
-				// startForResult()
-				method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
-				JVar requestCode = method.param(codeModel.INT, "requestCode");
-
-				JBlock body = method.body();
-				JClass activityClass = holder.classes().ACTIVITY;
-				JConditional condition = body._if(contextField._instanceof(activityClass));
-				condition._then() //
-						.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.intentField).arg(requestCode);
-				condition._else() //
-						.invoke(contextField, "startActivity").arg(holder.intentField);
-			} else {
-				// start()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.classes().COMPONENT_NAME, "start");
-				method.body()._return(contextField.invoke("startService").arg(holder.intentField));
-
-				// stop()
-				method = holder.intentBuilderClass.method(PUBLIC, codeModel.BOOLEAN, "stop");
-				method.body()._return(contextField.invoke("stopService").arg(holder.intentField));
-			}
-
-			{
-				// intent()
-				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
-				JVar contextParam = method.param(contextClass, "context");
-				method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
-			}
-		}
 	}
 }

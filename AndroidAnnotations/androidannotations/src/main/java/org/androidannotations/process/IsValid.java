@@ -13,25 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.rclass;
+package org.androidannotations.process;
 
-import com.sun.codemodel.JFieldRef;
-import org.androidannotations.holder.GeneratedClassHolder;
+public class IsValid {
 
-public interface IRInnerClass {
+	boolean valid = true;
 
-	boolean containsIdValue(Integer idValue);
+	public void invalidate() {
+		valid = false;
+	}
 
-	boolean containsField(String name);
-
-	String getIdQualifiedName(Integer idValue);
-
-	String getIdQualifiedName(String name);
-
-	JFieldRef getIdStaticRef(Integer idValue, GeneratedClassHolder holder);
-
-	JFieldRef getIdStaticRef(String name, GeneratedClassHolder holder);
-
-	final IRInnerClass EMPTY_R_INNER_CLASS = new RInnerClass(null);
-
+	public boolean isValid() {
+		return valid;
+	}
 }

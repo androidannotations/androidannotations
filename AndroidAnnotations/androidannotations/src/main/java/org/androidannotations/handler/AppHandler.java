@@ -7,7 +7,7 @@ import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.EApplicationHolder;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

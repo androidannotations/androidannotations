@@ -31,14 +31,12 @@ public class ViewNotifierHelper {
 			notifier = holder.getGeneratedClass().field(PRIVATE | FINAL, notifierClass, "onViewChangedNotifier_", _new(notifierClass));
 			holder.getGeneratedClass()._implements(HasViews.class);
 		}
-		JVar previousNotifier = block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(notifier));
-		return previousNotifier;
+		return block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(notifier));
 	}
 
 	public JVar replacePreviousNotifierWithNull(JBlock block) {
 		JClass notifierClass = holder.refClass(OnViewChangedNotifier.class);
-		JVar previousNotifier = block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(_null()));
-		return previousNotifier;
+		return block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(_null()));
 	}
 
 	public void resetPreviousNotifier(JBlock block, JVar previousNotifier) {

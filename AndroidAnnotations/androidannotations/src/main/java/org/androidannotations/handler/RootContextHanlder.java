@@ -7,7 +7,7 @@ import org.androidannotations.annotations.RootContext;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

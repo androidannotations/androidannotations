@@ -1,9 +1,9 @@
 package org.androidannotations.holder;
 
 import com.sun.codemodel.*;
+import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.HoloEverywhereHelper;
-import org.androidannotations.helper.ThirdPartyLibHelper;
 import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.TypeElement;
@@ -142,7 +142,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private boolean usesActionBarSherlock() {
-		return new ThirdPartyLibHelper(new AnnotationHelper(processingEnvironment())).usesActionBarSherlock(this);
+		return new ActionBarSherlockHelper(new AnnotationHelper(processingEnvironment())).usesActionBarSherlock(this);
 	}
 
 	@Override

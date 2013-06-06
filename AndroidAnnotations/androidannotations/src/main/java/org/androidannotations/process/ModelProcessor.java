@@ -22,7 +22,6 @@ import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
-import org.androidannotations.processing.OriginatingElements;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

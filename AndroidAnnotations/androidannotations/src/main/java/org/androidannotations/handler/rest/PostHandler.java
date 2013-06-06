@@ -1,7 +1,7 @@
 package org.androidannotations.handler.rest;
 
 import com.sun.codemodel.*;
-import org.androidannotations.annotations.rest.Get;
+import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -12,10 +12,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import java.util.TreeMap;
 
-public class GetHandler extends RestMethodHandler {
+public class PostHandler extends RestMethodHandler {
 
-	public GetHandler(ProcessingEnvironment processingEnvironment) {
-		super(Get.class, processingEnvironment);
+	public PostHandler(ProcessingEnvironment processingEnvironment) {
+		super(Post.class, processingEnvironment);
 	}
 
 	@Override
@@ -28,29 +28,25 @@ public class GetHandler extends RestMethodHandler {
 
 		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, valid);
 
-		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter((ExecutableElement) element, valid);
 
 		return valid.isValid();
 	}
 
 	@Override
 	protected String getUrlSuffix(Element element) {
-		Get annotation = element.getAnnotation(Get.class);
+		Post annotation = element.getAnnotation(Post.class);
 		return annotation.value();
 	}
 
 	@Override
 	protected JExpression getRequestEntity(Element element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
-		ExecutableElement executableElement = (ExecutableElement) element;
-		String mediaType = restAnnotationHelper.acceptedHeaders(executableElement);
+		String mediaType = restAnnotationHelper.acceptedHeaders((ExecutableElement) element);
+		JVar httpRestHeaders = null;
 		if (mediaType != null) {
-			JClass httpEntity = holder.classes().HTTP_ENTITY;
-			JInvocation newHttpEntityVarCall = JExpr._new(httpEntity.narrow(Object.class));
-			JVar httpHeaders = restAnnotationHelper.declareAcceptedHttpHeaders(holder, methodBody, mediaType);
-			newHttpEntityVarCall.arg(httpHeaders);
-			return methodBody.decl(httpEntity.narrow(Object.class), "requestEntity", newHttpEntityVarCall);
+			httpRestHeaders = restAnnotationHelper.declareAcceptedHttpHeaders(holder, methodBody, mediaType);
 		}
-		return JExpr._null();
+		return restAnnotationHelper.declareHttpEntity(holder, methodBody, methodParams, httpRestHeaders);
 	}
 
 	protected JExpression getResponseClass(Element element, RestHolder holder) {

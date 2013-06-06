@@ -222,7 +222,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private boolean usesActionBarSherlock() {
-		return new ThirdPartyLibHelper(new AnnotationHelper(processingEnvironment())).usesActionBarSherlock(this);
+		return new ActionBarSherlockHelper(new AnnotationHelper(processingEnvironment())).usesActionBarSherlock(this);
 	}
 
 	@Override

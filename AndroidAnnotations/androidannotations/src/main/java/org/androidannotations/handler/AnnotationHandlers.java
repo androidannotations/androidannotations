@@ -1,7 +1,6 @@
 package org.androidannotations.handler;
 
-import org.androidannotations.handler.rest.GetHandler;
-import org.androidannotations.handler.rest.RestHandler;
+import org.androidannotations.handler.rest.*;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidRes;
@@ -89,10 +88,7 @@ public class AnnotationHandlers {
 		add(new HierarchyViewerSupportHandler(processingEnvironment));
 		add(new WindowFeatureHandler(processingEnvironment));
 
-		/*
-		 * Any view injection or listener binding should occur before
-		 * AfterViewsProcessor
-		 */
+		/* After injection methods must be after injections */
 		add(new AfterInjectHandler(processingEnvironment));
 		add(new AfterViewsHandler(processingEnvironment));
 
