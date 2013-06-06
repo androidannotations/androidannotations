@@ -17,7 +17,6 @@ public class RoboGuiceHolder {
 	protected JBlock onStartBeforeSuperBlock;
 	protected JBlock onStartAfterSuperBlock;
 	protected JBlock onResumeBeforeSuperBlock;
-	protected JBlock onResumeAfterSuperBlock;
 	protected JBlock onPauseAfterSuperBlock;
 	protected JBlock onNewIntentAfterSuperBlock;
 	protected JBlock onStopBeforeSuperBlock;
@@ -92,10 +91,7 @@ public class RoboGuiceHolder {
 	}
 
 	public JBlock getOnResumeAfterSuperBlock() {
-		if (onResumeAfterSuperBlock == null) {
-			holder.setOnResume();
-		}
-		return onResumeAfterSuperBlock;
+		return holder.getOnResumeAfterSuperBlock();
 	}
 
 	public JBlock getOnPauseAfterSuperBlock() {

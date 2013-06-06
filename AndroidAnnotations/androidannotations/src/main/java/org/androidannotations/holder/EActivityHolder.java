@@ -45,6 +45,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JMethod getLastNonConfigurationInstance;
 	private JBlock onRetainNonConfigurationInstanceBindBlock;
 	private JVar onRetainNonConfigurationInstance;
+	private JBlock onDestroyAfterSuperBlock;
+	private JBlock onResumeAfterSuperBlock;
 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -97,27 +99,27 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		roboGuiceHolder.onStartBeforeSuperBlock = body.block();
+		getRoboGuiceHolder().onStartBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
-		roboGuiceHolder.onStartAfterSuperBlock = body.block();
+		getRoboGuiceHolder().onStartAfterSuperBlock = body.block();
 	}
 
 	protected void setOnRestart() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onRestart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		roboGuiceHolder.onRestartBeforeSuperBlock = body.block();
+		getRoboGuiceHolder().onRestartBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
-		roboGuiceHolder.onRestartAfterSuperBlock = body.block();
+		getRoboGuiceHolder().onRestartAfterSuperBlock = body.block();
 	}
 
 	protected void setOnResume() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onResume");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		roboGuiceHolder.onResumeBeforeSuperBlock = body.block();
+		getRoboGuiceHolder().onResumeBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
-		roboGuiceHolder.onResumeAfterSuperBlock = body.block();
+		onResumeAfterSuperBlock = body.block();
 	}
 
 	protected void setOnPause() {
@@ -125,7 +127,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(_super(), method);
-		roboGuiceHolder.onPauseAfterSuperBlock = body.block();
+		getRoboGuiceHolder().onPauseAfterSuperBlock = body.block();
 	}
 
 	protected void setOnNewIntent() {
@@ -134,7 +136,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JVar intent = method.param(classes().INTENT, "intent");
 		JBlock body = method.body();
 		body.invoke(_super(), method).arg(intent);
-		roboGuiceHolder.onNewIntentAfterSuperBlock = body.block();
+		getRoboGuiceHolder().onNewIntentAfterSuperBlock = body.block();
 	}
 
 	private void setSetIntent() {
@@ -149,7 +151,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStop");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		roboGuiceHolder.onStopBeforeSuperBlock = body.block();
+		getRoboGuiceHolder().onStopBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
 	}
 
@@ -157,8 +159,9 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onDestroy");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		roboGuiceHolder.onDestroyBeforeSuperBlock = body.block();
+		getRoboGuiceHolder().onDestroyBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
+		onDestroyAfterSuperBlock = body.block();
 	}
 
 	protected void setOnConfigurationChanged() {
@@ -166,11 +169,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JClass configurationClass = classes().CONFIGURATION;
 		JVar newConfig = method.param(configurationClass, "newConfig");
-		roboGuiceHolder.newConfig = newConfig;
+		getRoboGuiceHolder().newConfig = newConfig;
 		JBlock body = method.body();
-		roboGuiceHolder.currentConfig = body.decl(configurationClass, "currentConfig", JExpr.invoke("getResources").invoke("getConfiguration"));
+		getRoboGuiceHolder().currentConfig = body.decl(configurationClass, "currentConfig", JExpr.invoke("getResources").invoke("getConfiguration"));
 		body.invoke(_super(), method).arg(newConfig);
-		roboGuiceHolder.onConfigurationChangedAfterSuperBlock = body.block();
+		getRoboGuiceHolder().onConfigurationChangedAfterSuperBlock = body.block();
 	}
 
 	protected void setOnContentChanged() {
@@ -178,7 +181,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(_super(), method);
-		roboGuiceHolder.onContentChangedAfterSuperBlock = body.block();
+		getRoboGuiceHolder().onContentChangedAfterSuperBlock = body.block();
 	}
 
 	private void setOnCreateOptionsMenu() {
@@ -400,12 +403,12 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return roboGuiceHolder;
 	}
 
-	protected void  setScopeField() {
-		roboGuiceHolder.scope  = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope_");
+	protected void setScopeField() {
+		getRoboGuiceHolder().scope  = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope_");
 	}
 
 	protected void setEventManagerField() {
-		roboGuiceHolder.eventManager = generatedClass.field(JMod.PRIVATE, classes().EVENT_MANAGER, "eventManager_");
+		getRoboGuiceHolder().eventManager = generatedClass.field(JMod.PRIVATE, classes().EVENT_MANAGER, "eventManager_");
 	}
 
 	public void setGetInjector() {
@@ -413,7 +416,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JExpression castApplication = cast(classes().INJECTOR_PROVIDER, invoke("getApplication"));
 		method.body()._return(castApplication.invoke("getInjector"));
-		roboGuiceHolder.getInjector = method;
+		getRoboGuiceHolder().getInjector = method;
 	}
 
 	@Override
@@ -636,5 +639,19 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	public JVar getOnActivityResultRequestCodeParam() {
 		return onActivityResultHolder.getRequestCodeParam();
+	}
+
+	public JBlock getOnDestroyAfterSuperBlock() {
+		if (onDestroyAfterSuperBlock == null) {
+			setOnDestroy();
+		}
+		return onDestroyAfterSuperBlock;
+	}
+
+	public JBlock getOnResumeAfterSuperBlock() {
+		if (onResumeAfterSuperBlock == null) {
+			setOnResume();
+		}
+		return onResumeAfterSuperBlock;
 	}
 }

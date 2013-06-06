@@ -86,6 +86,7 @@ public class AnnotationHandlers {
         add(new InstanceStateHandler(processingEnvironment));
 		add(new HttpsClientHandler(processingEnvironment));
 		add(new OnActivityResultHandler(processingEnvironment));
+		add(new HierarchyViewerSupportHandler(processingEnvironment));
 
 		/*
 		 * Any view injection or listener binding should occur before
