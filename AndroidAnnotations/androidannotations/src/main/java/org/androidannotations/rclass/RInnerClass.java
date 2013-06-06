@@ -100,8 +100,20 @@ public class RInnerClass implements IRInnerClass {
 	}
 
 	@Override
+	public JFieldRef getIdStaticRef(Integer idValue, GeneratedClassHolder holder) {
+		String layoutFieldQualifiedName = getIdQualifiedName(idValue);
+		return extractIdStaticRef(holder, layoutFieldQualifiedName);
+	}
+
+	@Override
 	public JFieldRef getIdStaticRef(Integer idValue, EBeanHolder holder) {
 		String layoutFieldQualifiedName = getIdQualifiedName(idValue);
+		return extractIdStaticRef(holder, layoutFieldQualifiedName);
+	}
+
+	@Override
+	public JFieldRef getIdStaticRef(String name, GeneratedClassHolder holder) {
+		String layoutFieldQualifiedName = getIdQualifiedName(name);
 		return extractIdStaticRef(holder, layoutFieldQualifiedName);
 	}
 
