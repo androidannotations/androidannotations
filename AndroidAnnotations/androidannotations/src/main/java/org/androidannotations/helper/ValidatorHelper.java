@@ -1224,4 +1224,22 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void hasSeekBarTouchTrackingMethodParameters(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+
+		if (parameters.size() > 1) {
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
+			valid.invalidate();
+			return;
+		}
+
+		if (parameters.size() == 1) {
+			String parameterType = parameters.get(0).asType().toString();
+			if (!parameterType.equals(CanonicalNameConstants.SEEKBAR)) {
+				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
+				valid.invalidate();
+			}
+		}
+
+	}
 }
