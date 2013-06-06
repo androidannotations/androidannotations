@@ -97,7 +97,21 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 			}
 
 		}
+
+		/*
+		 * Handle the android bug :
+		 * getIntent().getExtras().getByteArray() always returns null;
+		 */
+		restoreMethodCall = handleByteArrayExtraBug(element, extraKeyStaticField, restoreMethodCall);
+
 		ifContainsKey.assign(extraField, restoreMethodCall);
+	}
+
+	private JExpression handleByteArrayExtraBug(Element element, JFieldVar extraKeyStaticField, JExpression restoreMethodCall) {
+		if ("byte[]".equals(element.asType().toString())) {
+			restoreMethodCall = invoke("getIntent").invoke("getByteArrayExtra").arg(extraKeyStaticField);
+		}
+		return restoreMethodCall;
 	}
 
 	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName) {
