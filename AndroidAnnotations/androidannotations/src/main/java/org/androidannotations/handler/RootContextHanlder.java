@@ -42,7 +42,7 @@ public class RootContextHanlder extends BaseAnnotationHandler<EBeanHolder> {
 		TypeMirror elementType = element.asType();
 		String typeQualifiedName = elementType.toString();
 
-		JBlock body = holder.getInit().body();
+		JBlock body = holder.getInitBody();
 		JExpression contextRef = holder.getContextRef();
 
 		if (CanonicalNameConstants.CONTEXT.equals(typeQualifiedName)) {

@@ -42,6 +42,10 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
 	protected abstract void setInit();
 
+	public JBlock getInitBody() {
+		return getInit().body();
+	}
+
 	public JVar getResourcesRef() {
 		if (resourcesRef == null) {
 			setResourcesRef();
@@ -50,7 +54,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setResourcesRef()  {
-		resourcesRef = getInit().body().decl(classes().RESOURCES, "resources_", getContextRef().invoke("getResources"));
+		resourcesRef = getInitBody().decl(classes().RESOURCES, "resources_", getContextRef().invoke("getResources"));
 	}
 
 	public JFieldVar getDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
@@ -68,7 +72,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		databaseHelperRefs.put(databaseHelperTypeMirror, databaseHelperRef);
 
 		JExpression dbHelperClass = databaseHelperClass.dotclass();
-		getInit().body().assign(databaseHelperRef, //
+		getInitBody().assign(databaseHelperRef, //
 				classes().OPEN_HELPER_MANAGER.staticInvoke("getHelper").arg(getContextRef()).arg(dbHelperClass));
 
 		return databaseHelperRef;

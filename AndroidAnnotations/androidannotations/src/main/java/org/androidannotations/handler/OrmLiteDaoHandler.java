@@ -49,7 +49,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 		TypeMirror databaseHelperTypeMirror = annotationHelper.extractAnnotationParameter(element, "helper");
 		JFieldVar databaseHelperRef = holder.getDatabaseHelperRef(databaseHelperTypeMirror);
 
-		JBlock initBody = holder.getInit().body();
+		JBlock initBody = holder.getInitBody();
 
 		JTryBlock tryBlock = initBody._try();
 		tryBlock.body().assign(ref(fieldName), databaseHelperRef.invoke("getDao").arg(modelClass));

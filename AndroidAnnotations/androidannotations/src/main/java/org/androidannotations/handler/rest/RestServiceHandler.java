@@ -43,7 +43,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
         String generatedClassName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
-        JBlock methodBody = holder.getInit().body();
+        JBlock methodBody = holder.getInitBody();
 
         JFieldRef field = JExpr.ref(fieldName);
 

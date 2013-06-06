@@ -27,6 +27,6 @@ public class FullscreenHandler extends BaseAnnotationHandler<EActivityHolder> {
     @Override
     public void process(Element element, EActivityHolder holder) {
         JFieldRef fullScreen = holder.classes().WINDOW_MANAGER_LAYOUT_PARAMS.staticRef("FLAG_FULLSCREEN");
-        holder.getInit().body().invoke("getWindow").invoke("setFlags").arg(fullScreen).arg(fullScreen);
+        holder.getInitBody().invoke("getWindow").invoke("setFlags").arg(fullScreen).arg(fullScreen);
     }
 }

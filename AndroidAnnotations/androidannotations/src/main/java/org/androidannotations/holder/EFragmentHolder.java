@@ -121,7 +121,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		onCreateOptionsMenuMethodBody = methodBody.block();
 		methodBody.invoke(_super(), method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar);
 
-		getInit().body().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
+		getInitBody().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
 	}
 
 	private void setOnOptionsItemSelected() {
@@ -249,7 +249,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		injectBundleArgs = injectExtrasBody.decl(classes().BUNDLE, "args_", invoke("getArguments"));
 		injectArgsBlock = injectExtrasBody._if(injectBundleArgs.ne(_null()))._then();
 
-		getInit().body().invoke(injectArgsMethod);
+		getInitBody().invoke(injectArgsMethod);
 	}
 
     @Override

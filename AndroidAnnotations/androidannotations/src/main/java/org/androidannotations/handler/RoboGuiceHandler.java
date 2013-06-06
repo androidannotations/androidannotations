@@ -108,7 +108,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scope, JFieldVar eventManager, JMethod getInjector) {
 		ProcessHolder.Classes classes = holder.classes();
 
-		JBlock body = holder.getInit().body();
+		JBlock body = holder.getInitBody();
 		JVar injector = body.decl(classes.INJECTOR, "injector_", invoke(getInjector));
 		body.assign(scope, invoke(injector, "getInstance").arg(classes.CONTEXT_SCOPE.dotclass()));
 		body.invoke(scope, "enter").arg(_this());

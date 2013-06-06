@@ -55,7 +55,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		onViewChangedBody = onViewChanged.body();
 		onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
 		JClass notifierClass = refClass(OnViewChangedNotifier.class);
-		getInit().body().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
+		getInitBody().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
 	}
 
 	public JInvocation findViewById(JFieldRef idRef) {

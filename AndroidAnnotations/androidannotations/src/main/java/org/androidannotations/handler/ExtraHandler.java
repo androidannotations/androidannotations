@@ -83,7 +83,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		JFieldRef extraField = JExpr.ref(fieldName);
 		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(extras, "containsKey").arg(extraKeyStaticField))._then();
 
-		JExpression restoreMethodCall = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(fieldName);
+		JExpression restoreMethodCall = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(extraKeyStaticField);
 		if (bundleHelper.restoreCallNeedCastStatement()) {
 
 			JClass jclass = codeModelHelper.typeMirrorToJClass(element.asType(), hasExtras);

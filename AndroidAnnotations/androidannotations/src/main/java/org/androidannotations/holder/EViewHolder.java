@@ -28,6 +28,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			+ "are in a View." //
 			;
 
+	protected JBlock initBody;
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
@@ -98,6 +99,18 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, codeModel().VOID, "init_");
 		viewNotifierHelper.wrapInitWithNotifier();
+	}
+
+	@Override
+	public JBlock getInitBody() {
+		if (initBody == null) {
+			setInit();
+		}
+		return initBody;
+	}
+
+	public void setInitBody(JBlock initBody) {
+		this.initBody = initBody;
 	}
 
 	public JMethod getOnFinishInflate() {

@@ -30,7 +30,7 @@ public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder>
 		int[] features = annotation.value();
 
 		for (int feature : features) {
-			holder.getInit().body().invoke("requestWindowFeature").arg(JExpr.lit(feature));
+			holder.getInitBody().invoke("requestWindowFeature").arg(JExpr.lit(feature));
 		}
 	}
 }
