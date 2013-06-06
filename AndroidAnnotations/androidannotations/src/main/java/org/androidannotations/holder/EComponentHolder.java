@@ -18,6 +18,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	protected JMethod init;
 	private JVar resourcesRef;
 	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<TypeMirror, JFieldVar>();
+	private JVar handler;
 
 	public EComponentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
         super(processHolder, annotatedElement);
@@ -71,5 +72,17 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 				classes().OPEN_HELPER_MANAGER.staticInvoke("getHelper").arg(getContextRef()).arg(dbHelperClass));
 
 		return databaseHelperRef;
+	}
+
+	public JVar getHandler() {
+		if (handler == null) {
+			setHandler();
+		}
+		return handler;
+	}
+
+	private void setHandler() {
+		JClass handlerClass = classes().HANDLER;
+		handler = generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
 	}
 }

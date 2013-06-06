@@ -18,6 +18,7 @@ package org.androidannotations.helper;
 import com.sun.codemodel.*;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
@@ -299,6 +300,37 @@ public class APTCodeModelHelper {
 		}
 
 		throw new IllegalStateException("Unable to extract target name from JFieldRef");
+	}
+
+	public JDefinedClass createDelegatingAnonymousRunnableClass(EComponentHolder holder, JMethod delegatedMethod) {
+
+		JCodeModel codeModel = holder.codeModel();
+		ProcessHolder.Classes classes = holder.classes();
+
+		JDefinedClass anonymousRunnableClass;
+		JBlock previousMethodBody = removeBody(delegatedMethod);
+
+		anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
+
+		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
+		runMethod.annotate(Override.class);
+
+		JBlock runMethodBody = runMethod.body();
+		JTryBlock runTry = runMethodBody._try();
+
+		runTry.body().add(previousMethodBody);
+
+		JCatchBlock runCatch = runTry._catch(classes.RUNTIME_EXCEPTION);
+		JVar exceptionParam = runCatch.param("e");
+
+		JInvocation errorInvoke = classes.LOG.staticInvoke("e");
+
+		errorInvoke.arg(holder.getGeneratedClass().name());
+		errorInvoke.arg("A runtime exception was thrown while executing code in a runnable");
+		errorInvoke.arg(exceptionParam);
+
+		runCatch.body().add(errorInvoke);
+		return anonymousRunnableClass;
 	}
 
 	public JDefinedClass createDelegatingAnonymousRunnableClass(EBeanHolder holder, JMethod delegatedMethod) {
