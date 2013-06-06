@@ -4,17 +4,24 @@ import com.sun.codemodel.*;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
 import org.androidannotations.api.view.OnViewChangedNotifier;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+
+import java.util.HashMap;
 
 import static com.sun.codemodel.JExpr.*;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
 public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
+	private APTCodeModelHelper codeModelHelper;
 	protected ViewNotifierHelper viewNotifierHelper;
 	private JBlock onViewChangedBody;
 	private JVar onViewChangedHasViewsParam;
@@ -22,9 +29,11 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	protected JMethod findSupportFragmentById;
 	protected JMethod findNativeFragmentByTag;
 	protected JMethod findSupportFragmentByTag;
+	private HashMap<String, TextWatcherHolder> textWatcherHolders = new HashMap<String, TextWatcherHolder>();
 
 	public EComponentWithViewSupportHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
+		codeModelHelper = new APTCodeModelHelper();
 		viewNotifierHelper = new ViewNotifierHelper(this);
 	}
 
@@ -136,5 +145,30 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		JVar activityVar = body.decl(classes().FRAGMENT_ACTIVITY, "activity_", cast(classes().FRAGMENT_ACTIVITY, getContextRef()));
 
 		body._return(activityVar.invoke("getSupportFragmentManager").invoke("findFragmentByTag").arg(tagParam));
+	}
+
+	public TextWatcherHolder getTextWatcherHolder(JFieldRef idRef, TypeMirror viewParameterType) {
+		String idRefString = codeModelHelper.getIdStringFromIdFieldRef(idRef);
+		TextWatcherHolder textWatcherHolder = textWatcherHolders.get(idRefString);
+		if (textWatcherHolder == null) {
+			textWatcherHolder = createTextWatcherHolder(idRef, viewParameterType);
+			textWatcherHolders.put(idRefString, textWatcherHolder);
+		}
+		return textWatcherHolder;
+	}
+
+	private TextWatcherHolder createTextWatcherHolder(JFieldRef idRef, TypeMirror viewParameterType) {
+		JDefinedClass onTextChangeListenerClass = codeModel().anonymousClass(classes().TEXT_WATCHER);
+		JClass viewClass = classes().TEXT_VIEW;
+		if (viewParameterType != null) {
+			viewClass = refClass(viewParameterType.toString());
+		}
+
+		JBlock onViewChangedBody = getOnViewChangedBody().block();
+		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));
+		onViewChangedBody._if(viewVariable.ne(JExpr._null()))._then() //
+							.invoke(viewVariable, "addTextChangedListener").arg(_new(onTextChangeListenerClass));
+
+		return new TextWatcherHolder(this, viewVariable, onTextChangeListenerClass);
 	}
 }

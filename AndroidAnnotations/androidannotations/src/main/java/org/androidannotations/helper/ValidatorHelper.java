@@ -1089,4 +1089,40 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void hasBeforeTextChangedMethodParameters(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		boolean charSequenceParameterFound = false;
+		boolean textViewParameterFound = false;
+		for (VariableElement parameter : parameters) {
+			String parameterType = parameter.asType().toString();
+			if (parameterType.equals(CanonicalNameConstants.CHAR_SEQUENCE)) {
+				if (charSequenceParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type java.lang.CharSequence");
+					valid.invalidate();
+				}
+				charSequenceParameterFound = true;
+				continue;
+			}
+			if (parameterType.equals(CanonicalNameConstants.TEXT_VIEW)) {
+				if (textViewParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.widget.TextView");
+					valid.invalidate();
+				}
+				textViewParameterFound = true;
+				continue;
+			}
+			if (parameter.asType().getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType)) {
+				String parameterName = parameter.toString();
+				if ("start".equals(parameterName) || "count".equals(parameterName) || "after".equals(parameterName)) {
+					continue;
+				}
+				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. You can only have start, before, or count parameter name. Try to pick a parameter from android.text.TextWatcher.beforeTextChanged() method.");
+				valid.invalidate();
+				continue;
+			}
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter (" + parameter.toString() + "). %s can only have a android.widget.TextView parameter and/or parameters from android.text.TextWatcher.beforeTextChanged() method.");
+			valid.invalidate();
+		}
+	}
+
 }

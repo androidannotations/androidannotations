@@ -1,5 +1,6 @@
 package org.androidannotations.handler;
 
+import org.androidannotations.annotations.BeforeTextChange;
 import org.androidannotations.handler.rest.GetHandler;
 import org.androidannotations.handler.rest.RestHandler;
 import org.androidannotations.helper.AndroidManifest;
@@ -71,6 +72,7 @@ public class AnnotationHandlers {
 		add(new RootContextHanlder(processingEnvironment));
 		add(new NonConfigurationInstanceHandler(processingEnvironment));
 		add(new BeanHandler(processingEnvironment));
+		add(new BeforeTextChangeHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
