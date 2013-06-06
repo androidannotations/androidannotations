@@ -571,7 +571,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	}
 
 	private void handleException(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, ProcessingException e) {
-		String errorMessage = errorHelper.getErrorMessage(e);
+		String errorMessage = errorHelper.getErrorMessage(processingEnv, e);
 
 		Messager messager = processingEnv.getMessager();
 		messager.printMessage(Diagnostic.Kind.ERROR, errorMessage);

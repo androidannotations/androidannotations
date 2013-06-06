@@ -1,62 +1,40 @@
 package org.androidannotations.helper;
 
 import java.io.BufferedReader;
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.util.Elements;
 
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.exception.ProcessingException;
 
 public class ErrorHelper {
 
-	public String getErrorMessage(ProcessingException e) {
+	public String getErrorMessage(ProcessingEnvironment processingEnv, ProcessingException e) {
 		String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations " + AndroidAnnotationProcessor.ANDROIDANNOTATION_VERSION + ", with the following content and tell us if you can reproduce it or not. The error was thrown on:\n";
 		if (e.getElement() != null) {
-			errorMessage += elementFullString(e.getElement()) + "\n";
+			errorMessage += elementFullString(processingEnv, e.getElement()) + "\n";
 		}
 		errorMessage += "compiled with " + getJavaCompilerVersion() + "\n";
 		errorMessage += "with stacktrace: " + stackTraceToString(e.getCause());
 		return errorMessage;
 	}
 
-	private String elementFullString(Element element) {
-		String result = "";
-		List<? extends AnnotationMirror> annotations = element.getAnnotationMirrors();
-		for (AnnotationMirror annotation : annotations) {
-			result += annotationFullString(annotation) + "\n";
-		}
+	private String elementFullString(ProcessingEnvironment processingEnv, Element element) {
+		Elements elementUtils = processingEnv.getElementUtils();
+		CharArrayWriter writer = new CharArrayWriter();
+		elementUtils.printElements(writer, element);
+		String result = writer.toString();
+
 		Element enclosingElement = element.getEnclosingElement();
 		if (enclosingElement != null) {
-			result += enclosingElement.toString() + ".";
-		}
-		return result + element.asType().toString();
-	}
-
-	private String annotationFullString(AnnotationMirror annotation) {
-		String result = annotation.toString();
-
-		Map<? extends ExecutableElement, ? extends AnnotationValue> fields = annotation.getElementValues();
-		if (fields != null) {
-			result += "(";
-			Set<? extends ExecutableElement> fieldKeys = fields.keySet();
-			int i = 0;
-			for (ExecutableElement fieldKey : fieldKeys) {
-				result += fieldKey.getSimpleName().toString() + "=" + fields.get(fieldKey).getValue().toString();
-				if (++i < fieldKeys.size()) {
-					result += ", ";
-				}
-			}
-			result += ")";
+			result = result + "\nin: " + enclosingElement.toString();
 		}
 		return result;
 	}
