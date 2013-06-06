@@ -77,6 +77,7 @@ public class AnnotationHandlers {
 		add(new SeekBarProgressChangeHandler(processingEnvironment));
 		add(new SeekBarTouchStartHandler(processingEnvironment));
 		add(new SeekBarTouchStopHandler(processingEnvironment));
+		add(new AfterViewsHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
