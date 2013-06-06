@@ -12,6 +12,8 @@ import org.androidannotations.rclass.IRClass;
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.*;
 
+import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
+
 public class AnnotationHandlers {
 
 	private List<AnnotationHandler<? extends GeneratedClassHolder>> annotationHandlers = new ArrayList<AnnotationHandler<? extends GeneratedClassHolder>>();
@@ -77,10 +79,19 @@ public class AnnotationHandlers {
 		add(new SeekBarProgressChangeHandler(processingEnvironment));
 		add(new SeekBarTouchStartHandler(processingEnvironment));
 		add(new SeekBarTouchStopHandler(processingEnvironment));
+
+        add(new InstanceStateHandler(processingEnvironment));
+
+		/*
+		 * Any view injection or listener binding should occur before
+		 * AfterViewsProcessor
+		 */
+		add(new AfterInjectHandler(processingEnvironment));
 		add(new AfterViewsHandler(processingEnvironment));
 
-		add(new AfterInjectHandler(processingEnvironment));
-        add(new InstanceStateHandler(processingEnvironment));
+		if (traceActivated(processingEnvironment)) {
+			add(new TraceHandler(processingEnvironment));
+		}
 	}
 
 	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
@@ -114,6 +125,16 @@ public class AnnotationHandlers {
 	public void setValidatedModel(AnnotationElements validatedModel) {
 		for (AnnotationHandler annotationHandler : annotationHandlers) {
 			annotationHandler.setValidatedModel(validatedModel);
+		}
+	}
+
+	private boolean traceActivated(ProcessingEnvironment processingEnvironment) {
+		Map<String, String> options = processingEnvironment.getOptions();
+		if (options.containsKey(TRACE_OPTION)) {
+			String trace = options.get(TRACE_OPTION);
+			return !"false".equals(trace);
+		} else {
+			return true;
 		}
 	}
 
