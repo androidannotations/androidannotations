@@ -85,6 +85,7 @@ public class AnnotationHandlers {
 		add(new BackgroundHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
 		add(new HttpsClientHandler(processingEnvironment));
+		add(new OnActivityResultHandler(processingEnvironment));
 
 		/*
 		 * Any view injection or listener binding should occur before

@@ -11,7 +11,7 @@ import javax.lang.model.element.TypeElement;
 import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.*;
 
-public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu {
+public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult {
 
 	private JFieldVar contentView;
 	private JBlock setContentViewBlock;
@@ -23,6 +23,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JBlock injectArgsBlock;
 	private JVar injectBundleArgs;
     private InstanceStateHolder instanceStateHolder;
+	private OnActivityResultHolder onActivityResultHolder;
 	private JBlock onCreateOptionsMenuMethodBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
 	private JVar onCreateOptionsMenuMenuParam;
@@ -33,6 +34,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
         instanceStateHolder = new InstanceStateHolder(this);
+		onActivityResultHolder = new OnActivityResultHolder(this);
 		createOnCreate();
 		createOnViewCreated();
 		createFragmentBuilder();
@@ -316,5 +318,20 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 			setOnOptionsItemSelected();
 		}
 		return onOptionsItemSelectedIfElseBlock;
+	}
+
+	@Override
+	public JBlock getOnActivityResultCaseBlock(int requestCode) {
+		return onActivityResultHolder.getCaseBlock(requestCode);
+	}
+
+	@Override
+	public JVar getOnActivityResultDataParam() {
+		return onActivityResultHolder.getDataParam();
+	}
+
+	@Override
+	public JVar getOnActivityResultResultCodeParam() {
+		return onActivityResultHolder.getResultCodeParam();
 	}
 }

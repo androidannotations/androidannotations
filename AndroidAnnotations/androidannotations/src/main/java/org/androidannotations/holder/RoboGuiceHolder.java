@@ -26,10 +26,6 @@ public class RoboGuiceHolder {
 	protected JVar currentConfig;
 	protected JBlock onConfigurationChangedAfterSuperBlock;
 	protected JBlock onContentChangedAfterSuperBlock;
-	protected JBlock onActivityResultAfterSuperBlock;
-	protected JVar requestCode;
-	protected JVar resultCode;
-	protected JVar data;
 
 	public RoboGuiceHolder(EActivityHolder holder) {
 		this.holder = holder;
@@ -159,30 +155,18 @@ public class RoboGuiceHolder {
 	}
 
 	public JBlock getOnActivityResultAfterSuperBlock() {
-		if (onActivityResultAfterSuperBlock == null) {
-			holder.setOnActivityResult();
-		}
-		return onActivityResultAfterSuperBlock;
+		return holder.getOnActivityResultAfterSuperBlock();
 	}
 
 	public JVar getRequestCode() {
-		if (requestCode == null) {
-			holder.setOnActivityResult();
-		}
-		return requestCode;
+		return holder.getOnActivityResultRequestCodeParam();
 	}
 
 	public JVar getResultCode() {
-		if (resultCode == null) {
-			holder.setOnActivityResult();
-		}
-		return resultCode;
+		return holder.getOnActivityResultResultCodeParam();
 	}
 
 	public JVar getData() {
-		if (data == null) {
-			holder.setOnActivityResult();
-		}
-		return data;
+		return holder.getOnActivityResultDataParam();
 	}
 }

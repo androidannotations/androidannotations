@@ -1242,4 +1242,32 @@ public class ValidatorHelper {
 		}
 
 	}
+
+	public void hasOnResultMethodParameters(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		boolean resultCodeParameterFound = false;
+		boolean intentParameterFound = false;
+		for (VariableElement parameter : parameters) {
+			TypeMirror parameterType = parameter.asType();
+			if (parameterType.toString().equals(CanonicalNameConstants.INTEGER) //
+					|| parameterType.getKind().equals(TypeKind.INT)) {
+				if (resultCodeParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type int or java.lang.Integer");
+					valid.invalidate();
+				}
+				resultCodeParameterFound = true;
+				continue;
+			}
+			if (parameterType.toString().equals(CanonicalNameConstants.INTENT)) {
+				if (intentParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.content.Intent");
+					valid.invalidate();
+				}
+				intentParameterFound = true;
+				continue;
+			}
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter type. %s can only have a android.content.Intent parameter and/or an Integer parameter");
+		}
+	}
 }

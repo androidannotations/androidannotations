@@ -18,7 +18,7 @@ import static com.sun.codemodel.JExpr.*;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu {
+public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult {
 
 	private GreenDroidHelper greenDroidHelper;
 	private JMethod onCreate;
@@ -28,6 +28,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JDefinedClass intentBuilderClass;
 	private JFieldVar intentField;
     private InstanceStateHolder instanceStateHolder;
+	private OnActivityResultHolder onActivityResultHolder;
 	private RoboGuiceHolder roboGuiceHolder;
 	private JMethod injectExtrasMethod;
 	private JBlock injectExtrasBlock;
@@ -48,6 +49,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
         instanceStateHolder = new InstanceStateHolder(this);
+		onActivityResultHolder = new OnActivityResultHolder(this);
 		createIntentBuilder();
 		handleBackPressed();
 	}
@@ -177,20 +179,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JBlock body = method.body();
 		body.invoke(_super(), method);
 		roboGuiceHolder.onContentChangedAfterSuperBlock = body.block();
-	}
-
-	protected void setOnActivityResult() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onActivityResult");
-		method.annotate(Override.class);
-		JVar requestCode = method.param(codeModel().INT, "requestCode");
-		JVar resultCode = method.param(codeModel().INT, "resultCode");
-		JVar data = method.param(classes().INTENT, "data");
-		JBlock body = method.body();
-		body.invoke(_super(), method).arg(requestCode).arg(resultCode).arg(data);
-		roboGuiceHolder.onActivityResultAfterSuperBlock = body.block();
-		roboGuiceHolder.requestCode = requestCode;
-		roboGuiceHolder.resultCode = requestCode;
-		roboGuiceHolder.data = data;
 	}
 
 	private void setOnCreateOptionsMenu() {
@@ -625,5 +613,28 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		methodBody.assign(onRetainNonConfigurationInstance.ref(ncHolder.getSuperNonConfigurationInstanceField()), superCall);
 		onRetainNonConfigurationInstanceBindBlock = methodBody.block();
 		methodBody._return(onRetainNonConfigurationInstance);
+	}
+
+	@Override
+	public JBlock getOnActivityResultCaseBlock(int requestCode) {
+		return onActivityResultHolder.getCaseBlock(requestCode);
+	}
+
+	@Override
+	public JVar getOnActivityResultDataParam() {
+		return onActivityResultHolder.getDataParam();
+	}
+
+	@Override
+	public JVar getOnActivityResultResultCodeParam() {
+		return onActivityResultHolder.getResultCodeParam();
+	}
+
+	public JBlock getOnActivityResultAfterSuperBlock() {
+		return onActivityResultHolder.getAfterSuperBlock();
+	}
+
+	public JVar getOnActivityResultRequestCodeParam() {
+		return onActivityResultHolder.getRequestCodeParam();
 	}
 }
