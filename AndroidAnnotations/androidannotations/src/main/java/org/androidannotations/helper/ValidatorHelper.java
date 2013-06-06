@@ -1161,4 +1161,31 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void hasAfterTextChangedMethodParameters(ExecutableElement executableElement, IsValid valid) {
+		List<? extends VariableElement> parameters = executableElement.getParameters();
+		boolean editableParameterFound = false;
+		boolean textViewParameterFound = false;
+		for (VariableElement parameter : parameters) {
+			String parameterType = parameter.asType().toString();
+			if (parameterType.equals(CanonicalNameConstants.EDITABLE)) {
+				if (editableParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.text.Editable");
+					valid.invalidate();
+				}
+				editableParameterFound = true;
+				continue;
+			}
+			if (parameterType.equals(CanonicalNameConstants.TEXT_VIEW)) {
+				if (textViewParameterFound) {
+					annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. you can declare only one parameter of type android.widget.TextView");
+					valid.invalidate();
+				}
+				textViewParameterFound = true;
+				continue;
+			}
+			valid.invalidate();
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter type. %s can only have a android.widget.TextView parameter and/or an android.text.Editable parameter. See android.text.TextWatcher.afterTextChanged() for more informations.");
+		}
+	}
+
 }

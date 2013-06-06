@@ -73,6 +73,7 @@ public class AnnotationHandlers {
 		add(new BeanHandler(processingEnvironment));
 		add(new BeforeTextChangeHandler(processingEnvironment));
 		add(new TextChangeHandler(processingEnvironment));
+		add(new AfterTextChangeHandler(processingEnvironment));
 
 		add(new AfterInjectHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
