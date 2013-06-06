@@ -82,7 +82,7 @@ public class AnnotationHandlers {
 		add(new SubscribeHandler(processingEnvironment));
 		add(new ProduceHandler(processingEnvironment));
 		add(new UiThreadHandler(processingEnvironment));
-
+		add(new BackgroundHandler(processingEnvironment));
         add(new InstanceStateHandler(processingEnvironment));
 
 		/*
