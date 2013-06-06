@@ -80,6 +80,7 @@ public class AnnotationHandlers {
 		add(new SeekBarTouchStartHandler(processingEnvironment));
 		add(new SeekBarTouchStopHandler(processingEnvironment));
 		add(new SubscribeHandler(processingEnvironment));
+		add(new ProduceHandler(processingEnvironment));
 
         add(new InstanceStateHandler(processingEnvironment));
 
