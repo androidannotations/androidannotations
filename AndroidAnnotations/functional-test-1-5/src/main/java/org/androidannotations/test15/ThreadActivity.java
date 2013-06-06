@@ -15,10 +15,8 @@
  */
 package org.androidannotations.test15;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import android.app.Activity;
+import android.os.Bundle;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -26,10 +24,17 @@ import org.androidannotations.test15.ebean.GenericBean;
 import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
 
-import android.app.Activity;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @EActivity
 public class ThreadActivity extends Activity {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
 	@UiThread
 	void emptyUiMethod() {

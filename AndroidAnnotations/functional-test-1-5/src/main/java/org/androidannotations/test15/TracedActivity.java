@@ -15,21 +15,17 @@
  */
 package org.androidannotations.test15;
 
+import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.util.Log;
+import org.androidannotations.annotations.*;
+import org.androidannotations.test15.instancestate.MySerializableBean;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.Transactional;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.test15.instancestate.MySerializableBean;
 
 @EActivity
 public class TracedActivity extends Activity {
@@ -43,6 +39,11 @@ public class TracedActivity extends Activity {
 	public boolean voidTracedMethodInfoCalled = false;
 	public boolean overloadedMethodInt = false;
 	public boolean overloadedMethodIntFLoat = false;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
 	@Trace
 	Object tracedMethod(List<Map<String, List<Set<Void>>>> param1, Void param2) throws IOException {

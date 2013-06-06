@@ -15,18 +15,23 @@
  */
 package org.androidannotations.test15;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
-
+import android.os.Bundle;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.test15.instancestate.MySerializableBean;
 
+import java.util.List;
+
 @EActivity
 public class TransactionalActivity extends Activity {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
 	@Transactional
 	void successfulTransaction(SQLiteDatabase db) {

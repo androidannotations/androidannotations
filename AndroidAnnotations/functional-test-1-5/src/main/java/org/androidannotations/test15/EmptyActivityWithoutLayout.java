@@ -17,8 +17,14 @@ package org.androidannotations.test15;
 
 import android.app.Activity;
 
+import android.os.Bundle;
 import org.androidannotations.annotations.EActivity;
 
 @EActivity
 public class EmptyActivityWithoutLayout extends Activity {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 }
