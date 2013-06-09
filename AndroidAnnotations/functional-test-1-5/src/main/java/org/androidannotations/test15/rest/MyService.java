@@ -223,6 +223,8 @@ public interface MyService {
 	void setRestTemplate(RestTemplate restTemplate);
 
 	void setRootUrl(String test);
+    
+    String getRootUrl();
 	
 	void setCookie(String cookieName, String value);
 	

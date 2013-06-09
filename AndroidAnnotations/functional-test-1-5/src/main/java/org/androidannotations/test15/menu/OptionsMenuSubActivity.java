@@ -17,10 +17,16 @@ package org.androidannotations.test15.menu;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.test15.R;
+
+import android.view.MenuItem;
 
 @EActivity
 @OptionsMenu(R.menu.my_menu3)
 public class OptionsMenuSubActivity extends OptionsMenuActivity {
+
+	@OptionsMenuItem
+	MenuItem menu_settings;
 
 }

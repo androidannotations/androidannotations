@@ -15,12 +15,12 @@
  */
 package org.androidannotations.processing;
 
-import java.util.List;
+import static com.sun.codemodel.JExpr.ref;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 
@@ -29,30 +29,30 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JVar;
 
-public class OptionsMenuProcessor extends AbstractOptionsMenuProcessor {
+/**
+ */
+public class OptionsMenuItemProcessor extends AbstractOptionsMenuProcessor {
 
-	public OptionsMenuProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
+	public OptionsMenuItemProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		super(processingEnv, rClass);
 	}
 
 	@Override
 	public String getTarget() {
-		return OptionsMenu.class.getName();
+		return OptionsMenuItem.class.getName();
 	}
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
 		super.process(element, codeModel, holder);
 
+		String fieldName = element.getSimpleName().toString();
 		JBlock body = holder.onCreateOptionMenuMethodBody;
-		JVar menuInflater = holder.onCreateOptionMenuMenuInflaterVariable;
 		JVar menuParam = holder.onCreateOptionMenuMenuParam;
 
-		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, Res.MENU, false);
+		JFieldRef idsRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, Res.ID, true);
 
-		for (JFieldRef optionsMenuRefId : fieldRefs) {
-			body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam);
-		}
+		body.assign(ref(fieldName), menuParam.invoke("findItem").arg(idsRef));
 
 	}
 }
