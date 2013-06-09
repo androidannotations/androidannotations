@@ -19,6 +19,7 @@ import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFE
 import static org.androidannotations.helper.CanonicalNameConstants.PRODUCE;
 import static org.androidannotations.helper.CanonicalNameConstants.SUBSCRIBE;
 import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
+import static org.androidannotations.rclass.ProjectRClassFinder.RESOURCE_PACKAGE_NAME_OPTION;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -75,6 +76,7 @@ import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.annotations.RootContext;
@@ -88,6 +90,7 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.WindowFeature;
 import org.androidannotations.annotations.res.AnimationRes;
 import org.androidannotations.annotations.res.BooleanRes;
 import org.androidannotations.annotations.res.ColorRes;
@@ -165,6 +168,7 @@ import org.androidannotations.processing.NoTitleProcessor;
 import org.androidannotations.processing.NonConfigurationInstanceProcessor;
 import org.androidannotations.processing.OnActivityResultProcessor;
 import org.androidannotations.processing.OptionsItemProcessor;
+import org.androidannotations.processing.OptionsMenuItemProcessor;
 import org.androidannotations.processing.OptionsMenuProcessor;
 import org.androidannotations.processing.OrmLiteDaoProcessor;
 import org.androidannotations.processing.PrefProcessor;
@@ -185,6 +189,7 @@ import org.androidannotations.processing.TraceProcessor;
 import org.androidannotations.processing.TransactionalProcessor;
 import org.androidannotations.processing.UiThreadProcessor;
 import org.androidannotations.processing.ViewByIdProcessor;
+import org.androidannotations.processing.WindowFeatureProcessor;
 import org.androidannotations.processing.rest.DeleteProcessor;
 import org.androidannotations.processing.rest.GetProcessor;
 import org.androidannotations.processing.rest.HeadProcessor;
@@ -234,6 +239,7 @@ import org.androidannotations.validation.NoTitleValidator;
 import org.androidannotations.validation.NonConfigurationInstanceValidator;
 import org.androidannotations.validation.OnActivityResultValidator;
 import org.androidannotations.validation.OptionsItemValidator;
+import org.androidannotations.validation.OptionsMenuItemValidator;
 import org.androidannotations.validation.OptionsMenuValidator;
 import org.androidannotations.validation.OrmLiteDaoValidator;
 import org.androidannotations.validation.PrefValidator;
@@ -254,6 +260,7 @@ import org.androidannotations.validation.TouchValidator;
 import org.androidannotations.validation.TraceValidator;
 import org.androidannotations.validation.TransactionalValidator;
 import org.androidannotations.validation.ViewByIdValidator;
+import org.androidannotations.validation.WindowFeatureValidator;
 import org.androidannotations.validation.rest.AcceptValidator;
 import org.androidannotations.validation.rest.DeleteValidator;
 import org.androidannotations.validation.rest.GetValidator;
@@ -264,7 +271,7 @@ import org.androidannotations.validation.rest.PutValidator;
 import org.androidannotations.validation.rest.RestValidator;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })
+@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION, RESOURCE_PACKAGE_NAME_OPTION })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private final TimeStats timeStats = new TimeStats();
@@ -420,8 +427,10 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new AcceptValidator(processingEnv));
 		modelValidator.register(new AppValidator(processingEnv));
 		modelValidator.register(new OptionsMenuValidator(processingEnv, rClass));
+		modelValidator.register(new OptionsMenuItemValidator(processingEnv, rClass));
 		modelValidator.register(new OptionsItemValidator(processingEnv, rClass));
 		modelValidator.register(new NoTitleValidator(processingEnv));
+		modelValidator.register(new WindowFeatureValidator(processingEnv));
 		modelValidator.register(new CustomTitleValidator(processingEnv, rClass));
 		modelValidator.register(new FullscreenValidator(processingEnv));
 		modelValidator.register(new RestServiceValidator(processingEnv));
@@ -483,7 +492,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new EViewGroupProcessor(processingEnv, rClass));
 		modelProcessor.register(new EViewProcessor());
 		modelProcessor.register(new EBeanProcessor());
-		modelProcessor.register(new SharedPrefProcessor());
+		modelProcessor.register(new SharedPrefProcessor(processingEnv, rClass));
 		modelProcessor.register(new PrefProcessor(validatedModel));
 		modelProcessor.register(new RoboGuiceProcessor());
 		modelProcessor.register(new ViewByIdProcessor(processingEnv, rClass));
@@ -515,8 +524,10 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new OptionsProcessor(processingEnv, restImplementationsHolder));
 		modelProcessor.register(new AppProcessor());
 		modelProcessor.register(new OptionsMenuProcessor(processingEnv, rClass));
+		modelProcessor.register(new OptionsMenuItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new OptionsItemProcessor(processingEnv, rClass));
 		modelProcessor.register(new NoTitleProcessor());
+		modelProcessor.register(new WindowFeatureProcessor());
 		modelProcessor.register(new CustomTitleProcessor(processingEnv, rClass));
 		modelProcessor.register(new FullscreenProcessor());
 		modelProcessor.register(new RestServiceProcessor());
@@ -633,9 +644,11 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					Accept.class, //
 					FromHtml.class, //
 					OptionsMenu.class, //
+					OptionsMenuItem.class, //
 					OptionsItem.class, //
 					HtmlRes.class, //
 					NoTitle.class, //
+					WindowFeature.class, //
 					CustomTitle.class, //
 					Fullscreen.class, //
 					RestService.class, //

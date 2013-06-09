@@ -13,41 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotations;
+package org.androidannotations.annotations.sharedpreferences;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.androidannotations.annotations.ResId;
+
 /**
- * Should be used on method that must be run in a background thread. This method
- * must belong to an activity annotated with @Layout.
- * 
+ * Default value for a preference field
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-public @interface Background {
-	/**
-	 * Identifier for task cancellation.
-	 * 
-	 * To cancel all tasks having a specified background id:
-	 * 
-	 * <pre>
-	 * boolean mayInterruptIfRunning = true;
-	 * BackgroundExecutor.cancelAll(&quot;my_background_id&quot;, mayInterruptIfRunning);
-	 * </pre>
-	 **/
-	String id() default "";
+public @interface DefaultRes {
 
-	/** Minimum delay, in milliseconds, before the background task is executed. */
-	int delay() default 0;
+	int value() default ResId.DEFAULT_VALUE;
 
-	/**
-	 * Serial execution group.
-	 * 
-	 * All background tasks having the same <code>serial</code> will be executed
-	 * sequentially.
-	 **/
-	String serial() default "";
+	String resName() default "";
+
 }

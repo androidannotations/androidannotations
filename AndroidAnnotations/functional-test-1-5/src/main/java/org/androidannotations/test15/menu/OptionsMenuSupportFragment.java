@@ -21,12 +21,16 @@ import android.view.MenuItem;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.test15.R;
 
 @EFragment
-@OptionsMenu({R.menu.my_menu, R.menu.my_menu2})
+@OptionsMenu({ R.menu.my_menu, R.menu.my_menu2 })
 public class OptionsMenuSupportFragment extends Fragment {
-	
+
+	@OptionsMenuItem
+	MenuItem menu_refresh;
+
 	@OptionsItem
 	void menuRefreshSelected() {
 	}

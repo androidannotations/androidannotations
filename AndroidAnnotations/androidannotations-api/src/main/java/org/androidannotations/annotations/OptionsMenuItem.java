@@ -21,33 +21,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on method that must be run in a background thread. This method
- * must belong to an activity annotated with @Layout.
+ * Should be used on option items fields in activity classes.
  * 
+ * The field MUST be of type {@link link android.view.MenuItem} or
+ * {@link com.actionbarsherlock.view.MenuItem}.
+ * <p/>
+ * The annotation value should be one of R.id.* fields. If not set, the method
+ * name will be used as the R.id.* field name. *
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.METHOD)
-public @interface Background {
-	/**
-	 * Identifier for task cancellation.
-	 * 
-	 * To cancel all tasks having a specified background id:
-	 * 
-	 * <pre>
-	 * boolean mayInterruptIfRunning = true;
-	 * BackgroundExecutor.cancelAll(&quot;my_background_id&quot;, mayInterruptIfRunning);
-	 * </pre>
-	 **/
-	String id() default "";
+@Target(ElementType.FIELD)
+public @interface OptionsMenuItem {
 
-	/** Minimum delay, in milliseconds, before the background task is executed. */
-	int delay() default 0;
+	int[] value() default ResId.DEFAULT_VALUE;
 
-	/**
-	 * Serial execution group.
-	 * 
-	 * All background tasks having the same <code>serial</code> will be executed
-	 * sequentially.
-	 **/
-	String serial() default "";
+	String[] resName() default "";
+
 }

@@ -21,33 +21,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on method that must be run in a background thread. This method
- * must belong to an activity annotated with @Layout.
+ * Should be used on Activity classes that must have no title.
+ * 
+ * The activity must be annotated with {@link EActivity}.
  * 
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.METHOD)
-public @interface Background {
-	/**
-	 * Identifier for task cancellation.
-	 * 
-	 * To cancel all tasks having a specified background id:
-	 * 
-	 * <pre>
-	 * boolean mayInterruptIfRunning = true;
-	 * BackgroundExecutor.cancelAll(&quot;my_background_id&quot;, mayInterruptIfRunning);
-	 * </pre>
-	 **/
-	String id() default "";
+@Target(ElementType.TYPE)
+public @interface WindowFeature {
 
-	/** Minimum delay, in milliseconds, before the background task is executed. */
-	int delay() default 0;
+	int[] value();
 
-	/**
-	 * Serial execution group.
-	 * 
-	 * All background tasks having the same <code>serial</code> will be executed
-	 * sequentially.
-	 **/
-	String serial() default "";
 }

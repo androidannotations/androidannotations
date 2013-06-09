@@ -165,6 +165,9 @@ public class RestProcessor implements GeneratingElementProcessor {
 			}
 		}
 
+		// Implement getRootUrl method
+		implementGetRootUrl(holder, eBeansHolder, methods);
+
 		// Implement setRootUrl method
 		for (ExecutableElement method : methods) {
 			List<? extends VariableElement> parameters = method.getParameters();
@@ -265,6 +268,20 @@ public class RestProcessor implements GeneratingElementProcessor {
 					putMapMethod.body().invoke(field, "put").arg(keyParam).arg(valParam);
 					break; // Only one implementation
 				}
+			}
+		}
+	}
+
+	private void implementGetRootUrl(RestImplementationHolder holder, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		for (ExecutableElement method : methods) {
+			String methodName = method.getSimpleName().toString();
+
+			if (method.getParameters().size() == 0 && method.getReturnType().toString().equals(STRING) && methodName.equals("getRootUrl")) {
+				JMethod getRootUrlMethod = holder.restImplementationClass.method(JMod.PUBLIC, eBeansHolder.refClass(STRING), methodName);
+
+				getRootUrlMethod.annotate(Override.class);
+				getRootUrlMethod.body()._return(holder.rootUrlField);
+				return; // Only one implementation
 			}
 		}
 	}

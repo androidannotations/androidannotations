@@ -13,25 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotations;
+package org.androidannotations.test15;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.WindowFeature;
 
-/**
- * Should be used on Activity classes that must have no title.
- * <p/>
- * The activity must be annotated with {@link EActivity}.
- * <p/>
- * Note: This annotation has been deprecated. Please use
- * {@code WindowFeature(Window.FEATURE_NO_TITLE})} instead
- * 
- * @see WindowFeature
- */
-@Deprecated
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.TYPE)
-public @interface NoTitle {
+import android.app.Activity;
+import android.view.Window;
+
+@EActivity
+@Fullscreen
+@WindowFeature({ Window.FEATURE_NO_TITLE, Window.FEATURE_INDETERMINATE_PROGRESS })
+public class WindowFeatureActivity extends Activity {
+
 }
