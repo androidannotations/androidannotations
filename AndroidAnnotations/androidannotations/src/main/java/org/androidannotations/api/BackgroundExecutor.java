@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.util.Log;
 
@@ -197,11 +198,21 @@ public class BackgroundExecutor {
 		for (int i = tasks.size() - 1; i >= 0; i--) {
 			Task task = tasks.get(i);
 			if (id.equals(task.id)) {
-				tasks.remove(i);
 				if (task.future != null) {
 					task.future.cancel(mayInterruptIfRunning);
+					if (!task.managed.getAndSet(true)) {
+						/*
+						 * the task has been submitted to the executor, but its
+						 * execution has not started yet, so that its run()
+						 * method will never call postExecute()
+						 */
+						task.postExecute();
+					}
 				} else if (task.executionAsked) {
 					Log.w(TAG, "A task with id " + task.id + " cannot be cancelled (the executor set does not support it)");
+				} else {
+					/* this task has not been submitted to the executor */
+					tasks.remove(i);
 				}
 			}
 		}
@@ -252,6 +263,20 @@ public class BackgroundExecutor {
 		private boolean executionAsked;
 		private Future<?> future;
 
+		/*
+		 * A task can be cancelled after it has been submitted to the executor
+		 * but before its run() method is called. In that case, run() will never
+		 * be called, hence neither will postExecute(): the tasks with the same
+		 * serial identifier (if any) will never be submitted.
+		 * 
+		 * Therefore, cancelAll() *must* call postExecute() if run() is not
+		 * started.
+		 * 
+		 * This flag guarantees that either cancelAll() or run() manages this
+		 * task post execution, but not both.
+		 */
+		private AtomicBoolean managed = new AtomicBoolean();
+
 		public Task(String id, int delay, String serial) {
 			if (!"".equals(id)) {
 				this.id = id;
@@ -267,6 +292,11 @@ public class BackgroundExecutor {
 
 		@Override
 		public void run() {
+			if (managed.getAndSet(true)) {
+				/* cancelled and postExecute() already called */
+				return;
+			}
+
 			try {
 				execute();
 			} finally {
