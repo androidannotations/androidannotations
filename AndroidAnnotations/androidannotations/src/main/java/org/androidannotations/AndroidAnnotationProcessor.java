@@ -17,6 +17,7 @@ package org.androidannotations;
 
 import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
 import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
+import static org.androidannotations.rclass.ProjectRClassFinder.RESOURCE_PACKAGE_NAME_OPTION;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,7 +53,7 @@ import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.ProjectRClassFinder;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })
+@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION, RESOURCE_PACKAGE_NAME_OPTION })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private final TimeStats timeStats = new TimeStats();
