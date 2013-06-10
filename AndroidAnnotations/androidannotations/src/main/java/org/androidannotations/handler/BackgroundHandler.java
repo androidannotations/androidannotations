@@ -24,13 +24,16 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.api.BackgroundExecutor.Task;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
 
 public class BackgroundHandler extends AbstractRunnableHandler {
 
@@ -47,19 +50,25 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 		holder.generateApiClass(element, BackgroundExecutor.class);
 
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
-		JDefinedClass anonymousRunnableClass = codeModelHelper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
+
+		JBlock previousMethodBody = codeModelHelper.removeBody(delegatingMethod);
+
+		JDefinedClass anonymousTaskClass = holder.codeModel().anonymousClass(Task.class);
+
+		JMethod executeMethod = anonymousTaskClass.method(JMod.PUBLIC, holder.codeModel().VOID, "execute");
+		executeMethod.annotate(Override.class);
+
+		JBlock runMethodBody = executeMethod.body();
+		codeModelHelper.surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a background task");
 
 		Background annotation = element.getAnnotation(Background.class);
-		long delay = annotation.delay();
+		String id = annotation.id();
+		int delay = annotation.delay();
+		String serial = annotation.serial();
 
 		JClass backgroundExecutorClass = holder.refClass(BackgroundExecutor.class);
-		JInvocation executeCall;
-
-		if (delay == 0) {
-			executeCall = backgroundExecutorClass.staticInvoke("execute").arg(_new(anonymousRunnableClass));
-		} else {
-			executeCall = backgroundExecutorClass.staticInvoke("executeDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
-		}
+		JInvocation newTask = _new(anonymousTaskClass).arg(lit(id)).arg(lit(delay)).arg(lit(serial));
+		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(newTask);
 
 		delegatingMethod.body().add(executeCall);
 	}
