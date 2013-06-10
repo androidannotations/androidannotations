@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.UiThread.Propagation;
 import org.androidannotations.helper.APTCodeModelHelper;
 
 import android.os.Looper;
@@ -57,12 +58,12 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		UiThread annotation = element.getAnnotation(UiThread.class);
-		boolean useDirect = annotation.useDirect();
+		Propagation propagation = annotation.propagation();
 
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock clonedBody = null;
 
-		if (useDirect) {
+		if (propagation == Propagation.REUSE) {
 			// Need to clone the body to be put in the check. This is done here
 			// because the next line
 			// will remove the body from the method.
@@ -80,7 +81,7 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 				holder.handler = holder.generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
 			}
 
-			if (useDirect) {
+			if (propagation == Propagation.REUSE) {
 				// Put in the check for the UI thread.
 				addUIThreadCheck(delegatingMethod, clonedBody, codeModel);
 			}
