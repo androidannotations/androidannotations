@@ -15,15 +15,15 @@
  */
 package org.androidannotations.handler;
 
-import org.androidannotations.annotations.EApplication;
-import org.androidannotations.holder.EApplicationHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.process.IsValid;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.annotations.EApplication;
+import org.androidannotations.holder.EApplicationHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
 
 public class EApplicationHandler extends BaseAnnotationHandler<EApplicationHolder> implements GeneratingAnnotationHandler<EApplicationHolder> {
 

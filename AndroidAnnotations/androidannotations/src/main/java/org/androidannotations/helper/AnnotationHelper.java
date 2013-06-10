@@ -15,22 +15,8 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JFieldRef;
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.OptionsItem;
-import org.androidannotations.annotations.ResId;
-import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.rclass.IRInnerClass;
-import org.androidannotations.rclass.RInnerClass;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.*;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.MirroredTypeException;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,7 +24,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
+
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.ResId;
+import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.rclass.IRInnerClass;
+import org.androidannotations.rclass.RInnerClass;
+
+import com.sun.codemodel.JFieldRef;
 
 public class AnnotationHelper {
 
@@ -141,21 +149,21 @@ public class AnnotationHelper {
 		return processingEnv.getTypeUtils();
 	}
 
-    /**
-     * Returns a list of {@link JFieldRef} linking to the R class, based on the
-     * given annotation
-     *
-     * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
-     */
-    public List<JFieldRef> extractAnnotationFieldRefs(GeneratedClassHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
-        List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
+	/**
+	 * Returns a list of {@link JFieldRef} linking to the R class, based on the
+	 * given annotation
+	 * 
+	 * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
+	 */
+	public List<JFieldRef> extractAnnotationFieldRefs(GeneratedClassHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
+		List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
 
-        for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName)) {
-            fieldRefs.add(RInnerClass.extractIdStaticRef(holder, refQualifiedName));
-        }
+		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName)) {
+			fieldRefs.add(RInnerClass.extractIdStaticRef(holder, refQualifiedName));
+		}
 
-        return fieldRefs;
-    }
+		return fieldRefs;
+	}
 
 	/**
 	 * Method to handle all annotations dealing with resource ids that can be

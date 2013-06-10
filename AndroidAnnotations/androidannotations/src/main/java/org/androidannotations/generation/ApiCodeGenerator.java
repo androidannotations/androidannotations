@@ -15,16 +15,17 @@
  */
 package org.androidannotations.generation;
 
-import org.androidannotations.process.OriginatingElements;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Set;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Set;
+
+import org.androidannotations.process.OriginatingElements;
 
 public class ApiCodeGenerator {
 

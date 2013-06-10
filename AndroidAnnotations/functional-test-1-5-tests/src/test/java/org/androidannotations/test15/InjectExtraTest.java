@@ -89,7 +89,7 @@ public class InjectExtraTest {
 
 		assertThat(activity.stringExtra).isEqualTo("Hello Again!");
 	}
-	
+
 	@Test
 	public void extraWithoutValueInjected() {
 		intent.putExtra("extraWithoutValue", "Hello!");

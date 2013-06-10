@@ -50,43 +50,44 @@ public class ClicksHandledActivityTest {
 	@Test
 	public void handlingWithConvention() {
 		assertThat(activity.conventionButtonEventHandled).isFalse();
-		
+
 		activity.findViewById(R.id.conventionButton).performClick();
-		
+
 		assertThat(activity.conventionButtonEventHandled).isTrue();
 	}
 
 	@Test
 	public void handlingWithSnakeCase() {
 		assertThat(activity.snakeCaseButtonEventHandled).isFalse();
-		
+
 		activity.findViewById(R.id.snake_case_button).performClick();
-		
+
 		assertThat(activity.snakeCaseButtonEventHandled).isTrue();
 	}
 
 	@Test
 	public void handlingWithExtendedConvention() {
 		assertThat(activity.extendedConventionButtonEventHandled).isFalse();
-		
+
 		activity.findViewById(R.id.extendedConventionButton).performClick();
-		
+
 		assertThat(activity.extendedConventionButtonEventHandled).isTrue();
 	}
 
 	@Test
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonEventHandled).isFalse();
-		
-		activity.findViewById(R.id.configurationOverConventionButton).performClick();
-		
+
+		activity.findViewById(R.id.configurationOverConventionButton)
+				.performClick();
+
 		assertThat(activity.overridenConventionButtonEventHandled).isTrue();
 	}
 
 	@Test
 	public void unannotatedButtonIsNotHandled() {
 		activity.findViewById(R.id.unboundButton).performClick();
-		
+
 		assertThat(activity.unboundButtonEventHandled).isFalse();
 	}
 
@@ -103,26 +104,26 @@ public class ClicksHandledActivityTest {
 	public void multipleButtonsClicked() {
 		assertThat(activity.multipleButtonsEventHandled).isFalse();
 
-		activity.findViewById(R.id.button1).performClick();		
+		activity.findViewById(R.id.button1).performClick();
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button1);
-		
+
 		activity.multipleButtonsEventHandled = false;
-		
+
 		activity.findViewById(R.id.button2).performClick();
 		assertThat(activity.multipleButtonsEventHandled).isTrue();
 		assertThat(activity.viewArgument).hasId(R.id.button2);
 	}
-	
+
 	@Test
 	public void libResBussonClicked() {
 		assertThat(activity.libResButtonEventHandled).isFalse();
 
-		activity.findViewById(R.id.libResButton1).performClick();		
+		activity.findViewById(R.id.libResButton1).performClick();
 		assertThat(activity.libResButtonEventHandled).isTrue();
-		
+
 		activity.libResButtonEventHandled = false;
-		
+
 		activity.findViewById(R.id.libResButton2).performClick();
 		assertThat(activity.libResButtonEventHandled).isTrue();
 	}

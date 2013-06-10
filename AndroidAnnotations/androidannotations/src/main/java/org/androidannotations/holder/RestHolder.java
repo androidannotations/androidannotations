@@ -15,18 +15,6 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.helper.ModelConstants;
-import org.androidannotations.process.ProcessHolder;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.util.ElementFilter;
-import java.util.List;
-
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.FINAL;
@@ -34,9 +22,28 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
+import java.util.List;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.ElementFilter;
+
+import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
+
 public class RestHolder extends BaseGeneratedClassHolder {
 
-    private JMethod init;
+	private JMethod init;
 	private JFieldVar rootUrlField;
 	private JFieldVar restTemplateField;
 
@@ -70,25 +77,24 @@ public class RestHolder extends BaseGeneratedClassHolder {
 			}
 
 			if (!setRestTemplateImplemented //
-					 && parameters.size() == 1 //
-					 && parameters.get(0).asType().toString().equals(REST_TEMPLATE) //
-					 && method.getReturnType().getKind() == TypeKind.VOID) {
+					&& parameters.size() == 1 //
+					&& parameters.get(0).asType().toString().equals(REST_TEMPLATE) //
+					&& method.getReturnType().getKind() == TypeKind.VOID) {
 
 				implementSetRestTemplateMethod(method);
 				setRestTemplateImplemented = true;
 			}
 
-            if (!getRootUrlImplemented //
-                    && parameters.size() == 0 //
-                    && method.getReturnType().toString().equals(STRING) //
-                    && method.getSimpleName().toString().equals("getRootUrl")) {
-                implementGetRootUrlMethod(method);
-                getRootUrlImplemented = true;
-            }
+			if (!getRootUrlImplemented //
+					&& parameters.size() == 0 //
+					&& method.getReturnType().toString().equals(STRING) //
+					&& method.getSimpleName().toString().equals("getRootUrl")) {
+				implementGetRootUrlMethod(method);
+				getRootUrlImplemented = true;
+			}
 
 			if (!setRootUrlImplemented //
-					&& method.getSimpleName().toString().equals("setRootUrl")
-					&& method.getReturnType().getKind() == TypeKind.VOID //
+					&& method.getSimpleName().toString().equals("setRootUrl") && method.getReturnType().getKind() == TypeKind.VOID //
 					&& parameters.size() == 1 //
 					&& parameters.get(0).asType().toString().equals(STRING)) {
 
@@ -114,12 +120,12 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		setRestTemplateMethod.body().assign(_this().ref(getRestTemplateField()), restTemplateSetterParam);
 	}
 
-    private void implementGetRootUrlMethod(ExecutableElement method) {
-        String methodName = method.getSimpleName().toString();
-        JMethod getRootUrlMethod = getGeneratedClass().method(JMod.PUBLIC, processHolder.refClass(STRING), methodName);
-        getRootUrlMethod.annotate(Override.class);
-        getRootUrlMethod.body()._return(getRootUrlField());
-    }
+	private void implementGetRootUrlMethod(ExecutableElement method) {
+		String methodName = method.getSimpleName().toString();
+		JMethod getRootUrlMethod = getGeneratedClass().method(JMod.PUBLIC, processHolder.refClass(STRING), methodName);
+		getRootUrlMethod.annotate(Override.class);
+		getRootUrlMethod.body()._return(getRootUrlField());
+	}
 
 	private void implementSetRootUrl(ExecutableElement method) {
 		String methodName = method.getSimpleName().toString();
@@ -130,12 +136,12 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		setRootUrlMethod.body().assign(_this().ref(getRootUrlField()), rootUrlSetterParam);
 	}
 
-    public JMethod getInit() {
-        if (init == null) {
-            setInit();
-        }
-        return init;
-    }
+	public JMethod getInit() {
+		if (init == null) {
+			setInit();
+		}
+		return init;
+	}
 
 	private void setInit() {
 		init = getGeneratedClass().constructor(JMod.PUBLIC);

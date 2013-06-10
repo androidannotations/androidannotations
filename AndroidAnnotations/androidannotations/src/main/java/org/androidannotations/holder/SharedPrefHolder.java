@@ -15,19 +15,37 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.api.sharedpreferences.*;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.api.sharedpreferences.BooleanPrefEditorField;
+import org.androidannotations.api.sharedpreferences.EditorHelper;
+import org.androidannotations.api.sharedpreferences.FloatPrefEditorField;
+import org.androidannotations.api.sharedpreferences.IntPrefEditorField;
+import org.androidannotations.api.sharedpreferences.LongPrefEditorField;
+import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
+import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
+import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class SharedPrefHolder extends BaseGeneratedClassHolder {
 

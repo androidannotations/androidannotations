@@ -15,19 +15,20 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import org.androidannotations.annotations.SystemService;
-import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.ref;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
 
 public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
 

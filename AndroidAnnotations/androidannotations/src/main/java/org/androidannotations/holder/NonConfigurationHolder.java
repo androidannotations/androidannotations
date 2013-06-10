@@ -15,9 +15,13 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-
 import static com.sun.codemodel.JMod.PUBLIC;
+
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMod;
 
 public class NonConfigurationHolder {
 

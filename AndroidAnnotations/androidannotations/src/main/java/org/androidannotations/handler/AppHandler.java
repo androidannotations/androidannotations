@@ -15,7 +15,11 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JClass;
+import static com.sun.codemodel.JExpr.ref;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.helper.ModelConstants;
@@ -24,10 +28,7 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
-import static com.sun.codemodel.JExpr.ref;
+import com.sun.codemodel.JClass;
 
 public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 

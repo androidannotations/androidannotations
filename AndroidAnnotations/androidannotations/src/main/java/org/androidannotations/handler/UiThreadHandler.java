@@ -15,17 +15,19 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.*;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.holder.EComponentHolder;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.lit;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.holder.EComponentHolder;
+
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JMethod;
 
 public class UiThreadHandler extends AbstractRunnableHandler {
 

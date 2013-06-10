@@ -15,12 +15,13 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+
 import org.androidannotations.annotations.SeekBarTouchStop;
 import org.androidannotations.holder.OnSeekBarChangeListenerHolder;
 
-import javax.annotation.processing.ProcessingEnvironment;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JVar;
 
 public class SeekBarTouchStopHandler extends AbstractSeekBarTouchHandler {
 

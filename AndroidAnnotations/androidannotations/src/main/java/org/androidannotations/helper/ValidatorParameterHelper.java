@@ -15,16 +15,17 @@
  */
 package org.androidannotations.helper;
 
-import org.androidannotations.process.IsValid;
+import static java.util.Arrays.asList;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.Arrays;
-import java.util.List;
 
-import static java.util.Arrays.asList;
+import org.androidannotations.process.IsValid;
 
 public class ValidatorParameterHelper {
 

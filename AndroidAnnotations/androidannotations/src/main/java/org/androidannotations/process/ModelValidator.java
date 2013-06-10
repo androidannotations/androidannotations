@@ -15,14 +15,15 @@
  */
 package org.androidannotations.process;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.lang.model.element.Element;
+
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
-
-import javax.lang.model.element.Element;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ModelValidator {
 
@@ -41,7 +42,7 @@ public class ModelValidator {
 		 */
 		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
-		for (AnnotationHandler annotationHandler : annotationHandlers.get()) {
+		for (AnnotationHandler<?> annotationHandler : annotationHandlers.get()) {
 			String annotationName = annotationHandler.getTarget();
 
 			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(annotationName);

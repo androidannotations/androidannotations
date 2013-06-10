@@ -15,12 +15,28 @@
  */
 package org.androidannotations.model;
 
-import org.androidannotations.annotations.res.*;
-import org.androidannotations.rclass.IRClass.Res;
-
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
+
+import org.androidannotations.annotations.res.AnimationRes;
+import org.androidannotations.annotations.res.BooleanRes;
+import org.androidannotations.annotations.res.ColorRes;
+import org.androidannotations.annotations.res.ColorStateListRes;
+import org.androidannotations.annotations.res.DimensionPixelOffsetRes;
+import org.androidannotations.annotations.res.DimensionPixelSizeRes;
+import org.androidannotations.annotations.res.DimensionRes;
+import org.androidannotations.annotations.res.DrawableRes;
+import org.androidannotations.annotations.res.HtmlRes;
+import org.androidannotations.annotations.res.IntArrayRes;
+import org.androidannotations.annotations.res.IntegerRes;
+import org.androidannotations.annotations.res.LayoutRes;
+import org.androidannotations.annotations.res.MovieRes;
+import org.androidannotations.annotations.res.StringArrayRes;
+import org.androidannotations.annotations.res.StringRes;
+import org.androidannotations.annotations.res.TextArrayRes;
+import org.androidannotations.annotations.res.TextRes;
+import org.androidannotations.rclass.IRClass.Res;
 
 public enum AndroidRes {
 

@@ -15,31 +15,59 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.*;
-import org.androidannotations.annotations.sharedpreferences.*;
-import org.androidannotations.api.sharedpreferences.*;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.holder.SharedPrefHolder;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.rclass.IRClass;
-import org.androidannotations.process.IsValid;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.STATIC;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.STATIC;
+import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
+import org.androidannotations.annotations.sharedpreferences.DefaultRes;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.api.sharedpreferences.AbstractPrefEditorField;
+import org.androidannotations.api.sharedpreferences.AbstractPrefField;
+import org.androidannotations.api.sharedpreferences.BooleanPrefEditorField;
+import org.androidannotations.api.sharedpreferences.BooleanPrefField;
+import org.androidannotations.api.sharedpreferences.EditorHelper;
+import org.androidannotations.api.sharedpreferences.FloatPrefEditorField;
+import org.androidannotations.api.sharedpreferences.FloatPrefField;
+import org.androidannotations.api.sharedpreferences.IntPrefEditorField;
+import org.androidannotations.api.sharedpreferences.IntPrefField;
+import org.androidannotations.api.sharedpreferences.LongPrefEditorField;
+import org.androidannotations.api.sharedpreferences.LongPrefField;
+import org.androidannotations.api.sharedpreferences.SharedPreferencesCompat;
+import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
+import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
+import org.androidannotations.api.sharedpreferences.StringPrefField;
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.holder.SharedPrefHolder;
+import org.androidannotations.model.AndroidSystemServices;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.rclass.IRClass;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> implements GeneratingAnnotationHandler<SharedPrefHolder> {
 
@@ -117,37 +145,37 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 		JVar contextParam = holder.getConstructorContextParam();
 
 		switch (scope) {
-			case ACTIVITY_DEFAULT: {
-				JMethod getLocalClassName = getLocalClassName(holder);
-				constructorSuperBlock.invoke("super") //
-						.arg(contextParam.invoke("getSharedPreferences") //
-								.arg(invoke(getLocalClassName).arg(contextParam)) //
-								.arg(JExpr.lit(mode)));
-				break;
-			}
-			case ACTIVITY: {
-				JMethod getLocalClassName = getLocalClassName(holder);
-				constructorSuperBlock.invoke("super") //
-						.arg(contextParam.invoke("getSharedPreferences") //
-								.arg(invoke(getLocalClassName).arg(contextParam) //
-										.plus(JExpr.lit("_" + interfaceSimpleName))) //
-								.arg(JExpr.lit(mode)));
-				break;
-			}
-			case UNIQUE: {
-				constructorSuperBlock.invoke("super") //
-						.arg(contextParam.invoke("getSharedPreferences") //
-								.arg(JExpr.lit(interfaceSimpleName)) //
-								.arg(JExpr.lit(mode)));
-				break;
-			}
-			case APPLICATION_DEFAULT: {
-				JClass preferenceManagerClass = holder.refClass("android.preference.PreferenceManager");
-				constructorSuperBlock.invoke("super") //
-						.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
-								.arg(contextParam));
-				break;
-			}
+		case ACTIVITY_DEFAULT: {
+			JMethod getLocalClassName = getLocalClassName(holder);
+			constructorSuperBlock.invoke("super") //
+					.arg(contextParam.invoke("getSharedPreferences") //
+							.arg(invoke(getLocalClassName).arg(contextParam)) //
+							.arg(JExpr.lit(mode)));
+			break;
+		}
+		case ACTIVITY: {
+			JMethod getLocalClassName = getLocalClassName(holder);
+			constructorSuperBlock.invoke("super") //
+					.arg(contextParam.invoke("getSharedPreferences") //
+							.arg(invoke(getLocalClassName).arg(contextParam) //
+									.plus(JExpr.lit("_" + interfaceSimpleName))) //
+							.arg(JExpr.lit(mode)));
+			break;
+		}
+		case UNIQUE: {
+			constructorSuperBlock.invoke("super") //
+					.arg(contextParam.invoke("getSharedPreferences") //
+							.arg(JExpr.lit(interfaceSimpleName)) //
+							.arg(JExpr.lit(mode)));
+			break;
+		}
+		case APPLICATION_DEFAULT: {
+			JClass preferenceManagerClass = holder.refClass("android.preference.PreferenceManager");
+			constructorSuperBlock.invoke("super") //
+					.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
+							.arg(contextParam));
+			break;
+		}
 		}
 	}
 
@@ -179,7 +207,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 	}
 
 	private void generateFieldMethodAndEditorFieldMethod(Element element, SharedPrefHolder sharedPrefHolder) {
-		for(ExecutableElement method : getValidMethods(element)) {
+		for (ExecutableElement method : getValidMethods(element)) {
 			generateFieldMethod(sharedPrefHolder, method);
 			sharedPrefHolder.createEditorFieldMethods(method);
 		}
@@ -235,7 +263,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 		JExpression defaultValue = defaultAnnotationValue;
 		if (defaultAnnotationValue == null) {
 			if (method.getAnnotation(DefaultRes.class) != null) {
-				defaultValue = extractResValue(holder, method,res);
+				defaultValue = extractResValue(holder, method, res);
 			} else {
 				defaultValue = defValue;
 			}
@@ -249,17 +277,17 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 
 		String resourceGetMethodName = null;
 		switch (res) {
-			case BOOL:
-				resourceGetMethodName = "getBoolean";
-				break;
-			case INTEGER:
-				resourceGetMethodName = "getInteger";
-				break;
-			case STRING:
-				resourceGetMethodName = "getString";
-				break;
-			default:
-				break;
+		case BOOL:
+			resourceGetMethodName = "getBoolean";
+			break;
+		case INTEGER:
+			resourceGetMethodName = "getInteger";
+			break;
+		case STRING:
+			resourceGetMethodName = "getString";
+			break;
+		default:
+			break;
 		}
 		return holder.getContextField().invoke("getResources").invoke(resourceGetMethodName).arg(idRef);
 	}

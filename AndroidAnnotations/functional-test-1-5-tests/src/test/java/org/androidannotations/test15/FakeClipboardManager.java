@@ -17,9 +17,7 @@ package org.androidannotations.test15;
 
 import android.text.ClipboardManager;
 
-import com.xtremelabs.robolectric.internal.Implementation;
-import com.xtremelabs.robolectric.internal.Implements;
-
+@SuppressWarnings("deprecation")
 public class FakeClipboardManager extends ClipboardManager {
 
 	private CharSequence text;

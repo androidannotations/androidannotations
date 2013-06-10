@@ -15,7 +15,14 @@
  */
 package org.androidannotations.process;
 
-import com.sun.codemodel.JCodeModel;
+import java.util.Set;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
@@ -23,12 +30,7 @@ import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import java.util.Set;
+import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
 
@@ -57,7 +59,7 @@ public class ModelProcessor {
 		this.annotationHandlers = annotationHandlers;
 	}
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ProcessResult process(AnnotationElements validatedModel) throws Exception {
 
 		ProcessHolder processHolder = new ProcessHolder(processingEnv);
@@ -88,8 +90,8 @@ public class ModelProcessor {
 			String annotationName = annotationHandler.getTarget();
 
 			/*
-			 * For ancestors, the annotationHandler manipulates the annotated elements,
-			 * but uses the holder for the root element
+			 * For ancestors, the annotationHandler manipulates the annotated
+			 * elements, but uses the holder for the root element
 			 */
 			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(annotationName);
 			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
@@ -119,7 +121,7 @@ public class ModelProcessor {
 				 * classes, because the generated classes are final anyway
 				 */
 				if (!isAbstractClass(enclosingElement)) {
-                    GeneratedClassHolder holder = processHolder.getGeneratedClassHolder(enclosingElement);
+					GeneratedClassHolder holder = processHolder.getGeneratedClassHolder(enclosingElement);
 					annotationHandler.process(annotatedElement, holder);
 				}
 			}
@@ -131,8 +133,6 @@ public class ModelProcessor {
 				processHolder.getOriginatingElements(), //
 				processHolder.getApiClassesToGenerate());
 	}
-
-
 
 	private boolean isAbstractClass(Element annotatedElement) {
 		if (annotatedElement instanceof TypeElement) {

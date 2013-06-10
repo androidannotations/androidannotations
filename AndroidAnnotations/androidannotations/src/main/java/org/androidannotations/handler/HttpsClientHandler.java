@@ -15,20 +15,36 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.*;
-import org.androidannotations.annotations.HttpsClient;
-import org.androidannotations.annotations.ResId;
-import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.rclass.IRClass;
-import org.androidannotations.rclass.IRInnerClass;
-import org.androidannotations.process.IsValid;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JExpr.ref;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import static com.sun.codemodel.JExpr.*;
+import org.androidannotations.annotations.HttpsClient;
+import org.androidannotations.annotations.ResId;
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.rclass.IRClass;
+import org.androidannotations.rclass.IRInnerClass;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JVar;
 
 public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> {
 

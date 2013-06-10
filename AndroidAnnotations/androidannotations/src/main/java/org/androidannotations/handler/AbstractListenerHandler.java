@@ -15,25 +15,39 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.*;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.rclass.IRClass;
-import org.androidannotations.process.IsValid;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
-import java.util.List;
 
-import static com.sun.codemodel.JExpr.*;
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.model.AndroidSystemServices;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.rclass.IRClass;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 
 public abstract class AbstractListenerHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 

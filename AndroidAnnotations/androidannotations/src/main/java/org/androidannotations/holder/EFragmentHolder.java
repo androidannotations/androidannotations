@@ -15,16 +15,32 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr.TRUE;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+
+import javax.lang.model.element.TypeElement;
+
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.HoloEverywhereHelper;
 import org.androidannotations.process.ProcessHolder;
 
-import javax.lang.model.element.TypeElement;
-
-import static com.sun.codemodel.JExpr.*;
-import static com.sun.codemodel.JMod.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult {
 
@@ -37,7 +53,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
 	private JVar injectBundleArgs;
-    private InstanceStateHolder instanceStateHolder;
+	private InstanceStateHolder instanceStateHolder;
 	private OnActivityResultHolder onActivityResultHolder;
 	private JBlock onCreateOptionsMenuMethodBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
@@ -48,7 +64,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-        instanceStateHolder = new InstanceStateHolder(this);
+		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
 		createOnCreate();
 		createOnViewCreated();
@@ -267,25 +283,25 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		getInitBody().invoke(injectArgsMethod);
 	}
 
-    @Override
-    public JBlock getSaveStateMethodBody() {
-        return instanceStateHolder.getSaveStateMethodBody();
-    }
+	@Override
+	public JBlock getSaveStateMethodBody() {
+		return instanceStateHolder.getSaveStateMethodBody();
+	}
 
-    @Override
-    public JVar getSaveStateBundleParam() {
-        return instanceStateHolder.getSaveStateBundleParam();
-    }
+	@Override
+	public JVar getSaveStateBundleParam() {
+		return instanceStateHolder.getSaveStateBundleParam();
+	}
 
-    @Override
-    public JMethod getRestoreStateMethod() {
-        return instanceStateHolder.getRestoreStateMethod();
-    }
+	@Override
+	public JMethod getRestoreStateMethod() {
+		return instanceStateHolder.getRestoreStateMethod();
+	}
 
-    @Override
-    public JVar getRestoreStateBundleParam() {
-        return instanceStateHolder.getRestoreStateBundleParam();
-    }
+	@Override
+	public JVar getRestoreStateBundleParam() {
+		return instanceStateHolder.getRestoreStateBundleParam();
+	}
 
 	@Override
 	public JBlock getOnCreateOptionsMenuMethodBody() {

@@ -15,8 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
@@ -24,13 +26,12 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EViewGroupHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
-import org.androidannotations.process.IsValid;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
 
 public class EViewGroupHandler extends BaseAnnotationHandler<EViewGroupHolder> implements GeneratingAnnotationHandler<EViewGroupHolder> {
 
@@ -68,7 +69,7 @@ public class EViewGroupHandler extends BaseAnnotationHandler<EViewGroupHolder> i
 	public void process(Element element, EViewGroupHolder holder) {
 		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.LAYOUT, false);
 		if (contentViewId != null) {
-            holder.getSetContentViewBlock().invoke("inflate").arg(holder.getContextRef()).arg(contentViewId).arg(JExpr._this());
+			holder.getSetContentViewBlock().invoke("inflate").arg(holder.getContextRef()).arg(contentViewId).arg(JExpr._this());
 		}
 	}
 }

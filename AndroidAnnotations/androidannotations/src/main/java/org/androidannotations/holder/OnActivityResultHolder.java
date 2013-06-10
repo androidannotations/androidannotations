@@ -15,12 +15,20 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.process.ProcessHolder;
+import static com.sun.codemodel.JExpr._super;
 
 import java.util.HashMap;
 
-import static com.sun.codemodel.JExpr._super;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCase;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JSwitch;
+import com.sun.codemodel.JVar;
 
 public class OnActivityResultHolder {
 
@@ -99,7 +107,7 @@ public class OnActivityResultHolder {
 		dataParam = method.param(classes().INTENT, "data");
 		JBlock body = method.body();
 		body.invoke(_super(), method).arg(requestCodeParam).arg(resultCodeParam).arg(dataParam);
-		afterSuperBlock =  body.block();
+		afterSuperBlock = body.block();
 	}
 
 	private JCodeModel codeModel() {

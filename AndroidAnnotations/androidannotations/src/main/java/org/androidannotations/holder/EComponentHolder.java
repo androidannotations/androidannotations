@@ -15,17 +15,26 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
+import static com.sun.codemodel.JMod.PRIVATE;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.sun.codemodel.JMod.PRIVATE;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
@@ -36,7 +45,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	private JVar handler;
 
 	public EComponentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-        super(processHolder, annotatedElement);
+		super(processHolder, annotatedElement);
 	}
 
 	public JExpression getContextRef() {
@@ -68,7 +77,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		return resourcesRef;
 	}
 
-	private void setResourcesRef()  {
+	private void setResourcesRef() {
 		resourcesRef = getInitBody().decl(classes().RESOURCES, "resources_", getContextRef().invoke("getResources"));
 	}
 

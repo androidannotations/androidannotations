@@ -15,11 +15,16 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public interface HasInstanceState extends GeneratedClassHolder {
-    JBlock getSaveStateMethodBody();
-    JVar getSaveStateBundleParam();
-    JMethod getRestoreStateMethod();
-    JVar getRestoreStateBundleParam();
+	JBlock getSaveStateMethodBody();
+
+	JVar getSaveStateBundleParam();
+
+	JMethod getRestoreStateMethod();
+
+	JVar getRestoreStateBundleParam();
 }

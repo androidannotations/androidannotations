@@ -15,17 +15,17 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Spinner;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.annotations.ViewById;
+
+import android.app.Activity;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
 
 @EActivity(R.layout.item_clicks_handled)
 public class ItemClicksHandledActivity extends Activity {
@@ -44,7 +44,7 @@ public class ItemClicksHandledActivity extends Activity {
 
 	@ViewById
 	ListView listViewWithPosition;
-	
+
 	@ViewById
 	ListView listViewWithOneParam;
 
@@ -65,7 +65,8 @@ public class ItemClicksHandledActivity extends Activity {
 
 	@AfterViews
 	void initView() {
-		adapter = ArrayAdapter.createFromResource(this, R.array.planets_array, R.layout.simple_spinner_item);
+		adapter = ArrayAdapter.createFromResource(this, R.array.planets_array,
+				R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		spinner.setAdapter(adapter);
@@ -101,23 +102,23 @@ public class ItemClicksHandledActivity extends Activity {
 	public void spinnerWithArgument(String selectedItem) {
 		spinnerWithArgumentSelectedItem = selectedItem;
 	}
-	
+
 	@ItemClick
 	void listViewWithPosition(int position) {
 		listViewWithPositionClickedPosition = position;
 	}
-	
+
 	@ItemSelect
 	void listViewWithPositionItemSelected(boolean selected, int position) {
 		listViewWithPositionItemSelected = selected;
 		listViewWithPositionItemSelectedPosition = position;
 	}
-	
+
 	@ItemSelect
 	void listViewWithOneParamItemSelected(boolean selected) {
 		listViewWithOneParamItemSelected = selected;
 	}
-	
+
 	@ItemLongClick
 	void listViewWithPositionItemLongClicked(int position) {
 

@@ -15,15 +15,17 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JFieldRef;
+import java.util.List;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 import org.androidannotations.rclass.IRInnerClass;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import java.util.List;
+import com.sun.codemodel.JFieldRef;
 
 public class IdAnnotationHelper extends TargetAnnotationHelper {
 
@@ -48,21 +50,21 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 		return super.extractAnnotationResources(element, getTarget(), rClass.get(res), useElementName);
 	}
 
-    public List<JFieldRef> extractAnnotationFieldRefs(GeneratedClassHolder holder, Element element, Res res, boolean useElementName) {
-        return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
-    }
+	public List<JFieldRef> extractAnnotationFieldRefs(GeneratedClassHolder holder, Element element, Res res, boolean useElementName) {
+		return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
+	}
 
-    public JFieldRef extractOneAnnotationFieldRef(GeneratedClassHolder holder, Element element, Res res, boolean useElementName) {
-        return extractOneAnnotationFieldRef(holder, element, getTarget(), res, useElementName);
-    }
+	public JFieldRef extractOneAnnotationFieldRef(GeneratedClassHolder holder, Element element, Res res, boolean useElementName) {
+		return extractOneAnnotationFieldRef(holder, element, getTarget(), res, useElementName);
+	}
 
-    public JFieldRef extractOneAnnotationFieldRef(GeneratedClassHolder holder, Element element, String annotationName, Res res, boolean useElementName) {
-        List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, annotationName, rClass.get(res), useElementName);
+	public JFieldRef extractOneAnnotationFieldRef(GeneratedClassHolder holder, Element element, String annotationName, Res res, boolean useElementName) {
+		List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, annotationName, rClass.get(res), useElementName);
 
-        if (jFieldRefs.size() == 1) {
-            return jFieldRefs.get(0);
-        } else {
-            return null;
-        }
-    }
+		if (jFieldRefs.size() == 1) {
+			return jFieldRefs.get(0);
+		} else {
+			return null;
+		}
+	}
 }

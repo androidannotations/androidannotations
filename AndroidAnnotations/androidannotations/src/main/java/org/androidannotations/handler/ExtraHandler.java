@@ -15,7 +15,24 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.*;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
@@ -26,16 +43,16 @@ import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-
-import static com.sun.codemodel.JExpr.*;
-import static com.sun.codemodel.JMod.*;
-import static org.androidannotations.helper.CanonicalNameConstants.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 
@@ -114,8 +131,8 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		}
 
 		/*
-		 * Handle the android bug :
-		 * getIntent().getExtras().getByteArray() always returns null;
+		 * Handle the android bug : getIntent().getExtras().getByteArray()
+		 * always returns null;
 		 */
 		restoreMethodCall = handleByteArrayExtraBug(element, extraKeyStaticField, restoreMethodCall);
 

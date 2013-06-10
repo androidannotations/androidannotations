@@ -15,35 +15,41 @@
  */
 package org.androidannotations;
 
+import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
+import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Set;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedOptions;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
+
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.Option;
-import org.androidannotations.process.TimeStats;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
 import org.androidannotations.model.ModelExtractor;
 import org.androidannotations.process.ModelProcessor;
 import org.androidannotations.process.ModelValidator;
+import org.androidannotations.process.TimeStats;
 import org.androidannotations.rclass.AndroidRClassFinder;
 import org.androidannotations.rclass.CoumpoundRClass;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.ProjectRClassFinder;
-
-import javax.annotation.processing.*;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Set;
-
-import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
-import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })

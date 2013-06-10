@@ -17,11 +17,11 @@ package org.androidannotations.test15;
 
 import java.util.List;
 
-import android.app.Activity;
-import android.content.Intent;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+
+import android.app.Activity;
+import android.content.Intent;
 
 @EActivity
 public class ExtraInjectedActivity extends Activity {
@@ -43,7 +43,7 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra
 	String extraWithoutValue;
-	
+
 	@Extra
 	ParcelableSerializableData parcelableSerializableData;
 
@@ -55,7 +55,10 @@ public class ExtraInjectedActivity extends Activity {
 	void intentWithExtras() {
 		ExtraInjectedActivity_.intent(this).arrayExtra(null).start();
 		ExtraInjectedActivity_.intent(this).intExtra(42).get();
-		ExtraInjectedActivity_.intent(this).stringExtra("hello").startForResult(42);
-		ExtraInjectedActivity_.intent(this).parcelableSerializableData(new ParcelableSerializableData()).get();
+		ExtraInjectedActivity_.intent(this).stringExtra("hello")
+				.startForResult(42);
+		ExtraInjectedActivity_.intent(this)
+				.parcelableSerializableData(new ParcelableSerializableData())
+				.get();
 	}
 }

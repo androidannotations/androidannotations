@@ -15,12 +15,12 @@
  */
 package org.androidannotations.helper;
 
-import org.androidannotations.holder.EComponentHolder;
-
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.holder.EComponentHolder;
 
 public class ActionBarSherlockHelper {
 

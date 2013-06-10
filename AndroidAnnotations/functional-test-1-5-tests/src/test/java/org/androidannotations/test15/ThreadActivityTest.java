@@ -21,12 +21,11 @@ import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.Executor;
 
+import org.androidannotations.api.BackgroundExecutor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-
-import org.androidannotations.api.BackgroundExecutor;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ThreadActivityTest {
@@ -41,14 +40,14 @@ public class ThreadActivityTest {
 
 	@Test
 	public void backgroundDelegatesToExecutor() {
-		
+
 		Executor executor = mock(Executor.class);
-		
+
 		BackgroundExecutor.setExecutor(executor);
-		
+
 		activity.emptyBackgroundMethod();
-		
-		verify(executor).execute(Mockito.<Runnable>any());
+
+		verify(executor).execute(Mockito.<Runnable> any());
 	}
 
 }

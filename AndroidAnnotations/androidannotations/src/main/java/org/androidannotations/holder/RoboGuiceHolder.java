@@ -15,11 +15,12 @@
  */
 package org.androidannotations.holder;
 
+import org.androidannotations.process.ProcessHolder;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.process.ProcessHolder;
 
 public class RoboGuiceHolder {
 

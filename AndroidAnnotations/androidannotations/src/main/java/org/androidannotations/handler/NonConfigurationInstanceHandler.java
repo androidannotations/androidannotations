@@ -15,7 +15,15 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.*;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.ref;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -25,12 +33,11 @@ import org.androidannotations.holder.NonConfigurationHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
-import static com.sun.codemodel.JExpr.*;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JVar;
 
 public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActivityHolder> {
 

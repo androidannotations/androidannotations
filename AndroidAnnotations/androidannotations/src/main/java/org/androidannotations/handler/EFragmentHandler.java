@@ -15,25 +15,26 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.EFragmentHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.rclass.IRClass;
-import org.androidannotations.process.IsValid;
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr._null;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr._null;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.holder.EFragmentHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.rclass.IRClass;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JVar;
 
 public class EFragmentHandler extends BaseAnnotationHandler<EFragmentHolder> implements GeneratingAnnotationHandler<EFragmentHolder> {
 
@@ -74,7 +75,7 @@ public class EFragmentHandler extends BaseAnnotationHandler<EFragmentHolder> imp
 
 			JBlock block = holder.getSetContentViewBlock();
 			JVar inflater = holder.getInflater();
-			JVar container  = holder.getContainer();
+			JVar container = holder.getContainer();
 
 			JFieldVar contentView = holder.getContentView();
 

@@ -15,11 +15,12 @@
  */
 package org.androidannotations.process;
 
-import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.lang.model.element.Element;
 
 public class OriginatingElements {
 

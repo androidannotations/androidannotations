@@ -15,7 +15,11 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class OnSeekBarChangeListenerHolder {
 

@@ -15,21 +15,25 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
-import org.androidannotations.process.ProcessHolder;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
+import java.util.List;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import java.util.List;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JMod.*;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public class EBeanHolder extends EComponentWithViewSupportHolder {
 
@@ -66,6 +70,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 	protected void setContextRef() {
 		contextRef = getContextField();
 	}
+
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, processHolder.codeModel().VOID, "init_");
 		JBlock constructorBody = constructor.body();
@@ -80,9 +85,9 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 		JBlock factoryMethodBody = factoryMethod.body();
 
-			/*
-			 * Singletons are bound to the application context
-			 */
+		/*
+		 * Singletons are bound to the application context
+		 */
 		if (hasSingletonScope) {
 
 			JFieldVar instanceField = generatedClass.field(PRIVATE | STATIC, generatedClass, "instance_");

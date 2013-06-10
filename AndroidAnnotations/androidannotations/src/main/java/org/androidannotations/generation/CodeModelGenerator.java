@@ -15,12 +15,14 @@
  */
 package org.androidannotations.generation;
 
-import com.sun.codemodel.writer.PrologCodeWriter;
-import org.androidannotations.process.ModelProcessor;
+import java.io.IOException;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
-import java.io.IOException;
+
+import org.androidannotations.process.ModelProcessor;
+
+import com.sun.codemodel.writer.PrologCodeWriter;
 
 public class CodeModelGenerator {
 

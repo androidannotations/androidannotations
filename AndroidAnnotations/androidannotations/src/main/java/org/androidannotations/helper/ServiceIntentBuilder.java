@@ -15,11 +15,12 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JMethod;
+import static com.sun.codemodel.JMod.PUBLIC;
+
 import org.androidannotations.holder.HasIntentBuilder;
 
-import static com.sun.codemodel.JMod.PUBLIC;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JMethod;
 
 public class ServiceIntentBuilder extends IntentBuilder {
 

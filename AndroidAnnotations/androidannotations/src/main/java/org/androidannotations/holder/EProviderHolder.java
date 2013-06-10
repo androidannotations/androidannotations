@@ -15,16 +15,17 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JMethod;
-import org.androidannotations.process.ProcessHolder;
-
-import javax.lang.model.element.TypeElement;
-
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+
+import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JMethod;
 
 public class EProviderHolder extends EComponentHolder {
 

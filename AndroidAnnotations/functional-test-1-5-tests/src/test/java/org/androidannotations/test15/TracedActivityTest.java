@@ -25,47 +25,46 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class TracedActivityTest {
 
-    @Test
-    public void servicesAreInjected() throws IOException {
-    	TracedActivity_ activity = new TracedActivity_();
-    	activity.onCreate(null);
-    	
-    	assertThat(activity.tracedMethodCalled).isFalse();
-    	activity.tracedMethod(null, null);
-    	assertThat(activity.tracedMethodCalled).isTrue();
+	@Test
+	public void servicesAreInjected() throws IOException {
+		TracedActivity_ activity = new TracedActivity_();
+		activity.onCreate(null);
 
-    	assertThat(activity.voidTracedMethodCalled).isFalse();
-    	activity.voidTracedMethod(null, null);
-    	assertThat(activity.voidTracedMethodCalled).isTrue();
+		assertThat(activity.tracedMethodCalled).isFalse();
+		activity.tracedMethod(null, null);
+		assertThat(activity.tracedMethodCalled).isTrue();
 
-    	assertThat(activity.voidTracedMethodDebugCalled).isFalse();
-    	activity.voidTracedMethodDebug();
-    	assertThat(activity.voidTracedMethodDebugCalled).isTrue();
+		assertThat(activity.voidTracedMethodCalled).isFalse();
+		activity.voidTracedMethod(null, null);
+		assertThat(activity.voidTracedMethodCalled).isTrue();
 
-    	assertThat(activity.voidTracedMethodErrorCalled).isFalse();
-    	activity.voidTracedMethodError();
-    	assertThat(activity.voidTracedMethodErrorCalled).isTrue();
+		assertThat(activity.voidTracedMethodDebugCalled).isFalse();
+		activity.voidTracedMethodDebug();
+		assertThat(activity.voidTracedMethodDebugCalled).isTrue();
 
-    	assertThat(activity.voidTracedMethodInfoCalled).isFalse();
-    	activity.voidTracedMethodInfo();
-    	assertThat(activity.voidTracedMethodInfoCalled).isTrue();
+		assertThat(activity.voidTracedMethodErrorCalled).isFalse();
+		activity.voidTracedMethodError();
+		assertThat(activity.voidTracedMethodErrorCalled).isTrue();
 
-    	assertThat(activity.voidTracedMethodVerboseCalled).isFalse();
-    	activity.voidTracedMethodVerbose();
-    	assertThat(activity.voidTracedMethodVerboseCalled).isTrue();
+		assertThat(activity.voidTracedMethodInfoCalled).isFalse();
+		activity.voidTracedMethodInfo();
+		assertThat(activity.voidTracedMethodInfoCalled).isTrue();
 
-    	assertThat(activity.voidTracedMethodWarnCalled).isFalse();
-    	activity.voidTracedMethodWarn();
-    	assertThat(activity.voidTracedMethodWarnCalled).isTrue();
+		assertThat(activity.voidTracedMethodVerboseCalled).isFalse();
+		activity.voidTracedMethodVerbose();
+		assertThat(activity.voidTracedMethodVerboseCalled).isTrue();
 
-        assertThat(activity.overloadedMethodInt).isFalse();
-        activity.overloadedMethod(0);
-        assertThat(activity.overloadedMethodInt).isTrue();
+		assertThat(activity.voidTracedMethodWarnCalled).isFalse();
+		activity.voidTracedMethodWarn();
+		assertThat(activity.voidTracedMethodWarnCalled).isTrue();
 
-        assertThat(activity.overloadedMethodIntFLoat).isFalse();
-        activity.overloadedMethod(0, 0f);
-        assertThat(activity.overloadedMethodIntFLoat).isTrue();
-    }
-    
-    
+		assertThat(activity.overloadedMethodInt).isFalse();
+		activity.overloadedMethod(0);
+		assertThat(activity.overloadedMethodInt).isTrue();
+
+		assertThat(activity.overloadedMethodIntFLoat).isFalse();
+		activity.overloadedMethod(0, 0f);
+		assertThat(activity.overloadedMethodIntFLoat).isTrue();
+	}
+
 }

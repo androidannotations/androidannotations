@@ -15,15 +15,15 @@
  */
 package org.androidannotations.handler;
 
-import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.holder.EReceiverHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.process.IsValid;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.annotations.EReceiver;
+import org.androidannotations.holder.EReceiverHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
 
 public class EReceiverHandler extends BaseAnnotationHandler<EReceiverHolder> implements GeneratingAnnotationHandler<EReceiverHolder> {
 

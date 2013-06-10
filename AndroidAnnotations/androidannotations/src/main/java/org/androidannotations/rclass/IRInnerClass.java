@@ -15,8 +15,9 @@
  */
 package org.androidannotations.rclass;
 
-import com.sun.codemodel.JFieldRef;
 import org.androidannotations.holder.GeneratedClassHolder;
+
+import com.sun.codemodel.JFieldRef;
 
 public interface IRInnerClass {
 

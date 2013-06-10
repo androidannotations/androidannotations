@@ -15,15 +15,21 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.helper.ServiceIntentBuilder;
-import org.androidannotations.process.ProcessHolder;
-
-import javax.lang.model.element.TypeElement;
-
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+
+import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.helper.ServiceIntentBuilder;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
 
 public class EServiceHolder extends EComponentHolder implements HasIntentBuilder {
 

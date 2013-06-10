@@ -15,14 +15,22 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.process.ProcessHolder;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 import javax.lang.model.element.TypeElement;
 
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JMod.*;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public class EApplicationHolder extends EComponentHolder {
 
@@ -40,14 +48,14 @@ public class EApplicationHolder extends EComponentHolder {
 		JClass annotatedComponent = generatedClass._extends();
 
 		staticInstanceField = generatedClass.field(PRIVATE | STATIC, annotatedComponent, "INSTANCE_");
-        // Static singleton getter and setter
-        JMethod getInstance = generatedClass.method(PUBLIC | STATIC, annotatedComponent, GET_APPLICATION_INSTANCE);
-        getInstance.body()._return(staticInstanceField);
+		// Static singleton getter and setter
+		JMethod getInstance = generatedClass.method(PUBLIC | STATIC, annotatedComponent, GET_APPLICATION_INSTANCE);
+		getInstance.body()._return(staticInstanceField);
 
-        JMethod setInstance = generatedClass.method(PUBLIC | STATIC, codeModel().VOID, "setForTesting");
-        setInstance.javadoc().append("Visible for testing purposes");
-        JVar applicationParam = setInstance.param(annotatedComponent, "application");
-        setInstance.body().assign(staticInstanceField, applicationParam);
+		JMethod setInstance = generatedClass.method(PUBLIC | STATIC, codeModel().VOID, "setForTesting");
+		setInstance.javadoc().append("Visible for testing purposes");
+		JVar applicationParam = setInstance.param(annotatedComponent, "application");
+		setInstance.body().assign(staticInstanceField, applicationParam);
 	}
 
 	private void createOnCreate() {

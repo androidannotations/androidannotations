@@ -15,7 +15,12 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JMethod;
+import static org.androidannotations.helper.CanonicalNameConstants.PRODUCE;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
@@ -23,11 +28,7 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
-import static org.androidannotations.helper.CanonicalNameConstants.PRODUCE;
+import com.sun.codemodel.JMethod;
 
 public class ProduceHandler extends BaseAnnotationHandler<EComponentHolder> {
 

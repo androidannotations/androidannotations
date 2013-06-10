@@ -78,7 +78,8 @@ public class LongClicksHandledActivityTest {
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonEventHandled).isFalse();
 
-		activity.findViewById(R.id.configurationOverConventionButton).performLongClick();
+		activity.findViewById(R.id.configurationOverConventionButton)
+				.performLongClick();
 
 		assertThat(activity.overridenConventionButtonEventHandled).isTrue();
 	}

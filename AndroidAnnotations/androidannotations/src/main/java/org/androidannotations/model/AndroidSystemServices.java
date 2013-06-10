@@ -15,12 +15,14 @@
  */
 package org.androidannotations.model;
 
-import com.sun.codemodel.JFieldRef;
-import org.androidannotations.holder.EComponentHolder;
-
-import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.holder.EComponentHolder;
+
+import com.sun.codemodel.JFieldRef;
 
 public class AndroidSystemServices {
 

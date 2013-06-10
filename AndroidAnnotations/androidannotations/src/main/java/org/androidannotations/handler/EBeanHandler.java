@@ -15,15 +15,15 @@
  */
 package org.androidannotations.handler;
 
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.holder.EBeanHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.process.IsValid;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.holder.EBeanHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
 
 public class EBeanHandler extends BaseAnnotationHandler<EBeanHolder> implements GeneratingAnnotationHandler<EBeanHolder> {
 
@@ -32,7 +32,7 @@ public class EBeanHandler extends BaseAnnotationHandler<EBeanHolder> implements 
 	}
 
 	@Override
-	public EBeanHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedComponent) throws Exception{
+	public EBeanHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedComponent) throws Exception {
 		return new EBeanHolder(processHolder, annotatedComponent);
 	}
 
@@ -55,10 +55,10 @@ public class EBeanHandler extends BaseAnnotationHandler<EBeanHolder> implements 
 		EBean.Scope eBeanScope = eBeanAnnotation.scope();
 		boolean hasSingletonScope = eBeanScope == EBean.Scope.Singleton;
 
-        holder.createFactoryMethod(hasSingletonScope);
+		holder.createFactoryMethod(hasSingletonScope);
 
 		if (!hasSingletonScope) {
-            holder.createRebindMethod();
+			holder.createRebindMethod();
 		}
 	}
 }
