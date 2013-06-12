@@ -522,15 +522,19 @@ public class ValidatorHelper {
 		TypeMirror modelTypeMirror = annotationHelper.extractAnnotationParameter(element, "model");
 
 		TypeElement daoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO);
+		TypeElement runtimeExceptionDaoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
+
 		if (daoTypeElement != null) {
 
 			TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
 			DeclaredType daoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, modelTypeMirror, wildcardType);
+			DeclaredType runtimeExceptionDaoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelTypeMirror, wildcardType);
 
-			// Checks that elementType extends Dao<ModelType, ?>
-			if (!annotationHelper.isSubtype(elementType, daoParameterizedType)) {
+			// Checks that elementType extends Dao<ModelType, ?> or RuntimeExceptionDao<ModelType, ?>
+			if (!annotationHelper.isSubtype(elementType, daoParameterizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParameterizedType)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString());
+				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString() //
+																									+  " or " +  runtimeExceptionDaoParameterizedType.toString());
 			}
 		}
 	}
