@@ -20,9 +20,12 @@ import static com.sun.codemodel.JMod.PRIVATE;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 
@@ -82,13 +85,27 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 							.arg(dbHelperClass));
 		}
 
+
+		JExpression modelClass = holder.refClass(modelObjectTypeMirror.toString()).dotclass();
+
+		JExpression injectExpr;
+		if (elementExtendsRuntimeExceptionDao(element, modelObjectTypeMirror)) {
+
+			injectExpr = classes.RUNTIME_EXCEPTION_DAO//
+							.staticInvoke("createDao") //
+							.arg(databaseHelperRef.invoke("getConnectionSource")) //
+							.arg(modelClass);
+
+		} else {
+
+			injectExpr = databaseHelperRef.invoke("getDao").arg(modelClass);
+
+		}
+
 		// create dao from database helper
 		JTryBlock tryBlock = initBody._try();
 
-		JExpression modelClass = holder.refClass(modelObjectTypeMirror.toString()).dotclass();
-		tryBlock.body().assign(ref(fieldName), //
-				databaseHelperRef.invoke("getDao"). //
-						arg(modelClass));
+		tryBlock.body().assign(ref(fieldName), injectExpr);
 
 		JCatchBlock catchBlock = tryBlock._catch(classes.SQL_EXCEPTION);
 		JVar exception = catchBlock.param("e");
@@ -98,5 +115,13 @@ public class OrmLiteDaoProcessor implements DecoratingElementProcessor {
 				.arg(holder.generatedClass.name()) //
 				.arg("Could not create DAO " + fieldName) //
 				.arg(exception);
+	}
+
+	private boolean elementExtendsRuntimeExceptionDao(Element element, TypeMirror modelObjectTypeMirror) {
+		TypeMirror elementType = element.asType();
+		TypeElement runtimeExceptionDaoTypeElement = helper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
+		TypeMirror wildcardType = helper.getTypeUtils().getWildcardType(null, null);
+		DeclaredType runtimeExceptionDaoParameterizedType = helper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelObjectTypeMirror, wildcardType);
+		return helper.isSubtype(elementType, runtimeExceptionDaoParameterizedType);
 	}
 }
