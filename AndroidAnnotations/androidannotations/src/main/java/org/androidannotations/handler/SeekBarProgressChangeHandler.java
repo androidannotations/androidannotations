@@ -95,7 +95,7 @@ public class SeekBarProgressChangeHandler extends BaseAnnotationHandler<ECompone
 			}
 		}
 
-		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
 			OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = holder.getOnSeekBarChangeListenerHolder(idRef);

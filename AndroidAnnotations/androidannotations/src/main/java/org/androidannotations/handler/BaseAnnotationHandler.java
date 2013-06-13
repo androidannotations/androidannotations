@@ -18,6 +18,8 @@ package org.androidannotations.handler;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -25,6 +27,7 @@ import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
 public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> implements AnnotationHandler<T> {
@@ -36,6 +39,7 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 	protected AndroidSystemServices androidSystemServices;
 	protected AndroidManifest androidManifest;
 	protected AnnotationElements validatedModel;
+	protected ProcessHolder processHolder;
 
 	public BaseAnnotationHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
 		this(targetClass.getName(), processingEnvironment);
@@ -62,6 +66,35 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 	@Override
 	public void setValidatedModel(AnnotationElements validatedModel) {
 		this.validatedModel = validatedModel;
+	}
+
+	@Override
+	public void setProcessHolder(ProcessHolder processHolder) {
+		this.processHolder = processHolder;
+	}
+
+	public ProcessingEnvironment processingEnvironment() {
+		return processHolder.processingEnvironment();
+	}
+
+	public ProcessHolder.Classes classes() {
+		return processHolder.classes();
+	}
+
+	public JCodeModel codeModel() {
+		return processHolder.codeModel();
+	}
+
+	public JClass refClass(String fullyQualifiedClassName) {
+		return processHolder.refClass(fullyQualifiedClassName);
+	}
+
+	public JClass refClass(Class<?> clazz) {
+		return processHolder.refClass(clazz);
+	}
+
+	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
+		processHolder.generateApiClass(originatingElement, apiClass);
 	}
 
 	@Override

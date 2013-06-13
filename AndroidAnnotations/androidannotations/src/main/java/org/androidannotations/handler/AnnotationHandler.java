@@ -21,6 +21,7 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
 public interface AnnotationHandler<T extends GeneratedClassHolder> {
@@ -34,4 +35,6 @@ public interface AnnotationHandler<T extends GeneratedClassHolder> {
 	void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest);
 
 	void setValidatedModel(AnnotationElements validatedModel);
+
+	void setProcessHolder(ProcessHolder processHolder);
 }

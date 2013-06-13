@@ -77,9 +77,9 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 		String fieldName = element.getSimpleName().toString();
 		JBlock methodBody = holder.getInitBody();
 
-		ProcessHolder.Classes classes = holder.classes();
+		ProcessHolder.Classes classes = classes();
 
-		JDefinedClass jAnonClass = holder.codeModel().anonymousClass(classes.DEFAULT_HTTP_CLIENT);
+		JDefinedClass jAnonClass = codeModel().anonymousClass(classes.DEFAULT_HTTP_CLIENT);
 
 		JMethod method = jAnonClass.method(JMod.PROTECTED, classes.CLIENT_CONNECTION_MANAGER, "createClientConnectionManager");
 		method.annotate(Override.class);
@@ -112,13 +112,13 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 		IRInnerClass rInnerClass = rClass.get(IRClass.Res.RAW);
 		if (useCustomKeyStore) {
-			JFieldRef rawIdRef = rInnerClass.getIdStaticRef(keyStoreRawId, holder);
+			JFieldRef rawIdRef = rInnerClass.getIdStaticRef(keyStoreRawId, processHolder);
 			JInvocation jInvRawKey = jVarRes.invoke("openRawResource").arg(rawIdRef);
 			jVarKeyFile = jTryBlock.body().decl(classes.INPUT_STREAM, "inKeystore", jInvRawKey);
 		}
 
 		if (useCustomTrustStore) {
-			JFieldRef rawIdRef = rInnerClass.getIdStaticRef(trustStoreRawId, holder);
+			JFieldRef rawIdRef = rInnerClass.getIdStaticRef(trustStoreRawId, processHolder);
 			JInvocation jInvRawTrust = jVarRes.invoke("openRawResource").arg(rawIdRef);
 			jVarTrstFile = jTryBlock.body().decl(classes.INPUT_STREAM, "inTrustStore", jInvRawTrust);
 

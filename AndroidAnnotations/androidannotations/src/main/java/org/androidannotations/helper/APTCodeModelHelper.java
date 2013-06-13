@@ -99,7 +99,7 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EComponentHolder holder) {
+	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
 
 		String methodName = executableElement.getSimpleName().toString();
 
@@ -154,7 +154,7 @@ public class APTCodeModelHelper {
 		return null;
 	}
 
-	public void callSuperMethod(JMethod superMethod, EComponentHolder holder, JBlock callBlock) {
+	public void callSuperMethod(JMethod superMethod, GeneratedClassHolder holder, JBlock callBlock) {
 		JExpression activitySuper = holder.getGeneratedClass().staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
 

@@ -49,13 +49,13 @@ public class GetHandler extends RestMethodHandler {
 	}
 
 	@Override
-	protected JExpression getRequestEntity(Element element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
+	protected JExpression getRequestEntity(Element element, JBlock methodBody, TreeMap<String, JVar> methodParams) {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		String mediaType = restAnnotationHelper.acceptedHeaders(executableElement);
 		if (mediaType != null) {
-			JClass httpEntity = holder.classes().HTTP_ENTITY;
+			JClass httpEntity = classes().HTTP_ENTITY;
 			JInvocation newHttpEntityVarCall = JExpr._new(httpEntity.narrow(Object.class));
-			JVar httpHeaders = restAnnotationHelper.declareAcceptedHttpHeaders(holder, methodBody, mediaType);
+			JVar httpHeaders = restAnnotationHelper.declareAcceptedHttpHeaders(processHolder, methodBody, mediaType);
 			newHttpEntityVarCall.arg(httpHeaders);
 			return methodBody.decl(httpEntity.narrow(Object.class), "requestEntity", newHttpEntityVarCall);
 		}

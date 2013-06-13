@@ -99,7 +99,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		} else {
 			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName + "Extra");
 		}
-		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, holder.classes().STRING, staticFieldName, lit(extraKey));
+		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(extraKey));
 	}
 
 	private void injectExtraInComponent(Element element, HasExtras hasExtras, JFieldVar extraKeyStaticField, String fieldName) {
@@ -170,9 +170,9 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		JBlock body = method.body();
 		JInvocation invocation = body.invoke(holder.getIntentField(), "putExtra").arg(extraKeyStaticField);
 		if (castToSerializable) {
-			invocation.arg(cast(holder.classes().SERIALIZABLE, extraParam));
+			invocation.arg(cast(classes().SERIALIZABLE, extraParam));
 		} else if (castToParcelable) {
-			invocation.arg(cast(holder.classes().PARCELABLE, extraParam));
+			invocation.arg(cast(classes().PARCELABLE, extraParam));
 		} else {
 			invocation.arg(extraParam);
 		}

@@ -62,16 +62,14 @@ public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSup
 
 	@Override
 	public void process(Element element, EComponentWithViewSupportHolder holder) {
-		ProcessHolder.Classes classes = holder.classes();
-
 		String fieldName = element.getSimpleName().toString();
 
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.STRING, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.STRING, true);
 
 		JBlock methodBody = holder.getOnViewChangedBody();
 		methodBody //
 				._if(ref(fieldName).ne(_null())) //
 				._then() //
-				.invoke(ref(fieldName), "setText").arg(classes.HTML.staticInvoke("fromHtml").arg(holder.getContextRef().invoke("getString").arg(idRef)));
+				.invoke(ref(fieldName), "setText").arg(classes().HTML.staticInvoke("fromHtml").arg(holder.getContextRef().invoke("getString").arg(idRef)));
 	}
 }

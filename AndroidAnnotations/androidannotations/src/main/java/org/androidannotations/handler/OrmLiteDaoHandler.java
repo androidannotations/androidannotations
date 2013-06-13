@@ -61,7 +61,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror modelObjectTypeMirror = annotationHelper.extractAnnotationParameter(element, "model");
-		JExpression modelClass = holder.refClass(modelObjectTypeMirror.toString()).dotclass();
+		JExpression modelClass = refClass(modelObjectTypeMirror.toString()).dotclass();
 
 		TypeMirror databaseHelperTypeMirror = annotationHelper.extractAnnotationParameter(element, "helper");
 		JFieldVar databaseHelperRef = holder.getDatabaseHelperRef(databaseHelperTypeMirror);
@@ -71,11 +71,11 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 		JTryBlock tryBlock = initBody._try();
 		tryBlock.body().assign(ref(fieldName), databaseHelperRef.invoke("getDao").arg(modelClass));
 
-		JCatchBlock catchBlock = tryBlock._catch(holder.classes().SQL_EXCEPTION);
+		JCatchBlock catchBlock = tryBlock._catch(classes().SQL_EXCEPTION);
 		JVar exception = catchBlock.param("e");
 
 		catchBlock.body() //
-				.staticInvoke(holder.classes().LOG, "e") //
+				.staticInvoke(classes().LOG, "e") //
 				.arg(holder.getGeneratedClass().name()) //
 				.arg("Could not create DAO " + fieldName) //
 				.arg(exception);

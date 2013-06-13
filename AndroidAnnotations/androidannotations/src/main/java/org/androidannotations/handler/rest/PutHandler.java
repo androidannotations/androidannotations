@@ -51,7 +51,7 @@ public class PutHandler extends RestMethodHandler {
 	}
 
 	@Override
-	protected JExpression getRequestEntity(Element element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
-		return restAnnotationHelper.declareHttpEntity(holder, methodBody, methodParams);
+	protected JExpression getRequestEntity(Element element, JBlock methodBody, TreeMap<String, JVar> methodParams) {
+		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, methodParams);
 	}
 }

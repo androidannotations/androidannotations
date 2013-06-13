@@ -61,7 +61,7 @@ public class OptionsMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 		JVar menuInflater = holder.getOnCreateOptionsMenuMenuInflaterVar();
 		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
 
-		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, IRClass.Res.MENU, false);
+		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.MENU, false);
 		for (JFieldRef optionsMenuRefId : fieldRefs) {
 			body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam);
 		}

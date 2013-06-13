@@ -39,7 +39,7 @@ public class NoTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 
 	@Override
 	public void process(Element element, EActivityHolder holder) {
-		JFieldRef noTitle = holder.classes().WINDOW.staticRef("FEATURE_NO_TITLE");
+		JFieldRef noTitle = classes().WINDOW.staticRef("FEATURE_NO_TITLE");
 
 		holder.getInitBody().invoke("requestWindowFeature").arg(noTitle);
 	}

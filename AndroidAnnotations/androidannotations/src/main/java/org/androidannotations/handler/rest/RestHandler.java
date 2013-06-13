@@ -92,7 +92,7 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 		JFieldVar restTemplateField = holder.getRestTemplateField();
 		JBlock init = holder.getInit().body();
 		for (DeclaredType converterType : converters) {
-			JClass converterClass = holder.refClass(converterType.toString());
+			JClass converterClass = refClass(converterType.toString());
 			init.add(invoke(restTemplateField, "getMessageConverters").invoke("add").arg(_new(converterClass)));
 		}
 	}
@@ -100,14 +100,14 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 	private void setInterceptors(Element element, RestHolder holder) {
 		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "interceptors");
 		if (interceptors != null) {
-			JClass listClass = holder.refClass(ARRAYLIST);
-			JClass clientInterceptorClass = holder.refClass(CLIENT_HTTP_REQUEST_INTERCEPTOR);
+			JClass listClass = refClass(ARRAYLIST);
+			JClass clientInterceptorClass = refClass(CLIENT_HTTP_REQUEST_INTERCEPTOR);
 			listClass = listClass.narrow(clientInterceptorClass);
 			JFieldVar restTemplateField = holder.getRestTemplateField();
 			JBlock init = holder.getInit().body();
 			init.add(invoke(restTemplateField, "setInterceptors").arg(_new(listClass)));
 			for (DeclaredType interceptorType : interceptors) {
-				JClass interceptorClass = holder.refClass(interceptorType.toString());
+				JClass interceptorClass = refClass(interceptorType.toString());
 				init.add(invoke(restTemplateField, "getInterceptors").invoke("add").arg(_new(interceptorClass)));
 			}
 		}

@@ -64,7 +64,7 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		String fieldName = element.getSimpleName().toString();
 		String typeQualifiedName = elementType.toString();
-		JClass injectedClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
+		JClass injectedClass = refClass(typeQualifiedName + GENERATION_SUFFIX);
 
 		JFieldRef beanField = ref(fieldName);
 		JBlock block = holder.getInitBody();

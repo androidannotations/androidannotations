@@ -60,7 +60,7 @@ public class RootContextHanlder extends BaseAnnotationHandler<EBeanHolder> {
 		if (CanonicalNameConstants.CONTEXT.equals(typeQualifiedName)) {
 			body.assign(ref(fieldName), contextRef);
 		} else {
-			JClass extendingContextClass = holder.refClass(typeQualifiedName);
+			JClass extendingContextClass = refClass(typeQualifiedName);
 			body._if(contextRef._instanceof(extendingContextClass)) //
 					._then() //
 					.assign(ref(fieldName), cast(extendingContextClass, contextRef));

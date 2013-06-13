@@ -30,17 +30,15 @@ public interface GeneratedClassHolder {
 
 	TypeElement getAnnotatedElement();
 
-	public ProcessingEnvironment processingEnvironment();
+	ProcessingEnvironment processingEnvironment();
 
-	public ProcessHolder.Classes classes();
+	ProcessHolder.Classes classes();
 
-	public JCodeModel codeModel();
+	JCodeModel codeModel();
 
-	public JClass refClass(String fullyQualifiedClassName);
+	JClass refClass(String fullyQualifiedClassName);
 
-	public JClass refClass(Class<?> clazz);
+	JClass refClass(Class<?> clazz);
 
-	public JDefinedClass definedClass(String fullyQualifiedClassName);
-
-	public void generateApiClass(Element originatingElement, Class<?> apiClass);
+	JDefinedClass definedClass(String fullyQualifiedClassName);
 }

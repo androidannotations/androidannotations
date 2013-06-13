@@ -86,7 +86,7 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
 		boolean hasItemParameter = parameters.size() == 1;
 
-		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
 		JExpression ifExpr = holder.getOnOptionsItemSelectedItemId().eq(idsRefs.get(0));
 		for (int i = 1; i < idsRefs.size(); i++) {
 			ifExpr = ifExpr.cor(holder.getOnOptionsItemSelectedItemId().eq(idsRefs.get(i)));

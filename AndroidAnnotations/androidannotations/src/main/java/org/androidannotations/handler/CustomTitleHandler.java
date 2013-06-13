@@ -49,9 +49,9 @@ public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 	public void process(Element element, EActivityHolder holder) {
 		JBlock onViewChangedBody = holder.getOnViewChangedBody();
 
-		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(IRClass.Res.LAYOUT), false).get(0);
+		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(processHolder, element, getTarget(), rClass.get(IRClass.Res.LAYOUT), false).get(0);
 
-		JFieldRef customTitleFeature = holder.classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
+		JFieldRef customTitleFeature = classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
 		holder.getInitBody().invoke("requestWindowFeature").arg(customTitleFeature);
 		onViewChangedBody.add(holder.getContextRef().invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(contentViewId));
 	}

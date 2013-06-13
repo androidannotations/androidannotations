@@ -69,13 +69,11 @@ public class ResHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	@Override
 	public void process(Element element, EComponentHolder holder) {
-		ProcessHolder.Classes classes = holder.classes();
-
 		String fieldName = element.getSimpleName().toString();
 
 		IRClass.Res resInnerClass = androidRes.getRInnerClass();
 
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, resInnerClass, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, resInnerClass, true);
 
 		JBlock methodBody = holder.getInitBody();
 
@@ -84,13 +82,13 @@ public class ResHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		// Special case for loading animations
 		if (CanonicalNameConstants.ANIMATION.equals(fieldType)) {
-			methodBody.assign(ref(fieldName), classes.ANIMATION_UTILS.staticInvoke("loadAnimation").arg(holder.getContextRef()).arg(idRef));
+			methodBody.assign(ref(fieldName), classes().ANIMATION_UTILS.staticInvoke("loadAnimation").arg(holder.getContextRef()).arg(idRef));
 		} else {
 			String resourceMethodName = androidRes.getResourceMethodName();
 
 			// Special case for @HtmlRes
 			if (element.getAnnotation(HtmlRes.class) != null) {
-				methodBody.assign(ref(fieldName), classes.HTML.staticInvoke("fromHtml").arg(invoke(holder.getResourcesRef(), resourceMethodName).arg(idRef)));
+				methodBody.assign(ref(fieldName), classes().HTML.staticInvoke("fromHtml").arg(invoke(holder.getResourcesRef(), resourceMethodName).arg(idRef)));
 			} else {
 				methodBody.assign(ref(fieldName), invoke(holder.getResourcesRef(), resourceMethodName).arg(idRef));
 			}

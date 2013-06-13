@@ -82,7 +82,7 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JFieldRef field = JExpr.ref(fieldName);
 
-		methodBody.assign(field, JExpr._new(holder.refClass(fieldType)).arg(holder.getContextRef()));
+		methodBody.assign(field, JExpr._new(refClass(fieldType)).arg(holder.getContextRef()));
 
 	}
 }

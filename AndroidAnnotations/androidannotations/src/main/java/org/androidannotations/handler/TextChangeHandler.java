@@ -109,7 +109,7 @@ public class TextChangeHandler extends BaseAnnotationHandler<EComponentWithViewS
 			}
 		}
 
-		List<JFieldRef> idsRefs = idAnnotationHelper.extractAnnotationFieldRefs(holder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = idAnnotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
 			TextWatcherHolder textWatcherHolder = holder.getTextWatcherHolder(idRef, viewParameterType);

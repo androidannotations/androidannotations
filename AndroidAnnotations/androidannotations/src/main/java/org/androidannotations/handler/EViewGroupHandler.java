@@ -63,7 +63,7 @@ public class EViewGroupHandler extends BaseAnnotationHandler<EViewGroupHolder> i
 
 	@Override
 	public void process(Element element, EViewGroupHolder holder) {
-		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.LAYOUT, false);
+		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.LAYOUT, false);
 		if (contentViewId != null) {
 			holder.getSetContentViewBlock().invoke("inflate").arg(holder.getContextRef()).arg(contentViewId).arg(JExpr._this());
 		}

@@ -84,7 +84,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		} else {
 			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName + "Arg");
 		}
-		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, holder.classes().STRING, staticFieldName, lit(argKey));
+		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(argKey));
 	}
 
 	private void injectArgInComponent(Element element, EFragmentHolder holder, BundleHelper bundleHelper, JFieldVar extraKeyStaticField, String fieldName) {

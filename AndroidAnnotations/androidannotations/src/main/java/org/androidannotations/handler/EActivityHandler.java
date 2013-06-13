@@ -62,7 +62,7 @@ public class EActivityHandler extends BaseAnnotationHandler<EActivityHolder> imp
 	@Override
 	public void process(Element element, EActivityHolder holder) {
 
-		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(IRClass.Res.LAYOUT), false);
+		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, getTarget(), rClass.get(IRClass.Res.LAYOUT), false);
 
 		JFieldRef contentViewId = null;
 		if (fieldRefs.size() == 1) {

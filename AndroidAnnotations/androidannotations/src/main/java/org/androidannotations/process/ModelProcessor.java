@@ -64,6 +64,8 @@ public class ModelProcessor {
 
 		ProcessHolder processHolder = new ProcessHolder(processingEnv);
 
+		annotationHandlers.setProcessHolder(processHolder);
+
 		for (GeneratingAnnotationHandler generatingAnnotationHandler : annotationHandlers.getGenerating()) {
 			String annotationName = generatingAnnotationHandler.getTarget();
 			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);

@@ -73,7 +73,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 		JBlock initIfNonConfigurationNotNullBlock = holder.getInitIfNonConfigurationNotNullBlock();
 		JVar initNonConfigurationInstance = holder.getInitNonConfigurationInstance();
 		initIfNonConfigurationNotNullBlock.assign(ref(fieldName), initNonConfigurationInstance.ref(ncHolderField));
-		rebindContextIfBean(element, holder, initIfNonConfigurationNotNullBlock, ncHolderField);
+		rebindContextIfBean(element, initIfNonConfigurationNotNullBlock, ncHolderField);
 	}
 
 	private void retainInOnRetain(EActivityHolder holder, String fieldName, JFieldVar ncHolderField) throws JClassAlreadyExistsException {
@@ -82,7 +82,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 		onRetainNonConfigurationInstanceBindBlock.assign(onRetainNonConfigurationInstance.ref(ncHolderField), ref(fieldName));
 	}
 
-	private void rebindContextIfBean(Element element, EActivityHolder holder, JBlock initIfNonConfigurationNotNullBlock, JFieldVar field) {
+	private void rebindContextIfBean(Element element, JBlock initIfNonConfigurationNotNullBlock, JFieldVar field) {
 		boolean hasBeanAnnotation = element.getAnnotation(Bean.class) != null;
 		if (hasBeanAnnotation) {
 
@@ -91,7 +91,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 				elementType = element.asType();
 			}
 			String typeQualifiedName = elementType.toString();
-			JClass fieldGeneratedBeanClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
+			JClass fieldGeneratedBeanClass = refClass(typeQualifiedName + GENERATION_SUFFIX);
 
 			initIfNonConfigurationNotNullBlock.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}

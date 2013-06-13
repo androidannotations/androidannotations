@@ -56,6 +56,6 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JBlock methodBody = holder.getInitBody();
 
-		methodBody.assign(ref(fieldName), cast(holder.refClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
+		methodBody.assign(ref(fieldName), cast(refClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
 	}
 }

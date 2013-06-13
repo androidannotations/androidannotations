@@ -81,11 +81,11 @@ public class FragmentByIdHandler extends BaseAnnotationHandler<EComponentWithVie
 
 		String fieldName = element.getSimpleName().toString();
 
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.ID, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.ID, true);
 
 		JBlock methodBody = holder.getOnViewChangedBody();
 
-		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), invoke(findFragmentById).arg(idRef)));
+		methodBody.assign(ref(fieldName), cast(refClass(typeQualifiedName), invoke(findFragmentById).arg(idRef)));
 
 	}
 }

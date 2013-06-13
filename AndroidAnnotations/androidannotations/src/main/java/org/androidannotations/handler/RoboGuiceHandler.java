@@ -64,7 +64,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	public void process(Element element, EActivityHolder holder) {
 		RoboGuiceHolder roboGuiceHolder = holder.getRoboGuiceHolder();
 
-		holder.getGeneratedClass()._implements(holder.classes().INJECTOR_PROVIDER);
+		holder.getGeneratedClass()._implements(classes().INJECTOR_PROVIDER);
 
 		JFieldVar scope = roboGuiceHolder.getScopeField();
 		JFieldVar eventManager = roboGuiceHolder.getEventManagerField();
@@ -90,10 +90,10 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		if (listenerClasses.size() > 0) {
 			int i = 1;
 			for (String listenerClassName : listenerClasses) {
-				JClass listenerClass = holder.refClass(listenerClassName);
+				JClass listenerClass = refClass(listenerClassName);
 				JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
 				listener.annotate(SuppressWarnings.class).param("value", "unused");
-				listener.annotate(holder.classes().INJECT);
+				listener.annotate(classes().INJECT);
 				i++;
 			}
 		}
@@ -129,53 +129,51 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scope, JFieldVar eventManager, JMethod getInjector) {
-		ProcessHolder.Classes classes = holder.classes();
-
 		JBlock body = holder.getInitBody();
-		JVar injector = body.decl(classes.INJECTOR, "injector_", invoke(getInjector));
-		body.assign(scope, invoke(injector, "getInstance").arg(classes.CONTEXT_SCOPE.dotclass()));
+		JVar injector = body.decl(classes().INJECTOR, "injector_", invoke(getInjector));
+		body.assign(scope, invoke(injector, "getInstance").arg(classes().CONTEXT_SCOPE.dotclass()));
 		body.invoke(scope, "enter").arg(_this());
 		body.invoke(injector, "injectMembers").arg(_this());
-		body.assign(eventManager, invoke(injector, "getInstance").arg(classes.EVENT_MANAGER.dotclass()));
-		fireEvent(eventManager, body, holder.classes().ON_CREATE_EVENT, holder.getInitSavedInstanceParam());
+		body.assign(eventManager, invoke(injector, "getInstance").arg(classes().EVENT_MANAGER.dotclass()));
+		fireEvent(eventManager, body, classes().ON_CREATE_EVENT, holder.getInitSavedInstanceParam());
 	}
 
 	private void afterSetContentView(EActivityHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JBlock onViewChanged = holder.getOnViewChangedBody();
 		onViewChanged.invoke(scope, "injectViews");
-		fireEvent(eventManager, onViewChanged, holder.classes().ON_CONTENT_VIEW_AVAILABLE_EVENT);
+		fireEvent(eventManager, onViewChanged, classes().ON_CONTENT_VIEW_AVAILABLE_EVENT);
 	}
 
 	private void onRestartMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JBlock onRestartBeforeSuperBlock = holder.getOnRestartBeforeSuperBlock();
 		onRestartBeforeSuperBlock.invoke(scope, "enter").arg(_this());
 		JBlock onRestartAfterSuperBlock = holder.getOnRestartAfterSuperBlock();
-		fireEvent(eventManager, onRestartAfterSuperBlock, holder.classes().ON_RESTART_EVENT);
+		fireEvent(eventManager, onRestartAfterSuperBlock, classes().ON_RESTART_EVENT);
 	}
 
 	private void onStartMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JBlock onStartBeforeSuperBlock = holder.getOnStartBeforeSuperBlock();
 		onStartBeforeSuperBlock.invoke(scope, "enter").arg(_this());
 		JBlock onStartAfterSuperBlock = holder.getOnStartAfterSuperBlock();
-		fireEvent(eventManager, onStartAfterSuperBlock, holder.classes().ON_START_EVENT);
+		fireEvent(eventManager, onStartAfterSuperBlock, classes().ON_START_EVENT);
 	}
 
 	private void onResumeMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JBlock onResumeBeforeSuperBlock = holder.getOnResumeBeforeSuperBlock();
 		onResumeBeforeSuperBlock.invoke(scope, "enter").arg(_this());
 		JBlock onResumeAfterSuperBlock = holder.getOnResumeAfterSuperBlock();
-		fireEvent(eventManager, onResumeAfterSuperBlock, holder.classes().ON_RESUME_EVENT);
+		fireEvent(eventManager, onResumeAfterSuperBlock, classes().ON_RESUME_EVENT);
 	}
 
 	private void onPauseMethod(RoboGuiceHolder holder, JFieldVar eventManager) {
 		JBlock onPauseAfterSuperBlock = holder.getOnPauseAfterSuperBlock();
-		fireEvent(eventManager, onPauseAfterSuperBlock, holder.classes().ON_PAUSE_EVENT);
+		fireEvent(eventManager, onPauseAfterSuperBlock, classes().ON_PAUSE_EVENT);
 	}
 
 	private void onNewIntentMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JBlock onNewIntentAfterSuperBlock = holder.getOnNewIntentAfterSuperBlock();
 		onNewIntentAfterSuperBlock.invoke(scope, "enter").arg(_this());
-		fireEvent(eventManager, onNewIntentAfterSuperBlock, holder.classes().ON_NEW_INTENT_EVENT);
+		fireEvent(eventManager, onNewIntentAfterSuperBlock, classes().ON_NEW_INTENT_EVENT);
 	}
 
 	private void onStopMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
@@ -183,7 +181,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		onStopBeforeSuperBlock.invoke(scope, "enter").arg(_this());
 
 		JTryBlock tryBlock = onStopBeforeSuperBlock._try();
-		fireEvent(eventManager, tryBlock.body(), holder.classes().ON_STOP_EVENT);
+		fireEvent(eventManager, tryBlock.body(), classes().ON_STOP_EVENT);
 		JBlock finallyBody = tryBlock._finally();
 
 		finallyBody.invoke(scope, "exit").arg(_this());
@@ -195,7 +193,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		onDestroyBeforeSuperBlock.invoke(scope, "enter").arg(_this());
 
 		JTryBlock tryBlock = onDestroyBeforeSuperBlock._try();
-		fireEvent(eventManager, tryBlock.body(), holder.classes().ON_DESTROY_EVENT);
+		fireEvent(eventManager, tryBlock.body(), classes().ON_DESTROY_EVENT);
 		JBlock finallyBody = tryBlock._finally();
 
 		finallyBody.invoke(eventManager, "clear").arg(_this());
@@ -208,12 +206,12 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		JVar currentConfig = holder.getCurrentConfig();
 		JBlock onConfigurationChangedAfterSuperBlock = holder.getOnConfigurationChangedAfterSuperBlock();
 		JExpression newConfig = holder.getNewConfig();
-		fireEvent(eventManager, onConfigurationChangedAfterSuperBlock, holder.classes().ON_CONFIGURATION_CHANGED_EVENT, currentConfig, newConfig);
+		fireEvent(eventManager, onConfigurationChangedAfterSuperBlock, classes().ON_CONFIGURATION_CHANGED_EVENT, currentConfig, newConfig);
 	}
 
 	private void onContentChangedMethod(RoboGuiceHolder holder, JFieldVar eventManager) {
 		JBlock onContentChangedAfterSuperBlock = holder.getOnContentChangedAfterSuperBlock();
-		fireEvent(eventManager, onContentChangedAfterSuperBlock, holder.classes().ON_CONTENT_CHANGED_EVENT);
+		fireEvent(eventManager, onContentChangedAfterSuperBlock, classes().ON_CONTENT_CHANGED_EVENT);
 	}
 
 	private void onActivityResultMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
@@ -225,7 +223,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		onActivityResultAfterSuperBlock.invoke(scope, "enter").arg(_this());
 
 		JTryBlock tryBlock = onActivityResultAfterSuperBlock._try();
-		fireEvent(eventManager, tryBlock.body(), holder.classes().ON_ACTIVITY_RESULT_EVENT, requestCode, resultCode, data);
+		fireEvent(eventManager, tryBlock.body(), classes().ON_ACTIVITY_RESULT_EVENT, requestCode, resultCode, data);
 
 		JBlock finallyBody = tryBlock._finally();
 		finallyBody.invoke(scope, "exit").arg(_this());

@@ -69,9 +69,9 @@ public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSup
 		TypeMirror uiFieldTypeMirror = element.asType();
 		String typeQualifiedName = uiFieldTypeMirror.toString();
 
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.ID, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.ID, true);
 
 		JBlock methodBody = holder.getOnViewChangedBody();
-		methodBody.assign(ref(fieldName), cast(holder.refClass(typeQualifiedName), holder.findViewById(idRef)));
+		methodBody.assign(ref(fieldName), cast(refClass(typeQualifiedName), holder.findViewById(idRef)));
 	}
 }

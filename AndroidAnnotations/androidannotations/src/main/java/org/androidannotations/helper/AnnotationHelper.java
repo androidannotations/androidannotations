@@ -43,6 +43,7 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
 import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
 
@@ -155,7 +156,7 @@ public class AnnotationHelper {
 	 * 
 	 * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
 	 */
-	public List<JFieldRef> extractAnnotationFieldRefs(GeneratedClassHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
+	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
 		List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
 
 		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName)) {

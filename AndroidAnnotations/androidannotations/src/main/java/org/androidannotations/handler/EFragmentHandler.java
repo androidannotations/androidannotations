@@ -65,7 +65,7 @@ public class EFragmentHandler extends BaseAnnotationHandler<EFragmentHolder> imp
 
 		IdAnnotationHelper idAnnotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 
-		JFieldRef contentViewId = idAnnotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.LAYOUT, false);
+		JFieldRef contentViewId = idAnnotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.LAYOUT, false);
 
 		if (contentViewId != null) {
 

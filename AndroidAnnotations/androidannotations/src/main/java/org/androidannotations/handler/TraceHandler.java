@@ -63,8 +63,6 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
-		ProcessHolder.Classes classes = holder.classes();
-		JCodeModel codeModel = holder.codeModel();
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		String tag = extractTag(executableElement);
@@ -76,20 +74,20 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JBlock methodBody = method.body();
 
-		JInvocation isLoggableInvocation = classes.LOG.staticInvoke("isLoggable");
-		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, classes.LOG));
+		JInvocation isLoggableInvocation = classes().LOG.staticInvoke("isLoggable");
+		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, classes().LOG));
 
 		JConditional ifStatement = methodBody._if(isLoggableInvocation);
 
-		JInvocation currentTimeInvoke = classes.SYSTEM.staticInvoke("currentTimeMillis");
+		JInvocation currentTimeInvoke = classes().SYSTEM.staticInvoke("currentTimeMillis");
 		JBlock _thenBody = ifStatement._then();
-		JVar startDeclaration = _thenBody.decl(codeModel.LONG, "start", currentTimeInvoke);
+		JVar startDeclaration = _thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
 
 		String methodName = "[" + element.toString() + "]";
 
 		// Log In
 		String logMethodName = logMethodNameFromLevel(level);
-		JInvocation logEnterInvoke = classes.LOG.staticInvoke(logMethodName);
+		JInvocation logEnterInvoke = classes().LOG.staticInvoke(logMethodName);
 		logEnterInvoke.arg(tag);
 
 		JExpression enterMessage = JExpr.lit("Entering " + methodName);
@@ -102,9 +100,9 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JBlock finallyBlock = tryBlock._finally();
 
-		JVar durationDeclaration = finallyBlock.decl(codeModel.LONG, "duration", currentTimeInvoke.minus(startDeclaration));
+		JVar durationDeclaration = finallyBlock.decl(codeModel().LONG, "duration", currentTimeInvoke.minus(startDeclaration));
 
-		JInvocation logExitInvoke = classes.LOG.staticInvoke(logMethodName);
+		JInvocation logExitInvoke = classes().LOG.staticInvoke(logMethodName);
 		logExitInvoke.arg(tag);
 
 		JExpression exitMessage = JExpr.lit("Exiting " + methodName + ", duration in ms: ").plus(durationDeclaration);

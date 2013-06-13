@@ -108,27 +108,27 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 
 	@Override
 	public void process(Element element, SharedPrefHolder holder) {
-		generateApiClasses(element, holder);
+		generateApiClasses(element);
 		generateConstructor(element, holder);
 		generateFieldMethodAndEditorFieldMethod(element, holder);
 	}
 
-	private void generateApiClasses(Element originatingElement, SharedPrefHolder holder) {
-		holder.generateApiClass(originatingElement, AbstractPrefEditorField.class);
-		holder.generateApiClass(originatingElement, AbstractPrefField.class);
-		holder.generateApiClass(originatingElement, BooleanPrefEditorField.class);
-		holder.generateApiClass(originatingElement, BooleanPrefField.class);
-		holder.generateApiClass(originatingElement, EditorHelper.class);
-		holder.generateApiClass(originatingElement, FloatPrefEditorField.class);
-		holder.generateApiClass(originatingElement, FloatPrefField.class);
-		holder.generateApiClass(originatingElement, IntPrefEditorField.class);
-		holder.generateApiClass(originatingElement, IntPrefField.class);
-		holder.generateApiClass(originatingElement, LongPrefEditorField.class);
-		holder.generateApiClass(originatingElement, LongPrefField.class);
-		holder.generateApiClass(originatingElement, SharedPreferencesCompat.class);
-		holder.generateApiClass(originatingElement, SharedPreferencesHelper.class);
-		holder.generateApiClass(originatingElement, StringPrefEditorField.class);
-		holder.generateApiClass(originatingElement, StringPrefField.class);
+	private void generateApiClasses(Element originatingElement) {
+		generateApiClass(originatingElement, AbstractPrefEditorField.class);
+		generateApiClass(originatingElement, AbstractPrefField.class);
+		generateApiClass(originatingElement, BooleanPrefEditorField.class);
+		generateApiClass(originatingElement, BooleanPrefField.class);
+		generateApiClass(originatingElement, EditorHelper.class);
+		generateApiClass(originatingElement, FloatPrefEditorField.class);
+		generateApiClass(originatingElement, FloatPrefField.class);
+		generateApiClass(originatingElement, IntPrefEditorField.class);
+		generateApiClass(originatingElement, IntPrefField.class);
+		generateApiClass(originatingElement, LongPrefEditorField.class);
+		generateApiClass(originatingElement, LongPrefField.class);
+		generateApiClass(originatingElement, SharedPreferencesCompat.class);
+		generateApiClass(originatingElement, SharedPreferencesHelper.class);
+		generateApiClass(originatingElement, StringPrefEditorField.class);
+		generateApiClass(originatingElement, StringPrefField.class);
 	}
 
 	private void generateConstructor(Element element, SharedPrefHolder holder) {
@@ -166,7 +166,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 			break;
 		}
 		case APPLICATION_DEFAULT: {
-			JClass preferenceManagerClass = holder.refClass("android.preference.PreferenceManager");
+			JClass preferenceManagerClass = refClass("android.preference.PreferenceManager");
 			constructorSuperBlock.invoke("super") //
 					.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
 							.arg(contextParam));
@@ -177,9 +177,9 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 
 	private JMethod getLocalClassName(SharedPrefHolder holder) {
 
-		JClass stringClass = holder.classes().STRING;
+		JClass stringClass = classes().STRING;
 		JMethod getLocalClassName = holder.getGeneratedClass().method(PRIVATE | STATIC, stringClass, "getLocalClassName");
-		JClass contextClass = holder.classes().CONTEXT;
+		JClass contextClass = classes().CONTEXT;
 
 		JVar contextParam = getLocalClassName.param(contextClass, "context");
 
@@ -189,7 +189,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 
 		JVar className = body.decl(stringClass, "className", contextParam.invoke("getClass").invoke("getName"));
 
-		JVar packageLen = body.decl(holder.codeModel().INT, "packageLen", packageName.invoke("length"));
+		JVar packageLen = body.decl(codeModel().INT, "packageLen", packageName.invoke("length"));
 
 		JExpression condition = className.invoke("startsWith").arg(packageName).not() //
 				.cor(className.invoke("length").lte(packageLen)) //
@@ -269,7 +269,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 	}
 
 	private JExpression extractResValue(SharedPrefHolder holder, Element method, IRClass.Res res) {
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(holder, method, DefaultRes.class.getCanonicalName(), res, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, method, DefaultRes.class.getCanonicalName(), res, true);
 
 		String resourceGetMethodName = null;
 		switch (res) {

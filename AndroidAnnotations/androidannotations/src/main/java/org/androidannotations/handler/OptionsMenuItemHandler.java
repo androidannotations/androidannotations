@@ -67,7 +67,7 @@ public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu
 		JBlock body = holder.getOnCreateOptionsMenuMethodBody();
 		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
 
-		JFieldRef idsRef = annotationHelper.extractOneAnnotationFieldRef(holder, element, IRClass.Res.ID, true);
+		JFieldRef idsRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.ID, true);
 		body.assign(ref(fieldName), menuParam.invoke("findItem").arg(idsRef));
 	}
 }

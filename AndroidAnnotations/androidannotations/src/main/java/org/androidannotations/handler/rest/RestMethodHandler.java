@@ -67,10 +67,10 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		// RestTemplate exchange() method call
 		JInvocation exchangeCall = JExpr.invoke(holder.getRestTemplateField(), "exchange");
 		exchangeCall.arg(getUrl(element, holder));
-		exchangeCall.arg(getHttpMethod(holder));
-		exchangeCall.arg(getRequestEntity(element, holder, methodBody, params));
+		exchangeCall.arg(getHttpMethod());
+		exchangeCall.arg(getRequestEntity(element, methodBody, params));
 		exchangeCall.arg(getResponseClass(element, holder));
-		JExpression urlVariables = getUrlVariables(element, holder, methodBody, params);
+		JExpression urlVariables = getUrlVariables(element, methodBody, params);
 		if (urlVariables != null)
 			exchangeCall.arg(urlVariables);
 
@@ -97,7 +97,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			JVar param;
 			if (parameter.asType().getKind().isPrimitive()) {
-				param = method.param(JType.parse(restHolder.codeModel(), paramType), paramName);
+				param = method.param(JType.parse(codeModel(), paramType), paramName);
 			} else {
 				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType(), restHolder);
 				param = method.param(parameterClass, paramName);
@@ -113,14 +113,14 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 	protected abstract String getUrlSuffix(Element element);
 
-	protected JExpression getHttpMethod(RestHolder holder) {
-		JClass httpMethod = holder.classes().HTTP_METHOD;
+	protected JExpression getHttpMethod() {
+		JClass httpMethod = classes().HTTP_METHOD;
 		String simpleName = getTarget().substring(getTarget().lastIndexOf('.') + 1);
 		String restMethodInCapitalLetters = simpleName.toUpperCase(Locale.ENGLISH);
 		return httpMethod.staticRef(restMethodInCapitalLetters);
 	}
 
-	protected JExpression getRequestEntity(Element element, RestHolder restHolder, JBlock methodBody, TreeMap<String, JVar> params) {
+	protected JExpression getRequestEntity(Element element, JBlock methodBody, TreeMap<String, JVar> params) {
 		return JExpr._null();
 	}
 
@@ -128,8 +128,8 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		return JExpr._null();
 	}
 
-	protected JExpression getUrlVariables(Element element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> params) {
-		return restAnnotationHelper.declareUrlVariables((ExecutableElement) element, holder, methodBody, params);
+	protected JExpression getUrlVariables(Element element, JBlock methodBody, TreeMap<String, JVar> params) {
+		return restAnnotationHelper.declareUrlVariables((ExecutableElement) element, processHolder, methodBody, params);
 	}
 
 	protected JInvocation addResultCallMethod(JInvocation exchangeCall, JClass methodReturnClass) {

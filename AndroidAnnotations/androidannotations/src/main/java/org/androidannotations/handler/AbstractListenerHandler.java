@@ -52,7 +52,6 @@ import com.sun.codemodel.JVar;
 public abstract class AbstractListenerHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper helper;
-	private EComponentWithViewSupportHolder holder;
 	private String methodName;
 
 	public AbstractListenerHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
@@ -84,17 +83,15 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<ECom
 
 	@Override
 	public void process(Element element, EComponentWithViewSupportHolder holder) {
-		this.holder = holder;
-
 		this.methodName = element.getSimpleName().toString();
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		TypeMirror returnType = executableElement.getReturnType();
 
-		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(holder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
 
-		JDefinedClass listenerAnonymousClass = holder.codeModel().anonymousClass(getListenerClass());
+		JDefinedClass listenerAnonymousClass = codeModel().anonymousClass(getListenerClass());
 		JMethod listenerMethod = createListenerMethod(listenerAnonymousClass);
 		listenerMethod.annotate(Override.class);
 
@@ -132,18 +129,6 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<ECom
 
 	protected JType getViewClass() {
 		return classes().VIEW;
-	}
-
-	protected ProcessHolder.Classes classes() {
-		return holder.classes();
-	}
-
-	protected JCodeModel codeModel() {
-		return holder.codeModel();
-	}
-
-	protected JClass refClass(String qualifiedClassName) {
-		return holder.refClass(qualifiedClassName);
 	}
 
 	protected String getMethodName() {

@@ -71,6 +71,6 @@ public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 
-		delegatingMethod.annotate(holder.refClass(SUBSCRIBE));
+		delegatingMethod.annotate(refClass(SUBSCRIBE));
 	}
 }

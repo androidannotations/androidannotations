@@ -52,6 +52,7 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
+import org.androidannotations.process.ProcessHolder;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
@@ -128,7 +129,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return variableNames;
 	}
 
-	public JVar declareUrlVariables(ExecutableElement element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
+	public JVar declareUrlVariables(ExecutableElement element, ProcessHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
 		Set<String> urlVariables = extractUrlVariableNames(element);
 		JClass hashMapClass = holder.refClass(HashMap.class).narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
@@ -155,7 +156,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		}
 	}
 
-	public JVar declareAcceptedHttpHeaders(RestHolder holder, JBlock body, String mediaType) {
+	public JVar declareAcceptedHttpHeaders(ProcessHolder holder, JBlock body, String mediaType) {
 		JClass httpHeadersClass = holder.classes().HTTP_HEADERS;
 		JClass collectionsClass = holder.classes().COLLECTIONS;
 		JClass mediaTypeClass = holder.classes().MEDIA_TYPE;
@@ -167,11 +168,11 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return httpHeadersVar;
 	}
 
-	public JExpression declareHttpEntity(RestHolder holder, JBlock body, TreeMap<String, JVar> methodParams) {
+	public JExpression declareHttpEntity(ProcessHolder holder, JBlock body, TreeMap<String, JVar> methodParams) {
 		return declareHttpEntity(holder, body, methodParams, null);
 	}
 
-	public JExpression declareHttpEntity(RestHolder holder, JBlock body, TreeMap<String, JVar> methodParams, JVar httpHeaders) {
+	public JExpression declareHttpEntity(ProcessHolder holder, JBlock body, TreeMap<String, JVar> methodParams, JVar httpHeaders) {
 		JVar entitySentToServer = null;
 		JType entityType = holder.refClass(Object.class);
 

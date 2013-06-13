@@ -58,6 +58,6 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
         JFieldRef field = JExpr.ref(fieldName);
 
-        methodBody.assign(field, JExpr._new(holder.refClass(generatedClassName)));
+        methodBody.assign(field, JExpr._new(refClass(generatedClassName)));
     }
 }

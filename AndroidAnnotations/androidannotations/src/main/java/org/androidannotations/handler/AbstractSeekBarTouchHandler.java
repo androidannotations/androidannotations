@@ -71,7 +71,7 @@ public abstract class AbstractSeekBarTouchHandler extends BaseAnnotationHandler<
 	public void process(Element element, EComponentWithViewSupportHolder holder) throws Exception {
 		String methodName = element.getSimpleName().toString();
 
-		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(holder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
 			OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = holder.getOnSeekBarChangeListenerHolder(idRef);
