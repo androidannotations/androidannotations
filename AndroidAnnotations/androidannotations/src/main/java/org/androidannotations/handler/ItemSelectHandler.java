@@ -51,20 +51,14 @@ public class ItemSelectHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
-		if (!super.validate(element, validatedElements)) {
-			valid.invalidate();
-		}
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		super.validate(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.param.hasOneOrTwoParametersAndFirstIsBoolean(executableElement, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

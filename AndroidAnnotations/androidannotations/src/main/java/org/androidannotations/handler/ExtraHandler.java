@@ -65,9 +65,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		/*
 		 * TODO since we override setIntent(), we should check that the
 		 * setIntent() method can be overridden
@@ -76,8 +74,6 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

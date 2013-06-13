@@ -52,9 +52,7 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		TypeElement typeElement = (TypeElement) element;
 
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
@@ -74,8 +72,6 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 		validatorHelper.validateInterceptors(element, valid);
 
 		validatorHelper.hasInternetPermission(typeElement, androidManifest, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

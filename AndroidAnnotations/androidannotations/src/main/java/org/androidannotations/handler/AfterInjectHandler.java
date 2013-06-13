@@ -31,9 +31,7 @@ public class AfterInjectHandler extends BaseAnnotationHandler<EComponentHolder> 
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
@@ -45,8 +43,6 @@ public class AfterInjectHandler extends BaseAnnotationHandler<EComponentHolder> 
 		validatorHelper.doesntThrowException(executableElement, valid);
 
 		validatorHelper.param.zeroParameter(executableElement, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

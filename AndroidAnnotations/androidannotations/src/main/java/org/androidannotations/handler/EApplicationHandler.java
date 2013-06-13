@@ -37,16 +37,12 @@ public class EApplicationHandler extends BaseAnnotationHandler<EApplicationHolde
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.extendsApplication(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
 
 		validatorHelper.applicationRegistered(element, androidManifest, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

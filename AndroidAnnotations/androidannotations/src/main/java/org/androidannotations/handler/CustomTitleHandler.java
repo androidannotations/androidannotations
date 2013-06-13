@@ -39,14 +39,10 @@ public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.hasEActivity(element, validatedElements, valid);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

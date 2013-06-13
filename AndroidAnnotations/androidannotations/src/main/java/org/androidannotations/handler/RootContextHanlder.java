@@ -39,16 +39,12 @@ public class RootContextHanlder extends BaseAnnotationHandler<EBeanHolder> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
 
 		validatorHelper.extendsContext(element, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

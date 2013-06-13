@@ -57,9 +57,7 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
@@ -75,8 +73,6 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
 		validatorHelper.param.zeroOrOneMenuItemParameter(executableElement, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

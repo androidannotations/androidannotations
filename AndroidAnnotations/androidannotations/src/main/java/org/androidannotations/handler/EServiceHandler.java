@@ -37,16 +37,12 @@ public class EServiceHandler extends BaseAnnotationHandler<EServiceHolder> imple
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.extendsService(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);
 
 		validatorHelper.componentRegistered(element, androidManifest, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

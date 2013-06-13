@@ -57,9 +57,7 @@ public class TextChangeHandler extends BaseAnnotationHandler<EComponentWithViewS
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
@@ -71,8 +69,6 @@ public class TextChangeHandler extends BaseAnnotationHandler<EComponentWithViewS
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
 
 		validatorHelper.hasTextChangedMethodParameters((ExecutableElement) element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

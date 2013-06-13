@@ -16,6 +16,7 @@
 package org.androidannotations.handler;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
@@ -23,6 +24,7 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 import org.androidannotations.rclass.IRClass;
 
 public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> implements AnnotationHandler<T> {
@@ -66,4 +68,13 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 	public String getTarget() {
 		return target;
 	}
+
+	@Override
+	public boolean validate(Element element, AnnotationElements validatedElements) {
+		IsValid valid = new IsValid();
+		validate(element, validatedElements, valid);
+		return valid.isValid();
+	}
+
+	protected abstract void validate(Element element, AnnotationElements validatedElements, IsValid valid);
 }

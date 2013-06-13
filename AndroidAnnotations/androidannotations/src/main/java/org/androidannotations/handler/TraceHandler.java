@@ -53,16 +53,12 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.hasValidLogLevel(element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

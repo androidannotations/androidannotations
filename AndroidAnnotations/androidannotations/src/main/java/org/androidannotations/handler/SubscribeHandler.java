@@ -41,12 +41,11 @@ public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		if (!annotationHelper.enclosingElementHasEnhancedComponentAnnotation(element)) {
-			return false;
+			valid.invalidate();
+			return;
 		}
-
-		IsValid valid = new IsValid();
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
@@ -64,8 +63,6 @@ public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 		validatorHelper.isNotFinal(element, valid);
 
 		validatorHelper.param.hasExactlyOneParameter(executableElement, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

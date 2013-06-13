@@ -44,16 +44,12 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.canBeSavedAsInstanceState(element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

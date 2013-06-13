@@ -56,9 +56,7 @@ public class AfterTextChangeHandler extends BaseAnnotationHandler<EComponentWith
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
@@ -70,8 +68,6 @@ public class AfterTextChangeHandler extends BaseAnnotationHandler<EComponentWith
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
 
 		validatorHelper.hasAfterTextChangedMethodParameters((ExecutableElement) element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

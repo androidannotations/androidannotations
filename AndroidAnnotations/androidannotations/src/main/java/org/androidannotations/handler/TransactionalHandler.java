@@ -44,9 +44,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
@@ -58,8 +56,6 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 		validatorHelper.isNotFinal(element, valid);
 
 		validatorHelper.param.hasOneOrTwoParametersAndFirstIsDb(executableElement, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

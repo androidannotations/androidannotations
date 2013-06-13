@@ -37,16 +37,12 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
 		validatorHelper.typeHasAnnotation(EApplication.class, element, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

@@ -44,9 +44,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.hasOrmLiteJars(element, valid);
 
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
@@ -56,8 +54,6 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 		validatorHelper.extendsOrmLiteDaoWithValidModelParameter(element, valid);
 
 		validatorHelper.hasASqlLiteOpenHelperParameterizedType(element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

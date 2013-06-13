@@ -53,16 +53,12 @@ public class EViewGroupHandler extends BaseAnnotationHandler<EViewGroupHolder> i
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.extendsViewGroup(element, valid);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
 		validatorHelper.isNotFinal(element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

@@ -31,18 +31,12 @@ public class DeleteHandler extends RestMethodHandler {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
-		if (!super.validate(element, validatedElements)) {
-			valid.invalidate();
-		}
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		super.validate(element, validatedElements, valid);
 
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
 
 		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

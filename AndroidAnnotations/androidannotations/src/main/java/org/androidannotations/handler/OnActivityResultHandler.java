@@ -42,9 +42,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
@@ -58,8 +56,6 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.hasOnResultMethodParameters(executableElement, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

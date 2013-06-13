@@ -33,12 +33,8 @@ public class NoTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.hasEActivity(element, validatedElements, valid);
-
-		return valid.isValid();
 	}
 
 	@Override

@@ -44,16 +44,12 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
 
 		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, valid);
 
 		validatorHelper.throwsOnlyRestClientException((ExecutableElement) element, valid);
-
-		return valid.isValid();
 	}
 
 	@Override
