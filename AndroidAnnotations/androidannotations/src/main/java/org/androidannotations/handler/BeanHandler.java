@@ -62,11 +62,11 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 			typeMirror = holder.processingEnvironment().getTypeUtils().erasure(typeMirror);
 		}
 
-		String fieldName = element.getSimpleName().toString();
 		String typeQualifiedName = typeMirror.toString();
 		TypeElement elementType = processingEnvironment().getElementUtils().getTypeElement(typeQualifiedName);
 		JClass injectedClass = processHolder.getGeneratedClassHolder(elementType).getGeneratedClass();
 
+		String fieldName = element.getSimpleName().toString();
 		JFieldRef beanField = ref(fieldName);
 		JBlock block = holder.getInitBody();
 

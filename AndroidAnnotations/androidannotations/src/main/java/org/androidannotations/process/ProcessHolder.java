@@ -207,7 +207,12 @@ public class ProcessHolder {
 	}
 
 	public GeneratedClassHolder getGeneratedClassHolder(Element element) {
-		return generatedClassHolders.get(element);
+		for (Element key : generatedClassHolders.keySet()) {
+			if(key.asType().toString().equals(element.asType().toString())) {
+				return generatedClassHolders.get(key);
+			}
+		}
+		return null;
 	}
 
 	public JClass refClass(Class<?> clazz) {
