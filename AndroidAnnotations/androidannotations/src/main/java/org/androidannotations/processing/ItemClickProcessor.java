@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.processing.EBeansHolder.Classes;
 import org.androidannotations.rclass.IRClass;
@@ -48,6 +49,7 @@ import com.sun.codemodel.JVar;
 public class ItemClickProcessor implements DecoratingElementProcessor {
 
 	private IdAnnotationHelper helper;
+	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public ItemClickProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
@@ -90,8 +92,12 @@ public class ItemClickProcessor implements DecoratingElementProcessor {
 			if (parameterType.getKind() == TypeKind.INT) {
 				itemClickCall.arg(onItemClickPositionParam);
 			} else {
-				String parameterTypeQualifiedName = parameterType.toString();
-				itemClickCall.arg(cast(holder.refClass(parameterTypeQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameterType, holder);
+				itemClickCall.arg(cast(parameterClass, invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+
+				if (parameterClass.isParameterized()) {
+					onItemClickMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
+				}
 			}
 		}
 
