@@ -72,12 +72,12 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 				holder.handler = holder.generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
 			}
 
-			if (propagation == Propagation.REUSE) {
-				// Put in the check for the UI thread.
-				addUIThreadCheck(delegatingMethod, codeModel, holder);
-			}
-
 			if (delay == 0) {
+				if (propagation == Propagation.REUSE) {
+					// Put in the check for the UI thread.
+					addUIThreadCheck(delegatingMethod, codeModel, holder);
+				}
+
 				delegatingMethod.body().invoke(holder.handler, "post").arg(_new(anonymousRunnableClass));
 			} else {
 				delegatingMethod.body().invoke(holder.handler, "postDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
