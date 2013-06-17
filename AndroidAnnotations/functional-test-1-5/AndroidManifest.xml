@@ -61,6 +61,7 @@
         <activity android:name=".ThreadActivity_" />
         <activity android:name=".TracedActivity_" />
         <activity android:name=".TextWatchedActivity_" />
+		<activity android:name=".innerclasses.ActivityWithInnerEnhancedClasses_" />
         <activity android:name=".ormlite.OrmLiteActivity_" />
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuActivity_" />
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuSubActivity_" />

@@ -17,8 +17,6 @@ package org.androidannotations.holder;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
@@ -30,10 +28,8 @@ import javax.lang.model.type.TypeKind;
 
 import org.androidannotations.api.rest.RestErrorHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
@@ -57,11 +53,9 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	@Override
-	protected void setGeneratedClass() throws Exception {
+	protected void setExtends() {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
-		String subComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
 		JClass annotatedComponent = codeModel().directClass(annotatedComponentQualifiedName);
-		generatedClass = codeModel()._class(PUBLIC | FINAL, subComponentQualifiedName, ClassType.CLASS);
 		generatedClass._implements(annotatedComponent);
 	}
 

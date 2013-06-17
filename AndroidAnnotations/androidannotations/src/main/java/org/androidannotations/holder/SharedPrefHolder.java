@@ -15,37 +15,16 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-
-import org.androidannotations.api.sharedpreferences.BooleanPrefEditorField;
-import org.androidannotations.api.sharedpreferences.EditorHelper;
-import org.androidannotations.api.sharedpreferences.FloatPrefEditorField;
-import org.androidannotations.api.sharedpreferences.IntPrefEditorField;
-import org.androidannotations.api.sharedpreferences.LongPrefEditorField;
-import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
-import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
+import com.sun.codemodel.*;
+import org.androidannotations.api.sharedpreferences.*;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
@@ -83,10 +62,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	}
 
 	@Override
-	protected void setGeneratedClass() throws Exception {
-		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
-		String subComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
-		generatedClass = codeModel()._class(PUBLIC | FINAL, subComponentQualifiedName, ClassType.CLASS);
+	protected void setExtends() {
 		generatedClass._extends(SharedPreferencesHelper.class);
 	}
 
