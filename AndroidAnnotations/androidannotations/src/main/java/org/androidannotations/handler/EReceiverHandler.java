@@ -15,17 +15,17 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.holder.EReceiverHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 
-public class EReceiverHandler extends BaseAnnotationHandler<EReceiverHolder> implements GeneratingAnnotationHandler<EReceiverHolder> {
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
+public class EReceiverHandler extends BaseGeneratingAnnotationHandler<EReceiverHolder> {
 
 	public EReceiverHandler(ProcessingEnvironment processingEnvironment) {
 		super(EReceiver.class, processingEnvironment);
@@ -38,9 +38,9 @@ public class EReceiverHandler extends BaseAnnotationHandler<EReceiverHolder> imp
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.extendsReceiver(element, valid);
+		super.validate(element, validatedElements, valid);
 
-		validatorHelper.isNotFinal(element, valid);
+		validatorHelper.extendsReceiver(element, valid);
 
 		final boolean NO_WARNING = false;
 		validatorHelper.componentRegistered(element, androidManifest, NO_WARNING, valid);

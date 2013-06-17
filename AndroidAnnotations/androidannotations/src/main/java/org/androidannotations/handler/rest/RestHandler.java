@@ -29,8 +29,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 
 import org.androidannotations.annotations.rest.Rest;
-import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.handler.GeneratingAnnotationHandler;
+import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -41,7 +40,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldVar;
 
-public class RestHandler extends BaseAnnotationHandler<RestHolder> implements GeneratingAnnotationHandler<RestHolder> {
+public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 	private final AnnotationHelper annotationHelper;
 
@@ -57,6 +56,8 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		super.validate(element, validatedElements, valid);
+
 		TypeElement typeElement = (TypeElement) element;
 
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
