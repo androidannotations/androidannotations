@@ -15,24 +15,21 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.ref;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.*;
 import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+
+import static com.sun.codemodel.JExpr.ref;
 
 public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -68,8 +65,22 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JBlock initBody = holder.getInitBody();
 
+		JExpression injectExpr;
+		if (elementExtendsRuntimeExceptionDao(element, modelObjectTypeMirror)) {
+
+			injectExpr = classes().RUNTIME_EXCEPTION_DAO//
+					.staticInvoke("createDao") //
+					.arg(databaseHelperRef.invoke("getConnectionSource")) //
+					.arg(modelClass);
+
+		} else {
+
+			injectExpr = databaseHelperRef.invoke("getDao").arg(modelClass);
+
+		}
+
 		JTryBlock tryBlock = initBody._try();
-		tryBlock.body().assign(ref(fieldName), databaseHelperRef.invoke("getDao").arg(modelClass));
+		tryBlock.body().assign(ref(fieldName), injectExpr);
 
 		JCatchBlock catchBlock = tryBlock._catch(classes().SQL_EXCEPTION);
 		JVar exception = catchBlock.param("e");
@@ -79,5 +90,13 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 				.arg(holder.getGeneratedClass().name()) //
 				.arg("Could not create DAO " + fieldName) //
 				.arg(exception);
+	}
+
+	private boolean elementExtendsRuntimeExceptionDao(Element element, TypeMirror modelObjectTypeMirror) {
+		TypeMirror elementType = element.asType();
+		TypeElement runtimeExceptionDaoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
+		TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
+		DeclaredType runtimeExceptionDaoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelObjectTypeMirror, wildcardType);
+		return annotationHelper.isSubtype(elementType, runtimeExceptionDaoParameterizedType);
 	}
 }

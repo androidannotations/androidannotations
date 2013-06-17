@@ -15,26 +15,20 @@
  */
 package org.androidannotations.process;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.GeneratedClassHolder;
-
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.GeneratedClassHolder;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 public class ProcessHolder {
 
@@ -140,6 +134,7 @@ public class ProcessHolder {
 		 */
 		public final JClass CONNECTION_SOURCE = refClass(CanonicalNameConstants.CONNECTION_SOURCE);
 		public final JClass OPEN_HELPER_MANAGER = refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER);
+		public final JClass RUNTIME_EXCEPTION_DAO = refClass(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
 		public final JClass DAO_MANAGER = refClass(CanonicalNameConstants.DAO_MANAGER);
 
 		/*
