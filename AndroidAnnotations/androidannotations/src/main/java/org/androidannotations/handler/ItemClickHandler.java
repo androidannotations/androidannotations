@@ -15,10 +15,11 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
-
-import java.util.List;
+import com.sun.codemodel.*;
+import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -26,21 +27,14 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.util.List;
 
-import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
 
 public class ItemClickHandler extends AbstractListenerHandler {
+
+	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public ItemClickHandler(ProcessingEnvironment processingEnvironment) {
 		super(ItemClick.class, processingEnvironment);
@@ -79,8 +73,12 @@ public class ItemClickHandler extends AbstractListenerHandler {
 			if (parameterType.getKind() == TypeKind.INT) {
 				call.arg(onItemClickPositionParam);
 			} else {
-				String parameterTypeQualifiedName = parameterType.toString();
-				call.arg(cast(refClass(parameterTypeQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameterType, getHolder());
+				call.arg(cast(parameterClass, invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+
+				if (parameterClass.isParameterized()) {
+					listenerMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
+				}
 			}
 		}
 	}

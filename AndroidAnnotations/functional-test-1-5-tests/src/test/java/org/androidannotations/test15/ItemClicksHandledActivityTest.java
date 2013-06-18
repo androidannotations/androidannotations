@@ -15,15 +15,14 @@
  */
 package org.androidannotations.test15;
 
-import static org.fest.assertions.Assertions.assertThat;
-
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Spinner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.view.View;
-import android.widget.ListView;
-import android.widget.Spinner;
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ItemClicksHandledActivityTest {
@@ -126,6 +125,17 @@ public class ItemClicksHandledActivityTest {
 		assertThat(activity.listViewWithOneParamItemSelected).isFalse();
 		listView.setSelection(TESTED_CLICKED_INDEX);
 		assertThat(activity.listViewWithOneParamItemSelected).isTrue();
+	}
+
+	@Test
+	public void handlingListViewItemClickWithParametrizedItem() {
+		ListView listView = (ListView) activity.findViewById(R.id.listViewWithArgumentWithParameterType);
+		long itemId = listView.getAdapter().getItemId(TESTED_CLICKED_INDEX);
+		View view = listView.getChildAt(TESTED_CLICKED_INDEX);
+
+		assertThat(activity.listViewParametrizedItemClicked).isFalse();
+		listView.performItemClick(view, TESTED_CLICKED_INDEX, itemId);
+		assertThat(activity.listViewParametrizedItemClicked).isTrue();
 	}
 
 }
