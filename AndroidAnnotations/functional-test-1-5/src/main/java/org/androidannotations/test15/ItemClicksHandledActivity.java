@@ -19,13 +19,10 @@ import android.app.Activity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import org.androidannotations.annotations.*;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.annotations.ItemLongClick;
-import org.androidannotations.annotations.ItemSelect;
-import org.androidannotations.annotations.ViewById;
+import java.util.ArrayList;
+import java.util.List;
 
 @EActivity(R.layout.item_clicks_handled)
 public class ItemClicksHandledActivity extends Activity {
@@ -40,16 +37,20 @@ public class ItemClicksHandledActivity extends Activity {
 	ListView listViewWithArgument;
 
 	@ViewById
+	ListView listViewWithArgumentWithParameterType;
+
+	@ViewById
 	Spinner spinnerWithArgument;
 
 	@ViewById
 	ListView listViewWithPosition;
-	
+
 	@ViewById
 	ListView listViewWithOneParam;
 
 	boolean spinnerItemClicked = false;
 	boolean listViewItemClicked = false;
+	boolean listViewParametrizedItemClicked = false;
 
 	String spinnerWithArgumentSelectedItem = null;
 	String listViewWithArgumentSelectedItem = null;
@@ -60,18 +61,23 @@ public class ItemClicksHandledActivity extends Activity {
 	int listViewWithPositionItemSelectedPosition;
 
 	private ArrayAdapter<CharSequence> adapter;
+	private ArrayAdapter<ArrayList<String>> parametrizedAdapter;
 
 	boolean listViewWithOneParamItemSelected;
 
 	@AfterViews
 	void initView() {
-		adapter = ArrayAdapter.createFromResource(this, R.array.planets_array, R.layout.simple_spinner_item);
+		adapter = ArrayAdapter.createFromResource(this, R.array.planets_array,
+				R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		parametrizedAdapter = new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_list_item_1, stringLists());
 
 		spinner.setAdapter(adapter);
 		listView.setAdapter(adapter);
 		spinnerWithArgument.setAdapter(adapter);
 		listViewWithArgument.setAdapter(adapter);
+		listViewWithArgumentWithParameterType.setAdapter(parametrizedAdapter);
 		listViewWithPosition.setAdapter(adapter);
 		listViewWithOneParam.setAdapter(adapter);
 		spinnerItemClicked = false;
@@ -92,6 +98,11 @@ public class ItemClicksHandledActivity extends Activity {
 		listViewWithArgumentSelectedItem = selectedItem;
 	}
 
+	@ItemClick(R.id.listViewWithArgumentWithParameterType)
+	protected void listViewWithArgumentWithParameterType(ArrayList<String> item) {
+		listViewParametrizedItemClicked = true;
+	}
+
 	@ItemClick
 	public void spinner() {
 		spinnerItemClicked = true;
@@ -101,26 +112,38 @@ public class ItemClicksHandledActivity extends Activity {
 	public void spinnerWithArgument(String selectedItem) {
 		spinnerWithArgumentSelectedItem = selectedItem;
 	}
-	
+
 	@ItemClick
 	void listViewWithPosition(int position) {
 		listViewWithPositionClickedPosition = position;
 	}
-	
+
 	@ItemSelect
 	void listViewWithPositionItemSelected(boolean selected, int position) {
 		listViewWithPositionItemSelected = selected;
 		listViewWithPositionItemSelectedPosition = position;
 	}
-	
+
 	@ItemSelect
 	void listViewWithOneParamItemSelected(boolean selected) {
 		listViewWithOneParamItemSelected = selected;
 	}
-	
+
 	@ItemLongClick
 	void listViewWithPositionItemLongClicked(int position) {
 
+	}
+
+	private List<ArrayList<String>> stringLists() {
+		List<ArrayList<String>> stringLists = new ArrayList<ArrayList<String>>();
+		for (int i = 0; i < 10; i++) {
+			ArrayList<String> stringList = new ArrayList<String>();
+			for (int j = 0; j < 4; j++) {
+				stringList.add(i + " : " + j);
+			}
+			stringLists.add(stringList);
+		}
+		return stringLists;
 	}
 
 }
