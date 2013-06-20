@@ -15,25 +15,7 @@
  */
 package org.androidannotations.handler;
 
-import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-
-import org.androidannotations.handler.rest.DeleteHandler;
-import org.androidannotations.handler.rest.GetHandler;
-import org.androidannotations.handler.rest.HeadHandler;
-import org.androidannotations.handler.rest.OptionsHandler;
-import org.androidannotations.handler.rest.PostHandler;
-import org.androidannotations.handler.rest.PutHandler;
-import org.androidannotations.handler.rest.RestHandler;
-import org.androidannotations.handler.rest.RestServiceHandler;
+import org.androidannotations.handler.rest.*;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidRes;
@@ -41,6 +23,11 @@ import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import java.util.*;
+
+import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
 
 public class AnnotationHandlers {
 
@@ -75,6 +62,7 @@ public class AnnotationHandlers {
 		add(new ItemClickHandler(processingEnvironment));
 		add(new ItemSelectHandler(processingEnvironment));
 		add(new ItemLongClickHandler(processingEnvironment));
+		add(new EditorActionHandler(processingEnvironment));
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			add(new ResHandler(androidRes, processingEnvironment));
 		}
