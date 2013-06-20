@@ -47,6 +47,7 @@ import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.BeforeTextChange;
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.CustomTitle;
 import org.androidannotations.annotations.EActivity;
@@ -59,6 +60,7 @@ import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.FocusChange;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.FragmentByTag;
@@ -676,7 +678,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					HttpsClient.class, //
 					FragmentArg.class, //
 					OnActivityResult.class, //
-					HierarchyViewerSupport.class //
+					HierarchyViewerSupport.class, //
+					CheckedChange.class, //
+					FocusChange.class //
 			};
 
 			Set<String> set = new HashSet<String>(annotationClassesArray.length);
