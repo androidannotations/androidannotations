@@ -96,7 +96,12 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		boolean usesGreenDroid = usesGreenDroid(typeElement);
 
-		int modifiers = JMod.PUBLIC | JMod.FINAL;
+		int modifiers = JMod.PUBLIC;
+
+		Boolean genFinal = (Boolean) annotationHelper.extractAnnotationParameter(element, EActivity.class, "genFinal");
+		if (genFinal) {
+			modifiers |= JMod.FINAL;
+		}
 
 		JDefinedClass generatedClass = codeModel._class(modifiers, subActivityQualifiedName, ClassType.CLASS);
 

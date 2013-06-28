@@ -47,4 +47,5 @@ public @interface EActivity {
 	int value() default ResId.DEFAULT_VALUE;
 
 	String resName() default "";
+    boolean genFinal() default true;
 }
