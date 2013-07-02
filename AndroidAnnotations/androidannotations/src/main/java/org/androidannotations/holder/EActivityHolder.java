@@ -91,6 +91,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		super(processHolder, annotatedElement);
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
+		setSetContentView();
 		createIntentBuilder();
 		handleBackPressed();
 	}
@@ -307,6 +308,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setSetContentView() {
+		getOnCreate();
+
 		String setContentViewMethodName;
 		if (usesGreenDroid()) {
 			setContentViewMethodName = "setActionBarContentView";
