@@ -94,7 +94,13 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		String subActivityQualifiedName = annotatedActivityQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
-		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, subActivityQualifiedName, ClassType.CLASS);
+		int mods = PUBLIC;
+
+		if ((Boolean) annotationHelper.extractAnnotationParameter(element, getTarget(), "genFinal")) {
+			mods |= FINAL;
+		}
+
+		JDefinedClass generatedClass = codeModel._class(mods, subActivityQualifiedName, ClassType.CLASS);
 
 		EBeanHolder holder = eBeansHolder.create(element, EActivity.class, generatedClass);
 
