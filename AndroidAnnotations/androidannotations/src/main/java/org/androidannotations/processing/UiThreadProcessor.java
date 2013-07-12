@@ -25,8 +25,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.UiThread.Propagation;
 import org.androidannotations.helper.APTCodeModelHelper;
 
-import android.os.Looper;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -96,8 +94,8 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 	 */
 	private void addUIThreadCheck(JMethod delegatingMethod, JCodeModel codeModel, EBeanHolder holder) throws JClassAlreadyExistsException {
 		// Get the Thread and Looper class.
-		JClass tClass = codeModel.ref(Thread.class);
-		JClass lClass = codeModel.ref(Looper.class);
+		JClass tClass = holder.classes().THREAD;
+		JClass lClass = holder.classes().LOOPER;
 
 		// invoke the methods.
 		JExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
