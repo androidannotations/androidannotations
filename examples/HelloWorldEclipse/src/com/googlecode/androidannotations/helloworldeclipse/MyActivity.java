@@ -3,6 +3,19 @@ package com.googlecode.androidannotations.helloworldeclipse;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.LongClick;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.Touch;
+import org.androidannotations.annotations.Transactional;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.BooleanRes;
+import org.androidannotations.annotations.res.ColorRes;
+import org.androidannotations.annotations.res.StringRes;
+
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,19 +31,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.LongClick;
-import com.googlecode.androidannotations.annotations.SystemService;
-import com.googlecode.androidannotations.annotations.Touch;
-import com.googlecode.androidannotations.annotations.Transactional;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.res.BooleanRes;
-import com.googlecode.androidannotations.annotations.res.ColorRes;
-import com.googlecode.androidannotations.annotations.res.StringRes;
 
 @EActivity(R.layout.my_activity)
 public class MyActivity extends Activity {
