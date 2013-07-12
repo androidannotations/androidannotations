@@ -13,23 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.annotations.rest;
 
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class RestImplementationHolder {
-
-	public JDefinedClass restImplementationClass;
-
-	public JFieldVar restTemplateField;
-
-	public JFieldVar rootUrlField;
-
-	public JFieldVar availableHeadersField;
-
-	public JFieldVar availableCookiesField;
-
-	public JFieldVar authenticationField;
-
+@Retention(RetentionPolicy.CLASS)
+@Target({ ElementType.METHOD, ElementType.TYPE })
+public @interface RequiresHeader {
+	String[] value();
 }

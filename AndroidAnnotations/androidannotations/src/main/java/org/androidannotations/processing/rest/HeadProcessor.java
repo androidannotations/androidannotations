@@ -26,7 +26,7 @@ import org.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JExpression;
 
 public class HeadProcessor extends MethodProcessor {
 
@@ -55,7 +55,7 @@ public class HeadProcessor extends MethodProcessor {
 	}
 
 	@Override
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+	protected JExpression addResultCallMethod(JExpression restCall, MethodProcessorHolder methodHolder) {
 		return JExpr.invoke(restCall, "getHeaders");
 	}
 

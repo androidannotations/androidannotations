@@ -45,6 +45,9 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
@@ -88,6 +91,15 @@ public class RestProcessor implements GeneratingElementProcessor {
 		JClass stringClass = eBeansHolder.refClass(STRING);
 		holder.rootUrlField = holder.restImplementationClass.field(JMod.PRIVATE, stringClass, "rootUrl");
 
+		// available headers/cookies
+		JClass mapClass = eBeansHolder.refClass("java.util.HashMap").narrow(stringClass, stringClass);
+		holder.availableHeadersField = holder.restImplementationClass.field(JMod.PRIVATE, mapClass, "availableHeaders");
+		holder.availableCookiesField = holder.restImplementationClass.field(JMod.PRIVATE, mapClass, "availableCookies");
+
+		// any auth
+		JClass httpAuthClass = eBeansHolder.refClass("org.springframework.http.HttpAuthentication");
+		holder.authenticationField = holder.restImplementationClass.field(JMod.PRIVATE, httpAuthClass, "authentication");
+
 		{
 			// Constructor
 			JMethod constructor = holder.restImplementationClass.constructor(JMod.PUBLIC);
@@ -118,6 +130,9 @@ public class RestProcessor implements GeneratingElementProcessor {
 				}
 			}
 			constructorBody.assign(holder.rootUrlField, lit(typeElement.getAnnotation(Rest.class).rootUrl()));
+
+			constructorBody.assign(holder.availableHeadersField, _new(mapClass));
+			constructorBody.assign(holder.availableCookiesField, _new(mapClass));
 		}
 
 		// Implement getRestTemplate method
@@ -170,6 +185,91 @@ public class RestProcessor implements GeneratingElementProcessor {
 			}
 		}
 
+		// Implement setHttpBasicAuth method
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 2 && method.getReturnType().getKind() == TypeKind.VOID) {
+				VariableElement firstParameter = parameters.get(0);
+				VariableElement secondParameter = parameters.get(1);
+				if (firstParameter.asType().toString().equals(STRING) && secondParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals("setHttpBasicAuth")) {
+					JMethod setBasicAuthMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
+					setBasicAuthMethod.annotate(Override.class);
+
+					JVar userParam = setBasicAuthMethod.param(stringClass, firstParameter.getSimpleName().toString());
+					JVar passParam = setBasicAuthMethod.param(stringClass, secondParameter.getSimpleName().toString());
+
+					JClass basicAuthClass = eBeansHolder.refClass("org.springframework.http.HttpBasicAuthentication");
+					JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(userParam).arg(passParam);
+
+					setBasicAuthMethod.body().assign(_this().ref(holder.authenticationField), basicAuthentication);
+					break; // Only one implementation
+				}
+			}
+		}
+
+		// Implement setAuthentication method
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 1 && method.getReturnType().getKind() == TypeKind.VOID) {
+				VariableElement firstParameter = parameters.get(0);
+				if (firstParameter.asType().toString().equals("org.springframework.http.HttpAuthentication") && method.getSimpleName().toString().equals("setAuthentication")) {
+					JMethod setAuthMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
+					setAuthMethod.annotate(Override.class);
+
+					JClass authClass = eBeansHolder.refClass("org.springframework.http.HttpAuthentication");
+					JVar authParam = setAuthMethod.param(authClass, firstParameter.getSimpleName().toString());
+
+					setAuthMethod.body().assign(_this().ref(holder.authenticationField), authParam);
+					break; // Only one implementation
+				}
+			}
+		}
+
+		// Implement getCookie and getHeader methods
+		implementMapGetMethod(holder, stringClass, methods, holder.availableCookiesField, "getCookie");
+		implementMapGetMethod(holder, stringClass, methods, holder.availableHeadersField, "getHeader");
+
+		// Implement putCookie and putHeader methods
+		implementMapPutMethod(holder, stringClass, codeModel, methods, holder.availableCookiesField, "setCookie");
+		implementMapPutMethod(holder, stringClass, codeModel, methods, holder.availableHeadersField, "setHeader");
+	}
+
+	private void implementMapGetMethod(RestImplementationHolder holder, JClass stringClass, List<ExecutableElement> methods, JFieldVar field, String methodName) {
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 1 && method.getReturnType().toString().equals(STRING)) {
+				VariableElement firstParameter = parameters.get(0);
+				if (firstParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals(methodName)) {
+					JMethod getCookieMethod = holder.restImplementationClass.method(JMod.PUBLIC, stringClass, method.getSimpleName().toString());
+					getCookieMethod.annotate(Override.class);
+
+					JVar cookieNameParam = getCookieMethod.param(stringClass, firstParameter.getSimpleName().toString());
+					JInvocation cookieValue = JExpr.invoke(field, "get").arg(cookieNameParam);
+					getCookieMethod.body()._return(cookieValue);
+					break; // Only one implementation
+				}
+			}
+		}
+	}
+
+	private void implementMapPutMethod(RestImplementationHolder holder, JClass stringClass, JCodeModel codeModel, List<ExecutableElement> methods, JFieldVar field, String methodName) {
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+			if (parameters.size() == 2 && method.getReturnType().getKind() == TypeKind.VOID) {
+				VariableElement firstParameter = parameters.get(0);
+				VariableElement secondParameter = parameters.get(1);
+				if (firstParameter.asType().toString().equals(STRING) && secondParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals(methodName)) {
+					JMethod putMapMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
+					putMapMethod.annotate(Override.class);
+
+					JVar keyParam = putMapMethod.param(stringClass, firstParameter.getSimpleName().toString());
+					JVar valParam = putMapMethod.param(stringClass, secondParameter.getSimpleName().toString());
+
+					putMapMethod.body().invoke(field, "put").arg(keyParam).arg(valParam);
+					break; // Only one implementation
+				}
+			}
+		}
 	}
 
 	private void implementGetRootUrl(RestImplementationHolder holder, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
