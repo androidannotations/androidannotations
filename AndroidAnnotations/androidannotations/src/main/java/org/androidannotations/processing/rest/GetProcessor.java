@@ -54,7 +54,7 @@ public class GetProcessor extends GetPostProcessor {
 		JClass httpEntity = holder.refClass(CanonicalNameConstants.HTTP_ENTITY);
 
 		JBlock body = methodHolder.getBody();
-		JVar httpHeadersVar = generateHttpHeadersVar(holder, body, executableElement);
+		JVar httpHeadersVar = generateHttpHeadersVar(methodHolder, holder, body, executableElement);
 
 		boolean hasHeaders = httpHeadersVar != null;
 

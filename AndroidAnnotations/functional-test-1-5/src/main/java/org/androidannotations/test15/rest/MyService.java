@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,12 @@ import org.androidannotations.annotations.rest.Head;
 import org.androidannotations.annotations.rest.Options;
 import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.annotations.rest.RequiresAuthentication;
+import org.androidannotations.annotations.rest.RequiresCookie;
+import org.androidannotations.annotations.rest.RequiresCookieInUrl;
+import org.androidannotations.annotations.rest.RequiresHeader;
 import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.annotations.rest.SetsCookie;
 import org.androidannotations.api.rest.MediaType;
 
 // if defined, the rootUrl will be added as a prefix to every request
@@ -43,6 +49,7 @@ public interface MyService {
 	// *** GET ***
 
 	// url variables are mapped to method parameter names.
+	@RequiresCookie("xt")
 	@Get("/events/{year}/{location}")
 	@Accept(MediaType.APPLICATION_JSON)
 	EventList getEvents(String location, int year);
@@ -112,10 +119,20 @@ public interface MyService {
 	@Get("/events/{year}/{location}")
 	Map<String, Event> getEventsGenericsMap(String location, int year) throws RestClientException;
 
-	@Get("/events/{year}/{location}")
+	@RequiresCookie("sjsaid")
+	@RequiresCookieInUrl("xt")
+	@Get("/events/{year}/{location}?xt={xt}")
 	void getEventsVoid(String location, int year) throws RestClientException;
 
 	// *** POST ***
+	@RequiresHeader("SomeFancyHeader")
+	@Post("/login")
+    @SetsCookie({"xt", "sjsaid"})
+	void authenticate();
+	
+	@RequiresAuthentication
+	@Post("http://company.com/client/ping")
+	void ping();
 
 	// There should be max 1 parameter that is not mapped to an attribute. This
 	// parameter will be used as the post entity.
@@ -208,4 +225,16 @@ public interface MyService {
 	void setRootUrl(String test);
     
     String getRootUrl();
+	
+	void setCookie(String cookieName, String value);
+	
+	String getCookie(String cookieName);
+	
+	void setHeader(String headerName, String value);
+	
+	String getHeader(String headerName);
+	
+	void setAuthentication(HttpAuthentication auth);
+	
+	void setHttpBasicAuth(String username, String password);
 }

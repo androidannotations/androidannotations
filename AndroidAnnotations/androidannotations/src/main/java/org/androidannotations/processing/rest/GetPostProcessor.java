@@ -42,6 +42,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JPackage;
 
@@ -267,7 +268,7 @@ public abstract class GetPostProcessor extends MethodProcessor {
 	}
 
 	@Override
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+	protected JExpression addResultCallMethod(JExpression restCall, MethodProcessorHolder methodHolder) {
 		JClass generatedReturnType = methodHolder.getMethodReturnClass();
 		if (generatedReturnType == null) {
 			return restCall;
