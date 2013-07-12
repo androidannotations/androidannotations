@@ -10,6 +10,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry kind="lib" path="/androidannotations-api/target/androidannotations-api-3.0-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="/androidannotations-api/target/androidannotations-api-3.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
