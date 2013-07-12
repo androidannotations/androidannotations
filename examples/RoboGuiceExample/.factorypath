@@ -1,4 +1,6 @@
 <factorypath>
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/androidannotations/target/androidannotations-2.2-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/androidannotations/androidannotations/3.0-SNAPSHOT/androidannotations-3.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/androidannotations/androidannotations-api/3.0-SNAPSHOT/androidannotations-api-3.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/codemodel/codemodel/2.4.1/codemodel-2.4.1.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>
