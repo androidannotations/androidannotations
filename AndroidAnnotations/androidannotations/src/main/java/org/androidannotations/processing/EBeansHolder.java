@@ -51,6 +51,7 @@ public class EBeansHolder {
 		public final JClass INPUT_STREAM = refClass(InputStream.class);
 		public final JClass FILE_INPUT_STREAM = refClass(FileInputStream.class);
 		public final JClass SQL_EXCEPTION = refClass(SQLException.class);
+		public final JClass THREAD = refClass(Thread.class);
 
 		/*
 		 * Android
@@ -97,6 +98,7 @@ public class EBeansHolder {
 		public final JClass KEY_STORE = refClass(CanonicalNameConstants.KEY_STORE);
 		public final JClass VIEW_SERVER = refClass(CanonicalNameConstants.VIEW_SERVER);
 		public final JClass PARCELABLE = refClass(CanonicalNameConstants.PARCELABLE);
+		public final JClass LOOPER = refClass(CanonicalNameConstants.LOOPER);
 
 		/*
 		 * Sherlock
