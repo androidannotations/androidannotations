@@ -68,6 +68,7 @@ import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.api.rest.EnhancedRestClient;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
@@ -131,10 +132,15 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void doesNotExtendOtherInterfaces(TypeElement element, IsValid valid) {
+	public void doesNotExtendInvalidInterfaces(TypeElement element, IsValid valid) {
 		if (element.getInterfaces().size() > 0) {
+			if (element.getInterfaces().size() == 1 && element.getInterfaces().get(0).toString().equals(EnhancedRestClient.class.getName())) {
+				// It's allowed to extend the EnhancedRestClient interface
+				return;
+			}
+
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on an interface that does not extend other interfaces");
+			annotationHelper.printAnnotationError(element, "%s interfaces can only extend EnhancedRestInterface");
 		}
 	}
 
@@ -533,11 +539,12 @@ public class ValidatorHelper {
 			DeclaredType daoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, modelTypeMirror, wildcardType);
 			DeclaredType runtimeExceptionDaoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelTypeMirror, wildcardType);
 
-			// Checks that elementType extends Dao<ModelType, ?> or RuntimeExceptionDao<ModelType, ?>
+			// Checks that elementType extends Dao<ModelType, ?> or
+			// RuntimeExceptionDao<ModelType, ?>
 			if (!annotationHelper.isSubtype(elementType, daoParameterizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParameterizedType)) {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString() //
-																									+  " or " +  runtimeExceptionDaoParameterizedType.toString());
+						+ " or " + runtimeExceptionDaoParameterizedType.toString());
 			}
 		}
 	}

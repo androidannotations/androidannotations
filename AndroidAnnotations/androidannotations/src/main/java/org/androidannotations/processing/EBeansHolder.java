@@ -151,6 +151,10 @@ public class EBeansHolder {
 		public final JClass SCHEME_REGISTRY = refClass(CanonicalNameConstants.SCHEME_REGISTRY);
 		public final JClass SINGLE_CLIENT_CONN_MANAGER = refClass(CanonicalNameConstants.SINGLE_CLIENT_CONN_MANAGER);
 
+		/*
+		 * Springframework
+		 */
+		public final JClass REST_CLIENT_EXCEPTION = refClass(CanonicalNameConstants.REST_CLIENT_EXCEPTION);
 	}
 
 	private final Map<Element, EBeanHolder> eBeanHolders = new HashMap<Element, EBeanHolder>();

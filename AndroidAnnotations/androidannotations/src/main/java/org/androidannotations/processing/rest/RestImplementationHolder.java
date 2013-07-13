@@ -32,4 +32,6 @@ public class RestImplementationHolder {
 
 	public JFieldVar authenticationField;
 
+	public JFieldVar restErrorHandlerField;
+
 }
