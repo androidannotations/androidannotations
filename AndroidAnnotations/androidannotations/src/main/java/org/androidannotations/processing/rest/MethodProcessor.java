@@ -214,6 +214,19 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 		}
 	}
 
+	/**
+	 * Adds the try/catch around the rest execution code.
+	 * 
+	 * If an exception is caught, it will first check if the handler is set. If
+	 * the handler is set, it will call the handler and return null (or nothing
+	 * if void). If the handler isn't set, it will re-throw the exception so
+	 * that it behaves as it did previous to this feature.
+	 * 
+	 * @param body
+	 * @param restCall
+	 * @param methodHolder
+	 * @param methodReturnVoid
+	 */
 	private void insertRestTryCatchBlock(JBlock body, JExpression restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid) {
 		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
 
@@ -233,12 +246,15 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 
 		JBlock thenBlock = con._then();
 
+		// call the handler method if it was set.
 		thenBlock.add(holder.restErrorHandlerField.invoke("onRestClientExceptionThrown").arg(excParam));
 
+		// return null if exception was caught and handled.
 		if (!methodReturnVoid) {
 			thenBlock._return(JExpr._null());
 		}
 
+		// re-throw the exception if handler wasn't set.
 		con._else()._throw(excParam);
 	}
 

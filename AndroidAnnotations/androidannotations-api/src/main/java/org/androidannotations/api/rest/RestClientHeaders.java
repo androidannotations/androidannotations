@@ -15,54 +15,58 @@
  */
 package org.androidannotations.api.rest;
 
-import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpAuthentication;
 
 /**
  * A @Rest interface implementing this interface will automatically have the
  * implementations of these methods generated.
  */
-public interface EnhancedRestClient {
+public interface RestClientHeaders {
 
 	/**
-	 * Gets the root URL for the rest service.
+	 * Gets a cookie by name.
 	 * 
-	 * @return String
+	 * @param name
+	 * @return the cookie value.
 	 */
-	String getRootUrl();
+	String getCookie(String name);
 
 	/**
-	 * Sets the root URL for the rest service.
+	 * Sets a cookie by name.
 	 * 
-	 * @param rootUrl
+	 * @param name
+	 * @param value
 	 */
-	void setRootUrl(String rootUrl);
+	void setCookie(String name, String value);
 
 	/**
-	 * Gets the rest template used by the rest service implementation.
+	 * Gets a header by name.
 	 * 
-	 * @return RestTemplate
+	 * @param name
+	 * @return the header value.
 	 */
-	RestTemplate getRestTemplate();
+	String getHeader(String name);
 
 	/**
-	 * Sets the rest template used by the rest service implementation.
+	 * Sets a header by name.
 	 * 
-	 * @param rt
+	 * @param name
+	 * @param value
 	 */
-	void setRestTemplate(RestTemplate rt);
+	void setHeader(String name, String value);
 
 	/**
-	 * Sets the error handler called when a rest error occurs.
+	 * Sets the authentication object.
 	 * 
-	 * @param handler
+	 * @param auth
 	 */
-	void setRestErrorHandler(RestErrorHandler handler);
+	void setAuthentication(HttpAuthentication auth);
 
-	String getCookie(String c);
-
-	void setHeader(String h, String v);
-
-	String getHeader(String h);
-
-	void setCookie(String c, String v);
+	/**
+	 * Sets the basic authentication user/password.
+	 * 
+	 * @param user
+	 * @param password
+	 */
+	void setHttpBasicAuth(String user, String password);
 }

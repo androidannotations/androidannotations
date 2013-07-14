@@ -34,10 +34,10 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.rest.Rest;
-import org.androidannotations.api.rest.EnhancedRestClient;
 import org.androidannotations.api.rest.RestErrorHandler;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.ModelConstants;
@@ -165,16 +165,112 @@ public class RestProcessor implements GeneratingElementProcessor {
 		implementSetErrorHandler(holder, codeModel, eBeansHolder, methods);
 	}
 
+	/**
+	 * Gets all of the methods of the class and includes the methods of any
+	 * implemented interfaces.
+	 * 
+	 * @param typeElement
+	 * @return full list of methods.
+	 */
 	private List<ExecutableElement> getMethods(TypeElement typeElement) {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
 		List<ExecutableElement> methods = new ArrayList<ExecutableElement>(ElementFilter.methodsIn(enclosedElements));
 
-		if (!typeElement.getInterfaces().isEmpty() && typeElement.getInterfaces().get(0).toString().equals(EnhancedRestClient.class.getName())) {
-			DeclaredType dt = (DeclaredType) typeElement.getInterfaces().get(0);
+		// Add methods of the interfaces. These will be valid as they have gone
+		// through the validator.
+		for (TypeMirror iface : typeElement.getInterfaces()) {
+			DeclaredType dt = (DeclaredType) iface;
 			methods.addAll(ElementFilter.methodsIn(dt.asElement().getEnclosedElements()));
 		}
 
 		return methods;
+	}
+
+	/**
+	 * Gets a method by name, return type and parameter types.
+	 * 
+	 * Note: Maybe this method should be in a util class somewhere if it could
+	 * be reused by other processors.
+	 * 
+	 * @param methods
+	 * @param methodName
+	 * @param returnType
+	 * @param parameterTypes
+	 * @return the ExecutableElement method object.
+	 */
+	private ExecutableElement getMethod(List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+
+			// Get the method return type or "VOID" if none.
+			String methodReturnType = method.getReturnType().getKind() == TypeKind.VOID ? TypeKind.VOID.toString() : method.getReturnType().toString();
+
+			if (parameters.size() == parameterTypes.length && methodReturnType.equals(returnType)) {
+				if (methodName == null || method.getSimpleName().toString().equals(methodName)) {
+					// At this point, method name, return type and number of
+					// parameters are correct. Now we need to validate the
+					// parameter types.
+					boolean validMethod = true;
+
+					for (int i = 0; i < parameters.size(); i++) {
+						VariableElement param = parameters.get(i);
+
+						if (!param.asType().toString().equals(parameterTypes[i])) {
+							// Parameter type does not match, this is not the
+							// correct method.
+							validMethod = false;
+							break;
+						}
+					}
+
+					if (validMethod) {
+						return method;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Implements a method based on its name, return type and parameter types.
+	 * It will return the JMethod object to be given the full implementation.
+	 * 
+	 * Note: Maybe this method should be in a util class somewhere if it could
+	 * be reused by other processors.
+	 * 
+	 * @param holder
+	 * @param codeModel
+	 * @param eBeansHolder
+	 * @param methods
+	 * @param methodName
+	 * @param returnType
+	 * @param parameterTypes
+	 * @return The JMethod object created.
+	 */
+	private JMethod implementMethod(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		// First get the ExecutableElement method object from the util function.
+		ExecutableElement method = getMethod(methods, methodName, returnType, parameterTypes);
+		JMethod jmethod = null;
+
+		if (method != null) {
+			// Get the return type or VOID if none.
+			JType jcReturnType = returnType.equals(TypeKind.VOID.toString()) ? codeModel.VOID : eBeansHolder.refClass(returnType);
+
+			// Create the implementation and annotate it with the Override
+			// annotation.
+			jmethod = holder.restImplementationClass.method(JMod.PUBLIC, jcReturnType, method.getSimpleName().toString());
+			jmethod.annotate(Override.class);
+
+			// Create the parameters.
+			for (int i = 0; i < method.getParameters().size(); i++) {
+				VariableElement param = method.getParameters().get(i);
+				jmethod.param(eBeansHolder.refClass(parameterTypes[i]), param.getSimpleName().toString());
+			}
+		}
+
+		return jmethod;
 	}
 
 	private void implementMapGetMethod(RestImplementationHolder holder, EBeansHolder eBeansHolder, List<ExecutableElement> methods, JFieldVar field, String methodName) {
@@ -192,52 +288,6 @@ public class RestProcessor implements GeneratingElementProcessor {
 		if (putMapMethod != null) {
 			putMapMethod.body().invoke(field, "put").arg(putMapMethod.params().get(0)).arg(putMapMethod.params().get(1));
 		}
-	}
-
-	private ExecutableElement getMethod(List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
-		for (ExecutableElement method : methods) {
-			List<? extends VariableElement> parameters = method.getParameters();
-			String methodReturnType = method.getReturnType().getKind() == TypeKind.VOID ? TypeKind.VOID.toString() : method.getReturnType().toString();
-
-			if (parameters.size() == parameterTypes.length && methodReturnType.equals(returnType)) {
-				if (methodName == null || method.getSimpleName().toString().equals(methodName)) {
-					boolean validMethod = true;
-
-					for (int i = 0; i < parameters.size(); i++) {
-						VariableElement param = parameters.get(i);
-
-						if (!param.asType().toString().equals(parameterTypes[i])) {
-							validMethod = false;
-							break;
-						}
-					}
-
-					if (validMethod) {
-						return method;
-					}
-				}
-			}
-		}
-
-		return null;
-	}
-
-	private JMethod implementMethod(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
-		ExecutableElement method = getMethod(methods, methodName, returnType, parameterTypes);
-		JMethod jmethod = null;
-
-		if (method != null) {
-			JType jcReturnType = returnType.equals(TypeKind.VOID.toString()) ? codeModel.VOID : eBeansHolder.refClass(returnType);
-			jmethod = holder.restImplementationClass.method(JMod.PUBLIC, jcReturnType, method.getSimpleName().toString());
-			jmethod.annotate(Override.class);
-
-			for (int i = 0; i < method.getParameters().size(); i++) {
-				VariableElement param = method.getParameters().get(i);
-				jmethod.param(eBeansHolder.refClass(parameterTypes[i]), param.getSimpleName().toString());
-			}
-		}
-
-		return jmethod;
 	}
 
 	private void implementSetAuthentication(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {

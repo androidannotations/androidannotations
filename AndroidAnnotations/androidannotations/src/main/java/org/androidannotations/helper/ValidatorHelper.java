@@ -68,7 +68,10 @@ import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
-import org.androidannotations.api.rest.EnhancedRestClient;
+import org.androidannotations.api.rest.RestClientErrorHandling;
+import org.androidannotations.api.rest.RestClientHeaders;
+import org.androidannotations.api.rest.RestClientRootUrl;
+import org.androidannotations.api.rest.RestClientSupport;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
@@ -76,6 +79,8 @@ import org.androidannotations.processing.InstanceStateProcessor;
 import org.androidannotations.validation.IsValid;
 
 public class ValidatorHelper {
+
+	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
 
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
@@ -134,13 +139,19 @@ public class ValidatorHelper {
 
 	public void doesNotExtendInvalidInterfaces(TypeElement element, IsValid valid) {
 		if (element.getInterfaces().size() > 0) {
-			if (element.getInterfaces().size() == 1 && element.getInterfaces().get(0).toString().equals(EnhancedRestClient.class.getName())) {
-				// It's allowed to extend the EnhancedRestClient interface
-				return;
+			boolean isValid = true;
+
+			for (TypeMirror iface : element.getInterfaces()) {
+				if (!VALID_REST_INTERFACES.contains(iface.toString())) {
+					isValid = false;
+					break;
+				}
 			}
 
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s interfaces can only extend EnhancedRestInterface");
+			if (!isValid) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s interfaces can only extend the following interfaces: " + VALID_REST_INTERFACES);
+			}
 		}
 	}
 
