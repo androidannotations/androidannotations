@@ -13,25 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.api.rest;
 
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
+import org.springframework.web.client.RestClientException;
 
-public class RestImplementationHolder {
-
-	public JDefinedClass restImplementationClass;
-
-	public JFieldVar restTemplateField;
-
-	public JFieldVar rootUrlField;
-
-	public JFieldVar availableHeadersField;
-
-	public JFieldVar availableCookiesField;
-
-	public JFieldVar authenticationField;
-
-	public JFieldVar restErrorHandlerField;
-
+/**
+ * This interface is used for handling rest client exceptions.
+ */
+public interface RestErrorHandler {
+	/**
+	 * Called when an exception occurs within the rest client.
+	 * 
+	 * @param e
+	 */
+	void onRestClientExceptionThrown(RestClientException e);
 }

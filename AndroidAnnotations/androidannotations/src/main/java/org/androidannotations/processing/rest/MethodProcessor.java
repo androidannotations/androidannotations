@@ -40,14 +40,18 @@ import org.androidannotations.processing.EBeanHolder;
 
 import com.sun.codemodel.JArray;
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JForEach;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JOp;
+import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
@@ -204,11 +208,54 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 
 	private void insertRestCallInBody(JBlock body, JExpression restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid, boolean usesInstance) {
 		if (methodReturnVoid && !usesInstance && restCall instanceof JInvocation) {
-			body.add((JInvocation) restCall);
+			insertRestTryCatchBlock(body, restCall, methodHolder, methodReturnVoid);
 		} else if (!methodReturnVoid) {
-			restCall = addResultCallMethod(restCall, methodHolder);
-			body._return(restCall);
+			insertRestTryCatchBlock(body, addResultCallMethod(restCall, methodHolder), methodHolder, methodReturnVoid);
 		}
+	}
+
+	/**
+	 * Adds the try/catch around the rest execution code.
+	 * 
+	 * If an exception is caught, it will first check if the handler is set. If
+	 * the handler is set, it will call the handler and return null (or nothing
+	 * if void). If the handler isn't set, it will re-throw the exception so
+	 * that it behaves as it did previous to this feature.
+	 * 
+	 * @param body
+	 * @param restCall
+	 * @param methodHolder
+	 * @param methodReturnVoid
+	 */
+	private void insertRestTryCatchBlock(JBlock body, JExpression restCall, MethodProcessorHolder methodHolder, boolean methodReturnVoid) {
+		RestImplementationHolder holder = restImplementationsHolder.getEnclosingHolder(methodHolder.getElement());
+
+		JTryBlock tryBlock = body._try();
+
+		if (methodReturnVoid) {
+			tryBlock.body().add((JInvocation) restCall);
+		} else {
+			tryBlock.body()._return(restCall);
+		}
+
+		JCatchBlock jcatch = tryBlock._catch(methodHolder.getHolder().classes().REST_CLIENT_EXCEPTION);
+
+		JBlock catchBlock = jcatch.body();
+		JConditional con = catchBlock._if(JOp.ne(holder.restErrorHandlerField, JExpr._null()));
+		JVar excParam = jcatch.param("e");
+
+		JBlock thenBlock = con._then();
+
+		// call the handler method if it was set.
+		thenBlock.add(holder.restErrorHandlerField.invoke("onRestClientExceptionThrown").arg(excParam));
+
+		// return null if exception was caught and handled.
+		if (!methodReturnVoid) {
+			thenBlock._return(JExpr._null());
+		}
+
+		// re-throw the exception if handler wasn't set.
+		con._else()._throw(excParam);
 	}
 
 	private JVar generateHashMapVar(RestImplementationHolder holder, MethodProcessorHolder methodHolder) {

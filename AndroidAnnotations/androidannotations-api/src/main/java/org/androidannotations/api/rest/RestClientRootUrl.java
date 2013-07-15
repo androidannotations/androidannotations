@@ -13,25 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.api.rest;
 
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
+/**
+ * A @Rest interface implementing this interface will automatically have the
+ * implementations of these methods generated.
+ */
+public interface RestClientRootUrl {
+	/**
+	 * Gets the root URL for the rest service.
+	 * 
+	 * @return String
+	 */
+	String getRootUrl();
 
-public class RestImplementationHolder {
-
-	public JDefinedClass restImplementationClass;
-
-	public JFieldVar restTemplateField;
-
-	public JFieldVar rootUrlField;
-
-	public JFieldVar availableHeadersField;
-
-	public JFieldVar availableCookiesField;
-
-	public JFieldVar authenticationField;
-
-	public JFieldVar restErrorHandlerField;
+	/**
+	 * Sets the root URL for the rest service.
+	 * 
+	 * @param rootUrl
+	 */
+	void setRootUrl(String rootUrl);
 
 }

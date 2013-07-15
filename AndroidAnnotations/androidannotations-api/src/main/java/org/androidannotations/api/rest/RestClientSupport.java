@@ -13,25 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.api.rest;
 
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
+import org.springframework.web.client.RestTemplate;
 
-public class RestImplementationHolder {
+/**
+ * A @Rest interface implementing this interface will automatically have the
+ * implementations of these methods generated.
+ */
+public interface RestClientSupport {
+	/**
+	 * Gets the rest template used by the rest service implementation.
+	 * 
+	 * @return RestTemplate
+	 */
+	RestTemplate getRestTemplate();
 
-	public JDefinedClass restImplementationClass;
-
-	public JFieldVar restTemplateField;
-
-	public JFieldVar rootUrlField;
-
-	public JFieldVar availableHeadersField;
-
-	public JFieldVar availableCookiesField;
-
-	public JFieldVar authenticationField;
-
-	public JFieldVar restErrorHandlerField;
-
+	/**
+	 * Sets the rest template used by the rest service implementation.
+	 * 
+	 * @param rt
+	 */
+	void setRestTemplate(RestTemplate rt);
 }

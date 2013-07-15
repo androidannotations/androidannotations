@@ -13,25 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.rest;
 
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
+import org.androidannotations.annotations.rest.Rest;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 
-public class RestImplementationHolder {
-
-	public JDefinedClass restImplementationClass;
-
-	public JFieldVar restTemplateField;
-
-	public JFieldVar rootUrlField;
-
-	public JFieldVar availableHeadersField;
-
-	public JFieldVar availableCookiesField;
-
-	public JFieldVar authenticationField;
-
-	public JFieldVar restErrorHandlerField;
+@Rest(converters = { MappingJacksonHttpMessageConverter.class })
+public interface ClientWithWrongInterface extends Comparable<String> {
 
 }
