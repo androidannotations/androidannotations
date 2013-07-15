@@ -15,19 +15,13 @@
  */
 package org.androidannotations.handler.rest;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.rest.Put;
-import org.androidannotations.handler.rest.RestMethodHandler;
-import org.androidannotations.holder.RestHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import java.util.TreeMap;
+
+import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 
 public class PutHandler extends RestMethodHandler {
 
@@ -48,10 +42,5 @@ public class PutHandler extends RestMethodHandler {
 	protected String getUrlSuffix(Element element) {
 		Put annotation = element.getAnnotation(Put.class);
 		return annotation.value();
-	}
-
-	@Override
-	protected JExpression getRequestEntity(Element element, JBlock methodBody, TreeMap<String, JVar> methodParams) {
-		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, methodParams);
 	}
 }

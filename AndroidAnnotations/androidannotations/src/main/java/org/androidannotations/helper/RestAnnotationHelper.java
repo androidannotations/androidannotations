@@ -15,44 +15,20 @@
  */
 package org.androidannotations.helper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.WildcardType;
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
 
-import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.annotations.rest.*;
 import org.androidannotations.holder.RestHolder;
 import org.androidannotations.process.IsValid;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
 import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.*;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
@@ -69,6 +45,13 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		List<String> parametersName = new ArrayList<String>();
 		for (VariableElement parameter : parameters) {
 			parametersName.add(parameter.getSimpleName().toString());
+		}
+
+		String[] cookiesToUrl = requiredUrlCookies(element);
+		if (cookiesToUrl != null) {
+			for (String cookie : cookiesToUrl) {
+				parametersName.add(cookie);
+			}
 		}
 
 		for (String variableName : variableNames) {
@@ -129,15 +112,30 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return variableNames;
 	}
 
-	public JVar declareUrlVariables(ExecutableElement element, ProcessHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
+	public JVar declareUrlVariables(ExecutableElement element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
 		Set<String> urlVariables = extractUrlVariableNames(element);
-		JClass hashMapClass = holder.refClass(HashMap.class).narrow(String.class, Object.class);
+
+		// cookies in url?
+		String[] cookiesToUrl = requiredUrlCookies(element);
+		if (cookiesToUrl != null) {
+			for (String cookie : cookiesToUrl) {
+				urlVariables.add(cookie);
+			}
+		}
+
+		JClass hashMapClass = holder.classes().HASH_MAP.narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
 			JVar hashMapVar = methodBody.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
 			for (String urlVariable : urlVariables) {
-				JVar urlValue = methodParams.get(urlVariable);
-				methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(urlValue);
-				methodParams.remove(urlVariable);
+				JVar methodParam = methodParams.get(urlVariable);
+				if (methodParam != null) {
+					methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(methodParam);
+					methodParams.remove(urlVariable);
+				} else {
+					// cookie from url
+					JInvocation cookieValue = holder.getAvailableCookiesField().invoke("get").arg(JExpr.lit(urlVariable));
+					methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(cookieValue);
+				}
 			}
 			return hashMapVar;
 		}
@@ -156,20 +154,117 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		}
 	}
 
-	public JVar declareAcceptedHttpHeaders(ProcessHolder holder, JBlock body, String mediaType) {
-		JClass httpHeadersClass = holder.classes().HTTP_HEADERS;
-		JClass collectionsClass = holder.classes().COLLECTIONS;
-		JClass mediaTypeClass = holder.classes().MEDIA_TYPE;
-
-		JVar httpHeadersVar = body.decl(httpHeadersClass, "httpHeaders", JExpr._new(httpHeadersClass));
-		JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
-		body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
-
-		return httpHeadersVar;
+	public String[] requiredHeaders(ExecutableElement executableElement) {
+		RequiresHeader cookieAnnotation = executableElement.getAnnotation(RequiresHeader.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
+		} else {
+			return null;
+		}
 	}
 
-	public JExpression declareHttpEntity(ProcessHolder holder, JBlock body, TreeMap<String, JVar> methodParams) {
-		return declareHttpEntity(holder, body, methodParams, null);
+	public String[] requiredCookies(ExecutableElement executableElement) {
+		RequiresCookie cookieAnnotation = executableElement.getAnnotation(RequiresCookie.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresCookie.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
+		} else {
+			return null;
+		}
+	}
+
+	public static String[] requiredUrlCookies(ExecutableElement executableElement) {
+		RequiresCookieInUrl cookieAnnotation = executableElement.getAnnotation(RequiresCookieInUrl.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresCookieInUrl.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
+		} else {
+			return null;
+		}
+	}
+
+	public String[] settingCookies(ExecutableElement executableElement) {
+		SetsCookie cookieAnnotation = executableElement.getAnnotation(SetsCookie.class);
+		if (cookieAnnotation == null) {
+			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(SetsCookie.class);
+		}
+		if (cookieAnnotation != null) {
+			return cookieAnnotation.value();
+		} else {
+			return null;
+		}
+	}
+
+	public boolean requiredAuthentication(ExecutableElement executableElement) {
+		RequiresAuthentication basicAuthAnnotation = executableElement.getAnnotation(RequiresAuthentication.class);
+		if (basicAuthAnnotation == null) {
+			basicAuthAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresAuthentication.class);
+		}
+		return basicAuthAnnotation != null;
+	}
+
+	public JVar declareHttpHeaders(ExecutableElement executableElement, RestHolder holder, JBlock body) {
+		JVar httpHeadersVar = null;
+
+		String mediaType = acceptedHeaders(executableElement);
+		boolean hasMediaTypeDefined = mediaType != null;
+
+		String[] cookies = requiredCookies(executableElement);
+		boolean requiresCookies = cookies != null && cookies.length > 0;
+
+		String[] headers = requiredHeaders(executableElement);
+		boolean requiresHeaders = headers != null && headers.length > 0;
+
+		boolean requiresAuth = requiredAuthentication(executableElement);
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
+			// we need the headers
+			httpHeadersVar = body.decl(holder.classes().HTTP_HEADERS, "httpHeaders", JExpr._new(holder.classes().HTTP_HEADERS));
+		}
+
+		if (hasMediaTypeDefined) {
+			JClass collectionsClass = holder.refClass(CanonicalNameConstants.COLLECTIONS);
+			JClass mediaTypeClass = holder.refClass(CanonicalNameConstants.MEDIA_TYPE);
+
+			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
+			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
+		}
+
+		if (requiresCookies) {
+			JClass stringBuilderClass = holder.classes().STRING_BUILDER;
+			JVar cookiesValueVar = body.decl(stringBuilderClass, "cookiesValue", JExpr._new(stringBuilderClass));
+			for (String cookie : cookies) {
+				JInvocation cookieValue = JExpr.invoke(holder.getAvailableCookiesField(), "get").arg(cookie);
+				JInvocation cookieFormatted = holder.classes().STRING.staticInvoke("format").arg(String.format("%s=%%s;", cookie)).arg(cookieValue);
+				JInvocation appendCookie = JExpr.invoke(cookiesValueVar, "append").arg(cookieFormatted);
+				body.add(appendCookie);
+			}
+
+			JInvocation cookiesToString = cookiesValueVar.invoke("toString");
+			body.add(JExpr.invoke(httpHeadersVar, "set").arg("Cookie").arg(cookiesToString));
+		}
+
+		if (requiresHeaders) {
+			for (String header : headers) {
+				JInvocation headerValue = JExpr.invoke(holder.getAvailableHeadersField(), "get").arg(header);
+				body.add(JExpr.invoke(httpHeadersVar, "set").arg(header).arg(headerValue));
+			}
+
+		}
+
+		if (requiresAuth) {
+			// attach auth
+			body.add(httpHeadersVar.invoke("setAuthorization").arg(holder.getAuthenticationField()));
+		}
+
+		return httpHeadersVar;
 	}
 
 	public JExpression declareHttpEntity(ProcessHolder holder, JBlock body, TreeMap<String, JVar> methodParams, JVar httpHeaders) {

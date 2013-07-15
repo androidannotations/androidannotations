@@ -57,6 +57,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		ExecutableElement executableElement = (ExecutableElement) element;
 		String methodName = element.getSimpleName().toString();
 		JClass methodReturnClass = getMethodReturnClass(element, holder);
+		boolean methodReturnVoid = executableElement.getReturnType().getKind() == TypeKind.VOID;
 
 		// Creating method signature
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, methodReturnClass, methodName);
@@ -68,18 +69,24 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		JInvocation exchangeCall = JExpr.invoke(holder.getRestTemplateField(), "exchange");
 		exchangeCall.arg(getUrl(element, holder));
 		exchangeCall.arg(getHttpMethod());
-		exchangeCall.arg(getRequestEntity(element, methodBody, params));
+		exchangeCall.arg(getRequestEntity(executableElement, holder, methodBody, params));
 		exchangeCall.arg(getResponseClass(element, holder));
-		JExpression urlVariables = getUrlVariables(element, methodBody, params);
-		if (urlVariables != null)
+		JExpression urlVariables = getUrlVariables(element, holder, methodBody, params);
+		if (urlVariables != null) {
 			exchangeCall.arg(urlVariables);
+		}
 
-		// Call exchange()
-		if (executableElement.getReturnType().getKind() == TypeKind.VOID) {
+		JExpression returnCall = exchangeCall;
+		JExpression result = setCookies(executableElement, holder, methodBody, exchangeCall);
+		if (result != null) {
+			returnCall = result;
+		}
+
+		if (methodReturnVoid && result == null) {
 			methodBody.add(exchangeCall);
-		} else {
-			exchangeCall = addResultCallMethod(exchangeCall, methodReturnClass);
-			methodBody._return(exchangeCall);
+		} else if (!methodReturnVoid) {
+			returnCall = addResultCallMethod(returnCall, methodReturnClass);
+			methodBody._return(returnCall);
 		}
 	}
 
@@ -108,7 +115,12 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	}
 
 	protected JExpression getUrl(Element element, RestHolder restHolder) {
-		return JExpr.invoke(restHolder.getRootUrlField(), "concat").arg(JExpr.lit(getUrlSuffix(element)));
+		String urlSuffix = getUrlSuffix(element);
+		JExpression url = JExpr.lit(getUrlSuffix(element));
+		if (!(urlSuffix.startsWith("http://") || urlSuffix.startsWith("https://"))) {
+			url = JExpr.invoke(restHolder.getRootUrlField(), "concat").arg(url);
+		}
+		return url;
 	}
 
 	protected abstract String getUrlSuffix(Element element);
@@ -120,19 +132,67 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		return httpMethod.staticRef(restMethodInCapitalLetters);
 	}
 
-	protected JExpression getRequestEntity(Element element, JBlock methodBody, TreeMap<String, JVar> params) {
-		return JExpr._null();
+	protected JExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> params) {
+		JVar httpHeaders = restAnnotationHelper.declareHttpHeaders(element, holder, methodBody);
+		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, params, httpHeaders);
 	}
 
 	protected JExpression getResponseClass(Element element, RestHolder holder) {
 		return JExpr._null();
 	}
 
-	protected JExpression getUrlVariables(Element element, JBlock methodBody, TreeMap<String, JVar> params) {
-		return restAnnotationHelper.declareUrlVariables((ExecutableElement) element, processHolder, methodBody, params);
+	protected JExpression getUrlVariables(Element element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> params) {
+		return restAnnotationHelper.declareUrlVariables((ExecutableElement) element, holder, methodBody, params);
 	}
 
-	protected JInvocation addResultCallMethod(JInvocation exchangeCall, JClass methodReturnClass) {
+	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
 		return exchangeCall;
+	}
+
+	private JFieldRef setCookies(ExecutableElement executableElement, RestHolder restHolder, JBlock methodBody, JInvocation exchangeCall) {
+		String[] settingCookies = restAnnotationHelper.settingCookies(executableElement);
+		if (settingCookies != null) {
+			boolean methodReturnVoid = executableElement.getReturnType().getKind() == TypeKind.VOID;
+			JClass methodReturnClass = getMethodReturnClass(executableElement, restHolder);
+
+			JClass responseEntityClass = classes().RESPONSE_ENTITY.narrow(methodReturnVoid ? codeModel().VOID : methodReturnClass);
+			JVar responseEntity = methodBody.decl(responseEntityClass, "response", exchangeCall);
+
+			// set cookies
+			JClass stringListClass = classes().LIST.narrow(classes().STRING);
+			JClass stringArrayClass = classes().STRING.array();
+			JArray cookiesArray = JExpr.newArray(classes().STRING);
+			for (String cookie : settingCookies) {
+				cookiesArray.add(JExpr.lit(cookie));
+			}
+			JVar requestedCookiesVar = methodBody.decl(stringArrayClass, "requestedCookies", cookiesArray);
+
+			JInvocation setCookiesList = JExpr.invoke(responseEntity, "getHeaders").invoke("get").arg("Set-Cookie");
+			JVar allCookiesList = methodBody.decl(stringListClass, "allCookies", setCookiesList);
+
+			// for loop over list... add if in string array
+			JForEach forEach = methodBody.forEach(classes().STRING, "rawCookie", allCookiesList);
+			JVar rawCookieVar = forEach.var();
+
+			JBlock forLoopBody = forEach.body();
+
+			JForEach innerForEach = forLoopBody.forEach(classes().STRING, "thisCookieName", requestedCookiesVar);
+			JBlock innerBody = innerForEach.body();
+			JBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var()))._then();
+
+			// where does the cookie VALUE end?
+			JInvocation valueEnd = rawCookieVar.invoke("indexOf").arg(JExpr.lit(';'));
+			JVar valueEndVar = thenBlock.decl(codeModel().INT, "valueEnd", valueEnd);
+			JBlock fixValueEndBlock = thenBlock._if(valueEndVar.eq(JExpr.lit(-1)))._then();
+			fixValueEndBlock.assign(valueEndVar, rawCookieVar.invoke("length"));
+
+			JExpression indexOfValue = rawCookieVar.invoke("indexOf").arg("=").plus(JExpr.lit(1));
+			JInvocation cookieValue = rawCookieVar.invoke("substring").arg(indexOfValue).arg(valueEndVar);
+			thenBlock.invoke(restHolder.getAvailableCookiesField(), "put").arg(innerForEach.var()).arg(cookieValue);
+			thenBlock._break();
+
+			return JExpr.ref(responseEntity.name());
+		}
+		return null;
 	}
 }

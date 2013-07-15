@@ -19,10 +19,13 @@ import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.CanonicalNameConstants.HTTP_AUTHENTICATION;
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -31,21 +34,19 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
+import com.sun.codemodel.*;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
 
 public class RestHolder extends BaseGeneratedClassHolder {
 
 	private JMethod init;
 	private JFieldVar rootUrlField;
 	private JFieldVar restTemplateField;
+	private JFieldVar availableHeadersField;
+	private JFieldVar availableCookiesField;
+	private JFieldVar authenticationField;
 
 	public RestHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -65,6 +66,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		List<? extends Element> enclosedElements = annotatedElement.getEnclosedElements();
 		List<ExecutableElement> methods = ElementFilter.methodsIn(enclosedElements);
 		boolean getRestTemplateImplemented = false, setRestTemplateImplemented = false, getRootUrlImplemented = false, setRootUrlImplemented = false;
+		boolean setHttpBasicAuthImplemented = false, setAuthenticationImplemented = false;
+		boolean getCookieImplemented = false, putCookieImplemented = false, getHeaderImplemented = false, putHeaderImplemented = false;
 		for (ExecutableElement method : methods) {
 			List<? extends VariableElement> parameters = method.getParameters();
 
@@ -94,12 +97,73 @@ public class RestHolder extends BaseGeneratedClassHolder {
 			}
 
 			if (!setRootUrlImplemented //
-					&& method.getSimpleName().toString().equals("setRootUrl") && method.getReturnType().getKind() == TypeKind.VOID //
+					&& method.getSimpleName().toString().equals("setRootUrl") //
+					&& method.getReturnType().getKind() == TypeKind.VOID //
 					&& parameters.size() == 1 //
 					&& parameters.get(0).asType().toString().equals(STRING)) {
 
 				implementSetRootUrl(method);
 				setRootUrlImplemented = true;
+			}
+
+			if (!setHttpBasicAuthImplemented //
+					&& method.getSimpleName().toString().equals("setHttpBasicAuth") //
+					&& parameters.size() == 2 //
+					&& parameters.get(0).asType().toString().equals(STRING) && parameters.get(1).asType().toString().equals(STRING) //
+					&& method.getReturnType().getKind() == TypeKind.VOID ) {
+
+				implementSetHttpBasicAuth(method);
+				setHttpBasicAuthImplemented = true;
+			}
+
+			if (!setAuthenticationImplemented //
+					&& method.getSimpleName().toString().equals("setAuthentication") //
+					&& method.getReturnType().getKind() == TypeKind.VOID //
+					&& parameters.size() == 1 //
+					&& parameters.get(0).asType().toString().equals(HTTP_AUTHENTICATION)) {
+
+				implementSetAuthentication(method);
+				setAuthenticationImplemented = true;
+			}
+
+			if (!getCookieImplemented //
+					&& method.getSimpleName().toString().equals("getCookie") //
+					&& method.getReturnType().toString().equals(STRING) //
+					&& parameters.size() == 1 //
+					&& parameters.get(0).asType().toString().equals(STRING)) {
+
+				implementMapGetMethod(method, getAvailableCookiesField());
+				getCookieImplemented = true;
+			}
+
+			if (!putCookieImplemented//
+					&& method.getSimpleName().toString().equals("setCookie") //
+					&& method.getReturnType().getKind() == TypeKind.VOID //
+					&& parameters.size() == 2 //
+					&& parameters.get(0).asType().toString().equals(STRING) && parameters.get(1).asType().toString().equals(STRING)) {
+
+				implementMapPutMethod(method, getAvailableCookiesField());
+				putCookieImplemented = true;
+			}
+
+			if (!getHeaderImplemented //
+					&& method.getSimpleName().toString().equals("getHeader") //
+					&& method.getReturnType().toString().equals(STRING) //
+					&& parameters.size() == 1 //
+					&& parameters.get(0).asType().toString().equals(STRING)) {
+
+				implementMapGetMethod(method, getAvailableHeadersField());
+				getHeaderImplemented = true;
+			}
+
+			if (!putHeaderImplemented //
+					&& method.getSimpleName().toString().equals("setHeader") //
+					&& method.getReturnType().getKind() == TypeKind.VOID //
+					&& parameters.size() == 2 //
+					&& parameters.get(0).asType().toString().equals(STRING) && parameters.get(1).asType().toString().equals(STRING)) {
+
+				implementMapPutMethod(method, getAvailableHeadersField());
+				putHeaderImplemented = true;
 			}
 		}
 	}
@@ -136,6 +200,53 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		setRootUrlMethod.body().assign(_this().ref(getRootUrlField()), rootUrlSetterParam);
 	}
 
+	private void implementSetHttpBasicAuth(ExecutableElement method) {
+		String methodName = method.getSimpleName().toString();
+		List<? extends VariableElement> parameters = method.getParameters();
+
+		JMethod setBasicAuthMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
+		setBasicAuthMethod.annotate(Override.class);
+		JVar userParam = setBasicAuthMethod.param(classes().STRING, parameters.get(0).getSimpleName().toString());
+		JVar passParam = setBasicAuthMethod.param(classes().STRING, parameters.get(1).getSimpleName().toString());
+
+		JInvocation basicAuthentication = JExpr._new(classes().HTTP_BASIC_AUTHENTICATION).arg(userParam).arg(passParam);
+		setBasicAuthMethod.body().assign(_this().ref(getAuthenticationField()), basicAuthentication);
+	}
+
+	private void implementSetAuthentication(ExecutableElement method) {
+		String methodName = method.getSimpleName().toString();
+		List<? extends VariableElement> parameters = method.getParameters();
+
+		JMethod setAuthMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
+		setAuthMethod.annotate(Override.class);
+
+		JVar authParam = setAuthMethod.param(classes().HTTP_AUTHENTICATION, parameters.get(0).getSimpleName().toString());
+		setAuthMethod.body().assign(_this().ref(getAuthenticationField()), authParam);
+	}
+
+	private void implementMapGetMethod(ExecutableElement method, JFieldVar field) {
+		String methodName = method.getSimpleName().toString();
+		List<? extends VariableElement> parameters = method.getParameters();
+
+		JMethod getCookieMethod = getGeneratedClass().method(JMod.PUBLIC, classes().STRING, methodName);
+		getCookieMethod.annotate(Override.class);
+		JVar cookieNameParam = getCookieMethod.param(classes().STRING, parameters.get(0).getSimpleName().toString());
+
+		JInvocation cookieValue = JExpr.invoke(field, "get").arg(cookieNameParam);
+		getCookieMethod.body()._return(cookieValue);
+	}
+
+	private void implementMapPutMethod(ExecutableElement method, JFieldVar field) {
+		String methodName = method.getSimpleName().toString();
+		List<? extends VariableElement> parameters = method.getParameters();
+
+		JMethod putMapMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
+		putMapMethod.annotate(Override.class);
+		JVar keyParam = putMapMethod.param(classes().STRING, parameters.get(0).getSimpleName().toString());
+		JVar valParam = putMapMethod.param(classes().STRING, parameters.get(1).getSimpleName().toString());
+		putMapMethod.body().invoke(field, "put").arg(keyParam).arg(valParam);
+	}
+
 	public JMethod getInit() {
 		if (init == null) {
 			setInit();
@@ -169,4 +280,44 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		restTemplateField = getGeneratedClass().field(JMod.PRIVATE, classes().REST_TEMPLATE, "restTemplate");
 		getInit().body().assign(restTemplateField, _new(classes().REST_TEMPLATE));
 	}
+
+	public JFieldVar getAvailableHeadersField() {
+		if (availableHeadersField == null) {
+			setAvailableHeadersField();
+		}
+		return availableHeadersField;
+	}
+
+	private void setAvailableHeadersField() {
+		JClass stringClass = classes().STRING;
+		JClass mapClass = classes().HASH_MAP.narrow(stringClass, stringClass);
+		availableHeadersField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableHeaders");
+		init.body().assign(availableHeadersField, _new(classes().HASH_MAP));
+	}
+
+	public JFieldVar getAvailableCookiesField() {
+		if (availableCookiesField == null) {
+			setAvailableCookiesField();
+		}
+		return availableCookiesField;
+	}
+
+	private void setAvailableCookiesField() {
+		JClass stringClass = classes().STRING;
+		JClass mapClass = classes().HASH_MAP.narrow(stringClass, stringClass);
+		availableCookiesField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableCookies");
+		init.body().assign(availableCookiesField, _new(classes().HASH_MAP));
+	}
+
+	public JFieldVar getAuthenticationField() {
+		if (authenticationField == null) {
+			setAuthenticationField();
+		}
+		return authenticationField;
+	}
+
+	private void setAuthenticationField() {
+		authenticationField = getGeneratedClass().field(JMod.PRIVATE, classes().HTTP_AUTHENTICATION, "authentication");
+	}
+
 }

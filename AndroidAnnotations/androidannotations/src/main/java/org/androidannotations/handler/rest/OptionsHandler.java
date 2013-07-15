@@ -16,7 +16,7 @@
 package org.androidannotations.handler.rest;
 
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JExpression;
 import org.androidannotations.annotations.rest.Options;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -47,7 +47,7 @@ public class OptionsHandler extends RestMethodHandler {
 	}
 
 	@Override
-	protected JInvocation addResultCallMethod(JInvocation exchangeCall, JClass methodReturnClass) {
+	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
 		return exchangeCall.invoke("getHeaders").invoke("getAllow");
 	}
 }

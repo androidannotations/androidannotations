@@ -15,10 +15,7 @@
  */
 package org.androidannotations.process;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.*;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.GeneratedClassHolder;
 
@@ -43,12 +40,15 @@ public class ProcessHolder {
 		public final JClass CLASS_CAST_EXCEPTION = refClass(ClassCastException.class);
 		public final JClass SERIALIZABLE = refClass(Serializable.class);
 		public final JClass STRING = refClass(String.class);
+		public final JClass STRING_BUILDER = refClass(StringBuilder.class);
 		public final JClass SYSTEM = refClass(System.class);
 		public final JClass INPUT_STREAM = refClass(InputStream.class);
 		public final JClass FILE_INPUT_STREAM = refClass(FileInputStream.class);
 		public final JClass SQL_EXCEPTION = refClass(SQLException.class);
 		public final JClass COLLECTIONS = refClass(Collections.class);
 		public final JClass THREAD = refClass(Thread.class);
+		public final JClass HASH_MAP = refClass(HashMap.class);
+		public final JClass LIST = refClass(List.class);
 
 		/*
 		 * Android
@@ -158,6 +158,8 @@ public class ProcessHolder {
 		public final JClass HTTP_HEADERS = refClass(CanonicalNameConstants.HTTP_HEADERS);
 		public final JClass MEDIA_TYPE = refClass(CanonicalNameConstants.MEDIA_TYPE);
 		public final JClass RESPONSE_ENTITY = refClass(CanonicalNameConstants.RESPONSE_ENTITY);
+		public final JClass HTTP_AUTHENTICATION = refClass(CanonicalNameConstants.HTTP_AUTHENTICATION);
+		public final JClass HTTP_BASIC_AUTHENTICATION = refClass(CanonicalNameConstants.HTTP_BASIC_AUTHENTICATION);
 
 	}
 

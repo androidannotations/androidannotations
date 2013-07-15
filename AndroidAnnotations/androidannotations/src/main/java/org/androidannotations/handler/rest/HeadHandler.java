@@ -17,9 +17,8 @@ package org.androidannotations.handler.rest;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JExpression;
 import org.androidannotations.annotations.rest.Head;
-import org.androidannotations.handler.rest.RestMethodHandler;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -49,7 +48,7 @@ public class HeadHandler extends RestMethodHandler {
 	}
 
 	@Override
-	protected JInvocation addResultCallMethod(JInvocation exchangeCall, JClass methodReturnClass) {
+	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
 		return JExpr.invoke(exchangeCall, "getHeaders");
 	}
 }
