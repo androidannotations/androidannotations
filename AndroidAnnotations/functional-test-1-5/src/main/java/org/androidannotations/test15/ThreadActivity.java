@@ -23,6 +23,7 @@ import java.util.concurrent.Semaphore;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.UiThread.Propagation;
 import org.androidannotations.test15.ebean.GenericBean;
 import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
@@ -118,6 +119,14 @@ public class ThreadActivity extends Activity {
 	@UiThread(delay = 1000)
 	void emptyUiDelayedMethod() {
 
+	}
+
+	@UiThread(propagation = Propagation.ENQUEUE)
+	void emptUiMethodEnqueue() {
+	}
+
+	@UiThread(propagation = Propagation.REUSE)
+	void emptUiMethodReuse() {
 	}
 
 	@UiThread
