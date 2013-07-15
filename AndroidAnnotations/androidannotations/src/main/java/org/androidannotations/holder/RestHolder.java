@@ -292,7 +292,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JClass stringClass = classes().STRING;
 		JClass mapClass = classes().HASH_MAP.narrow(stringClass, stringClass);
 		availableHeadersField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableHeaders");
-		init.body().assign(availableHeadersField, _new(classes().HASH_MAP));
+		init.body().assign(availableHeadersField, _new(mapClass));
 	}
 
 	public JFieldVar getAvailableCookiesField() {
@@ -306,7 +306,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JClass stringClass = classes().STRING;
 		JClass mapClass = classes().HASH_MAP.narrow(stringClass, stringClass);
 		availableCookiesField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableCookies");
-		init.body().assign(availableCookiesField, _new(classes().HASH_MAP));
+		init.body().assign(availableCookiesField, _new(mapClass));
 	}
 
 	public JFieldVar getAuthenticationField() {

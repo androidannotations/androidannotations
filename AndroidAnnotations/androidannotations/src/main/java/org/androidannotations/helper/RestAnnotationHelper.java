@@ -291,7 +291,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		if (httpHeaders != null) {
 			newHttpEntityVarCall.arg(httpHeaders);
 		} else if (entitySentToServer == null) {
-			newHttpEntityVarCall.arg(JExpr._null());
+			return JExpr._null();
 		}
 
 		return body.decl(narrowedHttpEntity, "requestEntity", newHttpEntityVarCall);
