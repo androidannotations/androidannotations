@@ -19,6 +19,9 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.handler.BaseAnnotationHandler;
@@ -27,9 +30,6 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
 
 public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -59,6 +59,6 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
         JFieldRef field = JExpr.ref(fieldName);
 
-        methodBody.assign(field, JExpr._new(refClass(generatedClassName)));
+        methodBody.assign(field, JExpr._new(refClass(generatedClassName)).arg(holder.getContextRef()));
     }
 }

@@ -15,10 +15,8 @@
  */
 package org.androidannotations.test15.rest;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import org.androidannotations.annotations.rest.*;
+import org.androidannotations.api.rest.MediaType;
 import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,23 +25,12 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import org.androidannotations.annotations.rest.Accept;
-import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.annotations.rest.Head;
-import org.androidannotations.annotations.rest.Options;
-import org.androidannotations.annotations.rest.Post;
-import org.androidannotations.annotations.rest.Put;
-import org.androidannotations.annotations.rest.RequiresAuthentication;
-import org.androidannotations.annotations.rest.RequiresCookie;
-import org.androidannotations.annotations.rest.RequiresCookieInUrl;
-import org.androidannotations.annotations.rest.RequiresHeader;
-import org.androidannotations.annotations.rest.Rest;
-import org.androidannotations.annotations.rest.SetsCookie;
-import org.androidannotations.api.rest.MediaType;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 // if defined, the rootUrl will be added as a prefix to every request
-@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class }, interceptors = { RequestInterceptor.class })
+@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class }, interceptors = { RequestInterceptor.class, EBeanInterceptor.class })
 public interface MyService {
 
 	// *** GET ***

@@ -38,7 +38,7 @@ import org.springframework.web.client.RestTemplate;
 import com.xtremelabs.robolectric.Robolectric;
 
 public class RequestTestBuilder {
-	private MyService_ myService = new MyService_();
+	private MyService_ myService = new MyService_(null);
 	private HttpEntityArgumentMatcher entityArgumentMatcher = new HttpEntityArgumentMatcher();;
 	private RestTemplate restTemplate;
 
