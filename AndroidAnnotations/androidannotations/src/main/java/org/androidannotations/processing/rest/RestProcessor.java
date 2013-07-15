@@ -24,6 +24,7 @@ import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_R
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -33,9 +34,11 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.api.rest.RestErrorHandler;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.processing.EBeansHolder;
@@ -50,10 +53,9 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.sun.codemodel.JType;
 
 public class RestProcessor implements GeneratingElementProcessor {
-
 	private final RestImplementationsHolder restImplementationsHolder;
 	private AnnotationHelper annotationHelper;
 
@@ -90,6 +92,10 @@ public class RestProcessor implements GeneratingElementProcessor {
 		// RootUrl field
 		JClass stringClass = eBeansHolder.refClass(STRING);
 		holder.rootUrlField = holder.restImplementationClass.field(JMod.PRIVATE, stringClass, "rootUrl");
+
+		// Error handler field.
+		JClass restErrorHandlerClass = eBeansHolder.refClass(RestErrorHandler.class.getName());
+		holder.restErrorHandlerField = holder.restImplementationClass.field(JMod.PRIVATE, restErrorHandlerClass, "restErrorHandler");
 
 		// available headers/cookies
 		JClass mapClass = eBeansHolder.refClass("java.util.HashMap").narrow(stringClass, stringClass);
@@ -135,154 +141,211 @@ public class RestProcessor implements GeneratingElementProcessor {
 			constructorBody.assign(holder.availableCookiesField, _new(mapClass));
 		}
 
-		// Implement getRestTemplate method
+		List<ExecutableElement> methods = getMethods(typeElement);
+
+		// rest template
+		implementGetRestTemplate(holder, codeModel, eBeansHolder, methods);
+		implementSetRestTemplate(holder, codeModel, eBeansHolder, methods);
+
+		// root url
+		implementGetRootUrl(holder, codeModel, eBeansHolder, methods);
+		implementSetRootUrl(holder, codeModel, eBeansHolder, methods);
+
+		// authentication
+		implementSetBasicAuth(holder, codeModel, eBeansHolder, methods);
+		implementSetAuthentication(holder, codeModel, eBeansHolder, methods);
+
+		// cookies and headers
+		implementMapGetMethod(holder, eBeansHolder, methods, holder.availableCookiesField, "getCookie");
+		implementMapGetMethod(holder, eBeansHolder, methods, holder.availableHeadersField, "getHeader");
+		implementMapPutMethod(holder, eBeansHolder, codeModel, methods, holder.availableCookiesField, "setCookie");
+		implementMapPutMethod(holder, eBeansHolder, codeModel, methods, holder.availableHeadersField, "setHeader");
+
+		// error handler.
+		implementSetErrorHandler(holder, codeModel, eBeansHolder, methods);
+	}
+
+	/**
+	 * Gets all of the methods of the class and includes the methods of any
+	 * implemented interfaces.
+	 * 
+	 * @param typeElement
+	 * @return full list of methods.
+	 */
+	private List<ExecutableElement> getMethods(TypeElement typeElement) {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
-		List<ExecutableElement> methods = ElementFilter.methodsIn(enclosedElements);
-		for (ExecutableElement method : methods) {
-			if (method.getParameters().size() == 0 && method.getReturnType().toString().equals(REST_TEMPLATE)) {
-				String methodName = method.getSimpleName().toString();
-				JMethod getRestTemplateMethod = holder.restImplementationClass.method(JMod.PUBLIC, restTemplateClass, methodName);
-				getRestTemplateMethod.annotate(Override.class);
-				getRestTemplateMethod.body()._return(holder.restTemplateField);
-				break; // Only one implementation
-			}
+		List<ExecutableElement> methods = new ArrayList<ExecutableElement>(ElementFilter.methodsIn(enclosedElements));
+
+		// Add methods of the interfaces. These will be valid as they have gone
+		// through the validator.
+		for (TypeMirror iface : typeElement.getInterfaces()) {
+			DeclaredType dt = (DeclaredType) iface;
+			methods.addAll(ElementFilter.methodsIn(dt.asElement().getEnclosedElements()));
 		}
 
-		for (ExecutableElement method : methods) {
-			List<? extends VariableElement> parameters = method.getParameters();
-			if (parameters.size() == 1 && method.getReturnType().getKind() == TypeKind.VOID) {
-				VariableElement firstParameter = parameters.get(0);
-				if (firstParameter.asType().toString().equals(REST_TEMPLATE)) {
-					String methodName = method.getSimpleName().toString();
-					JMethod setRestTemplateMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, methodName);
-					setRestTemplateMethod.annotate(Override.class);
-
-					JVar restTemplateSetterParam = setRestTemplateMethod.param(restTemplateClass, firstParameter.getSimpleName().toString());
-
-					setRestTemplateMethod.body().assign(_this().ref(holder.restTemplateField), restTemplateSetterParam);
-					break; // Only one implementation
-				}
-			}
-		}
-
-		// Implement getRootUrl method
-		implementGetRootUrl(holder, eBeansHolder, methods);
-
-		// Implement setRootUrl method
-		for (ExecutableElement method : methods) {
-			List<? extends VariableElement> parameters = method.getParameters();
-			if (parameters.size() == 1 && method.getReturnType().getKind() == TypeKind.VOID) {
-				VariableElement firstParameter = parameters.get(0);
-				if (firstParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals("setRootUrl")) {
-					JMethod setRootUrlMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
-					setRootUrlMethod.annotate(Override.class);
-
-					JVar rootUrlSetterParam = setRootUrlMethod.param(stringClass, firstParameter.getSimpleName().toString());
-
-					setRootUrlMethod.body().assign(_this().ref(holder.rootUrlField), rootUrlSetterParam);
-					break; // Only one implementation
-				}
-			}
-		}
-
-		// Implement setHttpBasicAuth method
-		for (ExecutableElement method : methods) {
-			List<? extends VariableElement> parameters = method.getParameters();
-			if (parameters.size() == 2 && method.getReturnType().getKind() == TypeKind.VOID) {
-				VariableElement firstParameter = parameters.get(0);
-				VariableElement secondParameter = parameters.get(1);
-				if (firstParameter.asType().toString().equals(STRING) && secondParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals("setHttpBasicAuth")) {
-					JMethod setBasicAuthMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
-					setBasicAuthMethod.annotate(Override.class);
-
-					JVar userParam = setBasicAuthMethod.param(stringClass, firstParameter.getSimpleName().toString());
-					JVar passParam = setBasicAuthMethod.param(stringClass, secondParameter.getSimpleName().toString());
-
-					JClass basicAuthClass = eBeansHolder.refClass("org.springframework.http.HttpBasicAuthentication");
-					JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(userParam).arg(passParam);
-
-					setBasicAuthMethod.body().assign(_this().ref(holder.authenticationField), basicAuthentication);
-					break; // Only one implementation
-				}
-			}
-		}
-
-		// Implement setAuthentication method
-		for (ExecutableElement method : methods) {
-			List<? extends VariableElement> parameters = method.getParameters();
-			if (parameters.size() == 1 && method.getReturnType().getKind() == TypeKind.VOID) {
-				VariableElement firstParameter = parameters.get(0);
-				if (firstParameter.asType().toString().equals("org.springframework.http.HttpAuthentication") && method.getSimpleName().toString().equals("setAuthentication")) {
-					JMethod setAuthMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
-					setAuthMethod.annotate(Override.class);
-
-					JClass authClass = eBeansHolder.refClass("org.springframework.http.HttpAuthentication");
-					JVar authParam = setAuthMethod.param(authClass, firstParameter.getSimpleName().toString());
-
-					setAuthMethod.body().assign(_this().ref(holder.authenticationField), authParam);
-					break; // Only one implementation
-				}
-			}
-		}
-
-		// Implement getCookie and getHeader methods
-		implementMapGetMethod(holder, stringClass, methods, holder.availableCookiesField, "getCookie");
-		implementMapGetMethod(holder, stringClass, methods, holder.availableHeadersField, "getHeader");
-
-		// Implement putCookie and putHeader methods
-		implementMapPutMethod(holder, stringClass, codeModel, methods, holder.availableCookiesField, "setCookie");
-		implementMapPutMethod(holder, stringClass, codeModel, methods, holder.availableHeadersField, "setHeader");
+		return methods;
 	}
 
-	private void implementMapGetMethod(RestImplementationHolder holder, JClass stringClass, List<ExecutableElement> methods, JFieldVar field, String methodName) {
+	/**
+	 * Gets a method by name, return type and parameter types.
+	 * 
+	 * Note: Maybe this method should be in a util class somewhere if it could
+	 * be reused by other processors.
+	 * 
+	 * @param methods
+	 * @param methodName
+	 * @param returnType
+	 * @param parameterTypes
+	 * @return the ExecutableElement method object.
+	 */
+	private ExecutableElement getMethod(List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
 		for (ExecutableElement method : methods) {
 			List<? extends VariableElement> parameters = method.getParameters();
-			if (parameters.size() == 1 && method.getReturnType().toString().equals(STRING)) {
-				VariableElement firstParameter = parameters.get(0);
-				if (firstParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals(methodName)) {
-					JMethod getCookieMethod = holder.restImplementationClass.method(JMod.PUBLIC, stringClass, method.getSimpleName().toString());
-					getCookieMethod.annotate(Override.class);
 
-					JVar cookieNameParam = getCookieMethod.param(stringClass, firstParameter.getSimpleName().toString());
-					JInvocation cookieValue = JExpr.invoke(field, "get").arg(cookieNameParam);
-					getCookieMethod.body()._return(cookieValue);
-					break; // Only one implementation
+			// Get the method return type or "VOID" if none.
+			String methodReturnType = method.getReturnType().getKind() == TypeKind.VOID ? TypeKind.VOID.toString() : method.getReturnType().toString();
+
+			if (parameters.size() == parameterTypes.length && methodReturnType.equals(returnType)) {
+				if (methodName == null || method.getSimpleName().toString().equals(methodName)) {
+					// At this point, method name, return type and number of
+					// parameters are correct. Now we need to validate the
+					// parameter types.
+					boolean validMethod = true;
+
+					for (int i = 0; i < parameters.size(); i++) {
+						VariableElement param = parameters.get(i);
+
+						if (!param.asType().toString().equals(parameterTypes[i])) {
+							// Parameter type does not match, this is not the
+							// correct method.
+							validMethod = false;
+							break;
+						}
+					}
+
+					if (validMethod) {
+						return method;
+					}
 				}
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Implements a method based on its name, return type and parameter types.
+	 * It will return the JMethod object to be given the full implementation.
+	 * 
+	 * Note: Maybe this method should be in a util class somewhere if it could
+	 * be reused by other processors.
+	 * 
+	 * @param holder
+	 * @param codeModel
+	 * @param eBeansHolder
+	 * @param methods
+	 * @param methodName
+	 * @param returnType
+	 * @param parameterTypes
+	 * @return The JMethod object created.
+	 */
+	private JMethod implementMethod(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		// First get the ExecutableElement method object from the util function.
+		ExecutableElement method = getMethod(methods, methodName, returnType, parameterTypes);
+		JMethod jmethod = null;
+
+		if (method != null) {
+			// Get the return type or VOID if none.
+			JType jcReturnType = returnType.equals(TypeKind.VOID.toString()) ? codeModel.VOID : eBeansHolder.refClass(returnType);
+
+			// Create the implementation and annotate it with the Override
+			// annotation.
+			jmethod = holder.restImplementationClass.method(JMod.PUBLIC, jcReturnType, method.getSimpleName().toString());
+			jmethod.annotate(Override.class);
+
+			// Create the parameters.
+			for (int i = 0; i < method.getParameters().size(); i++) {
+				VariableElement param = method.getParameters().get(i);
+				jmethod.param(eBeansHolder.refClass(parameterTypes[i]), param.getSimpleName().toString());
+			}
+		}
+
+		return jmethod;
+	}
+
+	private void implementMapGetMethod(RestImplementationHolder holder, EBeansHolder eBeansHolder, List<ExecutableElement> methods, JFieldVar field, String methodName) {
+		JMethod getCookieMethod = implementMethod(holder, null, eBeansHolder, methods, methodName, STRING, STRING);
+
+		if (getCookieMethod != null) {
+			JInvocation cookieValue = JExpr.invoke(field, "get").arg(getCookieMethod.params().get(0));
+			getCookieMethod.body()._return(cookieValue);
 		}
 	}
 
-	private void implementMapPutMethod(RestImplementationHolder holder, JClass stringClass, JCodeModel codeModel, List<ExecutableElement> methods, JFieldVar field, String methodName) {
-		for (ExecutableElement method : methods) {
-			List<? extends VariableElement> parameters = method.getParameters();
-			if (parameters.size() == 2 && method.getReturnType().getKind() == TypeKind.VOID) {
-				VariableElement firstParameter = parameters.get(0);
-				VariableElement secondParameter = parameters.get(1);
-				if (firstParameter.asType().toString().equals(STRING) && secondParameter.asType().toString().equals(STRING) && method.getSimpleName().toString().equals(methodName)) {
-					JMethod putMapMethod = holder.restImplementationClass.method(JMod.PUBLIC, codeModel.VOID, method.getSimpleName().toString());
-					putMapMethod.annotate(Override.class);
+	private void implementMapPutMethod(RestImplementationHolder holder, EBeansHolder eBeansHolder, JCodeModel codeModel, List<ExecutableElement> methods, JFieldVar field, String methodName) {
+		JMethod putMapMethod = implementMethod(holder, codeModel, eBeansHolder, methods, methodName, TypeKind.VOID.toString(), STRING, STRING);
 
-					JVar keyParam = putMapMethod.param(stringClass, firstParameter.getSimpleName().toString());
-					JVar valParam = putMapMethod.param(stringClass, secondParameter.getSimpleName().toString());
-
-					putMapMethod.body().invoke(field, "put").arg(keyParam).arg(valParam);
-					break; // Only one implementation
-				}
-			}
+		if (putMapMethod != null) {
+			putMapMethod.body().invoke(field, "put").arg(putMapMethod.params().get(0)).arg(putMapMethod.params().get(1));
 		}
 	}
 
-	private void implementGetRootUrl(RestImplementationHolder holder, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
-		for (ExecutableElement method : methods) {
-			String methodName = method.getSimpleName().toString();
+	private void implementSetAuthentication(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		JMethod setAuthMethod = implementMethod(holder, codeModel, eBeansHolder, methods, "setAuthentication", TypeKind.VOID.toString(), "org.springframework.http.HttpAuthentication");
 
-			if (method.getParameters().size() == 0 && method.getReturnType().toString().equals(STRING) && methodName.equals("getRootUrl")) {
-				JMethod getRootUrlMethod = holder.restImplementationClass.method(JMod.PUBLIC, eBeansHolder.refClass(STRING), methodName);
+		if (setAuthMethod != null) {
+			setAuthMethod.body().assign(_this().ref(holder.authenticationField), setAuthMethod.params().get(0));
+		}
+	}
 
-				getRootUrlMethod.annotate(Override.class);
-				getRootUrlMethod.body()._return(holder.rootUrlField);
-				return; // Only one implementation
-			}
+	private void implementSetBasicAuth(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		JMethod setAuthMethod = implementMethod(holder, codeModel, eBeansHolder, methods, "setHttpBasicAuth", TypeKind.VOID.toString(), STRING, STRING);
+
+		if (setAuthMethod != null) {
+			JClass basicAuthClass = eBeansHolder.refClass("org.springframework.http.HttpBasicAuthentication");
+			JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(setAuthMethod.params().get(0)).arg(setAuthMethod.params().get(1));
+
+			setAuthMethod.body().assign(_this().ref(holder.authenticationField), basicAuthentication);
+		}
+	}
+
+	private void implementSetErrorHandler(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		JMethod setErrorHandlerMethod = implementMethod(holder, codeModel, eBeansHolder, methods, "setRestErrorHandler", TypeKind.VOID.toString(), RestErrorHandler.class.getName());
+
+		if (setErrorHandlerMethod != null) {
+			setErrorHandlerMethod.body().assign(_this().ref(holder.restErrorHandlerField), setErrorHandlerMethod.params().get(0));
+		}
+	}
+
+	private void implementSetRootUrl(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		JMethod setRootUrlMethod = implementMethod(holder, codeModel, eBeansHolder, methods, "setRootUrl", TypeKind.VOID.toString(), STRING);
+
+		if (setRootUrlMethod != null) {
+			setRootUrlMethod.body().assign(_this().ref(holder.rootUrlField), setRootUrlMethod.params().get(0));
+		}
+	}
+
+	private void implementGetRootUrl(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		JMethod getRootUrlMethod = implementMethod(holder, codeModel, eBeansHolder, methods, "getRootUrl", STRING);
+
+		if (getRootUrlMethod != null) {
+			getRootUrlMethod.body()._return(holder.rootUrlField);
+		}
+	}
+
+	private void implementSetRestTemplate(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		JMethod setRestTemplateMethod = implementMethod(holder, codeModel, eBeansHolder, methods, null, TypeKind.VOID.toString(), REST_TEMPLATE);
+
+		if (setRestTemplateMethod != null) {
+			setRestTemplateMethod.body().assign(_this().ref(holder.restTemplateField), setRestTemplateMethod.params().get(0));
+		}
+	}
+
+	private void implementGetRestTemplate(RestImplementationHolder holder, JCodeModel codeModel, EBeansHolder eBeansHolder, List<ExecutableElement> methods) {
+		JMethod getRestTemplateMethod = implementMethod(holder, codeModel, eBeansHolder, methods, null, REST_TEMPLATE);
+
+		if (getRestTemplateMethod != null) {
+			getRestTemplateMethod.body()._return(holder.restTemplateField);
 		}
 	}
 }

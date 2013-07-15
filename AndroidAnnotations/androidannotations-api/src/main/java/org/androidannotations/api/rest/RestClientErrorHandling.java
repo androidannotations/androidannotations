@@ -13,25 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.api.rest;
 
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
-
-public class RestImplementationHolder {
-
-	public JDefinedClass restImplementationClass;
-
-	public JFieldVar restTemplateField;
-
-	public JFieldVar rootUrlField;
-
-	public JFieldVar availableHeadersField;
-
-	public JFieldVar availableCookiesField;
-
-	public JFieldVar authenticationField;
-
-	public JFieldVar restErrorHandlerField;
-
+/**
+ * A @Rest interface implementing this interface will automatically have the
+ * implementations of this method generated.
+ */
+public interface RestClientErrorHandling {
+	/**
+	 * Sets the error handler called when a rest error occurs.
+	 * 
+	 * @param handler
+	 */
+	void setRestErrorHandler(RestErrorHandler handler);
 }

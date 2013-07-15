@@ -92,4 +92,15 @@ public class RestTest extends AAProcessorTestHelper {
 		assertCompilationErrorCount(5, result);
 	}
 
+	@Test
+	public void client_with_wrong_interface() throws IOException {
+		CompileResult result = compileFiles(ClientWithWrongInterface.class);
+		assertCompilationErrorCount(1, result);
+	}
+
+	@Test
+	public void client_with_all_interfaces() throws IOException {
+		CompileResult result = compileFiles(ClientWithAllInterfaces.class);
+		assertCompilationSuccessful(result);
+	}
 }
