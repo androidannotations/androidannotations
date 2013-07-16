@@ -196,4 +196,5 @@ public @interface Rest {
 	Class<?>[] converters();
 
 	Class<?>[] interceptors() default {};
+	Class<?> requestFactory() default Void.class;
 }
