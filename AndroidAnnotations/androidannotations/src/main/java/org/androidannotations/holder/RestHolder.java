@@ -23,9 +23,7 @@ import static org.androidannotations.helper.CanonicalNameConstants.HTTP_AUTHENTI
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -35,11 +33,15 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import com.sun.codemodel.*;
+import org.androidannotations.api.rest.RestErrorHandler;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
 public class RestHolder extends BaseGeneratedClassHolder {
+
+	private APTCodeModelHelper codeModelHelper;
 
 	private JMethod init;
 	private JFieldVar rootUrlField;
@@ -47,9 +49,11 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	private JFieldVar availableHeadersField;
 	private JFieldVar availableCookiesField;
 	private JFieldVar authenticationField;
+	private JFieldVar restErrorHandlerField;
 
 	public RestHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
+		codeModelHelper = new APTCodeModelHelper();
 		implementMethods();
 	}
 
@@ -63,188 +67,120 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void implementMethods() {
-		List<? extends Element> enclosedElements = annotatedElement.getEnclosedElements();
-		List<ExecutableElement> methods = ElementFilter.methodsIn(enclosedElements);
-		boolean getRestTemplateImplemented = false, setRestTemplateImplemented = false, getRootUrlImplemented = false, setRootUrlImplemented = false;
-		boolean setHttpBasicAuthImplemented = false, setAuthenticationImplemented = false;
-		boolean getCookieImplemented = false, putCookieImplemented = false, getHeaderImplemented = false, putHeaderImplemented = false;
-		for (ExecutableElement method : methods) {
-			List<? extends VariableElement> parameters = method.getParameters();
+		List<ExecutableElement> methods = codeModelHelper.getMethods(getAnnotatedElement());
 
-			if (!getRestTemplateImplemented //
-					&& method.getParameters().size() == 0 //
-					&& method.getReturnType().toString().equals(REST_TEMPLATE)) {
+		// rest template
+		implementGetRestTemplate(methods);
+		implementSetRestTemplate(methods);
 
-				implementGetRestTemplateMethod(method);
-				getRestTemplateImplemented = true;
-			}
+		// root url
+		implementGetRootUrl(methods);
+		implementSetRootUrl(methods);
 
-			if (!setRestTemplateImplemented //
-					&& parameters.size() == 1 //
-					&& parameters.get(0).asType().toString().equals(REST_TEMPLATE) //
-					&& method.getReturnType().getKind() == TypeKind.VOID) {
+		// authentication
+		implementSetBasicAuth(methods);
+		implementSetAuthentication(methods);
 
-				implementSetRestTemplateMethod(method);
-				setRestTemplateImplemented = true;
-			}
+		// cookies and headers
+		implementGetCookie(methods);
+		implementGetHeader(methods);
+		implementSetCookie(methods);
+		implementSetHeader(methods);
 
-			if (!getRootUrlImplemented //
-					&& parameters.size() == 0 //
-					&& method.getReturnType().toString().equals(STRING) //
-					&& method.getSimpleName().toString().equals("getRootUrl")) {
-				implementGetRootUrlMethod(method);
-				getRootUrlImplemented = true;
-			}
+		// error handler.
+		implementSetErrorHandler(methods);
+	}
 
-			if (!setRootUrlImplemented //
-					&& method.getSimpleName().toString().equals("setRootUrl") //
-					&& method.getReturnType().getKind() == TypeKind.VOID //
-					&& parameters.size() == 1 //
-					&& parameters.get(0).asType().toString().equals(STRING)) {
+	private void implementGetRestTemplate(List<ExecutableElement> methods) {
+		JMethod getRestTemplateMethod = codeModelHelper.implementMethod(this, methods, null, REST_TEMPLATE);
 
-				implementSetRootUrl(method);
-				setRootUrlImplemented = true;
-			}
-
-			if (!setHttpBasicAuthImplemented //
-					&& method.getSimpleName().toString().equals("setHttpBasicAuth") //
-					&& parameters.size() == 2 //
-					&& parameters.get(0).asType().toString().equals(STRING) && parameters.get(1).asType().toString().equals(STRING) //
-					&& method.getReturnType().getKind() == TypeKind.VOID ) {
-
-				implementSetHttpBasicAuth(method);
-				setHttpBasicAuthImplemented = true;
-			}
-
-			if (!setAuthenticationImplemented //
-					&& method.getSimpleName().toString().equals("setAuthentication") //
-					&& method.getReturnType().getKind() == TypeKind.VOID //
-					&& parameters.size() == 1 //
-					&& parameters.get(0).asType().toString().equals(HTTP_AUTHENTICATION)) {
-
-				implementSetAuthentication(method);
-				setAuthenticationImplemented = true;
-			}
-
-			if (!getCookieImplemented //
-					&& method.getSimpleName().toString().equals("getCookie") //
-					&& method.getReturnType().toString().equals(STRING) //
-					&& parameters.size() == 1 //
-					&& parameters.get(0).asType().toString().equals(STRING)) {
-
-				implementMapGetMethod(method, getAvailableCookiesField());
-				getCookieImplemented = true;
-			}
-
-			if (!putCookieImplemented//
-					&& method.getSimpleName().toString().equals("setCookie") //
-					&& method.getReturnType().getKind() == TypeKind.VOID //
-					&& parameters.size() == 2 //
-					&& parameters.get(0).asType().toString().equals(STRING) && parameters.get(1).asType().toString().equals(STRING)) {
-
-				implementMapPutMethod(method, getAvailableCookiesField());
-				putCookieImplemented = true;
-			}
-
-			if (!getHeaderImplemented //
-					&& method.getSimpleName().toString().equals("getHeader") //
-					&& method.getReturnType().toString().equals(STRING) //
-					&& parameters.size() == 1 //
-					&& parameters.get(0).asType().toString().equals(STRING)) {
-
-				implementMapGetMethod(method, getAvailableHeadersField());
-				getHeaderImplemented = true;
-			}
-
-			if (!putHeaderImplemented //
-					&& method.getSimpleName().toString().equals("setHeader") //
-					&& method.getReturnType().getKind() == TypeKind.VOID //
-					&& parameters.size() == 2 //
-					&& parameters.get(0).asType().toString().equals(STRING) && parameters.get(1).asType().toString().equals(STRING)) {
-
-				implementMapPutMethod(method, getAvailableHeadersField());
-				putHeaderImplemented = true;
-			}
+		if (getRestTemplateMethod != null) {
+			getRestTemplateMethod.body()._return(getRestTemplateField());
 		}
 	}
 
-	private void implementGetRestTemplateMethod(ExecutableElement method) {
-		String methodName = method.getSimpleName().toString();
-		JMethod getRestTemplateMethod = getGeneratedClass().method(JMod.PUBLIC, classes().REST_TEMPLATE, methodName);
-		getRestTemplateMethod.annotate(Override.class);
-		getRestTemplateMethod.body()._return(getRestTemplateField());
+	private void implementSetRestTemplate(List<ExecutableElement> methods) {
+		JMethod setRestTemplateMethod = codeModelHelper.implementMethod(this, methods, null, TypeKind.VOID.toString(), REST_TEMPLATE);
+
+		if (setRestTemplateMethod != null) {
+			setRestTemplateMethod.body().assign(_this().ref(getRestTemplateField()), setRestTemplateMethod.params().get(0));
+		}
 	}
 
-	private void implementSetRestTemplateMethod(ExecutableElement method) {
-		String methodName = method.getSimpleName().toString();
-		VariableElement firstParameter = method.getParameters().get(0);
-		JMethod setRestTemplateMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
-		setRestTemplateMethod.annotate(Override.class);
-		JVar restTemplateSetterParam = setRestTemplateMethod.param(classes().REST_TEMPLATE, firstParameter.getSimpleName().toString());
-		setRestTemplateMethod.body().assign(_this().ref(getRestTemplateField()), restTemplateSetterParam);
+	private void implementGetRootUrl(List<ExecutableElement> methods) {
+		JMethod getRootUrlMethod = codeModelHelper.implementMethod(this, methods, "getRootUrl", STRING);
+
+		if (getRootUrlMethod != null) {
+			getRootUrlMethod.body()._return(getRootUrlField());
+		}
 	}
 
-	private void implementGetRootUrlMethod(ExecutableElement method) {
-		String methodName = method.getSimpleName().toString();
-		JMethod getRootUrlMethod = getGeneratedClass().method(JMod.PUBLIC, processHolder.refClass(STRING), methodName);
-		getRootUrlMethod.annotate(Override.class);
-		getRootUrlMethod.body()._return(getRootUrlField());
+	private void implementSetRootUrl(List<ExecutableElement> methods) {
+		JMethod setRootUrlMethod = codeModelHelper.implementMethod(this, methods, "setRootUrl", TypeKind.VOID.toString(), STRING);
+
+		if (setRootUrlMethod != null) {
+			setRootUrlMethod.body().assign(_this().ref(getRootUrlField()), setRootUrlMethod.params().get(0));
+		}
 	}
 
-	private void implementSetRootUrl(ExecutableElement method) {
-		String methodName = method.getSimpleName().toString();
-		VariableElement firstParameter = method.getParameters().get(0);
-		JMethod setRootUrlMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
-		setRootUrlMethod.annotate(Override.class);
-		JVar rootUrlSetterParam = setRootUrlMethod.param(classes().STRING, firstParameter.getSimpleName().toString());
-		setRootUrlMethod.body().assign(_this().ref(getRootUrlField()), rootUrlSetterParam);
+	private void implementSetBasicAuth(List<ExecutableElement> methods) {
+		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setHttpBasicAuth", TypeKind.VOID.toString(), STRING, STRING);
+
+		if (setAuthMethod != null) {
+			JClass basicAuthClass = classes().HTTP_BASIC_AUTHENTICATION;
+			JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(setAuthMethod.params().get(0)).arg(setAuthMethod.params().get(1));
+			setAuthMethod.body().assign(_this().ref(getAuthenticationField()), basicAuthentication);
+		}
 	}
 
-	private void implementSetHttpBasicAuth(ExecutableElement method) {
-		String methodName = method.getSimpleName().toString();
-		List<? extends VariableElement> parameters = method.getParameters();
+	private void implementSetAuthentication(List<ExecutableElement> methods) {
+		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setAuthentication", TypeKind.VOID.toString(), CanonicalNameConstants.HTTP_AUTHENTICATION);
 
-		JMethod setBasicAuthMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
-		setBasicAuthMethod.annotate(Override.class);
-		JVar userParam = setBasicAuthMethod.param(classes().STRING, parameters.get(0).getSimpleName().toString());
-		JVar passParam = setBasicAuthMethod.param(classes().STRING, parameters.get(1).getSimpleName().toString());
-
-		JInvocation basicAuthentication = JExpr._new(classes().HTTP_BASIC_AUTHENTICATION).arg(userParam).arg(passParam);
-		setBasicAuthMethod.body().assign(_this().ref(getAuthenticationField()), basicAuthentication);
+		if (setAuthMethod != null) {
+			setAuthMethod.body().assign(_this().ref(getAuthenticationField()), setAuthMethod.params().get(0));
+		}
 	}
 
-	private void implementSetAuthentication(ExecutableElement method) {
-		String methodName = method.getSimpleName().toString();
-		List<? extends VariableElement> parameters = method.getParameters();
+	private void implementGetCookie(List<ExecutableElement> methods) {
+		JMethod getCookieMethod = codeModelHelper.implementMethod(this, methods, "getCookie", STRING, STRING);
 
-		JMethod setAuthMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
-		setAuthMethod.annotate(Override.class);
-
-		JVar authParam = setAuthMethod.param(classes().HTTP_AUTHENTICATION, parameters.get(0).getSimpleName().toString());
-		setAuthMethod.body().assign(_this().ref(getAuthenticationField()), authParam);
+		if (getCookieMethod != null) {
+			JInvocation cookieValue = JExpr.invoke(getAvailableCookiesField(), "get").arg(getCookieMethod.params().get(0));
+			getCookieMethod.body()._return(cookieValue);
+		}
 	}
 
-	private void implementMapGetMethod(ExecutableElement method, JFieldVar field) {
-		String methodName = method.getSimpleName().toString();
-		List<? extends VariableElement> parameters = method.getParameters();
+	private void implementGetHeader(List<ExecutableElement> methods) {
+		JMethod getHeaderMethod = codeModelHelper.implementMethod(this, methods, "getHeader", STRING, STRING);
 
-		JMethod getCookieMethod = getGeneratedClass().method(JMod.PUBLIC, classes().STRING, methodName);
-		getCookieMethod.annotate(Override.class);
-		JVar cookieNameParam = getCookieMethod.param(classes().STRING, parameters.get(0).getSimpleName().toString());
-
-		JInvocation cookieValue = JExpr.invoke(field, "get").arg(cookieNameParam);
-		getCookieMethod.body()._return(cookieValue);
+		if (getHeaderMethod != null) {
+			JInvocation headerValue = JExpr.invoke(getAvailableHeadersField(), "get").arg(getHeaderMethod.params().get(0));
+			getHeaderMethod.body()._return(headerValue);
+		}
 	}
 
-	private void implementMapPutMethod(ExecutableElement method, JFieldVar field) {
-		String methodName = method.getSimpleName().toString();
-		List<? extends VariableElement> parameters = method.getParameters();
+	private void implementSetCookie(List<ExecutableElement> methods) {
+		JMethod setCookieMethod = codeModelHelper.implementMethod(this, methods, "setCookie", TypeKind.VOID.toString(), STRING, STRING);
 
-		JMethod putMapMethod = getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, methodName);
-		putMapMethod.annotate(Override.class);
-		JVar keyParam = putMapMethod.param(classes().STRING, parameters.get(0).getSimpleName().toString());
-		JVar valParam = putMapMethod.param(classes().STRING, parameters.get(1).getSimpleName().toString());
-		putMapMethod.body().invoke(field, "put").arg(keyParam).arg(valParam);
+		if (setCookieMethod != null) {
+			setCookieMethod.body().invoke(getAvailableCookiesField(), "put").arg(setCookieMethod.params().get(0)).arg(setCookieMethod.params().get(1));
+		}
+	}
+
+	private void implementSetHeader(List<ExecutableElement> methods) {
+		JMethod setHeaderMethod = codeModelHelper.implementMethod(this, methods, "setHeader", TypeKind.VOID.toString(), STRING, STRING);
+
+		if (setHeaderMethod != null) {
+			setHeaderMethod.body().invoke(getAvailableCookiesField(), "put").arg(setHeaderMethod.params().get(0)).arg(setHeaderMethod.params().get(1));
+		}
+	}
+
+	private void implementSetErrorHandler(List<ExecutableElement> methods) {
+		JMethod setErrorHandlerMethod = codeModelHelper.implementMethod(this, methods, "setRestErrorHandler", TypeKind.VOID.toString(), RestErrorHandler.class.getName());
+
+		if (setErrorHandlerMethod != null) {
+			setErrorHandlerMethod.body().assign(_this().ref(getRestErrorHandlerField()), setErrorHandlerMethod.params().get(0));
+		}
 	}
 
 	public JMethod getInit() {
@@ -318,6 +254,18 @@ public class RestHolder extends BaseGeneratedClassHolder {
 
 	private void setAuthenticationField() {
 		authenticationField = getGeneratedClass().field(JMod.PRIVATE, classes().HTTP_AUTHENTICATION, "authentication");
+	}
+
+	public JFieldVar getRestErrorHandlerField() {
+		if (restErrorHandlerField == null) {
+			setRestErrorHandlerField();
+		}
+		return restErrorHandlerField;
+	}
+
+	private void setRestErrorHandlerField() {
+		JClass restErrorHandlerClass = refClass(RestErrorHandler.class.getName());
+		restErrorHandlerField = getGeneratedClass().field(JMod.PRIVATE, restErrorHandlerClass, "restErrorHandler");
 	}
 
 }

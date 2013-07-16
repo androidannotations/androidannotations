@@ -83,10 +83,10 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		}
 
 		if (methodReturnVoid && result == null) {
-			methodBody.add(exchangeCall);
+			insertRestTryCatchBlock(holder, methodBody, exchangeCall, methodReturnVoid);
 		} else if (!methodReturnVoid) {
 			returnCall = addResultCallMethod(returnCall, methodReturnClass);
-			methodBody._return(returnCall);
+			insertRestTryCatchBlock(holder, methodBody, returnCall, methodReturnVoid);
 		}
 	}
 
@@ -194,5 +194,42 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			return JExpr.ref(responseEntity.name());
 		}
 		return null;
+	}
+
+	/**
+	 * Adds the try/catch around the rest execution code.
+	 *
+	 * If an exception is caught, it will first check if the handler is set. If
+	 * the handler is set, it will call the handler and return null (or nothing
+	 * if void). If the handler isn't set, it will re-throw the exception so
+	 * that it behaves as it did previous to this feature.
+	 */
+	private void insertRestTryCatchBlock(RestHolder holder, JBlock body, JExpression returnCall, boolean methodReturnVoid) {
+		JTryBlock tryBlock = body._try();
+
+		if (methodReturnVoid) {
+			tryBlock.body().add((JInvocation) returnCall);
+		} else {
+			tryBlock.body()._return(returnCall);
+		}
+
+		JCatchBlock jCatch = tryBlock._catch(classes().REST_CLIENT_EXCEPTION);
+
+		JBlock catchBlock = jCatch.body();
+		JConditional conditional = catchBlock._if(JOp.ne(holder.getRestErrorHandlerField(), JExpr._null()));
+		JVar exceptionParam = jCatch.param("e");
+
+		JBlock thenBlock = conditional._then();
+
+		// call the handler method if it was set.
+		thenBlock.add(holder.getRestErrorHandlerField().invoke("onRestClientExceptionThrown").arg(exceptionParam));
+
+		// return null if exception was caught and handled.
+		if (!methodReturnVoid) {
+			thenBlock._return(JExpr._null());
+		}
+
+		// re-throw the exception if handler wasn't set.
+		conditional._else()._throw(exceptionParam);
 	}
 }

@@ -131,6 +131,7 @@ public final class CanonicalNameConstants {
 	public static final String CLIENT_HTTP_REQUEST_INTERCEPTOR = "org.springframework.http.client.ClientHttpRequestInterceptor";
 	public static final String HTTP_AUTHENTICATION = "org.springframework.http.HttpAuthentication";
 	public static final String HTTP_BASIC_AUTHENTICATION = "org.springframework.http.HttpBasicAuthentication";
+	public static final String REST_CLIENT_EXCEPTION = "org.springframework.web.client.RestClientException";
 
 	/*
 	 * RoboGuice

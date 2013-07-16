@@ -68,12 +68,18 @@ import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.api.rest.RestClientErrorHandling;
+import org.androidannotations.api.rest.RestClientHeaders;
+import org.androidannotations.api.rest.RestClientRootUrl;
+import org.androidannotations.api.rest.RestClientSupport;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
 public class ValidatorHelper {
+
+	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
 
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
@@ -130,10 +136,21 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void doesNotExtendOtherInterfaces(TypeElement element, IsValid valid) {
+	public void doesNotExtendInvalidInterfaces(TypeElement element, IsValid valid) {
 		if (element.getInterfaces().size() > 0) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on an interface that does not extend other interfaces");
+			boolean isValid = true;
+
+			for (TypeMirror iface : element.getInterfaces()) {
+				if (!VALID_REST_INTERFACES.contains(iface.toString())) {
+					isValid = false;
+					break;
+				}
+			}
+
+			if (!isValid) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s interfaces can only extend the following interfaces: " + VALID_REST_INTERFACES);
+			}
 		}
 	}
 
@@ -465,11 +482,12 @@ public class ValidatorHelper {
 			DeclaredType daoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, modelTypeMirror, wildcardType);
 			DeclaredType runtimeExceptionDaoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelTypeMirror, wildcardType);
 
-			// Checks that elementType extends Dao<ModelType, ?> or RuntimeExceptionDao<ModelType, ?>
+			// Checks that elementType extends Dao<ModelType, ?> or
+			// RuntimeExceptionDao<ModelType, ?>
 			if (!annotationHelper.isSubtype(elementType, daoParameterizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParameterizedType)) {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString() //
-																									+  " or " +  runtimeExceptionDaoParameterizedType.toString());
+						+ " or " + runtimeExceptionDaoParameterizedType.toString());
 			}
 		}
 	}

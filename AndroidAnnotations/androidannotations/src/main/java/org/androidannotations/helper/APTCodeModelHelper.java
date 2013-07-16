@@ -19,12 +19,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.WildcardType;
+import javax.lang.model.type.*;
+import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -245,5 +245,85 @@ public class APTCodeModelHelper {
 		surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a runnable");
 
 		return anonymousRunnableClass;
+	}
+
+	/**
+	 * Gets all of the methods of the class and includes the methods of any
+	 * implemented interfaces.
+	 *
+	 * @param typeElement
+	 * @return full list of methods.
+	 */
+	public List<ExecutableElement> getMethods(TypeElement typeElement) {
+		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
+		List<ExecutableElement> methods = new ArrayList<ExecutableElement>(ElementFilter.methodsIn(enclosedElements));
+
+		// Add methods of the interfaces. These will be valid as they have gone
+		// through the validator.
+		for (TypeMirror iface : typeElement.getInterfaces()) {
+			DeclaredType dt = (DeclaredType) iface;
+			methods.addAll(ElementFilter.methodsIn(dt.asElement().getEnclosedElements()));
+		}
+
+		return methods;
+	}
+
+	public JMethod implementMethod(GeneratedClassHolder holder, List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		// First get the ExecutableElement method object from the util function.
+		ExecutableElement method = getMethod(methods, methodName, returnType, parameterTypes);
+		JMethod jmethod = null;
+
+		if (method != null) {
+			// Get the return type or VOID if none.
+			JType jcReturnType = returnType.equals(TypeKind.VOID.toString()) ? holder.codeModel().VOID : holder.refClass(returnType);
+
+			// Create the implementation and annotate it with the Override
+			// annotation.
+			jmethod = holder.getGeneratedClass().method(JMod.PUBLIC, jcReturnType, method.getSimpleName().toString());
+			jmethod.annotate(Override.class);
+
+			// Create the parameters.
+			for (int i = 0; i < method.getParameters().size(); i++) {
+				VariableElement param = method.getParameters().get(i);
+				jmethod.param(holder.refClass(parameterTypes[i]), param.getSimpleName().toString());
+			}
+		}
+
+		return jmethod;
+	}
+
+	private ExecutableElement getMethod(List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+
+			// Get the method return type or "VOID" if none.
+			String methodReturnType = method.getReturnType().getKind() == TypeKind.VOID ? TypeKind.VOID.toString() : method.getReturnType().toString();
+
+			if (parameters.size() == parameterTypes.length && methodReturnType.equals(returnType)) {
+				if (methodName == null || method.getSimpleName().toString().equals(methodName)) {
+					// At this point, method name, return type and number of
+					// parameters are correct. Now we need to validate the
+					// parameter types.
+					boolean validMethod = true;
+
+					for (int i = 0; i < parameters.size(); i++) {
+						VariableElement param = parameters.get(i);
+
+						if (!param.asType().toString().equals(parameterTypes[i])) {
+							// Parameter type does not match, this is not the
+							// correct method.
+							validMethod = false;
+							break;
+						}
+					}
+
+					if (validMethod) {
+						return method;
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 }
