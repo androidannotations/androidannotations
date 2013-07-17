@@ -31,7 +31,7 @@ public class SampleRoboApplication extends Application {
 	@Bean
 	public EmptyDependency someDependency;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
 
 }

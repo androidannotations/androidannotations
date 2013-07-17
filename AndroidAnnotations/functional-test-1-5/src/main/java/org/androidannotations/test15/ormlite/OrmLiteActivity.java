@@ -25,13 +25,13 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 @EActivity
 public class OrmLiteActivity extends Activity {
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	Dao<Car, Long> carDao;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	RuntimeExceptionDao<Car, Long> runtimeExceptionDao;
 
 	@Bean
