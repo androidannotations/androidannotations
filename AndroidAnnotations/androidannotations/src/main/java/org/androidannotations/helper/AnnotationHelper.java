@@ -75,6 +75,10 @@ public class AnnotationHelper {
 		return isSubtype(t1.asType(), t2.asType());
 	}
 
+	public List<? extends TypeMirror> directSupertypes(TypeMirror typeMirror) {
+		return processingEnv.getTypeUtils().directSupertypes(typeMirror);
+	}
+
 	/**
 	 * This method may return null if the {@link TypeElement} cannot be found in
 	 * the processor classpath

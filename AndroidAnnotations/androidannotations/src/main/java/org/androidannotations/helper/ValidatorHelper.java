@@ -450,10 +450,8 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void extendsOrmLiteDaoWithValidModelParameter(Element element, IsValid valid) {
+	public void extendsOrmLiteDao(Element element, IsValid valid) {
 		TypeMirror elementType = element.asType();
-
-		TypeMirror modelTypeMirror = annotationHelper.extractAnnotationParameter(element, "model");
 
 		TypeElement daoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO);
 		TypeElement runtimeExceptionDaoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
@@ -461,15 +459,15 @@ public class ValidatorHelper {
 		if (daoTypeElement != null) {
 
 			TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
-			DeclaredType daoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, modelTypeMirror, wildcardType);
-			DeclaredType runtimeExceptionDaoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelTypeMirror, wildcardType);
+			DeclaredType daoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, wildcardType, wildcardType);
+			DeclaredType runtimeExceptionDaoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, wildcardType, wildcardType);
 
-			// Checks that elementType extends Dao<ModelType, ?> or
-			// RuntimeExceptionDao<ModelType, ?>
-			if (!annotationHelper.isSubtype(elementType, daoParameterizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParameterizedType)) {
+			// Checks that elementType extends Dao<?, ?> or
+			// RuntimeExceptionDao<?, ?>
+			if (!annotationHelper.isSubtype(elementType, daoParametrizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParametrizedType)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString() //
-						+ " or " + runtimeExceptionDaoParameterizedType.toString());
+				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParametrizedType.toString() //
+						+ " or " + runtimeExceptionDaoParametrizedType.toString());
 			}
 		}
 	}
