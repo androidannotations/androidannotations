@@ -21,9 +21,11 @@ import static org.androidannotations.helper.CanonicalNameConstants.SUBSCRIBE;
 import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -270,9 +272,7 @@ import org.androidannotations.validation.rest.RestValidator;
 @SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
-	// TODO: We whould find a better way
-	public static final String ANDROIDANNOTATION_VERSION = "3.0-SNAPSHOT";
-
+	private final Properties properties = new Properties();
 	private final TimeStats timeStats = new TimeStats();
 	private final ErrorHelper errorHelper = new ErrorHelper();
 
@@ -283,6 +283,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		super.init(processingEnv);
 
 		Messager messager = processingEnv.getMessager();
+
+		loadPropertyFile();
 
 		timeStats.setMessager(messager);
 
@@ -303,6 +305,23 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		timeStats.stop("Whole Processing");
 		timeStats.logStats();
 		return true;
+	}
+
+	private void loadPropertyFile() {
+		String filename = "androidannotations-version.properties";
+		try {
+			URL url = getClass().getClassLoader().getResource(filename);
+			properties.load(url.openStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			Messager messager = processingEnv.getMessager();
+			messager.printMessage(Diagnostic.Kind.NOTE, "AndroidAnnotations processing failed because " + filename + " couldn't be parsed : " + e.getLocalizedMessage());
+		}
+	}
+
+	private String getAAProcessorVersion() {
+		return properties.getProperty("version", "3.0+");
 	}
 
 	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws ProcessingException, Exception {
@@ -571,7 +590,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	}
 
 	private void handleException(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, ProcessingException e) {
-		String errorMessage = errorHelper.getErrorMessage(processingEnv, e);
+		String errorMessage = errorHelper.getErrorMessage(processingEnv, e, getAAProcessorVersion());
 
 		Messager messager = processingEnv.getMessager();
 		messager.printMessage(Diagnostic.Kind.ERROR, errorMessage);

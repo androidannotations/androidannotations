@@ -11,13 +11,12 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.util.Elements;
 
-import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.exception.ProcessingException;
 
 public class ErrorHelper {
 
-	public String getErrorMessage(ProcessingEnvironment processingEnv, ProcessingException e) {
-		String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations " + AndroidAnnotationProcessor.ANDROIDANNOTATION_VERSION + ", with the following content and tell us if you can reproduce it or not. The error was thrown on:\n";
+	public String getErrorMessage(ProcessingEnvironment processingEnv, ProcessingException e, String aaVersion) {
+		String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations " + aaVersion + ", with the following content and tell us if you can reproduce it or not. The error was thrown on:\n";
 		if (e.getElement() != null) {
 			errorMessage += elementFullString(processingEnv, e.getElement()) + "\n";
 		}
