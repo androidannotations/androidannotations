@@ -45,4 +45,7 @@ public class PrefsActivity extends Activity {
 	@Pref
 	UniquePrefs_ uniquePrefs;
 
+	@Pref
+	InnerPrefs_.InnerSharedPrefs_ innerPrefs;
+
 }
