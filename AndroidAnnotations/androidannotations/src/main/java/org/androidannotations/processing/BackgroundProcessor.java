@@ -61,7 +61,7 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 		executeMethod.annotate(Override.class);
 
 		JBlock runMethodBody = executeMethod.body();
-		helper.surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a background task");
+		helper.surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a background task", true);
 
 		Background annotation = element.getAnnotation(Background.class);
 		String id = annotation.id();
