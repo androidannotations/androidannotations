@@ -16,6 +16,7 @@
 package org.androidannotations.processing;
 
 import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JExpr.ref;
 import static org.androidannotations.helper.CanonicalNameConstants.CONTEXT;
 
@@ -27,6 +28,9 @@ import org.androidannotations.annotations.RootContext;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
 
 public class RootContextProcessor implements DecoratingElementProcessor {
 
@@ -49,10 +53,16 @@ public class RootContextProcessor implements DecoratingElementProcessor {
 			body.assign(ref(fieldName), holder.contextRef);
 		} else {
 			JClass extendingContextClass = holder.refClass(typeQualifiedName);
-			body._if(holder.contextRef._instanceof(extendingContextClass)) //
-					._then() //
+			JConditional cond = body._if(holder.contextRef._instanceof(extendingContextClass));
+			cond._then() //
 					.assign(ref(fieldName), cast(extendingContextClass, holder.contextRef));
+
+			JInvocation warningInvoke = holder.classes().LOG.staticInvoke("w");
+			warningInvoke.arg(holder.generatedClass.name());
+			JExpression expr = lit("Due to Context class ").plus(holder.contextRef.invoke("getClass").invoke("getSimpleName")).plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated"));
+			warningInvoke.arg(expr);
+			cond._else() //
+					.add(warningInvoke);
 		}
 	}
-
 }
