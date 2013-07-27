@@ -228,7 +228,7 @@ public class APTCodeModelHelper {
 		throw new IllegalStateException("Unable to extract target name from JFieldRef");
 	}
 
-	public JTryBlock surroundWithTryCatch(EBeanHolder holder, JBlock block, JBlock content, String exceptionMessage, boolean propagate) {
+	public JTryBlock surroundWithTryCatch(EBeanHolder holder, JBlock block, JBlock content, String exceptionMessage) {
 		Classes classes = holder.classes();
 		JTryBlock tryBlock = block._try();
 		tryBlock.body().add(content);
@@ -239,16 +239,12 @@ public class APTCodeModelHelper {
 		errorInvoke.arg(exceptionMessage);
 		errorInvoke.arg(exceptionParam);
 		catchBlock.body().add(errorInvoke);
-		if (propagate) {
-			catchBlock.body()._throw(exceptionParam);
-		}
 		return tryBlock;
 	}
 
 	public JDefinedClass createDelegatingAnonymousRunnableClass(EBeanHolder holder, JMethod delegatedMethod) {
 
 		JCodeModel codeModel = holder.codeModel();
-		Classes classes = holder.classes();
 
 		JDefinedClass anonymousRunnableClass;
 		JBlock previousMethodBody = removeBody(delegatedMethod);
@@ -258,9 +254,7 @@ public class APTCodeModelHelper {
 		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
 		runMethod.annotate(Override.class);
 
-		JBlock runMethodBody = runMethod.body();
-
-		surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a runnable", true);
+		runMethod.body().add( previousMethodBody );
 
 		return anonymousRunnableClass;
 	}
