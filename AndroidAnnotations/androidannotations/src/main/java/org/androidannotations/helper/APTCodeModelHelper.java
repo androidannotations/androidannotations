@@ -37,10 +37,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 
 import org.androidannotations.processing.EBeanHolder;
-import org.androidannotations.processing.EBeansHolder.Classes;
 
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -54,7 +52,6 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
-import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
@@ -228,27 +225,9 @@ public class APTCodeModelHelper {
 		throw new IllegalStateException("Unable to extract target name from JFieldRef");
 	}
 
-	public JTryBlock surroundWithTryCatch(EBeanHolder holder, JBlock block, JBlock content, String exceptionMessage, boolean propagate) {
-		Classes classes = holder.classes();
-		JTryBlock tryBlock = block._try();
-		tryBlock.body().add(content);
-		JCatchBlock catchBlock = tryBlock._catch(classes.RUNTIME_EXCEPTION);
-		JVar exceptionParam = catchBlock.param("e");
-		JInvocation errorInvoke = classes.LOG.staticInvoke("e");
-		errorInvoke.arg(holder.generatedClass.name());
-		errorInvoke.arg(exceptionMessage);
-		errorInvoke.arg(exceptionParam);
-		catchBlock.body().add(errorInvoke);
-		if (propagate) {
-			catchBlock.body()._throw(exceptionParam);
-		}
-		return tryBlock;
-	}
-
 	public JDefinedClass createDelegatingAnonymousRunnableClass(EBeanHolder holder, JMethod delegatedMethod) {
 
 		JCodeModel codeModel = holder.codeModel();
-		Classes classes = holder.classes();
 
 		JDefinedClass anonymousRunnableClass;
 		JBlock previousMethodBody = removeBody(delegatedMethod);
@@ -258,9 +237,7 @@ public class APTCodeModelHelper {
 		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
 		runMethod.annotate(Override.class);
 
-		JBlock runMethodBody = runMethod.body();
-
-		surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a runnable", true);
+		runMethod.body().add( previousMethodBody );
 
 		return anonymousRunnableClass;
 	}
