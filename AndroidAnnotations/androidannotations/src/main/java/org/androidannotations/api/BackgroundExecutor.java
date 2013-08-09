@@ -17,6 +17,8 @@ package org.androidannotations.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +34,9 @@ public class BackgroundExecutor {
 	private static final String TAG = "BackgroundExecutor";
 
 	public static Executor DEFAULT_EXECUTOR = Executors.newScheduledThreadPool(2 * Runtime.getRuntime().availableProcessors());
+
+	public static Executor exceptionWatcherExecutor = Executors.newFixedThreadPool(2 * Runtime.getRuntime().availableProcessors());
+
 	private static Executor executor = DEFAULT_EXECUTOR;
 
 	private static final List<Task> tasks = new ArrayList<Task>();
@@ -51,7 +56,7 @@ public class BackgroundExecutor {
 	 * @return Future associated to the running task
 	 */
 	private static Future<?> directExecute(Runnable runnable, int delay) {
-		Future<?> future = null;
+		final Future<?> future;
 		if (delay > 0) {
 			/* no serial, but a delay: schedule the task */
 			if (!(executor instanceof ScheduledExecutorService)) {
@@ -66,8 +71,38 @@ public class BackgroundExecutor {
 			} else {
 				/* non-cancellable task */
 				executor.execute(runnable);
+				future = null;
 			}
 		}
+
+		/*
+		 * Because ExecutorService.submit/schedule doesn't propagate exception
+		 * during executions, we need to call futur.get() (in another thread
+		 * pool) to check if an exception occured during execution. If yes then
+		 * throw it so it could be caught by the system.
+		 */
+		if (future != null) {
+			exceptionWatcherExecutor.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						future.get();
+					} catch (InterruptedException e) {
+						Log.w(TAG, "Scheduled execution was interrupted", e);
+					} catch (CancellationException e) {
+						Log.w(TAG, "Watcher thread has been cancelled", e);
+					} catch (ExecutionException e) {
+						if (e.getCause() instanceof RuntimeException) {
+							throw (RuntimeException) e.getCause();
+						}
+						if (e.getCause() instanceof Error) {
+							throw (Error) e.getCause();
+						}
+					}
+				}
+			});
+		}
+
 		return future;
 	}
 

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -285,4 +286,40 @@ public class ThreadActivityTest {
 		}
 	}
 
+	/**
+	 * Verify that exceptions thrown in threads from executorService are visible
+	 * to exception handlers.
+	 *
+	 * Set a custom exception handler which stores the throwable and then check
+	 * its content.
+	 */
+	@Test
+	public void propagateExceptionWithExecutorService() throws InterruptedException {
+		final Thread.UncaughtExceptionHandler originExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+
+		final TestExceptionHandler testExceptionHandler = new TestExceptionHandler();
+		Thread.setDefaultUncaughtExceptionHandler(testExceptionHandler);
+
+		BackgroundExecutor.setExecutor(new ScheduledThreadPoolExecutor(1));
+
+		activity.backgroundThrowException();
+		Thread.sleep(500);
+		Assert.assertNotNull("Exception should be propagated in @Backgound annotated methods", testExceptionHandler.throwable);
+
+		testExceptionHandler.throwable = null;
+
+		activity.backgroundDelayThrowException();
+		Thread.sleep(500);
+		Assert.assertNotNull("Exception should be propagated in @Backgound(delay) annotated methods", testExceptionHandler.throwable);
+		Thread.setDefaultUncaughtExceptionHandler(originExceptionHandler);
+	}
+
+	class TestExceptionHandler implements Thread.UncaughtExceptionHandler {
+		Throwable throwable;
+
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex) {
+			throwable = ex;
+		}
+	}
 }

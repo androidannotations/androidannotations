@@ -29,7 +29,6 @@ import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
 
 import android.app.Activity;
-import android.os.Looper;
 
 @EActivity
 public class ThreadActivity extends Activity {
@@ -142,6 +141,11 @@ public class ThreadActivity extends Activity {
 
 	@Background
 	void backgroundThrowException() {
+		throw new RuntimeException();
+	}
+
+	@Background(delay = 100)
+	void backgroundDelayThrowException() {
 		throw new RuntimeException();
 	}
 
