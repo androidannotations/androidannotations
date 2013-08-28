@@ -23,6 +23,7 @@ import org.androidannotations.annotations.rest.Delete;
 import org.androidannotations.processing.EBeanHolder;
 
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JInvocation;
 
 public class DeleteProcessor extends MethodProcessor {
 
@@ -46,4 +47,8 @@ public class DeleteProcessor extends MethodProcessor {
 		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, null, null, codeModel));
 	}
 
+	@Override
+	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
+		return restCall.arg(generateHttpEntityVar(methodHolder));
+	}
 }
