@@ -19,6 +19,7 @@ package org.androidannotations.test15;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +35,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+
+import android.os.Handler;
+import android.os.Looper;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ThreadActivityTest {
@@ -283,6 +287,37 @@ public class ThreadActivityTest {
 		} catch (RuntimeException e) {
 			// good
 		}
+	}
+
+	@Test
+	public void assertHandlerWithMainThread() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+		/*
+		 * For this test we need to recreate the activity in a separate thread,
+		 * in order to check the handler is well associated to the main thread.
+		 */
+		final ThreadActivity_[] threadActivityHolder = new ThreadActivity_[1];
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (threadActivityHolder) {
+					threadActivityHolder[0] = new ThreadActivity_();
+					threadActivityHolder[0].onCreate(null);
+					threadActivityHolder.notify();
+				}
+			}
+		}).start();
+		synchronized (threadActivityHolder) {
+			do {
+				threadActivityHolder.wait();
+			} while(threadActivityHolder[0] == null);
+		}
+
+		Field handlerField = ThreadActivity_.class.getDeclaredField("handler_");
+		handlerField.setAccessible(true);
+
+		Handler handler = (Handler) handlerField.get(threadActivityHolder[0]);
+		Assert.assertTrue("Handler field not associated to the main thread", handler.getLooper() == Looper.getMainLooper());
 	}
 
 }
