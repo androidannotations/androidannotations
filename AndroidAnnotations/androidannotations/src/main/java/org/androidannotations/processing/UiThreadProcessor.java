@@ -33,6 +33,7 @@ import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JOp;
@@ -67,7 +68,9 @@ public class UiThreadProcessor implements DecoratingElementProcessor {
 
 			if (holder.handler == null) {
 				JClass handlerClass = holder.classes().HANDLER;
-				holder.handler = holder.generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
+				JClass lClass = holder.classes().LOOPER;
+				JInvocation arg = JExpr._new(handlerClass).arg(lClass.staticInvoke(METHOD_MAIN_LOOPER));
+				holder.handler = holder.generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", arg);
 			}
 
 			if (delay == 0) {
