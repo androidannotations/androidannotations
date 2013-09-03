@@ -35,6 +35,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
+import javax.lang.model.util.Elements;
 
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.processing.EBeansHolder.Classes;
@@ -313,15 +314,15 @@ public class APTCodeModelHelper {
 		return null;
 	}
 
-	public void addActivityIntentBuilder(JCodeModel codeModel, EBeanHolder holder) throws Exception {
-		addIntentBuilder(codeModel, holder, true);
+	public void addActivityIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper) throws Exception {
+		addIntentBuilder(codeModel, holder, annotationHelper, true);
 	}
 
-	public void addServiceIntentBuilder(JCodeModel codeModel, EBeanHolder holder) throws Exception {
-		addIntentBuilder(codeModel, holder, false);
+	public void addServiceIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper) throws Exception {
+		addIntentBuilder(codeModel, holder, annotationHelper, false);
 	}
 
-	private void addIntentBuilder(JCodeModel codeModel, EBeanHolder holder, boolean isActivity) throws JClassAlreadyExistsException {
+	private void addIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper, boolean isActivity) throws JClassAlreadyExistsException {
 		JClass contextClass = holder.classes().CONTEXT;
 		JClass intentClass = holder.classes().INTENT;
 		JClass fragmentClass = holder.classes().FRAGMENT;
@@ -342,27 +343,17 @@ public class APTCodeModelHelper {
 				constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.generatedClass.dotclass()));
 			}
 			// Additional constructor for fragments (issue #541)
-			boolean fragmentInClasspath = true;
-			try {
-				Class.forName(fragmentClass.fullName(), false, getClass().getClassLoader());
-			} catch (ClassNotFoundException e) {
-				fragmentInClasspath = false;
+			Elements elementUtils = annotationHelper.getElementUtils();
+			boolean fragmentInClasspath = elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
+			boolean fragmentSupportInClasspath = elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
 
-			}
-			boolean fragmentSupportInClasspath = true;
-			try {
-				Class.forName(fragmentSupportClass.fullName(), false, getClass().getClassLoader());
-			} catch (ClassNotFoundException e) {
-				fragmentSupportInClasspath = false;
-
-			}
 			JFieldVar fragmentField = null;
 			if (fragmentInClasspath) {
-				fragmentField = addIntentBuilderFragmentConstructor(holder, holder.classes().FRAGMENT, "fragment_", contextField);
+				fragmentField = addIntentBuilderFragmentConstructor(holder, fragmentClass, "fragment_", contextField);
 			}
 			JFieldVar fragmentSupportField = null;
 			if (fragmentSupportInClasspath) {
-				fragmentSupportField = addIntentBuilderFragmentConstructor(holder, holder.classes().SUPPORT_V4_FRAGMENT, "fragmentSupport_", contextField);
+				fragmentSupportField = addIntentBuilderFragmentConstructor(holder, fragmentSupportClass, "fragmentSupport_", contextField);
 			}
 
 			{
