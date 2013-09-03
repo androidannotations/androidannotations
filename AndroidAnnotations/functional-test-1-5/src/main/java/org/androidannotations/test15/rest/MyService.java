@@ -199,6 +199,7 @@ public interface MyService {
 
 	// url variables are mapped to method parameter names.
 	@Delete("/events/{id}")
+	@RequiresHeader("SomeFancyHeader")
 	void removeEvent(long id);
 
 	// *** HEAD ***
