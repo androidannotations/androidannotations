@@ -35,7 +35,7 @@ public class ThirdPartyLibHelper {
 	 * types
 	 */
 	public boolean usesHoloEverywhere(EBeanHolder holder) {
-		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().fullName());
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(holder.generatedClass._extends().erasure().fullName());
 
 		TypeMirror superType;
 		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {

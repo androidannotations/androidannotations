@@ -56,7 +56,6 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 	public EFragmentProcessor(ProcessingEnvironment processingEnv, IRClass rClass) {
 		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 		holoEverywhereHelper = new ThirdPartyLibHelper(helper);
-
 	}
 
 	@Override
@@ -74,10 +73,11 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 		String generatedBeanQualifiedName = beanQualifiedName + GENERATION_SUFFIX;
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
+		GenericUtils.generifyAs(typeElement, generatedClass);
 
 		EBeanHolder holder = eBeansHolder.create(element, EFragment.class, generatedClass);
 
-		JClass eBeanClass = codeModel.directClass(beanQualifiedName);
+		JClass eBeanClass = GenericUtils.generifyAs(codeModel, typeElement, codeModel.directClass(beanQualifiedName));
 
 		holder.generatedClass._extends(eBeanClass);
 
@@ -179,14 +179,16 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 			holder.initActivityRef = holder.contextRef;
 		}
 
-		addFragmentBuilder(codeModel, holder, eBeanClass);
+		addFragmentBuilder(codeModel, holder, eBeanClass, typeElement);
 	}
 
-	private void addFragmentBuilder(JCodeModel codeModel, EBeanHolder holder, JClass eBeanClass) throws JClassAlreadyExistsException {
+	private void addFragmentBuilder(JCodeModel codeModel, EBeanHolder holder, JClass eBeanClass, TypeElement typeElement) throws JClassAlreadyExistsException {
 		JClass bundleClass = holder.classes().BUNDLE;
 
 		{
 			holder.fragmentBuilderClass = holder.generatedClass._class(PUBLIC | STATIC, "FragmentBuilder_");
+			GenericUtils.generifyAs(typeElement, holder.fragmentBuilderClass);
+
 			holder.fragmentArgumentsBuilderField = holder.fragmentBuilderClass.field(PRIVATE, bundleClass, "args_");
 
 			{
@@ -201,15 +203,20 @@ public class EFragmentProcessor implements GeneratingElementProcessor {
 				JMethod method = holder.fragmentBuilderClass.method(PUBLIC, eBeanClass, "build");
 				JBlock body = method.body();
 
-				JVar fragment = body.decl(holder.generatedClass, "fragment_", _new(holder.generatedClass));
+				JClass fragmentClass = GenericUtils.generifyAs(codeModel, typeElement, holder.generatedClass);
+
+				JVar fragment = body.decl(fragmentClass, "fragment_", _new(fragmentClass));
 				body.invoke(fragment, "setArguments").arg(holder.fragmentArgumentsBuilderField);
 				body._return(fragment);
 			}
 
 			{
-				// create()
-				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.fragmentBuilderClass, "builder");
-				method.body()._return(_new(holder.fragmentBuilderClass));
+				// builder()
+				JClass returnClass = GenericUtils.generifyAs(codeModel, typeElement, holder.fragmentBuilderClass);
+
+				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, returnClass, "builder");
+				method.body()._return(_new(returnClass));
+				GenericUtils.generifyAs(typeElement, method);
 			}
 		}
 	}
