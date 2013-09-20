@@ -24,9 +24,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-import org.androidannotations.annotations.EService;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.helper.ModelConstants;
 
 import com.sun.codemodel.ClassType;
@@ -36,21 +34,17 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
-public class EServiceProcessor implements GeneratingElementProcessor {
+public class EIntentServiceProcessor extends EServiceProcessor {
 
-	final APTCodeModelHelper aptCodeModelHelper;
-
-	final AnnotationHelper annotationHelper;
-
-	public EServiceProcessor(ProcessingEnvironment processingEnv) {
-		aptCodeModelHelper = new APTCodeModelHelper();
-		annotationHelper = new AnnotationHelper(processingEnv);
+	public EIntentServiceProcessor(ProcessingEnvironment processingEnv) {
+		super(processingEnv);
 	}
 
 	@Override
 	public String getTarget() {
-		return EService.class.getName();
+		return EIntentService.class.getName();
 	}
 
 	@Override
@@ -64,7 +58,7 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedComponentQualifiedName, ClassType.CLASS);
 
-		EBeanHolder holder = eBeansHolder.create(element, EService.class, generatedClass);
+		EBeanHolder holder = eBeansHolder.create(element, EIntentService.class, generatedClass);
 
 		JClass annotatedComponent = codeModel.directClass(annotatedComponentQualifiedName);
 
@@ -84,6 +78,18 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 		}
 
 		{
+			// onHandleIntent
+			JMethod onHandleIntent = holder.generatedClass.method(PUBLIC, codeModel.VOID, "onHandleIntent");
+			JVar intent = onHandleIntent.param(eBeansHolder.classes().INTENT, "intent");
+			onHandleIntent.annotate(Override.class);
+			JBlock onHandleIntentBody = onHandleIntent.body();
+			aptCodeModelHelper.callSuperMethod(onHandleIntent, holder, onHandleIntentBody);
+
+			holder.onHandleIntentIntent = intent;
+			holder.onHandleIntentBody = onHandleIntentBody;
+		}
+
+		{
 			/*
 			 * Setting to null shouldn't be a problem as long as we don't allow
 			 * 
@@ -94,7 +100,5 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 		}
 
 		aptCodeModelHelper.addServiceIntentBuilder(codeModel, holder, annotationHelper);
-
 	}
-
 }
