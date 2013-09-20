@@ -54,6 +54,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.EProvider;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
@@ -85,6 +86,7 @@ import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.SeekBarProgressChange;
 import org.androidannotations.annotations.SeekBarTouchStart;
 import org.androidannotations.annotations.SeekBarTouchStop;
+import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.Touch;
@@ -147,6 +149,7 @@ import org.androidannotations.processing.EActivityProcessor;
 import org.androidannotations.processing.EApplicationProcessor;
 import org.androidannotations.processing.EBeanProcessor;
 import org.androidannotations.processing.EFragmentProcessor;
+import org.androidannotations.processing.EIntentServiceProcessor;
 import org.androidannotations.processing.EProviderProcessor;
 import org.androidannotations.processing.EReceiverProcessor;
 import org.androidannotations.processing.EServiceProcessor;
@@ -184,6 +187,7 @@ import org.androidannotations.processing.RootContextProcessor;
 import org.androidannotations.processing.SeekBarProgressChangeProcessor;
 import org.androidannotations.processing.SeekBarTouchStartProcessor;
 import org.androidannotations.processing.SeekBarTouchStopProcessor;
+import org.androidannotations.processing.ServiceActionProcessor;
 import org.androidannotations.processing.SharedPrefProcessor;
 import org.androidannotations.processing.SubscribeProcessor;
 import org.androidannotations.processing.SystemServiceProcessor;
@@ -219,6 +223,7 @@ import org.androidannotations.validation.EActivityValidator;
 import org.androidannotations.validation.EApplicationValidator;
 import org.androidannotations.validation.EBeanValidator;
 import org.androidannotations.validation.EFragmentValidator;
+import org.androidannotations.validation.EIntentServiceValidator;
 import org.androidannotations.validation.EProviderValidator;
 import org.androidannotations.validation.EReceiverValidator;
 import org.androidannotations.validation.EServiceValidator;
@@ -256,6 +261,7 @@ import org.androidannotations.validation.RunnableValidator;
 import org.androidannotations.validation.SeekBarProgressChangeValidator;
 import org.androidannotations.validation.SeekBarTouchStartValidator;
 import org.androidannotations.validation.SeekBarTouchStopValidator;
+import org.androidannotations.validation.ServiceActionValidator;
 import org.androidannotations.validation.SharedPrefValidator;
 import org.androidannotations.validation.SubscribeValidator;
 import org.androidannotations.validation.SystemServiceValidator;
@@ -416,6 +422,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new EApplicationValidator(processingEnv, androidManifest));
 		modelValidator.register(new EActivityValidator(processingEnv, rClass, androidManifest));
 		modelValidator.register(new EServiceValidator(processingEnv, androidManifest));
+		modelValidator.register(new EIntentServiceValidator(processingEnv, androidManifest));
 		modelValidator.register(new EReceiverValidator(processingEnv, androidManifest));
 		modelValidator.register(new EProviderValidator(processingEnv, androidManifest));
 		modelValidator.register(new EFragmentValidator(processingEnv, rClass));
@@ -471,6 +478,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new SeekBarProgressChangeValidator(processingEnv, rClass));
 		modelValidator.register(new SeekBarTouchStartValidator(processingEnv, rClass));
 		modelValidator.register(new SeekBarTouchStopValidator(processingEnv, rClass));
+		modelValidator.register(new ServiceActionValidator(processingEnv));
 		/*
 		 * Any view injection or listener binding should occur before
 		 * AfterViewsValidator
@@ -513,6 +521,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new EApplicationProcessor());
 		modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
 		modelProcessor.register(new EServiceProcessor(processingEnv));
+		modelProcessor.register(new EIntentServiceProcessor(processingEnv));
 		modelProcessor.register(new EReceiverProcessor());
 		modelProcessor.register(new EProviderProcessor());
 		modelProcessor.register(new EFragmentProcessor(processingEnv, rClass));
@@ -568,6 +577,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new SeekBarProgressChangeProcessor(processingEnv, rClass));
 		modelProcessor.register(new SeekBarTouchStartProcessor(processingEnv, rClass));
 		modelProcessor.register(new SeekBarTouchStopProcessor(processingEnv, rClass));
+		modelProcessor.register(new ServiceActionProcessor(processingEnv));
 		/*
 		 * Any view injection or listener binding should occur before
 		 * AfterViewsProcessor
@@ -677,6 +687,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					Bean.class, //
 					AfterInject.class, //
 					EService.class, //
+					EIntentService.class, //
+					ServiceAction.class, //
 					EReceiver.class, //
 					EProvider.class, //
 					Trace.class, //

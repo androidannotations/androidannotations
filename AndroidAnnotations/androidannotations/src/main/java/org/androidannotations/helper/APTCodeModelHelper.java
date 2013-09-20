@@ -23,19 +23,25 @@ import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 import org.androidannotations.processing.EBeanHolder;
 
@@ -54,6 +60,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
@@ -238,7 +245,7 @@ public class APTCodeModelHelper {
 		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
 		runMethod.annotate(Override.class);
 
-		runMethod.body().add( previousMethodBody );
+		runMethod.body().add(previousMethodBody);
 
 		return anonymousRunnableClass;
 	}
@@ -413,6 +420,49 @@ public class APTCodeModelHelper {
 				method.body()._return(_new(holder.intentBuilderClass).arg(fragmentParam));
 			}
 		}
+	}
+
+	public JInvocation addIntentBuilderPutExtraMethod(JCodeModel codeModel, EBeanHolder holder, APTCodeModelHelper helper, ProcessingEnvironment processingEnv, JMethod method, TypeMirror elementType, String parameterName, String extraName) {
+		boolean castToSerializable = false;
+		boolean castToParcelable = false;
+		if (elementType.getKind() == TypeKind.DECLARED) {
+			Elements elementUtils = processingEnv.getElementUtils();
+			Types typeUtils = processingEnv.getTypeUtils();
+			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
+			if (!typeUtils.isSubtype(elementType, parcelableType)) {
+				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
+				if (!typeUtils.isSubtype(elementType, stringType)) {
+					castToSerializable = true;
+				}
+			} else {
+				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
+				if (typeUtils.isSubtype(elementType, serializableType)) {
+					castToParcelable = true;
+				}
+			}
+		}
+
+		JClass parameterClass = helper.typeMirrorToJClass(elementType, holder);
+		JVar extraParameterVar = method.param(parameterClass, parameterName);
+		JBlock body = method.body();
+		JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraName);
+		if (castToSerializable) {
+			return invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
+		} else if (castToParcelable) {
+			return invocation.arg(cast(holder.classes().PARCELABLE, extraParameterVar));
+		}
+		return invocation.arg(extraParameterVar);
+	}
+
+	public void addCastMethod(JCodeModel codeModel, EBeanHolder holder) {
+		JType objectType = codeModel._ref(Object.class);
+		JMethod method = holder.generatedClass.method(JMod.PRIVATE, objectType, "cast_");
+		JTypeVar genericType = method.generify("T");
+		method.type(genericType);
+		JVar objectParam = method.param(objectType, "object");
+		method.annotate(SuppressWarnings.class).param("value", "unchecked");
+		method.body()._return(JExpr.cast(genericType, objectParam));
+		holder.cast = method;
 	}
 
 	private JFieldVar addIntentBuilderFragmentConstructor(EBeanHolder holder, JClass fragmentClass, String fieldName, JFieldVar contextField) {
