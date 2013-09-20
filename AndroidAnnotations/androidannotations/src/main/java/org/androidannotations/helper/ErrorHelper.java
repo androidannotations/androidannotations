@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -16,12 +21,19 @@ import org.androidannotations.exception.ProcessingException;
 public class ErrorHelper {
 
 	public String getErrorMessage(ProcessingEnvironment processingEnv, ProcessingException e, String aaVersion) {
-		String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations " + aaVersion + ", with the following content and tell us if you can reproduce it or not. The error was thrown on:\n";
-		if (e.getElement() != null) {
-			errorMessage += elementFullString(processingEnv, e.getElement()) + "\n";
+		String errorMessage = "Unexpected error in AndroidAnnotations " + aaVersion + "!\n" //
+				+ "You should check if there is already an issue about it on https://github.com/excilys/androidannotations/search?q=" + urlEncodedErrorMessage(e) + "&type=Issues\n" //
+				+ "If none exists, please open a new one with the following content and tell us if you can reproduce it or not. Don't forget to give us as much information as you can (like parts of your code in failure).\n";
+		errorMessage += "Java version: " + getJavaCompilerVersion() + "\n";
+		errorMessage += "Javac processors options: " + annotationProcessorOptions(processingEnv) + "\n";
+		errorMessage += "Stacktrace: " + stackTraceToString(e.getCause());
+
+		Element element = e.getElement();
+		if (element != null) {
+			errorMessage += "Thrown from: " + elementContainer(element) + "\n";
+			errorMessage += "Element (" + element.getClass().getSimpleName() + "): " + elementFullString(processingEnv, element) + "\n";
 		}
-		errorMessage += "compiled with " + getJavaCompilerVersion() + "\n";
-		errorMessage += "with stacktrace: " + stackTraceToString(e.getCause());
+
 		return errorMessage;
 	}
 
@@ -29,13 +41,23 @@ public class ErrorHelper {
 		Elements elementUtils = processingEnv.getElementUtils();
 		CharArrayWriter writer = new CharArrayWriter();
 		elementUtils.printElements(writer, element);
-		String result = writer.toString();
+		return writer.toString();
+	}
 
+	private String elementContainer(Element element) {
 		Element enclosingElement = element.getEnclosingElement();
-		if (enclosingElement != null) {
-			result = result + "\nin: " + enclosingElement.toString();
+		return enclosingElement != null ? enclosingElement.toString() : "";
+	}
+
+	private String annotationProcessorOptions(ProcessingEnvironment processingEnv) {
+		Map<String, String> options = processingEnv.getOptions();
+		Set<Entry<String, String>> optionsEntries = options.entrySet();
+
+		String result = "";
+		for (Entry<String, String> optionEntry : optionsEntries) {
+			result += optionEntry.getKey() + "=" + optionEntry.getValue() + ", ";
 		}
-		return result;
+		return result.length() > 2 ? result.substring(0, result.length() - 2) : result;
 	}
 
 	private String getJavaCompilerVersion() {
@@ -59,6 +81,14 @@ public class ErrorHelper {
 			}
 		}
 		return "unknown";
+	}
+
+	private String urlEncodedErrorMessage(Throwable e) {
+		try {
+			return URLEncoder.encode(e.getCause().getClass().getName(), "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			return "";
+		}
 	}
 
 	private String stackTraceToString(Throwable e) {
