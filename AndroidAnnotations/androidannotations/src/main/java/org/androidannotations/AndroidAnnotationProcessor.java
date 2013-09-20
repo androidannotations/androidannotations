@@ -22,11 +22,11 @@ import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
 import static org.androidannotations.rclass.ProjectRClassFinder.RESOURCE_PACKAGE_NAME_OPTION;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -121,9 +121,11 @@ import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
+import org.androidannotations.helper.ErrorHelper;
 import org.androidannotations.helper.Option;
 import org.androidannotations.helper.TimeStats;
 import org.androidannotations.model.AndroidRes;
@@ -276,7 +278,10 @@ import org.androidannotations.validation.rest.RestValidator;
 @SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION, RESOURCE_PACKAGE_NAME_OPTION })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
+	private final Properties properties = new Properties();
 	private final TimeStats timeStats = new TimeStats();
+	private final ErrorHelper errorHelper = new ErrorHelper();
+
 	private Set<String> supportedAnnotationNames;
 
 	@Override
@@ -284,6 +289,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		super.init(processingEnv);
 
 		Messager messager = processingEnv.getMessager();
+
+		loadPropertyFile();
 
 		timeStats.setMessager(messager);
 
@@ -296,16 +303,34 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		timeStats.start("Whole Processing");
 		try {
 			processThrowing(annotations, roundEnv);
-		} catch (Exception e) {
+		} catch (ProcessingException e) {
 			handleException(annotations, roundEnv, e);
+		} catch (Exception e) {
+			handleException(annotations, roundEnv, new ProcessingException(e, null));
 		}
 		timeStats.stop("Whole Processing");
 		timeStats.logStats();
 		return true;
 	}
 
-	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws Exception {
+	private void loadPropertyFile() {
+		String filename = "androidannotations-version.properties";
+		try {
+			URL url = getClass().getClassLoader().getResource(filename);
+			properties.load(url.openStream());
+		} catch (Exception e) {
+			e.printStackTrace();
 
+			Messager messager = processingEnv.getMessager();
+			messager.printMessage(Diagnostic.Kind.NOTE, "AndroidAnnotations processing failed because " + filename + " couldn't be parsed : " + e.getLocalizedMessage());
+		}
+	}
+
+	private String getAAProcessorVersion() {
+		return properties.getProperty("version", "3.0+");
+	}
+
+	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws ProcessingException, Exception {
 		if (nothingToDo(annotations, roundEnv)) {
 			return;
 		}
@@ -378,7 +403,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return Option.of(coumpoundRClass);
 	}
 
-	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) throws ProcessingException, Exception {
 		timeStats.start("Validate Annotations");
 		ModelValidator modelValidator = buildModelValidator(rClass, androidSystemServices, androidManifest);
 		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);
@@ -475,7 +500,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 	}
 
-	private ProcessResult processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) throws Exception {
+	private ProcessResult processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) throws ProcessingException, Exception {
 		timeStats.start("Process Annotations");
 		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices, androidManifest, validatedModel);
 		ProcessResult processResult = modelProcessor.process(validatedModel);
@@ -567,13 +592,13 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		timeStats.start("Generate Sources");
 		Messager messager = processingEnv.getMessager();
 		messager.printMessage(Diagnostic.Kind.NOTE, "Number of files generated by AndroidAnnotations: " + processResult.codeModel.countArtifacts());
-		CodeModelGenerator modelGenerator = new CodeModelGenerator(processingEnv.getFiler(), messager);
+		CodeModelGenerator modelGenerator = new CodeModelGenerator(processingEnv.getFiler(), messager, getAAProcessorVersion());
 		modelGenerator.generate(processResult);
 		timeStats.stop("Generate Sources");
 	}
 
-	private void handleException(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, Exception e) {
-		String errorMessage = "Unexpected error. Please report an issue on AndroidAnnotations, with the following content: " + stackTraceToString(e);
+	private void handleException(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, ProcessingException e) {
+		String errorMessage = errorHelper.getErrorMessage(processingEnv, e, getAAProcessorVersion());
 
 		Messager messager = processingEnv.getMessager();
 		messager.printMessage(Diagnostic.Kind.ERROR, errorMessage);
@@ -586,13 +611,6 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
 		messager.printMessage(Diagnostic.Kind.ERROR, errorMessage, element);
-	}
-
-	private String stackTraceToString(Throwable e) {
-		StringWriter writer = new StringWriter();
-		PrintWriter pw = new PrintWriter(writer);
-		e.printStackTrace(pw);
-		return writer.toString();
 	}
 
 	@Override
