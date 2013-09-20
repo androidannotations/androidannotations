@@ -18,8 +18,8 @@ package org.androidannotations.test15.eintentservice;
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.EmptyActivityWithoutLayout;
 import org.androidannotations.test15.EmptyActivityWithoutLayout_;
-import org.androidannotations.test15.eintentservice.IntentServiceHandledAction_.IntentBuilder_;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,19 +30,19 @@ public class MyIntentServiceTest {
 
 	@Test
 	public void testAction() {
-		IntentServiceHandledAction_.actionForTestHandled = false;
+		IntentServiceHandledAction.actionForTestHandled = null;
 
 		// Simulate call to intent builder and retrieve the configured Intent
-		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
-		IntentBuilder_ intentBuilder = IntentServiceHandledAction_.intent(
-				context).myActionForTests();
-		Intent intent = intentBuilder.get();
+		EmptyActivityWithoutLayout context = new EmptyActivityWithoutLayout_();
+		Intent intent = IntentServiceHandledAction_.intent(context) //
+				.MyActionOneParam("test") //
+				.get();
 
 		// Simulate the creation of IntentService by Android
-		IntentServiceHandledAction_ intentServiceHandledAction = new IntentServiceHandledAction_();
+		IntentServiceHandledAction intentServiceHandledAction = new IntentServiceHandledAction_();
 		intentServiceHandledAction.onHandleIntent(intent);
 
-		assertThat(IntentServiceHandledAction_.actionForTestHandled).isTrue();
+		assertThat(IntentServiceHandledAction_.actionForTestHandled).isEqualTo("test");
 	}
 
 }
