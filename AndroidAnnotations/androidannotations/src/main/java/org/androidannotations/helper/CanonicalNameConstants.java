@@ -98,6 +98,7 @@ public final class CanonicalNameConstants {
 	public static final String KEY_STORE = "java.security.KeyStore";
 	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
 	public static final String VIEW_SERVER = "org.androidannotations.api.ViewServer";
+	public static final String LOOPER = "android.os.Looper";
 
 	/*
 	 * Android permission
@@ -127,6 +128,7 @@ public final class CanonicalNameConstants {
 	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
 	public static final String HTTP_MESSAGE_CONVERTER = "org.springframework.http.converter.HttpMessageConverter";
 	public static final String CLIENT_HTTP_REQUEST_INTERCEPTOR = "org.springframework.http.client.ClientHttpRequestInterceptor";
+	public static final String REST_CLIENT_EXCEPTION = "org.springframework.web.client.RestClientException";
 
 	/*
 	 * RoboGuice
@@ -156,6 +158,7 @@ public final class CanonicalNameConstants {
 	public static final String DAO_MANAGER = "com.j256.ormlite.dao.DaoManager";
 	public static final String CONNECTION_SOURCE = "com.j256.ormlite.support.ConnectionSource";
 	public static final String OPEN_HELPER_MANAGER = "com.j256.ormlite.android.apptools.OpenHelperManager";
+	public static final String RUNTIME_EXCEPTION_DAO = "com.j256.ormlite.dao.RuntimeExceptionDao";
 
 	/*
 	 * HttpClient

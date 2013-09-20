@@ -63,6 +63,7 @@
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuActivity_" />
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuSubActivity_" />
         <activity android:name="org.androidannotations.test15.NoTitleFullscreenActivity_" />
+        <activity android:name="org.androidannotations.test15.WindowFeatureActivity_" />
         <activity android:name="org.androidannotations.test15.ExtendingActivity_" />
         <activity android:name="org.androidannotations.test15.ebean.BeanInjectedActivity_" />
         <activity android:name="org.androidannotations.test15.rest.MyServiceActivity_" />

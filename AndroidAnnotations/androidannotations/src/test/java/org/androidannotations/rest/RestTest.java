@@ -81,4 +81,26 @@ public class RestTest extends AAProcessorTestHelper {
 		assertCompilationSuccessful(result);
 	}
 
+	@Test
+	public void client_with_wrong_enhanced_methods() throws IOException {
+		CompileResult result = compileFiles(ClientWithWrongEnhancedMethod.class);
+		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "Object getRestTemplate();", result);
+		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "String getURL();", result);
+		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "String getRootURL();", result);
+		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "String getRootURL(String param);", result);
+		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "boolean setRootURL();", result);
+		assertCompilationErrorCount(5, result);
+	}
+
+	@Test
+	public void client_with_wrong_interface() throws IOException {
+		CompileResult result = compileFiles(ClientWithWrongInterface.class);
+		assertCompilationErrorCount(1, result);
+	}
+
+	@Test
+	public void client_with_all_interfaces() throws IOException {
+		CompileResult result = compileFiles(ClientWithAllInterfaces.class);
+		assertCompilationSuccessful(result);
+	}
 }

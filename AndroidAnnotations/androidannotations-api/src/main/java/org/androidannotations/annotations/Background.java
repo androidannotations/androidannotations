@@ -28,5 +28,26 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Background {
-	long delay() default 0;
+	/**
+	 * Identifier for task cancellation.
+	 * 
+	 * To cancel all tasks having a specified background id:
+	 * 
+	 * <pre>
+	 * boolean mayInterruptIfRunning = true;
+	 * BackgroundExecutor.cancelAll(&quot;my_background_id&quot;, mayInterruptIfRunning);
+	 * </pre>
+	 **/
+	String id() default "";
+
+	/** Minimum delay, in milliseconds, before the background task is executed. */
+	int delay() default 0;
+
+	/**
+	 * Serial execution group.
+	 * 
+	 * All background tasks having the same <code>serial</code> will be executed
+	 * sequentially.
+	 **/
+	String serial() default "";
 }

@@ -38,7 +38,7 @@ public class ServiceInjectionTest {
 		@SuppressWarnings("unchecked")
 		Map<String, String> SYSTEM_SERVICE_MAP = (Map<String, String>) serviceMapField.get(null);
 
-		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "org.androidannotations.test15.FakeClipboardManager");
+		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "android.content.ClipboardManager");
 	}
 
 	@Test
@@ -62,6 +62,8 @@ public class ServiceInjectionTest {
 		assertThat(activity.sensorManager).isNotNull();
 		assertThat(activity.telephonyManager).isNotNull();
 		assertThat(activity.audioManager).isNotNull();
+		assertThat(activity.textClipboardManager).isNotNull();
+		assertThat(activity.contentClipboardManager).isNotNull();
 	}
 
 }
