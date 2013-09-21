@@ -24,6 +24,7 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.FragmentArg;
@@ -113,7 +114,8 @@ public class FragmentArgProcessor implements DecoratingElementProcessor {
 		containsKeyCatch.body().add(logError);
 
 		{
-			JMethod method = holder.fragmentBuilderClass.method(PUBLIC, holder.fragmentBuilderClass, fieldName);
+			JClass returnClass = GenericUtils.generifyAs(codeModel, (TypeElement) element.getEnclosingElement(), holder.fragmentBuilderClass);
+			JMethod method = holder.fragmentBuilderClass.method(PUBLIC, returnClass, fieldName);
 
 			JClass paramClass = helper.typeMirrorToJClass(elementType, holder);
 			JVar arg = method.param(paramClass, fieldName);
