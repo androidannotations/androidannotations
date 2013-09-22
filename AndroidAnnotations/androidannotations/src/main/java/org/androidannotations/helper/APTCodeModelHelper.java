@@ -422,7 +422,7 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	public JInvocation addIntentBuilderPutExtraMethod(JCodeModel codeModel, EBeanHolder holder, APTCodeModelHelper helper, ProcessingEnvironment processingEnv, JMethod method, TypeMirror elementType, String parameterName, String extraName) {
+	public JInvocation addIntentBuilderPutExtraMethod(JCodeModel codeModel, EBeanHolder holder, APTCodeModelHelper helper, ProcessingEnvironment processingEnv, JMethod method, TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
 		boolean castToSerializable = false;
 		boolean castToParcelable = false;
 		if (elementType.getKind() == TypeKind.DECLARED) {
@@ -445,7 +445,7 @@ public class APTCodeModelHelper {
 		JClass parameterClass = helper.typeMirrorToJClass(elementType, holder);
 		JVar extraParameterVar = method.param(parameterClass, parameterName);
 		JBlock body = method.body();
-		JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraName);
+		JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKeyField);
 		if (castToSerializable) {
 			return invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
 		} else if (castToParcelable) {

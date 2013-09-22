@@ -123,7 +123,7 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 				// flags()
 				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, fieldName);
 
-				helper.addIntentBuilderPutExtraMethod(codeModel, holder, helper, processingEnv, method, elementType, fieldName, staticFieldName);
+				helper.addIntentBuilderPutExtraMethod(codeModel, holder, helper, processingEnv, method, elementType, fieldName, extraKeyField);
 
 				JBlock body = method.body();
 				body._return(_this());
