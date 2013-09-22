@@ -21,10 +21,12 @@ import static org.androidannotations.helper.CanonicalNameConstants.SUBSCRIBE;
 import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
 import static org.androidannotations.rclass.ProjectRClassFinder.RESOURCE_PACKAGE_NAME_OPTION;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -124,6 +126,7 @@ import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.exception.VersionMismatchException;
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
@@ -285,6 +288,7 @@ import org.androidannotations.validation.rest.RestValidator;
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private final Properties properties = new Properties();
+	private final Properties propertiesApi = new Properties();
 	private final TimeStats timeStats = new TimeStats();
 	private final ErrorHelper errorHelper = new ErrorHelper();
 
@@ -296,18 +300,36 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		Messager messager = processingEnv.getMessager();
 
-		loadPropertyFile();
+		try {
+			loadPropertyFile();
+			loadApiPropertyFile();
+		} catch (Exception e) {
+			messager.printMessage(Diagnostic.Kind.ERROR, "AndroidAnnotations processing failed: " + e.getMessage());
+			throw new RuntimeException("AndroidAnnotations processing failed", e);
+		}
 
 		timeStats.setMessager(messager);
 
 		messager.printMessage(Diagnostic.Kind.NOTE, "Starting AndroidAnnotations annotation processing");
+
+	}
+
+	private void checkApiAndCoreVersions() throws VersionMismatchException {
+		String apiVersion = getAAApiVersion();
+		String coreVersion = getAAProcessorVersion();
+
+		if (!apiVersion.equals(coreVersion)) {
+			throw new VersionMismatchException("AndroidAnnotation version for API (" + apiVersion + ") and core (" + coreVersion + " doesn't match. Please check your classpath)");
+		}
 	}
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		timeStats.clear();
 		timeStats.start("Whole Processing");
+
 		try {
+			checkApiAndCoreVersions();
 			processThrowing(annotations, roundEnv);
 		} catch (ProcessingException e) {
 			handleException(annotations, roundEnv, e);
@@ -319,21 +341,32 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return true;
 	}
 
-	private void loadPropertyFile() {
-		String filename = "androidannotations-version.properties";
+	private void loadPropertyFile() throws FileNotFoundException {
+		String filename = "androidannotations.properties";
 		try {
 			URL url = getClass().getClassLoader().getResource(filename);
 			properties.load(url.openStream());
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new FileNotFoundException(filename + " couldn't be parsed.");
+		}
+	}
 
-			Messager messager = processingEnv.getMessager();
-			messager.printMessage(Diagnostic.Kind.NOTE, "AndroidAnnotations processing failed because " + filename + " couldn't be parsed : " + e.getLocalizedMessage());
+	private void loadApiPropertyFile() throws FileNotFoundException {
+		String filename = "androidannotations-api.properties";
+		try {
+			URL url = getClass().getClassLoader().getResource(filename);
+			propertiesApi.load(url.openStream());
+		} catch (Exception e) {
+			throw new FileNotFoundException(filename + " couldn't be parsed. Please check your classpath and verify that AA-API's version is at least 3.0");
 		}
 	}
 
 	private String getAAProcessorVersion() {
 		return properties.getProperty("version", "3.0+");
+	}
+
+	private String getAAApiVersion() {
+		return propertiesApi.getProperty("version", null);
 	}
 
 	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws ProcessingException, Exception {
@@ -619,8 +652,16 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		 * eclipse.
 		 */
 
-		Element element = roundEnv.getElementsAnnotatedWith(annotations.iterator().next()).iterator().next();
-		messager.printMessage(Diagnostic.Kind.ERROR, errorMessage, element);
+		Iterator<? extends TypeElement> iterator = annotations.iterator();
+		if (iterator.hasNext()) {
+			Element element = roundEnv.getElementsAnnotatedWith(iterator.next()).iterator().next();
+			messager.printMessage(Diagnostic.Kind.ERROR, errorMessage, element);
+		} else {
+			// Sometime this is a total mess and javac could not even find one
+			// element on which we could print the error. So we should just
+			// throw an exception and let it go.
+			throw new RuntimeException("An error occured and couldn't be printed on an element: " + errorMessage);
+		}
 	}
 
 	@Override
