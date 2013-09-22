@@ -22,7 +22,9 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -62,6 +64,8 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 
 	@Override
 	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) {
+		Map<String, JFieldVar> extraKeyFields = new HashMap<String, JFieldVar>();
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 		String methodName = element.getSimpleName().toString();
 
@@ -113,13 +117,17 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 					JClass extraParamClass = helper.typeMirrorToJClass(param.asType(), holder);
 					boolean isPrimitive = param.asType().getKind().isPrimitive();
 
+					String extraKeyName = CaseHelper.camelCaseToUpperSnakeCase(null, methodName + paramName, "Extra");
+					JFieldVar extraKeyField = holder.generatedClass.field(PUBLIC | STATIC | FINAL, classes.STRING, extraKeyName, lit(extraKeyName));
+					extraKeyFields.put(methodName + paramName, extraKeyField);
+
 					JExpression extraInvok;
 					if (isPrimitive) {
 						JPrimitiveType primitiveType = JType.parse(codeModel, param.asType().toString());
 						JClass wrapperType = primitiveType.boxify();
-						extraInvok = JExpr.cast(wrapperType, extras.invoke("get").arg(paramName));
+						extraInvok = JExpr.cast(wrapperType, extras.invoke("get").arg(extraKeyField));
 					} else {
-						extraInvok = JExpr.invoke(holder.cast).arg(extras.invoke("get").arg(paramName));
+						extraInvok = JExpr.invoke(holder.cast).arg(extras.invoke("get").arg(extraKeyField));
 					}
 					JVar extraField = extrasNotNullBlock.decl(extraParamClass, extraParamName, extraInvok);
 					extraFields.add(extraField);
@@ -156,7 +164,9 @@ public class ServiceActionProcessor implements DecoratingElementProcessor {
 				for (VariableElement param : methodParameters) {
 					String paramName = param.getSimpleName().toString();
 
-					helper.addIntentBuilderPutExtraMethod(codeModel, holder, helper, processingEnv, method, param.asType(), paramName, paramName);
+					JFieldVar extraKeyField = extraKeyFields.get(methodName + paramName);
+
+					helper.addIntentBuilderPutExtraMethod(codeModel, holder, helper, processingEnv, method, param.asType(), paramName, extraKeyField);
 				}
 
 			}
