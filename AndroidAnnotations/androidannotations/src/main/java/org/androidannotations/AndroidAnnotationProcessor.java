@@ -302,9 +302,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		try {
 			loadPropertyFile();
 			loadApiPropertyFile();
-			checkApiAndCoreVersions();
 		} catch (Exception e) {
 			messager.printMessage(Diagnostic.Kind.ERROR, "AndroidAnnotations processing failed: " + e.getMessage());
+			throw new RuntimeException("AndroidAnnotations processing failed", e);
 		}
 
 		timeStats.setMessager(messager);
@@ -326,7 +326,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		timeStats.clear();
 		timeStats.start("Whole Processing");
+
 		try {
+			checkApiAndCoreVersions();
 			processThrowing(annotations, roundEnv);
 		} catch (ProcessingException e) {
 			handleException(annotations, roundEnv, e);
@@ -344,7 +346,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			URL url = getClass().getClassLoader().getResource(filename);
 			properties.load(url.openStream());
 		} catch (Exception e) {
-			throw new FileNotFoundException(filename + " couldn't be parsed");
+			throw new FileNotFoundException(filename + " couldn't be parsed.");
 		}
 	}
 
@@ -354,7 +356,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			URL url = getClass().getClassLoader().getResource(filename);
 			propertiesApi.load(url.openStream());
 		} catch (Exception e) {
-			throw new FileNotFoundException(filename + " couldn't be parsed");
+			throw new FileNotFoundException(filename + " couldn't be parsed. Please check your classpath and verify that AA-API's version is at least 3.0");
 		}
 	}
 
