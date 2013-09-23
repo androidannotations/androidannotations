@@ -319,7 +319,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		String coreVersion = getAAProcessorVersion();
 
 		if (!apiVersion.equals(coreVersion)) {
-			throw new VersionMismatchException("AndroidAnnotation version for API (" + apiVersion + ") and core (" + coreVersion + " doesn't match. Please check your classpath)");
+			throw new VersionMismatchException("AndroidAnnotation version for API (" + apiVersion + ") and core (" + coreVersion + ") doesn't match. Please check your classpath");
 		}
 	}
 
