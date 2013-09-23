@@ -354,7 +354,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private void loadApiPropertyFile() throws FileNotFoundException {
 		String filename = "androidannotations-api.properties";
 		try {
-			URL url = getClass().getClassLoader().getResource(filename);
+			URL url = EActivity.class.getClassLoader().getResource(filename);
 			propertiesApi.load(url.openStream());
 		} catch (Exception e) {
 			throw new FileNotFoundException(filename + " couldn't be parsed. Please check your classpath and verify that AA-API's version is at least 3.0");
