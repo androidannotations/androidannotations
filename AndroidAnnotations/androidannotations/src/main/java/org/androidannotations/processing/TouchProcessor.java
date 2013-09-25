@@ -70,7 +70,7 @@ public class TouchProcessor extends AbstractListenerProcessor {
 		String firstType = first.asType().toString();
 		if (firstType.equals(CanonicalNameConstants.MOTION_EVENT)) {
 			call.arg(eventParam);
-		} else { // if (first.equals(CanonicalNameConstants.VIEW))
+		} else {
 			call.arg(viewParam);
 		}
 		if (hasItemParameter) {
@@ -78,7 +78,7 @@ public class TouchProcessor extends AbstractListenerProcessor {
 			String secondType = second.asType().toString();
 			if (secondType.equals(CanonicalNameConstants.MOTION_EVENT)) {
 				call.arg(eventParam);
-			} else { // if (first.equals(CanonicalNameConstants.MOTION_EVENT))
+			} else {
 				call.arg(viewParam);
 			}
 		}
