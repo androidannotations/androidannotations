@@ -169,7 +169,8 @@ public class ValidatorParameterHelper {
 			if (parameters.size() == 1 && !firstParameterType.equals(CanonicalNameConstants.MOTION_EVENT)) {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(executableElement, "the parameter must be a " + CanonicalNameConstants.MOTION_EVENT + ", not a " + firstParameterType);
-			} else { // if (parameters.size() == 2)
+			}
+			if (parameters.size() == 2) {
 				VariableElement secondParameter = parameters.get(1);
 				String secondParameterType = secondParameter.asType().toString();
 
