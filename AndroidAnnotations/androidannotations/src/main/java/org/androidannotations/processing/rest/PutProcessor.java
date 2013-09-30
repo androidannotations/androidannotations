@@ -20,12 +20,17 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.processing.EBeanHolder;
 
-import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 
-public class PutProcessor extends MethodProcessor {
+public class PutProcessor extends GetPostProcessor {
 
 	public PutProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		super(processingEnv, restImplementationsHolder);
@@ -37,19 +42,31 @@ public class PutProcessor extends MethodProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
-
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		Put putAnnotation = element.getAnnotation(Put.class);
-		String urlSuffix = putAnnotation.value();
-
-		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, null, null, codeModel));
+	public String retrieveUrlSuffix(Element element) {
+		Put getAnnotation = element.getAnnotation(Put.class);
+		return getAnnotation.value();
 	}
 
 	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(generateHttpEntityVar(methodHolder));
-	}
+	protected JExpression generateHttpEntityVar(MethodProcessorHolder methodHolder) {
+		ExecutableElement executableElement = (ExecutableElement) methodHolder.getElement();
+		EBeanHolder holder = methodHolder.getHolder();
+		JClass httpEntity = holder.refClass(CanonicalNameConstants.HTTP_ENTITY);
 
+		JBlock body = methodHolder.getBody();
+		JVar httpHeadersVar = generateHttpHeadersVar(methodHolder, holder, body, executableElement);
+
+		boolean hasHeaders = httpHeadersVar != null;
+
+		if (hasHeaders) {
+			JInvocation newHttpEntityVarCall = JExpr._new(httpEntity.narrow(Object.class));
+			newHttpEntityVarCall.arg(httpHeadersVar);
+
+			String httpEntityVarName = "requestEntity";
+
+			return body.decl(httpEntity.narrow(Object.class), httpEntityVarName, newHttpEntityVarCall);
+		} else {
+			return JExpr._null();
+		}
+	}
 }
