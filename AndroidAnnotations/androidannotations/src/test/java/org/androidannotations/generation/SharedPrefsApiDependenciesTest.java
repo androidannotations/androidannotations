@@ -33,6 +33,8 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesCompat;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
+import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
+import org.androidannotations.api.sharedpreferences.StringSetPrefField;
 import org.androidannotations.manifest.SomeClass;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
@@ -54,7 +56,9 @@ public class SharedPrefsApiDependenciesTest extends AAProcessorTestHelper {
 			SharedPreferencesCompat.class,//
 			SharedPreferencesHelper.class,//
 			StringPrefEditorField.class,//
-			StringPrefField.class //
+			StringPrefField.class, //
+			StringSetPrefEditorField.class,//
+			StringSetPrefField.class //
 	};
 
 	@Before
