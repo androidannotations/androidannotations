@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -53,6 +54,8 @@ import javax.lang.model.util.Elements;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.rest.Delete;
@@ -68,6 +71,10 @@ import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.api.rest.RestClientErrorHandling;
+import org.androidannotations.api.rest.RestClientHeaders;
+import org.androidannotations.api.rest.RestClientRootUrl;
+import org.androidannotations.api.rest.RestClientSupport;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
@@ -76,9 +83,16 @@ import org.androidannotations.validation.IsValid;
 
 public class ValidatorHelper {
 
+	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
+
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
+	private static final String METHOD_NAME_SET_AUTHENTICATION = "setAuthentication";
+	private static final String METHOD_NAME_GET_COOKIE = "getCookie";
+	private static final String METHOD_NAME_GET_HEADER = "getHeader";
+
+	private static final String METHOD_NAME_GET_ROOT_URL = "getRootUrl";
 
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING, CanonicalNameConstants.STRING_SET);
 
@@ -126,10 +140,21 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void doesNotExtendOtherInterfaces(TypeElement element, IsValid valid) {
+	public void doesNotExtendInvalidInterfaces(TypeElement element, IsValid valid) {
 		if (element.getInterfaces().size() > 0) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on an interface that does not extend other interfaces");
+			boolean isValid = true;
+
+			for (TypeMirror iface : element.getInterfaces()) {
+				if (!VALID_REST_INTERFACES.contains(iface.toString())) {
+					isValid = false;
+					break;
+				}
+			}
+
+			if (!isValid) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "%s interfaces can only extend the following interfaces: " + VALID_REST_INTERFACES);
+			}
 		}
 	}
 
@@ -181,6 +206,11 @@ public class ValidatorHelper {
 	public void enclosingElementHasEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EFragment.class, valid);
+	}
+
+	public void enclosingElementHasEIntentService(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasClassAnnotation(element, enclosingElement, validatedElements, EIntentService.class, valid);
 	}
 
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
@@ -472,6 +502,10 @@ public class ValidatorHelper {
 		extendsType(element, CanonicalNameConstants.SERVICE, valid);
 	}
 
+	public void extendsIntentService(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.INTENT_SERVICE, valid);
+	}
+
 	public void extendsReceiver(Element element, IsValid valid) {
 		extendsType(element, CanonicalNameConstants.BROADCAST_RECEIVER, valid);
 	}
@@ -520,15 +554,20 @@ public class ValidatorHelper {
 		TypeMirror modelTypeMirror = annotationHelper.extractAnnotationParameter(element, "model");
 
 		TypeElement daoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO);
+		TypeElement runtimeExceptionDaoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
+
 		if (daoTypeElement != null) {
 
 			TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
 			DeclaredType daoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, modelTypeMirror, wildcardType);
+			DeclaredType runtimeExceptionDaoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelTypeMirror, wildcardType);
 
-			// Checks that elementType extends Dao<ModelType, ?>
-			if (!annotationHelper.isSubtype(elementType, daoParameterizedType)) {
+			// Checks that elementType extends Dao<ModelType, ?> or
+			// RuntimeExceptionDao<ModelType, ?>
+			if (!annotationHelper.isSubtype(elementType, daoParameterizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParameterizedType)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString());
+				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString() //
+						+ " or " + runtimeExceptionDaoParameterizedType.toString());
 			}
 		}
 	}
@@ -780,7 +819,12 @@ public class ValidatorHelper {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
 		boolean foundGetRestTemplateMethod = false;
 		boolean foundSetRestTemplateMethod = false;
+		boolean foundSetAuthenticationMethod = false;
 		boolean foundSetRootUrlMethod = false;
+		boolean foundGetCookieMethod = false;
+		boolean foundGetHeaderMethod = false;
+		boolean foundGetRootUrlMethod = false;
+
 		for (Element enclosedElement : enclosedElements) {
 			if (enclosedElement.getKind() != ElementKind.METHOD) {
 				valid.invalidate();
@@ -796,8 +840,11 @@ public class ValidatorHelper {
 				}
 
 				if (!hasRestAnnotation) {
+
 					ExecutableElement executableElement = (ExecutableElement) enclosedElement;
 					TypeMirror returnType = executableElement.getReturnType();
+					String simpleName = executableElement.getSimpleName().toString();
+
 					if (returnType.toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
 						if (executableElement.getParameters().size() > 0) {
 							valid.invalidate();
@@ -809,6 +856,23 @@ public class ValidatorHelper {
 							} else {
 								foundGetRestTemplateMethod = true;
 							}
+						}
+					} else if (simpleName.equals(METHOD_NAME_GET_ROOT_URL)) {
+						if (!returnType.toString().equals(CanonicalNameConstants.STRING)) {
+							valid.invalidate();
+							annotationHelper.printError(enclosedElement, "The method getRootUrl must return String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+						}
+
+						if (executableElement.getParameters().size() != 0) {
+							valid.invalidate();
+							annotationHelper.printError(enclosedElement, "The method getRootUrl cannot have parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+						}
+
+						if (!foundGetRootUrlMethod) {
+							foundGetRootUrlMethod = true;
+						} else {
+							valid.invalidate();
+							annotationHelper.printError(enclosedElement, "The can be only one getRootUrl method on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 						}
 					} else if (returnType.getKind() == TypeKind.VOID) {
 						List<? extends VariableElement> parameters = executableElement.getParameters();
@@ -824,14 +888,45 @@ public class ValidatorHelper {
 								}
 							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_ROOT_URL) && !foundSetRootUrlMethod) {
 								foundSetRootUrlMethod = true;
+							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_AUTHENTICATION) && !foundSetAuthenticationMethod) {
+								foundSetAuthenticationMethod = true;
 							} else {
 								valid.invalidate();
 								annotationHelper.printError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 
 							}
+						} else if (parameters.size() == 2) {
+							VariableElement firstParameter = parameters.get(0);
+							VariableElement secondParameter = parameters.get(1);
+							if (!(firstParameter.asType().toString().equals(CanonicalNameConstants.STRING) && secondParameter.asType().toString().equals(CanonicalNameConstants.STRING))) {
+								valid.invalidate();
+								annotationHelper.printError(enclosedElement, "The method to set headers, cookies, or HTTP Basic Auth should have only String parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+							}
 						} else {
 							valid.invalidate();
 							annotationHelper.printError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+						}
+					} else if (returnType.toString().equals(CanonicalNameConstants.STRING)) {
+						List<? extends VariableElement> parameters = executableElement.getParameters();
+						if (parameters.size() == 1) {
+							VariableElement firstParameter = parameters.get(0);
+							if (firstParameter.asType().toString().equals(CanonicalNameConstants.STRING)) {
+								if (executableElement.getSimpleName().toString().equals(METHOD_NAME_GET_COOKIE) && !foundGetCookieMethod) {
+									foundGetCookieMethod = true;
+								} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_GET_HEADER) && !foundGetHeaderMethod) {
+									foundGetHeaderMethod = true;
+								} else {
+									valid.invalidate();
+									annotationHelper.printError(enclosedElement, "Only one getCookie(String) and one getHeader(String) method are allowed on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+								}
+							} else {
+								valid.invalidate();
+								annotationHelper.printError(enclosedElement, "Only getCookie(String) and getHeader(String) can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+							}
+
+						} else {
+							valid.invalidate();
+							annotationHelper.printError(enclosedElement, "The only methods that can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface are getCookie(String) and getHeader(String)");
 						}
 					} else {
 						valid.invalidate();
@@ -1092,6 +1187,25 @@ public class ValidatorHelper {
 			} else {
 				valid.invalidate();
 				annotationHelper.printAnnotationError(element, "The interceptor class must be a subtype of " + CLIENT_HTTP_REQUEST_INTERCEPTOR);
+			}
+		}
+	}
+
+	public void hasNotMultipleAnnotatedMethodWithSameName(Element element, IsValid valid, Class<? extends Annotation> annotation) {
+		Set<String> actionNames = new TreeSet<String>();
+
+		List<? extends Element> enclosedElements = element.getEnclosedElements();
+		for (Element enclosedElement : enclosedElements) {
+			if (enclosedElement.getKind() != ElementKind.METHOD || !annotationHelper.hasOneOfClassAnnotations(enclosedElement, annotation)) {
+				continue;
+			}
+
+			String enclosedElementName = enclosedElement.getSimpleName().toString();
+			if (actionNames.contains(enclosedElementName)) {
+				valid.invalidate();
+				annotationHelper.printError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(ServiceAction.class) + " annotated method must have unique name even if the signature is not the same");
+			} else {
+				actionNames.add(enclosedElementName);
 			}
 		}
 	}

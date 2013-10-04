@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -33,9 +32,9 @@
 			<id>py.ricau</id>
 			<name>Pierre-Yves Ricau</name>
 			<email>py.ricau@gmail.com</email>
-			<url>http://blog.piwai.info</url>
-			<organization>Siine Ltd</organization>
-			<organizationUrl>http://www.siine.com</organizationUrl>
+			<url>http://piwai.info</url>
+			<organization>Square, Inc</organization>
+			<organizationUrl>http://squareup.com</organizationUrl>
 			<roles>
 				<role>Owner</role>
 			</roles>
@@ -65,7 +64,8 @@
 		<developer>
 			<id>jzapata</id>
 			<name>Joan Zapata</name>
-			<email>jzapata@excilys.com</email>
+			<email>zapata.joan@gmail.com</email>
+			<url>http://joanzapata.com</url>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
@@ -194,6 +194,14 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>2.3.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

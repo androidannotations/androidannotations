@@ -26,6 +26,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
+import org.androidannotations.processing.rest.MethodProcessor;
 import org.androidannotations.validation.IsValid;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
@@ -41,6 +42,13 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		List<String> parametersName = new ArrayList<String>();
 		for (VariableElement parameter : parameters) {
 			parametersName.add(parameter.getSimpleName().toString());
+		}
+
+		String[] cookiesToUrl = MethodProcessor.retrieveRequiredUrlCookieNames(element);
+		if (cookiesToUrl != null) {
+			for (String cookie : cookiesToUrl) {
+				parametersName.add(cookie);
+			}
 		}
 
 		for (String variableName : variableNames) {

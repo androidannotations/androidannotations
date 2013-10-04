@@ -130,6 +130,9 @@ public class EBeanHolder {
 
 	private ViewChangedHolder viewChangedHolder;
 
+	public JVar onHandleIntentIntent;
+	public JBlock onHandleIntentBody;
+
 	/**
 	 * Only defined in beans that implement {@link HasViews}
 	 */

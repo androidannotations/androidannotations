@@ -28,7 +28,7 @@ import org.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JExpression;
 
 public class OptionsProcessor extends MethodProcessor {
 
@@ -63,7 +63,7 @@ public class OptionsProcessor extends MethodProcessor {
 	}
 
 	@Override
-	protected JInvocation addResultCallMethod(JInvocation restCall, MethodProcessorHolder methodHolder) {
+	protected JExpression addResultCallMethod(JExpression restCall, MethodProcessorHolder methodHolder) {
 		restCall = JExpr.invoke(restCall, "getHeaders");
 		restCall = JExpr.invoke(restCall, "getAllow");
 		return restCall;

@@ -20,11 +20,13 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EService;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.ModelConstants;
 
 import com.sun.codemodel.ClassType;
@@ -37,10 +39,13 @@ import com.sun.codemodel.JMethod;
 
 public class EServiceProcessor implements GeneratingElementProcessor {
 
-	private final APTCodeModelHelper aptCodeModelHelper;
+	final APTCodeModelHelper aptCodeModelHelper;
 
-	public EServiceProcessor() {
+	final AnnotationHelper annotationHelper;
+
+	public EServiceProcessor(ProcessingEnvironment processingEnv) {
 		aptCodeModelHelper = new APTCodeModelHelper();
+		annotationHelper = new AnnotationHelper(processingEnv);
 	}
 
 	@Override
@@ -88,7 +93,7 @@ public class EServiceProcessor implements GeneratingElementProcessor {
 			holder.initActivityRef = null;
 		}
 
-		aptCodeModelHelper.addServiceIntentBuilder(codeModel, holder);
+		aptCodeModelHelper.addServiceIntentBuilder(codeModel, holder, annotationHelper);
 
 	}
 

@@ -21,6 +21,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OrmLiteDao;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 @EActivity
 public class OrmLiteActivity extends Activity {
@@ -29,6 +30,9 @@ public class OrmLiteActivity extends Activity {
 
 	@OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
 	Dao<Car, Long> carDao;
+
+	@OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
+	RuntimeExceptionDao<Car, Long> runtimeExceptionDao;
 
 	@Bean
 	OrmLiteBean ormLiteBean;

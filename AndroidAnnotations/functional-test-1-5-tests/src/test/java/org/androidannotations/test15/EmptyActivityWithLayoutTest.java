@@ -27,9 +27,8 @@ public class EmptyActivityWithLayoutTest {
 	public void shouldHaveLayoutAfterCreate() {
 		EmptyActivityWithLayout_ activity = new EmptyActivityWithLayout_();
 
-		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
-
 		activity.onCreate(null);
+		activity.setContentView(R.layout.main);
 
 		assertThat(activity.findViewById(R.id.helloTextView)).hasId(R.id.helloTextView);
 	}

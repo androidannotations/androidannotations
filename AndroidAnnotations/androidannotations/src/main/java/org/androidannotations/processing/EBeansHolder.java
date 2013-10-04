@@ -51,6 +51,7 @@ public class EBeansHolder {
 		public final JClass INPUT_STREAM = refClass(InputStream.class);
 		public final JClass FILE_INPUT_STREAM = refClass(FileInputStream.class);
 		public final JClass SQL_EXCEPTION = refClass(SQLException.class);
+		public final JClass THREAD = refClass(Thread.class);
 
 		/*
 		 * Android
@@ -97,6 +98,7 @@ public class EBeansHolder {
 		public final JClass KEY_STORE = refClass(CanonicalNameConstants.KEY_STORE);
 		public final JClass VIEW_SERVER = refClass(CanonicalNameConstants.VIEW_SERVER);
 		public final JClass PARCELABLE = refClass(CanonicalNameConstants.PARCELABLE);
+		public final JClass LOOPER = refClass(CanonicalNameConstants.LOOPER);
 
 		/*
 		 * Sherlock
@@ -136,6 +138,7 @@ public class EBeansHolder {
 		 */
 		public final JClass CONNECTION_SOURCE = refClass(CanonicalNameConstants.CONNECTION_SOURCE);
 		public final JClass OPEN_HELPER_MANAGER = refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER);
+		public final JClass RUNTIME_EXCEPTION_DAO = refClass(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
 		public final JClass DAO_MANAGER = refClass(CanonicalNameConstants.DAO_MANAGER);
 
 		/*
@@ -148,6 +151,10 @@ public class EBeansHolder {
 		public final JClass SCHEME_REGISTRY = refClass(CanonicalNameConstants.SCHEME_REGISTRY);
 		public final JClass SINGLE_CLIENT_CONN_MANAGER = refClass(CanonicalNameConstants.SINGLE_CLIENT_CONN_MANAGER);
 
+		/*
+		 * Springframework
+		 */
+		public final JClass REST_CLIENT_EXCEPTION = refClass(CanonicalNameConstants.REST_CLIENT_EXCEPTION);
 	}
 
 	private final Map<Element, EBeanHolder> eBeanHolders = new HashMap<Element, EBeanHolder>();

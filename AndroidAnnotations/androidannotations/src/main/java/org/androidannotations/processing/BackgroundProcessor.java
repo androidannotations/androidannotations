@@ -23,14 +23,17 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.api.BackgroundExecutor.Task;
 import org.androidannotations.helper.APTCodeModelHelper;
 
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
 
 public class BackgroundProcessor implements DecoratingElementProcessor {
 
@@ -50,25 +53,24 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 
 		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
 
-		JDefinedClass anonymousRunnableClass = helper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
+		JBlock previousMethodBody = helper.removeBody(delegatingMethod);
 
-		{
-			// Execute Runnable
-			Background annotation = element.getAnnotation(Background.class);
-			long delay = annotation.delay();
+		JDefinedClass anonymousTaskClass = codeModel.anonymousClass(Task.class);
 
-			JClass backgroundExecutorClass = holder.refClass(BackgroundExecutor.class);
-			JInvocation executeCall;
+		JMethod executeMethod = anonymousTaskClass.method(JMod.PUBLIC, codeModel.VOID, "execute");
+		executeMethod.annotate(Override.class);
 
-			if (delay == 0) {
-				executeCall = backgroundExecutorClass.staticInvoke("execute").arg(_new(anonymousRunnableClass));
-			} else {
-				executeCall = backgroundExecutorClass.staticInvoke("executeDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
-			}
+		executeMethod.body().add( previousMethodBody );
 
-			delegatingMethod.body().add(executeCall);
+		Background annotation = element.getAnnotation(Background.class);
+		String id = annotation.id();
+		int delay = annotation.delay();
+		String serial = annotation.serial();
 
-		}
+		JClass backgroundExecutorClass = holder.refClass(BackgroundExecutor.class);
+		JInvocation newTask = _new(anonymousTaskClass).arg(lit(id)).arg(lit(delay)).arg(lit(serial));
+		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(newTask);
 
+		delegatingMethod.body().add(executeCall);
 	}
 }
