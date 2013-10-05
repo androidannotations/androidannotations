@@ -78,11 +78,13 @@ import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.annotations.LongClick;
 import org.androidannotations.annotations.NoTitle;
 import org.androidannotations.annotations.NonConfigurationInstance;
+import org.androidannotations.annotations.NonParcelable;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.annotations.Parcelable;
 import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.SeekBarProgressChange;
@@ -181,6 +183,7 @@ import org.androidannotations.processing.OptionsItemProcessor;
 import org.androidannotations.processing.OptionsMenuItemProcessor;
 import org.androidannotations.processing.OptionsMenuProcessor;
 import org.androidannotations.processing.OrmLiteDaoProcessor;
+import org.androidannotations.processing.ParcelableProcessor;
 import org.androidannotations.processing.PrefProcessor;
 import org.androidannotations.processing.ProduceProcessor;
 import org.androidannotations.processing.ResProcessor;
@@ -249,11 +252,13 @@ import org.androidannotations.validation.LongClickValidator;
 import org.androidannotations.validation.ModelValidator;
 import org.androidannotations.validation.NoTitleValidator;
 import org.androidannotations.validation.NonConfigurationInstanceValidator;
+import org.androidannotations.validation.NonParcelableValidator;
 import org.androidannotations.validation.OnActivityResultValidator;
 import org.androidannotations.validation.OptionsItemValidator;
 import org.androidannotations.validation.OptionsMenuItemValidator;
 import org.androidannotations.validation.OptionsMenuValidator;
 import org.androidannotations.validation.OrmLiteDaoValidator;
+import org.androidannotations.validation.ParcelableValidator;
 import org.androidannotations.validation.PrefValidator;
 import org.androidannotations.validation.ProduceValidator;
 import org.androidannotations.validation.ResValidator;
@@ -527,6 +532,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new OnActivityResultValidator(processingEnv, rClass));
 		modelValidator.register(new HierarchyViewerSupportValidator(processingEnv, androidManifest));
 
+		modelValidator.register(new ParcelableValidator(processingEnv, rClass));
+		modelValidator.register(new NonParcelableValidator(processingEnv, rClass));
+
 		return modelValidator;
 	}
 
@@ -627,6 +635,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		modelProcessor.register(new OnActivityResultProcessor(processingEnv, rClass));
 		modelProcessor.register(new HierarchyViewerSupportProcessor());
+
+		modelProcessor.register(new ParcelableProcessor(processingEnv));
+
 		return modelProcessor;
 	}
 
@@ -745,7 +756,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					OnActivityResult.class, //
 					HierarchyViewerSupport.class, //
 					CheckedChange.class, //
-					FocusChange.class //
+					FocusChange.class, //
+					Parcelable.class, //
+					NonParcelable.class //
 			};
 
 			Set<String> set = new HashSet<String>(annotationClassesArray.length);
