@@ -73,13 +73,6 @@ public class ParcelableProcessor implements GeneratingElementProcessor {
 		String beanQualifiedName = typeElement.getQualifiedName().toString();
 		String generatedBeanQualifiedName = beanQualifiedName + GENERATION_SUFFIX;
 
-		// Annotated model
-		// String annotatedClassQualifiedName =
-		// typeElement.getQualifiedName().toString();
-		//
-		// String subClassQualifiedName = annotatedClassQualifiedName +
-		// ModelConstants.GENERATION_SUFFIX;
-
 		JClass annotatedClass = codeModel.directClass(beanQualifiedName);
 		JClass subClass = codeModel.directClass(generatedBeanQualifiedName);
 
@@ -87,13 +80,6 @@ public class ParcelableProcessor implements GeneratingElementProcessor {
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
 		generatedClass._extends(annotatedClass);
 		generatedClass._implements(android.os.Parcelable.class);
-
-		EBeanHolder holder = eBeansHolder.create(element, Parcelable.class, generatedClass);
-
-		// holder.eBean = codeModel._class(JMod.PUBLIC | JMod.FINAL,
-		// subClassQualifiedName, ClassType.CLASS);
-		// holder.eBean._extends(annotatedClass);
-		// holder.eBean._implements(Parcelable.class);
 
 		// Get all suitable fields
 		List<VariableElement> suitableVariables = getSuitableVariable(typeElement);
@@ -111,7 +97,7 @@ public class ParcelableProcessor implements GeneratingElementProcessor {
 			if (isParcelable(boxedClassname)) {
 				beanCBody.directStatement(suitableElement.getSimpleName() + " = new " + boxedClassname + ModelConstants.GENERATION_SUFFIX + "(bean." + suitableElement.getSimpleName() + ");");
 			}
-			// Non Parcelable cases
+			// Non Parcelable case
 			else {
 				beanCBody.directStatement(suitableElement.getSimpleName() + " = bean." + suitableElement.getSimpleName() + ";");
 			}
@@ -163,12 +149,9 @@ public class ParcelableProcessor implements GeneratingElementProcessor {
 	 */
 	private String getBoxedClass(JCodeModel codeModel, VariableElement variable) {
 		TypeMirror typeMirror = variable.asType();
-		if (typeMirror instanceof PrimitiveType) {
-			TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(typeMirror.toString());
-			if (typeElement != null) {
-				return typeElement.asType().toString();
-			}
-			return null;
+		if (typeMirror.getKind().isPrimitive()) {
+			TypeElement boxedElement = annotationHelper.getBoxedClass((PrimitiveType) typeMirror);
+			return boxedElement.asType().toString();
 		}
 		return typeMirror.toString();
 	}
@@ -205,7 +188,7 @@ public class ParcelableProcessor implements GeneratingElementProcessor {
 			// Generate only if @NonParcelable is not present
 			if (fieldElement.getAnnotation(NonParcelable.class) == null) {
 				// Verify if the field is not private nor transient
-				if (!annotationHelper.isPrivate(fieldElement)) { // && !annotationHelper.isTransient(fieldElement)) {
+				if (!annotationHelper.isPrivate(fieldElement) && !annotationHelper.isTransient(fieldElement)) {
 					result.add(fieldElement);
 				}
 			}
