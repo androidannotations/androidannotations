@@ -28,8 +28,6 @@ import org.androidannotations.rclass.IRClass;
  * The element validor which validates the @Parcelable annotation.<br/>
  * This annotation is validated if:<br/>
  * <li>The class, where the annotation is used, is not final</li> <br/>
- * 
- * @author Eric Taix
  */
 public class ParcelableValidator implements ElementValidator {
 

@@ -30,8 +30,6 @@ import org.androidannotations.rclass.IRClass;
  * This annotation is validated if:<br/>
  * <li>The enclosing class has the @Parcelable annotation</li> <li>The field has
  * a declared type</li> <li>The field is not private</li> <br/>
- * 
- * @author Eric Taix
  */
 public class NonParcelableValidator implements ElementValidator {
 
@@ -52,8 +50,7 @@ public class NonParcelableValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		// validatorHelper.enclosingElementHasParcelableAnnotation(element,
-		// validatedElements, valid);
+		validatorHelper.enclosingElementHasParcelableAnnotation(element, validatedElements, valid);
 
 		TypeMirror uiFieldTypeMirror = element.asType();
 

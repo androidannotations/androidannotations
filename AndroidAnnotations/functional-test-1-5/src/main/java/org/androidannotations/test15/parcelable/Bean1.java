@@ -16,4 +16,13 @@ public class Bean1 {
 	String nonParcelable;
 	private String privateStringField;
 	transient int transientIntField;
+	
+	public String getPrivateStringField() {
+		return privateStringField;
+	}
+	public void setPrivateStringField(String privateStringField) {
+		this.privateStringField = privateStringField;
+	}
+	
+	
 }

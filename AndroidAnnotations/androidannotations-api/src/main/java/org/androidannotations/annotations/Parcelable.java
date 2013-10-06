@@ -28,7 +28,8 @@ import java.lang.annotation.Target;
  * <li>Only attributes with protected or public visibility will be used</li> <li>
  * An attributes with @NonParcelable annotation will be discard</li> <li>A class
  * with @Parcelable annotation but which also implements {@link Parcelable}
- * interface will be discard</li>
+ * interface will be discard</li><li>A transient attribut will not be
+ * transformed</li>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

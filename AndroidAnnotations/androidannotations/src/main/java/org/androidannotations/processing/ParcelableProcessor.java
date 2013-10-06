@@ -50,8 +50,6 @@ import com.sun.codemodel.JVar;
 
 /**
  * Generates the code for elements which are annotated with @Parcelable
- * 
- * @author Eric Taix
  */
 public class ParcelableProcessor implements GeneratingElementProcessor {
 
