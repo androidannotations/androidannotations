@@ -46,21 +46,18 @@ public class RestTest extends AAProcessorTestHelper {
 	@Test
 	public void client_with_return_type() throws IOException {
 		CompileResult result = compileFiles(ClientWithResponseEntity.class);
-		assertCompilationErrorOn(ClientWithResponseEntity.class, "@Put", result);
-		assertCompilationErrorOn(ClientWithResponseEntity.class, "@Delete", result);
 		assertCompilationErrorOn(ClientWithResponseEntity.class, "@Options", result);
 		assertCompilationErrorOn(ClientWithResponseEntity.class, "@Head", result);
-		assertCompilationErrorCount(4, result);
+		assertCompilationErrorCount(2, result);
 	}
 
 	@Test
 	public void client_with_request_entity() throws IOException {
 		CompileResult result = compileFiles(ClientWithRequestEntity.class);
-		assertCompilationErrorOn(ClientWithRequestEntity.class, "@Delete", result);
 		assertCompilationErrorOn(ClientWithRequestEntity.class, "@Get", result);
 		assertCompilationErrorOn(ClientWithRequestEntity.class, "@Head", result);
 		assertCompilationErrorOn(ClientWithRequestEntity.class, "@Options", result);
-		assertCompilationErrorCount(4, result);
+		assertCompilationErrorCount(3, result);
 	}
 
 	@Test

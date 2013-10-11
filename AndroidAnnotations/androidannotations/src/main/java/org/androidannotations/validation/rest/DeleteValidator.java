@@ -56,9 +56,9 @@ public class DeleteValidator implements ElementValidator {
 
 		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
 
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
+		validatorHelper.doesNotReturnPrimitive(executableElement, valid);
 
-		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter(executableElement, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);
 
 		return valid.isValid();
 	}
