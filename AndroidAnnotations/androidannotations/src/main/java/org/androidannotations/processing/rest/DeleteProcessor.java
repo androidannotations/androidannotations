@@ -20,8 +20,6 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.rest.Delete;
 
-import com.sun.codemodel.JInvocation;
-
 public class DeleteProcessor extends MethodCrudProcessor {
 
 	public DeleteProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
@@ -39,8 +37,4 @@ public class DeleteProcessor extends MethodCrudProcessor {
 		return getAnnotation.value();
 	}
 
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(generateHttpEntityVar(methodHolder));
-	}
 }

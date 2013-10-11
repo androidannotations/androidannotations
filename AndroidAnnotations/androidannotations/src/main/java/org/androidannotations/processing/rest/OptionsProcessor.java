@@ -29,7 +29,6 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
 
 public class OptionsProcessor extends MethodProcessor {
 
@@ -61,11 +60,6 @@ public class OptionsProcessor extends MethodProcessor {
 		String urlSuffix = optionsAnnotation.value();
 
 		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, expectedClass, generatedReturnType, codeModel));
-	}
-
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(generateHttpEntityVar(methodHolder));
 	}
 
 	@Override

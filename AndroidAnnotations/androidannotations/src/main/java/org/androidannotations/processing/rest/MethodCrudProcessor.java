@@ -252,11 +252,6 @@ public abstract class MethodCrudProcessor extends MethodProcessor {
 	}
 
 	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(generateHttpEntityVar(methodHolder));
-	}
-
-	@Override
 	protected JInvocation addResponseEntityArg(JInvocation restCall, MethodProcessorHolder methodHolder) {
 		JClass expectedClass = methodHolder.getExpectedClass();
 
