@@ -34,13 +34,11 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.inject.matcher.Matchers;
 import com.xtremelabs.robolectric.Robolectric;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
@@ -238,7 +236,6 @@ public class MyServiceTest {
 
 	@Test
 	public void authenticatedRequests() {
-		
 		String xtValue = "1234";
 		String sjsaidValue = "5678";
 
@@ -265,7 +262,7 @@ public class MyServiceTest {
 			}
 		};
 		addPendingResponse("");
-		myService.removeEvent(0);
+		myService.removeEventWithRequires(0);
 		verify(restTemplate).exchange(Mockito.anyString(), eq(HttpMethod.DELETE), argThat(matcher), Mockito.<Class<Object>> any(), Mockito.<Map<String, ?>> any());
 	}
 }

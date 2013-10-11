@@ -106,7 +106,7 @@ public interface MyService {
 
 	@Get("/events/{year}/{location}")
 	GenericEvent<String> getEventsGenericString(String location, int year) throws RestClientException;
-	
+
 	@Get("/events/{year}/{location}")
 	GenericEvent<Integer> getEventsGenericInteger(String location, int year) throws RestClientException;
 
@@ -127,9 +127,9 @@ public interface MyService {
 	// *** POST ***
 	@RequiresHeader("SomeFancyHeader")
 	@Post("/login")
-    @SetsCookie({"xt", "sjsaid"})
+	@SetsCookie({ "xt", "sjsaid" })
 	void authenticate();
-	
+
 	@RequiresAuthentication
 	@Post("http://company.com/client/ping")
 	void ping();
@@ -191,7 +191,7 @@ public interface MyService {
 
 	@Put("/events/{id}")
 	void updateEvent(Event event, int id);
-	
+
 	@Put("/events/{date}")
 	void updateEvent(long date);
 
@@ -200,13 +200,21 @@ public interface MyService {
 
 	// *** DELETE ***
 
-	// url variables are mapped to method parameter names.
 	@Delete("/events/{id}")
-	@RequiresHeader("SomeFancyHeader")
 	void removeEvent(long id);
 
-	@Put("/events/{id}")
-	Event removeEventWithRespons(long id);
+	@Delete("/events/{id}")
+	Event removeEventWithResponse(long id);
+
+	@Delete("/events/{id}?myCookieInUrl={myCookieInUrl}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void removeEventWithRequires(long id);
+
+	@Delete("/events/{id}")
+	@RequiresAuthentication
+	void removeEventWithAuthentication(long id);
 
 	// *** HEAD ***
 
@@ -216,6 +224,16 @@ public interface MyService {
 	@Head("/events/{date}")
 	HttpHeaders getEventheaders(long date);
 
+	@Head("/events/{date}?myCookieInUrl={myCookieInUrl}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	HttpHeaders getEventheadersWithRequires(long date);
+
+	@Head("/events/{date}")
+	@RequiresAuthentication
+	HttpHeaders getEventheadersWithAuthentication(long date);
+
 	// *** OPTIONS ***
 
 	@Options("/events/{year}/{location}")
@@ -224,24 +242,34 @@ public interface MyService {
 	@Options("/events/{date}")
 	Set<HttpMethod> getEventOptions(long date);
 
+	@Options("/events/{date}?myCookieInUrl={myCookieInUrl}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	Set<HttpMethod> getEventOptionsWithRequires(long date);
+
+	@Options("/events/{date}")
+	@RequiresAuthentication
+	Set<HttpMethod> getEventOptionsWithAuthentication(long date);
+
 	// if you need to add some configuration to the Spring RestTemplate.
 	RestTemplate getRestTemplate();
 
 	void setRestTemplate(RestTemplate restTemplate);
 
 	void setRootUrl(String test);
-    
-    String getRootUrl();
-	
+
+	String getRootUrl();
+
 	void setCookie(String cookieName, String value);
-	
+
 	String getCookie(String cookieName);
-	
+
 	void setHeader(String headerName, String value);
-	
+
 	String getHeader(String headerName);
-	
+
 	void setAuthentication(HttpAuthentication auth);
-	
+
 	void setHttpBasicAuth(String username, String password);
 }
