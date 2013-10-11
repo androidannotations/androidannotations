@@ -191,15 +191,21 @@ public interface MyService {
 
 	@Put("/events/{id}")
 	void updateEvent(Event event, int id);
-
+	
 	@Put("/events/{date}")
 	void updateEvent(long date);
+
+	@Put("/events/{date}")
+	Event updateEventWithResponse(long date);
 
 	// *** DELETE ***
 
 	// url variables are mapped to method parameter names.
 	@Delete("/events/{id}")
 	void removeEvent(long id);
+
+	@Put("/events/{id}")
+	Event removeEventWithRespons(long id);
 
 	// *** HEAD ***
 
