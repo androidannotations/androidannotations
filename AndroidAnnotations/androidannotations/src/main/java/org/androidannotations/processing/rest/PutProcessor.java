@@ -20,7 +20,7 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.rest.Put;
 
-public class PutProcessor extends GetPostProcessor {
+public class PutProcessor extends MethodCrudProcessor {
 
 	public PutProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		super(processingEnv, restImplementationsHolder);

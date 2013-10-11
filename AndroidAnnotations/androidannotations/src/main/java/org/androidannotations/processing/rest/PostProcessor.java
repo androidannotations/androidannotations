@@ -20,7 +20,7 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.rest.Post;
 
-public class PostProcessor extends GetPostProcessor {
+public class PostProcessor extends MethodCrudProcessor {
 
 	public PostProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationHolder) {
 		super(processingEnv, restImplementationHolder);

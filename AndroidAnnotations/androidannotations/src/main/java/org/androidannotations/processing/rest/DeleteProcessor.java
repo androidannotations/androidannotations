@@ -22,7 +22,7 @@ import org.androidannotations.annotations.rest.Delete;
 
 import com.sun.codemodel.JInvocation;
 
-public class DeleteProcessor extends GetPostProcessor {
+public class DeleteProcessor extends MethodCrudProcessor {
 
 	public DeleteProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		super(processingEnv, restImplementationsHolder);
