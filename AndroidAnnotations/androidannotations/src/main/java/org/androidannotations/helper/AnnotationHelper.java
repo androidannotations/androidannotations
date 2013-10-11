@@ -255,6 +255,12 @@ public class AnnotationHelper {
 		 * Annotation resName() parameter can be a String or a String[]
 		 */
 		Object annotationResName = extractAnnotationParameter(element, annotationName, "resName");
+		if (annotationResName == null) {
+			// This case happened during refactoring, if the id has been changed
+			// in the layout and compiler throws an error on the annotation
+			// because the constant doesn't exists anymore
+			return new String[0];
+		}
 
 		String[] resNames;
 		if (annotationResName.getClass().isArray()) {
@@ -271,6 +277,12 @@ public class AnnotationHelper {
 		 * Annotation value() parameter can be an int or an int[]
 		 */
 		Object annotationValue = extractAnnotationParameter(element, annotationName, "value");
+		if (annotationValue == null) {
+			// This case happened during refactoring, if the id has been changed
+			// in the layout and compiler throws an error on the annotation
+			// because the constant doesn't exists anymore
+			return new int[0];
+		}
 
 		int[] values;
 		if (annotationValue.getClass().isArray()) {
@@ -386,6 +398,12 @@ public class AnnotationHelper {
 	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
 		Element enclosingElement = element.getEnclosingElement();
 		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
+	}
+
+	public boolean hasOneOfClassAnnotations(Element element, Class<? extends Annotation> validAnnotation) {
+		List<Class<? extends Annotation>> annotations = new ArrayList<Class<? extends Annotation>>();
+		annotations.add(validAnnotation);
+		return hasOneOfClassAnnotations(element, annotations);
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations) {

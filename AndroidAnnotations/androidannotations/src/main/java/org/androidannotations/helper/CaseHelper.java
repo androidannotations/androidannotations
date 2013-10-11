@@ -60,4 +60,14 @@ public class CaseHelper {
 		return camelCaseToSnakeCase(camelCase).toUpperCase();
 	}
 
+	public static String camelCaseToUpperSnakeCase(String prefix, String camelCase, String suffix) {
+		if (prefix != null && !camelCase.startsWith(prefix)) {
+			camelCase = prefix + "_" + camelCase;
+		}
+		if (suffix != null && !camelCase.toLowerCase().endsWith(suffix.toLowerCase())) {
+			camelCase = camelCase + "_" + suffix;
+		}
+		return camelCaseToUpperSnakeCase(camelCase);
+	}
+
 }

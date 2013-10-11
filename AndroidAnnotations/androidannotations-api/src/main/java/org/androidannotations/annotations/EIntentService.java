@@ -13,26 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15;
+package org.androidannotations.annotations;
 
-import static org.androidannotations.test15.MyAssertions.assertThat;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import android.view.View;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
-public class EmptyActivityWithoutLayoutTest {
-
-	@Test
-	public void shouldHaveNoLayoutAfterCreate() {
-		EmptyActivityWithoutLayout_ activity = new EmptyActivityWithoutLayout_();
-
-		activity.onCreate(null);
-		activity.setContentView(new View(activity));
-
-		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
-	}
-
+/**
+ * Use this annotation to enhance an Android IntentService
+ */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
+public @interface EIntentService {
 }

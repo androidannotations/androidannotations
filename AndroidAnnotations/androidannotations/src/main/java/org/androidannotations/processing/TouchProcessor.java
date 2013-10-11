@@ -23,6 +23,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.Touch;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
@@ -65,9 +66,21 @@ public class TouchProcessor extends AbstractListenerProcessor {
 		JVar eventParam = listenerMethod.param(classes.MOTION_EVENT, "event");
 		boolean hasItemParameter = parameters.size() == 2;
 
-		call.arg(eventParam);
-		if (hasItemParameter) {
+		VariableElement first = parameters.get(0);
+		String firstType = first.asType().toString();
+		if (firstType.equals(CanonicalNameConstants.MOTION_EVENT)) {
+			call.arg(eventParam);
+		} else {
 			call.arg(viewParam);
+		}
+		if (hasItemParameter) {
+			VariableElement second = parameters.get(1);
+			String secondType = second.asType().toString();
+			if (secondType.equals(CanonicalNameConstants.MOTION_EVENT)) {
+				call.arg(eventParam);
+			} else {
+				call.arg(viewParam);
+			}
 		}
 	}
 

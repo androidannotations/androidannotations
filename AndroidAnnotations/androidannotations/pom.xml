@@ -77,7 +77,12 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
 		</plugins>
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -88,7 +93,14 @@
 			<resource>
 				<directory>src/main/java</directory>
 				<includes>
-				    <include>org/androidannotations/api/**</include>
+					<include>org/androidannotations/api/**</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
 				</includes>
 			</resource>
 		</resources>

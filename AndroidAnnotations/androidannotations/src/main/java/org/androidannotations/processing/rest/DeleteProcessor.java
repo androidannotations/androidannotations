@@ -17,15 +17,12 @@ package org.androidannotations.processing.rest;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.processing.EBeanHolder;
 
-import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JInvocation;
 
-public class DeleteProcessor extends MethodProcessor {
+public class DeleteProcessor extends GetPostProcessor {
 
 	public DeleteProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		super(processingEnv, restImplementationsHolder);
@@ -37,14 +34,9 @@ public class DeleteProcessor extends MethodProcessor {
 	}
 
 	@Override
-	public void process(Element element, JCodeModel codeModel, EBeanHolder holder) throws Exception {
-
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		Delete deleteAnnotation = element.getAnnotation(Delete.class);
-		String urlSuffix = deleteAnnotation.value();
-
-		generateRestTemplateCallBlock(new MethodProcessorHolder(holder, executableElement, urlSuffix, null, null, codeModel));
+	public String retrieveUrlSuffix(Element element) {
+		Delete getAnnotation = element.getAnnotation(Delete.class);
+		return getAnnotation.value();
 	}
 
 	@Override

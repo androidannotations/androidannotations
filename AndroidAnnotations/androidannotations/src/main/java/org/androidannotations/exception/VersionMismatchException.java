@@ -13,28 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.exception;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
+public class VersionMismatchException extends Exception {
 
-import org.androidannotations.annotations.rest.Put;
+	private static final long serialVersionUID = 1457334941140141471L;
 
-public class PutProcessor extends GetPostProcessor {
-
-	public PutProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
-		super(processingEnv, restImplementationsHolder);
+	public VersionMismatchException() {
+		super();
 	}
 
-	@Override
-	public String getTarget() {
-		return Put.class.getName();
+	public VersionMismatchException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	@Override
-	public String retrieveUrlSuffix(Element element) {
-		Put getAnnotation = element.getAnnotation(Put.class);
-		return getAnnotation.value();
+	public VersionMismatchException(String message) {
+		super(message);
+	}
+
+	public VersionMismatchException(Throwable cause) {
+		super(cause);
 	}
 
 }

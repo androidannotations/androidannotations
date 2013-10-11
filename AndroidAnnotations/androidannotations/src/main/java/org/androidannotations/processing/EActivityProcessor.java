@@ -201,7 +201,7 @@ public class EActivityProcessor implements GeneratingElementProcessor {
 
 		}
 
-		aptCodeModelHelper.addActivityIntentBuilder(codeModel, holder);
+		aptCodeModelHelper.addActivityIntentBuilder(codeModel, holder, annotationHelper);
 
 	}
 

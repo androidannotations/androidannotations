@@ -13,28 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.processing.rest;
+package org.androidannotations.exception;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import org.androidannotations.annotations.rest.Put;
+public class ProcessingException extends Exception {
 
-public class PutProcessor extends GetPostProcessor {
+	private static final long serialVersionUID = -1282996599471872615L;
 
-	public PutProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
-		super(processingEnv, restImplementationsHolder);
+	private Element element;
+
+	public ProcessingException(Throwable cause, Element element) {
+		super(cause);
+		this.element = element;
 	}
 
-	@Override
-	public String getTarget() {
-		return Put.class.getName();
+	public ProcessingException(String message, Throwable cause, Element element) {
+		super(message, cause);
+		this.element = element;
 	}
 
-	@Override
-	public String retrieveUrlSuffix(Element element) {
-		Put getAnnotation = element.getAnnotation(Put.class);
-		return getAnnotation.value();
+	public Element getElement() {
+		return element;
 	}
 
 }

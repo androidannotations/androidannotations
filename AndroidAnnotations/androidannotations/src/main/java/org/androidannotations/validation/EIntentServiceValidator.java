@@ -13,34 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.validation.rest;
+package org.androidannotations.validation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.helper.RestAnnotationHelper;
+import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.validation.ElementValidator;
-import org.androidannotations.validation.IsValid;
 
-public class DeleteValidator implements ElementValidator {
+public class EIntentServiceValidator implements ElementValidator {
 
-	private ValidatorHelper validatorHelper;
-	private RestAnnotationHelper restAnnotationHelper;
+	private final ValidatorHelper validatorHelper;
+	private final AndroidManifest androidManifest;
 
-	public DeleteValidator(ProcessingEnvironment processingEnv) {
+	public EIntentServiceValidator(ProcessingEnvironment processingEnv, AndroidManifest androidManifest) {
+		this.androidManifest = androidManifest;
 		TargetAnnotationHelper annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 		validatorHelper = new ValidatorHelper(annotationHelper);
-		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
 	}
 
 	@Override
 	public String getTarget() {
-		return Delete.class.getName();
+		return EIntentService.class.getName();
 	}
 
 	@Override
@@ -48,17 +46,13 @@ public class DeleteValidator implements ElementValidator {
 
 		IsValid valid = new IsValid();
 
-		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
+		validatorHelper.extendsIntentService(element, valid);
 
-		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, valid);
+		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element, valid, ServiceAction.class);
 
-		ExecutableElement executableElement = (ExecutableElement) element;
+		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.throwsOnlyRestClientException(executableElement, valid);
-
-		validatorHelper.doesNotReturnPrimitive(executableElement, valid);
-
-		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(executableElement, valid);
+		validatorHelper.componentRegistered(element, androidManifest, valid);
 
 		return valid.isValid();
 	}

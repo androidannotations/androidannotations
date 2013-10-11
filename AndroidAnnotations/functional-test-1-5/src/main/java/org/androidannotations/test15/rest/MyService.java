@@ -191,9 +191,12 @@ public interface MyService {
 
 	@Put("/events/{id}")
 	void updateEvent(Event event, int id);
-
+	
 	@Put("/events/{date}")
 	void updateEvent(long date);
+
+	@Put("/events/{date}")
+	Event updateEventWithResponse(long date);
 
 	// *** DELETE ***
 
@@ -201,6 +204,9 @@ public interface MyService {
 	@Delete("/events/{id}")
 	@RequiresHeader("SomeFancyHeader")
 	void removeEvent(long id);
+
+	@Put("/events/{id}")
+	Event removeEventWithRespons(long id);
 
 	// *** HEAD ***
 

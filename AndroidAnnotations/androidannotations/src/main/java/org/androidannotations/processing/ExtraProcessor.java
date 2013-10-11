@@ -18,23 +18,16 @@ package org.androidannotations.processing;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
-import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -50,11 +43,9 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPrimitiveType;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
-import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class ExtraProcessor implements DecoratingElementProcessor {
@@ -87,19 +78,14 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 		Classes classes = holder.classes();
 
 		if (!isPrimitive && holder.cast == null) {
-			generateCastMethod(codeModel, holder);
+			helper.addCastMethod(codeModel, holder);
 		}
 
 		if (holder.extras == null) {
 			injectExtras(holder, codeModel);
 		}
 
-		String staticFieldName;
-		if (fieldName.endsWith("Extra")) {
-			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName);
-		} else {
-			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName + "Extra");
-		}
+		String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, fieldName, "Extra");
 
 		JFieldVar extraKeyField = holder.generatedClass.field(PUBLIC | STATIC | FINAL, classes.STRING, staticFieldName, lit(extraKey));
 
@@ -137,51 +123,13 @@ public class ExtraProcessor implements DecoratingElementProcessor {
 				// flags()
 				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, fieldName);
 
-				boolean castToSerializable = false;
-				boolean castToParcelable = false;
-				TypeMirror extraType = elementType;
-				if (extraType.getKind() == TypeKind.DECLARED) {
-					Elements elementUtils = processingEnv.getElementUtils();
-					Types typeUtils = processingEnv.getTypeUtils();
-					TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
-					if (!typeUtils.isSubtype(extraType, parcelableType)) {
-						TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
-						if (!typeUtils.isSubtype(extraType, stringType)) {
-							castToSerializable = true;
-						}
-					} else {
-						TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
-						if (typeUtils.isSubtype(extraType, serializableType)) {
-							castToParcelable = true;
-						}
-					}
-				}
-				JClass paramClass = helper.typeMirrorToJClass(extraType, holder);
-				JVar extraParam = method.param(paramClass, fieldName);
+				helper.addIntentBuilderPutExtraMethod(codeModel, holder, helper, processingEnv, method, elementType, fieldName, extraKeyField);
+
 				JBlock body = method.body();
-				JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKeyField);
-				if (castToSerializable) {
-					invocation.arg(cast(classes.SERIALIZABLE, extraParam));
-				} else if (castToParcelable) {
-					invocation.arg(cast(classes.PARCELABLE, extraParam));
-				} else {
-					invocation.arg(extraParam);
-				}
 				body._return(_this());
 			}
 		}
 
-	}
-
-	private void generateCastMethod(JCodeModel codeModel, EBeanHolder holder) {
-		JType objectType = codeModel._ref(Object.class);
-		JMethod method = holder.generatedClass.method(JMod.PRIVATE, objectType, "cast_");
-		JTypeVar genericType = method.generify("T");
-		method.type(genericType);
-		JVar objectParam = method.param(objectType, "object");
-		method.annotate(SuppressWarnings.class).param("value", "unchecked");
-		method.body()._return(JExpr.cast(genericType, objectParam));
-		holder.cast = method;
 	}
 
 	/**

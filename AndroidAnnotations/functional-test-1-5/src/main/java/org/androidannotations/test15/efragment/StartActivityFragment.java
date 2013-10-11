@@ -13,26 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15;
+package org.androidannotations.test15.efragment;
 
-import static org.androidannotations.test15.MyAssertions.assertThat;
+import android.app.Fragment;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.test15.ExtraInjectedActivity_;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import android.view.View;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
-public class EmptyActivityWithoutLayoutTest {
-
-	@Test
-	public void shouldHaveNoLayoutAfterCreate() {
-		EmptyActivityWithoutLayout_ activity = new EmptyActivityWithoutLayout_();
-
-		activity.onCreate(null);
-		activity.setContentView(new View(activity));
-
-		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
-	}
-
+@EFragment
+public class StartActivityFragment extends Fragment {
+    void startActivity() {
+        ExtraInjectedActivity_.intent(this).start();
+    }
 }
