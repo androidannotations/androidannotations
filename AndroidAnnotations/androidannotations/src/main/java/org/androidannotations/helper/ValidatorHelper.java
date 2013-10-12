@@ -55,6 +55,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.Parcelable;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
@@ -184,6 +185,11 @@ public class ValidatorHelper {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a non public element");
 		}
+	}
+
+	public void enclosingElementHasParcelableAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasClassAnnotation(element, enclosingElement, validatedElements, Parcelable.class, valid);
 	}
 
 	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {

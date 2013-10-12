@@ -35,6 +35,7 @@ import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -55,6 +56,16 @@ public class AnnotationHelper {
 
 	public AnnotationHelper(ProcessingEnvironment processingEnv) {
 		this.processingEnv = processingEnv;
+	}
+
+	/**
+	 * This method returns the boxed class of a primitive type
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public TypeElement getBoxedClass(PrimitiveType type) {
+		return processingEnv.getTypeUtils().boxedClass(type);
 	}
 
 	/**
@@ -112,6 +123,10 @@ public class AnnotationHelper {
 
 	public void printError(Element element, String message) {
 		processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
+	}
+
+	public boolean isTransient(Element element) {
+		return element.getModifiers().contains(Modifier.TRANSIENT);
 	}
 
 	public boolean isPrivate(Element element) {
