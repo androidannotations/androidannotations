@@ -20,7 +20,7 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.rest.Delete;
 
-public class DeleteProcessor extends GetPostProcessor {
+public class DeleteProcessor extends MethodCrudProcessor {
 
 	public DeleteProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		super(processingEnv, restImplementationsHolder);

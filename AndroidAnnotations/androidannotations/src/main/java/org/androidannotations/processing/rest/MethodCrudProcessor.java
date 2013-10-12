@@ -46,7 +46,7 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JPackage;
 
-public abstract class GetPostProcessor extends MethodProcessor {
+public abstract class MethodCrudProcessor extends MethodProcessor {
 
 	protected EBeanHolder holder;
 
@@ -57,7 +57,7 @@ public abstract class GetPostProcessor extends MethodProcessor {
 
 	protected APTCodeModelHelper helper;
 
-	public GetPostProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
+	public MethodCrudProcessor(ProcessingEnvironment processingEnv, RestImplementationsHolder restImplementationsHolder) {
 		super(processingEnv, restImplementationsHolder);
 		helper = new APTCodeModelHelper();
 	}
@@ -249,11 +249,6 @@ public abstract class GetPostProcessor extends MethodProcessor {
 			}
 		}
 		return plainName;
-	}
-
-	@Override
-	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(generateHttpEntityVar(methodHolder));
 	}
 
 	@Override

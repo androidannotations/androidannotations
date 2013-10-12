@@ -182,12 +182,10 @@ public abstract class MethodProcessor implements DecoratingElementProcessor {
 	}
 
 	/**
-	 * Add the HttpEntity attribute to restTemplate.exchange() method. By
-	 * default, the value will be <code>null</code> (for DELETE, HEAD and
-	 * OPTIONS method type)
+	 * Add the HttpEntity attribute to restTemplate.exchange() method.
 	 */
 	protected JInvocation addHttpEntityVar(JInvocation restCall, MethodProcessorHolder methodHolder) {
-		return restCall.arg(JExpr._null());
+		return restCall.arg(generateHttpEntityVar(methodHolder));
 	}
 
 	/**
