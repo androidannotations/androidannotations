@@ -58,7 +58,6 @@ public interface MyService {
 	@Accept("application/json")
 	Event[] getEventsArray(String location, int year);
 
-
 	@Get("/events/{year}/{year}")
 	@Accept(MediaType.APPLICATION_JSON)
 	Event[][] urlWithAParameterDeclaredTwice(int year);
@@ -72,16 +71,13 @@ public interface MyService {
 	/*
 	 * You may (or may not) declare throwing RestClientException (as a reminder, since it's a RuntimeException), but nothing else.
 	 */
-	ResponseEntity<EventList> getEvents2(String location, int year)
-			throws RestClientException;
+	ResponseEntity<EventList> getEvents2(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
-	ResponseEntity<Event[]> getEventsArray2(String location, int year)
-			throws RestClientException;
+	ResponseEntity<Event[]> getEventsArray2(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
-	ResponseEntity<Event[][]> getEventsArrayOfArrays2(String location, int year)
-			throws RestClientException;
+	ResponseEntity<Event[][]> getEventsArrayOfArrays2(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
 	List<Event> getEventsGenericsList(String location, int year) throws RestClientException;
@@ -197,6 +193,12 @@ public interface MyService {
 
 	@Put("/events/{date}")
 	Event updateEventWithResponse(long date);
+
+	@Put("/events/{date}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	Event updateEventWithRequires(long date);
 
 	// *** DELETE ***
 
