@@ -21,6 +21,10 @@ import static com.sun.codemodel.JExpr.lit;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import com.sun.codemodel.JCatchBlock;
+import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.api.BackgroundExecutor.Task;
@@ -60,7 +64,17 @@ public class BackgroundProcessor implements DecoratingElementProcessor {
 		JMethod executeMethod = anonymousTaskClass.method(JMod.PUBLIC, codeModel.VOID, "execute");
 		executeMethod.annotate(Override.class);
 
-		executeMethod.body().add( previousMethodBody );
+		// Catch exception in user code
+		JTryBlock tryBlock = executeMethod.body()._try();
+		tryBlock.body().add(previousMethodBody);
+		JCatchBlock catchBlock = tryBlock._catch(holder.classes().THROWABLE);
+		JVar caughtException = catchBlock.param("e");
+		JStatement uncaughtExceptionCall = holder.classes().THREAD
+				.staticInvoke("getDefaultUncaughtExceptionHandler")
+				.invoke("uncaughtException")
+				.arg(holder.classes().THREAD.staticInvoke("currentThread"))
+				.arg(caughtException);
+		catchBlock.body().add(uncaughtExceptionCall);
 
 		Background annotation = element.getAnnotation(Background.class);
 		String id = annotation.id();
