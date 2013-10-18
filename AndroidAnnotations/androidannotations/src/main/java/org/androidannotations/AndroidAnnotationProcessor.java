@@ -133,6 +133,8 @@ import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.ErrorHelper;
 import org.androidannotations.helper.Option;
 import org.androidannotations.helper.TimeStats;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AndroidRes;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
@@ -287,16 +289,19 @@ import org.androidannotations.validation.rest.RestValidator;
 @SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION, RESOURCE_PACKAGE_NAME_OPTION })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidAnnotationProcessor.class);
+
 	private final Properties properties = new Properties();
 	private final Properties propertiesApi = new Properties();
 	private final TimeStats timeStats = new TimeStats();
 	private final ErrorHelper errorHelper = new ErrorHelper();
-
 	private Set<String> supportedAnnotationNames;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);
+
+		LOGGER.warn("test: {}", processingEnv);
 
 		Messager messager = processingEnv.getMessager();
 
@@ -641,6 +646,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private void handleException(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, ProcessingException e) {
 		String errorMessage = errorHelper.getErrorMessage(processingEnv, e, getAAProcessorVersion());
+
+		LOGGER.error("Something went wront : {}", errorMessage);
 
 		Messager messager = processingEnv.getMessager();
 		messager.printMessage(Diagnostic.Kind.ERROR, errorMessage);
