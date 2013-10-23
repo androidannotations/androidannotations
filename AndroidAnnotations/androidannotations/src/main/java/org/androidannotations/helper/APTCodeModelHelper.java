@@ -298,15 +298,15 @@ public class APTCodeModelHelper {
 		return null;
 	}
 
-	public void addActivityIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper) throws Exception {
-		addIntentBuilder(codeModel, holder, annotationHelper, true);
+	public void addActivityIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper, boolean addFragmentIntent) throws Exception {
+		addIntentBuilder(codeModel, holder, annotationHelper, true, addFragmentIntent);
 	}
 
 	public void addServiceIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper) throws Exception {
-		addIntentBuilder(codeModel, holder, annotationHelper, false);
+		addIntentBuilder(codeModel, holder, annotationHelper, false, false);
 	}
 
-	private void addIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper, boolean isActivity) throws JClassAlreadyExistsException {
+	private void addIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper, boolean isActivity, boolean addFragmentIntent) throws JClassAlreadyExistsException {
 		JClass contextClass = holder.classes().CONTEXT;
 		JClass intentClass = holder.classes().INTENT;
 		JClass fragmentClass = holder.classes().FRAGMENT;
@@ -326,9 +326,10 @@ public class APTCodeModelHelper {
 				constructorBody.assign(contextField, constructorContextParam);
 				constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.generatedClass.dotclass()));
 			}
+
 			// Additional constructor for fragments (issue #541)
 			Elements elementUtils = annotationHelper.getElementUtils();
-			boolean fragmentInClasspath = elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
+			boolean fragmentInClasspath = addFragmentIntent && elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
 			boolean fragmentSupportInClasspath = elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
 
 			JFieldVar fragmentField = null;
