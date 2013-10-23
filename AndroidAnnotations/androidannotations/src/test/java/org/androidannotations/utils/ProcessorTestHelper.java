@@ -58,20 +58,20 @@ public class ProcessorTestHelper {
 	protected static final String SOURCE_FILE_SUFFIX = ".java";
 	protected static final String OUTPUT_DIRECTORY = "target/generated-test";
 
-	public static void assertGeneratedClassContains(File output, String value) {
+	public static void assertGeneratedClassMatches(File output, String value) {
 		String[] outputContent = getContents(output);
 		for (String line : outputContent) {
-			if (line.contains(value)) {
+			if (line.matches(value)) {
 				return;
 			}
 		}
 		fail("Expected value \"" + value + "\" couldn't be found in file " + output.getAbsolutePath());
 	}
 
-	public static void assertGeneratedClassDoesntContains(File output, String value) {
+	public static void assertGeneratedClassDoesntMatches(File output, String value) {
 		String[] outputContent = getContents(output);
 		for (String line : outputContent) {
-			if (line.contains(value)) {
+			if (line.matches(value)) {
 				fail("Value \"" + value + "\" shouldn't be in file " + output.getAbsolutePath());
 			}
 		}

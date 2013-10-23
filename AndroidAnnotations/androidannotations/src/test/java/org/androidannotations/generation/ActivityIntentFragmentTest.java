@@ -10,8 +10,8 @@ import org.junit.Test;
 public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 
 	// Couldn't find better than this for now
-	private static final String INTENT_FRAGMENT_SIGNATURE = "public static ActivityInManifest_.IntentBuilder_ intent(Fragment fragment)";
-	private static final String INTENT_FRAGMENT_SUPPORT_SIGNATURE = "public static ActivityInManifest_.IntentBuilder_ intent(Fragment supportFragment)";
+	private static final String INTENT_FRAGMENT_SIGNATURE = ".*public static ActivityInManifest_\\.IntentBuilder_ intent\\((android\\.app\\.)?Fragment fragment\\).*";
+	private static final String INTENT_FRAGMENT_SUPPORT_SIGNATURE = ".*public static ActivityInManifest_\\.IntentBuilder_ intent\\((android\\.support\\.v4\\.app\\.)?Fragment supportFragment\\).*";
 
 	@Before
 	public void setup() {
@@ -25,7 +25,7 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
-		assertGeneratedClassDoesntContains(generatedFile, INTENT_FRAGMENT_SIGNATURE);
+		assertGeneratedClassDoesntMatches(generatedFile, INTENT_FRAGMENT_SIGNATURE);
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
-		assertGeneratedClassDoesntContains(generatedFile, INTENT_FRAGMENT_SIGNATURE);
+		assertGeneratedClassDoesntMatches(generatedFile, INTENT_FRAGMENT_SIGNATURE);
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
-		assertGeneratedClassContains(generatedFile, INTENT_FRAGMENT_SIGNATURE);
+		assertGeneratedClassMatches(generatedFile, INTENT_FRAGMENT_SIGNATURE);
 	}
 
 	@Test
@@ -59,7 +59,19 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
-		assertGeneratedClassContains(generatedFile, INTENT_FRAGMENT_SUPPORT_SIGNATURE);
+		assertGeneratedClassMatches(generatedFile, INTENT_FRAGMENT_SUPPORT_SIGNATURE);
+	}
+
+	@Test
+	public void activity_intentFragment_minSdkJB_compileWithJBAndSupport() {
+		// To simulate compilation with SDK > 11, we add Fragment in classpath
+		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinJB.xml");
+		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "Fragment.java"), toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), ActivityInManifest.class);
+		File generatedFile = toGeneratedFile(ActivityInManifest.class);
+
+		assertCompilationSuccessful(result);
+		assertGeneratedClassMatches(generatedFile, INTENT_FRAGMENT_SIGNATURE);
+		assertGeneratedClassMatches(generatedFile, INTENT_FRAGMENT_SUPPORT_SIGNATURE);
 	}
 
 }
