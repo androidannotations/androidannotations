@@ -26,22 +26,28 @@ public class AndroidManifest {
 	private final String applicationClassName;
 	private final boolean libraryProject;
 	private final boolean debugabble;
+	private final int minSdkVersion;
+	private final int maxSdkVersion;
+	private final int targetSdkVersion;
 
-	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, boolean debugabble) {
-		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, permissionQualifiedNames, debugabble);
+	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debugabble) {
+		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, debugabble);
 	}
 
-	public static AndroidManifest createLibraryManifest(String applicationPackage) {
-		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList(), Collections.<String> emptyList(), false);
+	public static AndroidManifest createLibraryManifest(String applicationPackage, int minSdkVersion, int maxSdkVersion, int targetSdkVersion) {
+		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList(), Collections.<String> emptyList(), minSdkVersion, maxSdkVersion, targetSdkVersion, false);
 	}
 
-	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, boolean debuggable) {
+	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debuggable) {
 		this.libraryProject = libraryProject;
 		this.applicationPackage = applicationPackage;
 		this.applicationClassName = applicationClassName;
 		this.componentQualifiedNames = componentQualifiedNames;
 		this.permissionQualifiedNames = permissionQualifiedNames;
-		this.debugabble = debuggable;
+		this.minSdkVersion = minSdkVersion;
+		this.maxSdkVersion = maxSdkVersion;
+		this.targetSdkVersion = targetSdkVersion;
+		debugabble = debuggable;
 	}
 
 	public String getApplicationPackage() {
@@ -66,6 +72,18 @@ public class AndroidManifest {
 
 	public boolean isDebuggable() {
 		return debugabble;
+	}
+
+	public int getMinSdkVersion() {
+		return minSdkVersion;
+	}
+
+	public int getMaxSdkVersion() {
+		return maxSdkVersion;
+	}
+
+	public int getTargetSdkVersion() {
+		return targetSdkVersion;
 	}
 
 }

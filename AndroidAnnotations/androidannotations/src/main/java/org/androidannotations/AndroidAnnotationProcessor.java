@@ -551,7 +551,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private ModelProcessor buildModelProcessor(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest, AnnotationElements validatedModel) {
 		ModelProcessor modelProcessor = new ModelProcessor();
 		modelProcessor.register(new EApplicationProcessor());
-		modelProcessor.register(new EActivityProcessor(processingEnv, rClass));
+		modelProcessor.register(new EActivityProcessor(processingEnv, rClass, androidManifest));
 		modelProcessor.register(new EServiceProcessor(processingEnv));
 		modelProcessor.register(new EIntentServiceProcessor(processingEnv));
 		modelProcessor.register(new EReceiverProcessor());
