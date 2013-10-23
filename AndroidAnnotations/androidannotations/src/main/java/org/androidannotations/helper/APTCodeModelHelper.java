@@ -417,7 +417,7 @@ public class APTCodeModelHelper {
 			if (fragmentSupportInClasspath) {
 				// intent() with android.support.v4.app.Fragment param
 				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
-				JVar fragmentParam = method.param(fragmentSupportClass, "fragment");
+				JVar fragmentParam = method.param(fragmentSupportClass, "supportFragment");
 				method.body()._return(_new(holder.intentBuilderClass).arg(fragmentParam));
 			}
 		}
