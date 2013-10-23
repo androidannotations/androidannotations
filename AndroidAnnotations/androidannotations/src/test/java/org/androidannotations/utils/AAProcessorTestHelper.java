@@ -26,13 +26,17 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 	}
 
 	public void addManifestProcessorParameter(Class<?> classOfPackagingContainingManifest, String manifestFileName) {
-		String manifestPath = classOfPackagingContainingManifest.getResource(manifestFileName).getPath();
+		String manifestPath = toPath(classOfPackagingContainingManifest, manifestFileName);
 		addProcessorParameter("androidManifestFile", manifestPath);
 	}
 
 	public File toGeneratedFile(Class<?> compiledClass) {
 		File output = new File(OUTPUT_DIRECTORY, toPath(compiledClass.getPackage()) + "/" + compiledClass.getSimpleName() + ModelConstants.GENERATION_SUFFIX + SOURCE_FILE_SUFFIX);
 		return output;
+	}
+
+	public String toPath(Class<?> classOfPackagingContainingFile, String filename) {
+		return classOfPackagingContainingFile.getResource(filename).getPath();
 	}
 
 }
