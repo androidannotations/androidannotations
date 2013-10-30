@@ -29,7 +29,7 @@ public abstract class SharedPreferencesHelper {
 		return sharedPreferences;
 	}
 
-	public final void clear() {
+	public void clear() {
 		SharedPreferencesCompat.apply(sharedPreferences.edit().clear());
 	}
 

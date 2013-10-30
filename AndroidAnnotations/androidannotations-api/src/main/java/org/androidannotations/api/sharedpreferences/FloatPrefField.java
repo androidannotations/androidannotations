@@ -17,7 +17,7 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class FloatPrefField extends AbstractPrefField {
+public class FloatPrefField extends AbstractPrefField {
 
 	private final float defaultValue;
 

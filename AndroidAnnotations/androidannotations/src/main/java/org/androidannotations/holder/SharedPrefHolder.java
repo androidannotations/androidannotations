@@ -87,13 +87,13 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	protected void setGeneratedClass() throws Exception {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
 		String subComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
-		generatedClass = codeModel()._class(PUBLIC | FINAL, subComponentQualifiedName, ClassType.CLASS);
+		generatedClass = codeModel()._class(PUBLIC, subComponentQualifiedName, ClassType.CLASS);
 		generatedClass._extends(SharedPreferencesHelper.class);
 	}
 
 	private void createEditorClass() throws JClassAlreadyExistsException {
 		String interfaceSimpleName = annotatedElement.getSimpleName().toString();
-		editorClass = generatedClass._class(PUBLIC | STATIC | FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
+		editorClass = generatedClass._class(PUBLIC | STATIC, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
 		editorClass._extends(processHolder.refClass(EditorHelper.class).narrow(editorClass));
 		editorContextField = createContextField(editorClass);
 

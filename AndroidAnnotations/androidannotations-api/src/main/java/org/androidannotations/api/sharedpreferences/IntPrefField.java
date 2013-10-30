@@ -17,7 +17,7 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class IntPrefField extends AbstractPrefField {
+public class IntPrefField extends AbstractPrefField {
 
 	private final int defaultValue;
 

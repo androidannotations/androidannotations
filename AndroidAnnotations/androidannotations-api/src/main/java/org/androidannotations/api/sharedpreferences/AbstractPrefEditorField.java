@@ -26,7 +26,7 @@ public abstract class AbstractPrefEditorField<T extends EditorHelper<T>> {
 		this.key = key;
 	}
 
-	public final T remove() {
+	public T remove() {
 		editorHelper.getEditor().remove(key);
 		return editorHelper;
 	}

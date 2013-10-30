@@ -17,7 +17,7 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class BooleanPrefField extends AbstractPrefField {
+public class BooleanPrefField extends AbstractPrefField {
 
 	private final boolean defaultValue;
 

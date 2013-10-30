@@ -30,12 +30,12 @@ public abstract class EditorHelper<T extends EditorHelper<T>> {
 		return editor;
 	}
 
-	public final T clear() {
+	public T clear() {
 		editor.clear();
 		return cast();
 	}
 
-	public final void apply() {
+	public void apply() {
 		SharedPreferencesCompat.apply(editor);
 	}
 
