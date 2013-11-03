@@ -89,6 +89,8 @@ import org.androidannotations.annotations.SeekBarProgressChange;
 import org.androidannotations.annotations.SeekBarTouchStart;
 import org.androidannotations.annotations.SeekBarTouchStop;
 import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.annotations.SupposeBackground;
+import org.androidannotations.annotations.SupposeUiThread;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.Touch;
@@ -193,6 +195,8 @@ import org.androidannotations.processing.SeekBarTouchStopProcessor;
 import org.androidannotations.processing.ServiceActionProcessor;
 import org.androidannotations.processing.SharedPrefProcessor;
 import org.androidannotations.processing.SubscribeProcessor;
+import org.androidannotations.processing.SupposeBackgroundProcessor;
+import org.androidannotations.processing.SupposeUiThreadProcessor;
 import org.androidannotations.processing.SystemServiceProcessor;
 import org.androidannotations.processing.TextChangeProcessor;
 import org.androidannotations.processing.TouchProcessor;
@@ -255,6 +259,7 @@ import org.androidannotations.validation.OptionsMenuItemValidator;
 import org.androidannotations.validation.OptionsMenuValidator;
 import org.androidannotations.validation.OrmLiteDaoValidator;
 import org.androidannotations.validation.PrefValidator;
+import org.androidannotations.validation.SupposeValidator;
 import org.androidannotations.validation.ProduceValidator;
 import org.androidannotations.validation.ResValidator;
 import org.androidannotations.validation.RestServiceValidator;
@@ -521,6 +526,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		modelValidator.register(new ProduceValidator(processingEnv));
 		modelValidator.register(new RunnableValidator(UiThread.class.getName(), processingEnv));
 		modelValidator.register(new RunnableValidator(Background.class.getName(), processingEnv));
+        modelValidator.register(new SupposeValidator(SupposeUiThread.class.getName(), processingEnv));
+        modelValidator.register(new SupposeValidator(SupposeBackground.class.getName(), processingEnv));
 		modelValidator.register(new InstanceStateValidator(processingEnv));
 		modelValidator.register(new OrmLiteDaoValidator(processingEnv, rClass));
 		modelValidator.register(new HttpsClientValidator(processingEnv, rClass));
@@ -620,9 +627,11 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 		modelProcessor.register(new SubscribeProcessor());
 		modelProcessor.register(new ProduceProcessor());
-		modelProcessor.register(new UiThreadProcessor());
+        modelProcessor.register(new UiThreadProcessor());
+        modelProcessor.register(new SupposeUiThreadProcessor());
 		modelProcessor.register(new BackgroundProcessor());
-		modelProcessor.register(new AfterInjectProcessor());
+        modelProcessor.register(new SupposeBackgroundProcessor());
+        modelProcessor.register(new AfterInjectProcessor());
 		modelProcessor.register(new InstanceStateProcessor(processingEnv));
 		modelProcessor.register(new HttpsClientProcessor(rClass));
 		modelProcessor.register(new OnActivityResultProcessor(processingEnv, rClass));
@@ -677,8 +686,10 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 					Touch.class, //
 					ItemSelect.class, //
 					UiThread.class, //
+                    SupposeUiThread.class,
 					Transactional.class, //
 					Background.class, //
+                    SupposeBackground.class,
 					Extra.class, //
 					SystemService.class, //
 					SharedPref.class, //
