@@ -1145,6 +1145,10 @@ public class ValidatorHelper {
 	}
 
 	public void hasInternetPermission(Element element, AndroidManifest androidManifest, IsValid valid) {
+		if (androidManifest.isLibraryProject()) {
+			return;
+		}
+
 		String internetPermissionQualifiedName = INTERNET_PERMISSION;
 
 		List<String> permissionQualifiedNames = androidManifest.getPermissionQualifiedNames();
