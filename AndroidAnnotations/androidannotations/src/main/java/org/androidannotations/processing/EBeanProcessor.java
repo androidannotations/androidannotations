@@ -94,6 +94,10 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
 
+		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
+		EBean.Scope eBeanScope = eBeanAnnotation.scope();
+		boolean hasSingletonScope = eBeanScope == EBean.Scope.Singleton;
+
 		{
 			// Constructor
 
@@ -113,12 +117,10 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 			constructorBody.assign(contextField, constructorContextParam);
 
-			constructorBody.invoke(init);
+			if (!hasSingletonScope) {
+				constructorBody.invoke(init);
+			}
 		}
-
-		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
-		EBean.Scope eBeanScope = eBeanAnnotation.scope();
-		boolean hasSingletonScope = eBeanScope == EBean.Scope.Singleton;
 
 		{
 			// Factory method
@@ -141,6 +143,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 						._then();
 				JVar previousNotifier = holder.replacePreviousNotifierWithNull(creationBlock);
 				creationBlock.assign(instanceField, _new(holder.generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+				creationBlock.invoke(instanceField, init);
 				holder.resetPreviousNotifier(creationBlock, previousNotifier);
 
 				factoryMethodBody._return(instanceField);
