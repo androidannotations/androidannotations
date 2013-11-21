@@ -550,7 +550,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private ProcessResult processAnnotations(AnnotationElements validatedModel, IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) throws ProcessingException, Exception {
 		timeStats.start("Process Annotations");
 		ModelProcessor modelProcessor = buildModelProcessor(rClass, androidSystemServices, androidManifest, validatedModel);
-		ProcessResult processResult = modelProcessor.process(validatedModel);
+		ProcessResult processResult = modelProcessor.process(processingEnv, validatedModel);
 		timeStats.stop("Process Annotations");
 		return processResult;
 	}

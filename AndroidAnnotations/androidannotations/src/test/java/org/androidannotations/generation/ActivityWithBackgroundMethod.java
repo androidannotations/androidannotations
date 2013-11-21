@@ -17,8 +17,11 @@ package org.androidannotations.generation;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.SupposeUiThread;
 
 import android.app.Activity;
+
+import java.util.List;
 
 @EActivity
 public class ActivityWithBackgroundMethod extends Activity {
@@ -27,5 +30,10 @@ public class ActivityWithBackgroundMethod extends Activity {
 	public void executingOnBackground() {
 
 	}
+
+    @SupposeUiThread
+    void executingOnBackground(List<? super Activity> arg) {
+
+    }
 
 }
