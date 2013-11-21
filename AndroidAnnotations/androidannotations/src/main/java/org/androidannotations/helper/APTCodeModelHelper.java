@@ -37,6 +37,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
@@ -59,6 +60,7 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JSuperWildcard;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
@@ -86,15 +88,18 @@ public class APTCodeModelHelper {
 
 			return declaredClass;
 		} else if (type instanceof WildcardType) {
-			// TODO : At his time (01/2013), it is not possible to handle the
-			// super bound because code model does not offer a way to model
-			// statement like " ? super X"
-			// (see http://java.net/jira/browse/CODEMODEL-11)
 			WildcardType wildcardType = (WildcardType) type;
 
-			TypeMirror extendsBound = wildcardType.getExtendsBound();
+            TypeMirror bound = wildcardType.getExtendsBound();
+            if (bound == null) {
+                bound = wildcardType.getSuperBound();
+                if (bound == null) {
+                    throw new IllegalArgumentException("There are should be 'extends' or 'super' in the wildcard");
+                }
+                return superWildcard(typeMirrorToJClass(bound, holder));
+            }
 
-			return typeMirrorToJClass(extendsBound, holder).wildcard();
+			return typeMirrorToJClass(bound, holder).wildcard();
 		} else if (type instanceof ArrayType) {
 			ArrayType arrayType = (ArrayType) type;
 
@@ -106,7 +111,11 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	public static class Parameter {
+    private JClass superWildcard(final JClass bound) {
+        return new JSuperWildcard(bound);
+    }
+
+    public static class Parameter {
 		public final String name;
 		public final JClass jClass;
 
@@ -118,16 +127,19 @@ public class APTCodeModelHelper {
 
 	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EBeanHolder holder) {
 
+        TypeMirror gen = holder.beans().getOriginatingElements().getClassOriginatingElements(holder.generatedClass.fullName())[0].asType();
+        ExecutableType generalisedElement = (ExecutableType) holder.beans().getProcessingEnv().getTypeUtils().asMemberOf((DeclaredType) gen, executableElement);
+
 		String methodName = executableElement.getSimpleName().toString();
 
-		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder);
+		JClass returnType = typeMirrorToJClass(generalisedElement.getReturnType(), holder);
 
 		List<Parameter> parameters = new ArrayList<Parameter>();
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
-			parameters.add(new Parameter(parameterName, parameterClass));
-		}
+        for (int i = 0; i < executableElement.getParameters().size(); i++) {
+            String parameterName = executableElement.getParameters().get(i).getSimpleName().toString();
+            JClass parameterClass = typeMirrorToJClass(generalisedElement.getParameterTypes().get(i), holder);
+            parameters.add(new Parameter(parameterName, parameterClass));
+        }
 
 		JMethod existingMethod = findAlreadyGeneratedMethod(holder.generatedClass, methodName, parameters);
 
@@ -139,12 +151,13 @@ public class APTCodeModelHelper {
 		method.annotate(Override.class);
 
 		List<JVar> methodParameters = new ArrayList<JVar>();
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
-			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
-			methodParameters.add(param);
-		}
+        for (int i = 0; i < executableElement.getParameters().size(); i++) {
+            String parameterName = executableElement.getParameters().get(i).getSimpleName().toString();
+            JClass parameterClass = typeMirrorToJClass(generalisedElement.getParameterTypes().get(i), holder);
+
+            JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
+            methodParameters.add(param);
+        }
 
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
 			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
@@ -156,7 +169,7 @@ public class APTCodeModelHelper {
 		return method;
 	}
 
-	private JMethod findAlreadyGeneratedMethod(JDefinedClass definedClass, String methodName, List<Parameter> parameters) {
+    private JMethod findAlreadyGeneratedMethod(JDefinedClass definedClass, String methodName, List<Parameter> parameters) {
 		method: for (JMethod method : definedClass.methods()) {
 			if (method.name().equals(methodName) && method.params().size() == parameters.size()) {
 				int i = 0;
@@ -477,4 +490,5 @@ public class APTCodeModelHelper {
 		constructorBody.assign(holder.intentField, _new(holder.classes().INTENT).arg(contextField).arg(holder.generatedClass.dotclass()));
 		return fragmentField;
 	}
+
 }

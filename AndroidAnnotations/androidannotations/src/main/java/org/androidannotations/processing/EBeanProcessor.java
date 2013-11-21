@@ -28,6 +28,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.annotations.EBean;
@@ -57,15 +58,25 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 		TypeElement typeElement = (TypeElement) element;
 
-		String eBeanQualifiedName = typeElement.getQualifiedName().toString();
+		StringBuilder eBeanQualifiedName = new StringBuilder(typeElement.getQualifiedName());
 
 		String generatedBeanQualifiedName = eBeanQualifiedName + GENERATION_SUFFIX;
 
 		JDefinedClass generatedClass = codeModel._class(PUBLIC | FINAL, generatedBeanQualifiedName, ClassType.CLASS);
 
+        if (!typeElement.getTypeParameters().isEmpty()) {
+            eBeanQualifiedName.append("<");
+            for (TypeParameterElement typeParam : typeElement.getTypeParameters()) {
+                generatedClass.generify(typeParam.getSimpleName().toString());
+                eBeanQualifiedName.append(typeParam.getSimpleName()).append(", ");
+            }
+            int l = eBeanQualifiedName.length();
+            eBeanQualifiedName.replace(l - 2, l, ">");
+        }
+
 		EBeanHolder holder = eBeansHolder.create(element, EBean.class, generatedClass);
 
-		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName);
+		JClass eBeanClass = codeModel.directClass(eBeanQualifiedName.toString());
 
 		holder.generatedClass._extends(eBeanClass);
 
@@ -94,6 +105,10 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 			holder.initActivityRef = helper.castContextToActivity(holder, holder.initIfActivityBody);
 		}
 
+        EBean eBeanAnnotation = element.getAnnotation(EBean.class);
+        EBean.Scope eBeanScope = eBeanAnnotation.scope();
+        boolean hasSingletonScope = eBeanScope == EBean.Scope.Singleton;
+
 		{
 			// Constructor
 
@@ -113,12 +128,10 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 
 			constructorBody.assign(contextField, constructorContextParam);
 
-			constructorBody.invoke(init);
+            if (!hasSingletonScope) {
+			    constructorBody.invoke(init);
+            }
 		}
-
-		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
-		EBean.Scope eBeanScope = eBeanAnnotation.scope();
-		boolean hasSingletonScope = eBeanScope == EBean.Scope.Singleton;
 
 		{
 			// Factory method
@@ -141,6 +154,7 @@ public class EBeanProcessor implements GeneratingElementProcessor {
 						._then();
 				JVar previousNotifier = holder.replacePreviousNotifierWithNull(creationBlock);
 				creationBlock.assign(instanceField, _new(holder.generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+                creationBlock.invoke(instanceField, init);
 				holder.resetPreviousNotifier(creationBlock, previousNotifier);
 
 				factoryMethodBody._return(instanceField);
