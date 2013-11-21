@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -60,11 +61,11 @@ public class ModelProcessor {
 		typeProcessors.add(processor);
 	}
 
-	public ProcessResult process(AnnotationElements validatedModel) throws ProcessingException, Exception {
+	public ProcessResult process(ProcessingEnvironment processingEnv, AnnotationElements validatedModel) throws ProcessingException, Exception {
 
 		JCodeModel codeModel = new JCodeModel();
 
-		EBeansHolder eBeansHolder = new EBeansHolder(codeModel);
+		EBeansHolder eBeansHolder = new EBeansHolder(processingEnv, codeModel);
 
 		for (GeneratingElementProcessor processor : typeProcessors) {
 			String annotationName = processor.getTarget();

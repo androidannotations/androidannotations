@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.helper.CanonicalNameConstants;
@@ -36,7 +37,11 @@ import com.sun.codemodel.JDefinedClass;
 
 public class EBeansHolder {
 
-	public class Classes {
+    public ProcessingEnvironment getProcessingEnv() {
+        return processingEnv;
+    }
+
+    public class Classes {
 
 		/*
 		 * Java
@@ -170,7 +175,10 @@ public class EBeansHolder {
 
 	private final OriginatingElements originatingElements = new OriginatingElements();
 
-	public EBeansHolder(JCodeModel codeModel) {
+    private final ProcessingEnvironment processingEnv;
+
+	public EBeansHolder(ProcessingEnvironment processingEnv, JCodeModel codeModel) {
+        this.processingEnv = processingEnv;
 		this.codeModel = codeModel;
 		classes = new Classes();
 		refClass(CanonicalNameConstants.STRING);
