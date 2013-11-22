@@ -9,7 +9,11 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic.Kind;
 
+import org.androidannotations.helper.FileHelper;
+
 public class Appender {
+
+	private static final String DEFAULT_FILENAME = "androidannotations.log";
 
 	private File file;
 	private FileOutputStream outputStream;
@@ -48,26 +52,32 @@ public class Appender {
 	}
 
 	public void resolveLogFile() {
+		Messager messager = processingEnv.getMessager();
 		if (processingEnv.getOptions().containsKey(LoggerContext.LOG_FILE_OPTION)) {
 			file = resolveLogFileInSpecifiedPath();
 		} else {
 			file = resolveLogFileInParentsDirectories();
 		}
+
+		if (file == null) {
+			messager.printMessage(Kind.WARNING, "Can't resolve log file");
+		} else {
+			messager.printMessage(Kind.NOTE, "Resolve log file to " + file.getAbsolutePath());
+		}
 	}
 
 	private File resolveLogFileInSpecifiedPath() {
+		File outputDirectory = FileHelper.resolveOutputDirectory(processingEnv);
+
 		String path = processingEnv.getOptions().get(LoggerContext.LOG_FILE_OPTION);
+		path = path.replace("{outputFolder}", outputDirectory.getAbsolutePath());
+
 		return new File(path);
 	}
 
 	private File resolveLogFileInParentsDirectories() {
-		// TODO
-
-		if (file == null) {
-			Messager messager = processingEnv.getMessager();
-			messager.printMessage(Kind.ERROR, "Can't resolve log file path");
-		}
-		return null;
+		File outputDirectory = FileHelper.resolveOutputDirectory(processingEnv);
+		return new File(outputDirectory, DEFAULT_FILENAME);
 	}
 
 	public boolean isFileOpened() {

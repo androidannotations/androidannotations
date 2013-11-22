@@ -18,21 +18,18 @@ package org.androidannotations.helper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
-import javax.tools.JavaFileObject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.androidannotations.helper.FileHelper.FileHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -112,40 +109,13 @@ public class AndroidManifestFinder {
 	 * appreciated.
 	 */
 	private Option<File> findManifestInParentsDirectories() {
-		Filer filer = processingEnv.getFiler();
-
-		Messager messager = processingEnv.getMessager();
-
-		JavaFileObject dummySourceFile;
-		try {
-			dummySourceFile = filer.createSourceFile("dummy" + System.currentTimeMillis());
-		} catch (IOException ignored) {
-			messager.printMessage(Kind.ERROR, "Could not find the AndroidManifest.xml file, unable to create a dummy source file to locate the source folder");
-			return Option.absent();
-		}
-		String dummySourceFilePath = dummySourceFile.toUri().toString();
-
-		if (dummySourceFilePath.startsWith("file:")) {
-			if (!dummySourceFilePath.startsWith("file://")) {
-				dummySourceFilePath = "file://" + dummySourceFilePath.substring("file:".length());
-			}
-		} else {
-			dummySourceFilePath = "file://" + dummySourceFilePath;
-		}
-
-		URI cleanURI;
-		try {
-			cleanURI = new URI(dummySourceFilePath);
-		} catch (URISyntaxException e) {
-			messager.printMessage(Kind.ERROR, "Could not find the AndroidManifest.xml file, path to dummy source file cannot be parsed: " + dummySourceFilePath);
+		Option<FileHolder> projectRootHolderOption = FileHelper.findRootProjectHolder(processingEnv);
+		if (projectRootHolderOption.isAbsent()) {
 			return Option.absent();
 		}
 
-		File dummyFile = new File(cleanURI);
-
-		File sourcesGenerationFolder = dummyFile.getParentFile();
-
-		File projectRoot = sourcesGenerationFolder.getParentFile();
+		FileHolder projectRootHolder = projectRootHolderOption.get();
+		File projectRoot = projectRootHolder.projectRoot;
 
 		File androidManifestFile = new File(projectRoot, "AndroidManifest.xml");
 		for (int i = 0; i < MAX_PARENTS_FROM_SOURCE_FOLDER; i++) {
@@ -161,8 +131,9 @@ public class AndroidManifestFinder {
 			}
 		}
 
+		Messager messager = processingEnv.getMessager();
 		if (!androidManifestFile.exists()) {
-			messager.printMessage(Kind.ERROR, "Could not find the AndroidManifest.xml file, going up from path [" + sourcesGenerationFolder.getAbsolutePath() + "] found using dummy file [" + dummySourceFilePath + "] (max atempts: " + MAX_PARENTS_FROM_SOURCE_FOLDER + ")");
+			messager.printMessage(Kind.ERROR, "Could not find the AndroidManifest.xml file, going up from path [" + projectRootHolder.sourcesGenerationFolder.getAbsolutePath() + "] found using dummy file [" + projectRootHolder.dummySourceFilePath + "] (max atempts: " + MAX_PARENTS_FROM_SOURCE_FOLDER + ")");
 			return Option.absent();
 		} else {
 			messager.printMessage(Kind.NOTE, "AndroidManifest.xml file found: " + androidManifestFile.toString());
