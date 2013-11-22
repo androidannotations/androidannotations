@@ -48,12 +48,10 @@ public class Appender {
 	}
 
 	public void resolveLogFile() {
-		if (file == null) {
-			if (processingEnv.getOptions().containsKey(LoggerContext.LOG_FILE_OPTION)) {
-				file = resolveLogFileInSpecifiedPath();
-			} else {
-				file = resolveLogFileInParentsDirectories();
-			}
+		if (processingEnv.getOptions().containsKey(LoggerContext.LOG_FILE_OPTION)) {
+			file = resolveLogFileInSpecifiedPath();
+		} else {
+			file = resolveLogFileInParentsDirectories();
 		}
 	}
 
@@ -74,10 +72,6 @@ public class Appender {
 
 	public boolean isFileOpened() {
 		return outputStream != null;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
 	}
 
 	public void setProcessingEnv(ProcessingEnvironment processingEnv) {

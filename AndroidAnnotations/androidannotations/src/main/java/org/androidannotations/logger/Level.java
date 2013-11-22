@@ -22,4 +22,14 @@ public enum Level {
 	public boolean isSmaller(Level l) {
 		return weight < l.weight;
 	}
+
+	public static Level parse(String name) {
+		for (Level level : values()) {
+			if (level.name().equalsIgnoreCase(name)) {
+				return level;
+			}
+		}
+		throw new IllegalArgumentException("Can't find Level matching " + name);
+	}
+
 }

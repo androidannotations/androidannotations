@@ -302,9 +302,12 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);
-		LoggerContext.getInstance().setProcessingEnv(processingEnv);
 
-		LOGGER.warn("Initialize AndroidAnnotationProcessor with options {}", processingEnv.getOptions());
+		// Configure Logger
+		LoggerContext loggerContext = LoggerContext.getInstance();
+		loggerContext.setProcessingEnv(processingEnv);
+
+		LOGGER.info("Initialize AndroidAnnotationProcessor with options {}", processingEnv.getOptions());
 
 		Messager messager = processingEnv.getMessager();
 
