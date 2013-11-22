@@ -15,8 +15,11 @@ public enum Level {
 		this.name = name;
 	}
 
-	public boolean isGreaterOrEqual(Level l) {
+	public boolean isGreaterOrEquals(Level l) {
 		return weight >= l.weight;
 	}
 
+	public boolean isSmaller(Level l) {
+		return weight < l.weight;
+	}
 }

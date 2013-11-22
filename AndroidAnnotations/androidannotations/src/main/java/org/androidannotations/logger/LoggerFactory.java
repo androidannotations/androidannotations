@@ -18,7 +18,7 @@ public class LoggerFactory {
 
 		Logger logger = LOGGER_CACHE.get(name);
 		if (logger == null) {
-			logger = new Logger(name);
+			logger = new Logger(LoggerContext.getInstance(), name);
 			LOGGER_CACHE.put(name, logger);
 		}
 

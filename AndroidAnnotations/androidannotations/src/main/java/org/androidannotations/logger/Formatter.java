@@ -13,12 +13,12 @@ public class Formatter {
 	private static final String ARGS_PATTERN = "{}";
 	private static final int ARGS_PATTERN_LENGTH = ARGS_PATTERN.length();
 
-	public static String buildLog(Level level, String loggerName, String message, Throwable thr, Object... args) {
+	public String buildLog(Level level, String loggerName, String message, Throwable thr, Object... args) {
 		String fullMessage = buildFullMessage(message, args);
 		StringBuilder stringBuilder = new StringBuilder(fullMessage.length());
 
 		stringBuilder.append(DATE_FORMAT.format(new Date())) //
-				.append(" [").append(Thread.currentThread().getName()).append("] ") //
+				.append(" [").append(Thread.currentThread().getName()).append("]") //
 				.append(" ").append(level.name) //
 				.append(" ").append(loggerName) //
 				.append(" - ").append(fullMessage);
@@ -33,7 +33,7 @@ public class Formatter {
 		return stringBuilder.toString();
 	}
 
-	public static String buildFullMessage(String message, Object... args) {
+	public String buildFullMessage(String message, Object... args) {
 		StringBuilder stringBuilder = new StringBuilder(message.length());
 		int lastIndex = 0;
 		int argIndex = 0;
@@ -60,14 +60,14 @@ public class Formatter {
 		return stringBuilder.toString();
 	}
 
-	private static String formatArgument(Object arg) {
+	private String formatArgument(Object arg) {
 		if (arg != null && arg.getClass().isArray()) {
 			return Arrays.toString((Object[]) arg);
 		}
 		return arg.toString();
 	}
 
-	private static String stackTraceToString(Throwable e) {
+	private String stackTraceToString(Throwable e) {
 		StringWriter writer = new StringWriter();
 		PrintWriter pw = new PrintWriter(writer);
 		e.printStackTrace(pw);

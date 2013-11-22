@@ -2,9 +2,11 @@ package org.androidannotations.logger;
 
 public class Logger {
 
+	private final LoggerContext loggerContext;
 	private final String name;
 
-	public Logger(String name) {
+	public Logger(LoggerContext loggerContext, String name) {
+		this.loggerContext = loggerContext;
 		this.name = name;
 	}
 
@@ -36,12 +38,16 @@ public class Logger {
 		log(Level.ERROR, message, thr, args);
 	}
 
+	public boolean isLoggable(Level level) {
+		return level.isGreaterOrEquals(loggerContext.getCurrentLevel());
+	}
+
 	private void log(Level level, String message, Throwable thr, Object... args) {
-		if (LoggerContext.getInstance().getCurrentLevel().isGreaterOrEqual(level)) {
+		if (!isLoggable(level)) {
 			return;
 		}
 
-		LoggerContext.getInstance().writeLog(level, name, message, thr, args);
+		loggerContext.writeLog(level, name, message, thr, args);
 	}
 
 }
