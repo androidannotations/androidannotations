@@ -294,4 +294,26 @@ public class ThreadActivityTest {
 		}
 	}
 
+	@Test
+	public void propagateException() {
+		BackgroundExecutor.setExecutor(new Executor() {
+			@Override
+			public void execute(Runnable command) {
+				command.run();
+			}
+		});
+		try {
+			activity.backgroundThrowException();
+			Assert.fail("Exception should be propagated in @Background annotated methods");
+		} catch (RuntimeException e) {
+			// good
+		}
+		try {
+			activity.uiThreadThrowException();
+			Assert.fail("Exception should be propagated in @UIThread annotated methods");
+		} catch (RuntimeException e) {
+			// good
+		}
+	}
+
 }

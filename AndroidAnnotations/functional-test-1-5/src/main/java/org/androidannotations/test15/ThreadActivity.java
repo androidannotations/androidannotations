@@ -144,4 +144,14 @@ public class ThreadActivity extends Activity {
 	@Background
 	void backgroundUsingArrayParamtersMethod(MySerializableBean[][] array) {
 	}
+
+	@Background
+	void backgroundThrowException() {
+		throw new RuntimeException();
+	}
+
+	@UiThread
+	void uiThreadThrowException() {
+		throw new RuntimeException();
+	}
 }

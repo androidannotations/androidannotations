@@ -59,7 +59,7 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 		executeMethod.annotate(Override.class);
 
 		JBlock runMethodBody = executeMethod.body();
-		codeModelHelper.surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a background task");
+		codeModelHelper.surroundWithTryCatch(holder, runMethodBody, previousMethodBody, "A runtime exception was thrown while executing code in a background task", true);
 
 		Background annotation = element.getAnnotation(Background.class);
 		String id = annotation.id();
