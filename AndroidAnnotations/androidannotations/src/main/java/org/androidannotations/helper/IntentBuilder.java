@@ -32,15 +32,22 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
+import javax.lang.model.util.Elements;
+
 public class IntentBuilder {
 
 	protected HasIntentBuilder holder;
 	protected JFieldVar contextField;
 	protected JClass contextClass;
 	protected JClass intentClass;
+    protected JFieldVar fragmentField;
+    protected JFieldVar fragmentSupportField;
+
+    protected Elements elementUtils;
 
 	public IntentBuilder(HasIntentBuilder holder) {
 		this.holder = holder;
+        elementUtils = holder.processingEnvironment().getElementUtils();
 		contextClass = holder.classes().CONTEXT;
 		intentClass = holder.classes().INTENT;
 	}
@@ -48,6 +55,7 @@ public class IntentBuilder {
 	public void build() throws JClassAlreadyExistsException {
 		createClass();
 		createConstructor();
+        createAdditionalConstructor(); // See issue #541
 		createGet();
 		createFlags();
 		createIntent();
@@ -67,6 +75,15 @@ public class IntentBuilder {
 		constructorBody.assign(holder.getIntentField(), _new(intentClass).arg(constructorContextParam).arg(holder.getGeneratedClass().dotclass()));
 	}
 
+    private void createAdditionalConstructor() {
+        if (hasFragmentInClasspath()) {
+            fragmentField = addFragmentConstructor(holder.classes().FRAGMENT, "fragment_");
+        }
+        if (hasFragmentSupportInClasspath()) {
+            fragmentSupportField = addFragmentConstructor(holder.classes().SUPPORT_V4_FRAGMENT, "fragmentSupport_");
+        }
+    }
+
 	private void createGet() {
 		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, intentClass, "get");
 		method.body()._return(holder.getIntentField());
@@ -84,5 +101,37 @@ public class IntentBuilder {
 		JMethod method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
 		JVar contextParam = method.param(contextClass, "context");
 		method.body()._return(_new(holder.getIntentBuilderClass()).arg(contextParam));
+
+        if (hasFragmentInClasspath()) {
+            // intent() with android.app.Fragment param
+            method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
+            JVar fragmentParam = method.param(holder.classes().FRAGMENT, "fragment");
+            method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
+        }
+        if (hasFragmentSupportInClasspath()) {
+            // intent() with android.support.v4.app.Fragment param
+            method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
+            JVar fragmentParam = method.param(holder.classes().SUPPORT_V4_FRAGMENT, "fragment");
+            method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
+        }
 	}
+
+    private JFieldVar addFragmentConstructor(JClass fragmentClass, String fieldName) {
+        JFieldVar fragmentField = holder.getIntentBuilderClass().field(PRIVATE, fragmentClass, fieldName);
+        JMethod constructor = holder.getIntentBuilderClass().constructor(JMod.PUBLIC);
+        JVar constructorFragmentParam = constructor.param(fragmentClass, "fragment");
+        JBlock constructorBody = constructor.body();
+        constructorBody.assign(fragmentField, constructorFragmentParam);
+        constructorBody.assign(contextField, constructorFragmentParam.invoke("getActivity"));
+        constructorBody.assign(holder.getIntentField(), _new(holder.classes().INTENT).arg(contextField).arg(holder.getGeneratedClass().dotclass()));
+        return fragmentField;
+    }
+
+    private boolean hasFragmentInClasspath() {
+        return elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
+    }
+
+    private boolean hasFragmentSupportInClasspath() {
+        return elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
+    }
 }

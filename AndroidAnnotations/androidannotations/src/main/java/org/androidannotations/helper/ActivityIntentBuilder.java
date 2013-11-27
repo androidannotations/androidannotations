@@ -51,10 +51,29 @@ public class ActivityIntentBuilder extends IntentBuilder {
 
 		JBlock body = method.body();
 		JClass activityClass = holder.classes().ACTIVITY;
-		JConditional condition = body._if(contextField._instanceof(activityClass));
-		condition._then() //
-				.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
-		condition._else() //
-				.invoke(contextField, "startActivity").arg(holder.getIntentField());
+        JConditional condition = null;
+        if (fragmentSupportField != null) {
+            condition = body._if(fragmentSupportField.ne(JExpr._null()));
+            condition._then() //
+                    .invoke(fragmentSupportField, "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
+        }
+        if (fragmentField != null) {
+            if (condition == null) {
+                condition = body._if(fragmentField.ne(JExpr._null()));
+            } else {
+                condition = condition._elseif(fragmentField.ne(JExpr._null()));
+            }
+            condition._then() //
+                    .invoke(fragmentField, "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
+        }
+        if (condition == null) {
+            condition = body._if(contextField._instanceof(activityClass));
+        } else {
+            condition = condition._elseif(contextField._instanceof(activityClass));
+        }
+        condition._then() //
+                .invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
+        condition._else() //
+                .invoke(contextField, "startActivity").arg(holder.getIntentField());
 	}
 }
