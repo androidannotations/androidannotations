@@ -34,6 +34,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.app.ActivityManager", "android.content.Context.ACTIVITY_SERVICE");
 		registeredServices.put("android.app.AlarmManager", "android.content.Context.ALARM_SERVICE");
 		registeredServices.put("android.media.AudioManager", "android.content.Context.AUDIO_SERVICE");
+		registeredServices.put("android.content.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE");
 		registeredServices.put("android.text.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE");
 		registeredServices.put("android.net.ConnectivityManager", "android.content.Context.CONNECTIVITY_SERVICE");
 		registeredServices.put("android.location.CountryDetector", "android.content.Context.COUNTRY_DETECTOR");
