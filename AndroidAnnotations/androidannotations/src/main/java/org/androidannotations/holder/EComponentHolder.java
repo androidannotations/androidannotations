@@ -23,20 +23,14 @@ import java.util.Map;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
+import com.sun.codemodel.*;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
-
 public abstract class EComponentHolder extends BaseGeneratedClassHolder {
+
+    private static final String METHOD_MAIN_LOOPER = "getMainLooper";
 
 	protected JExpression contextRef;
 	protected JMethod init;
@@ -111,6 +105,8 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
 	private void setHandler() {
 		JClass handlerClass = classes().HANDLER;
-		handler = generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", JExpr._new(handlerClass));
+        JClass looperClass = classes().LOOPER;
+        JInvocation arg = JExpr._new(handlerClass).arg(looperClass.staticInvoke(METHOD_MAIN_LOOPER));
+        handler = generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", arg);
 	}
 }
