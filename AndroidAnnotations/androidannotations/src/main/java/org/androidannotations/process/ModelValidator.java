@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
+import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
 
@@ -33,7 +34,7 @@ public class ModelValidator {
 		this.annotationHandlers = annotationHandlers;
 	}
 
-	public AnnotationElements validate(AnnotationElementsHolder extractedModel) {
+	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ProcessingException, Exception {
 
 		/*
 		 * We currently do not validate the elements on the ancestors, assuming
@@ -52,12 +53,20 @@ public class ModelValidator {
 			validatedElements.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 
 			for (Element annotatedElement : annotatedElements) {
-				if (annotationHandler.validate(annotatedElement, validatedElements)) {
+				if (validateThrowing(annotationHandler, annotatedElement, validatedElements)) {
 					validatedAnnotatedElements.add(annotatedElement);
 				}
 			}
 		}
 		return validatedElements;
+	}
+
+	private boolean validateThrowing(AnnotationHandler<?> handler, Element element, AnnotationElements validatedElements) throws Exception, ProcessingException {
+		try {
+			return handler.validate(element, validatedElements);
+		} catch (Exception e) {
+			throw new ProcessingException(e, element);
+		}
 	}
 
 }

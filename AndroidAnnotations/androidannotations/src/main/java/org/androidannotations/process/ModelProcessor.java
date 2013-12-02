@@ -27,6 +27,7 @@ import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
 
@@ -60,8 +61,7 @@ public class ModelProcessor {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ProcessResult process(AnnotationElements validatedModel) throws Exception {
-
+	public ProcessResult process(AnnotationElements validatedModel) throws ProcessingException, Exception {
 		ProcessHolder processHolder = new ProcessHolder(processingEnv);
 
 		annotationHandlers.setProcessHolder(processHolder);
@@ -79,7 +79,7 @@ public class ModelProcessor {
 					TypeElement typeElement = (TypeElement) annotatedElement;
 					GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
 					processHolder.put(annotatedElement, generatedClassHolder);
-					generatingAnnotationHandler.process(annotatedElement, generatedClassHolder);
+					processThrowing(generatingAnnotationHandler, annotatedElement, generatedClassHolder);
 				}
 			}
 			/*
@@ -103,7 +103,7 @@ public class ModelProcessor {
 				 * elements that are not validated, and therefore not available.
 				 */
 				if (holder != null) {
-					annotationHandler.process(elements.annotatedElement, holder);
+					processThrowing(annotationHandler, elements.annotatedElement, holder);
 				}
 			}
 
@@ -124,7 +124,7 @@ public class ModelProcessor {
 				 */
 				if (!isAbstractClass(enclosingElement)) {
 					GeneratedClassHolder holder = processHolder.getGeneratedClassHolder(enclosingElement);
-					annotationHandler.process(annotatedElement, holder);
+					processThrowing(annotationHandler, annotatedElement, holder);
 				}
 			}
 
@@ -134,6 +134,14 @@ public class ModelProcessor {
 				processHolder.codeModel(), //
 				processHolder.getOriginatingElements(), //
 				processHolder.getApiClassesToGenerate());
+	}
+
+	private <T extends GeneratedClassHolder> void processThrowing(AnnotationHandler<T> handler, Element element, T generatedClassHolder) throws ProcessingException {
+		try {
+			handler.process(element, generatedClassHolder);
+		} catch (Exception e) {
+			throw new ProcessingException(e, element);
+		}
 	}
 
 	private boolean isAbstractClass(Element annotatedElement) {
