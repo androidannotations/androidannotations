@@ -92,15 +92,17 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<ECom
 		processParameters(listenerMethod, call, parameters);
 
 		for (JFieldRef idRef : idsRefs) {
-			JBlock block = holder.getOnViewChangedBody().block();
+            if (idRef != null) {
+                JBlock block = holder.getOnViewChangedBody().block();
 
-			JExpression findViewExpression = holder.findViewById(idRef);
-			if (!getViewClass().equals(classes().VIEW)) {
-				findViewExpression = cast(getViewClass(), findViewExpression);
-			}
+                JExpression findViewExpression = holder.findViewById(idRef);
+                if (!getViewClass().equals(classes().VIEW)) {
+                    findViewExpression = cast(getViewClass(), findViewExpression);
+                }
 
-			JVar view = block.decl(getViewClass(), "view", findViewExpression);
-			block._if(view.ne(_null()))._then().invoke(view, getSetterName()).arg(_new(listenerAnonymousClass));
+                JVar view = block.decl(getViewClass(), "view", findViewExpression);
+                block._if(view.ne(_null()))._then().invoke(view, getSetterName()).arg(_new(listenerAnonymousClass));
+            }
 		}
 	}
 
