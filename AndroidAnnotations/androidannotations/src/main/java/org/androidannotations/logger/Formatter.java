@@ -28,8 +28,6 @@ public class Formatter {
 			stringBuilder.append('\n').append(stackTraceToString(thr));
 		}
 
-		stringBuilder.append('\n');
-
 		return stringBuilder.toString();
 	}
 

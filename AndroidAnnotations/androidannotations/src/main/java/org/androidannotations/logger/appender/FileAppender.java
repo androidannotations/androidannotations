@@ -1,4 +1,4 @@
-package org.androidannotations.logger;
+package org.androidannotations.logger.appender;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,28 +7,34 @@ import java.io.IOException;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
 import org.androidannotations.helper.FileHelper;
+import org.androidannotations.logger.Level;
+import org.androidannotations.logger.LoggerContext;
 
-public class Appender {
+public class FileAppender extends Appender {
 
 	private static final String DEFAULT_FILENAME = "androidannotations.log";
 
 	private File file;
 	private FileOutputStream outputStream;
-	private ProcessingEnvironment processingEnv;
 
-	public synchronized void openFile() {
-		try {
-			outputStream = new FileOutputStream(file, true);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+	@Override
+	public synchronized void open() {
+		if (!isStreamOpened()) {
+			try {
+				outputStream = new FileOutputStream(file, true);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	public synchronized void closeFile() {
-		if (outputStream != null) {
+	@Override
+	public synchronized void close() {
+		if (isStreamOpened()) {
 			try {
 				outputStream.close();
 			} catch (IOException e) {
@@ -38,20 +44,26 @@ public class Appender {
 		}
 	}
 
-	public synchronized void append(String log) {
-		if (!isFileOpened()) {
-			openFile();
-		}
-
-		try {
-			outputStream.write(log.getBytes());
-			outputStream.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+	@Override
+	public synchronized void append(Level level, Element element, String message) {
+		if (isStreamOpened()) {
+			try {
+				message += "\n";
+				outputStream.write(message.getBytes());
+				outputStream.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	public void resolveLogFile() {
+	@Override
+	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
+		super.setProcessingEnv(processingEnv);
+		resolveLogFile();
+	}
+
+	private void resolveLogFile() {
 		Messager messager = processingEnv.getMessager();
 		if (processingEnv.getOptions().containsKey(LoggerContext.LOG_FILE_OPTION)) {
 			file = resolveLogFileInSpecifiedPath();
@@ -80,12 +92,8 @@ public class Appender {
 		return new File(outputDirectory, DEFAULT_FILENAME);
 	}
 
-	public boolean isFileOpened() {
+	private boolean isStreamOpened() {
 		return outputStream != null;
-	}
-
-	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
-		this.processingEnv = processingEnv;
 	}
 
 }
