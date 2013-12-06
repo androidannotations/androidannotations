@@ -217,4 +217,8 @@ public class EBeanHolder {
 		resetPreviousNotifier(initBlock, previousNotifier);
 	}
 
+    public EBeansHolder beans() {
+        return eBeansHolder;
+    }
+
 }

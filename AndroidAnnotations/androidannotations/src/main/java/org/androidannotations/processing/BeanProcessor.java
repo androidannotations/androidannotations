@@ -63,6 +63,10 @@ public class BeanProcessor implements DecoratingElementProcessor {
 		String fieldName = element.getSimpleName().toString();
 
 		String typeQualifiedName = elementType.toString();
+        int genericIndex = typeQualifiedName.indexOf("<");
+        if (genericIndex >= 0) {
+            typeQualifiedName = typeQualifiedName.substring(0, genericIndex);
+        }
 
 		JClass injectedClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
 
@@ -77,7 +81,7 @@ public class BeanProcessor implements DecoratingElementProcessor {
 				body = body._if(beanField.eq(_null()))._then();
 			}
 
-			JInvocation getInstance = injectedClass.staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
+			JInvocation getInstance = injectedClass.erasure().staticInvoke(GET_INSTANCE_METHOD_NAME).arg(holder.contextRef);
 			body.assign(beanField, getInstance);
 		}
 
