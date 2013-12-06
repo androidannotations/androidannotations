@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
@@ -45,7 +46,7 @@ public class FileAppender extends Appender {
 	}
 
 	@Override
-	public synchronized void append(Level level, Element element, String message) {
+	public synchronized void append(Level level, Element element, AnnotationMirror annotationMirror, String message) {
 		if (isStreamOpened()) {
 			try {
 				message += "\n";

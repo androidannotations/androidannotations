@@ -38,11 +38,13 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
 
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
+import org.androidannotations.logger.Level;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.processing.EBeanHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
@@ -50,6 +52,8 @@ import org.androidannotations.rclass.RInnerClass;
 import com.sun.codemodel.JFieldRef;
 
 public class AnnotationHelper {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationHelper.class);
 
 	private final ProcessingEnvironment processingEnv;
 
@@ -94,24 +98,24 @@ public class AnnotationHelper {
 	}
 
 	public void printAnnotationError(Element annotatedElement, String annotationName, String message) {
-		printAnnotationMessage(Diagnostic.Kind.ERROR, annotatedElement, annotationName, message);
+		printAnnotationMessage(Level.ERROR, annotatedElement, annotationName, message);
 	}
 
 	public void printAnnotationWarning(Element annotatedElement, String annotationName, String message) {
-		printAnnotationMessage(Diagnostic.Kind.WARNING, annotatedElement, annotationName, message);
+		printAnnotationMessage(Level.WARN, annotatedElement, annotationName, message);
 	}
 
-	public void printAnnotationMessage(Diagnostic.Kind diagnosticKind, Element annotatedElement, String annotationName, String message) {
+	public void printAnnotationMessage(Level level, Element annotatedElement, String annotationName, String message) {
 		AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationName);
 		if (annotationMirror != null) {
-			processingEnv.getMessager().printMessage(diagnosticKind, message, annotatedElement, annotationMirror);
+			LOGGER.log(level, message, annotatedElement, annotationMirror, null);
 		} else {
 			printError(annotatedElement, message);
 		}
 	}
 
 	public void printError(Element element, String message) {
-		processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
+		LOGGER.error(message, element);
 	}
 
 	public boolean isPrivate(Element element) {

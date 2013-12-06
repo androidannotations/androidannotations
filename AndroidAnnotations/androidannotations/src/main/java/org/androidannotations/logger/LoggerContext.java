@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.logger.appender.Appender;
@@ -38,10 +39,10 @@ public class LoggerContext {
 		appenders.add(new MessagerAppender());
 	}
 
-	public void writeLog(Level level, String loggerName, String message, Element element, Throwable thr, Object... args) {
+	public void writeLog(Level level, String loggerName, String message, Element element, AnnotationMirror annotationMirror, Throwable thr, Object... args) {
 		String log = formatter.buildLog(level, loggerName, message, thr, args);
 		for (Appender appender : appenders) {
-			appender.append(level, element, log);
+			appender.append(level, element, annotationMirror, log);
 		}
 	}
 

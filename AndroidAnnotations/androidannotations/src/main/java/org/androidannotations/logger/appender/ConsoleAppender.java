@@ -1,5 +1,6 @@
 package org.androidannotations.logger.appender;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.logger.Level;
@@ -11,7 +12,7 @@ public class ConsoleAppender extends Appender {
 	}
 
 	@Override
-	public void append(Level level, Element element, String message) {
+	public void append(Level level, Element element, AnnotationMirror annotationMirror, String message) {
 		if (level.isSmaller(Level.ERROR)) {
 			System.out.println(message);
 		} else {

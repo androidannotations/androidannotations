@@ -20,11 +20,11 @@ import java.io.OutputStream;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
-import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
-import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.processing.OriginatingElements;
 
 import com.sun.codemodel.CodeWriter;
@@ -32,10 +32,9 @@ import com.sun.codemodel.JPackage;
 
 public class SourceCodewriter extends CodeWriter {
 
-	private final Filer filer;
-	private final Messager message;
-
 	private static final VoidOutputStream VOID_OUTPUT_STREAM = new VoidOutputStream();
+	private static final Logger LOGGER = LoggerFactory.getLogger(SourceCodewriter.class);
+	private final Filer filer;
 	private OriginatingElements originatingElements;
 
 	private static class VoidOutputStream extends OutputStream {
@@ -45,16 +44,15 @@ public class SourceCodewriter extends CodeWriter {
 		}
 	}
 
-	public SourceCodewriter(Filer filer, Messager message, OriginatingElements originatingElements) {
+	public SourceCodewriter(Filer filer, OriginatingElements originatingElements) {
 		this.filer = filer;
-		this.message = message;
 		this.originatingElements = originatingElements;
 	}
 
 	@Override
 	public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
-		message.printMessage(Kind.NOTE, "Generating source file: " + qualifiedClassName);
+		LOGGER.info("Generating source file: {}", qualifiedClassName);
 
 		Element[] classOriginatingElements = originatingElements.getClassOriginatingElements(qualifiedClassName);
 
@@ -62,14 +60,14 @@ public class SourceCodewriter extends CodeWriter {
 			JavaFileObject sourceFile;
 
 			if (classOriginatingElements.length == 0) {
-				message.printMessage(Kind.NOTE, "Generating class with no originating element: " + qualifiedClassName);
+				LOGGER.info("Generating class with no originating element: {}", qualifiedClassName);
 			}
 
 			sourceFile = filer.createSourceFile(qualifiedClassName, classOriginatingElements);
 
 			return sourceFile.openOutputStream();
 		} catch (FilerException e) {
-			message.printMessage(Kind.NOTE, "Could not generate source file for " + qualifiedClassName + ", message: " + e.getMessage());
+			LOGGER.error("Could not generate source file for {}", qualifiedClassName, e.getMessage());
 			/*
 			 * This exception is expected, when some files are created twice. We
 			 * cannot delete existing files, unless using a dirty hack. Files a

@@ -15,18 +15,19 @@
  */
 package org.androidannotations.rclass;
 
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic.Kind;
 
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.Option;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 
 public class ProjectRClassFinder {
 
 	public static final String RESOURCE_PACKAGE_NAME_OPTION = "resourcePackageName";
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectRClassFinder.class);
 
 	private ProcessingEnvironment processingEnv;
 
@@ -41,8 +42,7 @@ public class ProjectRClassFinder {
 		TypeElement rType = elementUtils.getTypeElement(rClass);
 
 		if (rType == null) {
-			Messager messager = processingEnv.getMessager();
-			messager.printMessage(Kind.ERROR, "The generated " + rClass + " class cannot be found");
+			LOGGER.error("The generated {} class cannot be found", rClass);
 			return Option.absent();
 		}
 

@@ -15,14 +15,17 @@
  */
 package org.androidannotations.rclass;
 
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic.Kind;
+import javax.lang.model.util.Elements;
 
 import org.androidannotations.helper.Option;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 
 public class AndroidRClassFinder {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidRClassFinder.class);
 
 	private final ProcessingEnvironment processingEnv;
 
@@ -31,10 +34,10 @@ public class AndroidRClassFinder {
 	}
 
 	public Option<IRClass> find() {
-		TypeElement androidRType = processingEnv.getElementUtils().getTypeElement("android.R");
+		Elements elementUtils = processingEnv.getElementUtils();
+		TypeElement androidRType = elementUtils.getTypeElement("android.R");
 		if (androidRType == null) {
-			Messager messager = processingEnv.getMessager();
-			messager.printMessage(Kind.ERROR, "The android.R class cannot be found");
+			LOGGER.error("The android.R class cannot be found");
 			return Option.absent();
 		}
 		return Option.<IRClass> of(new RClass(androidRType));

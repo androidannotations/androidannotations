@@ -1,6 +1,7 @@
 package org.androidannotations.logger.appender;
 
 import javax.annotation.processing.Messager;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
@@ -16,13 +17,13 @@ public class MessagerAppender extends Appender {
 	}
 
 	@Override
-	public void append(Level level, Element element, String message) {
+	public void append(Level level, Element element, AnnotationMirror annotationMirror, String message) {
 		if (messager == null) {
 			return;
 		}
 
 		Kind kind = resolveKind(level);
-		messager.printMessage(kind, message, element);
+		messager.printMessage(kind, message, element, annotationMirror);
 	}
 
 	@Override
