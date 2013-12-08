@@ -25,12 +25,16 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
 
 import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModelProcessor.class);
 
 	public static class ProcessResult {
 
@@ -61,14 +65,19 @@ public class ModelProcessor {
 	}
 
 	public ProcessResult process(AnnotationElements validatedModel) throws ProcessingException, Exception {
-
 		JCodeModel codeModel = new JCodeModel();
-
 		EBeansHolder eBeansHolder = new EBeansHolder(codeModel);
+
+		LOGGER.info("Processing root elements");
 
 		for (GeneratingElementProcessor processor : typeProcessors) {
 			String annotationName = processor.getTarget();
 			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
+
+			if (!annotatedElements.isEmpty()) {
+				LOGGER.debug("Processing root elements with {}: {}", processor.getClass().getSimpleName(), annotatedElements);
+			}
+
 			for (Element annotatedElement : annotatedElements) {
 				/*
 				 * We do not generate code for abstract classes, because the
@@ -77,6 +86,8 @@ public class ModelProcessor {
 				 */
 				if (!isAbstractClass(annotatedElement)) {
 					processThrowing(processor, annotatedElement, codeModel, eBeansHolder);
+				} else {
+					LOGGER.trace("Skip element {} because it's abstract", annotatedElement);
 				}
 			}
 			/*
@@ -84,6 +95,8 @@ public class ModelProcessor {
 			 * ancestors. We should careful design the priority rules first.
 			 */
 		}
+
+		LOGGER.info("Processing enclosed elements");
 
 		for (DecoratingElementProcessor processor : enclosedProcessors) {
 			String annotationName = processor.getTarget();
@@ -93,6 +106,11 @@ public class ModelProcessor {
 			 * but uses the holder for the root element
 			 */
 			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(annotationName);
+
+			if (!ancestorAnnotatedElements.isEmpty()) {
+				LOGGER.debug("Processing enclosed elements with {}: {}", processor.getClass().getSimpleName(), ancestorAnnotatedElements);
+			}
+
 			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
 				EBeanHolder holder = eBeansHolder.getEBeanHolder(elements.rootTypeElement);
 				/*
@@ -122,6 +140,8 @@ public class ModelProcessor {
 				if (!isAbstractClass(enclosingElement)) {
 					EBeanHolder holder = eBeansHolder.getEBeanHolder(enclosingElement);
 					processThrowing(processor, annotatedElement, codeModel, holder);
+				} else {
+					LOGGER.trace("Skip element {} because enclosing element {} is abstract", annotatedElement, enclosingElement);
 				}
 			}
 

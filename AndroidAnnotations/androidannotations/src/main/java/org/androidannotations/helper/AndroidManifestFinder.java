@@ -71,7 +71,7 @@ public class AndroidManifestFinder {
 					String androidLibraryProperty = properties.getProperty("android.library");
 					libraryProject = androidLibraryProperty.equals("true");
 
-					LOGGER.info("Found android.library property in project.properties, value: {}", libraryProject);
+					LOGGER.debug("Found android.library={} property in project.properties", libraryProject);
 				}
 			} catch (IOException ignored) {
 			}
@@ -95,7 +95,7 @@ public class AndroidManifestFinder {
 			LOGGER.error("Could not find the AndroidManifest.xml file in specified path : {}", path);
 			return Option.absent();
 		} else {
-			LOGGER.info("AndroidManifest.xml file found: {}", androidManifestFile.toString());
+			LOGGER.debug("AndroidManifest.xml file found with specified path: {}", androidManifestFile.toString());
 		}
 		return Option.of(androidManifestFile);
 	}
@@ -134,7 +134,7 @@ public class AndroidManifestFinder {
 			LOGGER.error("Could not find the AndroidManifest.xml file, going up from path [{}] found using dummy file [] (max atempts: {})", projectRootHolder.sourcesGenerationFolder.getAbsolutePath(), projectRootHolder.dummySourceFilePath, MAX_PARENTS_FROM_SOURCE_FOLDER);
 			return Option.absent();
 		} else {
-			LOGGER.info("AndroidManifest.xml file found: {}", androidManifestFile.toString());
+			LOGGER.debug("AndroidManifest.xml file found in parent folder {}: {}", projectRoot.getAbsolutePath(), androidManifestFile.toString());
 		}
 
 		return Option.of(androidManifestFile);
@@ -185,7 +185,7 @@ public class AndroidManifestFinder {
 
 			if (applicationClassQualifiedName == null) {
 				if (nameAttribute != null) {
-					LOGGER.info("The class application declared in the AndroidManifest.xml cannot be found in the compile path: [{}]", nameAttribute.getNodeValue());
+					LOGGER.warn("The class application declared in the AndroidManifest.xml cannot be found in the compile path: [{}]", nameAttribute.getNodeValue());
 				}
 			}
 
@@ -249,9 +249,9 @@ public class AndroidManifestFinder {
 				componentQualifiedNames.add(qualifiedName);
 			} else {
 				if (nameAttribute != null) {
-					LOGGER.info("A class activity declared in the AndroidManifest.xml cannot be found in the compile path: [{}]", nameAttribute.getNodeValue());
+					LOGGER.warn("A class activity declared in the AndroidManifest.xml cannot be found in the compile path: [{}]", nameAttribute.getNodeValue());
 				} else {
-					LOGGER.info("The {} activity node in the AndroidManifest.xml has no android:name attribute", i);
+					LOGGER.warn("The {} activity node in the AndroidManifest.xml has no android:name attribute", i);
 				}
 			}
 		}

@@ -36,7 +36,6 @@ public class ProjectRClassFinder {
 	}
 
 	public Option<IRClass> find(AndroidManifest manifest) {
-
 		Elements elementUtils = processingEnv.getElementUtils();
 		String rClass = getRClassPackageName(manifest) + ".R";
 		TypeElement rType = elementUtils.getTypeElement(rClass);
@@ -45,6 +44,8 @@ public class ProjectRClassFinder {
 			LOGGER.error("The generated {} class cannot be found", rClass);
 			return Option.absent();
 		}
+
+		LOGGER.info("Found project R class: {}", rType.toString());
 
 		return Option.<IRClass> of(new RClass(rType));
 	}

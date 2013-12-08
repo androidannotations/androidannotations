@@ -23,10 +23,14 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
 
 public class ModelValidator {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModelValidator.class);
 
 	private List<ElementValidator> validators = new ArrayList<ElementValidator>();
 
@@ -36,6 +40,8 @@ public class ModelValidator {
 
 	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ProcessingException, Exception {
 
+		LOGGER.info("Validating elements");
+
 		/*
 		 * We currently do not validate the elements on the ancestors, assuming
 		 * they've already been validated. This also means some checks such as
@@ -44,6 +50,8 @@ public class ModelValidator {
 		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
 		for (ElementValidator validator : validators) {
+			String validatorSimpleName = validator.getClass().getSimpleName();
+
 			String annotationName = validator.getTarget();
 
 			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(annotationName);
@@ -52,12 +60,19 @@ public class ModelValidator {
 
 			validatedElements.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 
+			if (!annotatedElements.isEmpty()) {
+				LOGGER.debug("Validating with {}: {}", validatorSimpleName, annotatedElements);
+			}
+
 			for (Element annotatedElement : annotatedElements) {
 				if (validateThrowing(validator, annotatedElement, validatedElements)) {
 					validatedAnnotatedElements.add(annotatedElement);
+				} else {
+					LOGGER.warn("Element {} unvalidated by {}", annotatedElement, validatorSimpleName);
 				}
 			}
 		}
+
 		return validatedElements;
 	}
 

@@ -52,7 +52,7 @@ public class SourceCodewriter extends CodeWriter {
 	@Override
 	public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
-		LOGGER.info("Generating source file: {}", qualifiedClassName);
+		LOGGER.debug("Generating class: {}", qualifiedClassName);
 
 		Element[] classOriginatingElements = originatingElements.getClassOriginatingElements(qualifiedClassName);
 
