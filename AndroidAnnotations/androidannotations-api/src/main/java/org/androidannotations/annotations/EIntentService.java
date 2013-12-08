@@ -13,21 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.holder;
+package org.androidannotations.annotations;
 
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
-import org.androidannotations.helper.IntentBuilder;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface HasIntentBuilder extends GeneratedClassHolder {
-
-    public IntentBuilder getIntentBuilder();
-
-	public void setIntentBuilderClass(JDefinedClass intentBuilderClass);
-
-	public JDefinedClass getIntentBuilderClass();
-
-	public void setIntentField(JFieldVar intentField);
-
-	public JFieldVar getIntentField();
+/**
+ * Use this annotation to enhance an Android IntentService
+ */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
+public @interface EIntentService {
 }

@@ -21,6 +21,7 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.helper.ServiceIntentBuilder;
 import org.androidannotations.process.ProcessHolder;
 
@@ -33,19 +34,22 @@ import com.sun.codemodel.JMethod;
 
 public class EServiceHolder extends EComponentHolder implements HasIntentBuilder {
 
+    private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
 	private JFieldVar intentField;
 
 	public EServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		createIntentBuilder();
+        intentBuilder = new ServiceIntentBuilder(this);
+        intentBuilder.build();
 	}
 
-	private void createIntentBuilder() throws JClassAlreadyExistsException {
-		new ServiceIntentBuilder(this).build();
-	}
+    @Override
+    public IntentBuilder getIntentBuilder() {
+        return intentBuilder;
+    }
 
-	@Override
+    @Override
 	protected void setContextRef() {
 		contextRef = _this();
 	}

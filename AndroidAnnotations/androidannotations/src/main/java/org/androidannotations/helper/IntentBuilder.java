@@ -17,22 +17,26 @@ package org.androidannotations.helper;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
+import com.sun.codemodel.*;
+import com.sun.tools.javac.util.Pair;
 import org.androidannotations.holder.HasIntentBuilder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
-
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+import java.lang.annotation.ElementType;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IntentBuilder {
 
@@ -42,12 +46,16 @@ public class IntentBuilder {
 	protected JClass intentClass;
     protected JFieldVar fragmentField;
     protected JFieldVar fragmentSupportField;
+    protected Map<Pair<TypeMirror, String>, JMethod> putExtraMethods = new HashMap<Pair<TypeMirror, String>, JMethod>();
 
     protected Elements elementUtils;
+    protected Types typeUtils;
+    protected APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public IntentBuilder(HasIntentBuilder holder) {
 		this.holder = holder;
         elementUtils = holder.processingEnvironment().getElementUtils();
+        typeUtils = holder.processingEnvironment().getTypeUtils();
 		contextClass = holder.classes().CONTEXT;
 		intentClass = holder.classes().INTENT;
 	}
@@ -133,5 +141,50 @@ public class IntentBuilder {
 
     private boolean hasFragmentSupportInClasspath() {
         return elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
+    }
+
+    public JMethod getPutExtraMethod(TypeMirror elementType, String parameterName, String extraName) {
+        Pair<TypeMirror, String> signature = new Pair<TypeMirror, String>(elementType,parameterName);
+        JMethod putExtraMethod = putExtraMethods.get(signature);
+        if (putExtraMethod == null) {
+            putExtraMethod = addPutExtraMethod(elementType, parameterName, extraName);
+            putExtraMethods.put(signature, putExtraMethod);
+        }
+        return putExtraMethod;
+    }
+
+    private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, String extraName) {
+        boolean castToSerializable = false;
+        boolean castToParcelable = false;
+        if (elementType.getKind() == TypeKind.DECLARED) {
+            Elements elementUtils = holder.processingEnvironment().getElementUtils();
+            TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
+            if (!typeUtils.isSubtype(elementType, parcelableType)) {
+                TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
+                if (!typeUtils.isSubtype(elementType, stringType)) {
+                    castToSerializable = true;
+                }
+            } else {
+                TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
+                if (typeUtils.isSubtype(elementType, serializableType)) {
+                    castToParcelable = true;
+                }
+            }
+        }
+
+        JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
+        JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
+        JVar extraParameterVar = method.param(parameterClass, parameterName);
+        JBlock body = method.body();
+        JInvocation invocation = body.invoke(holder.getIntentField(), "putExtra").arg(extraName);
+        if (castToSerializable) {
+            invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
+        } else if (castToParcelable) {
+            invocation.arg(cast(holder.classes().PARCELABLE, extraParameterVar));
+        } else {
+            invocation.arg(extraParameterVar);
+        }
+        body._return(_this());
+        return method;
     }
 }

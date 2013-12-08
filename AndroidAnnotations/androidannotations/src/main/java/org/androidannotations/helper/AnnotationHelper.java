@@ -390,6 +390,12 @@ public class AnnotationHelper {
 		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
 	}
 
+	public boolean hasOneOfClassAnnotations(Element element, Class<? extends Annotation> validAnnotation) {
+		List<Class<? extends Annotation>> annotations = new ArrayList<Class<? extends Annotation>>();
+		annotations.add(validAnnotation);
+		return hasOneOfClassAnnotations(element, annotations);
+	}
+
 	public boolean hasOneOfClassAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations) {
 		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
 			if (element.getAnnotation(validAnnotation) != null) {

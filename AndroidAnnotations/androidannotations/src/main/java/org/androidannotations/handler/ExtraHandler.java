@@ -93,12 +93,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 	}
 
 	private JFieldVar createStaticExtraField(HasExtras holder, String extraKey, String fieldName) {
-		String staticFieldName;
-		if (fieldName.endsWith("Extra")) {
-			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName);
-		} else {
-			staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(fieldName + "Extra");
-		}
+        String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, fieldName, "Extra");
 		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(extraKey));
 	}
 
@@ -143,39 +138,6 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 	}
 
 	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName) {
-		JDefinedClass intentBuilderClass = holder.getIntentBuilderClass();
-		JMethod method = intentBuilderClass.method(PUBLIC, intentBuilderClass, fieldName);
-
-		boolean castToSerializable = false;
-		boolean castToParcelable = false;
-		TypeMirror extraType = element.asType();
-		if (extraType.getKind() == TypeKind.DECLARED) {
-			Elements elementUtils = processingEnv.getElementUtils();
-			Types typeUtils = processingEnv.getTypeUtils();
-			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
-			if (!typeUtils.isSubtype(extraType, parcelableType)) {
-				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
-				if (!typeUtils.isSubtype(extraType, stringType)) {
-					castToSerializable = true;
-				}
-			} else {
-				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
-				if (typeUtils.isSubtype(extraType, serializableType)) {
-					castToParcelable = true;
-				}
-			}
-		}
-		JClass paramClass = codeModelHelper.typeMirrorToJClass(extraType, holder);
-		JVar extraParam = method.param(paramClass, fieldName);
-		JBlock body = method.body();
-		JInvocation invocation = body.invoke(holder.getIntentField(), "putExtra").arg(extraKeyStaticField);
-		if (castToSerializable) {
-			invocation.arg(cast(classes().SERIALIZABLE, extraParam));
-		} else if (castToParcelable) {
-			invocation.arg(cast(classes().PARCELABLE, extraParam));
-		} else {
-			invocation.arg(extraParam);
-		}
-		body._return(_this());
+        holder.getIntentBuilder().getPutExtraMethod(element.asType(), fieldName, extraKeyStaticField.name());
 	}
 }

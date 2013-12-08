@@ -93,6 +93,7 @@ public final class CanonicalNameConstants {
 	public static final String MOTION_EVENT = "android.view.MotionEvent";
 	public static final String HANDLER = "android.os.Handler";
 	public static final String SERVICE = "android.app.Service";
+	public static final String INTENT_SERVICE = "android.app.IntentService";
 	public static final String BROADCAST_RECEIVER = "android.content.BroadcastReceiver";
 	public static final String CONTENT_PROVIDER = "android.content.ContentProvider";
 	public static final String SQLITE_DATABASE = "android.database.sqlite.SQLiteDatabase";

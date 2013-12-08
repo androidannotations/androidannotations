@@ -37,11 +37,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.api.SdkVersionHelper;
-import org.androidannotations.helper.ActionBarSherlockHelper;
-import org.androidannotations.helper.ActivityIntentBuilder;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.GreenDroidHelper;
+import org.androidannotations.helper.*;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -60,6 +56,7 @@ import com.sun.codemodel.JVar;
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult {
 
 	private GreenDroidHelper greenDroidHelper;
+    private ActivityIntentBuilder intentBuilder;
 	private JMethod onCreate;
 	private JMethod setIntent;
 	private JMethod setContentViewLayout;
@@ -92,7 +89,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
 		setSetContentView();
-		createIntentBuilder();
+        intentBuilder = new ActivityIntentBuilder(this);
+        intentBuilder.build();
 		handleBackPressed();
 	}
 
@@ -353,10 +351,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return greenDroidHelper.usesGreenDroid(annotatedElement);
 	}
 
-	private void createIntentBuilder() throws JClassAlreadyExistsException {
-		new ActivityIntentBuilder(this).build();
-	}
-
 	private void handleBackPressed() {
 		Element declaredOnBackPressedMethod = getOnBackPressedMethod(annotatedElement);
 		if (declaredOnBackPressedMethod != null) {
@@ -418,7 +412,12 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		;
 	}
 
-	@Override
+    @Override
+    public IntentBuilder getIntentBuilder() {
+        return intentBuilder;
+    }
+
+    @Override
 	public void setIntentBuilderClass(JDefinedClass intentBuilderClass) {
 		this.intentBuilderClass = intentBuilderClass;
 	}

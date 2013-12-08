@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -53,6 +54,8 @@ import javax.lang.model.util.Elements;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.rest.Delete;
@@ -195,6 +198,11 @@ public class ValidatorHelper {
 	public void enclosingElementHasEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EFragment.class, valid);
+	}
+
+	public void enclosingElementHasEIntentService(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasClassAnnotation(element, enclosingElement, validatedElements, EIntentService.class, valid);
 	}
 
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
@@ -424,6 +432,10 @@ public class ValidatorHelper {
 
 	public void extendsService(Element element, IsValid valid) {
 		extendsType(element, CanonicalNameConstants.SERVICE, valid);
+	}
+
+	public void extendsIntentService(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.INTENT_SERVICE, valid);
 	}
 
 	public void extendsReceiver(Element element, IsValid valid) {
@@ -1292,4 +1304,24 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter type. %s can only have a android.content.Intent parameter and/or an Integer parameter");
 		}
 	}
+
+	public void hasNotMultipleAnnotatedMethodWithSameName(Element element, IsValid valid, Class<? extends Annotation> annotation) {
+		Set<String> actionNames = new TreeSet<String>();
+
+		List<? extends Element> enclosedElements = element.getEnclosedElements();
+		for (Element enclosedElement : enclosedElements) {
+			if (enclosedElement.getKind() != ElementKind.METHOD || !annotationHelper.hasOneOfClassAnnotations(enclosedElement, annotation)) {
+				continue;
+			}
+
+			String enclosedElementName = enclosedElement.getSimpleName().toString();
+			if (actionNames.contains(enclosedElementName)) {
+				valid.invalidate();
+				annotationHelper.printError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(ServiceAction.class) + " annotated method must have unique name even if the signature is not the same");
+			} else {
+				actionNames.add(enclosedElementName);
+			}
+		}
+	}
+
 }

@@ -55,6 +55,7 @@ public class AnnotationHandlers {
 		add(new EProviderHandler(processingEnvironment));
 		add(new EReceiverHandler(processingEnvironment));
 		add(new EServiceHandler(processingEnvironment));
+        add(new EIntentServiceHandler(processingEnvironment));
 		add(new EFragmentHandler(processingEnvironment));
 		add(new EBeanHandler(processingEnvironment));
 		add(new EViewGroupHandler(processingEnvironment));
@@ -106,6 +107,7 @@ public class AnnotationHandlers {
 		add(new SeekBarProgressChangeHandler(processingEnvironment));
 		add(new SeekBarTouchStartHandler(processingEnvironment));
 		add(new SeekBarTouchStopHandler(processingEnvironment));
+        add(new ServiceActionHandler(processingEnvironment));
 		add(new SubscribeHandler(processingEnvironment));
 		add(new ProduceHandler(processingEnvironment));
 		add(new UiThreadHandler(processingEnvironment));

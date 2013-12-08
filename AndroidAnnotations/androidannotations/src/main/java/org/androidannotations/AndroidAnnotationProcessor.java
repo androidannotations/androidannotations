@@ -21,8 +21,7 @@ import static org.androidannotations.rclass.ProjectRClassFinder.RESOURCE_PACKAGE
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
@@ -35,6 +34,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
+import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.res.*;
+import org.androidannotations.annotations.rest.*;
+import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.handler.AnnotationHandlers;
@@ -42,10 +46,7 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.ErrorHelper;
 import org.androidannotations.helper.Option;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.model.AnnotationElementsHolder;
-import org.androidannotations.model.ModelExtractor;
+import org.androidannotations.model.*;
 import org.androidannotations.process.ModelProcessor;
 import org.androidannotations.process.ModelValidator;
 import org.androidannotations.process.TimeStats;
