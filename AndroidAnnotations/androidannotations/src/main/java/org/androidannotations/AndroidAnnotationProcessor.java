@@ -19,6 +19,9 @@ import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFE
 import static org.androidannotations.helper.CanonicalNameConstants.PRODUCE;
 import static org.androidannotations.helper.CanonicalNameConstants.SUBSCRIBE;
 import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
+import static org.androidannotations.logger.LoggerContext.LOG_APPENDER_CONSOLE;
+import static org.androidannotations.logger.LoggerContext.LOG_FILE_OPTION;
+import static org.androidannotations.logger.LoggerContext.LOG_LEVEL_OPTION;
 import static org.androidannotations.rclass.ProjectRClassFinder.RESOURCE_PACKAGE_NAME_OPTION;
 
 import java.io.FileNotFoundException;
@@ -286,7 +289,7 @@ import org.androidannotations.validation.rest.PutValidator;
 import org.androidannotations.validation.rest.RestValidator;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION, RESOURCE_PACKAGE_NAME_OPTION })
+@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION, RESOURCE_PACKAGE_NAME_OPTION, LOG_FILE_OPTION, LOG_LEVEL_OPTION, LOG_APPENDER_CONSOLE })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidAnnotationProcessor.class);
