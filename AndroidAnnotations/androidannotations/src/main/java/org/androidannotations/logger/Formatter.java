@@ -21,6 +21,7 @@ public class Formatter {
 				.append(" [").append(Thread.currentThread().getName()).append("]") //
 				.append(" ").append(level.name) //
 				.append(" ").append(loggerName) //
+				.append(":").append(getCallerLineNumber()) //
 				.append(" - ").append(fullMessage);
 
 		// Stacktrace
@@ -72,4 +73,18 @@ public class Formatter {
 		return writer.toString();
 	}
 
+	private int getCallerLineNumber() {
+		boolean previousWasLogger = false;
+		String loggerClassName = Logger.class.getCanonicalName();
+
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		for (StackTraceElement stackTraceElement : stackTrace) {
+			if (stackTraceElement.getClassName().equals(loggerClassName)) {
+				previousWasLogger = true;
+			} else if (previousWasLogger) {
+				return stackTraceElement.getLineNumber();
+			}
+		}
+		return -1;
+	}
 }
