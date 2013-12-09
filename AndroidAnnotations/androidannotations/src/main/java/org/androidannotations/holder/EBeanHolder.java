@@ -73,9 +73,12 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, processHolder.codeModel().VOID, "init_");
-		JBlock constructorBody = constructor.body();
-		constructorBody.invoke(init);
 	}
+
+    public void invokeInitInConstructor() {
+        JBlock constructorBody = constructor.body();
+        constructorBody.invoke(getInit());
+    }
 
 	public void createFactoryMethod(boolean hasSingletonScope) {
 
@@ -97,6 +100,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 					._then();
 			JVar previousNotifier = viewNotifierHelper.replacePreviousNotifierWithNull(creationBlock);
 			creationBlock.assign(instanceField, _new(generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+            creationBlock.invoke(instanceField, getInit());
 			viewNotifierHelper.resetPreviousNotifier(creationBlock, previousNotifier);
 
 			factoryMethodBody._return(instanceField);

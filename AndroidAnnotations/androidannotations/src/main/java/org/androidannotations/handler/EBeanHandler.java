@@ -54,6 +54,7 @@ public class EBeanHandler extends BaseAnnotationHandler<EBeanHolder> implements 
 		holder.createFactoryMethod(hasSingletonScope);
 
 		if (!hasSingletonScope) {
+            holder.invokeInitInConstructor();
 			holder.createRebindMethod();
 		}
 	}
