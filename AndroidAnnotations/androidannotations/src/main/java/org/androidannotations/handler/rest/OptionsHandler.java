@@ -16,8 +16,10 @@
 package org.androidannotations.handler.rest;
 
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import org.androidannotations.annotations.rest.Options;
+import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -45,6 +47,11 @@ public class OptionsHandler extends RestMethodHandler {
 		Options annotation = element.getAnnotation(Options.class);
 		return annotation.value();
 	}
+
+    @Override
+    protected JExpression getResponseClass(Element element, RestHolder holder) {
+        return JExpr._null();
+    }
 
 	@Override
 	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {

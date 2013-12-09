@@ -21,14 +21,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
-
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
 
 public class GetHandler extends RestMethodHandler {
 
@@ -49,16 +43,5 @@ public class GetHandler extends RestMethodHandler {
 	protected String getUrlSuffix(Element element) {
 		Get annotation = element.getAnnotation(Get.class);
 		return annotation.value();
-	}
-
-	protected JExpression getResponseClass(Element element, RestHolder holder) {
-		return restAnnotationHelper.getResponseClass(element, holder);
-	}
-
-	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
-		if (methodReturnClass != null && !methodReturnClass.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
-			return JExpr.invoke(exchangeCall, "getBody");
-		}
-		return exchangeCall;
 	}
 }

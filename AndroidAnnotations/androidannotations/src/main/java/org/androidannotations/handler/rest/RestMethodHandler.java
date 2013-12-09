@@ -18,6 +18,7 @@ package org.androidannotations.handler.rest;
 import com.sun.codemodel.*;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.RestAnnotationHelper;
 import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -137,17 +138,20 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, params, httpHeaders);
 	}
 
-	protected JExpression getResponseClass(Element element, RestHolder holder) {
-		return JExpr._null();
-	}
+    protected JExpression getResponseClass(Element element, RestHolder holder) {
+        return restAnnotationHelper.getResponseClass(element, holder);
+    }
 
 	protected JExpression getUrlVariables(Element element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> params) {
 		return restAnnotationHelper.declareUrlVariables((ExecutableElement) element, holder, methodBody, params);
 	}
 
-	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
-		return exchangeCall;
-	}
+    protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
+        if (methodReturnClass != null && !methodReturnClass.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+            return JExpr.invoke(exchangeCall, "getBody");
+        }
+        return exchangeCall;
+    }
 
 	private JFieldRef setCookies(ExecutableElement executableElement, RestHolder restHolder, JBlock methodBody, JInvocation exchangeCall) {
 		String[] settingCookies = restAnnotationHelper.settingCookies(executableElement);

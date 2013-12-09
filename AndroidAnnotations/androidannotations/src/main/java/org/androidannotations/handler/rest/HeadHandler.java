@@ -19,6 +19,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import org.androidannotations.annotations.rest.Head;
+import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -46,6 +47,11 @@ public class HeadHandler extends RestMethodHandler {
 		Head annotation = element.getAnnotation(Head.class);
 		return annotation.value();
 	}
+
+    @Override
+    protected JExpression getResponseClass(Element element, RestHolder holder) {
+        return JExpr._null();
+    }
 
 	@Override
 	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
