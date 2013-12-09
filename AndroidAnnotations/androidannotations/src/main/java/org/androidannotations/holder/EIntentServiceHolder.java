@@ -17,6 +17,7 @@ package org.androidannotations.holder;
 
 import com.sun.codemodel.*;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.TypeElement;
@@ -32,8 +33,8 @@ public class EIntentServiceHolder extends EServiceHolder {
     private JBlock onHandleIntentBody;
     private JVar onHandleIntentIntentAction;
 
-    public EIntentServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-        super(processHolder, annotatedElement);
+    public EIntentServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
+        super(processHolder, annotatedElement, androidManifest);
     }
 
     public JVar getOnHandleIntentIntent() {

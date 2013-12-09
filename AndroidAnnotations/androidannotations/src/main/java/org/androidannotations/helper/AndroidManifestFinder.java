@@ -35,6 +35,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -171,7 +172,6 @@ public class AndroidManifestFinder {
 	}
 
 	private Option<AndroidManifest> parse(File androidManifestFile, boolean libraryProject) {
-
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 
 		Document doc;
@@ -189,8 +189,19 @@ public class AndroidManifestFinder {
 
 		String applicationPackage = documentElement.getAttribute("package");
 
+		int minSdkVersion = -1;
+		int maxSdkVersion = -1;
+		int targetSdkVersion = -1;
+		NodeList sdkNodes = documentElement.getElementsByTagName("uses-sdk");
+		if (sdkNodes.getLength() > 0) {
+			Node sdkNode = sdkNodes.item(0);
+			minSdkVersion = extractAttributeIntValue(sdkNode, "android:minSdkVersion", -1);
+			maxSdkVersion = extractAttributeIntValue(sdkNode, "android:maxSdkVersion", -1);
+			targetSdkVersion = extractAttributeIntValue(sdkNode, "android:targetSdkVersion", -1);
+		}
+
 		if (libraryProject) {
-			return Option.of(AndroidManifest.createLibraryManifest(applicationPackage));
+			return Option.of(AndroidManifest.createLibraryManifest(applicationPackage, minSdkVersion, maxSdkVersion, targetSdkVersion));
 		}
 
 		NodeList applicationNodes = documentElement.getElementsByTagName("application");
@@ -241,7 +252,21 @@ public class AndroidManifestFinder {
 		List<String> permissionQualifiedNames = new ArrayList<String>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
 
-		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames, applicationDebuggableMode));
+		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, applicationDebuggableMode));
+	}
+
+	private int extractAttributeIntValue(Node node, String attribute, int defaultValue) {
+		try {
+			NamedNodeMap attributes = node.getAttributes();
+			if (attributes.getLength() > 0) {
+				Node attributeNode = attributes.getNamedItem(attribute);
+				if (attributeNode != null) {
+					return Integer.parseInt(attributeNode.getNodeValue());
+				}
+			}
+		} catch (NumberFormatException ignored) {
+		}
+		return defaultValue;
 	}
 
 	private List<String> extractComponentNames(String applicationPackage, NodeList componentNodes) {

@@ -33,7 +33,7 @@ public class EServiceHandler extends BaseAnnotationHandler<EServiceHolder> imple
 
 	@Override
 	public EServiceHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EServiceHolder(processHolder, annotatedElement);
+		return new EServiceHolder(processHolder, annotatedElement, androidManifest);
 	}
 
 	@Override

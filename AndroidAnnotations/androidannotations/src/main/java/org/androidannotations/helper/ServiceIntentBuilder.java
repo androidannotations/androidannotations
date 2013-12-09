@@ -24,8 +24,8 @@ import com.sun.codemodel.JMethod;
 
 public class ServiceIntentBuilder extends IntentBuilder {
 
-	public ServiceIntentBuilder(HasIntentBuilder holder) {
-		super(holder);
+	public ServiceIntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
+		super(holder, androidManifest);
 	}
 
 	@Override

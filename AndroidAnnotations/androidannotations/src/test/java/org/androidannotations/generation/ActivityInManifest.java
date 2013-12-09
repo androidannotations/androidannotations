@@ -13,16 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.efragment;
+package org.androidannotations.generation;
 
-import org.androidannotations.annotations.EFragment;
+import android.app.Activity;
 
-import android.app.Fragment;
+import org.androidannotations.annotations.EActivity;
 
-@EFragment
-public class StartActivityFragment extends Fragment {
-	void startActivity() {
-		// TODO: The only way to test this is to change minSdkVersion to 11 in AndroidManifest.xml but we want to stick on lower verison as possible
-		// ExtraInjectedActivity_.intent(this).start();
-	}
+@EActivity
+public class ActivityInManifest extends Activity {
+
 }

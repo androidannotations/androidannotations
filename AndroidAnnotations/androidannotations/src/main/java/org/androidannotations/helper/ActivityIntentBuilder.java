@@ -29,8 +29,8 @@ import com.sun.codemodel.JVar;
 
 public class ActivityIntentBuilder extends IntentBuilder {
 
-	public ActivityIntentBuilder(HasIntentBuilder holder) {
-		super(holder);
+	public ActivityIntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
+		super(holder, androidManifest);
 	}
 
 	@Override

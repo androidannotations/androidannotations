@@ -34,7 +34,7 @@ public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceH
 
     @Override
     public EIntentServiceHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-        return new EIntentServiceHolder(processHolder, annotatedElement);
+        return new EIntentServiceHolder(processHolder, annotatedElement, androidManifest);
     }
 
     @Override

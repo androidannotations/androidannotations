@@ -40,7 +40,10 @@ import java.util.Map;
 
 public class IntentBuilder {
 
+    private static final int MIN_SDK_WITH_FRAGMENT_SUPPORT = 11;
+
 	protected HasIntentBuilder holder;
+    protected AndroidManifest androidManifest;
 	protected JFieldVar contextField;
 	protected JClass contextClass;
 	protected JClass intentClass;
@@ -52,8 +55,9 @@ public class IntentBuilder {
     protected Types typeUtils;
     protected APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-	public IntentBuilder(HasIntentBuilder holder) {
+	public IntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
 		this.holder = holder;
+        this.androidManifest = androidManifest;
         elementUtils = holder.processingEnvironment().getElementUtils();
         typeUtils = holder.processingEnvironment().getTypeUtils();
 		contextClass = holder.classes().CONTEXT;
@@ -119,7 +123,7 @@ public class IntentBuilder {
         if (hasFragmentSupportInClasspath()) {
             // intent() with android.support.v4.app.Fragment param
             method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
-            JVar fragmentParam = method.param(holder.classes().SUPPORT_V4_FRAGMENT, "fragment");
+            JVar fragmentParam = method.param(holder.classes().SUPPORT_V4_FRAGMENT, "supportFragment");
             method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
         }
 	}
@@ -136,7 +140,8 @@ public class IntentBuilder {
     }
 
     private boolean hasFragmentInClasspath() {
-        return elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
+        boolean fragmentExistsInSdk = androidManifest.getMinSdkVersion() >= MIN_SDK_WITH_FRAGMENT_SUPPORT;
+        return fragmentExistsInSdk && elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
     }
 
     private boolean hasFragmentSupportInClasspath() {

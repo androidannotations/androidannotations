@@ -84,12 +84,12 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JBlock onDestroyAfterSuperBlock;
 	private JBlock onResumeAfterSuperBlock;
 
-	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
+	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
 		super(processHolder, annotatedElement);
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
 		setSetContentView();
-        intentBuilder = new ActivityIntentBuilder(this);
+        intentBuilder = new ActivityIntentBuilder(this, androidManifest);
         intentBuilder.build();
 		handleBackPressed();
 	}

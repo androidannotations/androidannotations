@@ -65,8 +65,6 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private AnnotationHandlers annotationHandlers;
 	private final ErrorHelper errorHelper = new ErrorHelper();
 
-	private Set<String> supportedAnnotationNames;
-
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);

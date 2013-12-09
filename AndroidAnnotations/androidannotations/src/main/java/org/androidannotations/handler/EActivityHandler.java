@@ -45,7 +45,7 @@ public class EActivityHandler extends BaseAnnotationHandler<EActivityHolder> imp
 
 	@Override
 	public EActivityHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EActivityHolder(processHolder, annotatedElement);
+		return new EActivityHolder(processHolder, annotatedElement, androidManifest);
 	}
 
 	@Override
