@@ -37,6 +37,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
+import org.androidannotations.annotations.EActivity;
 import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.exception.VersionMismatchException;
 import org.androidannotations.generation.CodeModelGenerator;
