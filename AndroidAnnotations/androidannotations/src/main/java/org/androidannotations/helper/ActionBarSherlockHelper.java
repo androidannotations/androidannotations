@@ -52,11 +52,13 @@ public class ActionBarSherlockHelper {
 				return true;
 			}
 			if (qName.startsWith("org.holoeverywhere")) {
-				/*
-				 * HoloEverywhere depends on ABS and uses its own provided
-				 * activity classes
-				 */
-				return true;
+				// Since 2.0.0, HoloEverywhere no longer depends on ABS so we
+				// had to find a way to to detect the version in classpath.
+				// Since org.holoeverywhere.addon.AddonSherlock has been removed
+				// during ABS to ABC migration, we're checking if this class is
+				// in the classpath. If so, we're using HEW < 2.0
+				// See issue #776
+				return annotationHelper.typeElementFromQualifiedName("org.holoeverywhere.addon.AddonSherlock") != null;
 			}
 		}
 		return false;
