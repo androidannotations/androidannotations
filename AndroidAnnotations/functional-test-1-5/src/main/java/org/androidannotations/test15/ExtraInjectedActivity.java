@@ -26,7 +26,7 @@ import android.content.Intent;
 @EActivity
 public class ExtraInjectedActivity extends Activity {
 
-	@Extra("stringExtra")
+	@Extra("aStringExtra")
 	String stringExtra;
 
 	@Extra("arrayExtra")

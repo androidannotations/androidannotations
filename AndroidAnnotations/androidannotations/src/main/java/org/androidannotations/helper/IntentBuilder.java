@@ -143,17 +143,17 @@ public class IntentBuilder {
         return elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
     }
 
-    public JMethod getPutExtraMethod(TypeMirror elementType, String parameterName, String extraName) {
+    public JMethod getPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
         Pair<TypeMirror, String> signature = new Pair<TypeMirror, String>(elementType,parameterName);
         JMethod putExtraMethod = putExtraMethods.get(signature);
         if (putExtraMethod == null) {
-            putExtraMethod = addPutExtraMethod(elementType, parameterName, extraName);
+            putExtraMethod = addPutExtraMethod(elementType, parameterName, extraKeyField);
             putExtraMethods.put(signature, putExtraMethod);
         }
         return putExtraMethod;
     }
 
-    private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, String extraName) {
+    private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
         boolean castToSerializable = false;
         boolean castToParcelable = false;
         if (elementType.getKind() == TypeKind.DECLARED) {
@@ -176,7 +176,7 @@ public class IntentBuilder {
         JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
         JVar extraParameterVar = method.param(parameterClass, parameterName);
         JBlock body = method.body();
-        JInvocation invocation = body.invoke(holder.getIntentField(), "putExtra").arg(extraName);
+        JInvocation invocation = body.invoke(holder.getIntentField(), "putExtra").arg(extraKeyField);
         if (castToSerializable) {
             invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
         } else if (castToParcelable) {

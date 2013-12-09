@@ -94,7 +94,11 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 
 	private JFieldVar createStaticExtraField(HasExtras holder, String extraKey, String fieldName) {
         String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, fieldName, "Extra");
-		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(extraKey));
+        JFieldVar staticExtraField = holder.getGeneratedClass().fields().get(staticFieldName);
+        if (staticExtraField == null) {
+            staticExtraField = holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(extraKey));
+        }
+        return staticExtraField;
 	}
 
 	private void injectExtraInComponent(Element element, HasExtras hasExtras, JFieldVar extraKeyStaticField, String fieldName) {
@@ -138,6 +142,6 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 	}
 
 	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName) {
-        holder.getIntentBuilder().getPutExtraMethod(element.asType(), fieldName, extraKeyStaticField.name());
+        holder.getIntentBuilder().getPutExtraMethod(element.asType(), fieldName, extraKeyStaticField);
 	}
 }

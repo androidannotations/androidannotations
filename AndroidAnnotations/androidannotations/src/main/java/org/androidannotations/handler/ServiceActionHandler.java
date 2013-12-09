@@ -22,6 +22,7 @@ import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EIntentServiceHolder;
+import org.androidannotations.holder.HasExtras;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -103,10 +104,11 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
             for (VariableElement param : methodParameters) {
                 String paramName = param.getSimpleName().toString();
                 String extraParamName = paramName + "Extra";
+                JFieldVar paramVar = getStaticExtraField(holder, paramName);
                 JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
                 BundleHelper bundleHelper = new BundleHelper(annotationHelper, param);
 
-                JExpression getExtraExpression = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(paramName);
+                JExpression getExtraExpression = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(paramVar);
                 if (bundleHelper.restoreCallNeedCastStatement()) {
                     getExtraExpression = JExpr.cast(extraParamClass, getExtraExpression);
 
@@ -140,13 +142,24 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
             for (VariableElement param : methodParameters) {
                 String paramName = param.getSimpleName().toString();
                 JClass parameterClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
+
+                JFieldVar paramVar = getStaticExtraField(holder, paramName);
                 JVar methodParam = method.param(parameterClass, paramName);
 
-                JMethod putExtraMethod = holder.getIntentBuilder().getPutExtraMethod(param.asType(), paramName, paramName);
+                JMethod putExtraMethod = holder.getIntentBuilder().getPutExtraMethod(param.asType(), paramName, paramVar);
                 body.invoke(putExtraMethod).arg(methodParam);
             }
 
         }
         body._return(JExpr._this());
+    }
+
+    private JFieldVar getStaticExtraField(EIntentServiceHolder holder, String extraName) {
+        String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, extraName, "Extra");
+        JFieldVar staticExtraField = holder.getGeneratedClass().fields().get(staticFieldName);
+        if (staticExtraField == null) {
+            staticExtraField = holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(extraName));
+        }
+        return staticExtraField;
     }
 }
