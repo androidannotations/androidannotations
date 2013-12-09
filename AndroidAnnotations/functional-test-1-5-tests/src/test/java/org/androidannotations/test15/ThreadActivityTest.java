@@ -46,6 +46,8 @@ public class ThreadActivityTest {
 
 	private ThreadActivity_ activity;
 
+	private volatile boolean propagatedExceptionToGlobalExceptionHandler;
+
 	@Before
 	public void setup() {
 		activity = new ThreadActivity_();
@@ -349,6 +351,46 @@ public class ThreadActivityTest {
 
 		Handler handler = (Handler) handlerField.get(threadActivityHolder[0]);
 		Assert.assertTrue("Handler field not associated to the main thread", handler.getLooper() == Looper.getMainLooper());
+	}
+
+	@Test
+	public void propagateExceptionToGlobalExceptionHandler() {
+
+		// Prepare lock on which we'll wait for the
+		// background exception handler to catch the exception
+		final Object LOCK = new Object();
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(Thread thread, Throwable ex) {
+				synchronized (LOCK) {
+					propagatedExceptionToGlobalExceptionHandler = true;
+					LOCK.notify();
+				}
+			}
+		});
+
+		propagatedExceptionToGlobalExceptionHandler = false;
+		activity.backgroundThrowException();
+
+		// If the default uncaught exception handler is not called
+		// after 2 secs this method returns and the following assert will fail.
+		waitOn(LOCK, 2000);
+		Assert.assertTrue("Exception should have been caught in the DefaultUncaughtExceptionHandler during @Background call.",
+				propagatedExceptionToGlobalExceptionHandler);
+	}
+
+	/**
+	 * Call wait() on the given object with the specified timeout.
+	 * Avoid boilerplate code like synchronized or try..catch.
+	 */
+	private void waitOn(Object lock, long timeout) {
+		synchronized (lock) {
+			try {
+				lock.wait(timeout);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

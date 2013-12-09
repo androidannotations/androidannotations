@@ -36,6 +36,7 @@ public class ProcessHolder {
 		 */
 		public final JClass RUNTIME_EXCEPTION = refClass(RuntimeException.class);
 		public final JClass EXCEPTION = refClass(Exception.class);
+		public final JClass THROWABLE = refClass(Throwable.class);
 		public final JClass CHAR_SEQUENCE = refClass(CharSequence.class);
 		public final JClass CLASS_CAST_EXCEPTION = refClass(ClassCastException.class);
 		public final JClass SERIALIZABLE = refClass(Serializable.class);
