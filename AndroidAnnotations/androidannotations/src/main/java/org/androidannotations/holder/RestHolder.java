@@ -171,7 +171,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JMethod setHeaderMethod = codeModelHelper.implementMethod(this, methods, "setHeader", TypeKind.VOID.toString(), STRING, STRING);
 
 		if (setHeaderMethod != null) {
-			setHeaderMethod.body().invoke(getAvailableCookiesField(), "put").arg(setHeaderMethod.params().get(0)).arg(setHeaderMethod.params().get(1));
+			setHeaderMethod.body().invoke(getAvailableHeadersField(), "put").arg(setHeaderMethod.params().get(0)).arg(setHeaderMethod.params().get(1));
 		}
 	}
 
