@@ -30,6 +30,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.androidannotations.api.BackgroundExecutor;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,10 +49,18 @@ public class ThreadActivityTest {
 
 	private volatile boolean propagatedExceptionToGlobalExceptionHandler;
 
+	private Thread.UncaughtExceptionHandler defaultExceptionHandler;
+
 	@Before
 	public void setup() {
 		activity = new ThreadActivity_();
 		activity.onCreate(null);
+		defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+	}
+
+	@After
+	public void after() {
+		Thread.setDefaultUncaughtExceptionHandler(defaultExceptionHandler);
 	}
 
 	@Test
@@ -309,12 +318,6 @@ public class ThreadActivityTest {
 			}
 		});
 		try {
-			activity.backgroundThrowException();
-			Assert.fail("Exception should be propagated in @Background annotated methods");
-		} catch (RuntimeException e) {
-			// good
-		}
-		try {
 			activity.uiThreadThrowException();
 			Assert.fail("Exception should be propagated in @UIThread annotated methods");
 		} catch (RuntimeException e) {
@@ -375,8 +378,7 @@ public class ThreadActivityTest {
 		// If the default uncaught exception handler is not called
 		// after 2 secs this method returns and the following assert will fail.
 		waitOn(LOCK, 2000);
-		Assert.assertTrue("Exception should have been caught in the DefaultUncaughtExceptionHandler during @Background call.",
-				propagatedExceptionToGlobalExceptionHandler);
+		Assert.assertTrue("Exception should have been caught in the DefaultUncaughtExceptionHandler during @Background call.", propagatedExceptionToGlobalExceptionHandler);
 	}
 
 	/**
