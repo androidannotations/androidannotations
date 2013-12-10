@@ -16,6 +16,7 @@
 package org.androidannotations.helper;
 
 
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,23 +32,9 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 
-import org.androidannotations.holder.EBeanHolder;
+import com.sun.codemodel.*;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JStatement;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
 
@@ -191,6 +178,26 @@ public class APTCodeModelHelper {
 
 		return clonedBody;
 	}
+
+    public void replaceSuperCall(JMethod method, JBlock replacement) {
+        String superCallStart = "super."+method.name()+"(";
+
+        JBlock oldBody = removeBody(method);
+        JBlock newBody = method.body();
+
+        for (Object content : oldBody.getContents()) {
+            StringWriter writer = new StringWriter();
+            JFormatter formatter = new JFormatter(writer);
+            JStatement statement = (JStatement) content;
+            statement.state(formatter);
+            String statementString = writer.getBuffer().toString();
+            if (statementString.startsWith(superCallStart)) {
+                newBody.add(replacement);
+            } else {
+                newBody.add(statement);
+            }
+        }
+    }
 
 	public String getIdStringFromIdFieldRef(JFieldRef idRef) {
 		try {

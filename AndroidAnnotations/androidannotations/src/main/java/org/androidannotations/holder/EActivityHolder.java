@@ -189,15 +189,15 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStop");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		getRoboGuiceHolder().onStopBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
+        getRoboGuiceHolder().onStop = method;
 	}
 
 	protected void setOnDestroy() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onDestroy");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		getRoboGuiceHolder().onDestroyBeforeSuperBlock = body.block();
+		getRoboGuiceHolder().onDestroy = method;
 		body.invoke(_super(), method);
 		onDestroyAfterSuperBlock = body.block();
 	}

@@ -15,8 +15,6 @@
  */
 package org.androidannotations.holder;
 
-import org.androidannotations.process.ProcessHolder;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
@@ -35,8 +33,8 @@ public class RoboGuiceHolder {
 	protected JBlock onResumeBeforeSuperBlock;
 	protected JBlock onPauseAfterSuperBlock;
 	protected JBlock onNewIntentAfterSuperBlock;
-	protected JBlock onStopBeforeSuperBlock;
-	protected JBlock onDestroyBeforeSuperBlock;
+	protected JMethod onStop;
+	protected JMethod onDestroy;
 	protected JVar newConfig;
 	protected JVar currentConfig;
 	protected JBlock onConfigurationChangedAfterSuperBlock;
@@ -120,18 +118,18 @@ public class RoboGuiceHolder {
 		return onNewIntentAfterSuperBlock;
 	}
 
-	public JBlock getOnStopBeforeSuperBlock() {
-		if (onStopBeforeSuperBlock == null) {
+	public JMethod getOnStop() {
+		if (onStop == null) {
 			holder.setOnStop();
 		}
-		return onStopBeforeSuperBlock;
+		return onStop;
 	}
 
-	public JBlock getOnDestroyBeforeSuperBlock() {
-		if (onDestroyBeforeSuperBlock == null) {
+	public JMethod getOnDestroy() {
+		if (onDestroy == null) {
 			holder.setOnDestroy();
 		}
-		return onDestroyBeforeSuperBlock;
+		return onDestroy;
 	}
 
 	public JVar getNewConfig() {

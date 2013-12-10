@@ -31,11 +31,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.RoboGuice;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.holder.RoboGuiceHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -48,6 +48,8 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
+
+    private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public RoboGuiceHandler(ProcessingEnvironment processingEnvironment) {
 		super(RoboGuice.class, processingEnvironment);
@@ -177,22 +179,25 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void onStopMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JBlock onStopBeforeSuperBlock = holder.getOnStopBeforeSuperBlock();
-		onStopBeforeSuperBlock.invoke(scope, "enter").arg(_this());
+		JBlock onStopBlock = new JBlock(false, false);
+		onStopBlock.invoke(scope, "enter").arg(_this());
 
-		JTryBlock tryBlock = onStopBeforeSuperBlock._try();
+		JTryBlock tryBlock = onStopBlock._try();
 		fireEvent(eventManager, tryBlock.body(), classes().ON_STOP_EVENT);
 		JBlock finallyBody = tryBlock._finally();
 
 		finallyBody.invoke(scope, "exit").arg(_this());
 		finallyBody.invoke(_super(), "onStop");
+
+        JMethod onStop = holder.getOnStop();
+        codeModelHelper.replaceSuperCall(onStop, onStopBlock);
 	}
 
 	private void onDestroyMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
-		JBlock onDestroyBeforeSuperBlock = holder.getOnDestroyBeforeSuperBlock();
-		onDestroyBeforeSuperBlock.invoke(scope, "enter").arg(_this());
+        JBlock onDestroyBlock = new JBlock(false, false);
+		onDestroyBlock.invoke(scope, "enter").arg(_this());
 
-		JTryBlock tryBlock = onDestroyBeforeSuperBlock._try();
+		JTryBlock tryBlock = onDestroyBlock._try();
 		fireEvent(eventManager, tryBlock.body(), classes().ON_DESTROY_EVENT);
 		JBlock finallyBody = tryBlock._finally();
 
@@ -200,6 +205,9 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		finallyBody.invoke(scope, "exit").arg(_this());
 		finallyBody.invoke(scope, "dispose").arg(_this());
 		finallyBody.invoke(_super(), "onDestroy");
+
+        JMethod onDestroy = holder.getOnDestroy();
+        codeModelHelper.replaceSuperCall(onDestroy, onDestroyBlock);
 	}
 
 	private void onConfigurationChangedMethod(RoboGuiceHolder holder, JFieldVar eventManager) {
