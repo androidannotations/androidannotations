@@ -110,8 +110,6 @@ public class AnnotationHandlers {
         add(new ServiceActionHandler(processingEnvironment));
 		add(new SubscribeHandler(processingEnvironment));
 		add(new ProduceHandler(processingEnvironment));
-		add(new UiThreadHandler(processingEnvironment));
-		add(new BackgroundHandler(processingEnvironment));
 		add(new InstanceStateHandler(processingEnvironment));
 		add(new HttpsClientHandler(processingEnvironment));
 		add(new OnActivityResultHandler(processingEnvironment));
@@ -122,9 +120,12 @@ public class AnnotationHandlers {
 		add(new AfterInjectHandler(processingEnvironment));
 		add(new AfterViewsHandler(processingEnvironment));
 
-		if (traceActivated(processingEnvironment)) {
-			add(new TraceHandler(processingEnvironment));
-		}
+        if (traceActivated(processingEnvironment)) {
+            add(new TraceHandler(processingEnvironment));
+        }
+        /* UIThreadHandler and BackgroundHandler must be after TraceHandler */
+        add(new UiThreadHandler(processingEnvironment));
+        add(new BackgroundHandler(processingEnvironment));
 	}
 
 	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
