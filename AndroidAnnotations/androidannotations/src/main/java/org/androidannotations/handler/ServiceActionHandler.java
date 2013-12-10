@@ -96,9 +96,6 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
             JVar extras = callActionBlock.decl(classes().BUNDLE, "extras");
             extras.init(holder.getOnHandleIntentIntent().invoke("getExtras"));
             JBlock extrasNotNullBlock = callActionBlock._if(extras.ne(_null()))._then();
-            callActionBlock = extrasNotNullBlock;
-
-            List<JVar> extraFields = new ArrayList<JVar>();
 
             // Extras params
             for (VariableElement param : methodParameters) {
@@ -123,8 +120,11 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
                 JVar extraField = extrasNotNullBlock.decl(extraParamClass, extraParamName, getExtraExpression);
                 callActionInvocation.arg(extraField);
             }
+            extrasNotNullBlock.add(callActionInvocation);
+        } else {
+            callActionBlock.add(callActionInvocation);
         }
-        callActionBlock.add(callActionInvocation);
+        callActionBlock._return();
     }
 
     private void addActionToIntentBuilder(EIntentServiceHolder holder, ExecutableElement executableElement, String methodName, JFieldVar actionKeyField) {
