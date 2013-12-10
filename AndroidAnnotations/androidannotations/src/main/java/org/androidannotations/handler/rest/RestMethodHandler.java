@@ -135,7 +135,8 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 	protected JExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> params) {
 		JVar httpHeaders = restAnnotationHelper.declareHttpHeaders(element, holder, methodBody);
-		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, params, httpHeaders);
+        JVar entitySentToServer = restAnnotationHelper.getEntitySentToServer(element, params);
+		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, entitySentToServer, httpHeaders);
 	}
 
     protected JExpression getResponseClass(Element element, RestHolder holder) {
