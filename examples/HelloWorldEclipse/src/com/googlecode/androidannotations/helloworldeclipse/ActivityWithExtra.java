@@ -19,16 +19,16 @@ public class ActivityWithExtra extends Activity {
 
 	@ViewById
 	TextView extraTextView;
-	
+
 	@Extra(MY_STRING_EXTRA)
 	String myMessage;
-	
+
 	@Extra(MY_DATE_EXTRA)
 	Date myDate;
-	
+
 	@Extra("unboundExtra")
 	String unboundExtra = "unboundExtraDefaultValue";
-	
+
 	/**
 	 * The logs will output a classcast exception, but the program flow won't be interrupted
 	 */
