@@ -24,29 +24,28 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ApplicationInjectedActivityTest {
-	
+
 	@Test
 	public void should_have_application_after_create() {
 		new SampleRoboApplication_().onCreate();
 		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
-		
+
 		activity.onCreate(null);
 
 		assertThat(activity.customApplication).isNotNull();
 	}
-	
+
 	@Test
 	public void application_can_be_replaced_for_tests() {
 		SampleRoboApplication testApp = new SampleRoboApplication();
-		
+
 		SampleRoboApplication_.setForTesting(testApp);
-		
+
 		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
-		
+
 		activity.onCreate(null);
 
 		assertThat(activity.customApplication).isSameAs(testApp);
 	}
-
 
 }

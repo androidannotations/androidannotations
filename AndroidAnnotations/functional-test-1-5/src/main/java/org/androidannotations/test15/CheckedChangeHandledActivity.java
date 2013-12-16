@@ -49,7 +49,8 @@ public class CheckedChangeHandledActivity extends EventsHandledAbstractActivity 
 	}
 
 	@CheckedChange({ R.id.button1, R.id.button2 })
-	public void multipleButtonWithViewArgument(CompoundButton v, boolean hasFocus) {
+	public void multipleButtonWithViewArgument(CompoundButton v,
+			boolean hasFocus) {
 
 	}
 

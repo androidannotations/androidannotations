@@ -64,7 +64,10 @@ import com.xtremelabs.robolectric.bytecode.RobolectricClassLoader;
  * public class FibonacciTest {
  * 	&#064;Parameters
  * 	public static List&lt;Object[]&gt; data() {
- * 		return Arrays.asList(new Object[][] { Fibonacci, { { 0, 0 }, { 1, 1 }, { 2, 1 }, { 3, 2 }, { 4, 3 }, { 5, 5 }, { 6, 8 } } });
+ * 		return Arrays.asList(new Object[][] {
+ * 				Fibonacci,
+ * 				{ { 0, 0 }, { 1, 1 }, { 2, 1 }, { 3, 2 }, { 4, 3 }, { 5, 5 },
+ * 						{ 6, 8 } } });
  * 	}
  * 
  * 	private int fInput;
@@ -91,18 +94,21 @@ import com.xtremelabs.robolectric.bytecode.RobolectricClassLoader;
  */
 public class RobolectricParameterized extends Suite {
 
-	public static class TestClassRunnerForParameters extends AndroidAnnotationsTestRunner {
+	public static class TestClassRunnerForParameters extends
+			AndroidAnnotationsTestRunner {
 		private int parameterSetNumber;
 
 		private List<Object[]> parameterList;
 
 		private RobolectricParameterized motherRunner;
 
-		public TestClassRunnerForParameters(Class<?> type) throws InitializationError {
+		public TestClassRunnerForParameters(Class<?> type)
+				throws InitializationError {
 			super(type);
 		}
 
-		private void init(RobolectricParameterized motherRunner, List<Object[]> parameterList, int parameterSetNumber) {
+		private void init(RobolectricParameterized motherRunner,
+				List<Object[]> parameterList, int parameterSetNumber) {
 			this.motherRunner = motherRunner;
 			this.parameterList = parameterList;
 			this.parameterSetNumber = parameterSetNumber;
@@ -144,7 +150,8 @@ public class RobolectricParameterized extends Suite {
 			}
 
 			if (initMethod == null) {
-				throw new RuntimeException("No init method found in parameterized test");
+				throw new RuntimeException(
+						"No init method found in parameterized test");
 			}
 
 			initMethod.setAccessible(true);
@@ -160,7 +167,10 @@ public class RobolectricParameterized extends Suite {
 			try {
 				return parameterList.get(parameterSetNumber);
 			} catch (ClassCastException e) {
-				throw new Exception(String.format("%s.%s() must return a Collection of arrays.", getTestClass().getName(), motherRunner.getParametersMethod(getTestClass()).getName()));
+				throw new Exception(String.format(
+						"%s.%s() must return a Collection of arrays.",
+						getTestClass().getName(), motherRunner
+								.getParametersMethod(getTestClass()).getName()));
 			}
 		}
 
@@ -171,7 +181,8 @@ public class RobolectricParameterized extends Suite {
 
 		@Override
 		protected String testName(final FrameworkMethod method) {
-			return String.format("%s[%s]", method.getName(), parameterSetNumber);
+			return String
+					.format("%s[%s]", method.getName(), parameterSetNumber);
 		}
 
 		@Override
@@ -197,7 +208,8 @@ public class RobolectricParameterized extends Suite {
 		super(robolectricClass(klass), Collections.<Runner> emptyList());
 		List<Object[]> parametersList = getParametersList(getTestClass());
 		for (int i = 0; i < parametersList.size(); i++) {
-			TestClassRunnerForParameters testRunner = new TestClassRunnerForParameters(getTestClass().getJavaClass());
+			TestClassRunnerForParameters testRunner = new TestClassRunnerForParameters(
+					getTestClass().getJavaClass());
 			testRunner.init(this, parametersList, i);
 			runners.add(testRunner);
 		}
@@ -210,26 +222,33 @@ public class RobolectricParameterized extends Suite {
 
 	@SuppressWarnings("unchecked")
 	private List<Object[]> getParametersList(TestClass klass) throws Throwable {
-		return (List<Object[]>) getParametersMethod(klass).invokeExplosively(null);
+		return (List<Object[]>) getParametersMethod(klass).invokeExplosively(
+				null);
 	}
 
-	private FrameworkMethod getParametersMethod(TestClass testClass) throws Exception {
-		List<FrameworkMethod> methods = testClass.getAnnotatedMethods(Parameters.class);
+	private FrameworkMethod getParametersMethod(TestClass testClass)
+			throws Exception {
+		List<FrameworkMethod> methods = testClass
+				.getAnnotatedMethods(Parameters.class);
 		for (FrameworkMethod each : methods) {
 			int modifiers = each.getMethod().getModifiers();
 			if (Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers))
 				return each;
 		}
 
-		throw new Exception("No public static parameters method on class " + testClass.getName());
+		throw new Exception("No public static parameters method on class "
+				+ testClass.getName());
 	}
 
-	private static Class<?> robolectricClass(Class<?> originalClass) throws Exception {
+	private static Class<?> robolectricClass(Class<?> originalClass)
+			throws Exception {
 		return getRobolectricLoader().loadClass(originalClass.getName());
 	}
 
-	private static RobolectricClassLoader getRobolectricLoader() throws Exception {
-		Method getDefaultLoader = RobolectricTestRunner.class.getDeclaredMethod("getDefaultLoader");
+	private static RobolectricClassLoader getRobolectricLoader()
+			throws Exception {
+		Method getDefaultLoader = RobolectricTestRunner.class
+				.getDeclaredMethod("getDefaultLoader");
 		getDefaultLoader.setAccessible(true);
 		return (RobolectricClassLoader) getDefaultLoader.invoke(null);
 	}

@@ -15,9 +15,9 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.EActivity;
+
+import android.app.Activity;
 
 @EActivity(R.layout.main)
 public class BackpressedActivity extends Activity {

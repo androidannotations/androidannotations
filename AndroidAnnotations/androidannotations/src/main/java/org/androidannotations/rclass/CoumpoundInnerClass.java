@@ -15,8 +15,8 @@
  */
 package org.androidannotations.rclass;
 
-import org.androidannotations.processing.EBeanHolder;
 import com.sun.codemodel.JFieldRef;
+import org.androidannotations.process.ProcessHolder;
 
 public class CoumpoundInnerClass implements IRInnerClass {
 
@@ -57,7 +57,7 @@ public class CoumpoundInnerClass implements IRInnerClass {
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(Integer idValue, EBeanHolder holder) {
+	public JFieldRef getIdStaticRef(Integer idValue, ProcessHolder holder) {
 		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, holder);
 		if (idStaticRef == null) {
 			idStaticRef = androidRInnerClass.getIdStaticRef(idValue, holder);
@@ -66,7 +66,7 @@ public class CoumpoundInnerClass implements IRInnerClass {
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(String name, EBeanHolder holder) {
+	public JFieldRef getIdStaticRef(String name, ProcessHolder holder) {
 		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, holder);
 		if (idStaticRef == null) {
 			idStaticRef = androidRInnerClass.getIdStaticRef(name, holder);

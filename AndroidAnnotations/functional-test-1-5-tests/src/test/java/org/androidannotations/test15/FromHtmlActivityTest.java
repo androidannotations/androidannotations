@@ -43,12 +43,14 @@ public class FromHtmlActivityTest {
 	@Test
 	public void injectionOfHtmlTest() {
 		assertNotNull(activity.textView);
-		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.textView.getText());
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)),
+				activity.textView.getText());
 	}
 
 	@Test
 	public void injectionOfHtmlWithDefaultName() {
 		assertNotNull(activity.someView);
-		assertEquals(Html.fromHtml(activity.getString(R.string.someView)), activity.someView.getText());
+		assertEquals(Html.fromHtml(activity.getString(R.string.someView)),
+				activity.someView.getText());
 	}
 }

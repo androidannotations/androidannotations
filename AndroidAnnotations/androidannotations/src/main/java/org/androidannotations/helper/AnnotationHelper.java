@@ -15,7 +15,6 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 
 import java.lang.annotation.Annotation;
@@ -43,7 +42,8 @@ import javax.tools.Diagnostic;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
-import org.androidannotations.processing.EBeanHolder;
+import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
 
@@ -154,9 +154,9 @@ public class AnnotationHelper {
 	 * Returns a list of {@link JFieldRef} linking to the R class, based on the
 	 * given annotation
 	 * 
-	 * @see #extractAnnotationResources(Element, Class, IRInnerClass, boolean)
+	 * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
 	 */
-	public List<JFieldRef> extractAnnotationFieldRefs(EBeanHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
+	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
 		List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
 
 		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName)) {
@@ -174,7 +174,7 @@ public class AnnotationHelper {
 	 * 
 	 * @param element
 	 *            the annotated element
-	 * @param target
+	 * @param annotationName
 	 *            the annotation on the element
 	 * @param rInnerClass
 	 *            the R innerClass the resources belong to
@@ -374,9 +374,7 @@ public class AnnotationHelper {
 
 				AnnotationValue annotationValue = entry.getValue();
 
-				DeclaredType annotationClass = (DeclaredType) annotationValue.getValue();
-
-				return annotationClass;
+				return (DeclaredType) annotationValue.getValue();
 			}
 		}
 
@@ -385,14 +383,6 @@ public class AnnotationHelper {
 
 	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName) {
 		return extractAnnotationClassParameter(element, annotationName, "value");
-	}
-
-	public boolean enclosingElementIsGenerated(Element element) {
-		/*
-		 * TODO This isn't really safe, can we find a better way?
-		 */
-		Element enclosingElement = element.getEnclosingElement();
-		return enclosingElement.getSimpleName().toString().endsWith(GENERATION_SUFFIX);
 	}
 
 	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {

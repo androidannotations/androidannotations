@@ -25,7 +25,7 @@ import javax.annotation.processing.FilerException;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 
-import org.androidannotations.processing.OriginatingElements;
+import org.androidannotations.process.OriginatingElements;
 
 public class ApiCodeGenerator {
 

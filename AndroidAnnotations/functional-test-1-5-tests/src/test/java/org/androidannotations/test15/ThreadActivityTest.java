@@ -65,25 +65,26 @@ public class ThreadActivityTest {
 
 	@Test
 	public void backgroundDelegatesToExecutor() {
-		
+
 		Executor executor = mock(Executor.class);
-		
+
 		BackgroundExecutor.setExecutor(executor);
-		
+
 		activity.emptyBackgroundMethod();
-		
-		verify(executor).execute(Mockito.<Runnable>any());
+
+		verify(executor).execute(Mockito.<Runnable> any());
 	}
 
 	/**
-	 * Verify that non-serialized background tasks <strong>are not</strong> serialized (ensure that
-	 * serial feature does not force all background tasks to be serialized).
+	 * Verify that non-serialized background tasks <strong>are not</strong>
+	 * serialized (ensure that serial feature does not force all background
+	 * tasks to be serialized).
 	 * 
-	 * Start several requests which add an item to a list in background, without "@Background"
-	 * serial attribute enabled.
+	 * Start several requests which add an item to a list in background, without
+	 * "@Background" serial attribute enabled.
 	 * 
-	 * Once all tasks have completed execution, verify that the items in the list are not ordered
-	 * (with very little false-negative probability).
+	 * Once all tasks have completed execution, verify that the items in the
+	 * list are not ordered (with very little false-negative probability).
 	 */
 	@Test
 	public void parallelBackgroundTasks() {
@@ -93,7 +94,8 @@ public class ThreadActivityTest {
 		/* set an executor with 4 threads */
 		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
 
-		List<Integer> list = Collections.synchronizedList(new ArrayList<Integer>());
+		List<Integer> list = Collections
+				.synchronizedList(new ArrayList<Integer>());
 
 		/* sem.acquire() will be unlocked exactly after NB_ADD releases */
 		Semaphore sem = new Semaphore(1 - NB_ADD);
@@ -103,8 +105,8 @@ public class ThreadActivityTest {
 		/* execute NB_ADD requests to add an item to the list */
 		for (int i = 0; i < NB_ADD; i++) {
 			/*
-			 * wait a random delay (between 0 and 20 milliseconds) to increase the probability of
-			 * wrong order
+			 * wait a random delay (between 0 and 20 milliseconds) to increase
+			 * the probability of wrong order
 			 */
 			int delay = random.nextInt(20);
 			activity.addBackground(list, i, delay, sem);
@@ -112,12 +114,14 @@ public class ThreadActivityTest {
 
 		try {
 			/* wait for all tasks to be completed */
-			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME, TimeUnit.MILLISECONDS);
-			Assert.assertTrue("Requested tasks should have completed execution", acquired);
+			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME,
+					TimeUnit.MILLISECONDS);
+			Assert.assertTrue(
+					"Requested tasks should have completed execution", acquired);
 
 			/*
-			 * verify that list items are in the wrong order (the probability it is in the right is
-			 * 1/(NB_ADD!), which is nearly 0)
+			 * verify that list items are in the wrong order (the probability it
+			 * is in the right is 1/(NB_ADD!), which is nearly 0)
 			 */
 			boolean rightOrder = true;
 			for (int i = 0; i < NB_ADD && rightOrder; i++) {
@@ -125,17 +129,20 @@ public class ThreadActivityTest {
 			}
 			Assert.assertFalse("Items should not be in order", rightOrder);
 		} catch (InterruptedException e) {
-			Assert.assertFalse("Testing thread should never be interrupted", true);
+			Assert.assertFalse("Testing thread should never be interrupted",
+					true);
 		}
 	}
 
 	/**
 	 * Verify that serialized background tasks are correctly serialized.
 	 * 
-	 * Start several requests which add an item to a list in background, with "@Background" serial
-	 * attribute enabled, so the requests must be executed sequentially.
+	 * Start several requests which add an item to a list in background, with
+	 * "@Background" serial attribute enabled, so the requests must be executed
+	 * sequentially.
 	 * 
-	 * Once all tasks have completed execution, verify that the items in the list are ordered.
+	 * Once all tasks have completed execution, verify that the items in the
+	 * list are ordered.
 	 */
 	@Test
 	public void serializedBackgroundTasks() {
@@ -146,10 +153,11 @@ public class ThreadActivityTest {
 		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
 
 		/*
-		 * the calls are serialized, but not necessarily on the same thread, so we need to
-		 * synchronize to avoid cache effects
+		 * the calls are serialized, but not necessarily on the same thread, so
+		 * we need to synchronize to avoid cache effects
 		 */
-		List<Integer> list = Collections.synchronizedList(new ArrayList<Integer>());
+		List<Integer> list = Collections
+				.synchronizedList(new ArrayList<Integer>());
 
 		/* sem.acquire() will be unlocked exactly after NB_ADD releases */
 		Semaphore sem = new Semaphore(1 - NB_ADD);
@@ -159,8 +167,8 @@ public class ThreadActivityTest {
 		/* execute NB_ADD requests to add an item to the list */
 		for (int i = 0; i < NB_ADD; i++) {
 			/*
-			 * wait a random delay (between 0 and 20 milliseconds) to increase the probability of
-			 * wrong order if buggy
+			 * wait a random delay (between 0 and 20 milliseconds) to increase
+			 * the probability of wrong order if buggy
 			 */
 			int delay = random.nextInt(20);
 			activity.addSerializedBackground(list, i, delay, sem);
@@ -168,25 +176,30 @@ public class ThreadActivityTest {
 
 		try {
 			/* wait for all tasks to be completed */
-			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME, TimeUnit.MILLISECONDS);
-			Assert.assertTrue("Requested tasks should have completed execution", acquired);
+			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME,
+					TimeUnit.MILLISECONDS);
+			Assert.assertTrue(
+					"Requested tasks should have completed execution", acquired);
 
 			for (int i = 0; i < NB_ADD; i++) {
-				Assert.assertEquals("Items must be in order", i, (int) list.get(i));
+				Assert.assertEquals("Items must be in order", i,
+						(int) list.get(i));
 			}
 		} catch (InterruptedException e) {
-			Assert.assertFalse("Testing thread should never be interrupted", true);
+			Assert.assertFalse("Testing thread should never be interrupted",
+					true);
 		}
 	}
 
 	/**
-	 * Verify that cancellable background tasks are correctly cancelled, and others are not.
+	 * Verify that cancellable background tasks are correctly cancelled, and
+	 * others are not.
 	 * 
-	 * Start several requests which add an item to a list in background, half explicitly cancelled,
-	 * half not cancelled.
+	 * Start several requests which add an item to a list in background, half
+	 * explicitly cancelled, half not cancelled.
 	 * 
-	 * Once all tasks have completed execution, check if and only if the items from the uncancelled
-	 * tasks are in the list.
+	 * Once all tasks have completed execution, check if and only if the items
+	 * from the uncancelled tasks are in the list.
 	 */
 	@Test
 	public void cancellableBackgroundTasks() {
@@ -197,15 +210,19 @@ public class ThreadActivityTest {
 		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
 
 		/*
-		 * the calls are serialized, but not necessarily on the same thread, so we need to
-		 * synchronize to avoid cache effects
+		 * the calls are serialized, but not necessarily on the same thread, so
+		 * we need to synchronize to avoid cache effects
 		 */
-		List<Integer> list = Collections.synchronizedList(new ArrayList<Integer>());
+		List<Integer> list = Collections
+				.synchronizedList(new ArrayList<Integer>());
 
 		/* sem.acquire() will be unlocked exactly after NB_ADD releases */
 		Semaphore sem = new Semaphore(1 - NB_ADD);
 
-		/* execute 2*NB_ADD requests to add an item to the list, half being cancelled */
+		/*
+		 * execute 2*NB_ADD requests to add an item to the list, half being
+		 * cancelled
+		 */
 		for (int i = 0; i < NB_ADD; i++) {
 			activity.addBackground(list, i, 0, sem);
 			activity.addCancellableBackground(list, NB_ADD + i, 4000);
@@ -218,16 +235,21 @@ public class ThreadActivityTest {
 
 		try {
 			/* wait for all non cancelled tasks to be completed */
-			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME, TimeUnit.MILLISECONDS);
-			Assert.assertTrue("Requested tasks should have completed execution", acquired);
+			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME,
+					TimeUnit.MILLISECONDS);
+			Assert.assertTrue(
+					"Requested tasks should have completed execution", acquired);
 
-			Assert.assertEquals("Only uncancelled tasks must have added items", list.size(), NB_ADD);
+			Assert.assertEquals("Only uncancelled tasks must have added items",
+					list.size(), NB_ADD);
 
 			for (int i = 0; i < NB_ADD; i++) {
-				Assert.assertTrue("Items must be only from uncancelled tasks", i < NB_ADD);
+				Assert.assertTrue("Items must be only from uncancelled tasks",
+						i < NB_ADD);
 			}
 		} catch (InterruptedException e) {
-			Assert.assertFalse("Testing thread should never be interrupted", true);
+			Assert.assertFalse("Testing thread should never be interrupted",
+					true);
 		}
 	}
 
@@ -240,15 +262,19 @@ public class ThreadActivityTest {
 		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
 
 		/*
-		 * the calls are serialized, but not necessarily on the same thread, so we need to
-		 * synchronize to avoid cache effects
+		 * the calls are serialized, but not necessarily on the same thread, so
+		 * we need to synchronize to avoid cache effects
 		 */
-		List<Integer> list = Collections.synchronizedList(new ArrayList<Integer>());
+		List<Integer> list = Collections
+				.synchronizedList(new ArrayList<Integer>());
 
 		/* sem.acquire() will be unlocked exactly after NB_ADD releases */
 		Semaphore sem = new Semaphore(1 - NB_ADD);
 
-		/* execute 2*NB_ADD requests to add an item to the list, half being cancelled */
+		/*
+		 * execute 2*NB_ADD requests to add an item to the list, half being
+		 * cancelled
+		 */
 		for (int i = 0; i < NB_ADD; i++) {
 			activity.addSerializedBackground(list, i, 0, sem);
 			activity.addCancellableSerializedBackground(list, NB_ADD + i, 4000);
@@ -261,20 +287,25 @@ public class ThreadActivityTest {
 
 		try {
 			/* wait for all non cancelled tasks to be completed */
-			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME, TimeUnit.MILLISECONDS);
-			Assert.assertTrue("Requested tasks should have completed execution", acquired);
+			boolean acquired = sem.tryAcquire(MAX_WAITING_TIME,
+					TimeUnit.MILLISECONDS);
+			Assert.assertTrue(
+					"Requested tasks should have completed execution", acquired);
 
 			/* cancel all tasks with id "to_cancel_2" */
 			BackgroundExecutor.cancelAll("to_cancel_2", true);
 
-			Assert.assertEquals("Only uncancelled tasks must have added items", list.size(), NB_ADD);
+			Assert.assertEquals("Only uncancelled tasks must have added items",
+					list.size(), NB_ADD);
 
 			for (int i = 0; i < NB_ADD; i++) {
-				Assert.assertTrue("Items must be only from uncancelled tasks", i < NB_ADD);
+				Assert.assertTrue("Items must be only from uncancelled tasks",
+						i < NB_ADD);
 			}
 
 		} catch (InterruptedException e) {
-			Assert.assertFalse("Testing thread should never be interrupted", true);
+			Assert.assertFalse("Testing thread should never be interrupted",
+					true);
 		}
 	}
 

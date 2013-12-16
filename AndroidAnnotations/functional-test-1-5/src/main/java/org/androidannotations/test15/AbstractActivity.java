@@ -15,11 +15,11 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-import android.widget.Button;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
+import android.app.Activity;
+import android.widget.Button;
 
 @EActivity(R.layout.views_injected)
 public abstract class AbstractActivity extends Activity {

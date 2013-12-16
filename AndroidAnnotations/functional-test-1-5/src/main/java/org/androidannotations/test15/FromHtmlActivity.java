@@ -15,12 +15,12 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-import android.widget.TextView;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FromHtml;
 import org.androidannotations.annotations.ViewById;
+
+import android.app.Activity;
+import android.widget.TextView;
 
 @EActivity(R.layout.views_injected)
 public class FromHtmlActivity extends Activity {

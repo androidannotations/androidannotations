@@ -20,7 +20,7 @@ import java.io.IOException;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 
-import org.androidannotations.processing.ModelProcessor.ProcessResult;
+import org.androidannotations.process.ModelProcessor;
 
 import com.sun.codemodel.writer.PrologCodeWriter;
 
@@ -36,7 +36,7 @@ public class CodeModelGenerator {
 		this.aaVersion = aaVersion;
 	}
 
-	public void generate(ProcessResult processResult) throws IOException {
+	public void generate(ModelProcessor.ProcessResult processResult) throws IOException {
 
 		ApiCodeGenerator apiCodeGenerator = new ApiCodeGenerator(filer);
 		apiCodeGenerator.writeApiClasses(processResult.apiClassesToGenerate, processResult.originatingElements);

@@ -25,7 +25,7 @@ import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 
-import org.androidannotations.processing.OriginatingElements;
+import org.androidannotations.process.OriginatingElements;
 
 import com.sun.codemodel.CodeWriter;
 import com.sun.codemodel.JPackage;

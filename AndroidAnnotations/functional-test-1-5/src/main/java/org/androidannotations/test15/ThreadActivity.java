@@ -29,10 +29,15 @@ import org.androidannotations.test15.ebean.SomeBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
 
 import android.app.Activity;
-import android.os.Looper;
+import android.os.Bundle;
 
 @EActivity
 public class ThreadActivity extends Activity {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
 	@UiThread
 	void emptyUiMethod() {

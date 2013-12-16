@@ -15,12 +15,13 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.NoTitle;
 
+import android.app.Activity;
+
+@SuppressWarnings("deprecation")
 @EActivity
 @NoTitle
 @Fullscreen

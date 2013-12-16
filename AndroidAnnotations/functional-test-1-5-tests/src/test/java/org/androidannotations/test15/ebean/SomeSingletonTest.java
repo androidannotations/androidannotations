@@ -15,11 +15,8 @@
  */
 package org.androidannotations.test15.ebean;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-
-import java.lang.reflect.Field;
-
+import android.content.Context;
+import android.view.View;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
@@ -28,8 +25,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.content.Context;
-import android.view.View;
+import java.lang.reflect.Field;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class SomeSingletonTest {
@@ -45,18 +44,6 @@ public class SomeSingletonTest {
 		SomeSingleton_ firstInstance = SomeSingleton_.getInstance_(context);
 		SomeSingleton_ secondInstance = SomeSingleton_.getInstance_(context);
 		assertThat(firstInstance).isSameAs(secondInstance);
-	}
-
-	@Test
-	public void rebind_does_not_rebind() {
-		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
-		SomeSingleton_ singleton = SomeSingleton_.getInstance_(context);
-
-		Context initialContext = singleton.context;
-
-		EmptyActivityWithoutLayout_ context2 = new EmptyActivityWithoutLayout_();
-		singleton.rebind(context2);
-		assertThat(singleton.context).isSameAs(initialContext);
 	}
 
 	@Test
