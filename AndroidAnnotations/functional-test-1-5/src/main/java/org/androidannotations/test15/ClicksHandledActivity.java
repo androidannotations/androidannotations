@@ -15,10 +15,10 @@
  */
 package org.androidannotations.test15;
 
-import android.view.View;
-
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+
+import android.view.View;
 
 @EActivity(R.layout.clickable_widgets)
 public class ClicksHandledActivity extends EventsHandledAbstractActivity {
@@ -27,8 +27,8 @@ public class ClicksHandledActivity extends EventsHandledAbstractActivity {
 	public void onClick(View v) {
 		avoidStackOverflowEventHandled = true;
 	}
-	
-	@Click(resName={"libResButton1", "libResButton2"})
+
+	@Click(resName = { "libResButton1", "libResButton2" })
 	public void libResButton() {
 		libResButtonEventHandled = true;
 	}

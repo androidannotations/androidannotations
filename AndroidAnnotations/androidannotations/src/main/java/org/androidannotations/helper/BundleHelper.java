@@ -31,7 +31,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 public class BundleHelper {
-	private static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
+	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
 
 	static {
 

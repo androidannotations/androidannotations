@@ -17,6 +17,7 @@ package org.androidannotations.test15.sherlock;
 
 
 
+import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import org.androidannotations.annotations.EActivity;
@@ -35,6 +36,11 @@ public class MySherlockActivity extends SherlockActivity {
 	boolean menuRefreshSelected;
 	boolean multipleMenuItems;
 	boolean menu_add;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
 	@OptionsItem
 	void menuRefreshSelected() {

@@ -15,11 +15,11 @@
  */
 package org.androidannotations.test15;
 
-import android.view.MotionEvent;
-import android.view.View;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Touch;
+
+import android.view.MotionEvent;
+import android.view.View;
 
 @EActivity(R.layout.clickable_widgets)
 public class TouchesHandledActivity extends EventsHandledAbstractActivity {
@@ -28,35 +28,36 @@ public class TouchesHandledActivity extends EventsHandledAbstractActivity {
 	public void conventionButton(MotionEvent evt) {
 		conventionButtonEventHandled = true;
 	}
-	
+
 	@Touch
 	public void snakeCaseButton(MotionEvent evt) {
 		snakeCaseButtonEventHandled = true;
-	}	
-	
+	}
+
 	@Touch
 	public void extendedConventionButtonTouched(MotionEvent evt) {
 		extendedConventionButtonEventHandled = true;
 	}
-	
+
 	@Touch(R.id.configurationOverConventionButton)
 	public void overridenConventionButton(MotionEvent evt) {
 		overridenConventionButtonEventHandled = true;
 	}
-	
+
 	public void unboundButton(MotionEvent evt) {
 		unboundButtonEventHandled = true;
 	}
-	
+
 	@Touch
 	public void buttonWithViewArgument(MotionEvent evt, View viewArgument) {
 		this.viewArgument = viewArgument;
 	}
 
-	@Touch({R.id.button1, R.id.button2})
-	public void multipleButtonWithViewArgument(MotionEvent evt, View viewArgument) {
+	@Touch({ R.id.button1, R.id.button2 })
+	public void multipleButtonWithViewArgument(MotionEvent evt,
+			View viewArgument) {
 		this.viewArgument = viewArgument;
 		multipleButtonsEventHandled = true;
 	}
-	
+
 }

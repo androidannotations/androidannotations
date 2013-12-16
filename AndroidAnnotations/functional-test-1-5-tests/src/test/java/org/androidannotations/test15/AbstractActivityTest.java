@@ -31,5 +31,5 @@ public class AbstractActivityTest {
 
 		assertThat(Modifier.isFinal(modifiers)).isTrue();
 	}
-	
+
 }

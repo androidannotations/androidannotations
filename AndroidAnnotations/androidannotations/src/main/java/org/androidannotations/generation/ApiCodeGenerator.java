@@ -27,7 +27,7 @@ import javax.tools.JavaFileObject;
 
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.processing.OriginatingElements;
+import org.androidannotations.process.OriginatingElements;
 
 public class ApiCodeGenerator {
 

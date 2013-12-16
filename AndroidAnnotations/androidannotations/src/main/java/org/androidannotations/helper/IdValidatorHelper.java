@@ -22,8 +22,8 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.ResId;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 import org.androidannotations.rclass.IRClass.Res;
-import org.androidannotations.validation.IsValid;
 
 public class IdValidatorHelper extends ValidatorHelper {
 

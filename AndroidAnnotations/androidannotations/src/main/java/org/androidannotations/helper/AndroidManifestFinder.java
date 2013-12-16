@@ -191,7 +191,7 @@ public class AndroidManifestFinder {
 
 			Node debuggableAttribute = applicationNode.getAttributes().getNamedItem("android:debuggable");
 			if (debuggableAttribute != null) {
-				applicationDebuggableMode = debuggableAttribute.getNodeValue().equalsIgnoreCase("true") ? true : false;
+				applicationDebuggableMode = debuggableAttribute.getNodeValue().equalsIgnoreCase("true");
 			}
 		}
 
@@ -214,7 +214,7 @@ public class AndroidManifestFinder {
 		componentQualifiedNames.addAll(providerQualifiedNames);
 
 		NodeList usesPermissionNodes = documentElement.getElementsByTagName("uses-permission");
-		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(applicationPackage, usesPermissionNodes);
+		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(usesPermissionNodes);
 
 		List<String> permissionQualifiedNames = new ArrayList<String>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
@@ -296,7 +296,7 @@ public class AndroidManifestFinder {
 		}
 	}
 
-	private List<String> extractUsesPermissionNames(String applicationPackage, NodeList usesPermissionNodes) {
+	private List<String> extractUsesPermissionNames(NodeList usesPermissionNodes) {
 		List<String> usesPermissionQualifiedNames = new ArrayList<String>();
 
 		for (int i = 0; i < usesPermissionNodes.getLength(); i++) {
