@@ -23,12 +23,17 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.sun.codemodel.*;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
 
 public class RootContextHanlder extends BaseAnnotationHandler<EBeanHolder> {
 

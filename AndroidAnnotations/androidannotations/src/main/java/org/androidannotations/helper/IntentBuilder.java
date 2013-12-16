@@ -26,17 +26,25 @@ import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
 import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
-import com.sun.codemodel.*;
-import com.sun.tools.javac.util.Pair;
-import org.androidannotations.holder.HasIntentBuilder;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import java.lang.annotation.ElementType;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.androidannotations.holder.HasIntentBuilder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
+import com.sun.tools.javac.util.Pair;
 
 public class IntentBuilder {
 

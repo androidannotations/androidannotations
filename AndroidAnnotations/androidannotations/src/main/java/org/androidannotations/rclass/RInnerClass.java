@@ -28,10 +28,10 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.helper.CaseHelper;
+import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldRef;
-import org.androidannotations.process.ProcessHolder;
 
 public class RInnerClass implements IRInnerClass {
 

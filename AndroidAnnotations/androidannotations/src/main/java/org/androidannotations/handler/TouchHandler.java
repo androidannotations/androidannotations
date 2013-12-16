@@ -25,9 +25,9 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.Touch;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
-import org.androidannotations.helper.CanonicalNameConstants;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;

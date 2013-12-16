@@ -37,7 +37,13 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.api.SdkVersionHelper;
-import org.androidannotations.helper.*;
+import org.androidannotations.helper.ActionBarSherlockHelper;
+import org.androidannotations.helper.ActivityIntentBuilder;
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.GreenDroidHelper;
+import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;

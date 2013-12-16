@@ -17,11 +17,10 @@ package org.androidannotations.rest;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.utils.AAProcessorTestHelper;
+import org.junit.Before;
+import org.junit.Test;
 
 public class RestConverterTest extends AAProcessorTestHelper {
 

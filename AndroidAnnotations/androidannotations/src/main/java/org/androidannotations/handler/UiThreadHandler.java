@@ -22,11 +22,18 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.sun.codemodel.*;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.holder.EComponentHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JOp;
 
 public class UiThreadHandler extends AbstractRunnableHandler {
 

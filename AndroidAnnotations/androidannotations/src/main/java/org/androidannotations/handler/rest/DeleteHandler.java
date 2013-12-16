@@ -15,13 +15,13 @@
  */
 package org.androidannotations.handler.rest;
 
-import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+
+import org.androidannotations.annotations.rest.Delete;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 
 public class DeleteHandler extends RestMethodHandler {
 

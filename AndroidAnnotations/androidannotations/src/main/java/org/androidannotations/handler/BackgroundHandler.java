@@ -22,10 +22,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JStatement;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.api.BackgroundExecutor.Task;
@@ -33,11 +29,15 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JVar;
 
 public class BackgroundHandler extends AbstractRunnableHandler {
 
