@@ -1,8 +1,20 @@
-.gradle
+# Maven
+target
+
+#Android
 gen
-out
-build
-*.idea
+bin
+
+# Eclipse
+.classpath
+.apt_generated
+.settings
+.project
+org.eclipse.jdt.core.prefs
+org.maven.ide.eclipse.prefs
+
+# Idea
 *.ipr
-*.iml
 *.iws
+*.iml
+*.idea
