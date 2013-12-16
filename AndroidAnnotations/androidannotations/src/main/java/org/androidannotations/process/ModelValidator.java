@@ -20,14 +20,17 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 
+import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
-import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
 
 public class ModelValidator {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModelValidator.class);
 	private AnnotationHandlers annotationHandlers;
 
 	public ModelValidator(AnnotationHandlers annotationHandlers) {
@@ -35,6 +38,8 @@ public class ModelValidator {
 	}
 
 	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ProcessingException, Exception {
+
+		LOGGER.info("Validating elements");
 
 		/*
 		 * We currently do not validate the elements on the ancestors, assuming
@@ -44,6 +49,7 @@ public class ModelValidator {
 		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
 		for (AnnotationHandler<?> annotationHandler : annotationHandlers.get()) {
+			String validatorSimpleName = annotationHandler.getClass().getSimpleName();
 			String annotationName = annotationHandler.getTarget();
 
 			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(annotationName);
@@ -52,12 +58,19 @@ public class ModelValidator {
 
 			validatedElements.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 
+			if (!annotatedElements.isEmpty()) {
+				LOGGER.debug("Validating with {}: {}", validatorSimpleName, annotatedElements);
+			}
+
 			for (Element annotatedElement : annotatedElements) {
 				if (validateThrowing(annotationHandler, annotatedElement, validatedElements)) {
 					validatedAnnotatedElements.add(annotatedElement);
+				} else {
+					LOGGER.warn("Element {} unvalidated by {}", annotatedElement, validatorSimpleName);
 				}
 			}
 		}
+
 		return validatedElements;
 	}
 

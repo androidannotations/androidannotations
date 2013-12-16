@@ -23,17 +23,21 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
 
 import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModelProcessor.class);
 
 	public static class ProcessResult {
 
@@ -66,9 +70,16 @@ public class ModelProcessor {
 
 		annotationHandlers.setProcessHolder(processHolder);
 
+		LOGGER.info("Processing root elements");
+
 		for (GeneratingAnnotationHandler generatingAnnotationHandler : annotationHandlers.getGenerating()) {
 			String annotationName = generatingAnnotationHandler.getTarget();
 			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
+
+			if (!annotatedElements.isEmpty()) {
+				LOGGER.debug("Processing root elements {}: {}", generatingAnnotationHandler.getClass().getSimpleName(), annotatedElements);
+			}
+
 			for (Element annotatedElement : annotatedElements) {
 				/*
 				 * We do not generate code for abstract classes, because the
@@ -80,6 +91,8 @@ public class ModelProcessor {
 					GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
 					processHolder.put(annotatedElement, generatedClassHolder);
 					processThrowing(generatingAnnotationHandler, annotatedElement, generatedClassHolder);
+				} else {
+					LOGGER.trace("Skip element {} because it's abstract", annotatedElement);
 				}
 			}
 			/*
@@ -87,6 +100,8 @@ public class ModelProcessor {
 			 * ancestors. We should careful design the priority rules first.
 			 */
 		}
+
+		LOGGER.info("Processing enclosed elements");
 
 		for (AnnotationHandler annotationHandler : annotationHandlers.getDecorating()) {
 			String annotationName = annotationHandler.getTarget();
@@ -96,6 +111,11 @@ public class ModelProcessor {
 			 * elements, but uses the holder for the root element
 			 */
 			Set<AnnotatedAndRootElements> ancestorAnnotatedElements = validatedModel.getAncestorAnnotatedElements(annotationName);
+
+			if (!ancestorAnnotatedElements.isEmpty()) {
+				LOGGER.debug("Processing enclosed elements with {}: {}", annotationHandler.getClass().getSimpleName(), ancestorAnnotatedElements);
+			}
+
 			for (AnnotatedAndRootElements elements : ancestorAnnotatedElements) {
 				GeneratedClassHolder holder = processHolder.getGeneratedClassHolder(elements.rootTypeElement);
 				/*
@@ -125,6 +145,8 @@ public class ModelProcessor {
 				if (!isAbstractClass(enclosingElement)) {
 					GeneratedClassHolder holder = processHolder.getGeneratedClassHolder(enclosingElement);
 					processThrowing(annotationHandler, annotatedElement, holder);
+				} else {
+					LOGGER.trace("Skip element {} because enclosing element {} is abstract", annotatedElement, enclosingElement);
 				}
 			}
 

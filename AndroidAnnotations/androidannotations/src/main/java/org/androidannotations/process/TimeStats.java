@@ -21,10 +21,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.processing.Messager;
-import javax.tools.Diagnostic;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 
 public class TimeStats {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimeStats.class);
 
 	private final Map<String, Long> measures = new HashMap<String, Long>();
 	private final List<Duration> durations = new ArrayList<Duration>();
@@ -44,8 +46,6 @@ public class TimeStats {
 		}
 	}
 
-	private Messager messager;
-
 	public void start(String key) {
 		long start = System.currentTimeMillis();
 		measures.put(key, start);
@@ -62,7 +62,6 @@ public class TimeStats {
 
 	@Override
 	public String toString() {
-
 		StringBuilder sb = new StringBuilder();
 		sb.append("Time measurements: ");
 
@@ -79,13 +78,7 @@ public class TimeStats {
 	}
 
 	public void logStats() {
-		if (messager != null) {
-			messager.printMessage(Diagnostic.Kind.NOTE, toString());
-		}
-	}
-
-	public void setMessager(Messager messager) {
-		this.messager = messager;
+		LOGGER.info(toString());
 	}
 
 	public void clear() {
