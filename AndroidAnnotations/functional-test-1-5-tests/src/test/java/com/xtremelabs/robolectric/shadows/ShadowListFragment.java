@@ -27,12 +27,13 @@ import com.xtremelabs.robolectric.internal.Implements;
 @Implements(ListFragment.class)
 public class ShadowListFragment extends ShadowFragment {
 
-	final private AdapterView.OnItemClickListener	mOnClickListener	= //
-		new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				onListItemClick((ListView) parent, v, position, id);
-			}
-		};
+	final private AdapterView.OnItemClickListener mOnClickListener = //
+	new AdapterView.OnItemClickListener() {
+		public void onItemClick(AdapterView<?> parent, View v, int position,
+				long id) {
+			onListItemClick((ListView) parent, v, position, id);
+		}
+	};
 
 	@Implementation
 	public void onViewCreated(View view, Bundle savedInstanceState) {

@@ -24,13 +24,13 @@
     <uses-sdk
         android:minSdkVersion="3"
         android:targetSdkVersion="8" />
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="org.androidannotations.test15.roboguice.SampleRoboApplication_"
-        android:icon="@drawable/icon"
         android:debuggable="true"
+        android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity android:name="org.androidannotations.test15.eviewgroup.CustomFrameLayoutActivity_" >
             <intent-filter>
@@ -92,6 +92,15 @@
 
         <service
             android:name="org.androidannotations.test15.eservice.MyService_"
+            android:exported="false" />
+        <service
+            android:name="org.androidannotations.test15.eservice.MySimpleIntentService_"
+            android:exported="false" />
+        <service
+            android:name="org.androidannotations.test15.eintentservice.MyIntentService_"
+            android:exported="false" />
+        <service
+            android:name="org.androidannotations.test15.eintentservice.IntentServiceHandledAction_"
             android:exported="false" />
     </application>
 

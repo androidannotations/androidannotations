@@ -20,6 +20,8 @@ import static org.androidannotations.test15.MyAssertions.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.view.View;
+
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class EmptyActivityWithoutLayoutTest {
 
@@ -27,9 +29,8 @@ public class EmptyActivityWithoutLayoutTest {
 	public void shouldHaveNoLayoutAfterCreate() {
 		EmptyActivityWithoutLayout_ activity = new EmptyActivityWithoutLayout_();
 
-		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
-
 		activity.onCreate(null);
+		activity.setContentView(new View(activity));
 
 		assertThat(activity.findViewById(R.id.helloTextView)).isNull();
 	}

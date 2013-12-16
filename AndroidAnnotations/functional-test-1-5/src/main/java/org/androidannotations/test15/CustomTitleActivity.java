@@ -15,10 +15,10 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-
-import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.CustomTitle;
+import org.androidannotations.annotations.EActivity;
+
+import android.app.Activity;
 
 @EActivity
 @CustomTitle(R.layout.component)

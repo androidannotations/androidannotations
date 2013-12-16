@@ -25,7 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.validation.IsValid;
+import org.androidannotations.process.IsValid;
 
 public class ValidatorParameterHelper {
 
@@ -166,16 +166,20 @@ public class ValidatorParameterHelper {
 		} else {
 			VariableElement firstParameter = parameters.get(0);
 			String firstParameterType = firstParameter.asType().toString();
-			if (!firstParameterType.equals(CanonicalNameConstants.MOTION_EVENT)) {
+			if (parameters.size() == 1 && !firstParameterType.equals(CanonicalNameConstants.MOTION_EVENT)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.MOTION_EVENT + ", not a " + firstParameterType);
+				annotationHelper.printAnnotationError(executableElement, "the parameter must be a " + CanonicalNameConstants.MOTION_EVENT + ", not a " + firstParameterType);
 			}
 			if (parameters.size() == 2) {
 				VariableElement secondParameter = parameters.get(1);
 				String secondParameterType = secondParameter.asType().toString();
-				if (!secondParameterType.equals(CanonicalNameConstants.VIEW)) {
+
+				boolean isViewAndMotion = firstParameterType.equals(CanonicalNameConstants.VIEW) && secondParameterType.equals(CanonicalNameConstants.MOTION_EVENT);
+				boolean isMotionAndView = firstParameterType.equals(CanonicalNameConstants.MOTION_EVENT) && secondParameterType.equals(CanonicalNameConstants.VIEW);
+
+				if (!isViewAndMotion && !isMotionAndView) {
 					valid.invalidate();
-					annotationHelper.printAnnotationError(executableElement, "the second parameter must be a " + CanonicalNameConstants.VIEW + ", not a " + secondParameterType);
+					annotationHelper.printAnnotationError(executableElement, "the parameters must be a " + CanonicalNameConstants.VIEW + " and a " + CanonicalNameConstants.MOTION_EVENT + ", not a " + firstParameterType + " and a " + secondParameterType);
 				}
 			}
 		}

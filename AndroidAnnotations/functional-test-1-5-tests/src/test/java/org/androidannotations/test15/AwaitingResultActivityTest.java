@@ -28,41 +28,46 @@ public class AwaitingResultActivityTest {
 		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
 
 		activity.onActivityResult(AwaitingResultActivity.FIRST_REQUEST, 0, null);
-		
+
 		assertThat(activity.onResultCalled).isTrue();
 		assertThat(activity.onResultWithDataCalled).isFalse();
-		assertThat(activity.onActivityResultWithResultCodeAndDataCalled).isFalse();
-		assertThat(activity.onActivityResultWithDataAndResultCodeCalled).isFalse();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
+				.isFalse();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
+				.isFalse();
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
 	}
-
 
 	@Test
 	public void onlySecondRequestAnnotatedMethodAreCalled() {
 		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
 
-		activity.onActivityResult(AwaitingResultActivity.SECOND_REQUEST, 0, null);
-		
+		activity.onActivityResult(AwaitingResultActivity.SECOND_REQUEST, 0,
+				null);
+
 		assertThat(activity.onResultCalled).isFalse();
 		assertThat(activity.onResultWithDataCalled).isTrue();
-		assertThat(activity.onActivityResultWithResultCodeAndDataCalled).isTrue();
-		assertThat(activity.onActivityResultWithDataAndResultCodeCalled).isTrue();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
+				.isTrue();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
+				.isTrue();
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
 	}
-
 
 	@Test
 	public void onlyThirdRequestAnnotatedMethodAreCalled() {
 		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
 
 		activity.onActivityResult(AwaitingResultActivity.THIRD_REQUEST, 0, null);
-		
+
 		assertThat(activity.onResultCalled).isFalse();
 		assertThat(activity.onResultWithDataCalled).isFalse();
-		assertThat(activity.onActivityResultWithResultCodeAndDataCalled).isFalse();
-		assertThat(activity.onActivityResultWithDataAndResultCodeCalled).isFalse();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
+				.isFalse();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
+				.isFalse();
 		assertThat(activity.onResultWithIntResultCodeCalled).isTrue();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isTrue();
 	}

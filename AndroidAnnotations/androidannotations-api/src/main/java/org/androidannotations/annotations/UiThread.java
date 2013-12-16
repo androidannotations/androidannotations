@@ -31,4 +31,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface UiThread {
 	long delay() default 0;
+
+	/**
+	 * If propagation = REUSE, the method will check first if it is inside the
+	 * UI thread already. If so, it will directly call the method instead of
+	 * using the handler. The default value is ENQUEUE, which will always call
+	 * the handler.
+	 * 
+	 * @return
+	 */
+	Propagation propagation() default Propagation.ENQUEUE;
+
+	public enum Propagation {
+		ENQUEUE, REUSE
+	}
 }

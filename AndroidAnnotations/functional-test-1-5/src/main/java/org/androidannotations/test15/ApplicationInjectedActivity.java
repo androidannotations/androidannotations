@@ -15,11 +15,11 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
+
+import android.app.Activity;
 
 @EActivity
 public class ApplicationInjectedActivity extends Activity {

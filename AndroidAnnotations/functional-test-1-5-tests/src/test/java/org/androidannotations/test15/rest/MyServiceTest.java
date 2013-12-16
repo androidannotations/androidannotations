@@ -16,17 +16,23 @@
 package org.androidannotations.test15.rest;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.rest.RequestTestBuilder.RequestTestBuilderExecutor;
+import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -42,7 +48,16 @@ public class MyServiceTest {
 	private MyService_ myService = new MyService_();
 
 	private void addPendingResponse(String jsonResponse) {
-		Robolectric.addPendingHttpResponse(HttpStatus.OK.value(), jsonResponse.replaceAll("'", "\""), new BasicHeader("content-type", "application/json"));
+		addPendingResponse(jsonResponse, "_=_");
+	}
+
+	private void addPendingResponse(String jsonResponse, String... cookies) {
+		Header[] headers = new Header[1 + cookies.length / 2];
+		headers[0] = new BasicHeader("content-type", "application/json");
+		for (int i = 0, j = 1; i < cookies.length - 1; i += 2, j++) {
+			headers[j] = new BasicHeader("set-cookie", cookies[i] + "=" + cookies[i + 1]);
+		}
+		Robolectric.addPendingHttpResponse(HttpStatus.OK.value(), jsonResponse.replaceAll("'", "\""), headers);
 	}
 
 	@Test
@@ -150,17 +165,116 @@ public class MyServiceTest {
 
 		Event event1 = new Event(1, "event1");
 		Event event2 = new Event(2, "event2");
-		Event[][] events = new Event[][] {{event1, event2}, {event1, event2}};
+		Event[][] events = new Event[][] { { event1, event2 }, { event1, event2 } };
 
-		for (int i = 0 ; i < events.length ; i++) {
+		for (int i = 0; i < events.length; i++) {
 
 			assertEquals(results[i].length, events[i].length);
 
-			for (int j = 0 ; j < events[i].length ; j++) {
+			for (int j = 0; j < events[i].length; j++) {
 				assertEquals(events[i][j].getName(), results[i][j].getName());
 				assertEquals(events[i][j].getId(), results[i][j].getId());
 			}
 		}
+	}
+
+	@Test
+	public void manualFullUrl() {
+
+		MyService_ myService = new MyService_();
+
+		RestTemplate restTemplate = mock(RestTemplate.class);
+		myService.setRestTemplate(restTemplate);
+
+		// make sure we used the full custom url.
+		// this may be used like in Google's APIs
+		// to fetch an oauth token; Mockito doesn't
+		// return a response with the mock'd template,
+		// so we just use this weird "ping" endpoint
+		addPendingResponse("fancyHeaderToken");
+		myService.setHttpBasicAuth("fancyUser", "fancierPassword");
+		myService.ping();
+		verify(restTemplate).exchange(eq("http://company.com/client/ping"), Mockito.<HttpMethod> any(), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+	}
+
+	@Test
+	public void cookieInUrl() {
+		final String xtValue = "1234";
+		final String sjsaidValue = "7890";
+		final String locationValue = "somePlace";
+		final int yearValue = 2013;
+
+		MyService_ myService = new MyService_();
+
+		RestTemplate restTemplate = mock(RestTemplate.class);
+		myService.setRestTemplate(restTemplate);
+
+		addPendingResponse("{'id':1,'name':'event1'}");
+
+		// normally this is set by a call like authenticate()
+		// which is annotated with @SetsCookie
+		myService.setCookie("xt", xtValue);
+		myService.setCookie("sjsaid", sjsaidValue);
+		myService.setHttpBasicAuth("fancyUser", "fancierPassword");
+		myService.getEventsVoid(locationValue, yearValue);
+
+		ArgumentMatcher<HttpEntity<Void>> matcher = new ArgumentMatcher<HttpEntity<Void>>() {
+
+			@Override
+			public boolean matches(Object argument) {
+				final String expected = "sjsaid=" + sjsaidValue + ";";
+				return expected.equals(((HttpEntity<?>) argument).getHeaders().get("Cookie").get(0));
+			}
+		};
+
+		Map<String, Object> urlVariables = new HashMap<String, Object>();
+		urlVariables.put("location", locationValue);
+		urlVariables.put("year", yearValue);
+		urlVariables.put("xt", xtValue);
+		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> any(), argThat(matcher), Mockito.<Class<Object>> any(), eq(urlVariables));
+	}
+
+	@Test
+	public void authenticate() {
+		RequestTestBuilder.build() //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.responseCookie("xt", "1234") //
+				.responseCookie("sjsaid", "5678") //
+				.asserts(new RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.authenticate();
+					}
+				});
+	}
+
+	@Test
+	public void removeEventWithRequires() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.removeEventWithRequires(0);
+					}
+				});
+	}
+
+	@Test
+	public void updateEventWithRequires() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.updateEventWithRequires(0);
+					}
+				});
 	}
 
 }

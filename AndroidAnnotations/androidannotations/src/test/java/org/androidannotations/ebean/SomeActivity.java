@@ -15,11 +15,11 @@
  */
 package org.androidannotations.ebean;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.NonConfigurationInstance;
+
+import android.app.Activity;
 
 @EActivity
 public class SomeActivity extends Activity {

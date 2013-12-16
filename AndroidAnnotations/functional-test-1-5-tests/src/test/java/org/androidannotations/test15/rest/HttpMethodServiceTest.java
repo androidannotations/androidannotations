@@ -63,7 +63,7 @@ public class HttpMethodServiceTest {
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
-		when(restTemplate.exchange("http://company.com/ajax/services/head/", HttpMethod.HEAD, null, null)).thenReturn(response);
+		when(restTemplate.exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.HEAD), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any())).thenReturn(response);
 
 		service.setRestTemplate(restTemplate);
 
@@ -79,7 +79,7 @@ public class HttpMethodServiceTest {
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
-		when(restTemplate.exchange("http://company.com/ajax/services/options/", HttpMethod.OPTIONS, null, null)).thenReturn(response);
+		when(restTemplate.exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.OPTIONS), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any())).thenReturn(response);
 		HttpHeaders headers = mock(HttpHeaders.class);
 		when(response.getHeaders()).thenReturn(headers);
 		

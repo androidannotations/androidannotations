@@ -114,18 +114,15 @@ public class ModelExtractor {
 	/**
 	 * Finds superclasses until reaching the Object class
 	 */
-	private void addAncestorsElements(Set<TypeElement> elements, TypeElement element) {
-		if (element instanceof TypeElement) {
-			TypeElement typeElement = element;
-			TypeMirror ancestorTypeMirror = typeElement.getSuperclass();
+	private void addAncestorsElements(Set<TypeElement> elements, TypeElement typeElement) {
+		TypeMirror ancestorTypeMirror = typeElement.getSuperclass();
 
-			if (!isRootObjectClass(ancestorTypeMirror) && ancestorTypeMirror instanceof DeclaredType) {
-				DeclaredType ancestorDeclaredType = (DeclaredType) ancestorTypeMirror;
-				Element ancestorElement = ancestorDeclaredType.asElement();
-				if (ancestorElement instanceof TypeElement) {
-					elements.add((TypeElement) ancestorElement);
-					addAncestorsElements(elements, (TypeElement) ancestorElement);
-				}
+		if (!isRootObjectClass(ancestorTypeMirror) && ancestorTypeMirror instanceof DeclaredType) {
+			DeclaredType ancestorDeclaredType = (DeclaredType) ancestorTypeMirror;
+			Element ancestorElement = ancestorDeclaredType.asElement();
+			if (ancestorElement instanceof TypeElement) {
+				elements.add((TypeElement) ancestorElement);
+				addAncestorsElements(elements, (TypeElement) ancestorElement);
 			}
 		}
 	}

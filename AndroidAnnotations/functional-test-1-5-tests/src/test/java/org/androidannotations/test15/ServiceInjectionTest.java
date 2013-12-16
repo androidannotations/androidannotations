@@ -33,12 +33,14 @@ public class ServiceInjectionTest {
 
 	@Before
 	public void setup() throws Exception {
-		Field serviceMapField = ShadowApplication.class.getDeclaredField("SYSTEM_SERVICE_MAP");
+		Field serviceMapField = ShadowApplication.class
+				.getDeclaredField("SYSTEM_SERVICE_MAP");
 		serviceMapField.setAccessible(true);
 		@SuppressWarnings("unchecked")
-		Map<String, String> SYSTEM_SERVICE_MAP = (Map<String, String>) serviceMapField.get(null);
+		Map<String, String> SYSTEM_SERVICE_MAP = (Map<String, String>) serviceMapField
+				.get(null);
 
-		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "org.androidannotations.test15.FakeClipboardManager");
+		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "android.content.ClipboardManager");
 	}
 
 	@Test
@@ -62,6 +64,8 @@ public class ServiceInjectionTest {
 		assertThat(activity.sensorManager).isNotNull();
 		assertThat(activity.telephonyManager).isNotNull();
 		assertThat(activity.audioManager).isNotNull();
+		assertThat(activity.textClipboardManager).isNotNull();
+		assertThat(activity.contentClipboardManager).isNotNull();
 	}
 
 }

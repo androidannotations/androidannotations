@@ -36,7 +36,8 @@ public class ViewAssert extends GenericAssert<ViewAssert, View> {
 		}
 
 		failIfCustomMessageIsSet();
-		throw failure(concat("view id is ", inBrackets(actual.getId()), ", should be ", inBrackets(id)));
+		throw failure(concat("view id is ", inBrackets(actual.getId()),
+				", should be ", inBrackets(id)));
 	}
 
 }

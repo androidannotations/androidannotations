@@ -28,7 +28,8 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.helper.CaseHelper;
-import org.androidannotations.processing.EBeanHolder;
+import org.androidannotations.process.ProcessHolder;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldRef;
 
@@ -104,18 +105,18 @@ public class RInnerClass implements IRInnerClass {
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(Integer idValue, EBeanHolder holder) {
+	public JFieldRef getIdStaticRef(Integer idValue, ProcessHolder holder) {
 		String layoutFieldQualifiedName = getIdQualifiedName(idValue);
 		return extractIdStaticRef(holder, layoutFieldQualifiedName);
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(String name, EBeanHolder holder) {
+	public JFieldRef getIdStaticRef(String name, ProcessHolder holder) {
 		String layoutFieldQualifiedName = getIdQualifiedName(name);
 		return extractIdStaticRef(holder, layoutFieldQualifiedName);
 	}
 
-	public static JFieldRef extractIdStaticRef(EBeanHolder holder, String layoutFieldQualifiedName) {
+	public static JFieldRef extractIdStaticRef(ProcessHolder holder, String layoutFieldQualifiedName) {
 		if (layoutFieldQualifiedName != null) {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
 			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
@@ -127,5 +128,4 @@ public class RInnerClass implements IRInnerClass {
 			return null;
 		}
 	}
-
 }

@@ -65,10 +65,10 @@ public class SharedPrefsApiDependenciesTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void shared_prefs_generate_api_dependencies() throws IOException {
+	public void class_with_prefs_do_not_generate_api_dependencies() throws IOException {
 		compileFiles(SharedPrefs.class);
 		for (Class<?> apiDependency : SHARED_PREF_API_DEPENDENCIES) {
-			assertClassSourcesGeneratedToOutput(apiDependency);
+			assertClassSourcesNotGeneratedToOutput(apiDependency);
 		}
 	}
 

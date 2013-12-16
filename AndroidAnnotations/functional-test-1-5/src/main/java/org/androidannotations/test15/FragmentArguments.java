@@ -17,9 +17,6 @@ package org.androidannotations.test15;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
-import android.os.Bundle;
-
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -27,6 +24,9 @@ import org.androidannotations.test15.instancestate.MyGenericParcelableBean;
 import org.androidannotations.test15.instancestate.MyGenericSerializableBean;
 import org.androidannotations.test15.instancestate.MyParcelableBean;
 import org.androidannotations.test15.instancestate.MySerializableBean;
+
+import android.app.Fragment;
+import android.os.Bundle;
 
 @EFragment
 public class FragmentArguments extends Fragment {
@@ -171,14 +171,15 @@ public class FragmentArguments extends Fragment {
 
 	@FragmentArg
 	MyGenericParcelableBean<Integer>[] myGenericParcelableBeanArray;
-	
+
 	@AfterInject
-	void afterInject(){
-		
+	void afterInject() {
+
 	}
 
 	static {
-		FragmentArguments_.builder().myBundle(null).myCharSequence(null).build();
+		FragmentArguments_.builder().myBundle(null).myCharSequence(null)
+				.build();
 	}
 
 }
