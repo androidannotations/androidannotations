@@ -22,16 +22,35 @@ import java.lang.annotation.Target;
 
 /**
  * Methods annotated with @{@link AfterInject} will be called after the
- * constructor is called in an enhanced class.
- * 
- * Any code depending on injected fields should be done in an
- * {@link AfterInject} annotated method.
- * 
- * The method must have zero parameters.
- * 
- * There may be several methods annotated with @{@link AfterInject} in the same
+ * constructor is called in an enhanced class. Any code depending on injected
+ * fields should be done in an {@link AfterInject} annotated method.
+ * <p/>
+ * The method MUST have zero parameters.
+ * <p/>
+ * There MAY be several methods annotated with @{@link AfterInject} in the same
  * class.
+ * <p/>
+ * <blockquote>
  * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivityTwo extends Activity {
+ * 
+ * 	&#064;Bean
+ * 	MyBean myBean;
+ * 
+ * 	&#064;AfterInject
+ * 	void init() {
+ * 		myBean.doSomeStuff();
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see AfterViews
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

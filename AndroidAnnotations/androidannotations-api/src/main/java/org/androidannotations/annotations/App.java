@@ -21,8 +21,31 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Injects the application. Please check that your registered the application in
- * the AndroidManifest.xml class prior to using this annotation.
+ * Injects an {@link EApplication} annotated class in an enhanced class.
+ * <p/>
+ * Please check that your registered the application in the AndroidManifest.xml
+ * class prior to using this annotation.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EApplication
+ * public class MyApplication extends Application {
+ * }
+ * 
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;App
+ * 	MyApplication myApp;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see EApplication
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

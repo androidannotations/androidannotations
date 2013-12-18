@@ -22,9 +22,22 @@ import java.lang.annotation.Target;
 
 /**
  * Use it on activities to set a custom title layout.
- * 
+ * <p/>
  * The activity must be annotated with {@link EActivity}.
+ * <p/>
+ * <blockquote>
  * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;CustomTitle(R.string.activityTitle)
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivity extends Activity {
+ * 
+ * }
+ * </pre>
+ * 
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

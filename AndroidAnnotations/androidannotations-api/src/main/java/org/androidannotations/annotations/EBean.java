@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * using an {@link RootContext} annotated field.
  * <p/>
  * Beans have two possible scopes : default or singleton. Default scope should
- * be prefered but in some case it may be useful to use a singleton scope
+ * be preferred but in some case it may be useful to use a singleton scope
  * (mainly if you want to keep some runtime state in your bean).
  * <p/>
  * The enhanced bean can also be injected in any enhanced class by using

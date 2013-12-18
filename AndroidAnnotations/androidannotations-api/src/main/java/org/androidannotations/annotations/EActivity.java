@@ -52,14 +52,12 @@ import java.lang.annotation.Target;
  * 
  * 	public void launchActivity() {
  * 		// Note the use of generated class instead of original one
- * 		MyActivityTwo_.intent(this)
- * 			.myExtra("test")
- * 			.startActivity();
+ * 		MyActivityTwo_.intent(this) //
+ * 				.myExtra(&quot;test&quot;) //
+ * 				.startActivity();
  * 	}
- * 
  * }
  * 
- * <pre>
  * &#064;EActivity(R.layout.main)
  * public class MyActivityTwo extends Activity {
  * 
