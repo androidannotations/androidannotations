@@ -38,10 +38,6 @@ import java.lang.annotation.Target;
  * content view will be set, and you should call the setContentView() method
  * yourself, in <b>onCreate()</b>
  * <p/>
- * The generated class will also contain an IntentBuilder to start activity with
- * a fluent API. Android's extra can also be enhanced by using {@link Extra}
- * annotation on every native or serializable/parcelable field.
- * <p/>
  * <blockquote>
  * 
  * Example :
@@ -52,9 +48,7 @@ import java.lang.annotation.Target;
  * 
  * 	public void launchActivity() {
  * 		// Note the use of generated class instead of original one
- * 		MyActivityTwo_.intent(this) //
- * 				.myExtra(&quot;test&quot;) //
- * 				.startActivity();
+ * 		MyActivityTwo_.intent(this).startActivity();
  * 	}
  * }
  * 
@@ -67,9 +61,6 @@ import java.lang.annotation.Target;
  * 	&#064;ViewById
  * 	TextView myTextView;
  * 
- * 	&#064;Extra
- * 	String myExtra;
- * 
  * 	&#064;AfterInject
  * 	void init() {
  * 		myBean.doSomeStuff();
@@ -77,7 +68,7 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;AfterViews
  * 	void initViews() {
- * 		myTextView.setText(myExtra);
+ * 		myTextView.setText(&quot;test&quot;);
  * 	}
  * }
  * </pre>

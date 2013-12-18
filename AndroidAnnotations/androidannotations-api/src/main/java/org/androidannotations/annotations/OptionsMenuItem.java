@@ -21,13 +21,34 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on option items fields in activity classes.
- * 
+ * Use it on {@link android.app.Fragment} or
+ * {@link android.support.v4.app.Fragment} fields in activity classes to inject
+ * a menu item.
+ * <p/>
  * The field MUST be of type {@link link android.view.MenuItem} or
  * {@link com.actionbarsherlock.view.MenuItem}.
  * <p/>
  * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name. *
+ * name will be used as the R.id.* field name.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * &#064;OptionsMenu({ R.menu.my_menu1, R.menu.my_menu2 })
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;OptionsMenuItem
+ * 	MenuItem menuRefresh;
+ * 
+ * 	&#064;OptionsMenuItem(R.id.menu_search)
+ * 	MenuItem menuItemSearch;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

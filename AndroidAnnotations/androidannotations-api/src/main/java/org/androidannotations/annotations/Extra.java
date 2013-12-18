@@ -15,20 +15,64 @@
  */
 package org.androidannotations.annotations;
 
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.app.Activity;
+import android.os.Parcelable;
+
 /**
- * Use on Extra fields in activity and service classes. This String value field
- * corresponds to the Android extra name.
+ * Use on any native, {@link Parcelable} or {@link Serializable} field in an
+ * {@link EActivity} annotated class to bind it with Android's extra.
+ * <p/>
+ * The annotation value is the key used for extra. If not set, the field name
+ * will be used as the key.
+ * <p/>
+ * When {@link Extra} is used, the intent builder will hold dedicated methods
+ * for each annotated fields.
+ * <p/>
+ * Your code related to injected extra should go in an {@link AfterInject}
+ * annotated method.
+ * <p/>
+ * Calling {@link Activity#setIntent(android.content.Intent)} will automatically
+ * update the annotated extras.
+ * <p/>
+ * <blockquote>
  * 
- * When {@link Extra} is used on fields in an Activity, the intent builder will
- * hold dedicated methods for these extras. Calling
- * Activity#setIntent(android.content.Intent) will automatically update the
- * annotated extras.
+ * Example :
  * 
+ * <pre>
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;Click
+ * 	void buttonClicked() {
+ * 		MyExtraActivity_.intent(this) //
+ * 				.myMessage(&quot;test&quot;) //
+ * 				.startActivity();
+ * 	}
+ * }
+ * 
+ * &#064;EActivity
+ * public class MyExtraActivity extends Activity {
+ * 
+ * 	&#064;Extra
+ * 	String myMessage;
+ * 
+ * 	&#064;AfterInject
+ * 	void init() {
+ * 		Log.d(&quot;AA&quot;, &quot;extra myMessage = &quot; + myMessage);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see AfterInject
+ * @see EActivity
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

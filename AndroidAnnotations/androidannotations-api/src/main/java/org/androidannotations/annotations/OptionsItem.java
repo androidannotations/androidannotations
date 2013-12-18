@@ -21,14 +21,52 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on option items listener methods in activity classes
+ * This annotation is intended to be used on methods to receive click on menu
+ * items.
+ * <p/>
+ * The annotation value should be one or more of R.id.* fields. If not set, the
+ * method name will be used as the R.id.* field name.
+ * <p/>
+ * The method may return a <code>boolean</code>, void, or a
+ * {@link java.lang.Boolean}. If returning void, it will be considered as
+ * returning true (ie: the method has handled the event).
+ * <p/>
+ * The method MAY have one parameter:
+ * <ul>
+ * <li>A {@link android.view.MenuItem} parameter to know which menu item has
+ * been clicked
+ * </ul>
+ * <p/>
+ * <blockquote>
  * 
- * The method may have zero or one parameter, that MUST be of type
- * android.view.MenuItem .
+ * Example :
  * 
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name.
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * &#064;OptionsMenu({ R.menu.my_menu1, R.menu.my_menu2 })
+ * public class MyActivity extends Activity {
  * 
+ * 	&#064;OptionsItem
+ * 	void menuRefreshSelected() {
+ * 		// ...
+ * 	}
+ * 
+ * 	&#064;OptionsItem({ R.id.menu_search, R.id.menu_share })
+ * 	boolean multipleMenuItems() {
+ * 		return false;
+ * 	}
+ * 
+ * 	&#064;OptionsItem
+ * 	void menu_add(MenuItem item) {
+ * 		// ...
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see OptionsMenu
+ * @see OptionsMenuItem
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

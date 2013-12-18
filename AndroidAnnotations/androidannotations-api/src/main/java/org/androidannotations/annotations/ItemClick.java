@@ -21,17 +21,48 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on item click listener methods for AdapterView classes
- * 
- * The method may have 0 or 1 parameter, that will be the object from the
- * adapter, at the selected position. It may be of any type, so be careful about
- * potential ClassCastException.
- * 
- * If the parameter is an int, it will be the position instead of the object from the adapter.
- * 
+ * This annotation is intended to be used on methods to receive events defined
+ * by {@link
+ * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.
+ * AdapterView<?>, android.view.View, int, long)} when a list item has been
+ * clicked by the user.
+ * <p/>
  * The annotation value should be one of R.id.* fields. If not set, the method
  * name will be used as the R.id.* field name.
+ * <p/>
+ * The method MAY have one parameter :
+ * <ul>
+ * <li>An <code>int</code> parameter to know the position of the clicked item.
+ * Or, a parameter of the type of the Adapter linked to the listview.</li>
+ * </ul>
+ * <p/>
+ * <blockquote>
  * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;ItemClick(R.id.myList)
+ * public void itemClickedOnMyList() {
+ * 	// ...
+ * }
+ * 
+ * &#064;ItemClick(R.id.myList)
+ * public void myListItemPositionClicked(int position) {
+ * 	// ...
+ * }
+ * 
+ * &#064;ItemClick
+ * public void myListItemClicked(MyItem clickedItem) {
+ * 	// ...
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see ItemLongClick
+ * @see ItemSelect
+ * @see Click
+ * @see LongClick
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
