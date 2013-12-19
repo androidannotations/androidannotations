@@ -21,12 +21,49 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Injects a {@link Rest} service
- * 
- * The injected element must be an interface annotated with {@link Rest}.
- * AndroidAnnotations will take care of creating the implementation of this
+ * Apply @{@link Rest} on an interface to create a RestService class that will
+ * contain implementation of rest calls related to the methods you define in the
  * interface.
+ * <p/>
+ * You should then inject your RestService class by using {@link RestService}
+ * annotation in any enhanced classes.
+ * <p/>
+ * <b>Note:</b> Implementation is based on <a href=
+ * "http://docs.spring.io/spring-android/docs/current/reference/htmlsingle/"
+ * >Spring Android Rest-template</a> library. So you <b>MUST</b> have the
+ * library in your classpath and we highly recommend you to take some time to
+ * read this document and understand how the library works.
+ * <p/>
+ * <blockquote>
  * 
+ * <b>Example :</b>
+ * 
+ * <pre>
+ * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = MappingJacksonHttpMessageConverter.class)
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Get(&quot;/events/{id}&quot;)
+ * 	Event getEvent(long id);
+ * 
+ * 	&#064;Post(&quot;/events/new&quot;)
+ * 	void newEvent(Event event);
+ * }
+ * 
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;RestService
+ * 	MyRestClient myRestClient;
+ * 
+ * 	public void getEvent(long id) {
+ * 		return myRestClient.getEvent(id);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Rest
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

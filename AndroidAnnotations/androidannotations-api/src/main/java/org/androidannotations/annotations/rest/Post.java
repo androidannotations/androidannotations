@@ -20,6 +20,40 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Use on methods in {@link Rest} annotated class to add a new rest service of
+ * type POST.
+ * <p/>
+ * This annotation as the same constraints as {@link Get}.
+ * <p/>
+ * If an extra parameter is present (ie the only one not mapped with URI
+ * placeholders) it will be send in the request body using given converter.
+ * <p/>
+ * <blockquote>
+ * 
+ * <b>Example :</b>
+ * 
+ * <pre>
+ * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = MappingJacksonHttpMessageConverter.class)
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Post(&quot;/events/new/random&quot;)
+ * 	Event newEvent();
+ * 
+ * 	&#064;Post(&quot;/events/new/<b>{id}</b>&quot;)
+ * 	void newEvent(Event <i>event</i>, int <b>id</b>);
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Rest
+ * @see Get
+ * @see Put
+ * @see Delete
+ * @see Head
+ * @see Options
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Post {
