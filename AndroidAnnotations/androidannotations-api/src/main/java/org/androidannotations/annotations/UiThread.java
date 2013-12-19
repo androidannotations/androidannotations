@@ -20,12 +20,71 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.os.Handler;
+
 /**
  * Should be used on method that must be run in the Ui thread
+ * <p/>
+ * The annotated method MUST return void and MAY contain parameters.
+ * <p/>
+ * The generated code is based on a local {@link android.os.Handler} instance.
  * 
- * The annotation parameter delay is the delay (in milliseconds) until the
- * method will be executed. The default is 0 (no delay).
  * 
+ * <h2>Delay</h2>
+ * Sometimes you may want to delay execution of a Ui thread method. To do so,
+ * you should use the {@link #delay()} field.
+ * <p/>
+ * <blockquote> <b>Example</b> :
+ * 
+ * <pre>
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;UiThread(delay = 2000)
+ * 	void uiThreadTask() {
+ * 		// ...
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * <h2>Execution flow</h2>
+ * <p/>
+ * Prior to 3.0, {@link UiThread} annotated method calls was always added in the
+ * handler execution queue to ensure that execution was done in Ui thread. In
+ * 3.0, we kept the same behavior for compatibility purpose.
+ * <p/>
+ * But, if you want to optimize UiThread calls, you may want to change
+ * {@link #propagation()} value to <code>REUSE</code>. In this configuration,
+ * the code will make a direct call to the method if current thread is already
+ * Ui thread. If not, we're falling back to handler call.
+ * </p>
+ * <blockquote> <b>Example</b> :
+ * 
+ * <pre>
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;UiThread
+ * 	void uiThreadTask() {
+ * 		// This code is executed via the handler
+ * 		// The following method will be directly executed instead of using
+ * 		// handler
+ * 		uiThreadTaskReused();
+ * 	}
+ * 
+ * 	&#064;UiThread(propagation = REUSE)
+ * 	void uiThreadTaskReused() {
+ * 		// ...
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Background
+ * @see Handler
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

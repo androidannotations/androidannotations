@@ -48,14 +48,11 @@ import java.lang.annotation.Target;
  * 
  * 	public void launchAction() {
  * 		// Note the use of generated class instead of original one
- * 		MyIntentService_.intent(this)
- * 				.myAction("test", 10L)
- * 				.start();
+ * 		MyIntentService_.intent(this).myAction(&quot;test&quot;, 10L).start();
  * 	}
  * 
  * }
  * 
- * <pre>
  * &#064;EIntentService
  * public class MyIntentService extends IntentService {
  * 

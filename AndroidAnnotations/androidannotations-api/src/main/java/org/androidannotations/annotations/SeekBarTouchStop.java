@@ -23,29 +23,53 @@ import java.lang.annotation.Target;
 import android.widget.SeekBar;
 
 /**
- * <blockquote>
- * 
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStopTrackingTouch(SeekBar seekBar)}
  * when the user has finished to move the cursor of the targeted SeekBar.
- * 
- * </blockquote> <blockquote>
- * 
+ * <p/>
  * The annotation value should be one or several R.id.* fields that refers to an
  * android.widget.SeekBar. If not set, the method name will be used as the
  * R.id.* field name.
+ * <p/>
+ * The method MAY have one parameter :
+ * <ul>
+ * <li>A {@link android.widget.SeekBar} parameter to determine which view has
+ * targeted this event</li>
+ * </ul>
+ * <p/>
+ * <blockquote>
  * 
- * </blockquote> <blockquote>
+ * Example :
  * 
- * The method can have zero or one parameter of type SeekBar.
+ * <pre>
+ * &#064;SeekBarTouchStop(<b>R.id.seekBar</b>)
+ * void onProgressStopOnSeekBar(SeekBar seekBar) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;SeekBarTouchStop(<b>R.id.seekBar</b>)
+ * void onProgressStopOnSeekBar() {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;SeekBarTouchStop(<b>{R.id.seekBar1, R.id.seekBar2}</b>)
+ * void onProgressStopOnSeekBar(SeekBar seekBar) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;SeekBarTouchStop(<b>{R.id.seekBar1, R.id.seekBar2}</b>)
+ * void onProgressStopOnSeekBar() {
+ * 	// Something Here
+ * }
+ * </pre>
  * 
  * </blockquote>
  * 
  * @since 2.7
  * 
- * @see org.androidannotations.annotations.SeekBarTouchStart
- * @see org.androidannotations.annotations.SeekBarProgressChange
+ * @see SeekBarTouchStart
+ * @see SeekBarProgressChange
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

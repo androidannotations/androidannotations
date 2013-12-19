@@ -51,10 +51,8 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
+ * @see Touch
  * @see LongClick
- * @see ItemClick
- * @see ItemLongClick
- * @see ItemSelect
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

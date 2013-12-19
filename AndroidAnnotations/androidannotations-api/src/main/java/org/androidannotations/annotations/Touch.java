@@ -20,19 +20,52 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.view.MotionEvent;
+
 /**
- * Should be used on touch listener methods in activity classes
- * 
- * The method may have one or two parameters, the first parameter must be a
- * android.view.MotionEvent and the second one must be a android.view.View.
- * 
- * The method may return a boolean, void, or a java.lang.Boolean. If returning
- * void, it will be considered as returning true (ie the method has handled the
- * event).
- * 
+ * This annotation is intended to be used on methods to receive events defined
+ * by
+ * {@link android.view.View.OnTouchListener#onTouch(android.view.View, MotionEvent)}
+ * when the view has been touched by the user.
+ * <p/>
  * The annotation value should be one of R.id.* fields. If not set, the method
  * name will be used as the R.id.* field name.
+ * <p/>
+ * The method may return a <code>boolean</code>, <code>void</code>, or a
+ * {@link Boolean}. If returning void, it will be considered as returning true
+ * (ie the method has handled the event).
+ * <p/>
+ * The method MAY have one or two parameters:
+ * <ul>
+ * <li>A {@link android.view.View} parameter to know which view has been clicked
+ * <li>A {@link android.view.MotionEvent} parameter
+ * </ul>
+ * <p/>
+ * <blockquote>
  * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;Touch(<b>R.id.myButton</b>)
+ * void touchOnMyButton() {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;Touch
+ * void <b>myButton</b>Touched(View view) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;Touch
+ * void <b>myButton</b>Touched(View view, MotionEvent motionEvent) {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Click
+ * @see LongClick
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

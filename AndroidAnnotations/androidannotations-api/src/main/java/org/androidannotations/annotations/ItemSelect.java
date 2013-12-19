@@ -67,8 +67,6 @@ import java.lang.annotation.Target;
  * 
  * @see ItemClick
  * @see ItemLongClick
- * @see Click
- * @see LongClick
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

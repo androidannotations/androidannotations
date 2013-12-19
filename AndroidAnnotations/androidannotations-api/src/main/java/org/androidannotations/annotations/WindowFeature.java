@@ -21,10 +21,25 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Activity classes that must have no title.
+ * Should be used on {@link EActivity} classes to set custom window features.
+ * <p/>
+ * <b>Note:</b> This should replace {@link NoTitle} annotation.
+ * <p/>
+ * <blockquote>
  * 
- * The activity must be annotated with {@link EActivity}.
+ * Example :
  * 
+ * <pre>
+ * &#064;WindowFeature({ Window.FEATURE_NO_TITLE, Window.FEATURE_INDETERMINATE_PROGRESS })
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see EActivity
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

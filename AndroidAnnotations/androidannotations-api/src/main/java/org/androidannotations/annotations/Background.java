@@ -33,7 +33,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * <h2>Cancellation</h2>
  * Since 3.0, you're able to cancel a background task by calling
  * <code>BackgroundExecutor.cancelAll("id")</code> where "id" matches the
- * {@link Background#id()} value.
+ * {@link #id()} value.
  * 
  * <p/>
  * <blockquote>
@@ -76,8 +76,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * {@link ScheduledThreadPoolExecutor} with a core pool size of <code>1</code>.
  * <p/>
  * If you want execute some background methods SEQUENTIALLY, you should simply
- * use {@link Background#serial()} field. All task with the same serial key will
- * be executed sequentially.
+ * use {@link #serial()} field. All task with the same serial key will be
+ * executed sequentially.
  * 
  * <p/>
  * <blockquote>
@@ -133,8 +133,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * 
  * <h2>Delay</h2>
  * Sometimes you may want to delay execution of a background method. To do so,
- * you should use the {@link Background#delay()} field.
- * </p>
+ * you should use the {@link #delay()} field.
+ * <p/>
  * <b>Example</b> :
  * 
  * <pre>
