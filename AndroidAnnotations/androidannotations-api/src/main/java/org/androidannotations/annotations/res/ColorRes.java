@@ -23,14 +23,11 @@ import java.lang.annotation.Target;
 import org.androidannotations.annotations.ResId;
 
 /**
- * Use on fields in activity classes that should be injected with values from
- * R.color.*
- * 
- * The annotated field must be an int or an Integer
- * 
+ * Use on {@link java.lang.Integer} or <code>int</code> fields in any enhanced
+ * classes that should be injected with this specific color resource.
+ * <p/>
  * The annotation value must be one of R.color.* fields. If the value is not
  * set, the field name will be used as the R.color.* field name.
- * 
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

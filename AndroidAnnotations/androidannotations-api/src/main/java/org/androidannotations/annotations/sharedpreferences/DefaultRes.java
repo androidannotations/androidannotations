@@ -23,7 +23,11 @@ import java.lang.annotation.Target;
 import org.androidannotations.annotations.ResId;
 
 /**
- * Default value for a preference field
+ * Use on methods in {@link SharedPref} annotated class to specified the default
+ * value of this preference.
+ * <p/>
+ * The annotation value must be one of R.* fields. If the value is not set, the
+ * field name will be used as the R.* field name.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

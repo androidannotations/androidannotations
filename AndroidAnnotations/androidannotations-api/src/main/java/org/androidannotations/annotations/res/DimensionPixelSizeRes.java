@@ -23,8 +23,12 @@ import java.lang.annotation.Target;
 import org.androidannotations.annotations.ResId;
 
 /**
- * Use on fields in activity classes that should be injected with this specific
- * resource
+ * Use on {@link java.lang.Integer} or <code>int</code> fields in any enhanced
+ * classes that should be injected with this specific dimension pixel size
+ * resource.
+ * <p/>
+ * The annotation value must be one of R.dimen.* fields. If the value is not
+ * set, the field name will be used as the R.dimen.* field name.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
