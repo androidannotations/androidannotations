@@ -19,5 +19,5 @@ import org.androidannotations.annotations.EActivity;
 
 @EActivity
 public class ExtendingActivity extends AbstractActivity {
-	
+
 }

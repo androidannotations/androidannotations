@@ -15,12 +15,11 @@
  */
 package org.androidannotations.test15;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.HttpsClient;
 import org.apache.http.client.HttpClient;
 
 import android.app.Activity;
-
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.HttpsClient;
 
 @EActivity
 public class SSLConnection extends Activity {

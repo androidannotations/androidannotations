@@ -36,7 +36,8 @@ public class ShadowButton extends ShadowTextView {
 	}
 
 	@Implementation
-	public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
+	public void setOnLongClickListener(
+			View.OnLongClickListener onLongClickListener) {
 		this.onLongClickListener = onLongClickListener;
 	}
 

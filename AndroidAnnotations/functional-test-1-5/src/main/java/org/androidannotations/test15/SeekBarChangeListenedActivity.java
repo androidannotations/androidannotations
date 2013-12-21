@@ -15,13 +15,13 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-import android.widget.SeekBar;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SeekBarProgressChange;
 import org.androidannotations.annotations.SeekBarTouchStart;
 import org.androidannotations.annotations.SeekBarTouchStop;
+
+import android.app.Activity;
+import android.widget.SeekBar;
 
 @EActivity(R.layout.seekbars)
 public class SeekBarChangeListenedActivity extends Activity {

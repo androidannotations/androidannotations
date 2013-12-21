@@ -30,7 +30,8 @@ public class EmptyActivityWithLayoutTest {
 		activity.onCreate(null);
 		activity.setContentView(R.layout.main);
 
-		assertThat(activity.findViewById(R.id.helloTextView)).hasId(R.id.helloTextView);
+		assertThat(activity.findViewById(R.id.helloTextView)).hasId(
+				R.id.helloTextView);
 	}
 
 }

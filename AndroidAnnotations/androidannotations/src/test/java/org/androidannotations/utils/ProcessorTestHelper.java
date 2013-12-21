@@ -58,6 +58,25 @@ public class ProcessorTestHelper {
 	protected static final String SOURCE_FILE_SUFFIX = ".java";
 	protected static final String OUTPUT_DIRECTORY = "target/generated-test";
 
+	public static void assertGeneratedClassMatches(File output, String value) {
+		String[] outputContent = getContents(output);
+		for (String line : outputContent) {
+			if (line.matches(value)) {
+				return;
+			}
+		}
+		fail("Expected value \"" + value + "\" couldn't be found in file " + output.getAbsolutePath());
+	}
+
+	public static void assertGeneratedClassDoesntMatches(File output, String value) {
+		String[] outputContent = getContents(output);
+		for (String line : outputContent) {
+			if (line.matches(value)) {
+				fail("Value \"" + value + "\" shouldn't be in file " + output.getAbsolutePath());
+			}
+		}
+	}
+
 	public static void assertOutput(File expectedResult, File output) {
 		String[] expectedContent = getContents(expectedResult);
 		String[] outputContent = getContents(output);
@@ -245,6 +264,20 @@ public class ProcessorTestHelper {
 		return compileFiles(files);
 	}
 
+	public CompileResult compileFiles(Object... elements) {
+		assert elements != null;
+
+		List<File> files = new ArrayList<File>();
+		for (Object element : elements) {
+			if (element instanceof Type) {
+				addCollection(files, (Type) element);
+			} else if (element instanceof String) {
+				files.add(new File((String) element));
+			}
+		}
+		return compileFiles(files);
+	}
+
 	public CompileResult compileFiles(File... compilationUnits) {
 		return compileFiles(Arrays.asList(compilationUnits));
 	}
@@ -334,20 +367,24 @@ public class ProcessorTestHelper {
 			return;
 		}
 		for (T element : compilationUnits) {
-			assert element != null;
+			addCollection(files, element);
+		}
+	}
 
-			if (element instanceof Class<?>) {
-				File file = toFile((Class<?>) element);
-				if (file != null) {
-					files.add(file);
-				} else {
-					// These are innerclasses, etc ... that should not be
-					// defined in this way
-				}
-			} else if (element instanceof Package) {
-				ClassFinder classFinder = new ClassFinder();
-				addCollection(files, classFinder.findClassesInPackage(((Package) element).getName()));
+	private <T extends Type> void addCollection(List<File> files, T element) {
+		assert element != null;
+
+		if (element instanceof Class<?>) {
+			File file = toFile((Class<?>) element);
+			if (file != null) {
+				files.add(file);
+			} else {
+				// These are innerclasses, etc ... that should not be
+				// defined in this way
 			}
+		} else if (element instanceof Package) {
+			ClassFinder classFinder = new ClassFinder();
+			addCollection(files, classFinder.findClassesInPackage(((Package) element).getName()));
 		}
 	}
 

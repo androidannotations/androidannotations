@@ -25,10 +25,13 @@ import javax.annotation.processing.FilerException;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 
-import org.androidannotations.processing.OriginatingElements;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
+import org.androidannotations.process.OriginatingElements;
 
 public class ApiCodeGenerator {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ApiCodeGenerator.class);
 	private static final byte[] BUFFER = new byte[4096];
 
 	private static void copyStream(InputStream input, OutputStream output) throws IOException {
@@ -45,6 +48,8 @@ public class ApiCodeGenerator {
 	}
 
 	public void writeApiClasses(Set<Class<?>> apiClassesToGenerate, OriginatingElements originatingElements) {
+
+		LOGGER.info("Writting following API classes in project: {}", apiClassesToGenerate);
 
 		for (Class<?> apiClassToGenerate : apiClassesToGenerate) {
 

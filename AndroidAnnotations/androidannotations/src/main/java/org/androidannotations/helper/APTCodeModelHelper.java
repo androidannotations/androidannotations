@@ -15,57 +15,44 @@
  */
 package org.androidannotations.helper;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
+import javax.lang.model.util.ElementFilter;
 
-import org.androidannotations.processing.EBeanHolder;
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.holder.GeneratedClassHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JFormatter;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
 import com.sun.codemodel.JType;
-import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
 
-	public JClass typeMirrorToJClass(TypeMirror type, EBeanHolder holder) {
+	public JClass typeMirrorToJClass(TypeMirror type, GeneratedClassHolder holder) {
 
 		if (type instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) type;
@@ -116,7 +103,7 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, EBeanHolder holder) {
+	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
 
 		String methodName = executableElement.getSimpleName().toString();
 
@@ -129,21 +116,19 @@ public class APTCodeModelHelper {
 			parameters.add(new Parameter(parameterName, parameterClass));
 		}
 
-		JMethod existingMethod = findAlreadyGeneratedMethod(holder.generatedClass, methodName, parameters);
+		JMethod existingMethod = findAlreadyGeneratedMethod(holder.getGeneratedClass(), methodName, parameters);
 
 		if (existingMethod != null) {
 			return existingMethod;
 		}
 
-		JMethod method = holder.generatedClass.method(JMod.PUBLIC, returnType, methodName);
+		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
 		method.annotate(Override.class);
 
-		List<JVar> methodParameters = new ArrayList<JVar>();
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterName = parameter.getSimpleName().toString();
 			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
-			JVar param = method.param(JMod.FINAL, parameterClass, parameterName);
-			methodParameters.add(param);
+			method.param(JMod.FINAL, parameterClass, parameterName);
 		}
 
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
@@ -173,8 +158,8 @@ public class APTCodeModelHelper {
 		return null;
 	}
 
-	public void callSuperMethod(JMethod superMethod, EBeanHolder holder, JBlock callBlock) {
-		JExpression activitySuper = holder.generatedClass.staticRef("super");
+	public void callSuperMethod(JMethod superMethod, GeneratedClassHolder holder, JBlock callBlock) {
+		JExpression activitySuper = holder.getGeneratedClass().staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
 
 		for (JVar param : superMethod.params()) {
@@ -208,6 +193,26 @@ public class APTCodeModelHelper {
 		return clonedBody;
 	}
 
+    public void replaceSuperCall(JMethod method, JBlock replacement) {
+        String superCallStart = "super."+method.name()+"(";
+
+        JBlock oldBody = removeBody(method);
+        JBlock newBody = method.body();
+
+        for (Object content : oldBody.getContents()) {
+            StringWriter writer = new StringWriter();
+            JFormatter formatter = new JFormatter(writer);
+            JStatement statement = (JStatement) content;
+            statement.state(formatter);
+            String statementString = writer.getBuffer().toString();
+            if (statementString.startsWith(superCallStart)) {
+                newBody.add(replacement);
+            } else {
+                newBody.add(statement);
+            }
+        }
+    }
+
 	public String getIdStringFromIdFieldRef(JFieldRef idRef) {
 		try {
 			Field nameField = JFieldRef.class.getDeclaredField("name");
@@ -233,7 +238,7 @@ public class APTCodeModelHelper {
 		throw new IllegalStateException("Unable to extract target name from JFieldRef");
 	}
 
-	public JDefinedClass createDelegatingAnonymousRunnableClass(EBeanHolder holder, JMethod delegatedMethod) {
+	public JDefinedClass createDelegatingAnonymousRunnableClass(EComponentHolder holder, JMethod delegatedMethod) {
 
 		JCodeModel codeModel = holder.codeModel();
 
@@ -250,230 +255,84 @@ public class APTCodeModelHelper {
 		return anonymousRunnableClass;
 	}
 
-	public JVar castContextToActivity(EBeanHolder holder, JBlock ifActivityBody) {
-		JClass activityClass = holder.classes().ACTIVITY;
-		return ifActivityBody.decl(activityClass, "activity", cast(activityClass, holder.contextRef));
+	/**
+	 * Gets all of the methods of the class and includes the methods of any
+	 * implemented interfaces.
+	 *
+	 * @param typeElement
+	 * @return full list of methods.
+	 */
+	public List<ExecutableElement> getMethods(TypeElement typeElement) {
+		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
+		List<ExecutableElement> methods = new ArrayList<ExecutableElement>(ElementFilter.methodsIn(enclosedElements));
+
+		// Add methods of the interfaces. These will be valid as they have gone
+		// through the validator.
+		for (TypeMirror iface : typeElement.getInterfaces()) {
+			DeclaredType dt = (DeclaredType) iface;
+			methods.addAll(ElementFilter.methodsIn(dt.asElement().getEnclosedElements()));
+		}
+
+		return methods;
 	}
 
-	public JBlock ifContextInstanceOfActivity(EBeanHolder holder, JBlock methodBody) {
-		return methodBody._if(holder.contextRef._instanceof(holder.classes().ACTIVITY))._then();
-	}
+	public JMethod implementMethod(GeneratedClassHolder holder, List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		// First get the ExecutableElement method object from the util function.
+		ExecutableElement method = getMethod(methods, methodName, returnType, parameterTypes);
+		JMethod jmethod = null;
 
-	public void copyConstructorsAndAddStaticEViewBuilders(Element element, JCodeModel codeModel, JClass eBeanClass, EBeanHolder holder, JMethod setContentViewMethod, JMethod init) {
-		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
-		for (Element e : element.getEnclosedElements()) {
-			if (e.getKind() == CONSTRUCTOR) {
-				constructors.add((ExecutableElement) e);
+		if (method != null) {
+			// Get the return type or VOID if none.
+			JType jcReturnType = returnType.equals(TypeKind.VOID.toString()) ? holder.codeModel().VOID : holder.refClass(returnType);
+
+			// Create the implementation and annotate it with the Override
+			// annotation.
+			jmethod = holder.getGeneratedClass().method(JMod.PUBLIC, jcReturnType, method.getSimpleName().toString());
+			jmethod.annotate(Override.class);
+
+			// Create the parameters.
+			for (int i = 0; i < method.getParameters().size(); i++) {
+				VariableElement param = method.getParameters().get(i);
+				jmethod.param(holder.refClass(parameterTypes[i]), param.getSimpleName().toString());
 			}
 		}
 
-		for (ExecutableElement userConstructor : constructors) {
-			JMethod copyConstructor = holder.generatedClass.constructor(PUBLIC);
-			JMethod staticHelper = holder.generatedClass.method(PUBLIC | STATIC, eBeanClass, "build");
-			JBlock body = copyConstructor.body();
-			JInvocation superCall = body.invoke("super");
-			JInvocation newInvocation = JExpr._new(holder.generatedClass);
-			for (VariableElement param : userConstructor.getParameters()) {
-				String paramName = param.getSimpleName().toString();
-				String paramType = param.asType().toString();
-				copyConstructor.param(holder.refClass(paramType), paramName);
-				staticHelper.param(holder.refClass(paramType), paramName);
-				superCall.arg(JExpr.ref(paramName));
-				newInvocation.arg(JExpr.ref(paramName));
-			}
-
-			JVar newCall = staticHelper.body().decl(holder.generatedClass, "instance", newInvocation);
-			staticHelper.body().invoke(newCall, "onFinishInflate");
-			staticHelper.body()._return(newCall);
-			body.invoke(init);
-		}
+		return jmethod;
 	}
 
-	public JVar findParameterByName(JMethod method, String name) {
-		for (JVar parameter : method.params()) {
-			if (parameter.name().equals(name)) {
-				return parameter;
+	private ExecutableElement getMethod(List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		for (ExecutableElement method : methods) {
+			List<? extends VariableElement> parameters = method.getParameters();
+
+			// Get the method return type or "VOID" if none.
+			String methodReturnType = method.getReturnType().getKind() == TypeKind.VOID ? TypeKind.VOID.toString() : method.getReturnType().toString();
+
+			if (parameters.size() == parameterTypes.length && methodReturnType.equals(returnType)) {
+				if (methodName == null || method.getSimpleName().toString().equals(methodName)) {
+					// At this point, method name, return type and number of
+					// parameters are correct. Now we need to validate the
+					// parameter types.
+					boolean validMethod = true;
+
+					for (int i = 0; i < parameters.size(); i++) {
+						VariableElement param = parameters.get(i);
+
+						if (!param.asType().toString().equals(parameterTypes[i])) {
+							// Parameter type does not match, this is not the
+							// correct method.
+							validMethod = false;
+							break;
+						}
+					}
+
+					if (validMethod) {
+						return method;
+					}
+				}
 			}
 		}
+
 		return null;
 	}
 
-	public void addActivityIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper) throws Exception {
-		addIntentBuilder(codeModel, holder, annotationHelper, true);
-	}
-
-	public void addServiceIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper) throws Exception {
-		addIntentBuilder(codeModel, holder, annotationHelper, false);
-	}
-
-	private void addIntentBuilder(JCodeModel codeModel, EBeanHolder holder, AnnotationHelper annotationHelper, boolean isActivity) throws JClassAlreadyExistsException {
-		JClass contextClass = holder.classes().CONTEXT;
-		JClass intentClass = holder.classes().INTENT;
-		JClass fragmentClass = holder.classes().FRAGMENT;
-		JClass fragmentSupportClass = holder.classes().SUPPORT_V4_FRAGMENT;
-
-		{
-			holder.intentBuilderClass = holder.generatedClass._class(PUBLIC | STATIC, "IntentBuilder_");
-
-			JFieldVar contextField = holder.intentBuilderClass.field(PRIVATE, contextClass, "context_");
-
-			holder.intentField = holder.intentBuilderClass.field(PRIVATE | FINAL, intentClass, "intent_");
-			{
-				// Constructor
-				JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
-				JVar constructorContextParam = constructor.param(contextClass, "context");
-				JBlock constructorBody = constructor.body();
-				constructorBody.assign(contextField, constructorContextParam);
-				constructorBody.assign(holder.intentField, _new(intentClass).arg(constructorContextParam).arg(holder.generatedClass.dotclass()));
-			}
-			// Additional constructor for fragments (issue #541)
-			Elements elementUtils = annotationHelper.getElementUtils();
-			boolean fragmentInClasspath = elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
-			boolean fragmentSupportInClasspath = elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
-
-			JFieldVar fragmentField = null;
-			if (fragmentInClasspath) {
-				fragmentField = addIntentBuilderFragmentConstructor(holder, fragmentClass, "fragment_", contextField);
-			}
-			JFieldVar fragmentSupportField = null;
-			if (fragmentSupportInClasspath) {
-				fragmentSupportField = addIntentBuilderFragmentConstructor(holder, fragmentSupportClass, "fragmentSupport_", contextField);
-			}
-
-			{
-				// get()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, intentClass, "get");
-				method.body()._return(holder.intentField);
-			}
-
-			{
-				// flags()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.intentBuilderClass, "flags");
-				JVar flagsParam = method.param(codeModel.INT, "flags");
-				JBlock body = method.body();
-				body.invoke(holder.intentField, "setFlags").arg(flagsParam);
-				body._return(_this());
-			}
-
-			if (isActivity) {
-				// start()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "start");
-				method.body().invoke(contextField, "startActivity").arg(holder.intentField);
-
-				// startForResult()
-				method = holder.intentBuilderClass.method(PUBLIC, codeModel.VOID, "startForResult");
-				JVar requestCode = method.param(codeModel.INT, "requestCode");
-
-				JBlock body = method.body();
-				JClass activityClass = holder.classes().ACTIVITY;
-
-				JConditional condition = null;
-				if (fragmentSupportField != null) {
-					condition = body._if(fragmentSupportField.ne(JExpr._null()));
-					condition._then() //
-							.invoke(fragmentSupportField, "startActivityForResult").arg(holder.intentField).arg(requestCode);
-				}
-				if (fragmentField != null) {
-					if (condition == null) {
-						condition = body._if(fragmentField.ne(JExpr._null()));
-					} else {
-						condition = condition._elseif(fragmentField.ne(JExpr._null()));
-					}
-					condition._then() //
-							.invoke(fragmentField, "startActivityForResult").arg(holder.intentField).arg(requestCode);
-				}
-				if (condition == null) {
-					condition = body._if(contextField._instanceof(activityClass));
-				} else {
-					condition = condition._elseif(contextField._instanceof(activityClass));
-				}
-				condition._then() //
-						.invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.intentField).arg(requestCode);
-				condition._else() //
-						.invoke(contextField, "startActivity").arg(holder.intentField);
-			} else {
-				// start()
-				JMethod method = holder.intentBuilderClass.method(PUBLIC, holder.classes().COMPONENT_NAME, "start");
-				method.body()._return(contextField.invoke("startService").arg(holder.intentField));
-
-				// stop()
-				method = holder.intentBuilderClass.method(PUBLIC, codeModel.BOOLEAN, "stop");
-				method.body()._return(contextField.invoke("stopService").arg(holder.intentField));
-			}
-
-			{
-				// intent() with activity param
-				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
-				JVar contextParam = method.param(contextClass, "context");
-				method.body()._return(_new(holder.intentBuilderClass).arg(contextParam));
-			}
-			if (fragmentInClasspath) {
-				// intent() with android.app.Fragment param
-				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
-				JVar fragmentParam = method.param(fragmentClass, "fragment");
-				method.body()._return(_new(holder.intentBuilderClass).arg(fragmentParam));
-			}
-			if (fragmentSupportInClasspath) {
-				// intent() with android.support.v4.app.Fragment param
-				JMethod method = holder.generatedClass.method(STATIC | PUBLIC, holder.intentBuilderClass, "intent");
-				JVar fragmentParam = method.param(fragmentSupportClass, "fragment");
-				method.body()._return(_new(holder.intentBuilderClass).arg(fragmentParam));
-			}
-		}
-	}
-
-	public JInvocation addIntentBuilderPutExtraMethod(JCodeModel codeModel, EBeanHolder holder, APTCodeModelHelper helper, ProcessingEnvironment processingEnv, JMethod method, TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
-		boolean castToSerializable = false;
-		boolean castToParcelable = false;
-		if (elementType.getKind() == TypeKind.DECLARED) {
-			Elements elementUtils = processingEnv.getElementUtils();
-			Types typeUtils = processingEnv.getTypeUtils();
-			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
-			if (!typeUtils.isSubtype(elementType, parcelableType)) {
-				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
-				if (!typeUtils.isSubtype(elementType, stringType)) {
-					castToSerializable = true;
-				}
-			} else {
-				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
-				if (typeUtils.isSubtype(elementType, serializableType)) {
-					castToParcelable = true;
-				}
-			}
-		}
-
-		JClass parameterClass = helper.typeMirrorToJClass(elementType, holder);
-		JVar extraParameterVar = method.param(parameterClass, parameterName);
-		JBlock body = method.body();
-		JInvocation invocation = body.invoke(holder.intentField, "putExtra").arg(extraKeyField);
-		if (castToSerializable) {
-			return invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
-		} else if (castToParcelable) {
-			return invocation.arg(cast(holder.classes().PARCELABLE, extraParameterVar));
-		}
-		return invocation.arg(extraParameterVar);
-	}
-
-	public void addCastMethod(JCodeModel codeModel, EBeanHolder holder) {
-		JType objectType = codeModel._ref(Object.class);
-		JMethod method = holder.generatedClass.method(JMod.PRIVATE, objectType, "cast_");
-		JTypeVar genericType = method.generify("T");
-		method.type(genericType);
-		JVar objectParam = method.param(objectType, "object");
-		method.annotate(SuppressWarnings.class).param("value", "unchecked");
-		method.body()._return(JExpr.cast(genericType, objectParam));
-		holder.cast = method;
-	}
-
-	private JFieldVar addIntentBuilderFragmentConstructor(EBeanHolder holder, JClass fragmentClass, String fieldName, JFieldVar contextField) {
-
-		JFieldVar fragmentField = holder.intentBuilderClass.field(PRIVATE, fragmentClass, fieldName);
-		JMethod constructor = holder.intentBuilderClass.constructor(JMod.PUBLIC);
-		JVar constructorFragmentParam = constructor.param(fragmentClass, "fragment");
-		JBlock constructorBody = constructor.body();
-		constructorBody.assign(fragmentField, constructorFragmentParam);
-		constructorBody.assign(contextField, constructorFragmentParam.invoke("getActivity"));
-		constructorBody.assign(holder.intentField, _new(holder.classes().INTENT).arg(contextField).arg(holder.generatedClass.dotclass()));
-		return fragmentField;
-	}
 }

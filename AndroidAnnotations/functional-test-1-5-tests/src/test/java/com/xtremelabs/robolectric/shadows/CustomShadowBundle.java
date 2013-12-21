@@ -34,7 +34,7 @@ import com.xtremelabs.robolectric.internal.Implements;
 @Implements(Bundle.class)
 public class CustomShadowBundle {
 
-	Map<String, Object>	mMap;
+	Map<String, Object> mMap;
 
 	public CustomShadowBundle() {
 		mMap = new HashMap<String, Object>();
@@ -131,12 +131,14 @@ public class CustomShadowBundle {
 	}
 
 	@Implementation
-	public void putParcelableArrayList(String key, ArrayList<? extends Parcelable> value) {
+	public void putParcelableArrayList(String key,
+			ArrayList<? extends Parcelable> value) {
 		mMap.put(key, value);
 	}
 
 	@Implementation
-	public void putSparseParcelableArray(String key, SparseArray<? extends Parcelable> value) {
+	public void putSparseParcelableArray(String key,
+			SparseArray<? extends Parcelable> value) {
 		mMap.put(key, value);
 	}
 
@@ -428,7 +430,8 @@ public class CustomShadowBundle {
 	}
 
 	@Implementation
-	public <T extends Parcelable> SparseArray<T> getSparseParcelableArray(String key) {
+	public <T extends Parcelable> SparseArray<T> getSparseParcelableArray(
+			String key) {
 		Object o = mMap.get(key);
 		if (o == null) {
 			return null;
@@ -622,7 +625,4 @@ public class CustomShadowBundle {
 		return true;
 	}
 
-
-	
-	
 }

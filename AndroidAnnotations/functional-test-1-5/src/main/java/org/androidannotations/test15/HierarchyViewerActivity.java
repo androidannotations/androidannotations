@@ -21,5 +21,5 @@ import org.androidannotations.annotations.HierarchyViewerSupport;
 @HierarchyViewerSupport
 @EActivity(R.layout.clickable_widgets)
 public class HierarchyViewerActivity extends AbstractActivity {
-	
+
 }

@@ -22,7 +22,8 @@ import org.junit.runners.model.InitializationError;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 public class AndroidAnnotationsTestRunner extends RobolectricTestRunner {
-    public AndroidAnnotationsTestRunner(Class<?> testClass) throws InitializationError {
-        super(testClass, new File("../functional-test-1-5"));
-    }
+	public AndroidAnnotationsTestRunner(Class<?> testClass)
+			throws InitializationError {
+		super(testClass, new File("../functional-test-1-5"));
+	}
 }

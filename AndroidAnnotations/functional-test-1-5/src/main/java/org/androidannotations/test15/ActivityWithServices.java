@@ -15,6 +15,9 @@
  */
 package org.androidannotations.test15;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.SystemService;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -33,9 +36,7 @@ import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.SystemService;
-
+@SuppressWarnings("deprecation")
 @EActivity
 public class ActivityWithServices extends Activity {
 
@@ -75,7 +76,6 @@ public class ActivityWithServices extends Activity {
 	@SystemService
 	WifiManager wifiManager;
 
-	
 	@SystemService
 	InputMethodManager inputMethodManager;
 

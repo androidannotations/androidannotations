@@ -15,13 +15,14 @@
  */
 package org.androidannotations.test15.efragment;
 
-import android.app.Fragment;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.test15.ExtraInjectedActivity_;
+
+import android.app.Fragment;
 
 @EFragment
 public class StartActivityFragment extends Fragment {
-    void startActivity() {
-        ExtraInjectedActivity_.intent(this).start();
-    }
+	void startActivity() {
+		// TODO: The only way to test this is to change minSdkVersion to 11 in AndroidManifest.xml but we want to stick on lower verison as possible
+		// ExtraInjectedActivity_.intent(this).start();
+	}
 }
