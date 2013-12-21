@@ -23,6 +23,9 @@ import java.lang.annotation.Target;
 /**
  * Should be used on custom classes to enable usage of AndroidAnnotations.
  * <p/>
+ * This class MUST have either a default constructor (ie without parameters) or
+ * a constructor with only a parameter of type {@link android.app.Context}.
+ * <p/>
  * Your code related to injected beans should go in an {@link AfterInject}
  * annotated method.
  * <p/>

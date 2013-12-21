@@ -21,16 +21,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use it on activities to set a custom title layout.
+ * Use it on {@link EActivity} annotated classes to set a custom title layout.
  * <p/>
- * The activity must be annotated with {@link EActivity}.
+ * The annotation value is mandatory and should be one of R.layout.* fields.
  * <p/>
  * <blockquote>
  * 
  * Example :
  * 
  * <pre>
- * &#064;CustomTitle(R.string.activityTitle)
+ * &#064;CustomTitle(R.layout.activityTitleLayout)
  * &#064;EActivity(R.layout.main)
  * public class MyActivity extends Activity {
  * 

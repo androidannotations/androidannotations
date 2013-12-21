@@ -28,8 +28,8 @@ import android.view.MotionEvent;
  * {@link android.view.View.OnTouchListener#onTouch(android.view.View, MotionEvent)}
  * when the view has been touched by the user.
  * <p/>
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name.
+ * The annotation value should be one or several of R.id.* fields. If not set,
+ * the method name will be used as the R.id.* field name.
  * <p/>
  * The method may return a <code>boolean</code>, <code>void</code>, or a
  * {@link Boolean}. If returning void, it will be considered as returning true

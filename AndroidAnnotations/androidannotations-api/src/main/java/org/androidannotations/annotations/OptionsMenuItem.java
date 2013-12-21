@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
  * The field MUST be of type {@link link android.view.MenuItem} or
  * {@link com.actionbarsherlock.view.MenuItem}.
  * <p/>
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name.
+ * The annotation value should be one or several of R.id.* fields. If not set,
+ * the method name will be used as the R.id.* field name.
  * <p/>
  * <blockquote>
  * 

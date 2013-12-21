@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Should be used on {@link EActivity} or {@link EFragment} annotated classes to
  * inject one or multiple menus.
  * <p/>
- * The annotation value should be one or more R.menu.* fields.
+ * The annotation value should be one or several R.menu.* fields.
  * <p/>
  * <b>Note:</b> Fragment menus are compounds with parent Activity menus
  * <p/>

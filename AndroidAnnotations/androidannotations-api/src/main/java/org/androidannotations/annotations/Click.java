@@ -25,8 +25,8 @@ import java.lang.annotation.Target;
  * by {@link android.view.View.OnClickListener#onClick(android.view.View)} when
  * the view has been clicked by the user.
  * <p/>
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name.
+ * The annotation value should be one or several of R.id.* fields. If not set,
+ * the method name will be used as the R.id.* field name.
  * <p/>
  * The method MAY have one parameter:
  * <ul>

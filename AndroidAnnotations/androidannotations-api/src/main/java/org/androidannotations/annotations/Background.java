@@ -60,7 +60,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * </blockquote>
  * <p/>
  * <b>Note</b>: Cancellation may or may not be successful. If the task wasn't
- * executed yet, it will be removed from the pool. But i could fail if task has
+ * executed yet, it will be removed from the pool. But it could fail if task has
  * already completed, has already been cancelled, or could not be cancelled for
  * some other reason. See {@link Future#cancel(boolean)} for more information.
  * 

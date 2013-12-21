@@ -26,8 +26,8 @@ import java.lang.annotation.Target;
  * {@link android.view.View.OnLongClickListener#onLongClick(android.view.View)}
  * when the view has been long clicked by the user.
  * <p/>
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name.
+ * The annotation value should be one or several of R.id.* fields. If not set,
+ * the method name will be used as the R.id.* field name.
  * <p/>
  * The method may return a <code>boolean</code>, void, or a
  * {@link java.lang.Boolean}. If returning void, it will be considered as

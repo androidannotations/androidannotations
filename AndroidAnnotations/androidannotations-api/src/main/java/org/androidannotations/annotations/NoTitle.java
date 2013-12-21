@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Should be used on {@link EActivity} classes that must have no title.
  * <p/>
  * <b>Note:</b> This annotation has been deprecated. Please use
- * <code>WindowFeature(Window.FEATURE_NO_TITLE})</code> instead
+ * <code>&#064;WindowFeature(Window.FEATURE_NO_TITLE})</code> instead
  * 
  * @see WindowFeature
  */

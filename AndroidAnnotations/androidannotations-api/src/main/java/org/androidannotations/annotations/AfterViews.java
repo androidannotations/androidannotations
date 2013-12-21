@@ -26,8 +26,9 @@ import android.app.Activity;
  * Methods annotated with @{@link AfterViews} will be called after
  * {@link Activity#setContentView(int)} is called by the generated activity.
  * <p/>
- * This occurs AFTER <b>super.onCreate() is called</b>. Any view depending code
- * should be done in an {@link AfterViews} annotated method.
+ * This occurs AFTER <code>setContentView(View)</code> which is called at the
+ * end of super.onCreate(). Any view depending code should be done in an
+ * {@link AfterViews} annotated method.
  * <p/>
  * The method MUST have zero parameters.
  * <p/>

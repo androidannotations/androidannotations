@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
  * This annotation is intended to be used on methods to receive click on menu
  * items.
  * <p/>
- * The annotation value should be one or more of R.id.* fields. If not set, the
- * method name will be used as the R.id.* field name.
+ * The annotation value should be one or several of R.id.* fields. If not set,
+ * the method name will be used as the R.id.* field name.
  * <p/>
  * The method may return a <code>boolean</code>, void, or a
  * {@link java.lang.Boolean}. If returning void, it will be considered as

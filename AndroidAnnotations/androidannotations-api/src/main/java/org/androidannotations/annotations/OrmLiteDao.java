@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * <ul>
  * <li><i>helper</i>: should hold the class of your database helper which should
  * extend {@link com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper}</li>
- * <li><i>model</i>: hould point to the model class that the DAO relates to. It
+ * <li><i>model</i>: should point to the model class that the DAO relates to. It
  * should match the type of the first generic parameter of your Dao.</li>
  * </ul>
  * <p/>

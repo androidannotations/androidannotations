@@ -36,8 +36,9 @@ import java.lang.annotation.Target;
  * AndroidAnnotations to create Abstract classes that handle common code.
  * <p/>
  * The annotation value should be one of R.layout.* fields. If not set, no
- * content view will be set, and you should call the setContentView() method
- * yourself, in <b>onCreate()</b>
+ * content view will be set, and you should call the
+ * <code>inflater.inflate()</code> method yourself, in
+ * <code>onCreateView()</code>.
  * <p/>
  * The generated class will also contain a FragmentBuilder to build fragment
  * with a fluent API. Arguments can be passed by using {@link FragmentArg}

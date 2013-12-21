@@ -23,6 +23,9 @@ import java.lang.annotation.Target;
 /**
  * Should be used on {@link EActivity} classes to set custom window features.
  * <p/>
+ * The annotation value should be one or several of {@link android.view.Window}
+ * constants.
+ * <p/>
  * <b>Note:</b> This should replace {@link NoTitle} annotation.
  * <p/>
  * <blockquote>

@@ -35,8 +35,8 @@ import java.lang.annotation.Target;
  * AndroidAnnotations to create Abstract classes that handle common code.
  * <p/>
  * The annotation value should be one of R.layout.* fields. If not set, no
- * content view will be set, and you should call the setContentView() method
- * yourself, in <b>onCreate()</b>
+ * content view will be set, and you should call the
+ * <code>setContentView()</code> method yourself, in <code>onCreate()</code>
  * <p/>
  * <blockquote>
  * 
