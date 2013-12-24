@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.androidannotations.api.rest.RestClientHeaders;
+
 /**
  * Use on {@link Get}, {@link Post}, … annotated methods to inject a cookie in
  * the request.
@@ -27,7 +29,8 @@ import java.lang.annotation.Target;
  * The annotation {@link #value()} is mandatory and define the cookie's name you
  * want to inject.
  * <p/>
- * To set a cookie's value you MUST add the following method to your interface :
+ * To set a cookie's value you MUST either let your RestClient interface extends
+ * of {@link RestClientHeaders} or add the following method to your interface :
  * <code>void setCookie(String name, String value)</code>.
  * <p/>
  * You can also add the getter version to read a cookie value :

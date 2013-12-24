@@ -20,12 +20,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.androidannotations.api.rest.RestClientHeaders;
+
 /**
  * Use on {@link Get}, {@link Post}, … annotated methods to use authentication
  * on the request.
  * <p/>
- * To set the current authentication object to use, yout MUST add the following
- * method to your interface :
+ * To set the current authentication object to use, you MUST either let your
+ * RestClient interface extends of {@link RestClientHeaders} or add the
+ * following method to your interface :
  * <code>void setAuthentication(org.springframework.http.HttpAuthentication auth)</code>.
  * <p/>
  * You can also add this specific method for <a
