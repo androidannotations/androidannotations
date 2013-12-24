@@ -21,7 +21,45 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Activity classes that use the RoboGuice framework
+ * Should be used on Activity classes that use the RoboGuice framework.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * &#064;RoboGuice({ AstroListener.class, AnotherListener.class })
+ * public class AstroGirl extends Activity {
+ * 
+ * 	&#064;ViewById
+ * 	EditText edit;
+ * 
+ * 	&#064;Inject
+ * 	GreetingService greetingService;
+ * 
+ * 	&#064;Click
+ * 	void button() {
+ * 		String name = edit.getText().toString();
+ * 		greetingService.greet(name);
+ * 	}
+ * }
+ * 
+ * public class AstroListener {
+ * 
+ * 	&#064;Inject
+ * 	Context context;
+ * 
+ * 	public void doSomethingOnResume(@Observes OnResumeEvent onResume) {
+ * 		Toast.makeText(context, &quot;Activity has been resumed&quot;, Toast.LENGTH_LONG).show();
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see <a
+ *      href="https://github.com/excilys/androidannotations/wiki/RoboGuiceIntegration">RoboGuiceIntegration</a>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

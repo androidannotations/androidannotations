@@ -23,18 +23,11 @@ import java.lang.annotation.Target;
 import org.androidannotations.annotations.ResId;
 
 /**
- * Use on fields in activity classes that should be injected with values from
- * R.string.*
- * 
- * The annotated field must be a String
- * 
+ * Use on {@link java.lang.String} fields in any enhanced classes that should be
+ * injected with this specific color resource.
+ * <p/>
  * The annotation value must be one of R.string.* fields. If the value is not
  * set, the field name will be used as the R.string.* field name.
- * 
- * Notice that we named it @StringResValue instead of @StringValue because the
- * StringValue class already exists in java.lang and does not need any import to
- * be used.
- * 
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

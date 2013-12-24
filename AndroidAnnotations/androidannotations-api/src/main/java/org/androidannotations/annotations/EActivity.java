@@ -21,25 +21,63 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Activity classes to enable usage of AndroidAnnotations
- * 
+ * Should be used on {@link android.app.Activity} classes to enable usage of
+ * AndroidAnnotations.
+ * <p/>
+ * Your code related to injected beans should go in an {@link AfterInject}
+ * annotated method.
+ * <p/>
  * Any view related code should happen in an {@link AfterViews} annotated
  * method.
- * 
+ * <p/>
+ * If the class is abstract, the enhanced activity will not be generated.
+ * Otherwise, it will be generated as a final class. You can use
+ * AndroidAnnotations to create Abstract classes that handle common code.
+ * <p/>
  * The annotation value should be one of R.layout.* fields. If not set, no
- * content view will be set, and you should call the setContentView() method
- * yourself, in <b>onCreate()</b>
+ * content view will be set, and you should call the
+ * <code>setContentView()</code> method yourself, in <code>onCreate()</code>
+ * <p/>
+ * <blockquote>
  * 
- * If the activity is abstract, the generated activity will not be final.
- * Otherwise, it will be final. You can use AndroidAnnotations to create
- * Abstract classes that handle common code, but we want you to make a clear
- * decision on that subject.
+ * Example :
  * 
- * The main reason is that the generated code should not be considered a public
- * API, and may change between releases. So if you extend some generated
- * activity, you may have to adapt your code when you upgrade
- * AndroidAnnotations.
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivity extends Activity {
  * 
+ * 	public void launchActivity() {
+ * 		// Note the use of generated class instead of original one
+ * 		MyActivityTwo_.intent(this).startActivity();
+ * 	}
+ * }
+ * 
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivityTwo extends Activity {
+ * 
+ * 	&#064;Bean
+ * 	MyBean myBean;
+ * 
+ * 	&#064;ViewById
+ * 	TextView myTextView;
+ * 
+ * 	&#064;AfterInject
+ * 	void init() {
+ * 		myBean.doSomeStuff();
+ * 	}
+ * 
+ * 	&#064;AfterViews
+ * 	void initViews() {
+ * 		myTextView.setText(&quot;test&quot;);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see AfterInject
+ * @see AfterViews
+ * @see Extra
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

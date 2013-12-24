@@ -21,8 +21,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use on activity fields to save and restore their values when the
- * system calls onSaveInstanceState(Bundle) and onCreate(Bundle).
+ * Use on activity fields to save and restore their values when the system calls
+ * <code>onSaveInstanceState(Bundle)</code> and <code>onCreate(Bundle)</code>.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;InstanceState
+ * 	int someId;
+ * 
+ * 	&#064;InstanceState
+ * 	MySerializableBean bean;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

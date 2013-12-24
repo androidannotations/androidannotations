@@ -22,6 +22,14 @@ import java.lang.annotation.Target;
 
 import org.androidannotations.annotations.ResId;
 
+/**
+ * Use on {@link java.lang.CharSequence} or {@link android.text.Spanned} fields
+ * in any enhanced classes that should be injected with this specific string
+ * resource as HTML.
+ * <p/>
+ * The annotation value must be one of R.string.* fields. If the value is not
+ * set, the field name will be used as the R.string.* field name.
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface HtmlRes {

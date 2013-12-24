@@ -21,39 +21,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <blockquote>
- * 
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.SeekBar.OnSeekBarChangeListener#onProgressChanged(android.widget.SeekBar, int, boolean)}
  * when the progress level of a SeekBar has changed.
- * 
- * </blockquote> <blockquote>
- * 
+ * <p/>
  * The annotation value should be one or several R.id.* fields that refers to an
  * android.widget.SeekBar. If not set, the method name will be used as the
  * R.id.* field name.
- * 
- * </blockquote> <blockquote>
- * 
- * The method may have multiple parameter :
- * 
- * </blockquote> <blockquote>
- * 
+ * <p/>
+ * The method MAY have multiple parameter :
+ * <p/>
  * <ul>
  * <li>A {@link android.widget.SeekBar} parameter to determine which view has
- * targeted this event
- * <li>An int parameter to get the progress level of the SeekBar
- * <li>A boolean parameter to determine if this event is triggered by the user
+ * targeted this event</li>
+ * <li>An <code>int</code> parameter to get the progress level of the SeekBar</li>
+ * <li>A <code>boolean</code> parameter to determine if this event was triggered
+ * by the user</li>
  * </ul>
- * 
- * </blockquote> <blockquote>
- * 
+ * <p/>
  * All these parameters are optional. Parameter names do not matter.
+ * <p/>
+ * <blockquote>
  * 
- * </blockquote> <blockquote>
- * 
- * Some usage examples of &#064;SeekBarProgressChange annotation:
+ * Example :
  * 
  * <pre>
  * &#064;ProgressChange(<b>R.id.seekBar</b>)
@@ -61,21 +52,16 @@ import java.lang.annotation.Target;
  * 	// Something Here
  * }
  * 
- * 
  * &#064;ProgressChange(<b>R.id.seekBar</b>)
  * void onProgressChangeOnSeekBar(SeekBar seekBar, int progress) {
  * 	// Something Here
  * }
- * </pre>
  * 
- * <pre>
  * &#064;ProgressChange(<b>{R.id.seekBar1, R.id.seekBar2}</b>)
  * void onProgressChangeOnSeekBar(SeekBar seekBar) {
  * 	// Something Here
  * }
- * </pre>
  * 
- * <pre>
  * &#064;ProgressChange(<b>{R.id.seekBar1, R.id.seekBar2}</b>)
  * void onProgressChangeOnSeekBar() {
  * 	// Something Here
@@ -86,8 +72,8 @@ import java.lang.annotation.Target;
  * 
  * @since 2.7
  * 
- * @see org.androidannotations.annotations.SeekBarTouchStart
- * @see org.androidannotations.annotations.SeekBarTouchStop
+ * @see SeekBarTouchStart
+ * @see SeekBarTouchStop
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

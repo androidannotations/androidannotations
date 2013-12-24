@@ -15,18 +15,56 @@
  */
 package org.androidannotations.annotations;
 
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.os.Parcelable;
+
 /**
- * Use on fields in fragments. This String value field corresponds to the
- * argument name.
+ * Use on any native, {@link Parcelable} or {@link Serializable} field in an
+ * {@link EFragment} annotated class to bind it with Android's arguments.
+ * <p/>
+ * The annotation value is the key used for argument. If not set, the field name
+ * will be used as the key.
+ * <p/>
+ * When {@link FragmentArg} is used, the intent builder will hold dedicated
+ * methods for each annotated fields.
+ * <p/>
+ * Your code related to injected extra should go in an {@link AfterInject}
+ * annotated method.
+ * <p/>
+ * <blockquote>
  * 
- * When {@link FragmentArg} is used on fields in a Fragment, the fragment
- * builder will hold dedicated methods for these arguments.
+ * Example :
  * 
+ * <pre>
+ * &#064;EFragment
+ * public class MyFragment extends Fragment {
+ * 
+ * 	&#064;FragmentArg
+ * 	String myMessage;
+ * }
+ * 
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;AfterViews
+ * 	void init() {
+ * 		MyFragment myFragment = MyFragment_.builder() //
+ * 				.myMessage(&quot;Hello&quot;) //
+ * 				.build();
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see EFragment
+ * @see FragmentById
+ * @see FragmentByTag
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

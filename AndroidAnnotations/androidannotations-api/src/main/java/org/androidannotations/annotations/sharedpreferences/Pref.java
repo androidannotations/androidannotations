@@ -23,11 +23,38 @@ import java.lang.annotation.Target;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 
 /**
- * Injects a {@link SharedPref}
- * 
+ * Injects an {@link SharedPref} annotated class in any enhanced class.
+ * <p/>
  * The field MUST be of a type that is generated using {@link SharedPref} and
  * therefore extends {@link SharedPreferencesHelper}.
+ * <p/>
+ * <b>Note:</b> To prevent you from any building issues, you should use fully
+ * qualified name for the field type.
+ * <p/>
+ * <blockquote>
  * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;Pref
+ * 	<b>mypackage.MyPref_</b> myPref;
+ * }
+ * 
+ * 
+ * package <b>mypackage</b>;
+ * 
+ * &#064;SharedPref
+ * public interface <b>MyPref</b> {
+ * 
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see SharedPref
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

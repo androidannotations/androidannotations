@@ -21,7 +21,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Default value for a preference field
+ * Use on methods in {@link SharedPref} annotated class to specified the default
+ * value of this preference.
+ * <p/>
+ * The annotation value must be a <code>boolean</code>.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

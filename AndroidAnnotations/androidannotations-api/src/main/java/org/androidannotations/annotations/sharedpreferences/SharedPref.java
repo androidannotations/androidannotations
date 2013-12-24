@@ -26,6 +26,44 @@ import android.content.Context;
  * Apply @{@link SharedPref} on an interface to create a SharedPreference helper
  * that will contain access methods related to the methods you define in the
  * interface.
+ * <p/>
+ * You should then inject your SharedPreference generated class by using
+ * {@link Pref} annotation.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;Pref
+ * 	<b>mypackage.MyPref_</b> myPref;
+ * }
+ * 
+ * 
+ * package <b>mypackage</b>;
+ * 
+ * &#064;SharedPref
+ * public interface <b>MyPref</b> {
+ * 
+ * 	// The field name will have default value "John"
+ * 	&#064;DefaultString("John")
+ * 	String name();
+ * 
+ * 	// The field age will have default value 42
+ * 	&#064;DefaultInt(42)
+ * 	int age();
+ * 
+ * 	// The field lastUpdated will have default value 0
+ * 	long lastUpdated();
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Pref
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

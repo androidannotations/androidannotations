@@ -20,6 +20,40 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.androidannotations.annotations.res.HtmlRes;
+
+/**
+ * Use on a {@link android.widget.TextView} field or a
+ * {@link android.widget.TextView} subclass field annotated with
+ * {@link ViewById} to inject text as HTML.
+ * <p/>
+ * The annotation value should be a R.string.* field that refers to string
+ * resource. If not set, the method name will be used as the R.string.* field
+ * name.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;ViewById(R.id.my_text_view)
+ * 	&#064;FromHtml(R.string.hello_html)
+ * 	TextView textView;
+ * 
+ * 	&#064;ViewById
+ * 	&#064;FromHtml
+ * 	TextView someView;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see ViewById
+ * @see HtmlRes
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface FromHtml {

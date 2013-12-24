@@ -21,12 +21,35 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Activity classes to set the id of the options menu.
+ * Should be used on {@link EActivity} or {@link EFragment} annotated classes to
+ * inject one or multiple menus.
+ * <p/>
+ * The annotation value should be one or several R.menu.* fields.
+ * <p/>
+ * <b>Note:</b> Fragment menus are compounds with parent Activity menus
+ * <p/>
+ * <blockquote>
  * 
- * The activity must be annotated with {@link EActivity}.
+ * Example :
  * 
- * The annotation value should be one of R.menu.* fields.
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * &#064;OptionsMenu({ R.menu.my_menu1, R.menu.my_menu2 })
+ * public class MyActivity extends Activity {
  * 
+ * }
+ * 
+ * &#064;EFragment
+ * &#064;OptionsMenu(R.menu.my_fragment_menu)
+ * public class MyFragment extends Fragment {
+ * 
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see OptionsItem
+ * @see OptionsMenuItem
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

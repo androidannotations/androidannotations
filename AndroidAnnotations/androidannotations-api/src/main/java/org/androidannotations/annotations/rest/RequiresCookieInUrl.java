@@ -20,8 +20,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Use on {@link Get}, {@link Post}, … annotated methods to inject a cookie in
+ * the URI.
+ * <p/>
+ * It works exactly as {@link RequiresCookie} but cookies will be injected in
+ * URL's placeholders instead of in headers.
+ * 
+ * @see Rest
+ * @see RequiresCookie
+ * @see SetsCookie
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface RequiresCookieInUrl {
-    public String[] value();
+	public String[] value();
 }

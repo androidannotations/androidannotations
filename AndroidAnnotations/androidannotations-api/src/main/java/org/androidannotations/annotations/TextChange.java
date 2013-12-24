@@ -25,12 +25,12 @@ import java.lang.annotation.Target;
  * by
  * {@link android.text.TextWatcher#onTextChanged(CharSequence s, int start, int before, int count)}
  * when the text is changed on the targeted TextView or subclass of TextView.
- * 
+ * <p/>
  * The annotation value should be one or several R.id.* fields that refers to
  * TextView or subclasses of TextView. If not set, the method name will be used
  * as the R.id.* field name.
- * 
- * The method may have multiple parameter :
+ * <p/>
+ * The method MAY have multiple parameter :
  * <ul>
  * <li>A {@link android.widget.TextView} parameter to know which view has
  * targeted this event
@@ -41,41 +41,37 @@ import java.lang.annotation.Target;
  * modification.
  * <li>An int parameter named count to know the number of modified characters.
  * </ul>
+ * <p/>
+ * <blockquote>
  * 
- * Some usage examples of &#064;BeforeTextChange annotation: <blockquote>
+ * Examples :
  * 
  * <pre>
  * &#064;TextChange(<b>R.id.helloTextView</b>)
  * void onTextChangesOnHelloTextView(CharSequence text, TextView hello, int before, int start, int count) {
  * 	// Something Here
  * }
- * </pre>
  * 
- * </blockquote> <blockquote>
- * 
- * <pre>
  * &#064;TextChange
  * void <b>helloTextView</b>TextChanged(TextView hello) {
  * 	// Something Here
  * }
- * </pre>
  * 
- * </blockquote> <blockquote>
- * 
- * <pre>
  * &#064;TextChange(<b>{R.id.editText, R.id.helloTextView}</b>)
  * void onTextChangesOnSomeTextViews(TextView tv, CharSequence text) {
  * 	// Something Here
  * }
- * </pre>
  * 
- * </blockquote> <blockquote>
- * 
- * <pre>
  * &#064;TextChange(<b>R.id.helloTextView</b>)
  * void onTextChangesOnHelloTextView() {
  * 	// Something Here
  * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see BeforeTextChange
+ * @see AfterTextChange
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

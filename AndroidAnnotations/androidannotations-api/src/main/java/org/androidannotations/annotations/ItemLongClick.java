@@ -21,21 +21,46 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on item long click listener methods for AdapterView classes
+ * This annotation is intended to be used on methods to receive events defined
+ * by {@link
+ * android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.
+ * widget. AdapterView<?>, android.view.View, int, long)} when a list item has
+ * been long clicked by the user.
+ * <p/>
+ * The annotation value should be one or several of R.id.* fields. If not set,
+ * the method name will be used as the R.id.* field name.
+ * <p/>
+ * The method MAY have one parameter :
+ * <ul>
+ * <li>An <code>int</code> parameter to know the position of the clicked item.
+ * Or, a parameter of the type of the Adapter linked to the listview.</li>
+ * </ul>
+ * <p/>
+ * <blockquote>
  * 
- * The method may have 0 or 1 parameter, that will be the object from the
- * adapter, at the selected position. It may be of any type, so be careful about
- * potential ClassCastException.
+ * Example :
  * 
- * If the parameter is an int, it will be the position instead of the object from the adapter.
+ * <pre>
+ * &#064;ItemLongClick(R.id.myList)
+ * public void itemLongClickedOnMyList() {
+ * 	// ...
+ * }
  * 
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name..
+ * &#064;ItemLongClick(R.id.myList)
+ * public void myListItemPositionLongClicked(int position) {
+ * 	// ...
+ * }
  * 
- * The method may return a boolean, void, or a java.lang.Boolean. If returning
- * void, it will be considered as returning true (ie the method has handled the
- * event).
+ * &#064;ItemLongClick
+ * public void myListItemLongClicked(MyItem clickedItem) {
+ * 	// ...
+ * }
+ * </pre>
  * 
+ * </blockquote>
+ * 
+ * @see ItemClick
+ * @see ItemSelect
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

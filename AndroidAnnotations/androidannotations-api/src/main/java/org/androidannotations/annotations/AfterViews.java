@@ -25,15 +25,37 @@ import android.app.Activity;
 /**
  * Methods annotated with @{@link AfterViews} will be called after
  * {@link Activity#setContentView(int)} is called by the generated activity.
- * 
- * This occurs after <b>super.onCreate() is called</b>. Any view depending code
- * should be done in an {@link AfterViews} annotated method.
- * 
- * The method must have zero parameters.
- * 
- * There may be several methods annotated with @{@link AfterViews} in the same
+ * <p/>
+ * This occurs AFTER <code>setContentView(View)</code> which is called at the
+ * end of super.onCreate(). Any view depending code should be done in an
+ * {@link AfterViews} annotated method.
+ * <p/>
+ * The method MUST have zero parameters.
+ * <p/>
+ * There MAY be several methods annotated with @{@link AfterViews} in the same
  * activity.
+ * <p/>
+ * <blockquote>
  * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivityTwo extends Activity {
+ * 
+ * 	&#064;ViewById
+ * 	TextView myTextView;
+ * 
+ * 	&#064;AfterViews
+ * 	void initViews() {
+ * 		myTextView.setText(&quot;test);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see AfterInject
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

@@ -20,31 +20,48 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import android.view.ViewGroup;
+
 /**
- * Should be used on custom classes that extend View to enable usage of
- * AndroidAnnotations
- * 
+ * Should be used on {@link android.view.View} classes to enable usage of
+ * AndroidAnnotations.
+ * <p/>
+ * Your code related to injected beans should go in an {@link AfterInject}
+ * annotated method.
+ * <p/>
  * Any view related code should happen in an {@link AfterViews} annotated
- * method.<br>
- * <br>
+ * method.
+ * <p/>
+ * If the class is abstract, the enhanced view will not be generated. Otherwise,
+ * it will be generated as a final class. You can use AndroidAnnotations to
+ * create Abstract classes that handle common code.
+ * <p/>
+ * <blockquote>
  * 
- * Supported annotations in @EView :
+ * Example :
  * 
- * <ul>
- * <li>ViewById</li>
- * <li>AfterViews</li>
- * <li>Click</li>
- * <li>ItemClick</li>
- * <li>ItemLongClick</li>
- * <li>ItemSelected</li>
- * <li>LongClick</li>
- * <li>Touch</li>
- * </ul>
+ * <pre>
+ * &#064;EView
+ * public class CustomButton extends Button {
  * 
+ * 	&#064;StringRes(R.string.test)
+ * 	String res;
+ * 
+ * 	&#064;AfterViews
+ * 	void initViews() {
+ * 		setText(res);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see AfterInject
+ * @see AfterViews
+ * @see ViewGroup
  * @see <a
- *      href="http://developer.android.com/guide/topics/ui/custom-components.html">How
- *      to build a custom component.</a>
- * 
+ *      href="http://developer.android.com/guide/topics/ui/custom-components.html"
+ *      >How to build a custom component.</a>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

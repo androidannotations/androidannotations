@@ -19,7 +19,40 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Set;
 
+/**
+ * Use on methods in {@link Rest} annotated class to add a new rest service of
+ * type OPTIONS.
+ * <p/>
+ * This annotation as the same constraints as {@link Get} but it MUST return a
+ * {@link Set} of {@link org.springframework.http.HttpMethod}
+ * <p/>
+ * <blockquote>
+ * 
+ * <b>Example :</b>
+ * 
+ * <pre>
+ * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = MappingJacksonHttpMessageConverter.class)
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Options(&quot;/events&quot;)
+ * 	Set&lt;HttpMethod&gt; getEventOptions();
+ * 
+ * 	&#064;Options(&quot;/events/{year}/{location}&quot;)
+ * 	Set&lt;HttpMethod&gt; getEventOptions(String location, int year);
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Rest
+ * @see Get
+ * @see Post
+ * @see Put
+ * @see Delete
+ * @see Head
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Options {
