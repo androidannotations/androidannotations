@@ -8,9 +8,9 @@
 		<version>7</version>
 	</parent>
 
-	<groupId>com.googlecode.androidannotations</groupId>
+	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>2.7.1-SNAPSHOT</version>
+	<version>3.0</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -32,17 +32,18 @@
 			<id>py.ricau</id>
 			<name>Pierre-Yves Ricau</name>
 			<email>py.ricau@gmail.com</email>
-			<url>http://blog.piwai.info</url>
-			<organization>Siine Ltd</organization>
-			<organizationUrl>http://www.siine.com</organizationUrl>
+			<url>http://piwai.info</url>
+			<organization>Square, Inc</organization>
+			<organizationUrl>http://squareup.com</organizationUrl>
 			<roles>
 				<role>Owner</role>
 			</roles>
 		</developer>
 		<developer>
 			<id>mat.boniface</id>
-			<name>Mathieu Boniface	</name>
+			<name>Mathieu Boniface</name>
 			<email>mat.boniface@gmail.com</email>
+			<url>http://twitter.com/matboniface</url>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
@@ -63,7 +64,8 @@
 		<developer>
 			<id>jzapata</id>
 			<name>Joan Zapata</name>
-			<email>jzapata@excilys.com</email>
+			<email>zapata.joan@gmail.com</email>
+			<url>http://joanzapata.com</url>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
@@ -76,6 +78,16 @@
 			<email>bluepyth@gmail.com</email>
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
+			<roles>
+				<role>Committer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>dvilleneuve</id>
+			<name>Damien Villeneuve</name>
+			<email>contact@damien-villeneuve.fr</email>
+			<organization>Excilys</organization>
+			<organizationUrl>http://excilys.com</organizationUrl>
 			<roles>
 				<role>Committer</role>
 			</roles>
@@ -98,47 +110,47 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-api</artifactId>
 				<version>${project.version}</version>
 				<classifier>javadoc</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-api</artifactId>
 				<version>${project.version}</version>
 				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<classifier>javadoc</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations-with-codemodel</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.googlecode.androidannotations</groupId>
+				<groupId>org.androidannotations</groupId>
 				<artifactId>functional-test-1-5</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -154,10 +166,10 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-			    <groupId>com.google.guava</groupId>
-			    <artifactId>guava</artifactId>
-			    <version>13.0.1</version>
-			    <scope>test</scope>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>13.0.1</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -185,6 +197,14 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>2.3.1</version>
 				</plugin>
@@ -194,7 +214,18 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.7</version>
+					<version>2.9</version>
+					<configuration>
+						<locale>en_US</locale>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>

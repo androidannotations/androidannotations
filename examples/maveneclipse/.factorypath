@@ -1,4 +1,0 @@
-<factorypath>
-    <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/googlecode/androidannotations/androidannotations/2.1-SNAPSHOT/androidannotations-2.1-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
-</factorypath>

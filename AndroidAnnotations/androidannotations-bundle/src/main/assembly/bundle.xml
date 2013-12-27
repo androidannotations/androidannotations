@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2010-2012 eBusiness Information, Excilys Group
+    Copyright (C) 2010-2013 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -27,17 +27,17 @@
 	    <dependencySet>
 	    	<useProjectArtifact>false</useProjectArtifact>
 	        <includes>
-	            <include>com.googlecode.androidannotations:androidannotations-api</include>
+	            <include>org.androidannotations:androidannotations-api</include>
 	        </includes>
 	        <excludes>
-	        	<exclude>com.googlecode.androidannotations:androidannotations-api:*:javadoc</exclude>
-	        	<exclude>com.googlecode.androidannotations:androidannotations-api:*:sources</exclude>
+	        	<exclude>org.androidannotations:androidannotations-api:*:javadoc</exclude>
+	        	<exclude>org.androidannotations:androidannotations-api:*:sources</exclude>
 	        </excludes>
 	    </dependencySet>
 	    <dependencySet>
 	    	<useProjectArtifact>false</useProjectArtifact>
 	        <includes>
-	            <include>com.googlecode.androidannotations:androidannotations-with-codemodel</include>
+	            <include>org.androidannotations:androidannotations-with-codemodel</include>
 	        </includes>
 	        <outputFileNameMapping>androidannotations-${artifact.version}.jar</outputFileNameMapping>
 	    </dependencySet>
@@ -45,16 +45,16 @@
 			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory>javadoc</outputDirectory>
 	        <includes>
-	            <include>com.googlecode.androidannotations:androidannotations-api:*:javadoc</include>
-	            <include>com.googlecode.androidannotations:androidannotations:*:javadoc</include>
+	            <include>org.androidannotations:androidannotations-api:*:javadoc</include>
+	            <include>org.androidannotations:androidannotations:*:javadoc</include>
 	        </includes>
 		</dependencySet>
 		<dependencySet>
 			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory>sources</outputDirectory>
 	        <includes>
-	            <include>com.googlecode.androidannotations:androidannotations-api:*:sources</include>
-	            <include>com.googlecode.androidannotations:androidannotations:*:sources</include>
+	            <include>org.androidannotations:androidannotations-api:*:sources</include>
+	            <include>org.androidannotations:androidannotations:*:sources</include>
 	        </includes>
 		</dependencySet>
 	</dependencySets>
