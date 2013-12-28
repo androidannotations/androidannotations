@@ -11,6 +11,5 @@
 	<classpathentry kind="src" path="libs"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="/androidannotations-api/target/androidannotations-api-3.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

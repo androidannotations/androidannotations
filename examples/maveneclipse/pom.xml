@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>4.1.1.4</android.version>
 		<android.platform>16</android.platform>
-		<androidannotations.version>3.0-SNAPSHOT</androidannotations.version>
+		<androidannotations.version>3.0</androidannotations.version>
 		<java.version>1.6</java.version>
 	</properties>
 
@@ -39,10 +39,13 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<compilerArgs>
+						<arg>-AlogLevel=trace</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
