@@ -19,14 +19,17 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.Level;
 
 public abstract class Appender {
 
 	protected ProcessingEnvironment processingEnv;
+	protected OptionsHelper optionsHelper;
 
 	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
 		this.processingEnv = processingEnv;
+		optionsHelper = new OptionsHelper(processingEnv);
 	}
 
 	public abstract void open();

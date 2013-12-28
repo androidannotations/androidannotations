@@ -38,15 +38,15 @@ import org.w3c.dom.NodeList;
 
 public class AndroidManifestFinder {
 
-	public static final String ANDROID_MANIFEST_FILE_OPTION = "androidManifestFile";
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidManifestFinder.class);
 	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
 
-	private ProcessingEnvironment processingEnv;
+	private final ProcessingEnvironment processingEnv;
+	private final OptionsHelper optionsHelper;
 
 	public AndroidManifestFinder(ProcessingEnvironment processingEnv) {
 		this.processingEnv = processingEnv;
+		optionsHelper = new OptionsHelper(processingEnv);
 	}
 
 	public Option<AndroidManifest> extractAndroidManifest() {
@@ -81,18 +81,18 @@ public class AndroidManifestFinder {
 	}
 
 	private Option<File> findManifestFile() {
-		if (processingEnv.getOptions().containsKey(ANDROID_MANIFEST_FILE_OPTION)) {
-			return findManifestInSpecifiedPath();
+		String androidManifestFile = optionsHelper.getAndroidManifestFile();
+		if (androidManifestFile != null) {
+			return findManifestInSpecifiedPath(androidManifestFile);
 		} else {
 			return findManifestInParentsDirectories();
 		}
 	}
 
-	private Option<File> findManifestInSpecifiedPath() {
-		String path = processingEnv.getOptions().get(ANDROID_MANIFEST_FILE_OPTION);
-		File androidManifestFile = new File(path);
+	private Option<File> findManifestInSpecifiedPath(String androidManifestPath) {
+		File androidManifestFile = new File(androidManifestPath);
 		if (!androidManifestFile.exists()) {
-			LOGGER.error("Could not find the AndroidManifest.xml file in specified path : {}", path);
+			LOGGER.error("Could not find the AndroidManifest.xml file in specified path : {}", androidManifestPath);
 			return Option.absent();
 		} else {
 			LOGGER.debug("AndroidManifest.xml file found with specified path: {}", androidManifestFile.toString());
