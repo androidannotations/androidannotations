@@ -1,67 +1,44 @@
-description = "AndroidAnnotations Gradle Sample"
-abbreviation = "GRADLESAMPLE"
-version = '1.0.0.BUILD-SNAPSHOT'
-
 buildscript {
     repositories {
         mavenCentral()
     }
-
-    def gradleAndroidAnnotationsPluginVersion = '0.3.0'
-
     dependencies {
-        classpath "net.ealden.gradle.plugins:gradle-androidannotations-plugin:$gradleAndroidAnnotationsPluginVersion"
+        // replace with the current version of the Android plugin
+        classpath 'com.android.tools.build:gradle:0.7+'
+        // the latest version of the android-apt plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.1'
     }
 }
-
-apply plugin: 'androidannotations'
-apply plugin: 'idea'
-
-def compatibilityVersion = 1.6
-sourceCompatibility = compatibilityVersion
-targetCompatibility = compatibilityVersion
 
 repositories {
     mavenCentral()
 }
 
-clean {
-    delete 'gen'
+apply plugin: 'android'
+apply plugin: 'android-apt'
+def AAVersion = '3.0'
+
+dependencies {
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
 
-//androidSignAndAlign {
-//    keyStore = ''
-//    keyAlias = ''
-//    keyStorePassword = ''
-//    keyAliasPassword = ''
-//}
+android {
+    compileSdkVersion 18
+    buildToolsVersion "18.0.1"
 
-processResources {
-    expand(project.properties)
-}
-
-task configureDebug << {
-    jar.classifier = "debug"
-}
-
-task configureRelease << {
-    proguard.enabled = true
-}
-
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 18
     }
-    project {
-        languageLevel = compatibilityVersion
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['res']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
     }
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-6'
-}
-
-androidProcessResources.dependsOn(clean)
-
-defaultTasks 'assemble'
