@@ -15,13 +15,6 @@
  */
 package org.androidannotations;
 
-import static org.androidannotations.helper.AndroidManifestFinder.ANDROID_MANIFEST_FILE_OPTION;
-import static org.androidannotations.helper.ModelConstants.TRACE_OPTION;
-import static org.androidannotations.logger.LoggerContext.LOG_APPENDER_CONSOLE;
-import static org.androidannotations.logger.LoggerContext.LOG_FILE_OPTION;
-import static org.androidannotations.logger.LoggerContext.LOG_LEVEL_OPTION;
-import static org.androidannotations.rclass.ProjectRClassFinder.RESOURCE_PACKAGE_NAME_OPTION;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -32,7 +25,6 @@ import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -47,6 +39,7 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.ErrorHelper;
 import org.androidannotations.helper.Option;
+import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.Level;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerContext;
@@ -64,7 +57,6 @@ import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.ProjectRClassFinder;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedOptions({ TRACE_OPTION, ANDROID_MANIFEST_FILE_OPTION, RESOURCE_PACKAGE_NAME_OPTION, LOG_FILE_OPTION, LOG_LEVEL_OPTION, LOG_APPENDER_CONSOLE })
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidAnnotationProcessor.class);
@@ -72,8 +64,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private final Properties properties = new Properties();
 	private final Properties propertiesApi = new Properties();
 	private final TimeStats timeStats = new TimeStats();
-	private AnnotationHandlers annotationHandlers;
 	private final ErrorHelper errorHelper = new ErrorHelper();
+	private AnnotationHandlers annotationHandlers;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -284,4 +276,10 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	public Set<String> getSupportedAnnotationTypes() {
 		return annotationHandlers.getSupportedAnnotationTypes();
 	}
+
+	@Override
+	public Set<String> getSupportedOptions() {
+		return OptionsHelper.getOptionsConstants();
+	}
+
 }

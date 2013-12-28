@@ -28,7 +28,6 @@ import javax.tools.Diagnostic.Kind;
 
 import org.androidannotations.helper.FileHelper;
 import org.androidannotations.logger.Level;
-import org.androidannotations.logger.LoggerContext;
 
 public class FileAppender extends Appender {
 
@@ -80,13 +79,14 @@ public class FileAppender extends Appender {
 	}
 
 	private void resolveLogFile() {
-		Messager messager = processingEnv.getMessager();
-		if (processingEnv.getOptions().containsKey(LoggerContext.LOG_FILE_OPTION)) {
-			file = resolveLogFileInSpecifiedPath();
+		String logFile = optionsHelper.getLogFile();
+		if (logFile != null) {
+			file = resolveLogFileInSpecifiedPath(logFile);
 		} else {
 			file = resolveLogFileInParentsDirectories();
 		}
 
+		Messager messager = processingEnv.getMessager();
 		if (file == null) {
 			messager.printMessage(Kind.WARNING, "Can't resolve log file");
 		} else {
@@ -94,13 +94,10 @@ public class FileAppender extends Appender {
 		}
 	}
 
-	private File resolveLogFileInSpecifiedPath() {
+	private File resolveLogFileInSpecifiedPath(String logFile) {
 		File outputDirectory = FileHelper.resolveOutputDirectory(processingEnv);
-
-		String path = processingEnv.getOptions().get(LoggerContext.LOG_FILE_OPTION);
-		path = path.replace("{outputFolder}", outputDirectory.getAbsolutePath());
-
-		return new File(path);
+		logFile = logFile.replace("{outputFolder}", outputDirectory.getAbsolutePath());
+		return new File(logFile);
 	}
 
 	private File resolveLogFileInParentsDirectories() {
