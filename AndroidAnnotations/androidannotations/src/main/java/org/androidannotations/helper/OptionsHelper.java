@@ -81,7 +81,7 @@ public class OptionsHelper {
 			String trace = options.get(key);
 			return !"false".equals(trace);
 		} else {
-			return true;
+			return false;
 		}
 	}
 
