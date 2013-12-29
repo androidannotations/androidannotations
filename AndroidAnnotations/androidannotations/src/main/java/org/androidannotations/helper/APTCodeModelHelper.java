@@ -15,7 +15,6 @@
  */
 package org.androidannotations.helper;
 
-
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -81,7 +80,11 @@ public class APTCodeModelHelper {
 
 			TypeMirror extendsBound = wildcardType.getExtendsBound();
 
-			return typeMirrorToJClass(extendsBound, holder).wildcard();
+			if (extendsBound == null) {
+				return holder.classes().OBJECT.wildcard();
+			} else {
+				return typeMirrorToJClass(extendsBound, holder).wildcard();
+			}
 		} else if (type instanceof ArrayType) {
 			ArrayType arrayType = (ArrayType) type;
 
@@ -193,25 +196,25 @@ public class APTCodeModelHelper {
 		return clonedBody;
 	}
 
-    public void replaceSuperCall(JMethod method, JBlock replacement) {
-        String superCallStart = "super."+method.name()+"(";
+	public void replaceSuperCall(JMethod method, JBlock replacement) {
+		String superCallStart = "super." + method.name() + "(";
 
-        JBlock oldBody = removeBody(method);
-        JBlock newBody = method.body();
+		JBlock oldBody = removeBody(method);
+		JBlock newBody = method.body();
 
-        for (Object content : oldBody.getContents()) {
-            StringWriter writer = new StringWriter();
-            JFormatter formatter = new JFormatter(writer);
-            JStatement statement = (JStatement) content;
-            statement.state(formatter);
-            String statementString = writer.getBuffer().toString();
-            if (statementString.startsWith(superCallStart)) {
-                newBody.add(replacement);
-            } else {
-                newBody.add(statement);
-            }
-        }
-    }
+		for (Object content : oldBody.getContents()) {
+			StringWriter writer = new StringWriter();
+			JFormatter formatter = new JFormatter(writer);
+			JStatement statement = (JStatement) content;
+			statement.state(formatter);
+			String statementString = writer.getBuffer().toString();
+			if (statementString.startsWith(superCallStart)) {
+				newBody.add(replacement);
+			} else {
+				newBody.add(statement);
+			}
+		}
+	}
 
 	public String getIdStringFromIdFieldRef(JFieldRef idRef) {
 		try {
@@ -258,7 +261,7 @@ public class APTCodeModelHelper {
 	/**
 	 * Gets all of the methods of the class and includes the methods of any
 	 * implemented interfaces.
-	 *
+	 * 
 	 * @param typeElement
 	 * @return full list of methods.
 	 */
