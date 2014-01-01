@@ -13,35 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.logger.appender;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
+package org.androidannotations.logger.formatter;
 
 import org.androidannotations.logger.Level;
-import org.androidannotations.logger.formatter.FormatterFull;
 
-public class ConsoleAppender extends Appender {
-
-	public ConsoleAppender() {
-		super(new FormatterFull());
-	}
+public class FormatterFull extends Formatter {
 
 	@Override
-	public void open() {
-	}
+	public String buildLog(Level level, String loggerName, String message, Throwable thr, Object... args) {
+		StringBuilder stringBuilder = new StringBuilder();
 
-	@Override
-	public void append(Level level, Element element, AnnotationMirror annotationMirror, String message) {
-		if (level.isSmaller(Level.ERROR)) {
-			System.out.println(message);
-		} else {
-			System.err.println(message);
+		stringBuilder.append(getTime()) //
+				.append(" [").append(getCurrentThread()).append("]") //
+				.append(" ").append(level.name) //
+				.append(" ").append(loggerName) //
+				.append(":").append(getCallerLineNumber()) //
+				.append(" - ").append(buildFullMessage(message, args));
+
+		// Stacktrace
+		if (thr != null) {
+			stringBuilder.append('\n').append(stackTraceToString(thr));
 		}
-	}
 
-	@Override
-	public void close() {
+		return stringBuilder.toString();
 	}
 
 }

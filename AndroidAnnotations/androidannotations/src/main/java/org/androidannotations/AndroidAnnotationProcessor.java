@@ -75,14 +75,14 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		LoggerContext loggerContext = LoggerContext.getInstance();
 		loggerContext.setProcessingEnv(processingEnv);
 
-		LOGGER.info("Initialize AndroidAnnotationProcessor with options {}", processingEnv.getOptions());
-
 		try {
 			loadPropertyFile();
 			loadApiPropertyFile();
 		} catch (Exception e) {
 			LOGGER.error("Can't load API or core properties files", e);
 		}
+
+		LOGGER.info("Initialize AndroidAnnotations {} with options {}", getAAProcessorVersion(), processingEnv.getOptions());
 
 		annotationHandlers = new AnnotationHandlers(processingEnv);
 	}
