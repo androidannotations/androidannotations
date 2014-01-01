@@ -21,8 +21,13 @@ import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
 import org.androidannotations.logger.Level;
+import org.androidannotations.logger.formatter.FormatterSimple;
 
 public class MessagerAppender extends Appender {
+
+	public MessagerAppender() {
+		super(new FormatterSimple());
+	}
 
 	private Messager messager;
 

@@ -27,6 +27,7 @@ import org.androidannotations.logger.appender.Appender;
 import org.androidannotations.logger.appender.ConsoleAppender;
 import org.androidannotations.logger.appender.FileAppender;
 import org.androidannotations.logger.appender.MessagerAppender;
+import org.androidannotations.logger.formatter.Formatter;
 
 public class LoggerContext {
 
@@ -35,7 +36,6 @@ public class LoggerContext {
 
 	private Level currentLevel = DEFAULT_LEVEL;
 	private List<Appender> appenders = new ArrayList<Appender>();
-	private Formatter formatter = new Formatter();
 
 	public static LoggerContext getInstance() {
 		if (INSTANCE == null) {
@@ -54,8 +54,9 @@ public class LoggerContext {
 	}
 
 	public void writeLog(Level level, String loggerName, String message, Element element, AnnotationMirror annotationMirror, Throwable thr, Object... args) {
-		String log = formatter.buildLog(level, loggerName, message, thr, args);
 		for (Appender appender : appenders) {
+			Formatter formatter = appender.getFormatter();
+			String log = formatter.buildLog(level, loggerName, message, thr, args);
 			appender.append(level, element, annotationMirror, log);
 		}
 	}

@@ -21,11 +21,21 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.Level;
+import org.androidannotations.logger.formatter.Formatter;
 
 public abstract class Appender {
 
+	protected final Formatter formatter;
 	protected ProcessingEnvironment processingEnv;
 	protected OptionsHelper optionsHelper;
+
+	public Appender(Formatter formatter) {
+		this.formatter = formatter;
+	}
+
+	public Formatter getFormatter() {
+		return formatter;
+	}
 
 	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
 		this.processingEnv = processingEnv;
