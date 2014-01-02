@@ -21,7 +21,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.HierarchyViewerSupport;
-import org.androidannotations.api.ViewServer;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -45,8 +44,6 @@ public class HierarchyViewerSupportHandler extends BaseAnnotationHandler<EActivi
 
 	@Override
 	public void process(Element element, EActivityHolder holder) throws Exception {
-		generateApiClass(element, ViewServer.class);
-
 		JInvocation viewServerInvocation = classes().VIEW_SERVER.staticInvoke("get").arg(_this());
 
 		holder.getOnViewChangedBody().invoke(viewServerInvocation, "addWindow").arg(_this());
