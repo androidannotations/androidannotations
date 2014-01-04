@@ -31,7 +31,20 @@ public final class LongPrefField extends AbstractPrefField {
 	}
 
 	public long getOr(long defaultValue) {
-		return sharedPreferences.getLong(key, defaultValue);
+		try{
+			return sharedPreferences.getLong(key, defaultValue);
+		}catch( ClassCastException e ){
+                // The pref could be a String, if that is the case try this 
+                // recovery bit 
+                try{ 
+                        String value = sharedPreferences.getString(key, ""+defaultValue);
+                        long result = Long.parseLong(value);
+                        return result ; 
+                }catch( Exception e2){
+                        // our  recovery bit failed. The problem is elsewhere. Send the original error
+                        throw e ; 
+                }
+         }
 	}
 
 	public void put(long value) {
