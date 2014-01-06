@@ -15,6 +15,8 @@
  */
 package org.androidannotations.test15;
 
+import java.util.List;
+
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -33,9 +35,14 @@ public class ActivityWithGenerics extends Activity {
 	<T, S extends Number> void emptyUiMethod(T param) {
 
 	}
-
+	
 	@Background
 	<T, S extends Number> void emptyBackgroundMethod(T param) {
+		
+	}
+
+	@Background
+	<T extends Number> void emptyBackgroundMethod(T param, List<T> param2) {
 
 	}
 
