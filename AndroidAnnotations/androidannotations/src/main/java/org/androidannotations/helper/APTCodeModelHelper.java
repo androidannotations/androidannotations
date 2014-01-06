@@ -23,6 +23,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
@@ -109,7 +110,6 @@ public class APTCodeModelHelper {
 	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
 
 		String methodName = executableElement.getSimpleName().toString();
-
 		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder);
 
 		List<Parameter> parameters = new ArrayList<Parameter>();
@@ -137,6 +137,21 @@ public class APTCodeModelHelper {
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
 			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
 			method._throws(thrownType);
+		}
+
+		for (TypeParameterElement typeParameter : executableElement.getTypeParameters()) {
+			List<? extends TypeMirror> bounds = typeParameter.getBounds();
+
+			JClass jClassBounds;
+			if (bounds.isEmpty()) {
+				jClassBounds = holder.classes().OBJECT;
+			} else {
+				// Currently Codemodel can't generate generics with multiple
+				// classes like this <T extends Number & Serializable>.
+				// So we only take the first class
+				jClassBounds = typeMirrorToJClass(bounds.get(0), holder);
+			}
+			method.generify(typeParameter.toString(), jClassBounds);
 		}
 
 		callSuperMethod(method, holder, method.body());
