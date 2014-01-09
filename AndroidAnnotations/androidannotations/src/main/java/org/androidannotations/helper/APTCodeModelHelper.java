@@ -27,10 +27,12 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
 
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -47,6 +49,7 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JSuperWildcard;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
@@ -73,11 +76,16 @@ public class APTCodeModelHelper {
 
 			return declaredClass;
 		} else if (type instanceof WildcardType) {
-			// TODO : At his time (01/2013), it is not possible to handle the
-			// super bound because code model does not offer a way to model
-			// statement like " ? super X"
-			// (see http://java.net/jira/browse/CODEMODEL-11)
 			WildcardType wildcardType = (WildcardType) type;
+
+            TypeMirror bound = wildcardType.getExtendsBound();
+            if (bound == null) {
+                bound = wildcardType.getSuperBound();
+                if (bound == null) {
+                    throw new IllegalArgumentException("There are should be 'extends' or 'super' in the wildcard");
+                }
+                return superWildcard(typeMirrorToJClass(bound, holder));
+            }
 
 			TypeMirror extendsBound = wildcardType.getExtendsBound();
 
@@ -97,6 +105,10 @@ public class APTCodeModelHelper {
 		}
 	}
 
+    private JClass superWildcard(final JClass bound) {
+        return new JSuperWildcard(bound);
+    }
+
 	public static class Parameter {
 		public final String name;
 		public final JClass jClass;
@@ -109,13 +121,20 @@ public class APTCodeModelHelper {
 
 	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
 
+        DeclaredType generatedClass = (DeclaredType) holder.getAnnotatedElement().asType();
+        Types typeUtils = holder.processingEnvironment().getTypeUtils();
+        ExecutableType generalisedElement = (ExecutableType) typeUtils.asMemberOf(generatedClass, executableElement);
+
 		String methodName = executableElement.getSimpleName().toString();
-		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder);
+		JClass returnType = typeMirrorToJClass(generalisedElement.getReturnType(), holder);
 
 		List<Parameter> parameters = new ArrayList<Parameter>();
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
+		for (int i = 0; i < executableElement.getParameters().size(); i++) {
+            VariableElement parameter = executableElement.getParameters().get(i);
+            TypeMirror parameterType = generalisedElement.getParameterTypes().get(i);
+
+            String parameterName = parameter.getSimpleName().toString();
+            JClass parameterClass = typeMirrorToJClass(parameterType, holder);
 			parameters.add(new Parameter(parameterName, parameterClass));
 		}
 
@@ -128,11 +147,9 @@ public class APTCodeModelHelper {
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
 		method.annotate(Override.class);
 
-		for (VariableElement parameter : executableElement.getParameters()) {
-			String parameterName = parameter.getSimpleName().toString();
-			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder);
-			method.param(JMod.FINAL, parameterClass, parameterName);
-		}
+        for (Parameter parameter : parameters) {
+			method.param(JMod.FINAL, parameter.jClass, parameter.name);
+        }
 
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
 			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
