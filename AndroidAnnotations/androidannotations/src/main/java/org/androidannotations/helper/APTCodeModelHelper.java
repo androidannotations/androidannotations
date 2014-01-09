@@ -23,13 +23,13 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
@@ -123,15 +123,15 @@ public class APTCodeModelHelper {
 
         DeclaredType generatedClass = (DeclaredType) holder.getAnnotatedElement().asType();
         Types typeUtils = holder.processingEnvironment().getTypeUtils();
-        ExecutableType generalisedElement = (ExecutableType) typeUtils.asMemberOf(generatedClass, executableElement);
+        ExecutableType executableType = (ExecutableType) typeUtils.asMemberOf(generatedClass, executableElement);
 
 		String methodName = executableElement.getSimpleName().toString();
-		JClass returnType = typeMirrorToJClass(generalisedElement.getReturnType(), holder);
+		JClass returnType = typeMirrorToJClass(executableType.getReturnType(), holder);
 
 		List<Parameter> parameters = new ArrayList<Parameter>();
 		for (int i = 0; i < executableElement.getParameters().size(); i++) {
             VariableElement parameter = executableElement.getParameters().get(i);
-            TypeMirror parameterType = generalisedElement.getParameterTypes().get(i);
+            TypeMirror parameterType = executableType.getParameterTypes().get(i);
 
             String parameterName = parameter.getSimpleName().toString();
             JClass parameterClass = typeMirrorToJClass(parameterType, holder);
@@ -147,6 +147,13 @@ public class APTCodeModelHelper {
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
 		method.annotate(Override.class);
 
+        System.out.println(executableType.getTypeVariables());
+        for (TypeVariable typeParameter : executableType.getTypeVariables()) {
+            TypeMirror bound = typeParameter.getUpperBound();
+            JClass jClassBounds = typeMirrorToJClass(bound, holder);
+            method.generify(typeParameter.toString(), jClassBounds);
+        }
+
         for (Parameter parameter : parameters) {
 			method.param(JMod.FINAL, parameter.jClass, parameter.name);
         }
@@ -154,21 +161,6 @@ public class APTCodeModelHelper {
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
 			JClass thrownType = typeMirrorToJClass(superThrownType, holder);
 			method._throws(thrownType);
-		}
-
-		for (TypeParameterElement typeParameter : executableElement.getTypeParameters()) {
-			List<? extends TypeMirror> bounds = typeParameter.getBounds();
-
-			JClass jClassBounds;
-			if (bounds.isEmpty()) {
-				jClassBounds = holder.classes().OBJECT;
-			} else {
-				// Currently Codemodel can't generate generics with multiple
-				// classes like this <T extends Number & Serializable>.
-				// So we only take the first class
-				jClassBounds = typeMirrorToJClass(bounds.get(0), holder);
-			}
-			method.generify(typeParameter.toString(), jClassBounds);
 		}
 
 		callSuperMethod(method, holder, method.body());
