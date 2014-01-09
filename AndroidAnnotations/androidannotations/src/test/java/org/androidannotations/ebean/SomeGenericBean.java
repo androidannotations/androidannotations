@@ -17,4 +17,9 @@ public class SomeGenericBean<T> {
 
     }
 
+    @Background
+    <N extends T> void someParameterizedMetnod(List<? super N> lst, List<? extends N> lst2) {
+
+    }
+
 }

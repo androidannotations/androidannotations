@@ -26,10 +26,14 @@ import android.app.Activity;
 @EActivity
 public class ActivityWithGenerics extends Activity {
 
-	// @UiThread
-	// <T, S extends Number & List<String>> void emptyUiMethod(T param, S param2) {
-	// // Not possible due to Codemodel's constraints
-	// }
+    // @UiThread
+    // <T, S extends Number & List<String>> void emptyUiMethod(T param, S param2) {
+    // // Not possible due to Codemodel's constraints
+    // }
+
+    @UiThread
+    <T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
+    }
 
 	@UiThread
 	<T, S extends Number> void emptyUiMethod(T param) {
