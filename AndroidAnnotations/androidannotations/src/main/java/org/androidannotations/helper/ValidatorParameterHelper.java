@@ -63,6 +63,10 @@ public class ValidatorParameterHelper {
 		zeroOrOneSpecificParameter(executableElement, ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES, valid);
 	}
 
+	public void zeroOrOneIntentParameter(ExecutableElement executableElement, IsValid isValid) {
+		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.INTENT, isValid);
+	}
+
 	public void zeroOrOneSpecificParameter(ExecutableElement executableElement, String parameterTypeQualifiedName, IsValid valid) {
 		zeroOrOneSpecificParameter(executableElement, Arrays.asList(parameterTypeQualifiedName), valid);
 	}

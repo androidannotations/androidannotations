@@ -52,6 +52,7 @@ public final class CanonicalNameConstants {
 	public static final String LOG = "android.util.Log";
 	public static final String PARCELABLE = "android.os.Parcelable";
 	public static final String INTENT = "android.content.Intent";
+	public static final String INTENT_FILTER = "android.content.IntentFilter";
 	public static final String COMPONENT_NAME = "android.content.ComponentName";
 	public static final String BUNDLE = "android.os.Bundle";
 	public static final String APPLICATION = "android.app.Application";

@@ -42,7 +42,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult {
+public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
 	private JFieldVar contentView;
 	private JBlock setContentViewBlock;
@@ -55,36 +55,47 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar injectBundleArgs;
 	private InstanceStateHolder instanceStateHolder;
 	private OnActivityResultHolder onActivityResultHolder;
+	private ReceiverRegistrationHolder receiverRegistrationHolder;
 	private JBlock onCreateOptionsMenuMethodBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
 	private JVar onCreateOptionsMenuMenuParam;
 	private JVar onOptionsItemSelectedItem;
 	private JVar onOptionsItemSelectedItemId;
 	private JBlock onOptionsItemSelectedIfElseBlock;
+	private JBlock onCreateAfterSuperBlock;
+	private JBlock onDestroyBeforeSuperBlock;
+	private JBlock onStartAfterSuperBlock;
+	private JBlock onStopBeforeSuperBlock;
+	private JBlock onResumeAfterSuperBlock;
+	private JBlock onPauseBeforeSuperBlock;
+	private JBlock onAttachAfterSuperBlock;
+	private JBlock onDetachBeforeSuperBlock;
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
-		createOnCreate();
-		createOnViewCreated();
-		createFragmentBuilder();
+		receiverRegistrationHolder = new ReceiverRegistrationHolder(this);
+		setOnCreate();
+		setOnViewCreated();
+		setFragmentBuilder();
 	}
 
-	private void createOnCreate() {
+	private void setOnCreate() {
 		JMethod onCreate = generatedClass.method(PUBLIC, codeModel().VOID, "onCreate");
 		onCreate.annotate(Override.class);
 		JVar onCreateSavedInstanceState = onCreate.param(classes().BUNDLE, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
 
 		JVar previousNotifier = viewNotifierHelper.replacePreviousNotifier(onCreateBody);
-		createFindViewById();
+		setFindViewById();
 		onCreateBody.invoke(getInit()).arg(onCreateSavedInstanceState);
 		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
+		onCreateAfterSuperBlock = onCreateBody.block();
 		viewNotifierHelper.resetPreviousNotifier(onCreateBody, previousNotifier);
 	}
 
-	private void createOnViewCreated() {
+	private void setOnViewCreated() {
 		JMethod onViewCreated = generatedClass.method(PUBLIC, codeModel().VOID, "onViewCreated");
 		onViewCreated.annotate(Override.class);
 		JVar view = onViewCreated.param(classes().VIEW, "view");
@@ -94,7 +105,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		viewNotifierHelper.invokeViewChanged(onViewCreatedBody);
 	}
 
-	private void createFindViewById() {
+	private void setFindViewById() {
 		JMethod findViewById = generatedClass.method(PUBLIC, classes().VIEW, "findViewById");
 		JVar idParam = findViewById.param(codeModel().INT, "id");
 
@@ -108,21 +119,21 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		body._return(contentView.invoke(findViewById).arg(idParam));
 	}
 
-	private void createFragmentBuilder() throws JClassAlreadyExistsException {
+	private void setFragmentBuilder() throws JClassAlreadyExistsException {
 		fragmentBuilderClass = generatedClass._class(PUBLIC | STATIC, "FragmentBuilder_");
 		fragmentArgumentsBuilderField = fragmentBuilderClass.field(PRIVATE, classes().BUNDLE, "args_");
-		createFragmentBuilderConstructor();
-		createFragmentBuilderBuild();
-		createFragmentBuilderCreate();
+		setFragmentBuilderConstructor();
+		setFragmentBuilderBuild();
+		setFragmentBuilderCreate();
 	}
 
-	private void createFragmentBuilderConstructor() {
+	private void setFragmentBuilderConstructor() {
 		JMethod constructor = fragmentBuilderClass.constructor(PRIVATE);
 		JBlock constructorBody = constructor.body();
 		constructorBody.assign(fragmentArgumentsBuilderField, _new(classes().BUNDLE));
 	}
 
-	private void createFragmentBuilderBuild() {
+	private void setFragmentBuilderBuild() {
 		JMethod method = fragmentBuilderClass.method(PUBLIC, generatedClass._extends(), "build");
 		JBlock body = method.body();
 
@@ -131,7 +142,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		body._return(fragment);
 	}
 
-	private void createFragmentBuilderCreate() {
+	private void setFragmentBuilderCreate() {
 		JMethod method = generatedClass.method(STATIC | PUBLIC, fragmentBuilderClass, "builder");
 		method.body()._return(_new(fragmentBuilderClass));
 	}
@@ -222,6 +233,63 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		setContentViewBlock = body.block();
 
 		body._return(contentView);
+	}
+
+	private void setOnStart() {
+		JMethod onStart = generatedClass.method(PUBLIC, codeModel().VOID, "onStart");
+		onStart.annotate(Override.class);
+		JBlock onStartBody = onStart.body();
+		onStartBody.invoke(_super(), onStart);
+		onStartAfterSuperBlock = onStartBody.block();
+	}
+
+	private void setOnAttach() {
+		JMethod onAttach = generatedClass.method(PUBLIC, codeModel().VOID, "onAttach");
+		onAttach.annotate(Override.class);
+		JVar activityParam = onAttach.param(classes().ACTIVITY, "activity");
+		JBlock onAttachBody = onAttach.body();
+		onAttachBody.invoke(_super(), onAttach).arg(activityParam);
+		onAttachAfterSuperBlock = onAttachBody.block();
+	}
+
+	private void setOnResume() {
+		JMethod onResume = generatedClass.method(PUBLIC, codeModel().VOID, "onResume");
+		onResume.annotate(Override.class);
+		JBlock onResumeBody = onResume.body();
+		onResumeBody.invoke(_super(), onResume);
+		onResumeAfterSuperBlock = onResumeBody.block();
+	}
+
+	private void setOnPause() {
+		JMethod onPause = generatedClass.method(PUBLIC, codeModel().VOID, "onPause");
+		onPause.annotate(Override.class);
+		JBlock onPauseBody = onPause.body();
+		onPauseBeforeSuperBlock = onPauseBody.block();
+		onPauseBody.invoke(_super(), onPause);
+	}
+
+	private void setOnDetach() {
+		JMethod onDetach = generatedClass.method(PUBLIC, codeModel().VOID, "onDetach");
+		onDetach.annotate(Override.class);
+		JBlock onDetachBody = onDetach.body();
+		onDetachBeforeSuperBlock = onDetachBody.block();
+		onDetachBody.invoke(_super(), onDetach);
+	}
+	
+	private void setOnStop() {
+		JMethod onStop = generatedClass.method(PUBLIC, codeModel().VOID, "onStop");
+		onStop.annotate(Override.class);
+		JBlock onStopBody = onStop.body();
+		onStopBeforeSuperBlock = onStopBody.block();
+		onStopBody.invoke(_super(), onStop);
+	}
+
+	private void setOnDestroy() {
+		JMethod onDestroy = generatedClass.method(PUBLIC, codeModel().VOID, "onDestroy");
+		onDestroy.annotate(Override.class);
+		JBlock onDestroyBody = onDestroy.body();
+		onDestroyBeforeSuperBlock = onDestroyBody.block();
+		onDestroyBody.invoke(_super(), onDestroy);
 	}
 
 	public JBlock getSetContentViewBlock() {
@@ -364,5 +432,74 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	public JVar getOnActivityResultResultCodeParam() {
 		return onActivityResultHolder.getResultCodeParam();
+	}
+
+	@Override
+	public JFieldVar getIntentFilterField(String[] actions) {
+		return receiverRegistrationHolder.getIntentFilterField(actions);
+	}
+
+	@Override
+	public JBlock getOnCreateAfterSuperBlock() {
+		if (onCreateAfterSuperBlock == null) {
+			setOnCreate();
+		}
+		return onCreateAfterSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnDestroyBeforeSuperBlock() {
+		if (onDestroyBeforeSuperBlock == null) {
+			setOnDestroy();
+		}
+		return onDestroyBeforeSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnStartAfterSuperBlock() {
+		if (onStartAfterSuperBlock == null) {
+			setOnStart();
+		}
+		return onStartAfterSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnStopBeforeSuperBlock() {
+		if (onStopBeforeSuperBlock == null) {
+			setOnStop();
+		}
+		return onStopBeforeSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnResumeAfterSuperBlock() {
+		if (onResumeAfterSuperBlock == null) {
+			setOnResume();
+		}
+		return onResumeAfterSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnPauseBeforeSuperBlock() {
+		if (onPauseBeforeSuperBlock == null) {
+			setOnPause();
+		}
+		return onPauseBeforeSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnAttachAfterSuperBlock() {
+		if (onAttachAfterSuperBlock == null) {
+			setOnAttach();
+		}
+		return onAttachAfterSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnDetachBeforeSuperBlock() {
+		if (onDetachBeforeSuperBlock == null) {
+			setOnDetach();
+		}
+		return onDetachBeforeSuperBlock;
 	}
 }
