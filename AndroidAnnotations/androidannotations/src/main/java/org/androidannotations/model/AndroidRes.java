@@ -36,6 +36,7 @@ import org.androidannotations.annotations.res.StringArrayRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.res.TextArrayRes;
 import org.androidannotations.annotations.res.TextRes;
+import org.androidannotations.annotations.res.TypedArrayRes;
 import org.androidannotations.rclass.IRClass.Res;
 
 public enum AndroidRes {
@@ -56,7 +57,8 @@ public enum AndroidRes {
 	MOVIE(Res.MOVIE, MovieRes.class, "getMovie", "android.graphics.Movie"), //
 	TEXT(Res.STRING, TextRes.class, "getText", "java.lang.CharSequence"), //
 	TEXT_ARRAY(Res.ARRAY, TextArrayRes.class, "getTextArray", "java.lang.CharSequence"), //
-	COLOR(Res.COLOR, ColorRes.class, "getColor", "int", "java.lang.Integer");
+	COLOR(Res.COLOR, ColorRes.class, "getColor", "int", "java.lang.Integer"), //
+	TYPED_ARRAY(Res.ARRAY, TypedArrayRes.class, "obtainTypedArray", "android.content.res.TypedArray");
 
 	private final Class<? extends Annotation> annotationClass;
 	private final String resourceMethodName;
