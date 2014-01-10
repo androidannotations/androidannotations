@@ -205,7 +205,20 @@ public class APTCodeModelHelper {
 		JBlock clonedBody = new JBlock(false, false);
 
 		for (Object statement : body.getContents()) {
-			clonedBody.add((JStatement) statement);
+			if (statement instanceof JVar) {
+				JVar var = (JVar) statement;
+				try {
+					Field varInitField = JVar.class.getDeclaredField("init");
+					varInitField.setAccessible(true);
+					JExpression varInit = (JExpression) varInitField.get(var);
+
+					clonedBody.decl(var.type(), var.name(), varInit);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				clonedBody.add((JStatement) statement);
+			}
 		}
 
 		return clonedBody;
