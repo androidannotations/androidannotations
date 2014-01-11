@@ -29,7 +29,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 
 import org.androidannotations.api.rest.RestErrorHandler;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
@@ -44,8 +43,6 @@ import com.sun.codemodel.JMod;
 
 public class RestHolder extends BaseGeneratedClassHolder {
 
-	private APTCodeModelHelper codeModelHelper;
-
 	private JMethod init;
 	private JFieldVar rootUrlField;
 	private JFieldVar restTemplateField;
@@ -56,7 +53,6 @@ public class RestHolder extends BaseGeneratedClassHolder {
 
 	public RestHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		codeModelHelper = new APTCodeModelHelper();
 		implementMethods();
 	}
 

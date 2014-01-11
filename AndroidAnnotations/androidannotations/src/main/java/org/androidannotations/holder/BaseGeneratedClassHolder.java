@@ -24,7 +24,10 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.ClassType;
@@ -37,10 +40,12 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	protected final ProcessHolder processHolder;
 	protected JDefinedClass generatedClass;
 	protected final TypeElement annotatedElement;
+	protected final APTCodeModelHelper codeModelHelper;
 
 	public BaseGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		this.processHolder = processHolder;
 		this.annotatedElement = annotatedElement;
+		this.codeModelHelper = new APTCodeModelHelper();
 		setGeneratedClass();
 	}
 
@@ -51,7 +56,8 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
 		generatedClass = codeModel()._class(PUBLIC | FINAL, subComponentQualifiedName, ClassType.CLASS);
         for (TypeParameterElement typeParam : annotatedElement.getTypeParameters()) {
-            generatedClass.generify(typeParam.getSimpleName().toString());
+			JClass bound = codeModelHelper.typeBoundsToJClass(this, typeParam.getBounds());
+			generatedClass.generify(typeParam.getSimpleName().toString(), bound);
         }
 		generatedClass._extends(annotatedComponent);
 	}

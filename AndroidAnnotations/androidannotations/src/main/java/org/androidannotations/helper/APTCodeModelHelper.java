@@ -62,7 +62,7 @@ public class APTCodeModelHelper {
 		return typeMirrorToJClass(type, holder, Collections.<String, TypeMirror>emptyMap());
 	}
 
-	public JClass typeMirrorToJClass(TypeMirror type, GeneratedClassHolder holder, Map<String, TypeMirror> substitute) {
+	private JClass typeMirrorToJClass(TypeMirror type, GeneratedClassHolder holder, Map<String, TypeMirror> substitute) {
 
 		if (type instanceof DeclaredType) {
 			DeclaredType declaredType = (DeclaredType) type;
@@ -109,7 +109,7 @@ public class APTCodeModelHelper {
 			return refClass.array();
 		} else {
 			TypeMirror substituted = substitute.get(type.toString());
-			if (substituted != null) {
+			if (substituted != null && type != substituted) {
 				return typeMirrorToJClass(substituted, holder, substitute);
 			}
 			return holder.refClass(type.toString());
@@ -130,9 +130,9 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	private Map<String, TypeMirror> getActualTypes(Types typeUtils, DeclaredType baseClass, TypeMirror actualClass) {
+	private Map<String, TypeMirror> getActualTypes(Types typeUtils, DeclaredType baseClass, TypeMirror annotatedClass) {
 		List<TypeMirror> superTypes = new ArrayList<TypeMirror>();
-		superTypes.add(actualClass);
+		superTypes.add(annotatedClass);
 		while(!superTypes.isEmpty()) {
 			TypeMirror x = superTypes.remove(0);
 			if (typeUtils.isSameType(typeUtils.erasure(x), typeUtils.erasure(baseClass))) {
@@ -152,24 +152,31 @@ public class APTCodeModelHelper {
 		return Collections.emptyMap();
 	}
 
+	public JClass typeBoundsToJClass(GeneratedClassHolder holder, List<? extends TypeMirror> bounds) {
+		return typeBoundsToJClass(holder, bounds, Collections.<String, TypeMirror>emptyMap());
+	}
+
+	private JClass typeBoundsToJClass(GeneratedClassHolder holder, List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
+		if (bounds.isEmpty()) {
+			return holder.classes().OBJECT;
+		} else {
+			//TODO resolve <T extends A&B> bounds
+			return typeMirrorToJClass(bounds.get(0), holder, actualTypes);
+		}
+	}
+
 	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
-        TypeMirror generatedClass = holder.getAnnotatedElement().asType();
-		DeclaredType originalClass = (DeclaredType) executableElement.getEnclosingElement().asType();
+        TypeMirror annotatedClass = holder.getAnnotatedElement().asType();
+		DeclaredType baseClass = (DeclaredType) executableElement.getEnclosingElement().asType();
 
         Types typeUtils = holder.processingEnvironment().getTypeUtils();
 
-		Map<String, TypeMirror> actualTypes = getActualTypes(typeUtils, originalClass, generatedClass);
+		Map<String, TypeMirror> actualTypes = getActualTypes(typeUtils, baseClass, annotatedClass);
 		Map<String, JClass> methodTypes = new LinkedHashMap<String, JClass>();
 
 		for (TypeParameterElement typeParameter : executableElement.getTypeParameters()) {
 			List<? extends TypeMirror> bounds = typeParameter.getBounds();
-			JClass jClassBounds;
-			if (bounds.isEmpty()) {
-				jClassBounds = holder.classes().OBJECT;
-			} else {
-				//TODO resolve <T extends A&B> bounds
-				jClassBounds = typeMirrorToJClass(bounds.get(0), holder, actualTypes);
-			}
+			JClass jClassBounds = typeBoundsToJClass(holder, bounds, actualTypes);
 			methodTypes.put(typeParameter.toString(), jClassBounds);
 		}
 
