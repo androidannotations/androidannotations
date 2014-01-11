@@ -32,7 +32,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
 import org.androidannotations.api.view.OnViewChangedNotifier;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
 
@@ -47,7 +46,6 @@ import com.sun.codemodel.JVar;
 
 public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
-	private APTCodeModelHelper codeModelHelper;
 	protected ViewNotifierHelper viewNotifierHelper;
 	private JBlock onViewChangedBody;
 	private JVar onViewChangedHasViewsParam;
@@ -60,7 +58,6 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	public EComponentWithViewSupportHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		codeModelHelper = new APTCodeModelHelper();
 		viewNotifierHelper = new ViewNotifierHelper(this);
 	}
 
