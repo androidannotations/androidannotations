@@ -22,7 +22,6 @@ import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -61,7 +60,7 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 		TypeMirror elementType = annotationHelper.extractAnnotationClassParameter(element);
 		if (elementType == null) {
 			elementType = element.asType();
-            elementType = holder.processingEnvironment().getTypeUtils().erasure(elementType);
+			elementType = holder.processingEnvironment().getTypeUtils().erasure(elementType);
 		}
 
 		String fieldName = element.getSimpleName().toString();
