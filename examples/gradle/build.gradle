@@ -12,15 +12,30 @@ buildscript {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 apply plugin: 'android'
 apply plugin: 'android-apt'
-def AAVersion = '3.0'
+def AAVersion = '3.0.1'
 
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
+}
+
+apt {
+    arguments {
+        androidManifestFile variant.processResources.manifestFile 
+        resourcePackageName 'com.googlecode.androidannotations.gradle'
+
+        // If you're using Android NBS flavors you should use the following line instead of hard-coded packageName
+        // resourcePackageName android.defaultConfig.packageName
+
+        // You can set optional annotation processing options here, like these commented options:
+        // logLevel 'INFO'
+        // logFile '/var/log/aa.log'
+    }
 }
 
 android {
