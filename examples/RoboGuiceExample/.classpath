@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="src" path=".apt_generated">
 		<attributes>
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/guice-2.0-no_aop.jar"/>
-	<classpathentry kind="lib" path="lib/roboguice-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/androidannotations/target/androidannotations-2.2-SNAPSHOT-api.jar" sourcepath="/androidannotations/target/androidannotations-2.2-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

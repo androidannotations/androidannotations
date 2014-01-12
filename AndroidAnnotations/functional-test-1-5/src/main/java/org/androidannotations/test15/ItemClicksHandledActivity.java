@@ -103,9 +103,14 @@ public class ItemClicksHandledActivity extends Activity {
 	public void listViewWithArgument(String selectedItem) {
 		listViewWithArgumentSelectedItem = selectedItem;
 	}
-
+	
 	@ItemClick(R.id.listViewWithArgumentWithParameterType)
 	protected void listViewWithArgumentWithParameterType(ArrayList<String> item) {
+		listViewParametrizedItemClicked = true;
+	}
+
+	@ItemClick(R.id.listViewWithArgumentWithGenericWildcard)
+	protected void listViewWithArgumentWithGenericWildcardType(ArrayList<?> item) {
 		listViewParametrizedItemClicked = true;
 	}
 

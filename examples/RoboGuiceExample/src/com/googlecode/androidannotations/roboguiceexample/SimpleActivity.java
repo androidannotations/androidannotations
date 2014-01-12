@@ -1,9 +1,9 @@
 package com.googlecode.androidannotations.roboguiceexample;
 
-import android.app.Activity;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.RoboGuice;
 
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.RoboGuice;
+import android.app.Activity;
 
 @EActivity
 @RoboGuice

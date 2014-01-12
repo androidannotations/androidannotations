@@ -62,7 +62,7 @@ import com.sun.codemodel.JVar;
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult {
 
 	private GreenDroidHelper greenDroidHelper;
-    private ActivityIntentBuilder intentBuilder;
+	private ActivityIntentBuilder intentBuilder;
 	private JMethod onCreate;
 	private JMethod setIntent;
 	private JMethod setContentViewLayout;
@@ -95,8 +95,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
 		setSetContentView();
-        intentBuilder = new ActivityIntentBuilder(this, androidManifest);
-        intentBuilder.build();
+		intentBuilder = new ActivityIntentBuilder(this, androidManifest);
+		intentBuilder.build();
 		handleBackPressed();
 	}
 
@@ -196,7 +196,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		body.invoke(_super(), method);
-        getRoboGuiceHolder().onStop = method;
+		getRoboGuiceHolder().onStop = method;
 	}
 
 	protected void setOnDestroy() {
@@ -361,8 +361,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		Element declaredOnBackPressedMethod = getOnBackPressedMethod(annotatedElement);
 		if (declaredOnBackPressedMethod != null) {
 
-			processHolder.generateApiClass(declaredOnBackPressedMethod, SdkVersionHelper.class);
-
 			JMethod onKeyDownMethod = generatedClass.method(PUBLIC, codeModel().BOOLEAN, "onKeyDown");
 			onKeyDownMethod.annotate(Override.class);
 			JVar keyCodeParam = onKeyDownMethod.param(codeModel().INT, "keyCode");
@@ -418,12 +416,12 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		;
 	}
 
-    @Override
-    public IntentBuilder getIntentBuilder() {
-        return intentBuilder;
-    }
+	@Override
+	public IntentBuilder getIntentBuilder() {
+		return intentBuilder;
+	}
 
-    @Override
+	@Override
 	public void setIntentBuilderClass(JDefinedClass intentBuilderClass) {
 		this.intentBuilderClass = intentBuilderClass;
 	}

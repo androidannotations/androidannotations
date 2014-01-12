@@ -80,7 +80,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		// Creating method signature
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, methodReturnClass, methodName);
 		method.annotate(Override.class);
-		TreeMap <String, JVar> params = addMethodParams(executableElement, holder, method);
+		TreeMap<String, JVar> params = addMethodParams(executableElement, holder, method);
 		JBlock methodBody = method.body();
 
 		// RestTemplate exchange() method call
@@ -152,24 +152,24 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 	protected JExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> params) {
 		JVar httpHeaders = restAnnotationHelper.declareHttpHeaders(element, holder, methodBody);
-        JVar entitySentToServer = restAnnotationHelper.getEntitySentToServer(element, params);
+		JVar entitySentToServer = restAnnotationHelper.getEntitySentToServer(element, params);
 		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, entitySentToServer, httpHeaders);
 	}
 
-    protected JExpression getResponseClass(Element element, RestHolder holder) {
-        return restAnnotationHelper.getResponseClass(element, holder);
-    }
+	protected JExpression getResponseClass(Element element, RestHolder holder) {
+		return restAnnotationHelper.getResponseClass(element, holder);
+	}
 
 	protected JExpression getUrlVariables(Element element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> params) {
 		return restAnnotationHelper.declareUrlVariables((ExecutableElement) element, holder, methodBody, params);
 	}
 
-    protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
-        if (methodReturnClass != null && !methodReturnClass.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
-            return JExpr.invoke(exchangeCall, "getBody");
-        }
-        return exchangeCall;
-    }
+	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
+		if (methodReturnClass != null && !methodReturnClass.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+			return JExpr.invoke(exchangeCall, "getBody");
+		}
+		return exchangeCall;
+	}
 
 	private JFieldRef setCookies(ExecutableElement executableElement, RestHolder restHolder, JBlock methodBody, JInvocation exchangeCall) {
 		String[] settingCookies = restAnnotationHelper.settingCookies(executableElement);
@@ -193,7 +193,8 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			JVar allCookiesList = methodBody.decl(stringListClass, "allCookies", setCookiesList);
 
 			// for loop over list... add if in string array
-			JForEach forEach = methodBody.forEach(classes().STRING, "rawCookie", allCookiesList);
+			JForEach forEach = methodBody._if(allCookiesList.ne(JExpr._null()))._then() //
+					.forEach(classes().STRING, "rawCookie", allCookiesList);
 			JVar rawCookieVar = forEach.var();
 
 			JBlock forLoopBody = forEach.body();
@@ -220,7 +221,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 	/**
 	 * Adds the try/catch around the rest execution code.
-	 *
+	 * 
 	 * If an exception is caught, it will first check if the handler is set. If
 	 * the handler is set, it will call the handler and return null (or nothing
 	 * if void). If the handler isn't set, it will re-throw the exception so

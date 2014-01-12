@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.logger;
+package org.androidannotations.logger.formatter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class FormatterTest {
 
-	private Formatter formatter = new Formatter();
+	private Formatter formatter = new FormatterSimple();
 
 	class SomeObject {
 		String name;

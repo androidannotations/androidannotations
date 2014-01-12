@@ -1,13 +1,14 @@
 package com.googlecode.androidannotations.roboguiceexample;
 
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.RoboGuice;
+import org.androidannotations.annotations.ViewById;
+
 import android.app.Activity;
 import android.widget.EditText;
 
 import com.google.inject.Inject;
-import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.RoboGuice;
-import com.googlecode.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.main)
 @RoboGuice(MyListener.class)
