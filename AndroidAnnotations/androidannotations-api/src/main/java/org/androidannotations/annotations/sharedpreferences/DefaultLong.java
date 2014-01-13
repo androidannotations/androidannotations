@@ -20,14 +20,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.androidannotations.annotations.ResId;
+
 /**
  * Use on methods in {@link SharedPref} annotated class to specified the default
  * value of this preference.
  * <p/>
  * The annotation value must be a <code>long</code>.
+ * <p/>
+ * The key of the preference will be the method name by default. This can be
+ * overridden by specifying a string resource with the {@link #keyRes()}
+ * parameter.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface DefaultLong {
 	long value();
+
+	int keyRes() default ResId.DEFAULT_VALUE;
 }

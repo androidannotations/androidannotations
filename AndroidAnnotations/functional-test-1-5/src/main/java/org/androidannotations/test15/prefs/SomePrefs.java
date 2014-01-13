@@ -22,6 +22,7 @@ import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
+import org.androidannotations.test15.R;
 
 @SharedPref(Scope.UNIQUE)
 public interface SomePrefs {
@@ -40,6 +41,9 @@ public interface SomePrefs {
 	
 	@DefaultBoolean(true)
 	boolean isAwesome();
+	
+	@DefaultInt(value = 42, keyRes = R.string.prefStringKey)
+	int stringResKeyPref();
 
 	long lastUpdated();
 

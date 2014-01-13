@@ -23,5 +23,6 @@
     <integer name="prefDefaultInt">42</integer>
     <integer name="prefDefaultLong">4200</integer>
     <integer name="prefDefaultFloat">42</integer>
+    <string name="prefStringKey">stringKey</string>
     
 </resources>
