@@ -15,8 +15,6 @@
  */
 package org.androidannotations.test15.efragment;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +27,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ListView;
+import org.androidannotations.api.BackgroundExecutor;
+
+import java.util.concurrent.Executor;
+
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class MyListFragmentTest {
@@ -36,6 +41,7 @@ public class MyListFragmentTest {
 	private static final int TESTED_CLICKED_INDEX = 4;
 
 	MyListFragment_	myListFragment;
+	FragmentManager fragmentManager;
 
 	@Before
 	public void setup() {
@@ -54,11 +60,76 @@ public class MyListFragmentTest {
 		assertThat(myListFragment.listItemClicked).isTrue();
 	}
 
-	public static void startFragment(Fragment fragment) {
+	@Test
+	public void not_ignored_method_is_called() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.notIgnored();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void uithread_method_is_called() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.uiThread();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void background_method_is_called() {
+		assertFalse(myListFragment.didExecute);
+		runBackgroundsOnSameThread();
+		myListFragment.backgroundThread();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void ignored_when_detached_works_for_uithread_method() {
+		popBackStack();
+
+		assertFalse(myListFragment.didExecute);
+		myListFragment.uiThreadIgnored();
+		assertFalse(myListFragment.didExecute);
+	}
+
+	@Test
+	public void ignored_when_detached_works_for_background_method() {
+		popBackStack();
+
+		assertFalse(myListFragment.didExecute);
+		runBackgroundsOnSameThread();
+		myListFragment.backgroundThreadIgnored();
+		assertFalse(myListFragment.didExecute);
+	}
+
+	@Test
+	public void ignored_when_detached_works_for_ignored_method() {
+		popBackStack();
+
+		assertFalse(myListFragment.didExecute);
+		myListFragment.ignored();
+		assertFalse(myListFragment.didExecute);
+	}
+
+	private void runBackgroundsOnSameThread() {
+		//Simplify the threading by making a dummy executor that runs off the same thread
+		BackgroundExecutor.setExecutor(new Executor() {
+			@Override
+			public void execute(Runnable command) {
+				command.run();
+			}
+		});
+	}
+
+	private void popBackStack() {
+		fragmentManager.popBackStack();
+	}
+
+	public void startFragment(Fragment fragment) {
 		FragmentActivity fragmentActivity = Robolectric.buildActivity(FragmentActivity.class).create().start().visible().get();
-		FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
+		fragmentManager = fragmentActivity.getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.add(fragment, null);
+		fragmentTransaction.addToBackStack("frag");
 		fragmentTransaction.commit();
 	}
 }
