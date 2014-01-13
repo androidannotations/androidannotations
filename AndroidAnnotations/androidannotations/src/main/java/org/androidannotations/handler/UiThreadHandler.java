@@ -40,66 +40,66 @@ import static com.sun.codemodel.JExpr.lit;
 
 public class UiThreadHandler extends AbstractRunnableHandler {
 
-    private static final String METHOD_CUR_THREAD = "currentThread";
-    private static final String METHOD_MAIN_LOOPER = "getMainLooper";
-    private static final String METHOD_GET_THREAD = "getThread";
+	private static final String METHOD_CUR_THREAD = "currentThread";
+	private static final String METHOD_MAIN_LOOPER = "getMainLooper";
+	private static final String METHOD_GET_THREAD = "getThread";
 
-    private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-    public UiThreadHandler(ProcessingEnvironment processingEnvironment) {
-        super(UiThread.class, processingEnvironment);
-    }
+	public UiThreadHandler(ProcessingEnvironment processingEnvironment) {
+		super(UiThread.class, processingEnvironment);
+	}
 
-    @Override
-    public void process(Element element, EComponentHolder holder) throws Exception {
-        ExecutableElement executableElement = (ExecutableElement) element;
-        JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
-        JDefinedClass anonymousRunnableClass = codeModelHelper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
+	@Override
+	public void process(Element element, EComponentHolder holder) throws Exception {
+		ExecutableElement executableElement = (ExecutableElement) element;
+		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
+		JDefinedClass anonymousRunnableClass = codeModelHelper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
 
-        JBlock body = delegatingMethod.body();
-        IgnoredWhenDetached ignoredWhenDetached = element.getAnnotation(IgnoredWhenDetached.class);
-        if (ignoredWhenDetached != null) {
-            body = body._if(invoke(_this(), "getActivity").ne(_null()))._then();
-        }
+		JBlock body = delegatingMethod.body();
+		IgnoredWhenDetached ignoredWhenDetached = element.getAnnotation(IgnoredWhenDetached.class);
+		if (ignoredWhenDetached != null) {
+			body = body._if(invoke(_this(), "getActivity").ne(_null()))._then();
+		}
 
-        UiThread annotation = element.getAnnotation(UiThread.class);
-        long delay = annotation.delay();
-        UiThread.Propagation propagation = annotation.propagation();
+		UiThread annotation = element.getAnnotation(UiThread.class);
+		long delay = annotation.delay();
+		UiThread.Propagation propagation = annotation.propagation();
 
-        if (delay == 0) {
-            if (propagation == UiThread.Propagation.REUSE) {
-                // Put in the check for the UI thread.
-                addUIThreadCheck(delegatingMethod, body, holder);
-            }
+		if (delay == 0) {
+			if (propagation == UiThread.Propagation.REUSE) {
+				// Put in the check for the UI thread.
+				addUIThreadCheck(delegatingMethod, body, holder);
+			}
 
-            body.invoke(holder.getHandler(), "post").arg(_new(anonymousRunnableClass));
-        } else {
-            body.invoke(holder.getHandler(), "postDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
-        }
-    }
+			body.invoke(holder.getHandler(), "post").arg(_new(anonymousRunnableClass));
+		} else {
+			body.invoke(holder.getHandler(), "postDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
+		}
+	}
 
-    /**
-     * Add the pre-check to see if we are already in the UI thread.
-     *
-     * @param delegatingMethod
-     * @param holder
-     * @throws JClassAlreadyExistsException
-     */
-    private void addUIThreadCheck(JMethod delegatingMethod, JBlock block, EComponentHolder holder) throws JClassAlreadyExistsException {
-        // Get the Thread and Looper class.
-        JClass tClass = holder.classes().THREAD;
-        JClass lClass = holder.classes().LOOPER;
+	/**
+	 * Add the pre-check to see if we are already in the UI thread.
+	 *
+	 * @param delegatingMethod
+	 * @param holder
+	 * @throws JClassAlreadyExistsException
+	 */
+	private void addUIThreadCheck(JMethod delegatingMethod, JBlock block, EComponentHolder holder) throws JClassAlreadyExistsException {
+		// Get the Thread and Looper class.
+		JClass tClass = holder.classes().THREAD;
+		JClass lClass = holder.classes().LOOPER;
 
-        // invoke the methods.
-        JExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
-        JExpression rhs = lClass.staticInvoke(METHOD_MAIN_LOOPER).invoke(METHOD_GET_THREAD);
+		// invoke the methods.
+		JExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
+		JExpression rhs = lClass.staticInvoke(METHOD_MAIN_LOOPER).invoke(METHOD_GET_THREAD);
 
-        // create the conditional and the block.
-        JConditional con = block._if(JOp.eq(lhs, rhs));
-        JBlock thenBlock = con._then();
+		// create the conditional and the block.
+		JConditional con = block._if(JOp.eq(lhs, rhs));
+		JBlock thenBlock = con._then();
 
-        codeModelHelper.callSuperMethod(delegatingMethod, holder, thenBlock);
+		codeModelHelper.callSuperMethod(delegatingMethod, holder, thenBlock);
 
-        thenBlock._return();
-    }
+		thenBlock._return();
+	}
 }

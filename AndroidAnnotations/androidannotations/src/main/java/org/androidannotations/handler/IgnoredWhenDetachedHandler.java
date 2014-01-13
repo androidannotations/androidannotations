@@ -28,30 +28,30 @@ import javax.lang.model.element.Element;
 
 public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-    private final TargetAnnotationHelper annotationHelper;
+	private final TargetAnnotationHelper annotationHelper;
 
-    public IgnoredWhenDetachedHandler(ProcessingEnvironment processingEnvironment) {
+	public IgnoredWhenDetachedHandler(ProcessingEnvironment processingEnvironment) {
 		super(IgnoredWhenDetached.class, processingEnvironment);
-        annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 	}
 
-    @Override
-    public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-        validateHasOnlyUIThreadOrBackground(element, valid);
+	@Override
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		validateHasOnlyUIThreadOrBackground(element, valid);
 
-        validatorHelper.enclosingElementHasEFragment(element, validatedElements, valid);
-    }
+		validatorHelper.enclosingElementHasEFragment(element, validatedElements, valid);
+	}
 
-    private void validateHasOnlyUIThreadOrBackground(Element element, IsValid valid) {
-        UiThread uiThread = element.getAnnotation(UiThread.class);
-        Background background = element.getAnnotation(Background.class);
-        if((uiThread == null && background == null) || (uiThread != null && background != null)) {
-            valid.invalidate();
-            annotationHelper.printAnnotationError(element, "can only be used on a method that uses either " + TargetAnnotationHelper.annotationName(Background.class) + " or " + TargetAnnotationHelper.annotationName(UiThread.class));
-        }
-    }
+	private void validateHasOnlyUIThreadOrBackground(Element element, IsValid valid) {
+		UiThread uiThread = element.getAnnotation(UiThread.class);
+		Background background = element.getAnnotation(Background.class);
+		if ((uiThread == null && background == null) || (uiThread != null && background != null)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "can only be used on a method that uses either " + TargetAnnotationHelper.annotationName(Background.class) + " or " + TargetAnnotationHelper.annotationName(UiThread.class));
+		}
+	}
 
-    @Override
+	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
 
 	}

@@ -84,12 +84,12 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 		JInvocation newTask = _new(anonymousTaskClass).arg(lit(id)).arg(lit(delay)).arg(lit(serial));
 		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(newTask);
 
-        IgnoredWhenDetached ignoredWhenDetached = element.getAnnotation(IgnoredWhenDetached.class);
-        JBlock body = delegatingMethod.body();
-        if(ignoredWhenDetached != null) {
-            body._if(invoke(_this(), "getActivity").ne(_null()))._then().add(executeCall);
-        } else {
-            body.add(executeCall);
-        }
+		IgnoredWhenDetached ignoredWhenDetached = element.getAnnotation(IgnoredWhenDetached.class);
+		JBlock body = delegatingMethod.body();
+		if (ignoredWhenDetached != null) {
+			body._if(invoke(_this(), "getActivity").ne(_null()))._then().add(executeCall);
+		} else {
+			body.add(executeCall);
+		}
 	}
 }

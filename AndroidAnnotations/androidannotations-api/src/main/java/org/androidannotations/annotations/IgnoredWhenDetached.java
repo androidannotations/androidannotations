@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * this will cause the annotated method to be wrapped in a safe 'if attached' block such
  * that no code will be executed if the {@link EFragment} is no longer bound to its
  * parent activity.
- *
+ * <p/>
  * Should be used on method that must meet the following criteria
  * <p/>
  * 1) Method must also be annotated with either {@link UiThread} or {@link Background}
