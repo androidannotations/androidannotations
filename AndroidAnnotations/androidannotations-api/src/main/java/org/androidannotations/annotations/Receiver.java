@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  *     <li>An {@link android.content.Intent}</li>
  * </ul>
  * <p/>
- * The annotation has two parameters:
+ * The annotation has three parameters:
  * <ul>
  *     <li>
  *         {@link #actions()}: One or several {@link java.lang.String} indicating the actions which will spark the method.
@@ -43,6 +43,11 @@ import java.lang.annotation.Target;
  *         will be registered and unregistered. By default : OnCreate/OnDestroy.
  *         The available values depend on the enclosing enhanced component.
  *
+ *     </li>
+ *     <li>
+ *          {@link #local()}: Specify whether {@link android.support.v4.content.LocalBroadcastManager} should be used.
+ *          To use {@link android.support.v4.content.LocalBroadcastManager}, you MUST have android support-v4 in your classpath.
+ *          Default value is false.
  *     </li>
  * </ul>
  * <p/>
@@ -71,6 +76,8 @@ public @interface Receiver {
 	String[] actions();
 
 	RegisterAt registerAt() default RegisterAt.OnCreateOnDestroy;
+
+	boolean local() default false;
 
 	public enum RegisterAt {
 		OnCreateOnDestroy,

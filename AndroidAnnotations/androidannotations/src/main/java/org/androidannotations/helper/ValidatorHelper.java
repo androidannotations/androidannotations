@@ -1353,4 +1353,16 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void hasSupportV4JarIfLocal(Element element, IsValid valid) {
+		boolean local = element.getAnnotation(Receiver.class).local();
+		if (local) {
+
+			Elements elementUtils = annotationHelper.getElementUtils();
+			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "To use the LocalBroadcastManager, you MUST include the android-support-v4 jar");
+			}
+		}
+	}
+
 }

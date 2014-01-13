@@ -29,7 +29,7 @@ public class ActivityWithReceiver extends Activity {
 
 	}
 
-	@Receiver(actions = WifiManager.NETWORK_STATE_CHANGED_ACTION, registerAt = Receiver.RegisterAt.OnStartOnStop)
+	@Receiver(actions = WifiManager.NETWORK_STATE_CHANGED_ACTION, registerAt = Receiver.RegisterAt.OnStartOnStop, local = true)
 	protected void onWifiStateChangedWithSameActions() {
 
 	}

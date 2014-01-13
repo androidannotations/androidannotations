@@ -50,6 +50,8 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element.getEnclosingElement(), valid, Receiver.class);
 
 		validatorHelper.hasRightRegisterAtValueDependingOnEnclosingElement(element, valid);
+
+		validatorHelper.hasSupportV4JarIfLocal(element, valid);
 	}
 
 	@Override
@@ -62,10 +64,11 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 		Receiver annotation = element.getAnnotation(Receiver.class);
 		String[] actions = annotation.actions();
 		Receiver.RegisterAt registerAt = annotation.registerAt();
+		boolean local = annotation.local();
 
 		JFieldVar intentFilterField = holder.getIntentFilterField(actions);
 		JFieldVar receiverField = createReceiverField(holder, receiverName, methodName, hasIntentParam);
-		registerAndUnregisterReceiver(holder, registerAt, intentFilterField, receiverField);
+		registerAndUnregisterReceiver(holder, registerAt, intentFilterField, receiverField, local);
 	}
 
 	private JFieldVar createReceiverField(HasReceiverRegistration holder, String receiverName, String methodName, boolean hasIntentParam) {
@@ -83,7 +86,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 		return holder.getGeneratedClass().field(PRIVATE | FINAL, classes().BROADCAST_RECEIVER, receiverName, receiverInit);
 	}
 
-	private void registerAndUnregisterReceiver(HasReceiverRegistration holder, Receiver.RegisterAt registerAt, JFieldVar intentFilterField, JFieldVar receiverField) {
+	private void registerAndUnregisterReceiver(HasReceiverRegistration holder, Receiver.RegisterAt registerAt, JFieldVar intentFilterField, JFieldVar receiverField, boolean local) {
 		JBlock registerBlock = null, unregisterBlock = null;
 		switch (registerAt) {
 			case OnCreateOnDestroy:
@@ -103,7 +106,14 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 				unregisterBlock = holder.getOnDetachBeforeSuperBlock();
 		}
 
-		registerBlock.invoke(holder.getContextRef(), "registerReceiver").arg(receiverField).arg(intentFilterField);
-		unregisterBlock.invoke(holder.getContextRef(), "unregisterReceiver").arg(receiverField);
+		JExpression broadcastManager;
+		if (local) {
+			broadcastManager = classes().LOCAL_BROADCAST_MANAGER.staticInvoke("getInstance").arg(holder.getContextRef());
+		} else {
+			broadcastManager = holder.getContextRef();
+		}
+
+		registerBlock.invoke(broadcastManager, "registerReceiver").arg(receiverField).arg(intentFilterField);
+		unregisterBlock.invoke(broadcastManager, "unregisterReceiver").arg(receiverField);
 	}
 }

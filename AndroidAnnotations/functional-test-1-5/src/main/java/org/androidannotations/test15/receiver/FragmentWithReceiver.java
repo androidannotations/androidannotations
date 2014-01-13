@@ -37,7 +37,7 @@ public class FragmentWithReceiver extends Fragment {
 
 	}
 
-	@Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnResumeOnPause)
+	@Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnResumeOnPause, local = true)
 	protected void onActionOnResume() {
 
 	}

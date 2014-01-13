@@ -86,6 +86,7 @@ public class ProcessHolder {
 		public final JClass INTENT = refClass(CanonicalNameConstants.INTENT);
 		public final JClass INTENT_FILTER = refClass(CanonicalNameConstants.INTENT_FILTER);
 		public final JClass BROADCAST_RECEIVER = refClass(CanonicalNameConstants.BROADCAST_RECEIVER);
+		public final JClass LOCAL_BROADCAST_MANAGER = refClass(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER);
 		public final JClass COMPONENT_NAME = refClass(CanonicalNameConstants.COMPONENT_NAME);
 		public final JClass VIEW_GROUP = refClass(CanonicalNameConstants.VIEW_GROUP);
 		public final JClass LAYOUT_INFLATER = refClass(CanonicalNameConstants.LAYOUT_INFLATER);
