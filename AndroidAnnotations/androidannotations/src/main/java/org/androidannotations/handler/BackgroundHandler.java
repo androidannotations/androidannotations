@@ -16,6 +16,9 @@
 package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -23,6 +26,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.IgnoredWhenDetached;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
@@ -80,6 +84,12 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 		JInvocation newTask = _new(anonymousTaskClass).arg(lit(id)).arg(lit(delay)).arg(lit(serial));
 		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(newTask);
 
-		delegatingMethod.body().add(executeCall);
+        IgnoredWhenDetached ignoredWhenDetached = element.getAnnotation(IgnoredWhenDetached.class);
+        JBlock body = delegatingMethod.body();
+        if(ignoredWhenDetached != null) {
+            body._if(invoke(_this(), "getActivity").ne(_null()))._then().add(executeCall);
+        } else {
+            body.add(executeCall);
+        }
 	}
 }

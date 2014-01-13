@@ -15,17 +15,6 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.holder.EComponentHolder;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -34,63 +23,83 @@ import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JOp;
+import org.androidannotations.annotations.IgnoredWhenDetached;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.holder.EComponentHolder;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
 
 public class UiThreadHandler extends AbstractRunnableHandler {
 
-	private static final String METHOD_CUR_THREAD = "currentThread";
-	private static final String METHOD_MAIN_LOOPER = "getMainLooper";
-	private static final String METHOD_GET_THREAD = "getThread";
+    private static final String METHOD_CUR_THREAD = "currentThread";
+    private static final String METHOD_MAIN_LOOPER = "getMainLooper";
+    private static final String METHOD_GET_THREAD = "getThread";
 
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+    private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-	public UiThreadHandler(ProcessingEnvironment processingEnvironment) {
-		super(UiThread.class, processingEnvironment);
-	}
+    public UiThreadHandler(ProcessingEnvironment processingEnvironment) {
+        super(UiThread.class, processingEnvironment);
+    }
 
-	@Override
-	public void process(Element element, EComponentHolder holder) throws Exception {
-		ExecutableElement executableElement = (ExecutableElement) element;
-		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
-		JDefinedClass anonymousRunnableClass = codeModelHelper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
+    @Override
+    public void process(Element element, EComponentHolder holder) throws Exception {
+        ExecutableElement executableElement = (ExecutableElement) element;
+        JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
+        JDefinedClass anonymousRunnableClass = codeModelHelper.createDelegatingAnonymousRunnableClass(holder, delegatingMethod);
 
-		UiThread annotation = element.getAnnotation(UiThread.class);
-		long delay = annotation.delay();
-		UiThread.Propagation propagation = annotation.propagation();
+        JBlock body = delegatingMethod.body();
+        IgnoredWhenDetached ignoredWhenDetached = element.getAnnotation(IgnoredWhenDetached.class);
+        if (ignoredWhenDetached != null) {
+            body = body._if(invoke(_this(), "getActivity").ne(_null()))._then();
+        }
 
-		if (delay == 0) {
-			if (propagation == UiThread.Propagation.REUSE) {
-				// Put in the check for the UI thread.
-				addUIThreadCheck(delegatingMethod, holder);
-			}
+        UiThread annotation = element.getAnnotation(UiThread.class);
+        long delay = annotation.delay();
+        UiThread.Propagation propagation = annotation.propagation();
 
-			delegatingMethod.body().invoke(holder.getHandler(), "post").arg(_new(anonymousRunnableClass));
-		} else {
-			delegatingMethod.body().invoke(holder.getHandler(), "postDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
-		}
-	}
+        if (delay == 0) {
+            if (propagation == UiThread.Propagation.REUSE) {
+                // Put in the check for the UI thread.
+                addUIThreadCheck(delegatingMethod, body, holder);
+            }
 
-	/**
-	 * Add the pre-check to see if we are already in the UI thread.
-	 *
-	 * @param delegatingMethod
-	 * @param holder
-	 * @throws JClassAlreadyExistsException
-	 */
-	private void addUIThreadCheck(JMethod delegatingMethod, EComponentHolder holder) throws JClassAlreadyExistsException {
-		// Get the Thread and Looper class.
-		JClass tClass = holder.classes().THREAD;
-		JClass lClass = holder.classes().LOOPER;
+            body.invoke(holder.getHandler(), "post").arg(_new(anonymousRunnableClass));
+        } else {
+            body.invoke(holder.getHandler(), "postDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
+        }
+    }
 
-		// invoke the methods.
-		JExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
-		JExpression rhs = lClass.staticInvoke(METHOD_MAIN_LOOPER).invoke(METHOD_GET_THREAD);
+    /**
+     * Add the pre-check to see if we are already in the UI thread.
+     *
+     * @param delegatingMethod
+     * @param holder
+     * @throws JClassAlreadyExistsException
+     */
+    private void addUIThreadCheck(JMethod delegatingMethod, JBlock block, EComponentHolder holder) throws JClassAlreadyExistsException {
+        // Get the Thread and Looper class.
+        JClass tClass = holder.classes().THREAD;
+        JClass lClass = holder.classes().LOOPER;
 
-		// create the conditional and the block.
-		JConditional con = delegatingMethod.body()._if(JOp.eq(lhs, rhs));
-		JBlock thenBlock = con._then();
+        // invoke the methods.
+        JExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
+        JExpression rhs = lClass.staticInvoke(METHOD_MAIN_LOOPER).invoke(METHOD_GET_THREAD);
 
-		codeModelHelper.callSuperMethod(delegatingMethod, holder, thenBlock);
+        // create the conditional and the block.
+        JConditional con = block._if(JOp.eq(lhs, rhs));
+        JBlock thenBlock = con._then();
 
-		thenBlock._return();
-	}
+        codeModelHelper.callSuperMethod(delegatingMethod, holder, thenBlock);
+
+        thenBlock._return();
+    }
 }

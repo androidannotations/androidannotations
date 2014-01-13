@@ -125,6 +125,7 @@ public class AnnotationHandlers {
 			add(new TraceHandler(processingEnvironment));
 		}
 		/* UIThreadHandler and BackgroundHandler must be after TraceHandler */
+		add(new IgnoredWhenDetachedHandler(processingEnvironment));
 		add(new UiThreadHandler(processingEnvironment));
 		add(new BackgroundHandler(processingEnvironment));
 	}
