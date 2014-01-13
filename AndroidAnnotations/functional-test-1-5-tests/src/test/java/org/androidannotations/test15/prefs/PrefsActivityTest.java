@@ -169,6 +169,7 @@ public class PrefsActivityTest {
 
 	@Test
 	public void stringResourcePrefKey() {
-		assertThat(somePrefs.stringResKeyPref().get()).isEqualTo(sharedPref.getInt(activity.getString(R.string.prefStringKey), 42));
+		somePrefs.stringResKeyPref().put(88);
+		assertThat(sharedPref.getInt(activity.getString(R.string.prefStringKey), 0)).isEqualTo(88);
 	}
 }
