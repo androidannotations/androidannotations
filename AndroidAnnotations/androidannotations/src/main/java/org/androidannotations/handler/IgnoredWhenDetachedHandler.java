@@ -41,6 +41,9 @@ public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EComponent
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotFinal(element, valid);
+		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
 		validatorHelper.enclosingElementHasEFragment(element, validatedElements, valid);
 	}
 
