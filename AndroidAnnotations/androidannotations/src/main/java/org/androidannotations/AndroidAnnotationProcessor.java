@@ -92,8 +92,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		String coreVersion = getAAProcessorVersion();
 
 		if (!apiVersion.equals(coreVersion)) {
-			LOGGER.error("AndroidAnnotation version for API ({}) and core ({}) doesn't match. Please check your classpath", apiVersion, coreVersion);
-			throw new VersionMismatchException("AndroidAnnotation version for API (" + apiVersion + ") and core (" + coreVersion + ") doesn't match. Please check your classpath");
+			LOGGER.error("AndroidAnnotations version for API ({}) and core ({}) doesn't match. Please check your classpath", apiVersion, coreVersion);
+			throw new VersionMismatchException("AndroidAnnotations version for API (" + apiVersion + ") and core (" + coreVersion + ") doesn't match. Please check your classpath");
 		}
 	}
 
@@ -132,7 +132,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			URL url = getClass().getClassLoader().getResource(filename);
 			properties.load(url.openStream());
 		} catch (Exception e) {
-			LOGGER.error("Core property file {} couldn't be parse");
+			LOGGER.error("Core property file {} couldn't be parsed");
 			throw new FileNotFoundException("Core property file " + filename + " couldn't be parsed.");
 		}
 	}
@@ -143,7 +143,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			URL url = EActivity.class.getClassLoader().getResource(filename);
 			propertiesApi.load(url.openStream());
 		} catch (Exception e) {
-			LOGGER.error("API property file {} couldn't be parse");
+			LOGGER.error("API property file {} couldn't be parsed");
 			throw new FileNotFoundException("API property file " + filename + " couldn't be parsed. Please check your classpath and verify that AA-API's version is at least 3.0");
 		}
 	}
@@ -266,9 +266,9 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		Iterator<? extends TypeElement> iterator = annotations.iterator();
 		if (iterator.hasNext()) {
 			Element element = roundEnv.getElementsAnnotatedWith(iterator.next()).iterator().next();
-			LOGGER.error("Something went wront : {}", element, errorMessage);
+			LOGGER.error("Something went wrong: {}", element, errorMessage);
 		} else {
-			LOGGER.error("Something went wront : {}", errorMessage);
+			LOGGER.error("Something went wrong: {}", errorMessage);
 		}
 	}
 
