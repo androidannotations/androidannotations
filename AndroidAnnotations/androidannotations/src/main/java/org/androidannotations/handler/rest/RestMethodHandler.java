@@ -228,31 +228,36 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	 * that it behaves as it did previous to this feature.
 	 */
 	private void insertRestTryCatchBlock(RestHolder holder, JBlock body, JExpression returnCall, boolean methodReturnVoid) {
-		JTryBlock tryBlock = body._try();
+		JBlock returnCallBody = body;
+
+		if (holder.getRestErrorHandlerField() != null) {
+			JTryBlock tryBlock = body._try();
+			returnCallBody = tryBlock.body();
+
+			JCatchBlock jCatch = tryBlock._catch(classes().REST_CLIENT_EXCEPTION);
+
+			JBlock catchBlock = jCatch.body();
+			JConditional conditional = catchBlock._if(JOp.ne(holder.getRestErrorHandlerField(), JExpr._null()));
+			JVar exceptionParam = jCatch.param("e");
+
+			JBlock thenBlock = conditional._then();
+
+			// call the handler method if it was set.
+			thenBlock.add(holder.getRestErrorHandlerField().invoke("onRestClientExceptionThrown").arg(exceptionParam));
+
+			// return null if exception was caught and handled.
+			if (!methodReturnVoid) {
+				thenBlock._return(JExpr._null());
+			}
+
+			// re-throw the exception if handler wasn't set.
+			conditional._else()._throw(exceptionParam);
+		}
 
 		if (methodReturnVoid) {
-			tryBlock.body().add((JInvocation) returnCall);
+			returnCallBody.add((JInvocation) returnCall);
 		} else {
-			tryBlock.body()._return(returnCall);
+			returnCallBody._return(returnCall);
 		}
-
-		JCatchBlock jCatch = tryBlock._catch(classes().REST_CLIENT_EXCEPTION);
-
-		JBlock catchBlock = jCatch.body();
-		JConditional conditional = catchBlock._if(JOp.ne(holder.getRestErrorHandlerField(), JExpr._null()));
-		JVar exceptionParam = jCatch.param("e");
-
-		JBlock thenBlock = conditional._then();
-
-		// call the handler method if it was set.
-		thenBlock.add(holder.getRestErrorHandlerField().invoke("onRestClientExceptionThrown").arg(exceptionParam));
-
-		// return null if exception was caught and handled.
-		if (!methodReturnVoid) {
-			thenBlock._return(JExpr._null());
-		}
-
-		// re-throw the exception if handler wasn't set.
-		conditional._else()._throw(exceptionParam);
 	}
 }
