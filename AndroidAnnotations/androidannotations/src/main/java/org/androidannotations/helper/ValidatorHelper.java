@@ -1046,6 +1046,9 @@ public class ValidatorHelper {
 				Element converterElement = converterType.asElement();
 				if (converterElement.getKind().isClass()) {
 					if (!annotationHelper.isAbstract(converterElement)) {
+						if (converterElement.getAnnotation(EBean.class) != null) {
+							return;
+						}
 						List<ExecutableElement> constructors = ElementFilter.constructorsIn(converterElement.getEnclosedElements());
 						for (ExecutableElement constructor : constructors) {
 							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
