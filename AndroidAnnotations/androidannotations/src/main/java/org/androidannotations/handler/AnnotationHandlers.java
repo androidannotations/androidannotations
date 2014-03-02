@@ -119,6 +119,7 @@ public class AnnotationHandlers {
 
 		/* After injection methods must be after injections */
 		add(new AfterInjectHandler(processingEnvironment));
+		add(new AfterExtrasHandler(processingEnvironment));
 		add(new AfterViewsHandler(processingEnvironment));
 
 		if (optionsHelper.shouldLogTrace()) {
