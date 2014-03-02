@@ -80,7 +80,6 @@ public class AnnotationHandlers {
 			add(new ResHandler(androidRes, processingEnvironment));
 		}
 		add(new TransactionalHandler(processingEnvironment));
-		add(new ExtraHandler(processingEnvironment));
 		add(new FragmentArgHandler(processingEnvironment));
 		add(new SystemServiceHandler(processingEnvironment));
 		add(new RestHandler(processingEnvironment));
@@ -102,6 +101,7 @@ public class AnnotationHandlers {
 		add(new RootContextHanlder(processingEnvironment));
 		add(new NonConfigurationInstanceHandler(processingEnvironment));
 		add(new BeanHandler(processingEnvironment));
+		add(new ExtraHandler(processingEnvironment));
 		add(new BeforeTextChangeHandler(processingEnvironment));
 		add(new TextChangeHandler(processingEnvironment));
 		add(new AfterTextChangeHandler(processingEnvironment));
