@@ -20,6 +20,37 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Use on methods in {@link Rest} annotated class to add a new rest service of
+ * type PUT.
+ * <p/>
+ * This annotation as the EXACT same constraints as {@link Post}.
+ * <p/>
+ * <blockquote>
+ * 
+ * <b>Example :</b>
+ * 
+ * <pre>
+ * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = MappingJacksonHttpMessageConverter.class)
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Put(&quot;/events/update/last&quot;)
+ * 	Event updateEvent();
+ * 
+ * 	&#064;Put(&quot;/events/update/<b>{id}</b>&quot;)
+ * 	void updateEvent(Event <i>event</i>, int <b>id</b>);
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Rest
+ * @see Get
+ * @see Post
+ * @see Delete
+ * @see Head
+ * @see Options
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Put {

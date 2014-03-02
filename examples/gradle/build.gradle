@@ -1,67 +1,59 @@
-description = "AndroidAnnotations Gradle Sample"
-abbreviation = "GRADLESAMPLE"
-version = '1.0.0.BUILD-SNAPSHOT'
-
 buildscript {
     repositories {
         mavenCentral()
     }
-
-    def gradleAndroidAnnotationsPluginVersion = '0.3.0'
-
     dependencies {
-        classpath "net.ealden.gradle.plugins:gradle-androidannotations-plugin:$gradleAndroidAnnotationsPluginVersion"
+        // replace with the current version of the Android plugin
+        classpath 'com.android.tools.build:gradle:0.7+'
+        // the latest version of the android-apt plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.1'
     }
 }
-
-apply plugin: 'androidannotations'
-apply plugin: 'idea'
-
-def compatibilityVersion = 1.6
-sourceCompatibility = compatibilityVersion
-targetCompatibility = compatibilityVersion
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
-clean {
-    delete 'gen'
+apply plugin: 'android'
+apply plugin: 'android-apt'
+def AAVersion = '3.0.1'
+
+dependencies {
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
 
-//androidSignAndAlign {
-//    keyStore = ''
-//    keyAlias = ''
-//    keyStorePassword = ''
-//    keyAliasPassword = ''
-//}
+apt {
+    arguments {
+        androidManifestFile variant.processResources.manifestFile 
+        resourcePackageName 'com.googlecode.androidannotations.gradle'
 
-processResources {
-    expand(project.properties)
-}
+        // If you're using Android NBS flavors you should use the following line instead of hard-coded packageName
+        // resourcePackageName android.defaultConfig.packageName
 
-task configureDebug << {
-    jar.classifier = "debug"
-}
-
-task configureRelease << {
-    proguard.enabled = true
-}
-
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
-    }
-    project {
-        languageLevel = compatibilityVersion
+        // You can set optional annotation processing options here, like these commented options:
+        // logLevel 'INFO'
+        // logFile '/var/log/aa.log'
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-6'
+android {
+    compileSdkVersion 18
+    buildToolsVersion "18.0.1"
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 18
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['res']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
 }
-
-androidProcessResources.dependsOn(clean)
-
-defaultTasks 'assemble'

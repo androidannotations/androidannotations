@@ -2,13 +2,13 @@ package com.googlecode.androidannotations.helloworldeclipse;
 
 import java.util.Date;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.ViewById;
+
 import android.app.Activity;
 import android.widget.TextView;
-
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_with_extra)
 public class ActivityWithExtra extends Activity {
@@ -19,16 +19,16 @@ public class ActivityWithExtra extends Activity {
 
 	@ViewById
 	TextView extraTextView;
-	
+
 	@Extra(MY_STRING_EXTRA)
 	String myMessage;
-	
+
 	@Extra(MY_DATE_EXTRA)
 	Date myDate;
-	
+
 	@Extra("unboundExtra")
 	String unboundExtra = "unboundExtraDefaultValue";
-	
+
 	/**
 	 * The logs will output a classcast exception, but the program flow won't be interrupted
 	 */

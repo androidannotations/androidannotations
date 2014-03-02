@@ -21,8 +21,39 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Injects an instance of a class annotated with {@link EBean}. You can specify
- * the type to inject using the value attribute, otherwise 
+ * Injects an {@link EBean} annotated class in an enhanced class.
+ * <p/>
+ * You can specify a specific implementation to inject using the value
+ * attribute.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;Bean
+ * 	MyBean myBean;
+ * 
+ * 	&#064;Bean(MyBean2.class)
+ * 	MyBean myBean2;
+ * 
+ * }
+ * 
+ * &#064;EBean
+ * public class MyBean {
+ * }
+ * 
+ * &#064;EBean
+ * public class MyBean2 extends MyBean {
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see EBean
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

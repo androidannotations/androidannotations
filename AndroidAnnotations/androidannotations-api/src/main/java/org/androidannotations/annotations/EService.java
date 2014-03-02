@@ -21,7 +21,50 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to enhance an Android Service
+ * Should be used on {@link android.app.Service} classes to enable usage of
+ * AndroidAnnotations.
+ * <p/>
+ * Your code related to injected beans should go in an {@link AfterInject}
+ * annotated method.
+ * <p/>
+ * If the class is abstract, the enhanced service will not be generated.
+ * Otherwise, it will be generated as a final class. You can use
+ * AndroidAnnotations to create Abstract classes that handle common code.
+ * <p/>
+ * The generated class will also contain an IntentBuilder to start service with
+ * a fluent API.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivity extends Activity {
+ * 
+ * 	public void startService() {
+ * 		// Note the use of generated class instead of original one
+ * 		MyService_.intent(this).start();
+ * 	}
+ * 
+ * 	public void stopService() {
+ * 		// Note the use of generated class instead of original one
+ * 		MyService_.intent(this).stop();
+ * 	}
+ * 
+ * }
+ * 
+ * <pre>
+ * &#064;EService
+ * public class MyService extends Service {
+ * 
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see AfterInject
+ * @see ServiceAction
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

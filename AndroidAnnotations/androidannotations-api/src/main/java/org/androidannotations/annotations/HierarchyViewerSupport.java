@@ -21,8 +21,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to enable the use of HierarchyViewer inside the
- * application.
+ * Should be used on {@link EActivity} classes to enable the use of <a href=
+ * "https://developer.android.com/tools/debugging/debugging-ui.html#HierarchyViewer"
+ * >HierarchyViewer</a> inside the application.
+ * <p/>
+ * <b>Note:</b> To use this annotation, your application must require the
+ * INTERNET permission and <code>android:debuggable</code> must be set to true
+ * in the AndroidManifest.xml
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;HierarchyViewerSupport
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * }
+ * </pre>
+ * 
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

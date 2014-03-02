@@ -20,6 +20,44 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.androidannotations.api.rest.MediaType;
+
+/**
+ * Use on {@link Get}, {@link Post}, … annotated methods to negotiate the
+ * response format expected, and so the converter to use.
+ * <p/>
+ * The annotation {@link #value()} is mandatory and define the <a
+ * href="https://en.wikipedia.org/wiki/Internet_media_type">media type</a> to
+ * accept. We provide a {@link MediaType} class to help you.
+ * <p/>
+ * <blockquote>
+ * 
+ * <b>Example :</b>
+ * 
+ * <pre>
+ * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = { MappingJacksonHttpMessageConverter.class, SimpleXmlHttpMessageConverter.class })
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Get(&quot;/events/{id}&quot;)
+ * 	&#064;Accept(<b>MediaType.APPLICATION_JSON</b>)
+ * 	Event getEvent(long id);
+ * 
+ * 	&#064;Post(&quot;/entity&quot;)
+ * 	&#064;Accept(<b>MediaType.APPLICATION_XML</b>)
+ * 	Event addEvent(Event event);
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Rest
+ * @see Get
+ * @see Post
+ * @see Put
+ * @see Delete
+ * @see Head
+ * @see Options
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface Accept {

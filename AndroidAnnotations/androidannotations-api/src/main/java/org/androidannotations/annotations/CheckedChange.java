@@ -20,8 +20,51 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
+ * This annotation is intended to be used on methods to receive events defined
+ * by
+ * {@link android.widget.CompoundButton.OnCheckedChangeListener#onCheckedChanged(android.widget.CompoundButton, boolean)}
+ * after the checked state is changed on the targeted CompoundButton or subclass
+ * of CompoundButton.
+ * <p/>
+ * The annotation value should be one or several R.id.* fields that refers to
+ * CompoundButton or subclasses of CompoundButton. If not set, the method name
+ * will be used as the R.id.* field name.
+ * <p/>
+ * The method MAY have multiple parameter:
+ * <ul>
+ * <li>A {@link android.widget.CompoundButton} parameter to know which view has
+ * targeted this event
+ * <li>An {@link boolean} to know the new state of the view.
+ * </ul>
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;CheckedChange(<b>R.id.myButton</b>)
+ * void checkedChangedOnMyButton(boolean isChecked, CompoundButton button) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;CheckedChange
+ * void <b>myButton</b>CheckedChanged(CompoundButton button) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;CheckedChange(<b>{R.id.myButton, R.id.myButton1}</b>)
+ * void checkedChangedOnSomeButtons(CompoundButton button, boolean isChecked) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;CheckedChange(<b>R.id.myButton</b>)
+ * void checkedChangedOnMyButton() {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote>
  * 
  * @author Rostislav Chekan
  */

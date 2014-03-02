@@ -35,8 +35,6 @@ public abstract class ModelConstants {
 
 	public static final String GENERATION_SUFFIX = "_";
 
-	public static final String TRACE_OPTION = "trace";
-
 	@SuppressWarnings("unchecked")
 	public static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
 

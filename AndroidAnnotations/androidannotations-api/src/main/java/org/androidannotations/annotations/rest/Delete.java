@@ -20,6 +20,37 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Use on methods in {@link Rest} annotated class to add a new rest service of
+ * type DELETE.
+ * <p/>
+ * This annotation as the EXACT same constraints as {@link Post}.
+ * <p/>
+ * <blockquote>
+ * 
+ * <b>Example :</b>
+ * 
+ * <pre>
+ * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = MappingJacksonHttpMessageConverter.class)
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Delete(&quot;/events/delete/last&quot;)
+ * 	Event deleteEvent();
+ * 
+ * 	&#064;Delete(&quot;/events/new/<b>{id}</b>&quot;)
+ * 	void deleteEvent(Event <i>event</i>, int <b>id</b>);
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see Rest
+ * @see Get
+ * @see Post
+ * @see Put
+ * @see Head
+ * @see Options
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Delete {

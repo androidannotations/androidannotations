@@ -21,10 +21,38 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on method that must be transactional.
+ * This annotation is intended to be used on methods to run it into a database
+ * transaction.
+ * <p/>
+ * The method MUST have at least one parameter :
+ * <ul>
+ * <li>A {@link android.database.sqlite.SQLiteDatabase} parameter at **FIRST**
+ * position</li>
+ * </ul>
+ * <p/>
+ * <blockquote>
  * 
- * The first parameter of the method must be a SQLiteDatabase.
+ * Example :
  * 
+ * <pre>
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;Transactional
+ * 	void successfulTransaction(SQLiteDatabase db) {
+ * 		db.execSQL(&quot;Some SQL&quot;);
+ * 	}
+ * 
+ * 	&#064;Transactional
+ * 	void mehodUsingArrayParameters(SQLiteDatabase db, MySerializableBean[] parameters) {
+ * 		// ...
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see OrmLiteDao
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

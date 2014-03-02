@@ -21,8 +21,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use it on manager fields in activity classes
+ * Use it on a SystemService fields in any enhanced classes to inject the
+ * according manager.
+ * <p/>
+ * <blockquote>
  * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;SystemService
+ * 	NotificationManager notificationManager;
+ * 
+ * 	&#064;SystemService
+ * 	AlarmManager alarmManager;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see <a
+ *      href="https://developer.android.com/reference/android/content/Context.html#getSystemService%28java.lang.String%29"
+ *      >List of SystemService managers</a>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

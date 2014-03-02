@@ -21,10 +21,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Activity classes that must be fullscreen
+ * Should be used on {@link EActivity} classes that must be fullscreen.
+ * <p/>
+ * <blockquote>
  * 
- * The activity must be annotated with {@link EActivity}.
+ * Example :
  * 
+ * <pre>
+ * &#064;Fullscreen
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see NoTitle
+ * @see WindowFeature
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

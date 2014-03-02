@@ -21,11 +21,76 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on Fragment classes to enable usage of AndroidAnnotations
+ * Should be used on {@link android.app.Fragment} or
+ * {@link android.support.v4.app.Fragment} classes to enable usage of
+ * AndroidAnnotations.
+ * <p/>
+ * Your code related to injected beans should go in an {@link AfterInject}
+ * annotated method.
+ * <p/>
+ * Any view related code should happen in an {@link AfterViews} annotated
+ * method.
+ * <p/>
+ * If the class is abstract, the enhanced activity will not be generated.
+ * Otherwise, it will be generated as a final class. You can use
+ * AndroidAnnotations to create Abstract classes that handle common code.
+ * <p/>
+ * The annotation value should be one of R.layout.* fields. If not set, no
+ * content view will be set, and you should call the
+ * <code>inflater.inflate()</code> method yourself, in
+ * <code>onCreateView()</code>.
+ * <p/>
+ * The generated class will also contain a FragmentBuilder to build fragment
+ * with a fluent API. Arguments can be passed by using {@link FragmentArg}
+ * annotation on every native or serializable/parcelable field.
+ * <p/>
+ * The enhanced fragment can also be retrieved (not injected in layout) in any
+ * enhanced class by using {@link FragmentById} or {@link FragmentByTag}
+ * annotations.
+ * <p/>
+ * <blockquote>
  * 
- * The annotation value should be one of R.layout.* fields, or none if you want
- * to handle the view creation by yourself.
+ * Example :
  * 
+ * <pre>
+ * &#064;EFragment(R.layout.fragment)
+ * public class MyFragment extends Fragment {
+ * 
+ * 	&#064;Bean
+ * 	MyBean myBean;
+ * 
+ * 	&#064;ViewById
+ * 	TextView myTextView;
+ * 
+ * 	&#064;FragmentArg
+ * 	String myExtra;
+ * 
+ * 	&#064;AfterInject
+ * 	void init() {
+ * 		myBean.doSomeStuff();
+ * 	}
+ * 
+ * 	&#064;AfterViews
+ * 	void initViews() {
+ * 		myTextView.setText(myExtra);
+ * 	}
+ * }
+ * 
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;FragmentById
+ * 	MyFragment myFragment;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see AfterInject
+ * @see AfterViews
+ * @see FragmentById
+ * @see FragmentByTag
+ * @see FragmentArg
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

@@ -21,7 +21,37 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Injects an OrmLite Dao, configured with the provided mode and helper classes
+ * Use it on fields of any enhanced class to injects an OrmLite Dao, configured
+ * with the provided mode and helper classes.
+ * <p/>
+ * All parameters are mandatory:
+ * <ul>
+ * <li><i>helper</i>: should hold the class of your database helper which should
+ * extend {@link com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper}</li>
+ * <li><i>model</i>: should point to the model class that the DAO relates to. It
+ * should match the type of the first generic parameter of your Dao.</li>
+ * </ul>
+ * <p/>
+ * <b>Note:</b> The minimum version required of ORMLite is 4.21
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EActivity
+ * public class MyActivity extends Activity {
+ * 
+ * 	// UserDao is a Dao&lt;User, Long&gt;
+ * 	&#064;OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+ * 	UserDao userDao;
+ * 
+ * 	&#064;OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
+ * 	Dao&lt;Car, Long&gt; carDao;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

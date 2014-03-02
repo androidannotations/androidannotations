@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.logger;
+package org.androidannotations.logger.formatter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,32 +22,26 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
-public class Formatter {
+import org.androidannotations.logger.Level;
+import org.androidannotations.logger.Logger;
+
+public abstract class Formatter {
 
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss.S");
 	private static final String ARGS_PATTERN = "{}";
 	private static final int ARGS_PATTERN_LENGTH = ARGS_PATTERN.length();
 
-	public String buildLog(Level level, String loggerName, String message, Throwable thr, Object... args) {
-		String fullMessage = buildFullMessage(message, args);
-		StringBuilder stringBuilder = new StringBuilder(fullMessage.length());
+	public abstract String buildLog(Level level, String loggerName, String message, Throwable thr, Object... args);
 
-		stringBuilder.append(DATE_FORMAT.format(new Date())) //
-				.append(" [").append(Thread.currentThread().getName()).append("]") //
-				.append(" ").append(level.name) //
-				.append(" ").append(loggerName) //
-				.append(":").append(getCallerLineNumber()) //
-				.append(" - ").append(fullMessage);
-
-		// Stacktrace
-		if (thr != null) {
-			stringBuilder.append('\n').append(stackTraceToString(thr));
-		}
-
-		return stringBuilder.toString();
+	protected String getCurrentThread() {
+		return Thread.currentThread().getName();
 	}
 
-	public String buildFullMessage(String message, Object... args) {
+	protected String getTime() {
+		return DATE_FORMAT.format(new Date());
+	}
+
+	protected String buildFullMessage(String message, Object... args) {
 		StringBuilder stringBuilder = new StringBuilder(message.length());
 		int lastIndex = 0;
 		int argIndex = 0;
@@ -74,21 +68,21 @@ public class Formatter {
 		return stringBuilder.toString();
 	}
 
-	private String formatArgument(Object arg) {
+	protected String formatArgument(Object arg) {
 		if (arg != null && arg.getClass().isArray()) {
 			return Arrays.toString((Object[]) arg);
 		}
 		return arg.toString();
 	}
 
-	private String stackTraceToString(Throwable e) {
+	protected String stackTraceToString(Throwable e) {
 		StringWriter writer = new StringWriter();
 		PrintWriter pw = new PrintWriter(writer);
 		e.printStackTrace(pw);
 		return writer.toString();
 	}
 
-	private int getCallerLineNumber() {
+	protected int getCallerLineNumber() {
 		boolean previousWasLogger = false;
 		String loggerClassName = Logger.class.getCanonicalName();
 

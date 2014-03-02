@@ -21,7 +21,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to enhance an Android BroadcastReceiver
+ * Should be used on {@link android.content.BroadcastReceiver} classes to enable
+ * usage of AndroidAnnotations.
+ * <p/>
+ * Your code related to injected beans should go in an {@link AfterInject}
+ * annotated method.
+ * <p/>
+ * If the class is abstract, the enhanced activity will not be generated.
+ * Otherwise, it will be generated as a final class. You can use
+ * AndroidAnnotations to create Abstract classes that handle common code.
+ * <p/>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;EReceiver
+ * public class MyReceiver extends BroadcastReceiver {
+ * 
+ * }
+ * 
+ * </blockquote>
+ * 
+ * @see AfterInject
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
