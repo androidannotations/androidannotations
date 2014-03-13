@@ -15,6 +15,7 @@
  */
 package com.sun.codemodel;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,65 +28,96 @@ import java.util.List;
 // So, if it will be fixed in code model - just remove this
 public class JSuperWildcard extends JClass {
 
-    private final JClass bound;
+	private final JClass bound;
 
-    public JSuperWildcard(JClass bound) {
-        super(bound.owner());
-        this.bound = bound;
-    }
+	public JSuperWildcard(JClass bound) {
+		super(bound.owner());
+		this.bound = bound;
+	}
 
-    public String name() {
-        return "? super "+ bound.name();
-    }
+	@Override
+	public String name() {
+		return "? super " + bound.name();
+	}
 
-    public String fullName() {
-        return "? super "+ bound.fullName();
-    }
+	@Override
+	public String fullName() {
+		return "? super " + bound.fullName();
+	}
 
-    public JPackage _package() {
-        return null;
-    }
+	@Override
+	public JPackage _package() {
+		return null;
+	}
 
-    /**
-     * Returns the class bound of this variable.
-     *
-     * <p>
-     * If no bound is given, this method returns {@link Object}.
-     */
-    public JClass _extends() {
-        if(bound !=null)
-            return bound;
-        else
-            return owner().ref(Object.class);
-    }
+	/**
+	 * Returns the class bound of this variable.
+	 * 
+	 * <p>
+	 * If no bound is given, this method returns {@link Object}.
+	 */
+	@Override
+	public JClass _extends() {
+		if (bound != null) {
+			return bound;
+		} else {
+			return owner().ref(Object.class);
+		}
+	}
 
-    /**
-     * Returns the interface bounds of this variable.
-     */
-    public Iterator<JClass> _implements() {
-        return bound._implements();
-    }
+	/**
+	 * Returns the interface bounds of this variable.
+	 */
+	@Override
+	public Iterator<JClass> _implements() {
+		return bound._implements();
+	}
 
-    public boolean isInterface() {
-        return false;
-    }
+	@Override
+	public boolean isInterface() {
+		return false;
+	}
 
-    public boolean isAbstract() {
-        return false;
-    }
+	@Override
+	public boolean isAbstract() {
+		return false;
+	}
 
-    protected JClass substituteParams(JTypeVar[] variables, List<JClass> bindings) {
-        JClass nb = bound.substituteParams(variables,bindings);
-        if(nb== bound)
-            return this;
-        else
-            return nb.wildcard();
-    }
+	@Override
+	protected JClass substituteParams(JTypeVar[] variables, List<JClass> bindings) {
+		// We should be able to use the following code with a direct call to
+		// substituteParams(), because the class is in codemodel's package. But,
+		// because of a possible Eclipse's issue on package visibility we have
+		// to use reflection to make it works
+		//
+		// packages in
+		// JClass nb = bound.substituteParams(variables, bindings);
+		// if (nb == bound) {
+		// return this;
+		// } else {
+		// return nb.wildcard();
+		// }
 
-    public void generate(JFormatter f) {
-        if(bound._extends()==null)
-            f.p("?");   // instead of "? extends Object"
-        else
-            f.p("? super").g(bound);
-    }
+		try {
+			Method substituteParamsMethod = JClass.class.getDeclaredMethod("substituteParams", JTypeVar[].class, List.class);
+			substituteParamsMethod.setAccessible(true);
+			Object nb = substituteParamsMethod.invoke(bound, variables, bindings);
+			if (nb == bound) {
+				return this;
+			} else {
+				return ((JClass) nb).wildcard();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public void generate(JFormatter f) {
+		if (bound._extends() == null) {
+			f.p("?"); // instead of "? extends Object"
+		} else {
+			f.p("? super").g(bound);
+		}
+	}
 }
