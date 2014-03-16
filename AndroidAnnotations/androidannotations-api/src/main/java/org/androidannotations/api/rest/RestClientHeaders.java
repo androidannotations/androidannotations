@@ -69,4 +69,11 @@ public interface RestClientHeaders {
 	 * @param password
 	 */
 	void setHttpBasicAuth(String user, String password);
+
+    /**
+     * Sets the Authorization: Bearer header as documented in RFC6750
+     *
+     * @param token
+     */
+    void setBearerAuth(String token);
 }

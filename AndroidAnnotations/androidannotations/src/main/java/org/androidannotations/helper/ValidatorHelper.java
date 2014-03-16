@@ -88,6 +88,7 @@ public class ValidatorHelper {
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
 	private static final String METHOD_NAME_SET_AUTHENTICATION = "setAuthentication";
+	private static final String METHOD_NAME_SET_BEARER_AUTH = "setBearerAuth";
 	private static final String METHOD_NAME_GET_COOKIE = "getCookie";
 	private static final String METHOD_NAME_GET_HEADER = "getHeader";
 
@@ -752,6 +753,7 @@ public class ValidatorHelper {
 		boolean foundGetRestTemplateMethod = false;
 		boolean foundSetRestTemplateMethod = false;
 		boolean foundSetAuthenticationMethod = false;
+		boolean foundSetBearerAuthMethod = false;
 		boolean foundSetRootUrlMethod = false;
 		boolean foundGetCookieMethod = false;
 		boolean foundGetHeaderMethod = false;
@@ -822,6 +824,8 @@ public class ValidatorHelper {
 								foundSetRootUrlMethod = true;
 							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_AUTHENTICATION) && !foundSetAuthenticationMethod) {
 								foundSetAuthenticationMethod = true;
+							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_BEARER_AUTH) && !foundSetBearerAuthMethod) {
+								foundSetBearerAuthMethod = true;
 							} else {
 								valid.invalidate();
 								annotationHelper.printError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
