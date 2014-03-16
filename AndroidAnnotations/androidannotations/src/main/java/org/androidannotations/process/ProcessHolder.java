@@ -60,6 +60,7 @@ public class ProcessHolder {
 		public final JClass THREAD = refClass(Thread.class);
 		public final JClass HASH_MAP = refClass(HashMap.class);
 		public final JClass LIST = refClass(List.class);
+		public final JClass OBJECT = refClass(Object.class);
 
 		/*
 		 * Android
@@ -191,7 +192,7 @@ public class ProcessHolder {
 
 	public ProcessHolder(ProcessingEnvironment processingEnvironment) {
 		this.processingEnvironment = processingEnvironment;
-		this.codeModel = new JCodeModel();
+		codeModel = new JCodeModel();
 		classes = new Classes();
 		refClass(CanonicalNameConstants.STRING);
 		preloadJavaLangClasses();

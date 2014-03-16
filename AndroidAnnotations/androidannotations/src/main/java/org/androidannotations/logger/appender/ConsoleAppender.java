@@ -19,8 +19,13 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.logger.Level;
+import org.androidannotations.logger.formatter.FormatterFull;
 
 public class ConsoleAppender extends Appender {
+
+	public ConsoleAppender() {
+		super(new FormatterFull());
+	}
 
 	@Override
 	public void open() {

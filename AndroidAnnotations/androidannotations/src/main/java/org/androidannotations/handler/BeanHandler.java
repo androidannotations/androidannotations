@@ -60,6 +60,7 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 		TypeMirror elementType = annotationHelper.extractAnnotationClassParameter(element);
 		if (elementType == null) {
 			elementType = element.asType();
+			elementType = holder.processingEnvironment().getTypeUtils().erasure(elementType);
 		}
 
 		String fieldName = element.getSimpleName().toString();

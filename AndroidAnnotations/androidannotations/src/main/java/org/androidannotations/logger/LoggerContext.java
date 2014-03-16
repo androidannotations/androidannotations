@@ -17,28 +17,25 @@ package org.androidannotations.logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.appender.Appender;
 import org.androidannotations.logger.appender.ConsoleAppender;
 import org.androidannotations.logger.appender.FileAppender;
 import org.androidannotations.logger.appender.MessagerAppender;
+import org.androidannotations.logger.formatter.Formatter;
 
 public class LoggerContext {
 
-	public static final String LOG_FILE_OPTION = "logFile";
-	public static final String LOG_LEVEL_OPTION = "logLevel";
-	public static final String LOG_APPENDER_CONSOLE = "logAppenderConsole";
 	private static LoggerContext INSTANCE = null;
 	private static final Level DEFAULT_LEVEL = Level.DEBUG;
 
 	private Level currentLevel = DEFAULT_LEVEL;
 	private List<Appender> appenders = new ArrayList<Appender>();
-	private Formatter formatter = new Formatter();
 
 	public static LoggerContext getInstance() {
 		if (INSTANCE == null) {
@@ -57,8 +54,9 @@ public class LoggerContext {
 	}
 
 	public void writeLog(Level level, String loggerName, String message, Element element, AnnotationMirror annotationMirror, Throwable thr, Object... args) {
-		String log = formatter.buildLog(level, loggerName, message, thr, args);
 		for (Appender appender : appenders) {
+			Formatter formatter = appender.getFormatter();
+			String log = formatter.buildLog(level, loggerName, message, thr, args);
 			appender.append(level, element, annotationMirror, log);
 		}
 	}
@@ -77,8 +75,9 @@ public class LoggerContext {
 			appender.open();
 		}
 
-		resolveLogLevel(processingEnv);
-		addConsoleAppender(processingEnv);
+		OptionsHelper optionsHelper = new OptionsHelper(processingEnv);
+		resolveLogLevel(optionsHelper);
+		addConsoleAppender(optionsHelper);
 	}
 
 	public void close() {
@@ -87,20 +86,13 @@ public class LoggerContext {
 		}
 	}
 
-	private void resolveLogLevel(ProcessingEnvironment processingEnv) {
-		Map<String, String> options = processingEnv.getOptions();
-		if (options.containsKey(LOG_LEVEL_OPTION)) {
-			Level logLevel = Level.parse(options.get(LOG_LEVEL_OPTION));
-			setCurrentLevel(logLevel);
-		}
+	private void resolveLogLevel(OptionsHelper optionsHelper) {
+		setCurrentLevel(optionsHelper.getLogLevel());
 	}
 
-	private void addConsoleAppender(ProcessingEnvironment processingEnv) {
-		Map<String, String> options = processingEnv.getOptions();
-		if (options.containsKey(LOG_APPENDER_CONSOLE)) {
-			if (Boolean.parseBoolean(options.get(LOG_APPENDER_CONSOLE))) {
-				appenders.add(new ConsoleAppender());
-			}
+	private void addConsoleAppender(OptionsHelper optionsHelper) {
+		if (optionsHelper.shouldUseConsoleAppender()) {
+			appenders.add(new ConsoleAppender());
 		}
 	}
 
