@@ -15,40 +15,27 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-
-import java.util.HashMap;
-
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.*;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
 import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.helper.ViewNotifierHelper;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.sun.codemodel.JExpr.*;
+import static com.sun.codemodel.JMod.*;
 
 public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	protected ViewNotifierHelper viewNotifierHelper;
 	private JBlock onViewChangedBody;
 	private JVar onViewChangedHasViewsParam;
+	private Map<String, FoundViewHolder> foundViewsHolders = new HashMap<String, FoundViewHolder>();
 	protected JMethod findNativeFragmentById;
 	protected JMethod findSupportFragmentById;
 	protected JMethod findNativeFragmentByTag;
@@ -89,6 +76,51 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		JInvocation findViewById = invoke(getOnViewChangedHasViewsParam(), "findViewById");
 		findViewById.arg(idRef);
 		return findViewById;
+	}
+
+	public void assignFindViewById(JFieldRef idRef, JClass viewClass, JFieldRef fieldRef) {
+		String idRefString = codeModelHelper.getIdStringFromIdFieldRef(idRef);
+		FoundViewHolder foundViewHolder = foundViewsHolders.get(idRefString);
+
+		JBlock block = getOnViewChangedBody();
+		JExpression assignExpression;
+
+		if (foundViewHolder != null) {
+			assignExpression = foundViewHolder.getView();
+		} else {
+			assignExpression = findViewById(idRef);
+			foundViewsHolders.put(idRefString, new FoundViewHolder(fieldRef, block));
+		}
+
+		if (viewClass != null && viewClass != classes().VIEW) {
+			assignExpression = cast(viewClass, assignExpression);
+		}
+
+		block.assign(fieldRef, assignExpression);
+	}
+
+	public FoundViewHolder getFoundViewHolder(JFieldRef idRef, JClass viewClass) {
+		String idRefString = codeModelHelper.getIdStringFromIdFieldRef(idRef);
+		FoundViewHolder foundViewHolder = foundViewsHolders.get(idRefString);
+		if (foundViewHolder == null) {
+			foundViewHolder = createFoundViewAndIfNotNullBlock(idRef, viewClass);
+			foundViewsHolders.put(idRefString, foundViewHolder);
+		}
+		return foundViewHolder;
+	}
+
+	protected FoundViewHolder createFoundViewAndIfNotNullBlock(JFieldRef idRef, JClass viewClass) {
+		JExpression findViewExpression = findViewById(idRef);
+		JBlock block = getOnViewChangedBody().block();
+
+		if (viewClass == null) {
+			viewClass = classes().VIEW;
+		} else if (viewClass != classes().VIEW) {
+			findViewExpression = cast(viewClass, findViewExpression);
+		}
+
+		JVar view = block.decl(viewClass, "view", findViewExpression);
+		return new FoundViewHolder(view, block);
 	}
 
 	public JMethod getFindNativeFragmentById() {

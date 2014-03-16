@@ -15,11 +15,6 @@
  */
 package org.androidannotations.process;
 
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.*;
-
 import com.sun.codemodel.JCodeModel;
 import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.handler.AnnotationHandler;
@@ -30,6 +25,10 @@ import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.*;
+import java.util.Set;
 
 
 public class ModelProcessor {
@@ -68,35 +67,6 @@ public class ModelProcessor {
 		annotationHandlers.setProcessHolder(processHolder);
 
 		LOGGER.info("Processing root elements");
-
-		for (GeneratingAnnotationHandler generatingAnnotationHandler : annotationHandlers.getGenerating()) {
-			String annotationName = generatingAnnotationHandler.getTarget();
-			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
-
-			if (!annotatedElements.isEmpty()) {
-				LOGGER.debug("Processing root elements {}: {}", generatingAnnotationHandler.getClass().getSimpleName(), annotatedElements);
-			}
-
-			for (Element annotatedElement : annotatedElements) {
-				/*
-				 * We do not generate code for abstract classes, because the
-				 * generated classes are final anyway (we do not want anyone to
-				 * extend them).
-				 */
-				if (!isAbstractClass(annotatedElement)) {
-					TypeElement typeElement = (TypeElement) annotatedElement;
-					GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
-					processHolder.put(annotatedElement, generatedClassHolder);
-					processThrowing(generatingAnnotationHandler, annotatedElement, generatedClassHolder);
-				} else {
-					LOGGER.trace("Skip element {} because it's abstract", annotatedElement);
-				}
-			}
-			/*
-			 * We currently do not take into account class annotations from
-			 * ancestors. We should careful design the priority rules first.
-			 */
-		}
 
 		/*
 		 * We generate top classes then inner classes, then inner classes of inner classes, etc...
@@ -185,24 +155,32 @@ public class ModelProcessor {
 		for (GeneratingAnnotationHandler generatingAnnotationHandler : annotationHandlers.getGenerating()) {
 			String annotationName = generatingAnnotationHandler.getTarget();
 			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
+
+			if (!annotatedElements.isEmpty()) {
+				LOGGER.debug("Processing root elements {}: {}", generatingAnnotationHandler.getClass().getSimpleName(), annotatedElements);
+			}
+
 			for (Element annotatedElement : annotatedElements) {
 				/*
 				 * We do not generate code for abstract classes, because the
 				 * generated classes are final anyway (we do not want anyone to
 				 * extend them).
 				 */
-				if (!isAbstractClass(annotatedElement) && processHolder.getGeneratedClassHolder(annotatedElement) == null) {
-					TypeElement typeElement = (TypeElement) annotatedElement;
-					Element enclosingElement = annotatedElement.getEnclosingElement();
+				if (!isAbstractClass(annotatedElement)) {
+					if (processHolder.getGeneratedClassHolder(annotatedElement) == null) {
+						TypeElement typeElement = (TypeElement) annotatedElement;
+						Element enclosingElement = annotatedElement.getEnclosingElement();
 
-					if (typeElement.getNestingKind() == NestingKind.MEMBER && processHolder.getGeneratedClassHolder(enclosingElement) == null) {
-						isElementRemaining = true;
-					} else {
-						GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
-						processHolder.put(annotatedElement, generatedClassHolder);
-						generatingAnnotationHandler.process(annotatedElement, generatedClassHolder);
+						if (typeElement.getNestingKind() == NestingKind.MEMBER && processHolder.getGeneratedClassHolder(enclosingElement) == null) {
+							isElementRemaining = true;
+						} else {
+							GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
+							processHolder.put(annotatedElement, generatedClassHolder);
+							generatingAnnotationHandler.process(annotatedElement, generatedClassHolder);
+						}
 					}
-
+				}  else {
+					LOGGER.trace("Skip element {} because it's abstract", annotatedElement);
 				}
 			}
 			/*
