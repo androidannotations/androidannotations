@@ -879,7 +879,7 @@ public class ValidatorHelper {
 	public void isAbstractOrHasEmptyOrContextConstructor(Element element, IsValid valid) {
 		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
 
-		if (!element.getModifiers().contains(Modifier.ABSTRACT)) {
+		if (!annotationHelper.isAbstract(element)) {
 			if (constructors.size() == 1) {
 				ExecutableElement constructor = constructors.get(0);
 
