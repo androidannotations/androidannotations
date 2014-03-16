@@ -15,10 +15,9 @@
  */
 package org.androidannotations.holder;
 
+import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JExpr.ref;
-import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
@@ -30,20 +29,23 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 import org.androidannotations.api.rest.RestErrorHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class RestHolder extends BaseGeneratedClassHolder {
 
@@ -141,23 +143,22 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void implementSetBearerAuth(List<ExecutableElement> methods) {
-		JMethod setBearerMethod = codeModelHelper.implementMethod(this, methods, "setBearerAuth", TypeKind.VOID.toString(), STRING);
+		JMethod setBearerMethod = codeModelHelper.implementMethod(this, methods, "setBearerAuth", TypeKind.VOID.toString(), true, STRING);
 
 		if (setBearerMethod != null) {
+			JVar tokenParamVar = setBearerMethod.params().get(0);
+			JExpression tokenExpr = lit("Bearer ").plus(tokenParamVar);
+
 			JClass authClass = classes().HTTP_AUTHENTICATION;
-            JDefinedClass anonymousHttpAuthClass = codeModel().anonymousClass(authClass);
+			JDefinedClass anonymousHttpAuthClass = codeModel().anonymousClass(authClass);
 
-            JMethod getHeaderValueMethod = anonymousHttpAuthClass.method(JMod.PUBLIC, String.class, "getHeaderValue");
-            getHeaderValueMethod.annotate(Override.class);
-            JBlock getHeaderValueMethodBody = getHeaderValueMethod.body();
+			JMethod getHeaderValueMethod = anonymousHttpAuthClass.method(JMod.PUBLIC, String.class, "getHeaderValue");
+			getHeaderValueMethod.annotate(Override.class);
+			JBlock getHeaderValueMethodBody = getHeaderValueMethod.body();
+			getHeaderValueMethodBody._return(tokenExpr);
 
-            JBlock setBearerBody = setBearerMethod.body();
-
-            setBearerBody.decl(FINAL, refClass(String.class), "bearerHeader", lit("Bearer ").plus(setBearerMethod.params().get(0)));
-
-            getHeaderValueMethodBody._return(ref("bearerHeader"));
-
-            setBearerBody.assign(_this().ref(getAuthenticationField()), _new(anonymousHttpAuthClass));
+			JBlock setBearerBody = setBearerMethod.body();
+			setBearerBody.assign(_this().ref(getAuthenticationField()), _new(anonymousHttpAuthClass));
 		}
 	}
 

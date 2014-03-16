@@ -295,6 +295,10 @@ public class APTCodeModelHelper {
 	}
 
 	public JMethod implementMethod(GeneratedClassHolder holder, List<ExecutableElement> methods, String methodName, String returnType, String... parameterTypes) {
+		return implementMethod(holder, methods, methodName, returnType, false, parameterTypes);
+	}
+
+	public JMethod implementMethod(GeneratedClassHolder holder, List<ExecutableElement> methods, String methodName, String returnType, boolean finalParams, String... parameterTypes) {
 		// First get the ExecutableElement method object from the util function.
 		ExecutableElement method = getMethod(methods, methodName, returnType, parameterTypes);
 		JMethod jmethod = null;
@@ -309,9 +313,10 @@ public class APTCodeModelHelper {
 			jmethod.annotate(Override.class);
 
 			// Create the parameters.
+			int paramMods = finalParams ? JMod.FINAL : JMod.NONE;
 			for (int i = 0; i < method.getParameters().size(); i++) {
 				VariableElement param = method.getParameters().get(i);
-				jmethod.param(holder.refClass(parameterTypes[i]), param.getSimpleName().toString());
+				jmethod.param(paramMods, holder.refClass(parameterTypes[i]), param.getSimpleName().toString());
 			}
 		}
 

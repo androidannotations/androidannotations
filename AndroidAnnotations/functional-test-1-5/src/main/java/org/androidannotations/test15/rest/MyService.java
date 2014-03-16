@@ -41,6 +41,7 @@ import org.androidannotations.annotations.rest.RequiresHeader;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.SetsCookie;
 import org.androidannotations.api.rest.MediaType;
+import org.androidannotations.api.rest.RestClientHeaders;
 
 // if defined, the rootUrl will be added as a prefix to every request
 @Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class }, interceptors = { RequestInterceptor.class })
@@ -274,4 +275,6 @@ public interface MyService {
 	void setAuthentication(HttpAuthentication auth);
 
 	void setHttpBasicAuth(String username, String password);
+
+	void setBearerAuth(String token);
 }
