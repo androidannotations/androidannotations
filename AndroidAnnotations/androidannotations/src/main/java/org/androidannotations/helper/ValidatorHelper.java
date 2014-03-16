@@ -29,12 +29,7 @@ import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPON
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -51,13 +46,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.EIntentService;
-import org.androidannotations.annotations.ServiceAction;
-import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.Delete;
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Head;
@@ -99,6 +88,11 @@ public class ValidatorHelper {
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
 	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(LOG_VERBOSE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR);
+
+	private static final List<Receiver.RegisterAt> VALID_ACTIVITY_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop);
+	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy);
+	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
+
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -193,6 +187,13 @@ public class ValidatorHelper {
 		Element enclosingElement = element.getEnclosingElement();
 		@SuppressWarnings("unchecked")
 		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class);
+		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
+	}
+
+	public void enclosingElementHasEActivityOrEFragmentOrEService(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		@SuppressWarnings("unchecked")
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class);
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
 
@@ -599,16 +600,21 @@ public class ValidatorHelper {
 	}
 
 	public void extendsType(Element element, String typeQualifiedName, IsValid valid) {
+		if (!extendsType(element, typeQualifiedName)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
+		}
+	}
+
+	private boolean extendsType(Element element, String typeQualifiedName) {
 		TypeMirror elementType = element.asType();
 
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(typeQualifiedName);
 		if (typeElement != null) {
 			TypeMirror expectedType = typeElement.asType();
-			if (!annotationHelper.isSubtype(elementType, expectedType)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + typeQualifiedName);
-			}
+			return annotationHelper.isSubtype(elementType, expectedType);
 		}
+		return false;
 	}
 
 	public void allowedType(Element element, IsValid valid, TypeMirror fieldTypeMirror, List<String> allowedTypes) {
@@ -1325,9 +1331,40 @@ public class ValidatorHelper {
 			String enclosedElementName = enclosedElement.getSimpleName().toString();
 			if (actionNames.contains(enclosedElementName)) {
 				valid.invalidate();
-				annotationHelper.printError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(ServiceAction.class) + " annotated method must have unique name even if the signature is not the same");
+				annotationHelper.printError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(annotation) + " annotated method must have unique name even if the signature is not the same");
 			} else {
 				actionNames.add(enclosedElementName);
+			}
+		}
+	}
+
+	public void hasRightRegisterAtValueDependingOnEnclosingElement(Element element, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		Receiver.RegisterAt registerAt = element.getAnnotation(Receiver.class).registerAt();
+
+		Map<String, List<Receiver.RegisterAt>> validRegisterAts = new HashMap<String, List<Receiver.RegisterAt>>();
+		validRegisterAts.put(CanonicalNameConstants.ACTIVITY, VALID_ACTIVITY_REGISTER_AT);
+		validRegisterAts.put(CanonicalNameConstants.SERVICE, VALID_SERVICE_REGISTER_AT);
+		validRegisterAts.put(CanonicalNameConstants.FRAGMENT, VALID_FRAGMENT_REGISTER_AT);
+
+		for (Map.Entry<String, List<Receiver.RegisterAt>> validRegisterAt : validRegisterAts.entrySet()) {
+			String enclosingType = validRegisterAt.getKey();
+			Collection<Receiver.RegisterAt> validRegisterAtValues = validRegisterAt.getValue();
+			if(extendsType(enclosingElement, enclosingType) && !validRegisterAtValues.contains(registerAt)) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "The parameter registerAt of @Receiver in "+enclosingType+" can only be one of the following values : "+validRegisterAtValues);
+			}
+		}
+	}
+
+	public void hasSupportV4JarIfLocal(Element element, IsValid valid) {
+		boolean local = element.getAnnotation(Receiver.class).local();
+		if (local) {
+
+			Elements elementUtils = annotationHelper.getElementUtils();
+			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null) {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "To use the LocalBroadcastManager, you MUST include the android-support-v4 jar");
 			}
 		}
 	}

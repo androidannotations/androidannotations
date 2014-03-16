@@ -63,6 +63,7 @@
         <activity android:name=".TextWatchedActivity_" />
         <activity android:name=".MultiFindViewActivity_" />
         <activity android:name=".ormlite.OrmLiteActivity_" />
+        <activity android:name=".receiver.ActivityWithReceiver_" />
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuActivity_" />
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuSubActivity_" />
         <activity android:name="org.androidannotations.test15.NoTitleFullscreenActivity_" />
@@ -104,6 +105,9 @@
         <service
             android:name="org.androidannotations.test15.eintentservice.IntentServiceHandledAction_"
             android:exported="false" />
+        <service
+                android:name="org.androidannotations.test15.receiver.ServiceWithReceiver_"
+                android:exported="false" />
     </application>
 
 </manifest>
