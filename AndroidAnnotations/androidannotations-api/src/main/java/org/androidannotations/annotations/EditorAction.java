@@ -32,6 +32,53 @@ import java.lang.annotation.Target;
  * name will be used as the R.id.* field name.
  * 
  */
+
+/**
+ * This annotation is intended to be used on methods to receive events defined
+ * by
+ * {@link android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)}
+ * when an action is performed on the editor.
+ * <p/>
+ * The annotation value should be one or several R.id.* fields that refers to
+ * TextView or subclasses of TextView. If not set, the method name will be used
+ * as the R.id.* field name.
+ * <p/>
+ * The method MAY have multiple parameter :
+ * <ul>
+ * <li>A {@link android.widget.TextView} parameter to know which view has
+ * targeted this event
+ * <li>An int parameter to get the actionId
+ * <li>A {@link android.view.KeyEvent} parameter
+ * </ul>
+ * <p/>
+ * <blockquote>
+ *
+ * Examples :
+ *
+ * <pre>
+ * &#064;EditorAction(<b>R.id.helloTextView</b>)
+ * void onEditorActionsOnHelloTextView(TextView hello, int actionId, KeyEvent keyEvent) {
+ * 	// Something Here
+ * }
+ *
+ * &#064;EditorAction
+ * void <b>helloTextView</b>EditorAction(TextView hello) {
+ * 	// Something Here
+ * }
+ *
+ * &#064;EditorAction(<b>{R.id.editText, R.id.helloTextView}</b>)
+ * void onEditorActionsOnSomeTextViews(TextView tv, int actionId) {
+ * 	// Something Here
+ * }
+ *
+ * &#064;EditorAction(<b>R.id.helloTextView</b>)
+ * void onEditorActionsOnHelloTextView() {
+ * 	// Something Here
+ * }
+ * </pre>
+ *
+ * </blockquote>
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface EditorAction {
