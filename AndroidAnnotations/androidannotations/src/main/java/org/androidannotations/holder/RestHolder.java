@@ -40,10 +40,12 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class RestHolder extends BaseGeneratedClassHolder {
 
 	private JMethod init;
+	private JVar initContextParam;
 	private JFieldVar rootUrlField;
 	private JFieldVar restTemplateField;
 	private JFieldVar availableHeadersField;
@@ -189,8 +191,16 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		return init;
 	}
 
+	public JVar getInitContextParam() {
+		if (initContextParam == null) {
+			setInit();
+		}
+		return initContextParam;
+	}
+
 	private void setInit() {
 		init = getGeneratedClass().constructor(JMod.PUBLIC);
+		initContextParam = init.param(classes().CONTEXT, "context");
 	}
 
 	public JFieldVar getRootUrlField() {

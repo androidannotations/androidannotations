@@ -1046,6 +1046,9 @@ public class ValidatorHelper {
 				Element converterElement = converterType.asElement();
 				if (converterElement.getKind().isClass()) {
 					if (!annotationHelper.isAbstract(converterElement)) {
+						if (converterElement.getAnnotation(EBean.class) != null) {
+							return;
+						}
 						List<ExecutableElement> constructors = ElementFilter.constructorsIn(converterElement.getEnclosedElements());
 						for (ExecutableElement constructor : constructors) {
 							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
@@ -1091,7 +1094,7 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void validateInterceptors(Element element, IsValid valid) {
+	public void validateInterceptors(Element element, AnnotationElements validatedElements, IsValid valid) {
 		TypeMirror clientHttpRequestInterceptorType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_INTERCEPTOR).asType();
 		TypeMirror clientHttpRequestInterceptorTypeErased = annotationHelper.getTypeUtils().erasure(clientHttpRequestInterceptorType);
 		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "interceptors");
@@ -1104,6 +1107,9 @@ public class ValidatorHelper {
 				Element interceptorElement = interceptorType.asElement();
 				if (interceptorElement.getKind().isClass()) {
 					if (!annotationHelper.isAbstract(interceptorElement)) {
+						if (interceptorElement.getAnnotation(EBean.class) != null) {
+							return;
+						}
 						List<ExecutableElement> constructors = ElementFilter.constructorsIn(interceptorElement.getEnclosedElements());
 						for (ExecutableElement constructor : constructors) {
 							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
@@ -1111,7 +1117,7 @@ public class ValidatorHelper {
 							}
 						}
 						valid.invalidate();
-						annotationHelper.printAnnotationError(element, "The interceptor class must have a public no argument constructor");
+						annotationHelper.printAnnotationError(element, "The interceptor class must have a public no argument constructor or be annotated with @EBean");
 					} else {
 						valid.invalidate();
 						annotationHelper.printAnnotationError(element, "The interceptor class must not be abstract");
