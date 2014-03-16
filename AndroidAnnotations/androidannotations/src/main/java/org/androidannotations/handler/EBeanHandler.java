@@ -42,7 +42,7 @@ public class EBeanHandler extends BaseAnnotationHandler<EBeanHolder> implements 
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.hasEmptyOrContextConstructor(element, valid);
+		validatorHelper.isAbstractOrHasEmptyOrContextConstructor(element, valid);
 	}
 
 	@Override
