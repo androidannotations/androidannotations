@@ -23,6 +23,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collection;
 
 import static java.util.Arrays.asList;
 
@@ -136,28 +137,53 @@ public class ValidatorParameterHelper {
 		}
 	}
 
-	public void hasZeroOrOneCompoundButtonOrTwoCompoundButtonBooleanParameters(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
+	public void hasZeroOrOneCompoundButtonParameter(ExecutableElement executableElement, IsValid valid) {
+		hasZeroOrOneParameterOfType(CanonicalNameConstants.COMPOUND_BUTTON, executableElement, valid);
+	}
 
-		if (parameters.size() == 0) {
-			return;
-		} else if (parameters.size() > 2) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with 0 or 1(CompoundButton) or 2(CompoundButton, boolean) parameter, instead of " + parameters.size());
-		} else {
-			VariableElement firstParameter = parameters.get(0);
-			String firstParameterType = firstParameter.asType().toString();
-			if (!firstParameterType.equals(CanonicalNameConstants.COMPOUND_BUTTON)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.COMPOUND_BUTTON + ", not a " + firstParameterType);
-			}
-			if (parameters.size() == 2) {
-				VariableElement secondParameter = parameters.get(1);
-				String secondParameterType = secondParameter.asType().toString();
-				if (!secondParameterType.equals(CanonicalNameConstants.BOOLEAN) && !secondParameterType.equals("boolean")) {
+	public void hasZeroOrOneBooleanParameter(ExecutableElement executableElement, IsValid valid) {
+		hasZeroOrOneParameterOfPrimitiveType(CanonicalNameConstants.BOOLEAN, TypeKind.BOOLEAN, executableElement, valid);
+	}
+
+	private void hasZeroOrOneParameterOfType(String typeCanonicalName, ExecutableElement executableElement, IsValid valid) {
+		boolean parameterOfTypeFound = false;
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterType = parameter.asType().toString();
+			if (parameterType.equals(typeCanonicalName)) {
+				if (parameterOfTypeFound) {
+					annotationHelper.printAnnotationError(executableElement, "You can declare only one parameter of type "+typeCanonicalName);
 					valid.invalidate();
-					annotationHelper.printAnnotationError(executableElement, "the second parameter must be a " + CanonicalNameConstants.BOOLEAN + " or boolean, not a " + secondParameterType);
 				}
+				parameterOfTypeFound = true;
+			}
+		}
+	}
+
+	private void hasZeroOrOneParameterOfPrimitiveType(String typeCanonicalName, TypeKind typeKind, ExecutableElement executableElement, IsValid valid) {
+		boolean parameterOfTypeFound = false;
+		for (VariableElement parameter : executableElement.getParameters()) {
+			if (parameter.asType().getKind() == typeKind || parameter.asType().toString().equals(typeCanonicalName)) {
+				if (parameterOfTypeFound) {
+					annotationHelper.printAnnotationError(executableElement, "You can declare only one parameter of type "+typeKind.name()+" or "+typeCanonicalName);
+					valid.invalidate();
+				}
+				parameterOfTypeFound = true;
+			}
+		}
+	}
+
+	public void hasNoOtherParameterThanCompoundButtonOrBoolean(ExecutableElement executableElement, IsValid valid) {
+		String[] types = new String[]{CanonicalNameConstants.COMPOUND_BUTTON, CanonicalNameConstants.BOOLEAN, "boolean"};
+		hasNotOtherParameterThanTypes(types, executableElement, valid);
+	}
+
+	private void hasNotOtherParameterThanTypes(String[] typesCanonicalNames, ExecutableElement executableElement, IsValid valid) {
+		Collection<String> types = Arrays.asList(typesCanonicalNames);
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterType = parameter.asType().toString();
+			if (!types.contains(parameterType)) {
+				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type "+Arrays.toString(typesCanonicalNames));
+				valid.invalidate();
 			}
 		}
 	}

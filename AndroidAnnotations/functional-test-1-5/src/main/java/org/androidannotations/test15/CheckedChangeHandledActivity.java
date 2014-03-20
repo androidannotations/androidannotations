@@ -29,7 +29,7 @@ public class CheckedChangeHandledActivity extends EventsHandledAbstractActivity 
 	}
 
 	@CheckedChange
-	public void snakeCaseButton() {
+	public void snakeCaseButton(boolean hasFocus, CompoundButton evt) {
 
 	}
 
@@ -44,7 +44,7 @@ public class CheckedChangeHandledActivity extends EventsHandledAbstractActivity 
 	}
 
 	@CheckedChange
-	public void buttonWithViewArgument() {
+	public void buttonWithViewArgument(boolean hasFocus) {
 
 	}
 
