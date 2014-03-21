@@ -30,7 +30,6 @@ import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import static com.sun.codemodel.JExpr._null;
@@ -63,8 +62,7 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 		}
 
 		String typeQualifiedName = typeMirror.toString();
-		TypeElement elementType = processingEnvironment().getElementUtils().getTypeElement(typeQualifiedName);
-		JClass injectedClass = processHolder.getGeneratedClassHolder(elementType).getGeneratedClass();
+		JClass injectedClass = refClass(annotationHelper.generatedClassQualifiedNameFromQualifiedName(typeQualifiedName));
 
 		String fieldName = element.getSimpleName().toString();
 		JFieldRef beanField = ref(fieldName);
