@@ -27,9 +27,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.*;
 
 public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -53,6 +51,9 @@ public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EComponent
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock previousMethodBody = codeModelHelper.removeBody(delegatingMethod);
 
-		delegatingMethod.body()._if(invoke(_this(), "getActivity").ne(_null()))._then().add(previousMethodBody);
+
+		delegatingMethod.body()
+				._if(invoke(holder.getGeneratedClass().staticRef("this"), "getActivity").ne(_null()))
+				._then().add(previousMethodBody);
 	}
 }
