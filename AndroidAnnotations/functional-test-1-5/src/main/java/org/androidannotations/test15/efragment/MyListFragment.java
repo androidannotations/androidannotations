@@ -55,7 +55,7 @@ public class MyListFragment extends ListFragment {
 		didExecute = true;
 	}
 
-	@UiThread
+	@UiThread(propagation = UiThread.Propagation.REUSE)
 	@IgnoredWhenDetached
 	void uiThreadIgnored() {
 		didExecute = true;
