@@ -111,32 +111,6 @@ public class ValidatorParameterHelper {
 		}
 	}
 
-	public void hasZeroOrOneViewOrTwoViewBooleanParameters(ExecutableElement executableElement, IsValid valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-
-		if (parameters.size() == 0) {
-			return;
-		} else if (parameters.size() > 2) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "%s can only be used on a method with 0 or 1(View) or 2(View, boolean) parameter, instead of " + parameters.size());
-		} else {
-			VariableElement firstParameter = parameters.get(0);
-			String firstParameterType = firstParameter.asType().toString();
-			if (!firstParameterType.equals(CanonicalNameConstants.VIEW)) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(executableElement, "the first parameter must be a " + CanonicalNameConstants.VIEW + ", not a " + firstParameterType);
-			}
-			if (parameters.size() == 2) {
-				VariableElement secondParameter = parameters.get(1);
-				String secondParameterType = secondParameter.asType().toString();
-				if (!secondParameterType.equals(CanonicalNameConstants.BOOLEAN) && !secondParameterType.equals("boolean")) {
-					valid.invalidate();
-					annotationHelper.printAnnotationError(executableElement, "the second parameter must be a " + CanonicalNameConstants.BOOLEAN + " or boolean, not a " + secondParameterType);
-				}
-			}
-		}
-	}
-
 	public void hasZeroOrOneCompoundButtonParameter(ExecutableElement executableElement, IsValid valid) {
 		hasZeroOrOneParameterOfType(CanonicalNameConstants.COMPOUND_BUTTON, executableElement, valid);
 	}
@@ -187,6 +161,11 @@ public class ValidatorParameterHelper {
 
 	public void hasNoOtherParameterThanMotionEventOrView(ExecutableElement executableElement, IsValid valid) {
 		String[] types = new String[]{CanonicalNameConstants.MOTION_EVENT, CanonicalNameConstants.VIEW};
+		hasNotOtherParameterThanTypes(types, executableElement, valid);
+	}
+
+	public void hasNoOtherParameterThanViewOrBoolean(ExecutableElement executableElement, IsValid valid) {
+		String[] types = new String[]{CanonicalNameConstants.VIEW, CanonicalNameConstants.BOOLEAN, "boolean"};
 		hasNotOtherParameterThanTypes(types, executableElement, valid);
 	}
 

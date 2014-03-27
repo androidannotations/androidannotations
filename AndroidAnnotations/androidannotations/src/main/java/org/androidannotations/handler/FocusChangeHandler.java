@@ -15,25 +15,19 @@
  */
 package org.androidannotations.handler;
 
-import java.util.List;
+import com.sun.codemodel.*;
+import org.androidannotations.annotations.FocusChange;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.annotations.FocusChange;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import java.util.List;
 
 public class FocusChangeHandler extends AbstractListenerHandler {
 
@@ -49,7 +43,11 @@ public class FocusChangeHandler extends AbstractListenerHandler {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.hasZeroOrOneViewOrTwoViewBooleanParameters(executableElement, valid);
+		validatorHelper.param.hasZeroOrOneViewParameter(executableElement, valid);
+
+		validatorHelper.param.hasZeroOrOneBooleanParameter(executableElement, valid);
+
+		validatorHelper.param.hasNoOtherParameterThanViewOrBoolean(executableElement, valid);
 	}
 
 	@Override
@@ -61,14 +59,14 @@ public class FocusChangeHandler extends AbstractListenerHandler {
 	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
 		JVar hasFocusParam = listenerMethod.param(codeModel().BOOLEAN, "hasFocus");
-		boolean hasFocusParamExists = parameters.size() == 2;
-		boolean viewParamExists = parameters.size() >= 1;
 
-		if (viewParamExists) {
-			call.arg(viewParam);
-		}
-		if (hasFocusParamExists) {
-			call.arg(hasFocusParam);
+		for (VariableElement parameter : parameters) {
+			String parameterType = parameter.asType().toString();
+			if (parameterType.equals(CanonicalNameConstants.VIEW)) {
+				call.arg(viewParam);
+			} else if (parameterType.equals(CanonicalNameConstants.BOOLEAN) || parameter.asType().getKind() == TypeKind.BOOLEAN) {
+				call.arg(hasFocusParam);
+			}
 		}
 	}
 
