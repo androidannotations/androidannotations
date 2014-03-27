@@ -17,6 +17,7 @@ package org.androidannotations.handler;
 
 import com.sun.codemodel.*;
 import org.androidannotations.annotations.ItemLongClick;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -32,6 +33,8 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 
 public class ItemLongClickHandler extends AbstractListenerHandler {
+
+	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public ItemLongClickHandler(ProcessingEnvironment processingEnvironment) {
 		super(ItemLongClick.class, processingEnvironment);
@@ -76,8 +79,12 @@ public class ItemLongClickHandler extends AbstractListenerHandler {
 			if (parameterType.getKind() == TypeKind.INT) {
 				call.arg(onItemClickPositionParam);
 			} else {
-				String parameterTypeQualifiedName = parameterType.toString();
-				call.arg(cast(refClass(parameterTypeQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameterType, getHolder());
+				call.arg(cast(parameterClass, invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+
+				if (parameterClass.isParameterized()) {
+					listenerMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
+				}
 			}
 		}
 	}
