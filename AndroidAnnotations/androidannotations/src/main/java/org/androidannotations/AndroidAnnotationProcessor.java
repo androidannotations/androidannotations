@@ -56,7 +56,6 @@ import org.androidannotations.rclass.CoumpoundRClass;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.ProjectRClassFinder;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidAnnotationProcessor.class);
@@ -280,6 +279,11 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	@Override
 	public Set<String> getSupportedOptions() {
 		return OptionsHelper.getOptionsConstants();
+	}
+
+	@Override
+	public SourceVersion getSupportedSourceVersion() {
+		return SourceVersion.latest();
 	}
 
 }
