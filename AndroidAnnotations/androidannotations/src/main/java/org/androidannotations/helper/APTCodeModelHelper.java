@@ -37,6 +37,8 @@ import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
 
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 
@@ -55,6 +57,9 @@ import com.sun.codemodel.JStatement;
 import com.sun.codemodel.JSuperWildcard;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
+
+import static com.sun.codemodel.JExpr._new;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 public class APTCodeModelHelper {
 
@@ -431,6 +436,16 @@ public class APTCodeModelHelper {
 		}
 
 		return null;
+	}
+
+	public JInvocation newBeanOrEBean(GeneratedClassHolder holder, DeclaredType beanType, JVar contextVar) {
+		if (beanType.asElement().getAnnotation(EBean.class) != null) {
+			String typeQualifiedName = beanType.toString();
+			JClass injectedClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
+			return injectedClass.staticInvoke(EBeanHolder.GET_INSTANCE_METHOD_NAME).arg(contextVar);
+		} else {
+			return _new(holder.refClass(beanType.toString()));
+		}
 	}
 
 }
