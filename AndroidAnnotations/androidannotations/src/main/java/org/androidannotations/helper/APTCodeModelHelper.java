@@ -271,7 +271,11 @@ public class APTCodeModelHelper {
 		}
 
 		JBlock clonedBody = new JBlock(false, false);
+		copy(body, clonedBody);
+		return clonedBody;
+	}
 
+	public void copy(JBlock body, JBlock newBody) {
 		for (Object statement : body.getContents()) {
 			if (statement instanceof JVar) {
 				JVar var = (JVar) statement;
@@ -280,16 +284,14 @@ public class APTCodeModelHelper {
 					varInitField.setAccessible(true);
 					JExpression varInit = (JExpression) varInitField.get(var);
 
-					clonedBody.decl(var.type(), var.name(), varInit);
+					newBody.decl(var.type(), var.name(), varInit);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 			} else {
-				clonedBody.add((JStatement) statement);
+				newBody.add((JStatement) statement);
 			}
 		}
-
-		return clonedBody;
 	}
 
 	public void replaceSuperCall(JMethod method, JBlock replacement) {
