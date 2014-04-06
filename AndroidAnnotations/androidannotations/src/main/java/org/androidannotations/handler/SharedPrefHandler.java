@@ -46,6 +46,7 @@ import org.androidannotations.api.sharedpreferences.FloatPrefField;
 import org.androidannotations.api.sharedpreferences.IntPrefField;
 import org.androidannotations.api.sharedpreferences.LongPrefField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
@@ -70,6 +71,7 @@ import com.sun.codemodel.JVar;
 public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> implements GeneratingAnnotationHandler<SharedPrefHolder> {
 
 	private IdAnnotationHelper annotationHelper;
+	private APTCodeModelHelper aptCodeModelHelper;
 
 	private static final class DefaultPrefInfo<T> {
 		final Class<? extends Annotation> annotationClass;
@@ -100,6 +102,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 
 	public SharedPrefHandler(ProcessingEnvironment processingEnvironment) {
 		super(SharedPref.class, processingEnvironment);
+		aptCodeModelHelper = new APTCodeModelHelper();
 	}
 
 	@Override
@@ -251,12 +254,12 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 		JExpression defaultValueExpr;
 
 		if (annotation != null) {
-			defaultValueExpr = litObject(annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "value"));
+			defaultValueExpr = aptCodeModelHelper.litObject(annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "value"));
 		} else if (method.getAnnotation(DefaultRes.class) != null) {
 			defaultValueExpr = extractResValue(holder, method, resType);
 			annotationClass = DefaultRes.class;
 		} else {
-			defaultValueExpr = litObject(defaultValue);
+			defaultValueExpr = aptCodeModelHelper.litObject(defaultValue);
 			annotationClass = null;
 		}
 
@@ -301,17 +304,4 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 		return holder.getContextField().invoke("getResources").invoke(resourceGetMethodName).arg(idRef);
 	}
 
-	private static JExpression litObject(Object o) {
-		if (o instanceof Integer) {
-			return lit((Integer) o);
-		} else if (o instanceof Float) {
-			return lit((Float) o);
-		} else if (o instanceof Long) {
-			return lit((Long) o);
-		} else if (o instanceof Boolean) {
-			return lit((Boolean) o);
-		} else {
-			return lit((String) o);
-		}
-	}
 }

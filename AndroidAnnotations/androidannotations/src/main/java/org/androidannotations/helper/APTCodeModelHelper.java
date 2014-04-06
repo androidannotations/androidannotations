@@ -15,6 +15,10 @@
  */
 package org.androidannotations.helper;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.lit;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -58,13 +62,10 @@ import com.sun.codemodel.JSuperWildcard;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-import static com.sun.codemodel.JExpr._new;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-
 public class APTCodeModelHelper {
 
 	public JClass typeMirrorToJClass(TypeMirror type, GeneratedClassHolder holder) {
-		return typeMirrorToJClass(type, holder, Collections.<String, TypeMirror>emptyMap());
+		return typeMirrorToJClass(type, holder, Collections.<String, TypeMirror> emptyMap());
 	}
 
 	private JClass typeMirrorToJClass(TypeMirror type, GeneratedClassHolder holder, Map<String, TypeMirror> substitute) {
@@ -90,14 +91,14 @@ public class APTCodeModelHelper {
 		} else if (type instanceof WildcardType) {
 			WildcardType wildcardType = (WildcardType) type;
 
-            TypeMirror bound = wildcardType.getExtendsBound();
-            if (bound == null) {
-                bound = wildcardType.getSuperBound();
-                if (bound == null) {
-                    return holder.classes().OBJECT.wildcard();
-                }
-                return superWildcard(typeMirrorToJClass(bound, holder, substitute));
-            }
+			TypeMirror bound = wildcardType.getExtendsBound();
+			if (bound == null) {
+				bound = wildcardType.getSuperBound();
+				if (bound == null) {
+					return holder.classes().OBJECT.wildcard();
+				}
+				return superWildcard(typeMirrorToJClass(bound, holder, substitute));
+			}
 
 			TypeMirror extendsBound = wildcardType.getExtendsBound();
 
@@ -121,9 +122,9 @@ public class APTCodeModelHelper {
 		}
 	}
 
-    private JClass superWildcard(final JClass bound) {
-        return new JSuperWildcard(bound);
-    }
+	private JClass superWildcard(final JClass bound) {
+		return new JSuperWildcard(bound);
+	}
 
 	public static class Parameter {
 		public final String name;
@@ -138,7 +139,7 @@ public class APTCodeModelHelper {
 	private Map<String, TypeMirror> getActualTypes(Types typeUtils, DeclaredType baseClass, TypeMirror annotatedClass) {
 		List<TypeMirror> superTypes = new ArrayList<TypeMirror>();
 		superTypes.add(annotatedClass);
-		while(!superTypes.isEmpty()) {
+		while (!superTypes.isEmpty()) {
 			TypeMirror x = superTypes.remove(0);
 			if (typeUtils.isSameType(typeUtils.erasure(x), typeUtils.erasure(baseClass))) {
 				DeclaredType type = (DeclaredType) x;
@@ -158,23 +159,23 @@ public class APTCodeModelHelper {
 	}
 
 	public JClass typeBoundsToJClass(GeneratedClassHolder holder, List<? extends TypeMirror> bounds) {
-		return typeBoundsToJClass(holder, bounds, Collections.<String, TypeMirror>emptyMap());
+		return typeBoundsToJClass(holder, bounds, Collections.<String, TypeMirror> emptyMap());
 	}
 
 	private JClass typeBoundsToJClass(GeneratedClassHolder holder, List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
 		if (bounds.isEmpty()) {
 			return holder.classes().OBJECT;
 		} else {
-			//TODO resolve <T extends A&B> bounds
+			// TODO resolve <T extends A&B> bounds
 			return typeMirrorToJClass(bounds.get(0), holder, actualTypes);
 		}
 	}
 
 	public JMethod overrideAnnotatedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
-        TypeMirror annotatedClass = holder.getAnnotatedElement().asType();
+		TypeMirror annotatedClass = holder.getAnnotatedElement().asType();
 		DeclaredType baseClass = (DeclaredType) executableElement.getEnclosingElement().asType();
 
-        Types typeUtils = holder.processingEnvironment().getTypeUtils();
+		Types typeUtils = holder.processingEnvironment().getTypeUtils();
 
 		Map<String, TypeMirror> actualTypes = getActualTypes(typeUtils, baseClass, annotatedClass);
 		Map<String, JClass> methodTypes = new LinkedHashMap<String, JClass>();
@@ -192,10 +193,10 @@ public class APTCodeModelHelper {
 
 		List<Parameter> parameters = new ArrayList<Parameter>();
 		for (int i = 0; i < executableElement.getParameters().size(); i++) {
-            VariableElement parameter = executableElement.getParameters().get(i);
+			VariableElement parameter = executableElement.getParameters().get(i);
 
-            String parameterName = parameter.getSimpleName().toString();
-            JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder, actualTypes);
+			String parameterName = parameter.getSimpleName().toString();
+			JClass parameterClass = typeMirrorToJClass(parameter.asType(), holder, actualTypes);
 			parameters.add(new Parameter(parameterName, parameterClass));
 		}
 
@@ -208,13 +209,13 @@ public class APTCodeModelHelper {
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
 		method.annotate(Override.class);
 
-        for (Map.Entry<String, JClass> typeDeclaration : methodTypes.entrySet()) {
-            method.generify(typeDeclaration.getKey(), typeDeclaration.getValue());
-        }
+		for (Map.Entry<String, JClass> typeDeclaration : methodTypes.entrySet()) {
+			method.generify(typeDeclaration.getKey(), typeDeclaration.getValue());
+		}
 
-        for (Parameter parameter : parameters) {
+		for (Parameter parameter : parameters) {
 			method.param(JMod.FINAL, parameter.jClass, parameter.name);
-        }
+		}
 
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
 			JClass thrownType = typeMirrorToJClass(superThrownType, holder, actualTypes);
@@ -445,6 +446,20 @@ public class APTCodeModelHelper {
 			return injectedClass.staticInvoke(EBeanHolder.GET_INSTANCE_METHOD_NAME).arg(contextVar);
 		} else {
 			return _new(holder.refClass(beanType.toString()));
+		}
+	}
+
+	public JExpression litObject(Object o) {
+		if (o instanceof Integer) {
+			return lit((Integer) o);
+		} else if (o instanceof Float) {
+			return lit((Float) o);
+		} else if (o instanceof Long) {
+			return lit((Long) o);
+		} else if (o instanceof Boolean) {
+			return lit((Boolean) o);
+		} else {
+			return lit((String) o);
 		}
 	}
 
