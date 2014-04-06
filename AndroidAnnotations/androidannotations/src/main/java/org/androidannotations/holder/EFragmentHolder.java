@@ -107,6 +107,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setFindViewById() {
 		JMethod findViewById = generatedClass.method(PUBLIC, classes().VIEW, "findViewById");
+		findViewById.annotate(Override.class);
+
 		JVar idParam = findViewById.param(codeModel().INT, "id");
 
 		JBlock body = findViewById.body();
@@ -275,7 +277,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		onDetachBeforeSuperBlock = onDetachBody.block();
 		onDetachBody.invoke(_super(), onDetach);
 	}
-	
+
 	private void setOnStop() {
 		JMethod onStop = generatedClass.method(PUBLIC, codeModel().VOID, "onStop");
 		onStop.annotate(Override.class);
