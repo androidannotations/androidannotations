@@ -132,6 +132,7 @@ public final class CanonicalNameConstants {
 	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
 	public static final String HTTP_MESSAGE_CONVERTER = "org.springframework.http.converter.HttpMessageConverter";
 	public static final String CLIENT_HTTP_REQUEST_INTERCEPTOR = "org.springframework.http.client.ClientHttpRequestInterceptor";
+	public static final String CLIENT_HTTP_REQUEST_FACTORY = "org.springframework.http.client.ClientHttpRequestFactory";
 	public static final String HTTP_AUTHENTICATION = "org.springframework.http.HttpAuthentication";
 	public static final String HTTP_BASIC_AUTHENTICATION = "org.springframework.http.HttpBasicAuthentication";
 	public static final String REST_CLIENT_EXCEPTION = "org.springframework.web.client.RestClientException";

@@ -75,6 +75,8 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 
 		validatorHelper.validateInterceptors(element, valid);
 
+		validatorHelper.validateRequestFactory(element, valid);
+
 		validatorHelper.hasInternetPermission(typeElement, androidManifest, valid);
 	}
 
@@ -83,6 +85,7 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 		setRootUrl(element, holder);
 		setConverters(element, holder);
 		setInterceptors(element, holder);
+		setRequestFactory(element, holder);
 	}
 
 	private void setRootUrl(Element element, RestHolder holder) {
@@ -114,6 +117,14 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 				JInvocation newInterceptor = codeModelHelper.newBeanOrEBean(holder, interceptorType, holder.getInitContextParam());
 				init.add(invoke(restTemplateField, "getInterceptors").invoke("add").arg(newInterceptor));
 			}
+		}
+	}
+
+	private void setRequestFactory(Element element, RestHolder holder) {
+		DeclaredType requestFactoryType = annotationHelper.extractAnnotationClassParameter(element, getTarget(), "requestFactory");
+		if (requestFactoryType != null) {
+			JInvocation requestFactory = codeModelHelper.newBeanOrEBean(holder, requestFactoryType, holder.getInitContextParam());
+			holder.getInit().body().add(invoke(holder.getRestTemplateField(), "setRequestFactory").arg(requestFactory));
 		}
 	}
 }
