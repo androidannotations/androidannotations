@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import android.content.SharedPreferences;
 
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.R;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class PrefsActivityTest {
@@ -166,4 +167,9 @@ public class PrefsActivityTest {
 		assertThat(sharedPref.contains("name")).isFalse();
 	}
 
+	@Test
+	public void stringResourcePrefKey() {
+		somePrefs.stringResKeyPref().put(88);
+		assertThat(sharedPref.getInt(activity.getString(R.string.prefStringKey), 0)).isEqualTo(88);
+	}
 }
