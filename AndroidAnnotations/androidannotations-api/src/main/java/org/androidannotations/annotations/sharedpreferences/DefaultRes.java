@@ -27,7 +27,11 @@ import org.androidannotations.annotations.ResId;
  * value of this preference.
  * <p/>
  * The annotation value must be one of R.* fields. If the value is not set, the
- * field name will be used as the R.* field name.
+ * method name will be used as the R.* field name.
+ * <p/>
+ * The key of the preference will be the method name by default. This can be
+ * overridden by specifying a string resource with the {@link #keyRes()}
+ * parameter.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
@@ -37,4 +41,5 @@ public @interface DefaultRes {
 
 	String resName() default "";
 
+	int keyRes() default ResId.DEFAULT_VALUE;
 }
