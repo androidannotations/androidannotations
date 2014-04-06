@@ -46,7 +46,6 @@ public class ReceiverRegistrationTest extends AAProcessorTestHelper {
 	public void activity_with_two_method_with_same_name_not_compile() throws IOException {
 		CompileResult result = compileFiles(ActivityWithTwoSameNameMethod.class);
 		assertCompilationErrorOn(ActivityWithTwoSameNameMethod.class, "@Receiver", result);
-		assertCompilationErrorCount(2, result);
 	}
 
 	@Test
