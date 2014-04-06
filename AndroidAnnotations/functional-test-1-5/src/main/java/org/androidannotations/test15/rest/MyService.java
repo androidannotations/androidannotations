@@ -112,6 +112,7 @@ public interface MyService {
 	GenericEvent<GenericEvent<GenericEvent<String>>> getEventsGenericsInception(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
+	@SetsCookie({ "xt", "sjsaid" })
 	Map<String, Event> getEventsGenericsMap(String location, int year) throws RestClientException;
 
 	@RequiresCookie("sjsaid")
