@@ -18,7 +18,6 @@ package org.androidannotations.api.sharedpreferences;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.pig.impl.util.ObjectSerializer;
 
@@ -27,12 +26,15 @@ import android.content.SharedPreferences.Editor;
 
 public final class StringSetPrefField extends AbstractPrefField {
 
-	StringSetPrefField(SharedPreferences sharedPreferences, String key) {
+	private final Set<String> defaultValue;
+
+	StringSetPrefField(SharedPreferences sharedPreferences, String key, Set<String> defaultValue) {
 		super(sharedPreferences, key);
+		this.defaultValue = defaultValue;
 	}
 
 	public Set<String> get() {
-		return getOr(new TreeSet<String>());
+		return getOr(defaultValue);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -43,17 +45,17 @@ public final class StringSetPrefField extends AbstractPrefField {
 		} catch (IOException e) {
 			return null;
 		}
-		
-		if(obj == null) {
+
+		if (obj == null) {
 			return defaultValue;
 		}
-		
-		if(!(obj instanceof Set<?>)) {
+
+		if (!(obj instanceof Set<?>)) {
 			return defaultValue;
 		}
 
 		// No way to check further.
-		
+
 		return (Set<String>) obj;
 	}
 
