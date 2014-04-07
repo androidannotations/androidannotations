@@ -16,6 +16,13 @@
 package org.androidannotations.test15.prefs;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +31,7 @@ import org.junit.runner.RunWith;
 import android.content.SharedPreferences;
 
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.apache.pig.impl.util.ObjectSerializer;
 import org.androidannotations.test15.R;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
@@ -69,6 +77,23 @@ public class PrefsActivityTest {
 		long now = System.currentTimeMillis();
 		somePrefs.lastUpdated().put(now);
 		assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
+	}
+
+	@Test
+	public void putStringSet() {
+		Set<String> values = new TreeSet<String>();
+		values.add("1");
+		values.add("2");
+		values.add("3");
+		values.add("4");
+		values.add("5");
+
+		somePrefs.types().put(values);
+		try {
+			assertThat(ObjectSerializer.deserialize(sharedPref.getString("types", null))).isEqualTo(values);
+		} catch (IOException e) {
+			fail("IO exception while deserializing the object");
+		}
 	}
 
 	@Test
@@ -147,6 +172,30 @@ public class PrefsActivityTest {
 		sharedPref.edit().putLong("lastUpdated", now).commit();
 
 		assertThat(somePrefs.lastUpdated().get()).isEqualTo(now);
+	}
+
+	@Test
+	public void getStringSet() {
+		Set<String> values = new TreeSet<String>();
+		values.add("1");
+		values.add("2");
+		values.add("3");
+		values.add("4");
+		values.add("5");
+
+		try {
+			sharedPref.edit()
+					.putString("types", ObjectSerializer.serialize((Serializable) values))
+					.commit();
+		} catch (IOException e) {
+			fail("Error while serializing string set: " + e.toString());
+		}
+
+		Set<String> set = somePrefs.types().get();
+		int i = 0;
+		for(String v : set) {
+			assertThat(v).isEqualTo(new Integer(++i).toString());
+		}
 	}
 
 	@Test

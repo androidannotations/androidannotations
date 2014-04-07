@@ -41,6 +41,10 @@ public abstract class SharedPreferencesHelper {
 		return new StringPrefField(sharedPreferences, key, defaultValue);
 	}
 
+	protected StringSetPrefField stringSetField(String key) {
+		return new StringSetPrefField(sharedPreferences, key);
+	}
+
 	protected BooleanPrefField booleanField(String key, boolean defaultValue) {
 		return new BooleanPrefField(sharedPreferences, key, defaultValue);
 	}
