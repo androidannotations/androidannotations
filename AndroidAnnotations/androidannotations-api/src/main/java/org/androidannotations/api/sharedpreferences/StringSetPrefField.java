@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,14 +15,9 @@
  */
 package org.androidannotations.api.sharedpreferences;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.Set;
 
-import org.apache.pig.impl.util.ObjectSerializer;
-
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 
 public final class StringSetPrefField extends AbstractPrefField {
 
@@ -37,39 +32,13 @@ public final class StringSetPrefField extends AbstractPrefField {
 		return getOr(defaultValue);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Set<String> getOr(Set<String> defaultValue) {
-		Object obj;
-		try {
-			obj = ObjectSerializer.deserialize(sharedPreferences.getString(key, null));
-		} catch (IOException e) {
-			return null;
-		}
-
-		if (obj == null) {
-			return defaultValue;
-		}
-
-		if (!(obj instanceof Set<?>)) {
-			return defaultValue;
-		}
-
-		// No way to check further.
-
-		return (Set<String>) obj;
+		return SharedPreferencesCompat.getStringSet(sharedPreferences, key, defaultValue);
 	}
 
 	public void put(Set<String> value) {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		setValue(editor, key, value);
+		SharedPreferencesCompat.putStringSet(editor, key, value);
 		apply(editor);
-	}
-
-	static void setValue(Editor editor, String key, Set<String> value) {
-		try {
-			editor.putString(key, ObjectSerializer.serialize((Serializable) value));
-		} catch (IOException e) {
-			throw new RuntimeException("Argument for key `" + key + "` does not implement the Serializable interface");
-		}
 	}
 }
