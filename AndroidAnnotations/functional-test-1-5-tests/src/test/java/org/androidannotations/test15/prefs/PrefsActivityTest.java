@@ -16,22 +16,23 @@
 package org.androidannotations.test15.prefs;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
-import java.io.IOException;
-import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.androidannotations.api.sharedpreferences.SetXmlSerializer;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.content.SharedPreferences;
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowXml;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.apache.pig.impl.util.ObjectSerializer;
-import org.androidannotations.test15.R;
+import android.content.SharedPreferences;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class PrefsActivityTest {
@@ -47,6 +48,7 @@ public class PrefsActivityTest {
 		activity.onCreate(null);
 		somePrefs = activity.somePrefs;
 		sharedPref = somePrefs.getSharedPreferences();
+		Robolectric.bindShadowClass(ShadowXml.class);
 	}
 
 	@Test
@@ -80,19 +82,16 @@ public class PrefsActivityTest {
 
 	@Test
 	public void putStringSet() {
-		Set<String> values = new TreeSet<String>();
-		values.add("1");
-		values.add("2");
-		values.add("3");
-		values.add("4");
-		values.add("5");
-
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		
 		somePrefs.types().put(values);
-		try {
-			assertThat(ObjectSerializer.deserialize(sharedPref.getString("types", null))).isEqualTo(values);
-		} catch (IOException e) {
-			fail("IO exception while deserializing the object");
-		}
+		assertThat(SetXmlSerializer.deserialize(sharedPref.getString("types", null))).isEqualTo(values);
+	}
+	
+	@Test
+	public void putNullSet() {
+		somePrefs.types().put(null);
+		assertThat(SetXmlSerializer.deserialize(sharedPref.getString("types", null))).isEqualTo(Collections.emptySet());
 	}
 
 	@Test
@@ -175,26 +174,28 @@ public class PrefsActivityTest {
 
 	@Test
 	public void getStringSet() {
-		Set<String> values = new TreeSet<String>();
-		values.add("1");
-		values.add("2");
-		values.add("3");
-		values.add("4");
-		values.add("5");
-
-		try {
-			sharedPref.edit()
-					.putString("types", ObjectSerializer.serialize((Serializable) values))
-					.commit();
-		} catch (IOException e) {
-			fail("Error while serializing string set: " + e.toString());
-		}
-
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		sharedPref.edit().putString("types", SetXmlSerializer.serialize(values)).commit();
+		
 		Set<String> set = somePrefs.types().get();
-		int i = 0;
-		for(String v : set) {
-			assertThat(v).isEqualTo(new Integer(++i).toString());
-		}
+		assertThat(values).isEqualTo(set);
+		
+		
+		
+//
+//		try {
+//			sharedPref.edit()
+//					.putString("types", ObjectSerializer.serialize((Serializable) values))
+//					.commit();
+//		} catch (IOException e) {
+//			fail("Error while serializing string set: " + e.toString());
+//		}
+//
+//		Set<String> set = somePrefs.types().get();
+//		int i = 0;
+//		for(String v : set) {
+//			assertThat(v).isEqualTo(new Integer(++i).toString());
+//		}
 	}
 
 	@Test
