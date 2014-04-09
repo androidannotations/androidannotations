@@ -179,23 +179,6 @@ public class PrefsActivityTest {
 		
 		Set<String> set = somePrefs.types().get();
 		assertThat(values).isEqualTo(set);
-		
-		
-		
-//
-//		try {
-//			sharedPref.edit()
-//					.putString("types", ObjectSerializer.serialize((Serializable) values))
-//					.commit();
-//		} catch (IOException e) {
-//			fail("Error while serializing string set: " + e.toString());
-//		}
-//
-//		Set<String> set = somePrefs.types().get();
-//		int i = 0;
-//		for(String v : set) {
-//			assertThat(v).isEqualTo(new Integer(++i).toString());
-//		}
 	}
 
 	@Test
