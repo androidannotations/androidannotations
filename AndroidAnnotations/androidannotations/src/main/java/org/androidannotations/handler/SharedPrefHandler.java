@@ -271,7 +271,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 			annotationClass = null;
 		}
 
-		int keyResId = ResId.DEFAULT_VALUE;
+		Integer keyResId = ResId.DEFAULT_VALUE;
 
 		if (annotationClass != null) {
 			keyResId = annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "keyRes");
