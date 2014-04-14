@@ -183,12 +183,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public String[] requiredHeaders(ExecutableElement executableElement) {
-		RequiresHeader cookieAnnotation = executableElement.getAnnotation(RequiresHeader.class);
-		if (cookieAnnotation == null) {
-			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
+		RequiresHeader headerAnnotation = executableElement.getAnnotation(RequiresHeader.class);
+		if (headerAnnotation == null) {
+			headerAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
 		}
-		if (cookieAnnotation != null) {
-			return cookieAnnotation.value();
+		if (headerAnnotation != null) {
+			return headerAnnotation.value();
 		} else {
 			return null;
 		}
