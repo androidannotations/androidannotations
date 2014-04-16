@@ -14,8 +14,4 @@ public interface ClientWithOneHeaderInHeaders {
     @Headers({@Header(key="testKey", value="testVal")})
     @Post("/test/")
     void requestWithOneHeader();
-
-    @Headers(@Header(key="testKey1", value="testVal1"))
-    @Post("/test1")
-    void requestWithOneHeaderNoArray();
 }
