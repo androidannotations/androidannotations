@@ -288,7 +288,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		boolean requiresAuth = requiredAuthentication(executableElement);
 
-		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
+        Map<String, String> declaredHeaders = declaredHeaders(executableElement);;
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth || declaredHeaders.size() > 0) {
 			// we need the headers
 			httpHeadersVar = body.decl(holder.classes().HTTP_HEADERS, "httpHeaders", JExpr._new(holder.classes().HTTP_HEADERS));
 		}
@@ -302,7 +304,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		}
 
         // Set pre-defined headers here so that they can be overridden by any runtime calls
-        Map<String, String> declaredHeaders = declaredHeaders(executableElement);
+
         if (declaredHeaders != null) {
             for (Map.Entry<String, String> declaredHeader: declaredHeaders.entrySet()) {
                 body.add(JExpr.invoke(httpHeadersVar, "set").arg(declaredHeader.getKey()).arg(declaredHeader.getValue()));
