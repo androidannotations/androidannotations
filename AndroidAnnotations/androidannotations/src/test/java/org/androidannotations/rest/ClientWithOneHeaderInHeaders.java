@@ -11,7 +11,7 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 @Rest(converters = MappingJacksonHttpMessageConverter.class)
 public interface ClientWithOneHeaderInHeaders {
 
-    @Headers({@Header(key="testKey", value="testVal")})
+    @Headers({@Header(headerName="testKey", value="testVal")})
     @Post("/test/")
     void requestWithOneHeader();
 }

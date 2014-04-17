@@ -10,8 +10,8 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 public interface ClientWithMultipleHeaders {
 
     @Headers({
-            @Header(key="testKey", value="testVal"),
-            @Header(key="testKey1", value="testVal1")
+            @Header(headerName="testKey", value="testVal"),
+            @Header(headerName="testKey1", value="testVal1")
     })
     @Post("/test/")
     void requestWithOneHeader();

@@ -9,7 +9,7 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 @Rest(converters = MappingJacksonHttpMessageConverter.class)
 public interface ClientWithOneHeader {
 
-    @Header(key="testKey", value="testVal")
+    @Header(headerName="testKey", value="testVal")
     @Post("/test/")
     void requestWithHeader();
 

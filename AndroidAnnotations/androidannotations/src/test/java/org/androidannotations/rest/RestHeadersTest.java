@@ -7,9 +7,6 @@ import org.junit.Test;
 
 import dalvik.annotation.TestTargetClass;
 
-/**
- * Created by jmaltz on 4/16/14.
- */
 public class RestHeadersTest extends AAProcessorTestHelper {
 
     @Before
