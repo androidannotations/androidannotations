@@ -225,7 +225,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
             return null;
         } else {
             Map<String, String> headerInfo = new HashMap<String, String>();
-            headerInfo.put(singleHeader.name(), singleHeader.value());
+            headerInfo.put(singleHeader.headerName(), singleHeader.value());
             return headerInfo;
         }
     }
