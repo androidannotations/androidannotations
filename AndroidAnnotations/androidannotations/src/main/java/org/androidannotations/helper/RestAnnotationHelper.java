@@ -186,12 +186,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public String[] requiredHeaders(ExecutableElement executableElement) {
-		RequiresHeader headerAnnotation = executableElement.getAnnotation(RequiresHeader.class);
-		if (headerAnnotation == null) {
-			headerAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
+		RequiresHeader requiresHeaderAnnotation = executableElement.getAnnotation(RequiresHeader.class);
+		if (requiresHeaderAnnotation == null) {
+			requiresHeaderAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
 		}
-		if (headerAnnotation != null) {
-			return headerAnnotation.value();
+		if (requiresHeaderAnnotation != null) {
+			return requiresHeaderAnnotation.value();
 		} else {
 			return null;
 		}
