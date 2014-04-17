@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Use on methods in {@link Rest} annotated class to add headers to a particular method
  *
  * Example usage:
- * 
+ *
  * @Header(headerName="keep-alive", value="300")
  * @Post("/test")
  * public void testRoute()
