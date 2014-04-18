@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,7 @@
  */
 package org.androidannotations.test15.rest;
 
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.startsWith;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.xtremelabs.robolectric.Robolectric;
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.androidannotations.test15.rest.RequestTestBuilder.RequestTestBuilderExecutor;
 import org.apache.http.Header;
@@ -40,12 +30,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import com.xtremelabs.robolectric.Robolectric;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class MyServiceTest {
 
-	private MyService_ myService = new MyService_();
+	private MyService_ myService = new MyService_(null);
 
 	private void addPendingResponse(String jsonResponse) {
 		addPendingResponse(jsonResponse, "_=_");
@@ -62,7 +59,7 @@ public class MyServiceTest {
 
 	@Test
 	public void can_override_root_url() {
-		MyService_ myService = new MyService_();
+		MyService_ myService = new MyService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		myService.setRestTemplate(restTemplate);
@@ -180,8 +177,7 @@ public class MyServiceTest {
 
 	@Test
 	public void manualFullUrl() {
-
-		MyService_ myService = new MyService_();
+		MyService_ myService = new MyService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		myService.setRestTemplate(restTemplate);
@@ -204,7 +200,7 @@ public class MyServiceTest {
 		final String locationValue = "somePlace";
 		final int yearValue = 2013;
 
-		MyService_ myService = new MyService_();
+		MyService_ myService = new MyService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		myService.setRestTemplate(restTemplate);

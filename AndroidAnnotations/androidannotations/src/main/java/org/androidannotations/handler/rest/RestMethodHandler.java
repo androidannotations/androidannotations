@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,7 @@
  */
 package org.androidannotations.handler.rest;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.TreeMap;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-
+import com.sun.codemodel.*;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
@@ -33,22 +24,14 @@ import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JArray;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JForEach;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JOp;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import java.util.List;
+import java.util.Locale;
+import java.util.TreeMap;
 
 public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder> {
 
@@ -81,7 +64,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, methodReturnClass, methodName);
 		method.annotate(Override.class);
 		TreeMap<String, JVar> params = addMethodParams(executableElement, holder, method);
-		JBlock methodBody = method.body();
+		JBlock methodBody = new JBlock(false, false);
 
 		// RestTemplate exchange() method call
 		JInvocation exchangeCall = JExpr.invoke(holder.getRestTemplateField(), "exchange");
@@ -94,18 +77,14 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			exchangeCall.arg(urlVariables);
 		}
 
-		JExpression returnCall = exchangeCall;
-		JExpression result = setCookies(executableElement, holder, methodBody, exchangeCall);
-		if (result != null) {
-			returnCall = result;
-		}
-
-		if (methodReturnVoid && result == null) {
-			insertRestTryCatchBlock(holder, methodBody, exchangeCall, methodReturnVoid);
+		JExpression response = setCookies(executableElement, holder, methodBody, exchangeCall);
+		if (methodReturnVoid && response.equals(exchangeCall)) {
+			methodBody.add(exchangeCall);
 		} else if (!methodReturnVoid) {
-			returnCall = addResultCallMethod(returnCall, methodReturnClass);
-			insertRestTryCatchBlock(holder, methodBody, returnCall, methodReturnVoid);
+			methodBody._return(addResultCallMethod(response, methodReturnClass));
 		}
+		methodBody = surroundWithRestTryCatch(holder, methodBody, methodReturnVoid);
+		method.body().add(methodBody);
 	}
 
 	protected JClass getMethodReturnClass(Element element, RestHolder holder) {
@@ -171,13 +150,14 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		return exchangeCall;
 	}
 
-	private JFieldRef setCookies(ExecutableElement executableElement, RestHolder restHolder, JBlock methodBody, JInvocation exchangeCall) {
+	private JExpression setCookies(ExecutableElement executableElement, RestHolder restHolder, JBlock methodBody, JInvocation exchangeCall) {
 		String[] settingCookies = restAnnotationHelper.settingCookies(executableElement);
 		if (settingCookies != null) {
 			boolean methodReturnVoid = executableElement.getReturnType().getKind() == TypeKind.VOID;
-			JClass methodReturnClass = getMethodReturnClass(executableElement, restHolder);
 
-			JClass responseEntityClass = classes().RESPONSE_ENTITY.narrow(methodReturnVoid ? codeModel().VOID : methodReturnClass);
+			JClass exchangeResponseClass = restAnnotationHelper.retrieveResponseClass(executableElement.getReturnType(), restHolder);
+			JType narrowType = exchangeResponseClass == null || methodReturnVoid ? codeModel().VOID : exchangeResponseClass;
+			JClass responseEntityClass = classes().RESPONSE_ENTITY.narrow(narrowType);
 			JVar responseEntity = methodBody.decl(responseEntityClass, "response", exchangeCall);
 
 			// set cookies
@@ -214,9 +194,9 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			thenBlock.invoke(restHolder.getAvailableCookiesField(), "put").arg(innerForEach.var()).arg(cookieValue);
 			thenBlock._break();
 
-			return JExpr.ref(responseEntity.name());
+			return responseEntity;
 		}
-		return null;
+		return exchangeCall;
 	}
 
 	/**
@@ -227,14 +207,11 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	 * if void). If the handler isn't set, it will re-throw the exception so
 	 * that it behaves as it did previous to this feature.
 	 */
-	private void insertRestTryCatchBlock(RestHolder holder, JBlock body, JExpression returnCall, boolean methodReturnVoid) {
-		JTryBlock tryBlock = body._try();
+	private JBlock surroundWithRestTryCatch(RestHolder holder, JBlock block, boolean methodReturnVoid) {
+		JBlock newBlock = new JBlock(false, false);
 
-		if (methodReturnVoid) {
-			tryBlock.body().add((JInvocation) returnCall);
-		} else {
-			tryBlock.body()._return(returnCall);
-		}
+		JTryBlock tryBlock = newBlock._try();
+		codeModelHelper.copy(block, tryBlock.body());
 
 		JCatchBlock jCatch = tryBlock._catch(classes().REST_CLIENT_EXCEPTION);
 
@@ -254,5 +231,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 		// re-throw the exception if handler wasn't set.
 		conditional._else()._throw(exceptionParam);
+
+		return newBlock;
 	}
 }

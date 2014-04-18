@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -84,6 +84,9 @@ public class ProcessHolder {
 		public final JClass KEY_EVENT = refClass(CanonicalNameConstants.KEY_EVENT);
 		public final JClass CONTEXT = refClass(CanonicalNameConstants.CONTEXT);
 		public final JClass INTENT = refClass(CanonicalNameConstants.INTENT);
+		public final JClass INTENT_FILTER = refClass(CanonicalNameConstants.INTENT_FILTER);
+		public final JClass BROADCAST_RECEIVER = refClass(CanonicalNameConstants.BROADCAST_RECEIVER);
+		public final JClass LOCAL_BROADCAST_MANAGER = refClass(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER);
 		public final JClass COMPONENT_NAME = refClass(CanonicalNameConstants.COMPONENT_NAME);
 		public final JClass VIEW_GROUP = refClass(CanonicalNameConstants.VIEW_GROUP);
 		public final JClass LAYOUT_INFLATER = refClass(CanonicalNameConstants.LAYOUT_INFLATER);
