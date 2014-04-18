@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,12 @@
  */
 package org.androidannotations.test15.ormlite;
 
-import static org.fest.assertions.Assertions.assertThat;
-
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class OrmLiteActivityTest {
@@ -36,21 +35,21 @@ public class OrmLiteActivityTest {
 
 	@Test
 	public void custom_dao_is_injected() {
-		assertThat(activity.userDao).isNotNull();
+		assertThat((Object) activity.userDao).isNotNull();
 	}
 
 	@Test
 	public void dao_is_injected() {
-		assertThat(activity.carDao).isNotNull();
+		assertThat((Object) activity.carDao).isNotNull();
 	}
 
 	@Test
 	public void bean_is_injected() {
-		assertThat(activity.ormLiteBean).isNotNull();
+		assertThat((Object) activity.ormLiteBean).isNotNull();
 	}
 
 	@Test
 	public void dao_in_bean_is_injected() {
-		assertThat(activity.ormLiteBean.userDao).isNotNull();
+		assertThat((Object) activity.ormLiteBean.userDao).isNotNull();
 	}
 }

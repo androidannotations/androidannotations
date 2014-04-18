@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,14 +32,17 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 
-public class EServiceHolder extends EComponentHolder implements HasIntentBuilder {
+public class EServiceHolder extends EComponentHolder implements HasIntentBuilder, HasReceiverRegistration {
 
     private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
 	private JFieldVar intentField;
+	private ReceiverRegistrationHolder receiverRegistrationHolder;
+	private JBlock onDestroyBeforeSuperBlock;
 
 	public EServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
 		super(processHolder, annotatedElement);
+		receiverRegistrationHolder = new ReceiverRegistrationHolder(this);
         intentBuilder = new ServiceIntentBuilder(this, androidManifest);
         intentBuilder.build();
 	}
@@ -57,15 +60,23 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	@Override
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, codeModel().VOID, "init_");
-		createOnCreate();
+		setOnCreate();
 	}
 
-	private void createOnCreate() {
+	private void setOnCreate() {
 		JMethod onCreate = generatedClass.method(PUBLIC, codeModel().VOID, "onCreate");
 		onCreate.annotate(Override.class);
 		JBlock onCreateBody = onCreate.body();
 		onCreateBody.invoke(getInit());
 		onCreateBody.invoke(JExpr._super(), onCreate);
+	}
+
+	private void setOnDestroy() {
+		JMethod onDestroy = generatedClass.method(PUBLIC, codeModel().VOID, "onDestroy");
+		onDestroy.annotate(Override.class);
+		JBlock onDestroyBody = onDestroy.body();
+		onDestroyBeforeSuperBlock = onDestroyBody.block();
+		onDestroyBody.invoke(JExpr._super(), onDestroy);
 	}
 
 	@Override
@@ -86,5 +97,53 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	@Override
 	public JFieldVar getIntentField() {
 		return intentField;
+	}
+
+	@Override
+	public JFieldVar getIntentFilterField(String[] actions) {
+		return receiverRegistrationHolder.getIntentFilterField(actions);
+	}
+
+	@Override
+	public JBlock getOnCreateAfterSuperBlock() {
+		return getInitBody();
+	}
+
+	@Override
+	public JBlock getOnDestroyBeforeSuperBlock() {
+		if (onDestroyBeforeSuperBlock == null) {
+			setOnDestroy();
+		}
+		return onDestroyBeforeSuperBlock;
+	}
+
+	@Override
+	public JBlock getOnStartAfterSuperBlock() {
+		return receiverRegistrationHolder.getOnStartAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnStopBeforeSuperBlock() {
+		return receiverRegistrationHolder.getOnStopBeforeSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnResumeAfterSuperBlock() {
+		return receiverRegistrationHolder.getOnAttachAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnPauseBeforeSuperBlock() {
+		return receiverRegistrationHolder.getOnPauseBeforeSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnAttachAfterSuperBlock() {
+		return receiverRegistrationHolder.getOnAttachAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnDetachBeforeSuperBlock() {
+		return receiverRegistrationHolder.getOnDetachBeforeSuperBlock();
 	}
 }

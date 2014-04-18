@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import android.content.SharedPreferences;
 
 import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.androidannotations.test15.R;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class PrefsActivityTest {
@@ -166,4 +167,9 @@ public class PrefsActivityTest {
 		assertThat(sharedPref.contains("name")).isFalse();
 	}
 
+	@Test
+	public void stringResourcePrefKey() {
+		somePrefs.stringResKeyPref().put(88);
+		assertThat(sharedPref.getInt(activity.getString(R.string.prefStringKey), 0)).isEqualTo(88);
+	}
 }
