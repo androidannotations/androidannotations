@@ -63,6 +63,6 @@ import java.lang.annotation.Target;
 public @interface ViewsById {
 
 	int[] value() default ResId.DEFAULT_VALUE;
-	
+
 	String[] resName() default "";
 }
