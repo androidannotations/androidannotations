@@ -15,11 +15,7 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.ref;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
+import com.sun.codemodel.*;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
@@ -28,14 +24,10 @@ import org.androidannotations.holder.HasInstanceState;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+
+import static com.sun.codemodel.JExpr.ref;
 
 public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState> {
 
@@ -66,10 +58,11 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 		BundleHelper bundleHelper = new BundleHelper(annotationHelper, element);
 		APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-		JFieldRef ref = ref(fieldName);
-		saveStateBody.invoke(saveStateBundleParam, bundleHelper.getMethodNameToSave()).arg(fieldName).arg(ref);
+        JFieldRef ref = ref(fieldName);
 
-		JInvocation restoreMethodCall = JExpr.invoke(restoreStateBundleParam, bundleHelper.getMethodNameToRestore()).arg(fieldName);
+        saveStateBody.invoke(saveStateBundleParam, bundleHelper.getMethodNameToSave()).arg(fieldName).arg(parcelsWrap(bundleHelper.isParcelerBean(), ref));
+
+        JExpression restoreMethodCall = parcelsWrap(bundleHelper.isParcelerBean(), JExpr.invoke(restoreStateBundleParam, bundleHelper.getMethodNameToRestore()).arg(fieldName));
 		if (bundleHelper.restoreCallNeedCastStatement()) {
 
 			JClass jclass = codeModelHelper.typeMirrorToJClass(element.asType(), holder);
@@ -86,4 +79,11 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 			restoreStateBody.assign(ref, restoreMethodCall);
 		}
 	}
+
+    private JExpression parcelsWrap(boolean wrap, JExpression expression){
+        if(wrap){
+            return codeModel().ref("org.parceler.Parcels").staticInvoke("wrap").arg(expression);
+        }
+        return expression;
+    }
 }

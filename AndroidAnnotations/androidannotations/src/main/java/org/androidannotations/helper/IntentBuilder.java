@@ -29,6 +29,9 @@ import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -171,12 +174,13 @@ public class IntentBuilder {
 		if (elementType.getKind() == TypeKind.DECLARED) {
 			Elements elementUtils = holder.processingEnvironment().getElementUtils();
 			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
-			if (!typeUtils.isSubtype(elementType, parcelableType)) {
+            if (!typeUtils.isSubtype(elementType, parcelableType)) {
 				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
 				if (!typeUtils.isSubtype(elementType, stringType)) {
 					castToSerializable = true;
 				}
-			} else {
+			}
+            else {
 				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
 				if (typeUtils.isSubtype(elementType, serializableType)) {
 					castToParcelable = true;
@@ -189,15 +193,30 @@ public class IntentBuilder {
 		JVar extraParameterVar = method.param(parameterClass, parameterName);
 		JBlock body = method.body();
 		JInvocation invocation = body.invoke(holder.getIntentField(), "putExtra").arg(extraKeyField);
-		if (castToSerializable) {
-			invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
-		} else if (castToParcelable) {
-			invocation.arg(cast(holder.classes().PARCELABLE, extraParameterVar));
-		} else {
-			invocation.arg(extraParameterVar);
-		}
+		if (isParcelerBean(elementType)) {
+            invocation.arg(holder.codeModel().ref("org.parceler.Parcels").staticInvoke("wrap").arg(extraParameterVar));
+        } else if (castToSerializable) {
+            invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
+        } else if (castToParcelable) {
+            invocation.arg(cast(holder.classes().PARCELABLE, extraParameterVar));
+        } else {
+            invocation.arg(extraParameterVar);
+        }
 		body._return(_this());
 		return method;
 	}
+
+    private boolean isParcelerBean(TypeMirror typeMirror){
+        if(typeMirror instanceof DeclaredType){
+            Element element = ((DeclaredType)typeMirror).asElement();
+
+            for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+                if(annotationMirror.getAnnotationType().toString().equals("org.parceler.Parcel")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

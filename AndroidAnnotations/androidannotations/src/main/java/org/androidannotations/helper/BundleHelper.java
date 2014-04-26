@@ -15,20 +15,18 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.androidannotations.helper.CanonicalNameConstants.*;
 
 public class BundleHelper {
 	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
@@ -73,6 +71,7 @@ public class BundleHelper {
 
 	private boolean restoreCallNeedCastStatement = false;
 	private boolean restoreCallNeedsSuppressWarning = false;
+    private boolean parcelerBean = false;
 
 	private String methodNameToSave;
 	private String methodNameToRestore;
@@ -166,7 +165,13 @@ public class BundleHelper {
 			if (isTypeParcelable(elementType)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
-			} else {
+			}
+            else if (isTypeParcelerBean(elementType)){
+                methodNameToSave = "put" + "Parcelable";
+                methodNameToRestore = "get" + "Parcelable";
+                parcelerBean = true;
+            }
+            else {
 				methodNameToSave = "put" + "Serializable";
 				methodNameToRestore = "get" + "Serializable";
 				restoreCallNeedCastStatement = true;
@@ -200,4 +205,20 @@ public class BundleHelper {
 
 		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
 	}
+
+    private boolean isTypeParcelerBean(TypeElement elementType) {
+
+        if(elementType != null) {
+            for (AnnotationMirror annotation : elementType.getAnnotationMirrors()) {
+                if(annotation.getAnnotationType().asElement().toString().equals("org.parceler.Parcel")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isParcelerBean(){
+        return parcelerBean;
+    }
 }
