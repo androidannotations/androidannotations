@@ -13,8 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.otto;
+package org.androidannotations.test15;
 
-public class Event {
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.Trace;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+@EBean
+@Nullable
+public class OthersAnnotations {
+	
+	@Trace
+	@Background
+	@Subscribe
+	public void onEvent(@Nonnull Event event) {
+
+	}
+	
+	@Produce
+	public Event produceEvent() {
+		return new Event();
+	}
+
+	public static class Event {}
 }
