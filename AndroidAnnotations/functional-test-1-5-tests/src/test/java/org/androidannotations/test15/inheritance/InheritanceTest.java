@@ -20,14 +20,14 @@ import static org.mockito.Mockito.mock;
 
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedNotifier;
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import android.app.Activity;
 import android.content.Context;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class InheritanceTest {
 
 	@Test

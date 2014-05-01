@@ -17,16 +17,16 @@ package org.androidannotations.test15.prefs;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.SharedPreferences;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.androidannotations.test15.R;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
 
 	private PrefsActivity_ activity;
@@ -36,8 +36,7 @@ public class PrefsActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new PrefsActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(PrefsActivity_.class).create().get();
 		somePrefs = activity.somePrefs;
 		sharedPref = somePrefs.getSharedPreferences();
 	}

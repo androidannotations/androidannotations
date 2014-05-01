@@ -17,27 +17,28 @@ package org.androidannotations.test15.efragment;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * Those test are disabled for now, we need to update Robolectric version for
- * fragment support, however we'll have to solve other issues to do so.
- */
-// @RunWith(AndroidAnnotationsTestRunner.class)
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+
+@RunWith(RobolectricTestRunner.class)
 public class MyFragmentActivityTest {
 
 	private MyFragmentActivity_ activity;
 
-	// @Before
+	@Before
 	public void setup() {
-		activity = new MyFragmentActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(MyFragmentActivity_.class).create().get();
 	}
 
-	// @Test
+	@Test
 	public void can_inject_native_fragment_with_default_id() {
 		assertThat(activity.myFragment).isNotNull();
 	}
 
-	// @Test
+	@Test
 	public void can_inject_native_fragment_with_id() {
 		assertThat(activity.myFragment2).isNotNull();
 	}

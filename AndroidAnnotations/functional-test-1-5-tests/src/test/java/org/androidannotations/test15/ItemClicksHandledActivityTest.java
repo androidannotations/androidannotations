@@ -15,16 +15,19 @@
  */
 package org.androidannotations.test15;
 
-import android.view.View;
-import android.widget.ListView;
-import android.widget.Spinner;
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import static org.fest.assertions.Assertions.assertThat;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Spinner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ItemClicksHandledActivityTest {
 
 	private static final int TESTED_CLICKED_INDEX = 3;
@@ -35,20 +38,17 @@ public class ItemClicksHandledActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new ItemClicksHandledActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(ItemClicksHandledActivity_.class).create().get();
 		clickedItem = activity.getResources().getStringArray(
 				R.array.planets_array)[TESTED_CLICKED_INDEX];
 	}
 
 	@Test
-	public void handlingSpinnerItemClick() {
+	public void handlingSpinnerItemSelect() {
 		Spinner spinner = (Spinner) activity.findViewById(R.id.spinner);
-		long itemId = spinner.getAdapter().getItemId(TESTED_CLICKED_INDEX);
-		View view = spinner.getChildAt(0);
-
 		assertThat(activity.spinnerItemClicked).isFalse();
-		spinner.performItemClick(view, TESTED_CLICKED_INDEX, itemId);
+		
+		spinner.getOnItemSelectedListener().onItemSelected(spinner, null, TESTED_CLICKED_INDEX, 0);
 		assertThat(activity.spinnerItemClicked).isTrue();
 	}
 
@@ -64,14 +64,12 @@ public class ItemClicksHandledActivityTest {
 	}
 
 	@Test
-	public void handlingSpinnerItemClickWithArgument() {
+	public void handlingSpinnerItemSelectWithArgument() {
 		Spinner spinner = (Spinner) activity
 				.findViewById(R.id.spinnerWithArgument);
-		long itemId = spinner.getAdapter().getItemId(TESTED_CLICKED_INDEX);
-		View view = spinner.getChildAt(TESTED_CLICKED_INDEX);
 
 		assertThat(activity.spinnerWithArgumentSelectedItem).isNull();
-		spinner.performItemClick(view, TESTED_CLICKED_INDEX, itemId);
+		spinner.getOnItemSelectedListener().onItemSelected(spinner, null, TESTED_CLICKED_INDEX, 0);
 		assertThat(activity.spinnerWithArgumentSelectedItem).isNotNull();
 		assertThat(activity.spinnerWithArgumentSelectedItem).isEqualTo(
 				clickedItem);
@@ -106,13 +104,13 @@ public class ItemClicksHandledActivityTest {
 
 	@Test
 	public void handlingListViewWithPositionItemSelected() {
-		ListView listView = (ListView) activity
+		final ListView listView = (ListView) activity
 				.findViewById(R.id.listViewWithPosition);
 
 		assertThat(activity.listViewWithPositionItemSelectedPosition)
 				.isEqualTo(0);
 		assertThat(activity.listViewWithPositionItemSelected).isFalse();
-		listView.setSelection(TESTED_CLICKED_INDEX);
+		listView.getOnItemSelectedListener().onItemSelected(listView, null, TESTED_CLICKED_INDEX, 0);
 		assertThat(activity.listViewWithPositionItemSelected).isTrue();
 		assertThat(activity.listViewWithPositionItemSelectedPosition)
 				.isEqualTo(TESTED_CLICKED_INDEX);
@@ -123,7 +121,7 @@ public class ItemClicksHandledActivityTest {
 		ListView listView = (ListView) activity
 				.findViewById(R.id.listViewWithOneParam);
 		assertThat(activity.listViewWithOneParamItemSelected).isFalse();
-		listView.setSelection(TESTED_CLICKED_INDEX);
+		listView.getOnItemSelectedListener().onItemSelected(listView, null, TESTED_CLICKED_INDEX, 0);
 		assertThat(activity.listViewWithOneParamItemSelected).isTrue();
 	}
 

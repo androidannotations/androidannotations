@@ -114,13 +114,13 @@ public class ItemClicksHandledActivity extends Activity {
 		listViewParametrizedItemClicked = true;
 	}
 
-	@ItemClick
-	public void spinner() {
+	@ItemSelect
+	public void spinner(boolean selected, int position) {
 		spinnerItemClicked = true;
 	}
 
-	@ItemClick
-	public void spinnerWithArgument(String selectedItem) {
+	@ItemSelect
+	public void spinnerWithArgument(boolean selected, String selectedItem) {
 		spinnerWithArgumentSelectedItem = selectedItem;
 	}
 
