@@ -15,27 +15,37 @@
  */
 package org.androidannotations.test15;
 
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.meta.When;
+
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.Trace;
+import org.simpleframework.xml.Attribute;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
+
+import dalvik.annotation.TestTargetClass;
 
 @EBean
 @Nullable
+@TestTargetClass(String.class)
 public class OthersAnnotations {
 	
 	@Trace
 	@Background
+	@SuppressWarnings(value = { "", "hi" })
+	@Attribute(name = "2")
+	@Nonnull(when = When.MAYBE)
 	@Subscribe
-	public void onEvent(@Nonnull Event event) {
+	public void onEvent(@Nonnull(when = When.UNKNOWN) Event event) {
 
 	}
 	
 	@Produce
+	@Attribute(name = "2")
 	public Event produceEvent() {
 		return new Event();
 	}
