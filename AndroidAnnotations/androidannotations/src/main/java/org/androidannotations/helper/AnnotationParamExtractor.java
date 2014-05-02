@@ -15,21 +15,19 @@
  */
 package org.androidannotations.helper;
 
-import java.util.List;
+import com.sun.codemodel.*;
+import org.androidannotations.holder.GeneratedClassHolder;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor6;
-
-import org.androidannotations.holder.GeneratedClassHolder;
-
-import com.sun.codemodel.JAnnotationArrayMember;
-import com.sun.codemodel.JAnnotationUse;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void, String> {
 
@@ -125,9 +123,24 @@ public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Void visitAnnotation(AnnotationMirror a, String p) {
-		// TODO
-		// use.annotationParam(name, value);
+		try {
+			JClass annotationJClass = helper.typeMirrorToJClass(a.getAnnotationType(), holder);
+			Constructor<JAnnotationUse> constructor = JAnnotationUse.class.getDeclaredConstructor(JClass.class);
+			constructor.setAccessible(true);
+			JAnnotationUse paramAnnotation = constructor.newInstance(annotationJClass);
+			Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = a.getElementValues();
+			for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
+				param.getValue().accept(new AnnotationParamExtractor(paramAnnotation, holder, helper), param.getKey().getSimpleName().toString());
+			}
+
+			Method addValueMethod = use.getClass().getDeclaredMethod("addValue", String.class, JAnnotationValue.class);
+			addValueMethod.setAccessible(true);
+			addValueMethod.invoke(use, p, paramAnnotation);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		return null;
 	}
 };

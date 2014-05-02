@@ -15,23 +15,24 @@
  */
 package org.androidannotations.test15;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.meta.When;
-
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
+import com.test.ComplexAnnotation;
+import com.test.SimpleAnnotation;
+import dalvik.annotation.TestTargetClass;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.Trace;
 import org.simpleframework.xml.Attribute;
 
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
-
-import dalvik.annotation.TestTargetClass;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.meta.When;
 
 @EBean
 @Nullable
 @TestTargetClass(String.class)
+@ComplexAnnotation(value = @SimpleAnnotation("1"), array = {@SimpleAnnotation("2"), @SimpleAnnotation("3")})
 public class OthersAnnotations {
 	
 	@Trace
