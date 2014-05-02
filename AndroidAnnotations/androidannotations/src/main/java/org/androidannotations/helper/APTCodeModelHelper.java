@@ -208,11 +208,19 @@ public class APTCodeModelHelper {
 	public void addNonAAAnotations(JAnnotatable annotatable, List<? extends AnnotationMirror> annotationMirrors, GeneratedClassHolder holder) {
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
 			JClass annotationClass = typeMirrorToJClass(annotationMirror.getAnnotationType(), holder);
-			if (!annotationClass.fullName().startsWith("org.androidannotations")
-					&& annotationMirror.getElementValues().isEmpty() // There is currently no way to add annotations with parameters from an AnnotationMirror
-					) {
-				annotatable.annotate(annotationClass);
+			if (!annotationClass.fullName().startsWith("org.androidannotations")) {
+				addAnnotation(annotatable, annotationMirror, holder);
 			}
+		}
+	}
+
+	private void addAnnotation(JAnnotatable annotatable, AnnotationMirror annotationMirror, GeneratedClassHolder holder) {
+		Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = annotationMirror.getElementValues();
+
+		JAnnotationUse annotate = annotatable.annotate(typeMirrorToJClass(annotationMirror.getAnnotationType(), holder));
+
+		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
+			param.getValue().accept(new AnnotationParamExtractor(annotate, holder, this), param.getKey().getSimpleName().toString());
 		}
 	}
 
@@ -331,7 +339,7 @@ public class APTCodeModelHelper {
 	/**
 	 * Gets all of the methods of the class and includes the methods of any
 	 * implemented interfaces.
-	 * 
+	 *
 	 * @param typeElement
 	 * @return full list of methods.
 	 */
