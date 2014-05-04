@@ -129,6 +129,8 @@ public class AnnotationHandlers {
         add(new UiThreadHandler(processingEnvironment));
         add(new BackgroundHandler(processingEnvironment));
 
+		/* SupposeUiThreadHandler and SupposeBackgroundHandler must be
+		 after all handlers that modifies generated method body */
         add(new SupposeUiThreadHandler(processingEnvironment));
         add(new SupposeBackgroundHandler(processingEnvironment));
 	}

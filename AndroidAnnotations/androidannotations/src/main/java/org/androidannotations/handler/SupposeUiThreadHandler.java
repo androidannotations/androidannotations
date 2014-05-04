@@ -1,5 +1,6 @@
 package org.androidannotations.handler;
 
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JMethod;
 
@@ -27,11 +28,12 @@ public class SupposeUiThreadHandler extends SupposeThreadHandler {
         ExecutableElement executableElement = (ExecutableElement) element;
 
         JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
-        helper.removeBody(delegatingMethod);
+        JBlock body = delegatingMethod.body();
 
         JClass bgExecutor = refClass(BackgroundExecutor.class);
 
-        delegatingMethod.body().staticInvoke(bgExecutor, METHOD_CHECK_UI_THREAD);
-        helper.callSuperMethod(delegatingMethod, holder, delegatingMethod.body());
+        body.pos(0);
+        body.staticInvoke(bgExecutor, METHOD_CHECK_UI_THREAD);
+        body.pos(body.getContents().size());
     }
 }

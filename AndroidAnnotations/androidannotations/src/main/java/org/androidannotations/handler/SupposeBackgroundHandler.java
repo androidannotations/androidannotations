@@ -1,5 +1,6 @@
 package org.androidannotations.handler;
 
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -30,10 +31,8 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
         ExecutableElement executableElement = (ExecutableElement) element;
 
         JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
-        helper.removeBody(delegatingMethod);
 
         JClass bgExecutor = refClass(BackgroundExecutor.class);
-
 
         SupposeBackground annotation = element.getAnnotation(SupposeBackground.class);
         String[] serial = annotation.serial();
@@ -42,7 +41,9 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
             invocation.arg(lit(s));
         }
 
-        delegatingMethod.body().add(invocation);
-        helper.callSuperMethod(delegatingMethod, holder, delegatingMethod.body());
+        JBlock body = delegatingMethod.body();
+        body.pos(0);
+        body.add(invocation);
+        body.pos(body.getContents().size());
     }
 }
