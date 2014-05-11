@@ -52,6 +52,16 @@
 			<version>4.41</version>
 		</dependency>
 		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>1.3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup</groupId>
+			<artifactId>otto</artifactId>
+			<version>1.3.4</version>
+		</dependency>
+		<dependency>
 			<!-- spring-android-rest-template is required to use the Rest API -->
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-rest-template</artifactId>
