@@ -99,7 +99,7 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		if (fragmentSupportField != null) {
 			condition = body._if(fragmentSupportField.ne(JExpr._null()));
 			condition._then() //
-					.invoke(fragmentSupportField, "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
+					.invoke(fragmentSupportField, "startActivityForResult").arg(intentField).arg(requestCode);
 		}
 		if (fragmentField != null) {
 			if (condition == null) {
@@ -108,7 +108,7 @@ public class ActivityIntentBuilder extends IntentBuilder {
 				condition = condition._elseif(fragmentField.ne(JExpr._null()));
 			}
 			condition._then() //
-					.invoke(fragmentField, "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
+					.invoke(fragmentField, "startActivityForResult").arg(intentField).arg(requestCode);
 		}
 		condition._else().invoke(_super(), "startForResult").arg(requestCode);
 	}

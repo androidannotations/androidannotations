@@ -42,7 +42,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JMethod setContentViewLayout;
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
-	private JFieldRef intentField;
 	private InstanceStateHolder instanceStateHolder;
 	private OnActivityResultHolder onActivityResultHolder;
 	private ReceiverRegistrationHolder receiverRegistrationHolder;
@@ -412,16 +411,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	public JDefinedClass getIntentBuilderClass() {
 		return intentBuilderClass;
-	}
-
-	@Override
-	public void setIntentField(JFieldRef intentField) {
-		this.intentField = intentField;
-	}
-
-	@Override
-	public JFieldRef getIntentField() {
-		return intentField;
 	}
 
 	public RoboGuiceHolder getRoboGuiceHolder() {

@@ -31,7 +31,6 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 
     private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
-	private JFieldRef intentField;
 	private ReceiverRegistrationHolder receiverRegistrationHolder;
 	private JBlock onDestroyBeforeSuperBlock;
 
@@ -82,16 +81,6 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	@Override
 	public JDefinedClass getIntentBuilderClass() {
 		return intentBuilderClass;
-	}
-
-	@Override
-	public void setIntentField(JFieldRef intentField) {
-		this.intentField = intentField;
-	}
-
-	@Override
-	public JFieldRef getIntentField() {
-		return intentField;
 	}
 
 	@Override

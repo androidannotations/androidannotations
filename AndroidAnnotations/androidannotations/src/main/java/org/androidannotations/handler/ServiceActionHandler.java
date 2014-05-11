@@ -15,19 +15,7 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-
-import java.util.List;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-
+import com.sun.codemodel.*;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
@@ -37,14 +25,15 @@ import org.androidannotations.holder.EIntentServiceHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import java.util.List;
+
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.*;
 
 public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHolder> {
 
@@ -138,7 +127,7 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
         JBlock body = method.body();
 
         // setAction
-        body.invoke(holder.getIntentField(), "setAction").arg(actionKeyField);
+        body.invoke("action").arg(actionKeyField);
 
         // For each method params, we get put value into extras
         List<? extends VariableElement> methodParameters = executableElement.getParameters();

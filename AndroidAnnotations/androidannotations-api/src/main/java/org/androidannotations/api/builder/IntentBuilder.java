@@ -37,6 +37,11 @@ public class IntentBuilder<I extends IntentBuilder<I>> extends Builder {
 		return (I) this;
 	}
 
+	public I action(String action) {
+		intent.setAction(action);
+		return (I) this;
+	}
+
 	public I extras(Bundle bundle) {
 		intent.putExtras(bundle);
 		return (I) this;

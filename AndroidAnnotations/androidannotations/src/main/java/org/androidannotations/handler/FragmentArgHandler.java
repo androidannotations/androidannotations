@@ -29,7 +29,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.*;
 
@@ -101,13 +101,11 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
 	private void createBuilderInjectionMethod(Element element, EFragmentHolder holder, BundleHelper bundleHelper, JFieldVar argKeyStaticField, String fieldName) {
 		JDefinedClass builderClass = holder.getBuilderClass();
-		JFieldRef builderArgsField = holder.getBuilderArgsField();
 		TypeMirror elementType = element.asType();
 		JClass paramClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
 
 		JMethod method = builderClass.method(PUBLIC, builderClass, fieldName);
 		JVar arg = method.param(paramClass, fieldName);
-		method.body().invoke(builderArgsField, bundleHelper.getMethodNameToSave()).arg(argKeyStaticField).arg(arg);
-		method.body()._return(_this());
+		method.body()._return(_super().invoke(bundleHelper.getMethodNameToSave()).arg(argKeyStaticField).arg(arg));
 	}
 }

@@ -33,7 +33,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar inflater;
 	private JVar container;
 	private JDefinedClass fragmentBuilderClass;
-	private JFieldRef fragmentArgumentsBuilderField;
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
 	private JVar injectBundleArgs;
@@ -110,7 +109,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JClass superClass = refClass(org.androidannotations.api.builder.FragmentBuilder.class);
 		superClass = superClass.narrow(fragmentBuilderClass);
 		fragmentBuilderClass._extends(superClass);
-		fragmentArgumentsBuilderField = ref("args");
 		setFragmentBuilderBuild();
 		setFragmentBuilderCreate();
 	}
@@ -120,7 +118,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JBlock body = method.body();
 
 		JVar fragment = body.decl(generatedClass, "fragment_", _new(generatedClass));
-		body.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);
+		body.invoke(fragment, "setArguments").arg(ref("args"));
 		body._return(fragment);
 	}
 
@@ -297,10 +295,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	public JDefinedClass getBuilderClass() {
 		return fragmentBuilderClass;
-	}
-
-	public JFieldRef getBuilderArgsField() {
-		return fragmentArgumentsBuilderField;
 	}
 
 	public JMethod getInjectArgsMethod() {
