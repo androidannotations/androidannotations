@@ -15,20 +15,14 @@
  */
 package org.androidannotations.test15;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.annotations.ItemLongClick;
-import org.androidannotations.annotations.ItemSelect;
-import org.androidannotations.annotations.ViewById;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import org.androidannotations.annotations.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EActivity(R.layout.item_clicks_handled)
 public class ItemClicksHandledActivity extends Activity {
@@ -143,6 +137,14 @@ public class ItemClicksHandledActivity extends Activity {
 	@ItemLongClick
 	void listViewWithPositionItemLongClicked(int position) {
 
+	}
+
+	@ItemLongClick(R.id.listViewWithArgumentWithParameterType)
+	protected void listViewWithArgumentWithParameterTypeLongClick(ArrayList<String> item) {
+	}
+
+	@ItemLongClick(R.id.listViewWithArgumentWithGenericWildcard)
+	protected void listViewWithArgumentWithGenericWildcardTypeLongClick(ArrayList<?> item) {
 	}
 
 	private List<ArrayList<String>> stringLists() {
