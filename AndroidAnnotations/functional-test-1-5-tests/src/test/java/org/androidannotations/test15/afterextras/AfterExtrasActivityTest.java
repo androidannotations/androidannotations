@@ -33,7 +33,7 @@ public class AfterExtrasActivityTest {
 	@Before
 	public void setup() {
 		activity = new AfterExtrasActivity_();
-		intent = AfterExtrasActivity_.intent(activity).extraData(true).get();
+		intent = AfterExtrasActivity_.intent(activity).extraDataSet(true).get();
 	}
 
 	@Test
