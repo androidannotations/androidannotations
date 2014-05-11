@@ -475,6 +475,20 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void extendsListOfView(Element element, IsValid valid) {
+		DeclaredType elementType = (DeclaredType) element.asType();
+		List<? extends TypeMirror> elementTypeArguments = elementType.getTypeArguments();
+
+		TypeMirror viewType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW).asType();
+
+		if (!elementType.toString().equals(CanonicalNameConstants.LIST)
+				&& elementTypeArguments.size() == 1
+				&& !annotationHelper.isSubtype(elementTypeArguments.get(0), viewType)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on a "+CanonicalNameConstants.LIST+ " of elements extending " + CanonicalNameConstants.VIEW);
+		}
+	}
+
 	public void hasASqlLiteOpenHelperParameterizedType(Element element, IsValid valid) {
 		TypeMirror helperType = annotationHelper.extractAnnotationParameter(element, "helper");
 

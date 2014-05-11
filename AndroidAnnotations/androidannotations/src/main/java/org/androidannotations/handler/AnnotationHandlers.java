@@ -53,6 +53,7 @@ public class AnnotationHandlers {
 		add(new PrefHandler(processingEnvironment));
 		add(new RoboGuiceHandler(processingEnvironment));
 		add(new ViewByIdHandler(processingEnvironment));
+		add(new ViewsByIdHandler(processingEnvironment));
 		add(new FragmentByIdHandler(processingEnvironment));
 		add(new FragmentByTagHandler(processingEnvironment));
 		add(new FromHtmlHandler(processingEnvironment));

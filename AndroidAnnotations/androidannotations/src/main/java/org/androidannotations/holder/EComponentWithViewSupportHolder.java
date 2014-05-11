@@ -34,6 +34,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	protected ViewNotifierHelper viewNotifierHelper;
 	private JBlock onViewChangedBody;
+	private JBlock onViewChangedBodyBeforeFindViews;
 	private JVar onViewChangedHasViewsParam;
 	private Map<String, FoundViewHolder> foundViewsHolders = new HashMap<String, FoundViewHolder>();
 	protected JMethod findNativeFragmentById;
@@ -55,6 +56,13 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		return onViewChangedBody;
 	}
 
+	public JBlock getOnViewChangedBodyBeforeFindViews() {
+		if (onViewChangedBodyBeforeFindViews == null) {
+			setOnViewChanged();
+		}
+		return onViewChangedBodyBeforeFindViews;
+	}
+
 	public JVar getOnViewChangedHasViewsParam() {
 		if (onViewChangedHasViewsParam == null) {
 			setOnViewChanged();
@@ -67,6 +75,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		JMethod onViewChanged = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onViewChanged");
 		onViewChanged.annotate(Override.class);
 		onViewChangedBody = onViewChanged.body();
+		onViewChangedBodyBeforeFindViews = onViewChangedBody.block();
 		onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
 		JClass notifierClass = refClass(OnViewChangedNotifier.class);
 		getInitBody().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
@@ -86,14 +95,13 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		JExpression assignExpression;
 
 		if (foundViewHolder != null) {
-			assignExpression = foundViewHolder.getView();
+			assignExpression = foundViewHolder.getView(viewClass);
 		} else {
 			assignExpression = findViewById(idRef);
-			foundViewsHolders.put(idRefString, new FoundViewHolder(fieldRef, block));
-		}
-
-		if (viewClass != null && viewClass != classes().VIEW) {
-			assignExpression = cast(viewClass, assignExpression);
+			if (viewClass != null && viewClass != classes().VIEW) {
+				assignExpression = cast(viewClass, assignExpression);
+			}
+			foundViewsHolders.put(idRefString, new FoundViewHolder(this, viewClass, fieldRef, block));
 		}
 
 		block.assign(fieldRef, assignExpression);
@@ -120,7 +128,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		}
 
 		JVar view = block.decl(viewClass, "view", findViewExpression);
-		return new FoundViewHolder(view, block);
+		return new FoundViewHolder(this, viewClass, view, block);
 	}
 
 	public JMethod getFindNativeFragmentById() {
