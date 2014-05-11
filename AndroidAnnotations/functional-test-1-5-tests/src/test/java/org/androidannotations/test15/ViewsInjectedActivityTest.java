@@ -16,12 +16,13 @@
 package org.androidannotations.test15;
 
 //import static org.fest.assertions.Assertions.assertThat;
-import static org.androidannotations.test15.MyAssertions.assertThat;
-
 import org.fest.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.androidannotations.test15.MyAssertions.assertThat;
+
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class ViewsInjectedActivityTest {
@@ -59,6 +60,16 @@ public class ViewsInjectedActivityTest {
 		Assertions.assertThat(activity.counter).isEqualTo(1);
 		activity.setContentView(R.layout.views_injected);
 		Assertions.assertThat(activity.counter).isEqualTo(2);
+	}
+
+	@Test
+	public void listOfViewAreInjected() {
+		Assertions.assertThat(activity.views).hasSize(2);
+	}
+
+	@Test
+	public void listOfTextViewAreInjected() {
+		Assertions.assertThat(activity.textViews).hasSize(2);
 	}
 
 }

@@ -16,23 +16,37 @@
 package org.androidannotations.holder;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
 
 import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.cast;
 
 public class FoundViewHolder {
 
+	private GeneratedClassHolder holder;
+	private JClass viewClass;
 	private JExpression view;
 	private JBlock ifNotNullBlock;
 	private boolean ifNotNullCreated = false;
 
-	public FoundViewHolder(JExpression view, JBlock block) {
+	public FoundViewHolder(GeneratedClassHolder holder, JClass viewClass, JExpression view, JBlock block) {
+		this.holder = holder;
+		this.viewClass = viewClass;
 		this.view = view;
 		this.ifNotNullBlock = block;
 	}
 
 	public JExpression getView() {
 		return view;
+	}
+
+	public JExpression getView(JClass viewClass) {
+		if (this.viewClass.equals(viewClass) || holder.classes().VIEW.equals(viewClass)) {
+			return view;
+		} else {
+			return cast(viewClass, view);
+		}
 	}
 
 	public JBlock getIfNotNullBlock() {

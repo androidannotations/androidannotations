@@ -15,29 +15,7 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.NestingKind;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.MirroredTypeException;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-
+import com.sun.codemodel.JFieldRef;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
@@ -48,7 +26,19 @@ import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
 
-import com.sun.codemodel.JFieldRef;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class AnnotationHelper {
 
@@ -386,11 +376,6 @@ public class AnnotationHelper {
 
 	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName) {
 		return extractAnnotationClassParameter(element, annotationName, "value");
-	}
-
-	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
-		Element enclosingElement = element.getEnclosingElement();
-		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, Class<? extends Annotation> validAnnotation) {
