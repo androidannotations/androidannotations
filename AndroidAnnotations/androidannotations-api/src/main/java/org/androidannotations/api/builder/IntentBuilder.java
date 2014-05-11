@@ -42,142 +42,137 @@ public class IntentBuilder<I extends IntentBuilder<I>> extends Builder {
 		return (I) this;
 	}
 
-	public I extras(Bundle bundle) {
-		intent.putExtras(bundle);
-		return (I) this;
-	}
-
-	public I putExtra(String name, boolean value) {
+	public I extra(String name, boolean value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, byte value) {
+	public I extra(String name, byte value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, char value) {
+	public I extra(String name, char value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, short value) {
+	public I extra(String name, short value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, int value) {
+	public I extra(String name, int value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, long value) {
+	public I extra(String name, long value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, float value) {
+	public I extra(String name, float value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, double value) {
+	public I extra(String name, double value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, String value) {
+	public I extra(String name, String value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, CharSequence value) {
+	public I extra(String name, CharSequence value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, Parcelable value) {
+	public I extra(String name, Parcelable value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, Parcelable[] value) {
+	public I extra(String name, Parcelable[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putParcelableArrayListExtra(String name, ArrayList<? extends Parcelable> value) {
+	public I parcelableArrayListExtra(String name, ArrayList<? extends Parcelable> value) {
 		intent.putParcelableArrayListExtra(name, value);
 		return (I) this;
 	}
 
-	public I putIntegerArrayListExtra(String name, ArrayList<Integer> value) {
+	public I integerArrayListExtra(String name, ArrayList<Integer> value) {
 		intent.putIntegerArrayListExtra(name, value);
 		return (I) this;
 	}
 
-	public I putStringArrayListExtra(String name, ArrayList<String> value) {
+	public I stringArrayListExtra(String name, ArrayList<String> value) {
 		intent.putStringArrayListExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, Serializable value) {
+	public I extra(String name, Serializable value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, boolean[] value) {
+	public I extra(String name, boolean[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, byte[] value) {
+	public I extra(String name, byte[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, short[] value) {
+	public I extra(String name, short[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, char[] value) {
+	public I extra(String name, char[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, int[] value) {
+	public I extra(String name, int[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, long[] value) {
+	public I extra(String name, long[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, float[] value) {
+	public I extra(String name, float[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, double[] value) {
+	public I extra(String name, double[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, String[] value) {
+	public I extra(String name, String[] value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtra(String name, Bundle value) {
+	public I extra(String name, Bundle value) {
 		intent.putExtra(name, value);
 		return (I) this;
 	}
 
-	public I putExtras(Intent src) {
+	public I extras(Intent src) {
 		intent.putExtras(src);
 		return (I) this;
 	}

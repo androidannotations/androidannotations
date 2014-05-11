@@ -112,7 +112,7 @@ public abstract class IntentBuilder {
 		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
 		JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
 		JVar extraParameterVar = method.param(parameterClass, parameterName);
-		JInvocation invocation = _super().invoke("putExtra").arg(extraKeyField);
+		JInvocation invocation = _super().invoke("extra").arg(extraKeyField);
 		if (castToSerializable) {
 			invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
 		} else if (castToParcelable) {
