@@ -107,6 +107,9 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 			}
 
 		}
+        if(bundleHelper.isParcelerBean()){
+            restoreMethodCall = codeModel().ref("org.parceler.Parcels").staticInvoke("unwrap").arg(restoreMethodCall);
+        }
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 

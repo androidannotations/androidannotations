@@ -122,7 +122,9 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
                         }
                     }
                 }
-
+                if(bundleHelper.isParcelerBean()){
+                    getExtraExpression = codeModel().ref("org.parceler.Parcels").staticInvoke("unwrap").arg(getExtraExpression);
+                }
                 JVar extraField = extrasNotNullBlock.decl(extraParamClass, extraParamName, getExtraExpression);
                 callActionInvocation.arg(extraField);
             }

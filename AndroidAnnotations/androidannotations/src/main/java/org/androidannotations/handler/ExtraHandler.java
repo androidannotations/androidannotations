@@ -119,6 +119,9 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		 * always returns null;
 		 */
 		restoreMethodCall = handleByteArrayExtraBug(element, extraKeyStaticField, restoreMethodCall);
+        if(bundleHelper.isParcelerBean()){
+            restoreMethodCall = codeModel().ref("org.parceler.Parcels").staticInvoke("unwrap").arg(restoreMethodCall);
+        }
 
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}

@@ -15,13 +15,13 @@
  */
 package org.androidannotations.test15;
 
-import java.util.List;
-
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
-
 import android.app.Activity;
 import android.content.Intent;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.test15.parceler.ParcelerBean;
+
+import java.util.List;
 
 @EActivity
 public class ExtraInjectedActivity extends Activity {
@@ -40,6 +40,9 @@ public class ExtraInjectedActivity extends Activity {
 
 	@Extra("byteArrayExtra")
 	byte[] byteArrayExtra;
+
+    @Extra("parcelerExtra")
+    ParcelerBean parcelerExample;
 
 	@Extra
 	String extraWithoutValue;
@@ -60,5 +63,7 @@ public class ExtraInjectedActivity extends Activity {
 		ExtraInjectedActivity_.intent(this)
 				.parcelableSerializableData(new ParcelableSerializableData())
 				.get();
+        ExtraInjectedActivity_.intent(this)
+                .parcelerExample(new ParcelerBean("Andy", 42));
 	}
 }

@@ -90,6 +90,17 @@
 			</exclusions>
 		</dependency>
         <dependency>
+            <groupId>org.parceler</groupId>
+            <artifactId>parceler</artifactId>
+            <version>0.2.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.parceler</groupId>
+            <artifactId>parceler-api</artifactId>
+            <version>0.2.7</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
             <version>r7</version>
