@@ -76,6 +76,7 @@ public class AnnotationHandlers {
 		add(new ItemClickHandler(processingEnvironment));
 		add(new ItemSelectHandler(processingEnvironment));
 		add(new ItemLongClickHandler(processingEnvironment));
+		add(new EditorActionHandler(processingEnvironment));
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			add(new ResHandler(androidRes, processingEnvironment));
 		}
