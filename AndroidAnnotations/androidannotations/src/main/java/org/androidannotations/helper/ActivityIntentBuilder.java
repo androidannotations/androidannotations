@@ -15,19 +15,21 @@
  */
 package org.androidannotations.helper;
 
-import static com.sun.codemodel.JMod.PUBLIC;
-
+import com.sun.codemodel.*;
 import org.androidannotations.holder.HasIntentBuilder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 public class ActivityIntentBuilder extends IntentBuilder {
+
+	private static final int MIN_SDK_WITH_FRAGMENT_SUPPORT = 11;
+
+	private JFieldVar fragmentField;
+	private JFieldVar fragmentSupportField;
 
 	public ActivityIntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
 		super(holder, androidManifest);
@@ -36,44 +38,87 @@ public class ActivityIntentBuilder extends IntentBuilder {
 	@Override
 	public void build() throws JClassAlreadyExistsException {
 		super.build();
-		createStart();
-		createStartForResult();
+		createAdditionalConstructor(); // See issue #541
+		createAdditionalIntentMethods();
+		overrideStartForResultMethod();
 	}
 
-	private void createStart() {
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.codeModel().VOID, "start");
-		method.body().invoke(contextField, "startActivity").arg(holder.getIntentField());
+	private void createAdditionalIntentMethods() {
+		if (hasFragmentInClasspath()) {
+			// intent() with android.app.Fragment param
+			JMethod method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
+			JVar fragmentParam = method.param(holder.classes().FRAGMENT, "fragment");
+			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
+		}
+		if (hasFragmentSupportInClasspath()) {
+			// intent() with android.support.v4.app.Fragment param
+			JMethod method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
+			JVar fragmentParam = method.param(holder.classes().SUPPORT_V4_FRAGMENT, "supportFragment");
+			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
+		}
 	}
 
-	private void createStartForResult() {
+	@Override
+	protected JClass getSuperClass() {
+		JClass superClass = holder.refClass(org.androidannotations.api.builder.ActivityIntentBuilder.class);
+		return superClass.narrow(builderClass);
+	}
+
+	private void createAdditionalConstructor() {
+		if (hasFragmentInClasspath()) {
+			fragmentField = addFragmentConstructor(holder.classes().FRAGMENT, "fragment_");
+		}
+		if (hasFragmentSupportInClasspath()) {
+			fragmentSupportField = addFragmentConstructor(holder.classes().SUPPORT_V4_FRAGMENT, "fragmentSupport_");
+		}
+	}
+
+	private JFieldVar addFragmentConstructor(JClass fragmentClass, String fieldName) {
+		JFieldVar fragmentField = holder.getIntentBuilderClass().field(PRIVATE, fragmentClass, fieldName);
+		JExpression generatedClass = holder.getGeneratedClass().dotclass();
+
+		JMethod constructor = holder.getIntentBuilderClass().constructor(JMod.PUBLIC);
+		JVar constructorFragmentParam = constructor.param(fragmentClass, "fragment");
+		JBlock constructorBody = constructor.body();
+		constructorBody.invoke("super").arg(constructorFragmentParam.invoke("getActivity")).arg(generatedClass);
+		constructorBody.assign(fragmentField, constructorFragmentParam);
+
+		return fragmentField;
+	}
+
+	private void overrideStartForResultMethod() {
+		if (fragmentSupportField == null && fragmentField == null) {
+			return;
+		}
 		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.codeModel().VOID, "startForResult");
+		method.annotate(Override.class);
 		JVar requestCode = method.param(holder.codeModel().INT, "requestCode");
-
 		JBlock body = method.body();
-		JClass activityClass = holder.classes().ACTIVITY;
-        JConditional condition = null;
-        if (fragmentSupportField != null) {
-            condition = body._if(fragmentSupportField.ne(JExpr._null()));
-            condition._then() //
-                    .invoke(fragmentSupportField, "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
-        }
-        if (fragmentField != null) {
-            if (condition == null) {
-                condition = body._if(fragmentField.ne(JExpr._null()));
-            } else {
-                condition = condition._elseif(fragmentField.ne(JExpr._null()));
-            }
-            condition._then() //
-                    .invoke(fragmentField, "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
-        }
-        if (condition == null) {
-            condition = body._if(contextField._instanceof(activityClass));
-        } else {
-            condition = condition._elseif(contextField._instanceof(activityClass));
-        }
-        condition._then() //
-                .invoke(JExpr.cast(activityClass, contextField), "startActivityForResult").arg(holder.getIntentField()).arg(requestCode);
-        condition._else() //
-                .invoke(contextField, "startActivity").arg(holder.getIntentField());
+
+		JConditional condition = null;
+		if (fragmentSupportField != null) {
+			condition = body._if(fragmentSupportField.ne(JExpr._null()));
+			condition._then() //
+					.invoke(fragmentSupportField, "startActivityForResult").arg(intentField).arg(requestCode);
+		}
+		if (fragmentField != null) {
+			if (condition == null) {
+				condition = body._if(fragmentField.ne(JExpr._null()));
+			} else {
+				condition = condition._elseif(fragmentField.ne(JExpr._null()));
+			}
+			condition._then() //
+					.invoke(fragmentField, "startActivityForResult").arg(intentField).arg(requestCode);
+		}
+		condition._else().invoke(_super(), "startForResult").arg(requestCode);
+	}
+
+	protected boolean hasFragmentInClasspath() {
+		boolean fragmentExistsInSdk = androidManifest.getMinSdkVersion() >= MIN_SDK_WITH_FRAGMENT_SUPPORT;
+		return fragmentExistsInSdk && elementUtils.getTypeElement(CanonicalNameConstants.FRAGMENT) != null;
+	}
+
+	protected boolean hasFragmentSupportInClasspath() {
+		return elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
 	}
 }
