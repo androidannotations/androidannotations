@@ -15,10 +15,9 @@
  */
 package org.androidannotations.holder;
 
-import org.androidannotations.helper.IntentBuilder;
-
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JFieldRef;
+import org.androidannotations.helper.IntentBuilder;
 
 public interface HasIntentBuilder extends GeneratedClassHolder {
 
@@ -28,7 +27,7 @@ public interface HasIntentBuilder extends GeneratedClassHolder {
 
 	public JDefinedClass getIntentBuilderClass();
 
-	public void setIntentField(JFieldVar intentField);
+	public void setIntentField(JFieldRef intentField);
 
-	public JFieldVar getIntentField();
+	public JFieldRef getIntentField();
 }

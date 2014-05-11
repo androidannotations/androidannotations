@@ -15,28 +15,23 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-
-import javax.lang.model.element.TypeElement;
-
+import com.sun.codemodel.*;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.helper.ServiceIntentBuilder;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
+import javax.lang.model.element.TypeElement;
+
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
 
 public class EServiceHolder extends EComponentHolder implements HasIntentBuilder, HasReceiverRegistration {
 
     private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
-	private JFieldVar intentField;
+	private JFieldRef intentField;
 	private ReceiverRegistrationHolder receiverRegistrationHolder;
 	private JBlock onDestroyBeforeSuperBlock;
 
@@ -90,12 +85,12 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	}
 
 	@Override
-	public void setIntentField(JFieldVar intentField) {
+	public void setIntentField(JFieldRef intentField) {
 		this.intentField = intentField;
 	}
 
 	@Override
-	public JFieldVar getIntentField() {
+	public JFieldRef getIntentField() {
 		return intentField;
 	}
 
