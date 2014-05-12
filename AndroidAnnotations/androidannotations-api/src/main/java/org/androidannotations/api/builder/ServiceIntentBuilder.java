@@ -13,16 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.holder;
+package org.androidannotations.api.builder;
 
-import com.sun.codemodel.JDefinedClass;
-import org.androidannotations.helper.IntentBuilder;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 
-public interface HasIntentBuilder extends GeneratedClassHolder {
+public class ServiceIntentBuilder<I extends ServiceIntentBuilder<I>> extends IntentBuilder<I> {
 
-    public IntentBuilder getIntentBuilder();
+	public ServiceIntentBuilder(Context context, Class<?> clazz) {
+		super(context, clazz);
+	}
 
-	public void setIntentBuilderClass(JDefinedClass intentBuilderClass);
+	public ServiceIntentBuilder(Context context, Intent intent) {
+		super(context, intent);
+	}
 
-	public JDefinedClass getIntentBuilderClass();
+	public ComponentName start() {
+		return context.startService(intent);
+	}
+
+	public boolean stop() {
+		return context.stopService(intent);
+	}
 }
