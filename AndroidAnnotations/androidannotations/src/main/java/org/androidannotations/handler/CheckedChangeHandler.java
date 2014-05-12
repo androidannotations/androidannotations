@@ -16,7 +16,9 @@
 package org.androidannotations.handler;
 
 import com.sun.codemodel.*;
+
 import org.androidannotations.annotations.CheckedChange;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -25,6 +27,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+
 import java.util.List;
 
 public class CheckedChangeHandler extends AbstractListenerHandler {
@@ -49,7 +52,7 @@ public class CheckedChangeHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
+	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		JVar btnParam = listenerMethod.param(classes().COMPOUND_BUTTON, "buttonView");
 		JVar isCheckedParam = listenerMethod.param(codeModel().BOOLEAN, "isChecked");
 		boolean isCheckedParamExists = parameters.size() == 2;
