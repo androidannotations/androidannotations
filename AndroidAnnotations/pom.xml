@@ -285,4 +285,12 @@
 		<developerConnection>scm:git:git@github.com:tomreay/androidannotations.git</developerConnection>
 		<url>https://github.com/tomreay/androidannotations</url>
 	</scm>
+
+    <distributionManagement>
+        <repository>
+            <id>deployment</id>
+            <url>http://nexus-tomreay.rhcloud.com/nexus/content/repositories/releases/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 </project>
