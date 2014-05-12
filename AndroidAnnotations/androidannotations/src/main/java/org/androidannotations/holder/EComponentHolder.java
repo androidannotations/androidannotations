@@ -83,7 +83,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
         JFieldVar skipInjectBeans = generatedClass.field(PROTECTED, boolean.class, "skipInjectBeans");
 
         JMethod setSkipInjectBeans = generatedClass.method(PUBLIC, codeModel().VOID, "setSkipInjectBeans");
-        setSkipInjectBeans.javadoc().add(SET_SKIP_INJECT_BEANS_JAVADOC).
+        setSkipInjectBeans.javadoc().add(SET_SKIP_INJECT_BEANS_JAVADOC);
         JVar setSkipInjectBeansParam = setSkipInjectBeans.param(boolean.class, "mSkipInjectBeans");
         setSkipInjectBeans.body().assign(skipInjectBeans, setSkipInjectBeansParam);
 
