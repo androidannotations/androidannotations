@@ -1,12 +1,12 @@
 package org.androidannotations.api.builder;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
 public class IntentBuilder<I extends IntentBuilder<I>> extends Builder {
@@ -15,8 +15,7 @@ public class IntentBuilder<I extends IntentBuilder<I>> extends Builder {
 	protected final Intent intent;
 
 	public IntentBuilder(Context context, Class<?> clazz) {
-		this.context = context;
-		intent = new Intent(context, clazz);
+		this(context, new Intent(context, clazz));
 	}
 
 	public IntentBuilder(Context context, Intent intent) {
