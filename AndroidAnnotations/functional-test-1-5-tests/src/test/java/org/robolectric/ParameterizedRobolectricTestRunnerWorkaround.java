@@ -27,10 +27,10 @@ public class ParameterizedRobolectricTestRunnerWorkaround extends Suite {
 		
 		Config config = AnnotationUtil.defaultsFor(Config.class);
 
-	    Config globalConfig = Config.Implementation.fromProperties(testrunner.getConfigProperties());
-	    if (globalConfig != null) {
-	      config = new Config.Implementation(config, globalConfig);
-	    }
+		Config globalConfig = Config.Implementation.fromProperties(testrunner.getConfigProperties());
+		if (globalConfig != null) {
+			config = new Config.Implementation(config, globalConfig);
+		}
 		
 		AndroidManifest manifest = testrunner.getAppManifest(config);
 		Method getEnvironmentMethod = RobolectricTestRunner.class.getDeclaredMethod("getEnvironment", AndroidManifest.class, Config.class);

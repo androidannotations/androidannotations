@@ -15,21 +15,20 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
+import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.process.ProcessHolder;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.ModelConstants;
-import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
 
 public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
@@ -56,6 +55,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 			generatedClass.generify(typeParam.getSimpleName().toString(), bound);
 		}
 		generatedClass._extends(annotatedComponent);
+		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors(), this);
 	}
 
 	@Override

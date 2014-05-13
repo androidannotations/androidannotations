@@ -61,4 +61,14 @@ public class ViewsInjectedActivityTest {
 		Assertions.assertThat(activity.counter).isEqualTo(2);
 	}
 
+	@Test
+	public void listOfViewAreInjected() {
+		Assertions.assertThat(activity.views).hasSize(2);
+	}
+
+	@Test
+	public void listOfTextViewAreInjected() {
+		Assertions.assertThat(activity.textViews).hasSize(2);
+	}
+
 }

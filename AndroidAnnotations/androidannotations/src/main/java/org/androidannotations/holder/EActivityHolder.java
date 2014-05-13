@@ -15,19 +15,10 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-
-import java.util.*;
+import com.sun.codemodel.*;
+import org.androidannotations.api.SdkVersionHelper;
+import org.androidannotations.helper.*;
+import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -35,23 +26,12 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.androidannotations.api.SdkVersionHelper;
-import org.androidannotations.helper.*;
-import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr.*;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
 
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
@@ -62,7 +42,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JMethod setContentViewLayout;
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
-	private JFieldVar intentField;
 	private InstanceStateHolder instanceStateHolder;
 	private OnActivityResultHolder onActivityResultHolder;
 	private ReceiverRegistrationHolder receiverRegistrationHolder;
@@ -432,16 +411,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	public JDefinedClass getIntentBuilderClass() {
 		return intentBuilderClass;
-	}
-
-	@Override
-	public void setIntentField(JFieldVar intentField) {
-		this.intentField = intentField;
-	}
-
-	@Override
-	public JFieldVar getIntentField() {
-		return intentField;
 	}
 
 	public RoboGuiceHolder getRoboGuiceHolder() {
