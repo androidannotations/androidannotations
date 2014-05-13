@@ -296,6 +296,6 @@
             <id>snapshots</id>
             <url>http://nexus-tomreay.rhcloud.com/nexus/content/repositories/snapshots/</url>
             <layout>default</layout>
-        </snapshotRepository>dd
+        </snapshotRepository>
     </distributionManagement>
 </project>
