@@ -47,6 +47,7 @@
         <activity android:name=".CheckedChangeHandledActivity_" />
         <activity android:name=".LongClicksHandledActivity_" />
         <activity android:name=".TouchesHandledActivity_" />
+        <activity android:name=".EditorActionsHandledActivity_" />
         <activity android:name=".ItemClicksHandledActivity_" />
         <activity android:name=".ActivityWithServices_" />
         <activity android:name=".ExtraInjectedActivity_" />

@@ -13,14 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15;
-
-import org.androidannotations.annotations.CustomTitle;
-import org.androidannotations.annotations.EActivity;
+package org.androidannotations.api.builder;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 
-@EActivity
-@CustomTitle(R.layout.component)
-public class CustomTitleActivity extends Activity {
+public class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> extends IntentBuilder<I> {
+
+	public ActivityIntentBuilder(Context context, Class<?> clazz) {
+		super(context, clazz);
+	}
+
+	public ActivityIntentBuilder(Context context, Intent intent) {
+		super(context, intent);
+	}
+
+	public void start() {
+		context.startActivity(intent);
+	}
+
+	public void startForResult(int requestCode) {
+		if (context instanceof Activity) {
+			((Activity) context).startActivityForResult(intent, requestCode);
+		} else {
+			context.startActivity(intent);
+		}
+	}
 }

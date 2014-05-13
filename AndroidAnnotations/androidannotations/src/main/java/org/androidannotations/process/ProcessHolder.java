@@ -73,6 +73,7 @@ public class ProcessHolder {
 		public final JClass SEEKBAR = refClass(CanonicalNameConstants.SEEKBAR);
 		public final JClass ON_SEEKBAR_CHANGE_LISTENER = refClass(CanonicalNameConstants.ON_SEEKBAR_CHANGE_LISTENER);
 		public final JClass TEXT_VIEW = refClass(CanonicalNameConstants.TEXT_VIEW);
+		public final JClass TEXT_VIEW_ON_EDITOR_ACTION_LISTENER = refClass(CanonicalNameConstants.TEXT_VIEW_ON_EDITOR_ACTION_LISTENER);
 		public final JClass COMPOUND_BUTTON = refClass(CanonicalNameConstants.COMPOUND_BUTTON);
 		public final JClass COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER = refClass(CanonicalNameConstants.COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER);
 		public final JClass VIEW = refClass(CanonicalNameConstants.VIEW);
