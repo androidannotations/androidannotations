@@ -4,7 +4,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>3.1-TOMREAY-SNAPSHOT</version>
+	<version>3.1-TOMREAY</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -284,7 +284,8 @@
 		<connection>scm:git:git@github.com:tomreay/androidannotations.git</connection>
 		<developerConnection>scm:git:git@github.com:tomreay/androidannotations.git</developerConnection>
 		<url>https://github.com/tomreay/androidannotations</url>
-	</scm>
+	  <tag>androidannotations-parent-3.1-TOMREAY</tag>
+  </scm>
 
     <distributionManagement>
         <repository>
