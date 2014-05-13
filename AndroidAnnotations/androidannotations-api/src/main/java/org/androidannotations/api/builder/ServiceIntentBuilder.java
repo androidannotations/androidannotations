@@ -13,28 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.otto;
+package org.androidannotations.api.builder;
 
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.Trace;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
+public class ServiceIntentBuilder<I extends ServiceIntentBuilder<I>> extends IntentBuilder<I> {
 
-@EBean
-public class OttoBean {
-	
-	@Trace
-	@Background
-	@Subscribe
-	public void onEvent(Event event) {
-
-	}
-	
-	@Produce
-	public Event produceEvent() {
-		return new Event();
+	public ServiceIntentBuilder(Context context, Class<?> clazz) {
+		super(context, clazz);
 	}
 
+	public ServiceIntentBuilder(Context context, Intent intent) {
+		super(context, intent);
+	}
+
+	public ComponentName start() {
+		return context.startService(intent);
+	}
+
+	public boolean stop() {
+		return context.stopService(intent);
+	}
 }
