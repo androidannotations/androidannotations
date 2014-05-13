@@ -292,5 +292,10 @@
             <url>http://nexus-tomreay.rhcloud.com/nexus/content/repositories/releases/</url>
             <layout>default</layout>
         </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://nexus-tomreay.rhcloud.com/nexus/content/repositories/snapshots/</url>
+            <layout>default</layout>
+        </snapshotRepository>dd
     </distributionManagement>
 </project>
