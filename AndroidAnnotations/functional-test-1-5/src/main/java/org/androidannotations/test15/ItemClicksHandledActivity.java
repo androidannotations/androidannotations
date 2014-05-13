@@ -139,6 +139,11 @@ public class ItemClicksHandledActivity extends Activity {
 	void listViewWithOneParamItemSelected(boolean selected) {
 		listViewWithOneParamItemSelected = selected;
 	}
+	
+	@ItemSelect(R.id.listView)
+	void onItemSelected(boolean selected, int position) {
+		
+	}
 
 	@ItemLongClick
 	void listViewWithPositionItemLongClicked(int position) {
