@@ -26,6 +26,7 @@ import javax.lang.model.type.*;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
 import java.io.StringWriter;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -157,8 +158,11 @@ public class APTCodeModelHelper {
 		String methodName = executableElement.getSimpleName().toString();
 		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder, actualTypes);
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
-		method.annotate(Override.class);
 		addNonAAAnotations(method, executableElement.getAnnotationMirrors(), holder);
+
+		if (!hasAnnotation(method, Override.class)) {
+			method.annotate(Override.class);
+		}
 
 		for (Map.Entry<String, JClass> typeDeclaration : methodTypes.entrySet()) {
 			method.generify(typeDeclaration.getKey(), typeDeclaration.getValue());
@@ -222,6 +226,15 @@ public class APTCodeModelHelper {
 		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
 			param.getValue().accept(new AnnotationParamExtractor(annotate, holder, this), param.getKey().getSimpleName().toString());
 		}
+	}
+
+	private boolean hasAnnotation(JAnnotatable annotatable, Class<? extends Annotation> annotationClass) {
+		for (JAnnotationUse annotationUse : annotatable.annotations()) {
+			if (annotationUse.getAnnotationClass().fullName().equals(annotationClass.getCanonicalName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void callSuperMethod(JMethod superMethod, GeneratedClassHolder holder, JBlock callBlock) {
