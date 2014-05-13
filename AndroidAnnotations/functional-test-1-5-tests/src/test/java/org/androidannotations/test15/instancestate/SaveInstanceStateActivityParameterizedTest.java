@@ -25,13 +25,13 @@ import java.util.Collection;
 import org.fest.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.ParameterizedRobolectricTestRunner;
+import org.robolectric.ParameterizedRobolectricTestRunnerWorkaround;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
 import org.robolectric.Robolectric;
 
 import android.os.Bundle;
 
-@RunWith(ParameterizedRobolectricTestRunner.class)
+@RunWith(ParameterizedRobolectricTestRunnerWorkaround.class)
 public class SaveInstanceStateActivityParameterizedTest {
 	
 	@Parameters(name = "{0}")
