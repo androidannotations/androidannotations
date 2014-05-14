@@ -142,7 +142,7 @@ public final class CanonicalNameConstants {
 	 * RoboGuice
 	 */
 	public static final String ROBO_CONTEXT = "roboguice.util.RoboContext";
-	public static final String INJECTOR = "com.google.inject.Injector";
+	public static final String ROBO_INJECTOR = "roboguice.inject.RoboInjector";
 	public static final String KEY = "com.google.inject.Key";
 	public static final String CONTENT_VIEW_LISTENER = "roboguice.inject.ContentViewListener";
 	public static final String ON_RESTART_EVENT = "roboguice.activity.event.OnRestartEvent";

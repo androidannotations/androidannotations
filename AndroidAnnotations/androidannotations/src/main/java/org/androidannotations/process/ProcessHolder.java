@@ -130,7 +130,7 @@ public class ProcessHolder {
 		 * RoboGuice
 		 */
 		public final JClass ROBO_CONTEXT = refClass(CanonicalNameConstants.ROBO_CONTEXT);
-		public final JClass INJECTOR = refClass(CanonicalNameConstants.INJECTOR);
+		public final JClass ROBO_INJECTOR = refClass(CanonicalNameConstants.ROBO_INJECTOR);
 		public final JClass CONTENT_VIEW_LISTENER = refClass(CanonicalNameConstants.CONTENT_VIEW_LISTENER);
 		public final JClass KEY = refClass(CanonicalNameConstants.KEY);
 		public final JClass ON_RESTART_EVENT = refClass(CanonicalNameConstants.ON_RESTART_EVENT);

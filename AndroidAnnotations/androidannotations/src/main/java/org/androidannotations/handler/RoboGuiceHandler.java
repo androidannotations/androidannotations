@@ -39,6 +39,7 @@ import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
@@ -73,7 +74,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		roboGuiceHolder.getContentViewListenerField();
 		listenerFields(element, holder);
 
-		beforeCreateMethod(holder, eventManager);
+		beforeCreateMethod(holder, scopedObjects, eventManager);
 		onRestartMethod(roboGuiceHolder, eventManager);
 		onStartMethod(roboGuiceHolder, eventManager);
 		onResumeMethod(roboGuiceHolder, eventManager);
@@ -130,11 +131,15 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		return new ArrayList<String>(0);
 	}
 
-	private void beforeCreateMethod(EActivityHolder holder, JFieldVar eventManager) {
+	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scopedObjects, JFieldVar eventManager) {
 		JBlock body = holder.getInitBody();
-		JVar injector = body.decl(classes().INJECTOR, "injector_", classes().ROBO_GUICE.staticInvoke("getInjector").arg(_this()));
+		JClass keyWildCard = classes().KEY.narrow(codeModel().wildcard());
+		JClass scopedHashMap = classes().HASH_MAP.narrow(keyWildCard, classes().OBJECT);
+		body.assign(scopedObjects, JExpr._new(scopedHashMap));
+
+		JVar injector = body.decl(classes().ROBO_INJECTOR, "injector_", classes().ROBO_GUICE.staticInvoke("getInjector").arg(_this()));
 		body.assign(eventManager, invoke(injector, "getInstance").arg(classes().EVENT_MANAGER.dotclass()));
-		injector.invoke("injectMembersWithoutViews").arg(_this());
+		body.add(injector.invoke("injectMembersWithoutViews").arg(_this()));
 		fireEvent(eventManager, body, classes().ON_CREATE_EVENT, holder.getInitSavedInstanceParam());
 	}
 

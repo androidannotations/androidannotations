@@ -664,13 +664,13 @@ public class ValidatorHelper {
 		}
 
 		try {
-			if (elementUtils.getTypeElement(CanonicalNameConstants.INJECTOR) == null) {
+			if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_INJECTOR) == null) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR);
+				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
 			}
 		} catch (RuntimeException e) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR);
+			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
 		}
 	}
 
