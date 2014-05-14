@@ -19,7 +19,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.app.Activity;
@@ -35,9 +34,9 @@ import org.androidannotations.test15.R;
 /**
  * Adapted from http://pivotal.github.com/robolectric/roboguice.html
  */
-//@RoboGuice
+@RoboGuice
 @EActivity(R.layout.injected)
-public class ActivityWithRoboGuice extends RoboActivity {
+public class ActivityWithRoboGuice extends Activity {
 
 	@InjectResource(R.string.injected_activity_caption)
 	String caption;
