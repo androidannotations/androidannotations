@@ -177,6 +177,7 @@ public class ProcessHolder {
 		public final JClass HTTP_AUTHENTICATION = refClass(CanonicalNameConstants.HTTP_AUTHENTICATION);
 		public final JClass HTTP_BASIC_AUTHENTICATION = refClass(CanonicalNameConstants.HTTP_BASIC_AUTHENTICATION);
 		public final JClass REST_CLIENT_EXCEPTION = refClass(CanonicalNameConstants.REST_CLIENT_EXCEPTION);
+		public final JClass NESTED_RUNTIME_EXCEPTION = refClass(CanonicalNameConstants.NESTED_RUNTIME_EXCEPTION);
 	}
 
 	private final Map<Element, GeneratedClassHolder> generatedClassHolders = new HashMap<Element, GeneratedClassHolder>();
