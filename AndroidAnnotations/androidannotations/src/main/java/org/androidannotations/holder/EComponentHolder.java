@@ -15,34 +15,31 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.PRIVATE;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.*;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PROTECTED;
+import static com.sun.codemodel.JMod.PUBLIC;
 
 public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
     private static final String METHOD_MAIN_LOOPER = "getMainLooper";
+    private static final String SET_SKIP_INJECT_BEANS_JAVADOC = "Controls whether bean injection is performed or not." +
+            "  Useful for testing so that you can set the beans as mock objects and call this method with true.  " +
+            "Then the mock objects will not get overwritten it init_()";
 
 	protected JExpression contextRef;
 	protected JMethod init;
+    private JMethod injectBeans;
 	private JVar resourcesRef;
 	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<TypeMirror, JFieldVar>();
 	private JVar handler;
@@ -72,6 +69,28 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	public JBlock getInitBody() {
 		return getInit().body();
 	}
+
+    public JMethod getInjectBeans() {
+        if (injectBeans == null) {
+            setInjectBeans();
+        }
+        return injectBeans;
+    }
+
+    private void setInjectBeans() {
+        injectBeans = generatedClass.method(PROTECTED, codeModel().VOID, "injectBeans_");
+
+        JFieldVar skipInjectBeans = generatedClass.field(PROTECTED, boolean.class, "skipInjectBeans");
+
+        JMethod setSkipInjectBeans = generatedClass.method(PUBLIC, codeModel().VOID, "setSkipInjectBeans");
+        setSkipInjectBeans.javadoc().add(SET_SKIP_INJECT_BEANS_JAVADOC);
+        JVar setSkipInjectBeansParam = setSkipInjectBeans.param(boolean.class, "mSkipInjectBeans");
+        setSkipInjectBeans.body().assign(skipInjectBeans, setSkipInjectBeansParam);
+
+        getInitBody()._if(skipInjectBeans.eq(FALSE))._then().invoke(injectBeans);
+    }
+
+    public JBlock getInjectBody() { return getInjectBeans().body(); }
 
 	public JVar getResourcesRef() {
 		if (resourcesRef == null) {
