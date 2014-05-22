@@ -15,13 +15,13 @@
  */
 package org.androidannotations.test15.ebean;
 
-import static org.fest.assertions.Assertions.assertThat;
-
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class BeanInjectedActivityTest {
@@ -48,6 +48,15 @@ public class BeanInjectedActivityTest {
 	public void dependency_with_annotation_value_is_of_annotation_value_type() {
 		assertThat(activity.interfaceDependency).isInstanceOf(SomeImplementation.class);
 	}
+
+    @Test
+    public void dependency_injection_is_skipped() {
+        activity = new BeanInjectedActivity_();
+        activity.setSkipInjectBeans(true);
+        activity.onCreate(null);
+
+        assertNull(activity.dependency);
+    }
 	
 	@Test
 	public void singleton_dependency_is_same_reference() {
@@ -58,5 +67,4 @@ public class BeanInjectedActivityTest {
 		
 		assertThat(newActivity.singletonDependency).isSameAs(initialDependency);
 	}
-	
 }

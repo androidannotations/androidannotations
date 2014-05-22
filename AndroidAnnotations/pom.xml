@@ -2,15 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>3.1-SNAPSHOT</version>
+	<version>3.2-TOMREAY-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -180,7 +174,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.2.1</version>
+					<version>2.5</version>
 					<configuration>
 						<mavenExecutorId>forked-path</mavenExecutorId>
 					</configuration>
@@ -287,40 +281,22 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:git@github.com:excilys/androidannotations.git</connection>
-		<developerConnection>scm:git:git@github.com:excilys/androidannotations.git</developerConnection>
-		<url>https://github.com/excilys/androidannotations</url>
-	</scm>
+		<connection>scm:git:git@github.com:tomreay/androidannotations.git</connection>
+		<developerConnection>scm:git:git@github.com:tomreay/androidannotations.git</developerConnection>
+		<url>https://github.com/tomreay/androidannotations</url>
+	  <tag>HEAD</tag>
+  </scm>
 
-	<profiles>
-		<profile>
-			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.4</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
-
+    <distributionManagement>
+        <repository>
+            <id>deployment</id>
+            <url>http://nexus-tomreay.rhcloud.com/nexus/content/repositories/releases/</url>
+            <layout>default</layout>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://nexus-tomreay.rhcloud.com/nexus/content/repositories/snapshots/</url>
+            <layout>default</layout>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
