@@ -15,32 +15,16 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-
-import javax.lang.model.element.TypeElement;
-
+import com.sun.codemodel.*;
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.HoloEverywhereHelper;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import javax.lang.model.element.TypeElement;
+
+import static com.sun.codemodel.JExpr.*;
+import static com.sun.codemodel.JMod.*;
 
 public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
@@ -203,7 +187,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	public JFieldVar getContentView() {
 		if (contentView == null) {
 			setContentView();
-			setOnCreateView();
 		}
 		return contentView;
 	}
@@ -230,8 +213,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JVar savedInstanceState = onCreateView.param(classes().BUNDLE, "savedInstanceState");
 
 		JBlock body = onCreateView.body();
-		body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
-
 		setContentViewBlock = body.block();
 
 		body._return(contentView);
