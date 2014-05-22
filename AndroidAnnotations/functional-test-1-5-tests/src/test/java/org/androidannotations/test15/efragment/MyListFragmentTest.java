@@ -15,22 +15,26 @@
  */
 package org.androidannotations.test15.efragment;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ListView;
-
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.ShadowListFragment;
+import org.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.concurrent.Executor;
+
+import static com.xtremelabs.robolectric.Robolectric.shadowOf;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidAnnotationsTestRunner.class)
 public class MyListFragmentTest {
@@ -58,10 +62,76 @@ public class MyListFragmentTest {
 		assertThat(myListFragment.listItemClicked).isTrue();
 	}
 
+	@Test
+	public void not_ignored_method_is_called() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.notIgnored();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void uithread_method_is_called() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.uiThread();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void background_method_is_called() {
+		assertFalse(myListFragment.didExecute);
+		runBackgroundsOnSameThread();
+		myListFragment.backgroundThread();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void ignored_when_detached_works_for_uithread_method() {
+		popBackStack();
+
+		assertFalse(myListFragment.didExecute);
+		myListFragment.uiThreadIgnored();
+		assertFalse(myListFragment.didExecute);
+	}
+
+	@Test
+	public void ignored_when_detached_works_for_background_method() {
+		popBackStack();
+
+		assertFalse(myListFragment.didExecute);
+		runBackgroundsOnSameThread();
+		myListFragment.backgroundThreadIgnored();
+		assertFalse(myListFragment.didExecute);
+	}
+
+	@Test
+	public void ignored_when_detached_works_for_ignored_method() {
+		popBackStack();
+
+		assertFalse(myListFragment.didExecute);
+		myListFragment.ignored();
+		assertFalse(myListFragment.didExecute);
+	}
+
+	private void runBackgroundsOnSameThread() {
+		//Simplify the threading by making a dummy executor that runs off the same thread
+		BackgroundExecutor.setExecutor(new Executor() {
+			@Override
+			public void execute(Runnable command) {
+				command.run();
+			}
+		});
+	}
+
+	private void popBackStack() {
+		//TestFragmentManager doesn't have any implementation for popping the back stack so this is a work around
+		shadowOf(myListFragment).setActivity(null);
+	}
+
 	public static void startFragment(Fragment fragment) {
 		FragmentManager fragmentManager = new FragmentActivity().getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.add(fragment, null);
+		fragmentTransaction.addToBackStack("frag");
 		fragmentTransaction.commit();
 	}
 }
