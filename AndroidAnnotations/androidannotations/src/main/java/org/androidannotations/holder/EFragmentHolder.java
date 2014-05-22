@@ -183,7 +183,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	public JFieldVar getContentView() {
 		if (contentView == null) {
 			setContentView();
-			setOnCreateView();
 		}
 		return contentView;
 	}
@@ -210,8 +209,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JVar savedInstanceState = onCreateView.param(classes().BUNDLE, "savedInstanceState");
 
 		JBlock body = onCreateView.body();
-		body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
-
 		setContentViewBlock = body.block();
 
 		body._return(contentView);
