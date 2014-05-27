@@ -1,74 +1,90 @@
 package org.robolectric;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import org.junit.Test;
+import org.fest.reflect.reference.TypeRef;
 import org.junit.runner.Runner;
 import org.junit.runners.Suite;
+import org.junit.runners.model.InitializationError;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.AnnotationUtil;
+
+import static org.fest.reflect.core.Reflection.*;
 
 public class ParameterizedRobolectricTestRunnerWorkaround extends Suite {
 
 	private Object delegate; // ParameterizedRobolectricTestRunner
 	private Class<?> runnerClass; // ParameterizedRobolectricTestRunner.class
-	private Field lastTestRunnerClassField; // RobolectricTestRunner.lastTestRunnerClass
 	private Class<?> testRunnerClass; // ParameterizedRobolectricTestRunner$TestClassRunnerForParameters.class
 	private RobolectricTestRunner testrunner;
+	private List<Runner> runners; // delegate.getChildren()
 	
 	public ParameterizedRobolectricTestRunnerWorkaround(Class<?> klass) throws Throwable {
 		super(klass, Collections.<Runner>emptyList());
 		
-		testrunner = new RobolectricTestRunner(FakeTestClass.class);
+		testrunner = new ClassLoaderCreatorRobolectricTestRunner(klass);
 		
-		Config config = AnnotationUtil.defaultsFor(Config.class);
-
-		Config globalConfig = Config.Implementation.fromProperties(testrunner.getConfigProperties());
-		if (globalConfig != null) {
-			config = new Config.Implementation(config, globalConfig);
-		}
+		Config config = testrunner.getConfig(klass.getMethods()[0]);
 		
 		AndroidManifest manifest = testrunner.getAppManifest(config);
-		Method getEnvironmentMethod = RobolectricTestRunner.class.getDeclaredMethod("getEnvironment", AndroidManifest.class, Config.class);
-		getEnvironmentMethod.setAccessible(true);
-		SdkEnvironment environment = (SdkEnvironment) getEnvironmentMethod.invoke(testrunner, manifest, config);
+		SdkEnvironment environment  = method("getEnvironment")
+				.withReturnType(SdkEnvironment.class).withParameterTypes(AndroidManifest.class, Config.class).in(testrunner).invoke(manifest, config);
 		
-		runnerClass = environment.getRobolectricClassLoader().loadClass(ParameterizedRobolectricTestRunner.class.getName());
-		testRunnerClass = environment.getRobolectricClassLoader().loadClass(runnerClass.getName() + "$TestClassRunnerForParameters");
+		runnerClass = type(ParameterizedRobolectricTestRunner.class.getName()).withClassLoader(environment.getRobolectricClassLoader()).load();
+		testRunnerClass = type(runnerClass.getName() + "$TestClassRunnerForParameters").withClassLoader(environment.getRobolectricClassLoader()).load();
 		
-		lastTestRunnerClassField = RobolectricTestRunner.class.getDeclaredField("lastTestRunnerClass");
+		Field lastTestRunnerClassField = field("lastTestRunnerClass").ofType(Class.class).in(RobolectricTestRunner.class).info();
 		lastTestRunnerClassField.setAccessible(true);
-		
 		lastTestRunnerClassField.set(testrunner, testRunnerClass);
 		
-		Constructor<?> constructor = runnerClass.getConstructor(Class.class);
-		delegate = constructor.newInstance(environment.getRobolectricClassLoader().loadClass(klass.getName()));
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected List<Runner> getChildren() {
-		try {
-			lastTestRunnerClassField.set(testrunner, testRunnerClass);
-			
-			Method getChildrenMethod = runnerClass.getDeclaredMethod("getChildren");
-			getChildrenMethod.setAccessible(true);
-			return (List<Runner>) getChildrenMethod.invoke(delegate);
-		} catch (ReflectiveOperationException e) {
-			throw new RuntimeException(e);
-		} catch (SecurityException e) {
-			throw new RuntimeException(e);
+		delegate = constructor().withParameterTypes(Class.class).in(runnerClass)
+				.newInstance(type(klass.getName()).withClassLoader(environment.getRobolectricClassLoader()).load());
+		
+		Field lastSdkEnvironmentField = field("lastSdkEnvironment").ofType(SdkEnvironment.class).in(RobolectricTestRunner.class).info();
+		lastSdkEnvironmentField.setAccessible(true);
+		
+		Field lastSdkConfigField = field("lastSdkConfig").ofType(SdkConfig.class).in(RobolectricTestRunner.class).info();
+		lastSdkConfigField.setAccessible(true);
+		
+		runners = method("getChildren").withReturnType(new TypeRef<List<Runner>>() {}) .in(delegate).invoke();
+		
+		for (Runner runner : runners) {
+			lastTestRunnerClassField.set(runner, testRunnerClass);
+			lastSdkEnvironmentField.set(runner, environment);
+			lastSdkConfigField.set(runner, environment.getSdkConfig());
 		}
 	}
-
-	public static class FakeTestClass { 
-		
-		@Test
-		public void test() {}
-	}
 	
+	@Override
+	protected List<Runner> getChildren() {
+		return runners;
+	}
+
+	private static class ClassLoaderCreatorRobolectricTestRunner extends RobolectricTestRunner {
+
+		public ClassLoaderCreatorRobolectricTestRunner(Class<?> testClass)
+				throws InitializationError, IllegalArgumentException, IllegalAccessException {
+			super(testClass);
+			
+			Map<Class<? extends RobolectricTestRunner>, EnvHolder> envHoldersByTestRunner = 
+					field("envHoldersByTestRunner").ofType(new TypeRef<Map<Class<? extends RobolectricTestRunner>, EnvHolder>>() {}).in(this).get();
+			
+			EnvHolder envHolder = envHoldersByTestRunner.get(RobolectricTestRunner.class);
+			
+			if (envHolder != null) {
+				Field envHolderField = field("envHolder").ofType(EnvHolder.class).in(RobolectricTestRunner.class).info();
+				envHolderField.setAccessible(true);
+				envHolderField.set(this, envHolder);
+			} else {
+				envHoldersByTestRunner.put(RobolectricTestRunner.class, envHolder);
+			}
+		}
+		
+		@Override
+		protected void validateConstructor(List<Throwable> errors) {
+			validateOnlyOneConstructor(errors);
+		}
+	}
 }
