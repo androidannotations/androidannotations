@@ -159,10 +159,10 @@ public class ValidatorHelper {
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
 
-	public void enclosingElementHasEActivityOrEFragmentOrEService(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		@SuppressWarnings("unchecked")
-		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class);
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class, EIntentService.class);
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
 
