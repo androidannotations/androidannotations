@@ -19,28 +19,23 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.view.MenuItem;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.androidannotations.test15.R;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowHtml;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MySherlockActivityTest {
 
 	private MySherlockActivity_ activity;
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowHtml.class);
-
-		activity = new MySherlockActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(MySherlockActivity_.class).create().get();
 	}
 
 	@Test

@@ -17,14 +17,13 @@ package org.androidannotations.test15.application;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.androidannotations.test15.roboguice.InjectedTestRunner;
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
 import org.androidannotations.test15.roboguice.SampleRoboApplication_;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(InjectedTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GeneratedApplicationTest {
 
 	@Test

@@ -20,29 +20,31 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.util.ActivityController;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AfterInjectActivityTest {
 	
 	AfterInjectActivity_ activity;
+	ActivityController<AfterInjectActivity_> activityController;
 
 	@Before
 	public void setup() {
-		activity = new AfterInjectActivity_();
+		activityController = ActivityController.of(AfterInjectActivity_.class);
+		activity = activityController.get();
 	}
 	
 	@Test
 	public void afterInjectIsCalledInOnCreate() {
 		assertThat(activity.afterInjectCalled).isFalse();
-		activity.onCreate(null);
+		activityController.create();
 		assertThat(activity.afterInjectCalled).isTrue();
 	}
 	
 	@Test
 	public void injectionDoneWhenAfterInjectCalled() {
-		activity.onCreate(null);
+		activityController.create();
 		assertThat(activity.notificationManagerNullAfterInject).isFalse();
 	}
 
