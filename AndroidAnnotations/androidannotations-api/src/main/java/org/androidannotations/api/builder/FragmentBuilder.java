@@ -170,4 +170,8 @@ public class FragmentBuilder<I extends FragmentBuilder<I>> extends Builder {
 		args.putBundle(key, value);
 		return (I) this;
 	}
+
+	public Bundle args() {
+		return args;
+	}
 }
