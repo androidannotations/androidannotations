@@ -15,7 +15,7 @@
  */
 package org.androidannotations.api.rest;
 
-import org.springframework.web.client.RestClientException;
+import org.springframework.core.NestedRuntimeException;
 
 /**
  * This interface is used for handling rest client exceptions.
@@ -26,5 +26,5 @@ public interface RestErrorHandler {
 	 * 
 	 * @param e
 	 */
-	void onRestClientExceptionThrown(RestClientException e);
+	void onRestClientExceptionThrown(NestedRuntimeException e);
 }

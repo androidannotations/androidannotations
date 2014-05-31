@@ -137,6 +137,7 @@ public final class CanonicalNameConstants {
 	public static final String HTTP_AUTHENTICATION = "org.springframework.http.HttpAuthentication";
 	public static final String HTTP_BASIC_AUTHENTICATION = "org.springframework.http.HttpBasicAuthentication";
 	public static final String REST_CLIENT_EXCEPTION = "org.springframework.web.client.RestClientException";
+	public static final String NESTED_RUNTIME_EXCEPTION = "org.springframework.core.NestedRuntimeException";
 
 	/*
 	 * RoboGuice
