@@ -15,9 +15,10 @@
  */
 package org.androidannotations.test15.roboguice;
 
-import roboguice.config.AbstractAndroidModule;
+import com.google.inject.AbstractModule;
 
-public class RobolectricSampleModule extends AbstractAndroidModule {
+
+public class RobolectricSampleModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

@@ -21,8 +21,9 @@ import java.lang.reflect.Modifier;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AbstractActivityTest {
 
 	@Test

@@ -21,21 +21,17 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowButton;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class LongClicksHandledActivityTest {
 
 	private LongClicksHandledActivity_ activity;
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowButton.class);
-
-		activity = new LongClicksHandledActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(LongClicksHandledActivity_.class).create().get();
 	}
 
 	@Test

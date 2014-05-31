@@ -15,22 +15,22 @@
  */
 package org.androidannotations.test15.ormlite;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class OrmLiteActivityTest {
 	
 	private OrmLiteActivity_ activity;
 
 	@Before
 	public void setup() {
-		activity = new OrmLiteActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(OrmLiteActivity_.class).create().get();
 	}
 
 	@Test

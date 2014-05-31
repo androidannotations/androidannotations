@@ -21,10 +21,12 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.view.MotionEvent;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TouchesHandledActivityTest {
 
 	private TouchesHandledActivity_ activity;
@@ -33,8 +35,7 @@ public class TouchesHandledActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new TouchesHandledActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(TouchesHandledActivity_.class).create().get();
 
 		mockedEvent = MotionEvent.obtain(0, 0, 0, 0f, 0f, 0);
 	}

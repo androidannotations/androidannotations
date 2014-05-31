@@ -26,10 +26,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.database.sqlite.SQLiteDatabase;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TransactionalActivityTest {
 
 	private SQLiteDatabase mockDb;
@@ -37,8 +39,7 @@ public class TransactionalActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new TransactionalActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(TransactionalActivity_.class).create().get();
 		mockDb = mock(SQLiteDatabase.class);
 	}
 

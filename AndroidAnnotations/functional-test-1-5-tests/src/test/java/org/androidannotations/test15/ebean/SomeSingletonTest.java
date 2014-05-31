@@ -15,22 +15,23 @@
  */
 package org.androidannotations.test15.ebean;
 
-import android.content.Context;
-import android.view.View;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
+import java.lang.reflect.Field;
+
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedNotifier;
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.androidannotations.test15.EmptyActivityWithoutLayout_;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-import java.lang.reflect.Field;
+import android.content.Context;
+import android.view.View;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class SomeSingletonTest {
 	
 	@Before
