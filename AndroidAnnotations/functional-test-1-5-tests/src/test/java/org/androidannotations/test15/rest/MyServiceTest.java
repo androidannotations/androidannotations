@@ -15,8 +15,17 @@
  */
 package org.androidannotations.test15.rest;
 
-import com.xtremelabs.robolectric.Robolectric;
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.startsWith;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.androidannotations.test15.rest.RequestTestBuilder.RequestTestBuilderExecutor;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
@@ -24,22 +33,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MyServiceTest {
 
 	private MyService_ myService = new MyService_(null);

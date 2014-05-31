@@ -15,11 +15,6 @@
  */
 package org.androidannotations.test15.roboguice;
 
-import java.util.List;
-
-import roboguice.application.RoboApplication;
-
-import com.google.inject.Module;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.OrmLiteDao;
@@ -28,8 +23,10 @@ import org.androidannotations.test15.ormlite.DatabaseHelper;
 import org.androidannotations.test15.ormlite.User;
 import org.androidannotations.test15.ormlite.UserDao;
 
+import android.app.Application;
+
 @EApplication
-public class SampleRoboApplication extends RoboApplication {
+public class SampleRoboApplication extends Application {
 	
 	@Bean
 	public EmptyDependency someDependency;
@@ -37,14 +34,4 @@ public class SampleRoboApplication extends RoboApplication {
 	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
 	UserDao userDao;
 
-	private Module module = new RobolectricSampleModule();
-
-	@Override
-	protected void addApplicationModules(List<Module> modules) {
-		modules.add(module);
-	}
-
-	public void setModule(Module module) {
-		this.module = module;
-	}
 }
