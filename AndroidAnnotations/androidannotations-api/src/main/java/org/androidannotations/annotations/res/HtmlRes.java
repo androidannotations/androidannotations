@@ -15,20 +15,23 @@
  */
 package org.androidannotations.annotations.res;
 
+import org.androidannotations.annotations.ResId;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.annotations.ResId;
-
 /**
+ * <p>
  * Use on {@link java.lang.CharSequence} or {@link android.text.Spanned} fields
  * in any enhanced classes that should be injected with this specific string
  * resource as HTML.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value must be one of R.string.* fields. If the value is not
  * set, the field name will be used as the R.string.* field name.
+ * </p>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

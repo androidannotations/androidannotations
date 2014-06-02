@@ -21,24 +21,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use on methods in {@link Rest} annotated class to add a new rest service of
  * type GET.
- * <p/>
+ * </p>
+ * <p>
  * The annotation {@link #value()} is mandatory and define the URI or the full
  * URL of the web service. It MAY contain placeholders defined as follow :
  * <code>{name}</code>
- * <p/>
+ * </p>
+ * <p>
  * The annotated method MAY have parameters as soon as each parameter names are
  * present as placeholders in the URI.
- * <p/>
+ * </p>
+ * <p>
  * The annotated method CAN return <code>void</code>,
  * {@link org.springframework.http.ResponseEntity} or any concrete java classes.
  * Interfaces CAN'T be used as return type because converters have to know which
  * object to instantiate while returning result.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> Generics classes are also supported both for return type and
  * parameters.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>
@@ -51,10 +56,10 @@ import java.lang.annotation.Target;
  * 	EventList getEvents();
  * 
  * 	&#064;Get(&quot;/events/<b>{max}</b>&quot;)
- * 	ResponseEntity&lt;EventList> getEvents(int <b>max</b>);
+ * 	ResponseEntity&lt;EventList&gt; getEvents(int <b>max</b>);
  * 
  * 	&#064;Get(&quot;/events/<b>{max}</b>/<b>{filter}</b>&quot;)
- * 	ArrayList&lt;Event> getEvents(int <b>max</b>, String <b>filter</b>);
+ * 	ArrayList&lt;Event&gt; getEvents(int <b>max</b>, String <b>filter</b>);
  * }
  * </pre>
  * 

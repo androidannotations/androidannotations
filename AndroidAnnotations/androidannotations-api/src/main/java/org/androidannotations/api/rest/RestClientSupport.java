@@ -32,7 +32,7 @@ public interface RestClientSupport {
 	/**
 	 * Sets the rest template used by the rest service implementation.
 	 * 
-	 * @param rt
+	 * @param rt New {@link RestTemplate}
 	 */
 	void setRestTemplate(RestTemplate rt);
 }

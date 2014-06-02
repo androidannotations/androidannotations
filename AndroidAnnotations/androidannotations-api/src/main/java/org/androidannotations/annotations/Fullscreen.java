@@ -21,8 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link EActivity} classes that must be fullscreen.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

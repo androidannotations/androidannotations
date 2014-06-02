@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>1.6_r2</version>
+			<version>4.1.1.4</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

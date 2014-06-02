@@ -21,8 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on Activity classes that use the RoboGuice framework.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :
@@ -67,6 +68,8 @@ public @interface RoboGuice {
 	/**
 	 * The RoboGuice listener classes to bind to this activity. Will add an
 	 * injected listener field to the subclass.
+	 *
+	 * @return The RoboGuice listener classes to bind to this activity
 	 */
 	Class<?>[] value() default {};
 }

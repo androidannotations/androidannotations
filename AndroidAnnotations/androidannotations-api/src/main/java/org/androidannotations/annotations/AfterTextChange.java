@@ -15,29 +15,32 @@
  */
 package org.androidannotations.annotations;
 
+import android.text.Editable;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.text.Editable;
-
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by {@link android.text.TextWatcher#afterTextChanged(Editable s)} after the
  * text is changed on the targeted TextView or subclass of TextView.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.id.* fields that refers to
  * TextView or subclasses of TextView. If not set, the method name will be used
  * as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have multiple parameter:
+ * </p>
  * <ul>
  * <li>A {@link android.widget.TextView} parameter to know which view has
- * targeted this event
- * <li>An {@link android.text.Editable} to make changes on modified text.
+ * targeted this event</li>
+ * <li>An {@link android.text.Editable} to make changes on modified text.</li>
  * </ul>
- * <p/>
  * <blockquote>
  * 
  * Example :

@@ -21,15 +21,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use it on {@link android.app.Fragment} or
- * {@link android.support.v4.app.Fragment} fields in activity classes to
+ * android.support.v4.app.Fragment fields in activity classes to
  * retrieve and inject a fragment.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one of fragment tag. If not set, the field
  * name will be used as the tag name.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> This can only inject an existing fragment, not create them.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :
@@ -37,15 +40,15 @@ import java.lang.annotation.Target;
  * <pre>
  * &lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
  *     android:layout_width="match_parent"
- *     android:layout_height="match_parent" >
+ *     android:layout_height="match_parent" &gt;
  * 
  *     &lt;fragment
  *         android:id="@+id/myFragment"
  *         android:tag="myFragmentTag"
  *         android:name="mypackage.MyFragment_"
  *         android:layout_width="match_parent"
- *         android:layout_height="match_parent" />
- * &lt;/LinearLayout>
+ *         android:layout_height="match_parent" /&gt;
+ * &lt;/LinearLayout&gt;
  * 
  * 
  * &#064;EActivity(R.layout.main)

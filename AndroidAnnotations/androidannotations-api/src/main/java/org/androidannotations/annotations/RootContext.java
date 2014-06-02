@@ -21,13 +21,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use it on {@link android.content.Context} fields in an {@link EBean}
  * annotated classes to inject context of the parent class.
- * <p/>
+ * </p>
+ * <p>
  * This field may not be injected at runtime if the context used to create the
  * bean is not of the appropriate type. For example, if you create a new
  * instance of the bean using a Service context, and you use {@link RootContext}
  * on a field that extends Activity, this field will be null at runtime.
+ * </p>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

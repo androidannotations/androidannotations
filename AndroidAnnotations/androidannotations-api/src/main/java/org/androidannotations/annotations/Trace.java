@@ -15,25 +15,28 @@
  */
 package org.androidannotations.annotations;
 
+import android.util.Log;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.util.Log;
-
 /**
+ * <p>
  * This annotation is intended to be used on methods to log at runtime the
  * execution time.
- * <p/>
+ * </p>
+ * <p>
  * All annotation values are optional :
+ * </p>
  * <ul>
  * <li><i>tag</i>: the tag used for the log message. (default: enclosing class
  * name)</li>
  * <li><i>level</i>: the log level used for the log message. (default :
  * LOG.INFO).</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Example :

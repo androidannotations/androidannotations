@@ -22,12 +22,14 @@ import java.lang.annotation.Target;
 import java.util.Set;
 
 /**
+ * <p>
  * Use on methods in {@link Rest} annotated class to add a new rest service of
  * type OPTIONS.
- * <p/>
+ * </p>
+ * <p>
  * This annotation as the same constraints as {@link Get} but it MUST return a
  * {@link Set} of {@link org.springframework.http.HttpMethod}
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

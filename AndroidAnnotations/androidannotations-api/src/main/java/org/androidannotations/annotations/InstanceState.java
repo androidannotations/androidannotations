@@ -21,9 +21,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use on activity fields to save and restore their values when the system calls
  * <code>onSaveInstanceState(Bundle)</code> and <code>onCreate(Bundle)</code>.
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * Example :
