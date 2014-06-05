@@ -21,14 +21,15 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TracedActivityTest {
 
 	@Test
 	public void servicesAreInjected() throws IOException {
-		TracedActivity_ activity = new TracedActivity_();
-		activity.onCreate(null);
+		TracedActivity_ activity = Robolectric.buildActivity(TracedActivity_.class).create().get();
 
 		assertThat(activity.tracedMethodCalled).isFalse();
 		activity.tracedMethod(null, null);

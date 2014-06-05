@@ -22,22 +22,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Before;
+import org.fest.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized.Parameters;
+import org.robolectric.ParameterizedRobolectricTestRunnerWorkaround;
+import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
+import org.robolectric.Robolectric;
 
 import android.os.Bundle;
 
-import com.google.inject.internal.Lists;
-import org.androidannotations.test15.RobolectricParameterized;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.CustomShadowBundle;
-
-@RunWith(RobolectricParameterized.class)
+@RunWith(ParameterizedRobolectricTestRunnerWorkaround.class)
 public class SaveInstanceStateActivityParameterizedTest {
-
-	@Parameters
+	
+	@Parameters(name = "{0}")
 	public static Collection<Object[]> generateTestCases() throws Exception {
 		ArrayList<MyGenericParcelableBean<Integer>> myGenericParcelableBeanArrayList = new ArrayList<MyGenericParcelableBean<Integer>>();
 		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>((Integer) 1));
@@ -105,21 +102,16 @@ public class SaveInstanceStateActivityParameterizedTest {
 	/**
 	 * @see RobolectricParameterized
 	 */
-	public void init(String fieldName, Object value) throws Exception {
+	public SaveInstanceStateActivityParameterizedTest(String fieldName, Object value) throws Exception {
 		this.fieldName = fieldName;
 		this.value = value;
 		field = SaveInstanceStateActivity.class.getDeclaredField(fieldName);
 		field.setAccessible(true);
 	}
 
-	@Before
-	public void setup() throws Exception {
-		Robolectric.bindShadowClass(CustomShadowBundle.class);
-	}
-
 	@Test
 	public void can_save_field() throws Exception {
-		SaveInstanceStateActivity_ savedActivity = new SaveInstanceStateActivity_();
+		SaveInstanceStateActivity_ savedActivity = Robolectric.buildActivity(SaveInstanceStateActivity_.class).create().get();
 
 		Bundle bundle = saveField(savedActivity);
 
@@ -128,11 +120,11 @@ public class SaveInstanceStateActivityParameterizedTest {
 
 	@Test
 	public void can_load_field() throws Exception {
-		SaveInstanceStateActivity_ savedActivity = new SaveInstanceStateActivity_();
+		SaveInstanceStateActivity_ savedActivity = Robolectric.buildActivity(SaveInstanceStateActivity_.class).create().get();
 
 		Bundle bundle = saveField(savedActivity);
 
-		SaveInstanceStateActivity_ recreatedActivity = new SaveInstanceStateActivity_();
+		SaveInstanceStateActivity_ recreatedActivity = Robolectric.buildActivity(SaveInstanceStateActivity_.class).create().get();
 
 		Object initialFieldValue = field.get(recreatedActivity);
 

@@ -15,26 +15,31 @@
  */
 package org.androidannotations.test15.roboguice;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
+import roboguice.RoboGuice;
 import android.content.Context;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import org.androidannotations.test15.R;
 
-@RunWith(InjectedTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class InjectedActivityTest {
 
 	@Inject
 	Context context;
 
-	@Inject
 	ActivityWithRoboGuice_ injectedActivity;
 
 	@Inject
@@ -45,23 +50,23 @@ public class InjectedActivityTest {
 	@Before
 	public void setUp() {
 		fakeDateProvider.setDate("December 8, 2010");
+		injectedActivity = Robolectric.buildActivity(ActivityWithRoboGuice_.class).create().get();
 	}
 
 	@Test
 	public void shouldAssignStringToTextView() throws Exception {
-		injectedActivity.onCreate(null);
 		TextView injectedTextView = (TextView) injectedActivity.findViewById(R.id.injected_text_view);
 		assertThat(injectedTextView.getText().toString(), equalTo("Roboguice Activity tested with Robolectric - December 8, 2010"));
 	}
 
 	@Test
 	public void shouldInjectSingletons() throws Exception {
-		Counter instance = injectedActivity.getInjector().getInstance(Counter.class);
+		Counter instance = RoboGuice.getInjector(injectedActivity).getInstance(Counter.class);
 		assertEquals(0, instance.count);
 
 		instance.count++;
 
-		Counter instanceAgain = injectedActivity.getInjector().getInstance(Counter.class);
+		Counter instanceAgain = RoboGuice.getInjector(injectedActivity).getInstance(Counter.class);
 		assertEquals(1, instanceAgain.count);
 
 		assertSame(fieldCounter, instance);

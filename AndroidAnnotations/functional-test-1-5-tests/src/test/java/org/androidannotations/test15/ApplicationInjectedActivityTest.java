@@ -21,16 +21,18 @@ import org.androidannotations.test15.roboguice.SampleRoboApplication;
 import org.androidannotations.test15.roboguice.SampleRoboApplication_;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ApplicationInjectedActivityTest {
-
+	
 	@Test
 	public void should_have_application_after_create() {
-		new SampleRoboApplication_().onCreate();
-		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
-
-		activity.onCreate(null);
+		SampleRoboApplication_ application = new SampleRoboApplication_();
+		application.onCreate();
+		
+		ApplicationInjectedActivity_ activity = Robolectric.buildActivity(ApplicationInjectedActivity_.class).create().get();
 
 		assertThat(activity.customApplication).isNotNull();
 	}
@@ -41,9 +43,7 @@ public class ApplicationInjectedActivityTest {
 
 		SampleRoboApplication_.setForTesting(testApp);
 
-		ApplicationInjectedActivity_ activity = new ApplicationInjectedActivity_();
-
-		activity.onCreate(null);
+		ApplicationInjectedActivity_ activity = Robolectric.buildActivity(ApplicationInjectedActivity_.class).create().get();;
 
 		assertThat(activity.customApplication).isSameAs(testApp);
 	}

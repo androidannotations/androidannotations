@@ -15,6 +15,8 @@
  */
 package org.androidannotations.test15;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import com.test.ComplexAnnotation;
@@ -33,7 +35,7 @@ import javax.annotation.meta.When;
 @Nullable
 @TestTargetClass(String.class)
 @ComplexAnnotation(value = @SimpleAnnotation("1"), array = {@SimpleAnnotation("2"), @SimpleAnnotation("3")})
-public class OthersAnnotations {
+public class OthersAnnotations implements Parcelable {
 	
 	@Trace
 	@Background
@@ -49,6 +51,17 @@ public class OthersAnnotations {
 	@Attribute(name = "2")
 	public Event produceEvent() {
 		return new Event();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	@Background
+	public void writeToParcel(Parcel parcel, int i) {
+
 	}
 
 	public static class Event {}

@@ -20,22 +20,24 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.util.ActivityController;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AfterViewsActivityTest {
 
 	AfterViewsActivity_ activity;
+	ActivityController<AfterViewsActivity_> controller;
 
 	@Before
 	public void setup() {
-		activity = new AfterViewsActivity_();
+		controller = ActivityController.of(AfterViewsActivity_.class);
+		activity = controller.get();
 	}
 
 	@Test
 	public void afterViews_called_in_bean_before_activity() {
-		activity.onCreate(null);
+		controller.create();
 		assertThat(activity.afterViewBeanCalledBefore).isTrue();
 	}
 
