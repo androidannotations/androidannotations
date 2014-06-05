@@ -19,6 +19,7 @@ import com.sun.codemodel.*;
 import org.androidannotations.api.SdkVersionHelper;
 import org.androidannotations.helper.*;
 import org.androidannotations.process.ProcessHolder;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -420,20 +421,21 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return roboGuiceHolder;
 	}
 
-	protected void setScopeField() {
-		getRoboGuiceHolder().scope = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope_");
+	protected void setScopedObjectsField() {
+		JClass keyWildCard = classes().KEY.narrow(codeModel().wildcard());
+		JClass scopedHashMap = classes().HASH_MAP.narrow(keyWildCard, classes().OBJECT);
+
+		getRoboGuiceHolder().scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + GENERATION_SUFFIX);
+		getRoboGuiceHolder().scopedObjects.assign(JExpr._new(scopedHashMap));
 	}
 
 	protected void setEventManagerField() {
-		getRoboGuiceHolder().eventManager = generatedClass.field(JMod.PRIVATE, classes().EVENT_MANAGER, "eventManager_");
+		getRoboGuiceHolder().eventManager = generatedClass.field(JMod.PROTECTED, classes().EVENT_MANAGER, "eventManager" + GENERATION_SUFFIX);
 	}
 
-	public void setGetInjector() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, classes().INJECTOR, "getInjector");
-		method.annotate(Override.class);
-		JExpression castApplication = cast(classes().INJECTOR_PROVIDER, invoke("getApplication"));
-		method.body()._return(castApplication.invoke("getInjector"));
-		getRoboGuiceHolder().getInjector = method;
+	protected void setContentViewListenerField() {
+		getRoboGuiceHolder().contentViewListenerField = generatedClass.field(JMod.NONE, classes().CONTENT_VIEW_LISTENER, "ignored" + GENERATION_SUFFIX);
+		getRoboGuiceHolder().contentViewListenerField.annotate(classes().INJECT);
 	}
 
 	@Override
@@ -665,6 +667,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return onDestroyAfterSuperBlock;
 	}
 
+	@Override
 	public JBlock getOnResumeAfterSuperBlock() {
 		if (onResumeAfterSuperBlock == null) {
 			setOnResume();
@@ -723,6 +726,5 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	public JFieldVar getIntentFilterField(String[] actions) {
 		return receiverRegistrationHolder.getIntentFilterField(actions);
 	}
-
 
 }

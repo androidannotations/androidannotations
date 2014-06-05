@@ -39,7 +39,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 	@Override
 	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEService(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

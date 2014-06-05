@@ -16,7 +16,9 @@
 package org.androidannotations.handler;
 
 import com.sun.codemodel.*;
+
 import org.androidannotations.annotations.ItemSelect;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -26,6 +28,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+
 import java.util.List;
 
 import static com.sun.codemodel.JExpr.*;
@@ -55,7 +58,7 @@ public class ItemSelectHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(JMethod listenerMethod, JInvocation itemSelectedCall, List<? extends VariableElement> parameters) {
+	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation itemSelectedCall, List<? extends VariableElement> parameters) {
 		JClass narrowAdapterViewClass = classes().ADAPTER_VIEW.narrow(codeModel().wildcard());
 		JVar onItemClickParentParam = listenerMethod.param(narrowAdapterViewClass, "parent");
 		listenerMethod.param(classes().VIEW, "view");
@@ -83,7 +86,10 @@ public class ItemSelectHandler extends AbstractListenerHandler {
 		}
 
 		onNothingSelectedMethod.param(narrowAdapterViewClass, "parent");
-		JInvocation nothingSelectedCall = onNothingSelectedMethod.body().invoke(getMethodName());
+		JExpression activityRef = holder.getGeneratedClass().staticRef("this");
+
+		JInvocation nothingSelectedCall = invoke(activityRef, getMethodName());
+		onNothingSelectedMethod.body().add(nothingSelectedCall);
 		nothingSelectedCall.arg(JExpr.FALSE);
 		if (hasItemParameter) {
 			if (secondParameterIsInt) {

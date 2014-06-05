@@ -16,8 +16,10 @@
 package org.androidannotations.handler;
 
 import com.sun.codemodel.*;
+
 import org.androidannotations.annotations.EditorAction;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -27,6 +29,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+
 import java.util.List;
 
 public class EditorActionHandler extends AbstractListenerHandler {
@@ -65,7 +68,7 @@ public class EditorActionHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
+	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
 		JVar textView = listenerMethod.param(classes().TEXT_VIEW, "textView");
 		JVar actionId = listenerMethod.param(codeModel().INT, "actionId");
 		JVar event = listenerMethod.param(classes().KEY_EVENT, "event");

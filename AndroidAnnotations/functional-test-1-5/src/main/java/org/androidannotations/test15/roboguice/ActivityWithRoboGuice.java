@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.RoboGuice;

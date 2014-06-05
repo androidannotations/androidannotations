@@ -15,23 +15,57 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.*;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.lit;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
+import java.io.StringWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
+
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 
-import javax.lang.model.element.*;
-import javax.lang.model.type.*;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Types;
-import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.util.*;
-
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import com.sun.codemodel.JAnnotatable;
+import com.sun.codemodel.JAnnotationUse;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFormatter;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JSuperWildcard;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
 
@@ -157,8 +191,11 @@ public class APTCodeModelHelper {
 		String methodName = executableElement.getSimpleName().toString();
 		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), holder, actualTypes);
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
-		method.annotate(Override.class);
 		addNonAAAnotations(method, executableElement.getAnnotationMirrors(), holder);
+
+		if (!hasAnnotation(method, Override.class)) {
+			method.annotate(Override.class);
+		}
 
 		for (Map.Entry<String, JClass> typeDeclaration : methodTypes.entrySet()) {
 			method.generify(typeDeclaration.getKey(), typeDeclaration.getValue());
@@ -217,11 +254,31 @@ public class APTCodeModelHelper {
 	public void addAnnotation(JAnnotatable annotatable, AnnotationMirror annotationMirror, GeneratedClassHolder holder) {
 		Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = annotationMirror.getElementValues();
 
-		JAnnotationUse annotate = annotatable.annotate(typeMirrorToJClass(annotationMirror.getAnnotationType(), holder));
+		if (!hasAnnotation(annotatable, annotationMirror)) {
+			JClass annotation = typeMirrorToJClass(annotationMirror.getAnnotationType(), holder);
+			JAnnotationUse annotate = annotatable.annotate(annotation);
 
-		for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
-			param.getValue().accept(new AnnotationParamExtractor(annotate, holder, this), param.getKey().getSimpleName().toString());
+			for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
+				param.getValue().accept(new AnnotationParamExtractor(annotate, holder, this), param.getKey().getSimpleName().toString());
+			}
 		}
+	}
+
+	private boolean hasAnnotation(JAnnotatable annotatable, AnnotationMirror annotationMirror) {
+		return hasAnnotation(annotatable, annotationMirror.getAnnotationType().toString());
+	}
+
+	private boolean hasAnnotation(JAnnotatable annotatable, Class<? extends Annotation> annotationClass) {
+		return hasAnnotation(annotatable, annotationClass.getCanonicalName());
+	}
+
+	private boolean hasAnnotation(JAnnotatable annotatable, String annotationFQN) {
+		for (JAnnotationUse annotation : annotatable.annotations()) {
+			if (annotation.getAnnotationClass().fullName().equals(annotationFQN)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void callSuperMethod(JMethod superMethod, GeneratedClassHolder holder, JBlock callBlock) {
@@ -339,7 +396,7 @@ public class APTCodeModelHelper {
 	/**
 	 * Gets all of the methods of the class and includes the methods of any
 	 * implemented interfaces.
-	 *
+	 * 
 	 * @param typeElement
 	 * @return full list of methods.
 	 */
