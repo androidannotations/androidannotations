@@ -67,6 +67,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	private JFieldVar contextField;
 	private JDefinedClass editorClass;
 	private JFieldVar editorContextField;
+	private JMethod editorConstructor;
 
 	public SharedPrefHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -83,18 +84,16 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		String interfaceSimpleName = annotatedElement.getSimpleName().toString();
 		editorClass = generatedClass._class(PUBLIC | STATIC | FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
 		editorClass._extends(processHolder.refClass(EditorHelper.class).narrow(editorClass));
-		editorContextField = createContextField(editorClass);
 
 		createEditorConstructor();
 	}
 
 	private void createEditorConstructor() {
-		JMethod editorConstructor = editorClass.constructor(JMod.NONE);
+		editorConstructor = editorClass.constructor(JMod.NONE);
 		JClass sharedPreferencesClass = processHolder.refClass("android.content.SharedPreferences");
 		JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
 		editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
-		JVar contextParam = editorConstructor.param(classes().CONTEXT, "context");
-		editorConstructor.body().assign(JExpr._this().ref(editorContextField), contextParam);
+		editorConstructor.param(classes().CONTEXT, "context");
 	}
 
 	private void createEditMethod() {
@@ -147,6 +146,18 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
 	protected void setContextField() {
 		contextField = createContextField(generatedClass);
+	}
+
+	public JFieldVar getEditorContextField() {
+		if (editorContextField == null) {
+			setEditorContextField();
+		}
+		return editorContextField;
+	}
+
+	protected void setEditorContextField() {
+		editorContextField = createContextField(editorClass);
+		editorConstructor.body().assign(JExpr._this().ref(editorContextField), editorConstructor.listParams()[1]);
 	}
 
 	private JFieldVar createContextField(JDefinedClass generatedClass) {
