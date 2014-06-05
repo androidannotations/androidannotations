@@ -17,48 +17,46 @@ package org.androidannotations.test15.afterextras;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.lang.reflect.Field;
-
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.util.ActivityController;
 
-import android.app.Activity;
 import android.content.Intent;
 
-import com.xtremelabs.robolectric.shadows.ShadowActivity;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AfterExtrasActivityTest {
 
+	ActivityController<AfterExtrasActivity_> activityController;
 	AfterExtrasActivity_ activity;
 	Intent intent;
 
 	@Before
 	public void setup() {
-		activity = new AfterExtrasActivity_();
+		activityController = ActivityController.of(AfterExtrasActivity_.class);
+		activity = activityController.get();
+
 		intent = AfterExtrasActivity_.intent(activity).extraDataSet(true).get();
 	}
 
 	@Test
 	public void afterExtra_called_activity_after_setIntent() {
-		activity.setIntent(intent);
+		activityController.create();
+		assertThat(activity.extraDataSet).isFalse();
+		assertThat(activity.afterExtrasCalled).isFalse();
 
+		activity.setIntent(intent);
 		assertThat(activity.extraDataSet).isTrue();
 		assertThat(activity.afterExtrasCalled).isTrue();
 	}
 
 	@Test
 	public void afterExtra_called_activity_in_onCreate() throws Exception {
-		Field shadowField = Activity.class.getDeclaredField("__shadow__");
-		Field intentField = ShadowActivity.class.getDeclaredField("intent");
-		intentField.setAccessible(true);
+		assertThat(activity.extraDataSet).isFalse();
+		assertThat(activity.afterExtrasCalled).isFalse();
 
-		Object shadow = shadowField.get(activity);
-		intentField.set(shadow, intent);
-
-		activity.onCreate(null);
+		activityController.withIntent(intent).create();
 		assertThat(activity.extraDataSet).isTrue();
 		assertThat(activity.afterExtrasCalled).isTrue();
 	}
