@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,13 +17,13 @@ package org.androidannotations.test15.roboguice;
 
 import java.util.Date;
 
-import roboguice.config.AbstractAndroidModule;
 import roboguice.util.Ln;
 import android.util.Log;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
-public class RobolectricSampleTestModule extends AbstractAndroidModule {
+public class RobolectricSampleTestModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

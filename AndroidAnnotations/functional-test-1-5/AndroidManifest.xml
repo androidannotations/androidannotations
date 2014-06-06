@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+    Copyright (C) 2010-2014 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -19,19 +19,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.androidannotations.test15"
     android:versionCode="1"
-    android:versionName="2.1-SNAPSHOT" >
+    android:versionName="2.1-SNAPSHOT" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
         android:minSdkVersion="3"
-        android:targetSdkVersion="8" />
+        android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="org.androidannotations.test15.roboguice.SampleRoboApplication_"
-        android:debuggable="true"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:debuggable="true" >
         <activity android:name="org.androidannotations.test15.eviewgroup.CustomFrameLayoutActivity_" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,6 +47,7 @@
         <activity android:name=".CheckedChangeHandledActivity_" />
         <activity android:name=".LongClicksHandledActivity_" />
         <activity android:name=".TouchesHandledActivity_" />
+        <activity android:name=".EditorActionsHandledActivity_" />
         <activity android:name=".ItemClicksHandledActivity_" />
         <activity android:name=".ActivityWithServices_" />
         <activity android:name=".ExtraInjectedActivity_" />
@@ -64,6 +65,7 @@
 		<activity android:name=".innerclasses.ActivityWithInnerEnhancedClasses_" />
         <activity android:name=".MultiFindViewActivity_" />
         <activity android:name=".ormlite.OrmLiteActivity_" />
+        <activity android:name=".receiver.ActivityWithReceiver_" />
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuActivity_" />
         <activity android:name="org.androidannotations.test15.menu.OptionsMenuSubActivity_" />
         <activity android:name="org.androidannotations.test15.NoTitleFullscreenActivity_" />
@@ -105,6 +107,9 @@
         <service
             android:name="org.androidannotations.test15.eintentservice.IntentServiceHandledAction_"
             android:exported="false" />
+        <service
+                android:name="org.androidannotations.test15.receiver.ServiceWithReceiver_"
+                android:exported="false" />
     </application>
 
 </manifest>

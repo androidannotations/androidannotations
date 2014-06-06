@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
  */
 package org.androidannotations.api.rest;
 
-import org.springframework.web.client.RestClientException;
+import org.springframework.core.NestedRuntimeException;
 
 /**
  * This interface is used for handling rest client exceptions.
@@ -26,5 +26,5 @@ public interface RestErrorHandler {
 	 * 
 	 * @param e
 	 */
-	void onRestClientExceptionThrown(RestClientException e);
+	void onRestClientExceptionThrown(NestedRuntimeException e);
 }

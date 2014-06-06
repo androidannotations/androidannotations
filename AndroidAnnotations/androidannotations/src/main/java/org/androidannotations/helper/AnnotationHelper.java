@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 
 public class AnnotationHelper {
 
@@ -389,11 +388,6 @@ public class AnnotationHelper {
 
 	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName) {
 		return extractAnnotationClassParameter(element, annotationName, "value");
-	}
-
-	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
-		Element enclosingElement = element.getEnclosingElement();
-		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, Class<? extends Annotation> validAnnotation) {

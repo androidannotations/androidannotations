@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -114,13 +114,13 @@ public class ItemClicksHandledActivity extends Activity {
 		listViewParametrizedItemClicked = true;
 	}
 
-	@ItemClick
-	public void spinner() {
+	@ItemSelect
+	public void spinner(boolean selected, int position) {
 		spinnerItemClicked = true;
 	}
 
-	@ItemClick
-	public void spinnerWithArgument(String selectedItem) {
+	@ItemSelect
+	public void spinnerWithArgument(boolean selected, String selectedItem) {
 		spinnerWithArgumentSelectedItem = selectedItem;
 	}
 
@@ -138,6 +138,11 @@ public class ItemClicksHandledActivity extends Activity {
 	@ItemSelect
 	void listViewWithOneParamItemSelected(boolean selected) {
 		listViewWithOneParamItemSelected = selected;
+	}
+	
+	@ItemSelect(R.id.listView)
+	void onItemSelected(boolean selected, int position) {
+		
 	}
 
 	@ItemLongClick

@@ -5,6 +5,10 @@ target
 gen
 bin
 
+#Gradle
+build
+.gradle
+
 # Eclipse
 .classpath
 .apt_generated

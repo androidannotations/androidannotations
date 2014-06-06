@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,20 +15,19 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
+import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.process.ProcessHolder;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.NestingKind;
@@ -67,8 +66,8 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 			JClass bound = codeModelHelper.typeBoundsToJClass(this, typeParam.getBounds());
 			generatedClass.generify(typeParam.getSimpleName().toString(), bound);
 		}
-
 		setExtends();
+		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors(), this);
 	}
 
 	protected void setExtends() {

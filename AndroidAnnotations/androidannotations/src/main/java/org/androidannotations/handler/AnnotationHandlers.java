@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,22 +15,7 @@
  */
 package org.androidannotations.handler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-
-import org.androidannotations.handler.rest.DeleteHandler;
-import org.androidannotations.handler.rest.GetHandler;
-import org.androidannotations.handler.rest.HeadHandler;
-import org.androidannotations.handler.rest.OptionsHandler;
-import org.androidannotations.handler.rest.PostHandler;
-import org.androidannotations.handler.rest.PutHandler;
-import org.androidannotations.handler.rest.RestHandler;
-import org.androidannotations.handler.rest.RestServiceHandler;
+import org.androidannotations.handler.rest.*;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -39,6 +24,9 @@ import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import java.util.*;
 
 public class AnnotationHandlers {
 
@@ -65,6 +53,7 @@ public class AnnotationHandlers {
 		add(new PrefHandler(processingEnvironment));
 		add(new RoboGuiceHandler(processingEnvironment));
 		add(new ViewByIdHandler(processingEnvironment));
+		add(new ViewsByIdHandler(processingEnvironment));
 		add(new FragmentByIdHandler(processingEnvironment));
 		add(new FragmentByTagHandler(processingEnvironment));
 		add(new FromHtmlHandler(processingEnvironment));
@@ -76,6 +65,7 @@ public class AnnotationHandlers {
 		add(new ItemClickHandler(processingEnvironment));
 		add(new ItemSelectHandler(processingEnvironment));
 		add(new ItemLongClickHandler(processingEnvironment));
+		add(new EditorActionHandler(processingEnvironment));
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			add(new ResHandler(androidRes, processingEnvironment));
 		}
@@ -109,13 +99,12 @@ public class AnnotationHandlers {
 		add(new SeekBarTouchStartHandler(processingEnvironment));
 		add(new SeekBarTouchStopHandler(processingEnvironment));
 		add(new ServiceActionHandler(processingEnvironment));
-		add(new SubscribeHandler(processingEnvironment));
-		add(new ProduceHandler(processingEnvironment));
 		add(new InstanceStateHandler(processingEnvironment));
 		add(new HttpsClientHandler(processingEnvironment));
 		add(new OnActivityResultHandler(processingEnvironment));
 		add(new HierarchyViewerSupportHandler(processingEnvironment));
 		add(new WindowFeatureHandler(processingEnvironment));
+		add(new ReceiverHandler(processingEnvironment));
 
 		/* After injection methods must be after injections */
 		add(new AfterInjectHandler(processingEnvironment));

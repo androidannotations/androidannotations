@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,20 +17,20 @@ package org.androidannotations.test15.eview;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.androidannotations.test15.EmptyActivityWithoutLayout_;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.Context;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.androidannotations.test15.EmptyActivityWithoutLayout_;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class CustomButtonTest {
 
 	@Test
 	public void constructor_parameters_are_transmitted_from_factory_method() {
-		Context context = new EmptyActivityWithoutLayout_();
+		Context context = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
 		int parameter = 42;
 		CustomButton button = CustomButton_.build(context, parameter);
 		assertThat(button.constructorParameter).isEqualTo(parameter);
@@ -38,7 +38,7 @@ public class CustomButtonTest {
 
 	@Test
 	public void factory_method_builds_inflated_instance() {
-		Context context = new EmptyActivityWithoutLayout_();
+		Context context = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
 		CustomButton button = CustomButton_.build(context);
 		assertThat(button.afterViewsCalled).isTrue();
 	}

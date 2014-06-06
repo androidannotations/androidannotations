@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,8 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.otto;
+package org.androidannotations.test15.ebean;
 
-public class Event {
+import org.androidannotations.annotations.EBean;
+
+@EBean
+public class ChildBean1 extends AbstractBean {
+
+	public ChildBean1() {
+		super("MyBeanConstructorParam");
+	}
 
 }

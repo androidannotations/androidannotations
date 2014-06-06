@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,28 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.otto;
+package org.androidannotations.test15.receiver;
 
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.Trace;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.Receiver;
 
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
+@EService
+public class ServiceWithReceiver extends Service {
 
-@EBean
-public class OttoBean {
-	
-	@Trace
-	@Background
-	@Subscribe
-	public void onEvent(Event event) {
+	@Receiver(actions = "org.androidannotations.ACTION_1")
+	protected void onAction1() {
 
 	}
-	
-	@Produce
-	public Event produceEvent() {
-		return new Event();
-	}
 
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,10 +21,12 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.view.MotionEvent;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TouchesHandledActivityTest {
 
 	private TouchesHandledActivity_ activity;
@@ -33,8 +35,7 @@ public class TouchesHandledActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new TouchesHandledActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(TouchesHandledActivity_.class).create().get();
 
 		mockedEvent = MotionEvent.obtain(0, 0, 0, 0f, 0f, 0);
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,9 @@
 package org.androidannotations.handler;
 
 import com.sun.codemodel.*;
+
 import org.androidannotations.annotations.ItemLongClick;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -26,6 +28,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+
 import java.util.List;
 
 import static com.sun.codemodel.JExpr.cast;
@@ -60,7 +63,7 @@ public class ItemLongClickHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
+	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		boolean hasItemParameter = parameters.size() == 1;
 
 		JClass narrowAdapterViewClass = classes().ADAPTER_VIEW.narrow(codeModel().wildcard());

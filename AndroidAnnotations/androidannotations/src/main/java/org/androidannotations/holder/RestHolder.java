@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package org.androidannotations.holder;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.lit;
 import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
@@ -30,16 +31,21 @@ import org.androidannotations.api.rest.RestErrorHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.process.ProcessHolder;
 
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class RestHolder extends BaseGeneratedClassHolder {
 
 	private JMethod init;
+	private JVar initContextParam;
 	private JFieldVar rootUrlField;
 	private JFieldVar restTemplateField;
 	private JFieldVar availableHeadersField;
@@ -72,6 +78,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 
 		// authentication
 		implementSetBasicAuth(methods);
+		implementSetBearerAuth(methods);
 		implementSetAuthentication(methods);
 
 		// cookies and headers
@@ -126,6 +133,26 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		}
 	}
 
+	private void implementSetBearerAuth(List<ExecutableElement> methods) {
+		JMethod setBearerMethod = codeModelHelper.implementMethod(this, methods, "setBearerAuth", TypeKind.VOID.toString(), true, STRING);
+
+		if (setBearerMethod != null) {
+			JVar tokenParamVar = setBearerMethod.params().get(0);
+			JExpression tokenExpr = lit("Bearer ").plus(tokenParamVar);
+
+			JClass authClass = classes().HTTP_AUTHENTICATION;
+			JDefinedClass anonymousHttpAuthClass = codeModel().anonymousClass(authClass);
+
+			JMethod getHeaderValueMethod = anonymousHttpAuthClass.method(JMod.PUBLIC, String.class, "getHeaderValue");
+			getHeaderValueMethod.annotate(Override.class);
+			JBlock getHeaderValueMethodBody = getHeaderValueMethod.body();
+			getHeaderValueMethodBody._return(tokenExpr);
+
+			JBlock setBearerBody = setBearerMethod.body();
+			setBearerBody.assign(_this().ref(getAuthenticationField()), _new(anonymousHttpAuthClass));
+		}
+	}
+
 	private void implementSetAuthentication(List<ExecutableElement> methods) {
 		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setAuthentication", TypeKind.VOID.toString(), CanonicalNameConstants.HTTP_AUTHENTICATION);
 
@@ -172,6 +199,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JMethod setErrorHandlerMethod = codeModelHelper.implementMethod(this, methods, "setRestErrorHandler", TypeKind.VOID.toString(), RestErrorHandler.class.getName());
 
 		if (setErrorHandlerMethod != null) {
+			setRestErrorHandlerField();
 			setErrorHandlerMethod.body().assign(_this().ref(getRestErrorHandlerField()), setErrorHandlerMethod.params().get(0));
 		}
 	}
@@ -183,8 +211,16 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		return init;
 	}
 
+	public JVar getInitContextParam() {
+		if (initContextParam == null) {
+			setInit();
+		}
+		return initContextParam;
+	}
+
 	private void setInit() {
 		init = getGeneratedClass().constructor(JMod.PUBLIC);
+		initContextParam = init.param(classes().CONTEXT, "context");
 	}
 
 	public JFieldVar getRootUrlField() {
@@ -250,9 +286,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	public JFieldVar getRestErrorHandlerField() {
-		if (restErrorHandlerField == null) {
-			setRestErrorHandlerField();
-		}
+		// restErrorHandlerField is created only if the method setRestErrorHandler is implemented
 		return restErrorHandlerField;
 	}
 

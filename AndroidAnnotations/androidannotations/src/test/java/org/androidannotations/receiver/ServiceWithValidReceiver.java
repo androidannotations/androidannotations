@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,15 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.squareup.otto;
+package org.androidannotations.receiver;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.Receiver;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subscribe {
+@EService
+public class ServiceWithValidReceiver extends Service {
 
-}	
+	@Receiver(actions = "org.androidannotations.ACTION_1")
+	protected void onActionOnCreate() {
+
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+}

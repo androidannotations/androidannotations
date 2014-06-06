@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,14 +17,13 @@ package org.androidannotations.test15.application;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.androidannotations.test15.roboguice.InjectedTestRunner;
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
 import org.androidannotations.test15.roboguice.SampleRoboApplication_;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(InjectedTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GeneratedApplicationTest {
 
 	@Test

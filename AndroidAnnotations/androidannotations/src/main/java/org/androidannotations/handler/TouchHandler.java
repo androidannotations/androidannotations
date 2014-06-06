@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,6 +26,7 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -68,7 +69,7 @@ public class TouchHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
+	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
 		JVar eventParam = listenerMethod.param(classes().MOTION_EVENT, "event");
 		boolean hasItemParameter = parameters.size() == 2;

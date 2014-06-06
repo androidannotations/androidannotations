@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,23 +16,37 @@
 package org.androidannotations.holder;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
 
 import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.cast;
 
 public class FoundViewHolder {
 
+	private GeneratedClassHolder holder;
+	private JClass viewClass;
 	private JExpression view;
 	private JBlock ifNotNullBlock;
 	private boolean ifNotNullCreated = false;
 
-	public FoundViewHolder(JExpression view, JBlock block) {
+	public FoundViewHolder(GeneratedClassHolder holder, JClass viewClass, JExpression view, JBlock block) {
+		this.holder = holder;
+		this.viewClass = viewClass;
 		this.view = view;
 		this.ifNotNullBlock = block;
 	}
 
 	public JExpression getView() {
 		return view;
+	}
+
+	public JExpression getView(JClass viewClass) {
+		if (this.viewClass.equals(viewClass) || holder.classes().VIEW.equals(viewClass)) {
+			return view;
+		} else {
+			return cast(viewClass, view);
+		}
 	}
 
 	public JBlock getIfNotNullBlock() {

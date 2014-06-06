@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,21 +21,19 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowButton;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+
+@RunWith(RobolectricTestRunner.class)
 public class ClicksHandledActivityTest {
 
 	private ClicksHandledActivity_ activity;
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowButton.class);
-
-		activity = new ClicksHandledActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(ClicksHandledActivity_.class).create().get();
 	}
 
 	@Test

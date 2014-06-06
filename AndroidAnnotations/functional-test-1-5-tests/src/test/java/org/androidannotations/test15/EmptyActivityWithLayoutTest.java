@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,15 +19,16 @@ import static org.androidannotations.test15.MyAssertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class EmptyActivityWithLayoutTest {
 
 	@Test
 	public void shouldHaveLayoutAfterCreate() {
-		EmptyActivityWithLayout_ activity = new EmptyActivityWithLayout_();
+		EmptyActivityWithLayout_ activity = Robolectric.buildActivity(EmptyActivityWithLayout_.class).create().get();
 
-		activity.onCreate(null);
 		activity.setContentView(R.layout.main);
 
 		assertThat(activity.findViewById(R.id.helloTextView)).hasId(

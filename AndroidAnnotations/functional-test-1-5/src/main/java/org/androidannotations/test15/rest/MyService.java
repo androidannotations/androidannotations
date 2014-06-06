@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,14 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.http.HttpAuthentication;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
 import org.androidannotations.annotations.rest.Accept;
 import org.androidannotations.annotations.rest.Delete;
 import org.androidannotations.annotations.rest.Get;
@@ -41,9 +33,18 @@ import org.androidannotations.annotations.rest.RequiresHeader;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.SetsCookie;
 import org.androidannotations.api.rest.MediaType;
+import org.springframework.http.HttpAuthentication;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 // if defined, the rootUrl will be added as a prefix to every request
-@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class }, interceptors = { RequestInterceptor.class })
+@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class, EBeanConverter.class },
+		interceptors = { RequestInterceptor.class, EBeanInterceptor.class },
+		requestFactory = MyRequestFactory.class)
 public interface MyService {
 
 	// *** GET ***
@@ -113,6 +114,7 @@ public interface MyService {
 	GenericEvent<GenericEvent<GenericEvent<String>>> getEventsGenericsInception(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
+	@SetsCookie({ "xt", "sjsaid" })
 	Map<String, Event> getEventsGenericsMap(String location, int year) throws RestClientException;
 
 	@RequiresCookie("sjsaid")
@@ -274,4 +276,6 @@ public interface MyService {
 	void setAuthentication(HttpAuthentication auth);
 
 	void setHttpBasicAuth(String username, String password);
+
+	void setBearerAuth(String token);
 }

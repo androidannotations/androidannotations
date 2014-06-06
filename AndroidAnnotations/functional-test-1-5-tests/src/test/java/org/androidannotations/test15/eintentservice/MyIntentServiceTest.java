@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,15 +17,15 @@ package org.androidannotations.test15.eintentservice;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.androidannotations.test15.EmptyActivityWithoutLayout;
 import org.androidannotations.test15.EmptyActivityWithoutLayout_;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.Intent;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MyIntentServiceTest {
 
 	@Test

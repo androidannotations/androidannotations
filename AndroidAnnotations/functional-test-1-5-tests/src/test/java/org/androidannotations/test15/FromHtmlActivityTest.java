@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,23 +21,19 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.text.Html;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowHtml;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class FromHtmlActivityTest {
 
 	private FromHtmlActivity_ activity;
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowHtml.class);
-
-		activity = new FromHtmlActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(FromHtmlActivity_.class).create().get();
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,15 +17,16 @@ package org.androidannotations.test15.prefs;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.SharedPreferences;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
 
 	private PrefsActivity_ activity;
@@ -35,8 +36,7 @@ public class PrefsActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new PrefsActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(PrefsActivity_.class).create().get();
 		somePrefs = activity.somePrefs;
 		sharedPref = somePrefs.getSharedPreferences();
 	}
@@ -171,4 +171,9 @@ public class PrefsActivityTest {
 		assertThat(sharedPref.contains("name")).isFalse();
 	}
 
+	@Test
+	public void stringResourcePrefKey() {
+		somePrefs.stringResKeyPref().put(88);
+		assertThat(sharedPref.getInt(activity.getString(R.string.prefStringKey), 0)).isEqualTo(88);
+	}
 }

@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:0.7+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
         // the latest version of the android-apt plugin
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.1'
     }
@@ -39,8 +39,8 @@ apt {
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion "18.0.1"
+    compileSdkVersion 19
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
         minSdkVersion 9

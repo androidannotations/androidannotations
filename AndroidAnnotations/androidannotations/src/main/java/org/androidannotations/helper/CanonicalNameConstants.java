@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -52,6 +52,7 @@ public final class CanonicalNameConstants {
 	public static final String LOG = "android.util.Log";
 	public static final String PARCELABLE = "android.os.Parcelable";
 	public static final String INTENT = "android.content.Intent";
+	public static final String INTENT_FILTER = "android.content.IntentFilter";
 	public static final String COMPONENT_NAME = "android.content.ComponentName";
 	public static final String BUNDLE = "android.os.Bundle";
 	public static final String APPLICATION = "android.app.Application";
@@ -61,6 +62,7 @@ public final class CanonicalNameConstants {
 	public static final String SEEKBAR = "android.widget.SeekBar";
 	public static final String ON_SEEKBAR_CHANGE_LISTENER = "android.widget.SeekBar.OnSeekBarChangeListener";
 	public static final String TEXT_VIEW = "android.widget.TextView";
+	public static final String TEXT_VIEW_ON_EDITOR_ACTION_LISTENER = "android.widget.TextView.OnEditorActionListener";
 	public static final String COMPOUND_BUTTON = "android.widget.CompoundButton";
 	public static final String COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER = "android.widget.CompoundButton.OnCheckedChangeListener";
 	public static final String VIEW = "android.view.View";
@@ -95,6 +97,7 @@ public final class CanonicalNameConstants {
 	public static final String SERVICE = "android.app.Service";
 	public static final String INTENT_SERVICE = "android.app.IntentService";
 	public static final String BROADCAST_RECEIVER = "android.content.BroadcastReceiver";
+	public static final String LOCAL_BROADCAST_MANAGER = "android.support.v4.content.LocalBroadcastManager";
 	public static final String CONTENT_PROVIDER = "android.content.ContentProvider";
 	public static final String SQLITE_DATABASE = "android.database.sqlite.SQLiteDatabase";
 	public static final String KEY_STORE = "java.security.KeyStore";
@@ -130,15 +133,19 @@ public final class CanonicalNameConstants {
 	public static final String REST_TEMPLATE = "org.springframework.web.client.RestTemplate";
 	public static final String HTTP_MESSAGE_CONVERTER = "org.springframework.http.converter.HttpMessageConverter";
 	public static final String CLIENT_HTTP_REQUEST_INTERCEPTOR = "org.springframework.http.client.ClientHttpRequestInterceptor";
+	public static final String CLIENT_HTTP_REQUEST_FACTORY = "org.springframework.http.client.ClientHttpRequestFactory";
 	public static final String HTTP_AUTHENTICATION = "org.springframework.http.HttpAuthentication";
 	public static final String HTTP_BASIC_AUTHENTICATION = "org.springframework.http.HttpBasicAuthentication";
 	public static final String REST_CLIENT_EXCEPTION = "org.springframework.web.client.RestClientException";
+	public static final String NESTED_RUNTIME_EXCEPTION = "org.springframework.core.NestedRuntimeException";
 
 	/*
 	 * RoboGuice
 	 */
-	public static final String INJECTOR_PROVIDER = "roboguice.inject.InjectorProvider";
-	public static final String INJECTOR = "com.google.inject.Injector";
+	public static final String ROBO_CONTEXT = "roboguice.util.RoboContext";
+	public static final String ROBO_INJECTOR = "roboguice.inject.RoboInjector";
+	public static final String KEY = "com.google.inject.Key";
+	public static final String CONTENT_VIEW_LISTENER = "roboguice.inject.ContentViewListener";
 	public static final String ON_RESTART_EVENT = "roboguice.activity.event.OnRestartEvent";
 	public static final String ON_START_EVENT = "roboguice.activity.event.OnStartEvent";
 	public static final String ON_RESUME_EVENT = "roboguice.activity.event.OnResumeEvent";
@@ -146,6 +153,7 @@ public final class CanonicalNameConstants {
 	public static final String ON_NEW_INTENT_EVENT = "roboguice.activity.event.OnNewIntentEvent";
 	public static final String EVENT_MANAGER = "roboguice.event.EventManager";
 	public static final String CONTEXT_SCOPE = "roboguice.inject.ContextScope";
+	public static final String ROBO_GUICE = "roboguice.RoboGuice";
 	public static final String INJECT = "com.google.inject.Inject";
 	public static final String ON_STOP_EVENT = "roboguice.activity.event.OnStopEvent";
 	public static final String ON_DESTROY_EVENT = "roboguice.activity.event.OnDestroyEvent";

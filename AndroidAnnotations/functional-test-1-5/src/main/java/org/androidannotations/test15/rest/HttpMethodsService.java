@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,8 @@ import org.androidannotations.annotations.rest.Options;
 import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.annotations.rest.Put;
 import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.api.rest.RestClientErrorHandling;
+import org.androidannotations.api.rest.RestErrorHandler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
@@ -31,7 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 // if defined, the rootUrl will be added as a prefix to every request
 @Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class }, interceptors = { RequestInterceptor.class })
-public interface HttpMethodsService {
+public interface HttpMethodsService extends RestClientErrorHandling {
 
 	@Delete("/delete/")
 	void delete();

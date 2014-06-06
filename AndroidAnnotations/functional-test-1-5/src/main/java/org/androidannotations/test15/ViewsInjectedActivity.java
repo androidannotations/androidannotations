@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,14 +15,16 @@
  */
 package org.androidannotations.test15;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
-
 import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.ViewsById;
+
+import java.util.List;
 
 @EActivity(R.layout.views_injected)
 public class ViewsInjectedActivity extends Activity {
@@ -39,6 +41,12 @@ public class ViewsInjectedActivity extends Activity {
 
 	@ViewById
 	TextView myTextView;
+
+	@ViewsById({R.id.my_text_view, R.id.myButton})
+	List<View> views;
+
+	@ViewsById({R.id.my_text_view, R.id.someView})
+	List<TextView> textViews;
 
 	@AfterViews
 	void incrementCounter() {
