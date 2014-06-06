@@ -21,23 +21,19 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.text.Html;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowHtml;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class FromHtmlActivityTest {
 
 	private FromHtmlActivity_ activity;
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowHtml.class);
-
-		activity = new FromHtmlActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(FromHtmlActivity_.class).create().get();
 	}
 
 	@Test

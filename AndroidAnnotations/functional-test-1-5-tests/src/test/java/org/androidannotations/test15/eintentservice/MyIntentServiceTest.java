@@ -17,15 +17,15 @@ package org.androidannotations.test15.eintentservice;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.androidannotations.test15.EmptyActivityWithoutLayout;
 import org.androidannotations.test15.EmptyActivityWithoutLayout_;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.Intent;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MyIntentServiceTest {
 
 	@Test

@@ -20,19 +20,20 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.app.Activity;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AfterInjectBeanTest {
 	
 	AfterInjectBean bean;
 
 	@Before
 	public void setup() {
-		bean = AfterInjectBean_.getInstance_(new Activity());
+		Activity activity = Robolectric.buildActivity(Activity.class).create().get();
+		bean = AfterInjectBean_.getInstance_(activity);
 	}
 	
 	@Test

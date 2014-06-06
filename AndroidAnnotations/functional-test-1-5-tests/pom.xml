@@ -24,10 +24,23 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.pivotallabs</groupId>
-			<artifactId>robolectric</artifactId>
-			<version>1.1</version>
+			<groupId>com.google.android</groupId>
+			<artifactId>support-v4</artifactId>
+			<version>r7</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.robolectric</groupId>
+			<artifactId>robolectric</artifactId>
+			<version>2.3</version>
+			<scope>test</scope>
+
+			<exclusions>
+				<exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-v4</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.easytesting</groupId>
@@ -45,12 +58,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>net.sf.kxml</groupId>
-		    <artifactId>kxml2</artifactId>
-		    <version>2.3.0</version>
-		    <scope>test</scope>
 		</dependency>
 		
 		<dependency>

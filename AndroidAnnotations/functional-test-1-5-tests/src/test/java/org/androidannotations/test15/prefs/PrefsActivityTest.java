@@ -18,23 +18,20 @@ package org.androidannotations.test15.prefs;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.androidannotations.api.sharedpreferences.SetXmlSerializer;
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowXml;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.SharedPreferences;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
 
 	private PrefsActivity_ activity;
@@ -44,11 +41,9 @@ public class PrefsActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new PrefsActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(PrefsActivity_.class).create().get();
 		somePrefs = activity.somePrefs;
 		sharedPref = somePrefs.getSharedPreferences();
-		Robolectric.bindShadowClass(ShadowXml.class);
 	}
 
 	@Test
@@ -83,15 +78,8 @@ public class PrefsActivityTest {
 	@Test
 	public void putStringSet() {
 		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
-		
 		somePrefs.types().put(values);
-		assertThat(SetXmlSerializer.deserialize(sharedPref.getString("types", null))).isEqualTo(values);
-	}
-	
-	@Test
-	public void putNullSet() {
-		somePrefs.types().put(null);
-		assertThat(SetXmlSerializer.deserialize(sharedPref.getString("types", null))).isEqualTo(Collections.emptySet());
+		assertThat(sharedPref.getStringSet("types", null)).isEqualTo(values);
 	}
 
 	@Test
@@ -173,14 +161,23 @@ public class PrefsActivityTest {
 	}
 
 	@Test
-	public void getStringSet() {
+	public void getStringSetCompat() {
 		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		
 		sharedPref.edit().putString("types", SetXmlSerializer.serialize(values)).commit();
 		
-		Set<String> set = somePrefs.types().get();
-		assertThat(values).isEqualTo(set);
+		assertThat(somePrefs.types().get()).isEqualTo(values);
 	}
 
+	@Test
+	public void getStringSet() {
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		
+		sharedPref.edit().putStringSet("types", values).commit();
+		
+		assertThat(somePrefs.types().get()).isEqualTo(values);
+	}
+	
 	@Test
 	public void defaultValue() {
 		assertThat(somePrefs.name().get()).isEqualTo("John");

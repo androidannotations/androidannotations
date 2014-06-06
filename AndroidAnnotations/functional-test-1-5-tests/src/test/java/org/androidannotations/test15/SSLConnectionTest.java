@@ -31,8 +31,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class SSLConnectionTest {
 
 	private SSLConnection_ activity;
@@ -44,8 +46,7 @@ public class SSLConnectionTest {
 
 	@Before
 	public void setup() {
-		activity = new SSLConnection_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(SSLConnection_.class).create().get();
 	}
 
 	@Test

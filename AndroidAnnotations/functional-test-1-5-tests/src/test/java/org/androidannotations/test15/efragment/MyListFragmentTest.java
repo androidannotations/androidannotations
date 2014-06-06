@@ -17,10 +17,11 @@ package org.androidannotations.test15.efragment;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -29,10 +30,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ListView;
 
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowListFragment;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MyListFragmentTest {
 
 	private static final int TESTED_CLICKED_INDEX = 4;
@@ -41,8 +39,6 @@ public class MyListFragmentTest {
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowListFragment.class);
-
 		myListFragment = new MyListFragment_();
 		startFragment(myListFragment);
 	}
@@ -59,7 +55,8 @@ public class MyListFragmentTest {
 	}
 
 	public static void startFragment(Fragment fragment) {
-		FragmentManager fragmentManager = new FragmentActivity().getSupportFragmentManager();
+		FragmentActivity fragmentActivity = Robolectric.buildActivity(FragmentActivity.class).create().start().visible().get();
+		FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.add(fragment, null);
 		fragmentTransaction.commit();

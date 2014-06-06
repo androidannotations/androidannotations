@@ -23,9 +23,9 @@ import com.sun.codemodel.JVar;
 public class RoboGuiceHolder {
 
 	private EActivityHolder holder;
-	protected JFieldVar scope;
+	protected JFieldVar scopedObjects;
 	protected JFieldVar eventManager;
-	protected JMethod getInjector;
+	public JFieldVar contentViewListenerField;
 	protected JBlock onRestartBeforeSuperBlock;
 	protected JBlock onRestartAfterSuperBlock;
 	protected JBlock onStartBeforeSuperBlock;
@@ -50,18 +50,18 @@ public class RoboGuiceHolder {
 		return eventManager;
 	}
 
-	public JFieldVar getScopeField() {
-		if (scope == null) {
-			holder.setScopeField();
+	public JFieldVar getScopedObjectsField() {
+		if (scopedObjects == null) {
+			holder.setScopedObjectsField();
 		}
-		return scope;
+		return scopedObjects;
 	}
 
-	public JMethod getGetInjector() {
-		if (getInjector == null) {
-			holder.setGetInjector();
+	public JFieldVar getContentViewListenerField() {
+		if (contentViewListenerField == null) {
+			holder.setContentViewListenerField();
 		}
-		return getInjector;
+		return contentViewListenerField;
 	}
 
 	public JBlock getOnRestartBeforeSuperBlock() {
