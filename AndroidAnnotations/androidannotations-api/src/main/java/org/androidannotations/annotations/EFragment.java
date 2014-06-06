@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Should be used on {@link android.app.Fragment} or
+ * Should be used on android.app.Fragment or
  * link android.support.v4.app.Fragment classes to enable usage of
  * AndroidAnnotations.
  * </p>

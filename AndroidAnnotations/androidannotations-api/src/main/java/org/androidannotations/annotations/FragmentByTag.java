@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on {@link android.app.Fragment} or
+ * Use it on android.app.Fragment or
  * android.support.v4.app.Fragment fields in activity classes to
  * retrieve and inject a fragment.
  * </p>
