@@ -20,6 +20,7 @@ import com.sun.codemodel.JMethod;
 import org.androidannotations.annotations.IgnoredWhenDetached;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -29,7 +30,7 @@ import javax.lang.model.element.ExecutableElement;
 
 import static com.sun.codemodel.JExpr.*;
 
-public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EComponentHolder> {
+public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
 	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
@@ -46,7 +47,7 @@ public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EComponent
 	}
 
 	@Override
-	public void process(Element element, EComponentHolder holder) throws Exception {
+	public void process(Element element, EFragmentHolder holder) throws Exception {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock previousMethodBody = codeModelHelper.removeBody(delegatingMethod);
