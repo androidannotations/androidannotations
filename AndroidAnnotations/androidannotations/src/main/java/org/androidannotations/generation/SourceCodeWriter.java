@@ -15,25 +15,23 @@
  */
 package org.androidannotations.generation;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import com.sun.codemodel.CodeWriter;
+import com.sun.codemodel.JPackage;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
+import org.androidannotations.process.OriginatingElements;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
+import java.io.IOException;
+import java.io.OutputStream;
 
-import org.androidannotations.logger.Logger;
-import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.process.OriginatingElements;
-
-import com.sun.codemodel.CodeWriter;
-import com.sun.codemodel.JPackage;
-
-public class SourceCodewriter extends CodeWriter {
+public class SourceCodeWriter extends CodeWriter {
 
 	private static final VoidOutputStream VOID_OUTPUT_STREAM = new VoidOutputStream();
-	private static final Logger LOGGER = LoggerFactory.getLogger(SourceCodewriter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SourceCodeWriter.class);
 	private final Filer filer;
 	private OriginatingElements originatingElements;
 
@@ -44,7 +42,7 @@ public class SourceCodewriter extends CodeWriter {
 		}
 	}
 
-	public SourceCodewriter(Filer filer, OriginatingElements originatingElements) {
+	public SourceCodeWriter(Filer filer, OriginatingElements originatingElements) {
 		this.filer = filer;
 		this.originatingElements = originatingElements;
 	}

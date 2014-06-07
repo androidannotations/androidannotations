@@ -44,16 +44,11 @@ public class ModelProcessor {
 
 		public final JCodeModel codeModel;
 		public final OriginatingElements originatingElements;
-		public final Set<Class<?>> apiClassesToGenerate;
 
-		public ProcessResult(//
-				JCodeModel codeModel, //
-				OriginatingElements originatingElements, //
-				Set<Class<?>> apiClassesToGenerate) {
+		public ProcessResult(JCodeModel codeModel, OriginatingElements originatingElements) {
 
 			this.codeModel = codeModel;
 			this.originatingElements = originatingElements;
-			this.apiClassesToGenerate = apiClassesToGenerate;
 		}
 	}
 
@@ -143,8 +138,7 @@ public class ModelProcessor {
 
 		return new ProcessResult(//
 				processHolder.codeModel(), //
-				processHolder.getOriginatingElements(), //
-				processHolder.getApiClassesToGenerate());
+				processHolder.getOriginatingElements());
 	}
 
 	private <T extends GeneratedClassHolder> void processThrowing(AnnotationHandler<T> handler, Element element, T generatedClassHolder) throws ProcessingException {

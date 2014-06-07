@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -200,8 +199,6 @@ public class ProcessHolder {
 
 	private final Classes classes;
 
-	private final Set<Class<?>> apiClassesToGenerate = new HashSet<>();
-
 	private final OriginatingElements originatingElements = new OriginatingElements();
 
 	public ProcessHolder(ProcessingEnvironment processingEnvironment) {
@@ -292,12 +289,4 @@ public class ProcessHolder {
 		return originatingElements;
 	}
 
-	public Set<Class<?>> getApiClassesToGenerate() {
-		return apiClassesToGenerate;
-	}
-
-	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
-		originatingElements.add(apiClass.getCanonicalName(), originatingElement);
-		apiClassesToGenerate.add(apiClass);
-	}
 }
