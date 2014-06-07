@@ -21,7 +21,7 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 public abstract class AbstractRunnableHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -30,19 +30,19 @@ public abstract class AbstractRunnableHandler extends BaseAnnotationHandler<ECom
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.doesntThrowException(executableElement, valid);
+		validatorHelper.doesntThrowException(executableElement, validation);
 
-		validatorHelper.isNotFinal(element, valid);
+		validatorHelper.isNotFinal(element, validation);
 
-		validatorHelper.isNotSynchronized(element, valid);
+		validatorHelper.isNotSynchronized(element, validation);
 	}
 }

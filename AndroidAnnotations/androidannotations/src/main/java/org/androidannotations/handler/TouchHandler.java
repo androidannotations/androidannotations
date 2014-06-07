@@ -28,7 +28,7 @@ import org.androidannotations.annotations.Touch;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -46,17 +46,17 @@ public class TouchHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
+		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, validation);
 
 		validatorHelper.param.anyOrder() //
 				.type(CanonicalNameConstants.MOTION_EVENT).optional() //
 				.extendsType(CanonicalNameConstants.VIEW).optional() //
-				.validate(executableElement, valid);
+				.validate(executableElement, validation);
 	}
 
 	@Override

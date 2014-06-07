@@ -22,7 +22,7 @@ import javax.lang.model.element.ExecutableElement;
 import org.androidannotations.annotations.rest.Head;
 import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
@@ -35,12 +35,12 @@ public class HeadHandler extends RestMethodHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
-		validatorHelper.hasHttpHeadersReturnType((ExecutableElement) element, valid);
+		validatorHelper.hasHttpHeadersReturnType((ExecutableElement) element, validation);
 
-		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, validation);
 	}
 
 	@Override

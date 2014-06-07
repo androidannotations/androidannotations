@@ -28,7 +28,7 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -44,12 +44,12 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
-		validatorHelper.androidService(androidSystemServices, element, valid);
+		validatorHelper.androidService(androidSystemServices, element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override

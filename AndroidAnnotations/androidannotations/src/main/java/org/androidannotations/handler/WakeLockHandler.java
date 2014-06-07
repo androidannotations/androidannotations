@@ -24,7 +24,7 @@ import org.androidannotations.annotations.WakeLock.Flag;
 import org.androidannotations.annotations.WakeLock.Level;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JConditional;
@@ -42,15 +42,15 @@ public class WakeLockHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.doesNotHaveTraceAnnotationAndReturnValue(executableElement, validatedElements, valid);
 
 		validatorHelper.doesNotUseFlagsWithPartialWakeLock(element, validatedElements, valid);
 
-		validatorHelper.hasWakeLockPermission(element, androidManifest, valid);
+		validatorHelper.hasWakeLockPermission(androidManifest, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

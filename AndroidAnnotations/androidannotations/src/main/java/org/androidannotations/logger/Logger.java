@@ -68,6 +68,10 @@ public class Logger {
 		log(Level.WARN, message, element, null, thr, args);
 	}
 
+	public void warn(String message, Element element, AnnotationMirror annotationMirror) {
+		log(Level.WARN, message, element, annotationMirror, null);
+	}
+
 	public void error(String message, Object... args) {
 		error(message, null, null, args);
 	}
@@ -82,6 +86,10 @@ public class Logger {
 
 	public void error(String message, Element element, Throwable thr, Object... args) {
 		log(Level.ERROR, message, element, null, thr, args);
+	}
+
+	public void error(String message, Element element, AnnotationMirror annotationMirror) {
+		log(Level.ERROR, message, element, annotationMirror, null);
 	}
 
 	public boolean isLoggable(Level level) {

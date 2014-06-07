@@ -15,15 +15,14 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
+import com.sun.codemodel.JExpr;
 import org.androidannotations.annotations.WindowFeature;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
-import com.sun.codemodel.JExpr;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 
 public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder> {
 
@@ -32,8 +31,8 @@ public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder>
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.hasEActivity(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.hasEActivity(element, validation);
 	}
 
 	@Override

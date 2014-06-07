@@ -28,7 +28,6 @@ import org.androidannotations.annotations.PreferenceChange;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -39,6 +38,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
+import org.androidannotations.process.ElementValidation;
 
 public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
@@ -47,8 +47,9 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		super.validate(element, validatedElements, valid);
+
 		validatorHelper.enclosingElementExtendsPreferenceActivityOrPreferenceFragment(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;

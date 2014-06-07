@@ -23,7 +23,7 @@ import org.androidannotations.annotations.Transactional;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
@@ -42,21 +42,21 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.doesntThrowException(executableElement, valid);
+		validatorHelper.doesntThrowException(executableElement, validation);
 
-		validatorHelper.isNotFinal(element, valid);
+		validatorHelper.isNotFinal(element, validation);
 
 		validatorHelper.param.inOrder() //
 				.type(CanonicalNameConstants.SQLITE_DATABASE) //
 				.anyType().multiple().optional() //
-				.validate(executableElement, valid);
+				.validate(executableElement, validation);
 	}
 
 	@Override

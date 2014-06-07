@@ -23,7 +23,7 @@ import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferenceHeaders;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
@@ -41,10 +41,10 @@ public class PreferenceHeadersHandler extends BaseAnnotationHandler<HasPreferenc
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		validatorHelper.isPreferenceFragmentClassPresent(element, valid);
 		validatorHelper.extendsPreferenceActivity(element, valid);
-		validatorHelper.hasEActivity(element, validatedElements, valid);
+		validatorHelper.hasEActivity(element, valid);
 		validatorHelper.resIdsExist(element, IRClass.Res.XML, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);
 	}
 

@@ -26,7 +26,7 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
@@ -101,21 +101,17 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		return processHolder.refClass(clazz);
 	}
 
-	public void generateApiClass(Element originatingElement, Class<?> apiClass) {
-		processHolder.generateApiClass(originatingElement, apiClass);
-	}
-
 	@Override
 	public String getTarget() {
 		return target;
 	}
 
 	@Override
-	public boolean validate(Element element, AnnotationElements validatedElements) {
-		IsValid valid = new IsValid();
-		validate(element, validatedElements, valid);
-		return valid.isValid();
+	public ElementValidation validate(Element element, AnnotationElements validatedElements) {
+		ElementValidation validation = new ElementValidation(target, element);
+		validate(element, validatedElements, validation);
+		return validation;
 	}
 
-	protected abstract void validate(Element element, AnnotationElements validatedElements, IsValid valid);
+	protected abstract void validate(Element element, AnnotationElements validatedElements, ElementValidation validation);
 }

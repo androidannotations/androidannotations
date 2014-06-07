@@ -21,7 +21,7 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.rest.Delete;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 public class DeleteHandler extends RestMethodHandler {
 
@@ -30,12 +30,12 @@ public class DeleteHandler extends RestMethodHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
-		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, valid);
+		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
 
-		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter((ExecutableElement) element, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter((ExecutableElement) element, validation);
 	}
 
 	@Override

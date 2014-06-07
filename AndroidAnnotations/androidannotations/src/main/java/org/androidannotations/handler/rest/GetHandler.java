@@ -15,13 +15,13 @@
  */
 package org.androidannotations.handler.rest;
 
+import org.androidannotations.annotations.rest.Get;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-
-import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
 
 public class GetHandler extends RestMethodHandler {
 
@@ -30,12 +30,12 @@ public class GetHandler extends RestMethodHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
-		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, valid);
+		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
 
-		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, valid);
+		restAnnotationHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, validation);
 	}
 
 	@Override

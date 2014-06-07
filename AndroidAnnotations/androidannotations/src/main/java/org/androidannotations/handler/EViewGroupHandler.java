@@ -26,7 +26,7 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EViewGroupHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
@@ -53,12 +53,12 @@ public class EViewGroupHandler extends BaseGeneratingAnnotationHandler<EViewGrou
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
-		validatorHelper.extendsViewGroup(element, valid);
+		validatorHelper.extendsViewGroup(element, validation);
 
-		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, valid);
+		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, validation);
 	}
 
 	@Override

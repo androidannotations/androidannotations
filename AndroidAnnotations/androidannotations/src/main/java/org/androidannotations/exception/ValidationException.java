@@ -13,17 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.process;
+package org.androidannotations.exception;
 
-public class IsValid {
+import org.androidannotations.process.ElementValidation;
 
-	boolean valid = true;
+import java.util.List;
 
-	public void invalidate() {
-		valid = false;
+public class ValidationException extends Exception {
+
+	private final List<ElementValidation> failedValidations;
+
+	public ValidationException(List<ElementValidation> failedValidations) {
+		this.failedValidations = failedValidations;
 	}
 
-	public boolean isValid() {
-		return valid;
+	public List<ElementValidation> getFailedValidations() {
+		return failedValidations;
 	}
+
 }

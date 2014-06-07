@@ -15,23 +15,6 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.annotations.OrmLiteDao;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.OrmLiteHelper;
-import org.androidannotations.helper.TargetAnnotationHelper;
-import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;
 import com.sun.codemodel.JClass;
@@ -39,6 +22,22 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
+import org.androidannotations.annotations.OrmLiteDao;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.OrmLiteHelper;
+import org.androidannotations.helper.TargetAnnotationHelper;
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.ref;
 
 public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -53,16 +52,16 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.hasOrmLiteJars(element, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.hasOrmLiteJars(validation);
 
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.extendsOrmLiteDao(element, valid, ormLiteHelper);
+		validatorHelper.extendsOrmLiteDao(element, validation, ormLiteHelper);
 
-		validatorHelper.hasASqlLiteOpenHelperParameterizedType(element, valid);
+		validatorHelper.hasASolLiteOpenHelperParametrizedType(element, validation);
 	}
 
 	@Override

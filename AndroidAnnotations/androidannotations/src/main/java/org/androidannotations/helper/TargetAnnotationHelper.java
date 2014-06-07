@@ -15,11 +15,10 @@
  */
 package org.androidannotations.helper;
 
-import java.lang.annotation.Annotation;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
+import java.lang.annotation.Annotation;
 
 public class TargetAnnotationHelper extends AnnotationHelper {
 
@@ -63,23 +62,4 @@ public class TargetAnnotationHelper extends AnnotationHelper {
 	public String annotationName() {
 		return annotationName(annotationName);
 	}
-
-	/**
-	 * @param message
-	 *            if the string contains a %s, it will be replaced with the
-	 *            annotation name (ex: @Override)
-	 */
-	public void printAnnotationError(Element annotatedElement, String message) {
-		printAnnotationError(annotatedElement, annotationName, String.format(message, annotationName()));
-	}
-
-	/**
-	 * @param message
-	 *            if the string contains a %s, it will be replaced with the
-	 *            annotation name (ex: @Override)
-	 */
-	public void printAnnotationWarning(Element annotatedElement, String message) {
-		printAnnotationWarning(annotatedElement, annotationName, String.format(message, annotationName()));
-	}
-
 }

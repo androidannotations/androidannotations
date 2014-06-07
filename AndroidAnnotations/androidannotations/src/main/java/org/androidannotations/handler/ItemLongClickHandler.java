@@ -27,11 +27,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.annotations.ItemLongClick;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
@@ -40,6 +35,10 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
+import org.androidannotations.annotations.ItemLongClick;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 public class ItemLongClickHandler extends AbstractViewListenerHandler {
 
@@ -48,14 +47,14 @@ public class ItemLongClickHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
+		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, validation);
 
-		validatorHelper.param.anyType().optional().validate(executableElement, valid);
+		validatorHelper.param.anyType().optional().validate(executableElement, validation);
 	}
 
 	@Override

@@ -31,6 +31,7 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.exception.ValidationException;
 import org.androidannotations.exception.VersionMismatchException;
 import org.androidannotations.generation.CodeModelGenerator;
 import org.androidannotations.handler.AnnotationHandlers;
@@ -113,6 +114,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		try {
 			checkApiAndCoreVersions();
 			processThrowing(annotations, roundEnv);
+		} catch (ValidationException e) {
+			// We do nothing, errors have been printed by ModelValidator
 		} catch (ProcessingException e) {
 			handleException(annotations, roundEnv, e);
 		} catch (Exception e) {
@@ -157,7 +160,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return propertiesApi.getProperty("version", "unknown");
 	}
 
-	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws ProcessingException, Exception {
+	private void processThrowing(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws Exception {
 		if (nothingToDo(annotations, roundEnv)) {
 			return;
 		}
@@ -230,7 +233,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return Option.of(coumpoundRClass);
 	}
 
-	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel) throws ProcessingException, Exception {
+	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel) throws ValidationException {
 		timeStats.start("Validate Annotations");
 		ModelValidator modelValidator = new ModelValidator(annotationHandlers);
 		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);

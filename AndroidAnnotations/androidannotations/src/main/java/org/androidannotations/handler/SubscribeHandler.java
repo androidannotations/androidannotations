@@ -23,7 +23,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -35,7 +35,7 @@ public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		if (!annotationHelper.enclosingElementHasEnhancedComponentAnnotation(element)) {
 			valid.invalidate();
 			return;
@@ -46,7 +46,7 @@ public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 		/*
 		 * We check that twice to skip invalid annotated elements
 		 */
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(executableElement, validatedElements, valid);
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(executableElement, valid);
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 

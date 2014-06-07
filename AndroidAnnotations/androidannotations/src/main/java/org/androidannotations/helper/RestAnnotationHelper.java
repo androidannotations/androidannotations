@@ -15,15 +15,23 @@
  */
 package org.androidannotations.helper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
+import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.annotations.rest.RequiresAuthentication;
+import org.androidannotations.annotations.rest.RequiresCookie;
+import org.androidannotations.annotations.rest.RequiresCookieInUrl;
+import org.androidannotations.annotations.rest.RequiresHeader;
+import org.androidannotations.annotations.rest.SetsCookie;
+import org.androidannotations.holder.RestHolder;
+import org.androidannotations.process.ElementValidation;
+import org.androidannotations.process.ProcessHolder;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -36,25 +44,15 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
-
-import org.androidannotations.annotations.rest.Accept;
-import org.androidannotations.annotations.rest.RequiresAuthentication;
-import org.androidannotations.annotations.rest.RequiresCookie;
-import org.androidannotations.annotations.rest.RequiresCookieInUrl;
-import org.androidannotations.annotations.rest.RequiresHeader;
-import org.androidannotations.annotations.rest.SetsCookie;
-import org.androidannotations.holder.RestHolder;
-import org.androidannotations.process.IsValid;
-import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
@@ -64,7 +62,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		super(processingEnv, annotationName);
 	}
 
-	public void urlVariableNamesExistInParameters(ExecutableElement element, Set<String> variableNames, IsValid valid) {
+	public void urlVariableNamesExistInParameters(ExecutableElement element, Set<String> variableNames, ElementValidation valid) {
 
 		List<? extends VariableElement> parameters = element.getParameters();
 
@@ -82,14 +80,13 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		for (String variableName : variableNames) {
 			if (!parametersName.contains(variableName)) {
-				valid.invalidate();
-				printAnnotationError(element, "%s annotated method has an url variable which name could not be found in the method parameters: " + variableName);
+				valid.addError("%s annotated method has an url variable which name could not be found in the method parameters: " + variableName);
 				return;
 			}
 		}
 	}
 
-	public void urlVariableNamesExistInParametersAndHasNoOneMoreParameter(ExecutableElement element, IsValid valid) {
+	public void urlVariableNamesExistInParametersAndHasNoOneMoreParameter(ExecutableElement element, ElementValidation valid) {
 		if (valid.isValid()) {
 			Set<String> variableNames = extractUrlVariableNames(element);
 			urlVariableNamesExistInParameters(element, variableNames, valid);
@@ -97,14 +94,13 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 				List<? extends VariableElement> parameters = element.getParameters();
 
 				if (parameters.size() > variableNames.size()) {
-					valid.invalidate();
-					printAnnotationError(element, "%s annotated method has only url variables in the method parameters");
+					valid.addError("%s annotated method has only url variables in the method parameters");
 				}
 			}
 		}
 	}
 
-	public void urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(ExecutableElement element, IsValid valid) {
+	public void urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter(ExecutableElement element, ElementValidation valid) {
 		if (valid.isValid()) {
 			Set<String> variableNames = extractUrlVariableNames(element);
 			urlVariableNamesExistInParameters(element, variableNames, valid);
@@ -112,8 +108,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 				List<? extends VariableElement> parameters = element.getParameters();
 
 				if (parameters.size() > variableNames.size() + 1) {
-					valid.invalidate();
-					printAnnotationError(element, "%s annotated method has more than one entity parameter");
+					valid.addError("%s annotated method has more than one entity parameter");
 				}
 			}
 		}

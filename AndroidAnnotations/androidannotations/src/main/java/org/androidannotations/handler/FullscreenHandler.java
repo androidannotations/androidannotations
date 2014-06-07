@@ -15,18 +15,17 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.holder.EActivityHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import org.androidannotations.annotations.Fullscreen;
-import org.androidannotations.holder.EActivityHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
+import static com.sun.codemodel.JExpr.invoke;
 
 public class FullscreenHandler extends BaseAnnotationHandler<EActivityHolder> {
 
@@ -35,8 +34,8 @@ public class FullscreenHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.hasEActivity(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.hasEActivity(element, validation);
 	}
 
 	@Override

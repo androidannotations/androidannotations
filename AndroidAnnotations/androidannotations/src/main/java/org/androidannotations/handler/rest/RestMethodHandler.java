@@ -32,7 +32,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.RestAnnotationHelper;
 import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JArray;
 import com.sun.codemodel.JBlock;
@@ -61,12 +61,12 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.notAlreadyValidated(element, validatedElements, validation);
 
-		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, validation);
 
-		validatorHelper.throwsOnlyRestClientException((ExecutableElement) element, valid);
+		validatorHelper.throwsOnlyRestClientException((ExecutableElement) element, validation);
 	}
 
 	@Override

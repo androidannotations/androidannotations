@@ -22,7 +22,7 @@ import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.InjectMenu;
 import org.androidannotations.holder.HasOptionsMenu;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -34,8 +34,8 @@ public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, valid);
 
 		validatorHelper.isDeclaredType(element, valid);
 

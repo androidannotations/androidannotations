@@ -15,23 +15,22 @@
  */
 package org.androidannotations.helper;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.androidannotations.process.ElementValidation;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.process.IsValid;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ValidatorParameterHelper {
 
 	public interface Validator {
-		void validate(ExecutableElement executableElement, IsValid valid);
+		void validate(ExecutableElement executableElement, ElementValidation validation);
 	}
 
 	public interface ParameterRequirement {
@@ -49,10 +48,9 @@ public class ValidatorParameterHelper {
 	public class NoParamValidator implements Validator {
 
 		@Override
-		public void validate(ExecutableElement executableElement, IsValid valid) {
+		public void validate(ExecutableElement executableElement, ElementValidation validation) {
 			if (!executableElement.getParameters().isEmpty()) {
-				annotationHelper.printAnnotationError(executableElement, "%s cannot have any parameters");
-				valid.invalidate();
+				validation.addError("%s cannot have any parameters");
 			}
 		}
 	}
@@ -76,41 +74,40 @@ public class ValidatorParameterHelper {
 		}
 
 		@Override
-		public void validate(ExecutableElement executableElement, IsValid valid) {
+		public void validate(ExecutableElement executableElement, ElementValidation validation) {
 			List<? extends VariableElement> parameters = executableElement.getParameters();
 			if (!parameterRequirement.multiple()) {
 				if (parameterRequirement.required() && parameters.size() != 1) {
-					invalidate(executableElement, valid);
+					invalidate(validation);
 					return;
 				}
 				if (!parameterRequirement.required() && parameters.size() > 1) {
-					invalidate(executableElement, valid);
+					invalidate(validation);
 					return;
 				}
 			}
 
 			for (VariableElement parameter : parameters) {
 				if (!parameterRequirement.isSatisfied(parameter)) {
-					invalidate(executableElement, valid);
+					invalidate(validation);
 					return;
 				}
 			}
 		}
 
-		protected void invalidate(ExecutableElement element, IsValid valid) {
-			annotationHelper.printAnnotationError(element, "%s can only have the following parameter: " + parameterRequirement);
-			valid.invalidate();
+		protected void invalidate(ElementValidation validation) {
+			validation.addError("%s can only have the following parameter: " + parameterRequirement);
 		}
 	}
 
 	private abstract class BaseParamValidator<V extends BaseParamValidator<?>> implements Validator {
 
 		private List<ParameterRequirement> parameterRequirements = new ArrayList<>();
-		private List<ParameterRequirement> originalparameterRequirements;
+		private List<ParameterRequirement> originalParameterRequirements;
 
 		@Override
-		public void validate(ExecutableElement executableElement, IsValid valid) {
-			originalparameterRequirements = new ArrayList<>(parameterRequirements);
+		public void validate(ExecutableElement executableElement, ElementValidation validation) {
+			originalParameterRequirements = new ArrayList<>(parameterRequirements);
 		}
 
 		public V type(String qualifiedName) {
@@ -163,19 +160,15 @@ public class ValidatorParameterHelper {
 			return parameterRequirements.get(parameterRequirements.size() - 1);
 		}
 
-		protected void invalidate(ExecutableElement executableElement, IsValid valid) {
-			printMessage(executableElement);
-			valid.invalidate();
+		protected void invalidate(ExecutableElement element, ElementValidation validation) {
+			validation.addError("%s can only have the following parameters: " + createMessage(element));
 		}
 
-		protected final void printMessage(ExecutableElement element) {
-			annotationHelper.printAnnotationError(element, "%s can only have the following parameters: " + createMessage(element));
-		}
 
 		protected String createMessage(ExecutableElement element) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("[ ");
-			for (ParameterRequirement parameterRequirement : originalparameterRequirements) {
+			for (ParameterRequirement parameterRequirement : originalParameterRequirements) {
 				builder.append(parameterRequirement).append(", ");
 			}
 			return builder.append(" ]").toString();
@@ -203,20 +196,20 @@ public class ValidatorParameterHelper {
 		}
 
 		@Override
-		public void validate(ExecutableElement executableElement, IsValid valid) {
-			super.validate(executableElement, valid);
+		public void validate(ExecutableElement executableElement, ElementValidation validation) {
+			super.validate(executableElement, validation);
 
 			nextParameterRequirement();
 			for (VariableElement parameter : executableElement.getParameters()) {
 				if (!validate(parameter)) {
-					invalidate(executableElement, valid);
+					invalidate(executableElement, validation);
 					return;
 				}
 			}
 
 			for (ParameterRequirement expectedParameter : getParamRequirements()) {
 				if (expectedParameter.required() && !satisfiedParameterRequirements.contains(expectedParameter)) {
-					invalidate(executableElement, valid);
+					invalidate(executableElement, validation);
 					return;
 				}
 			}
@@ -252,8 +245,8 @@ public class ValidatorParameterHelper {
 		private List<ParameterRequirement> satisfiedParameterRequirements = new ArrayList<>();
 
 		@Override
-		public void validate(ExecutableElement executableElement, IsValid valid) {
-			super.validate(executableElement, valid);
+		public void validate(ExecutableElement executableElement, ElementValidation validation) {
+			super.validate(executableElement, validation);
 
 			for (VariableElement parameter : executableElement.getParameters()) {
 				ParameterRequirement foundParameter = null;
@@ -267,7 +260,7 @@ public class ValidatorParameterHelper {
 				}
 
 				if (foundParameter == null) {
-					invalidate(executableElement, valid);
+					invalidate(executableElement, validation);
 					return;
 				}
 
@@ -278,7 +271,7 @@ public class ValidatorParameterHelper {
 
 			for (ParameterRequirement expectedParameter : getParamRequirements()) {
 				if (expectedParameter.required() && !satisfiedParameterRequirements.contains(expectedParameter)) {
-					invalidate(executableElement, valid);
+					invalidate(executableElement, validation);
 					return;
 				}
 			}

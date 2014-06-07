@@ -15,18 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr.invoke;
-
-import java.util.List;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
@@ -35,13 +27,19 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import java.util.List;
+
+import static com.sun.codemodel.JExpr.TRUE;
+import static com.sun.codemodel.JExpr.invoke;
 
 public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
@@ -58,22 +56,22 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
-		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
+		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.doesntThrowException(element, valid);
+		validatorHelper.doesntThrowException(element, validation);
 
-		validatorHelper.uniqueId(element, validatedElements, valid);
+		validatorHelper.uniqueId(element, validatedElements, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
+		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, validation);
 
-		validatorHelper.param.type(CanonicalNameConstants.MENU_ITEM).optional().validate(executableElement, valid);
+		validatorHelper.param.type(CanonicalNameConstants.MENU_ITEM).optional().validate(executableElement, validation);
 	}
 
 	@Override

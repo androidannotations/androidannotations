@@ -20,6 +20,9 @@ import static com.sun.codemodel.JExpr._this;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
@@ -27,12 +30,9 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JVar;
 
 public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
@@ -49,16 +49,16 @@ public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
-		validatorHelper.isDeclaredType(element, valid);
+		validatorHelper.isDeclaredType(element, validation);
 
-		validatorHelper.extendsMenuItem(element, valid);
+		validatorHelper.extendsMenuItem(element, validation);
 
-		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
+		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override

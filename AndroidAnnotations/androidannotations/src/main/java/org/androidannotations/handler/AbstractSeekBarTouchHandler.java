@@ -30,7 +30,7 @@ import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.OnSeekBarChangeListenerHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
@@ -54,20 +54,20 @@ public abstract class AbstractSeekBarTouchHandler extends BaseAnnotationHandler<
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
 
-		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
+		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.doesntThrowException(element, valid);
+		validatorHelper.doesntThrowException(element, validation);
 
-		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
+		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
-		validatorHelper.hasSeekBarTouchTrackingMethodParameters((ExecutableElement) element, valid);
+		validatorHelper.hasSeekBarTouchTrackingMethodParameters((ExecutableElement) element, validation);
 
-		validatorHelper.param.type(CanonicalNameConstants.SEEKBAR).optional().validate((ExecutableElement) element, valid);
+		validatorHelper.param.type(CanonicalNameConstants.SEEKBAR).optional().validate((ExecutableElement) element, validation);
 	}
 
 	@Override

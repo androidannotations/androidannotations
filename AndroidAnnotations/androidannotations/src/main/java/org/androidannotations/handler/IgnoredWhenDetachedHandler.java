@@ -15,20 +15,19 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.invoke;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JMethod;
+import org.androidannotations.annotations.IgnoredWhenDetached;
+import org.androidannotations.holder.EFragmentHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.annotations.IgnoredWhenDetached;
-import org.androidannotations.holder.EFragmentHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JMethod;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.invoke;
 
 public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
@@ -37,11 +36,14 @@ public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		validatorHelper.isNotPrivate(element, valid);
+
 		validatorHelper.isNotFinal(element, valid);
+
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
-		validatorHelper.enclosingElementHasEFragment(element, validatedElements, valid);
+
+		validatorHelper.enclosingElementHasEFragment(element, valid);
 	}
 
 	@Override

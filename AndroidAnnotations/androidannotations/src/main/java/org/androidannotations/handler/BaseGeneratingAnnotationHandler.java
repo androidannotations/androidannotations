@@ -15,13 +15,13 @@
  */
 package org.androidannotations.handler;
 
+import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-
-import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
 
 public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> implements GeneratingAnnotationHandler<T> {
 
@@ -34,7 +34,7 @@ public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHo
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		validatorHelper.isNotFinal(element, valid);
 
 		if (isInnerClass(element)) {
@@ -43,7 +43,7 @@ public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHo
 
 			validatorHelper.isStatic(element, valid);
 
-			validatorHelper.enclosingElementHasAndroidAnnotation(element, validatedElements, valid);
+			validatorHelper.enclosingElementHasAndroidAnnotation(element, valid);
 
 			validatorHelper.enclosingElementIsNotAbstractIfNotAbstract(element, valid);
 		}

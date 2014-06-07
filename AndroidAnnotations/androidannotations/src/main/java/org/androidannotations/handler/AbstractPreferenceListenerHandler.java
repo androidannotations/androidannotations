@@ -25,7 +25,7 @@ import javax.lang.model.element.Element;
 import org.androidannotations.holder.FoundPreferenceHolder;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass.Res;
 
 import com.sun.codemodel.JClass;
@@ -43,9 +43,9 @@ public abstract class AbstractPreferenceListenerHandler extends AbstractListener
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		super.validate(element, validatedElements, valid);
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, valid);
 	}
 
 	@Override

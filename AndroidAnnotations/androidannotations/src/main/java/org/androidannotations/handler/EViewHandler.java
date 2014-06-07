@@ -22,7 +22,7 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.holder.EViewHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 
 public class EViewHandler extends BaseGeneratingAnnotationHandler<EViewHolder> {
@@ -37,10 +37,10 @@ public class EViewHandler extends BaseGeneratingAnnotationHandler<EViewHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
-		validatorHelper.extendsView(element, valid);
+		validatorHelper.extendsView(element, validation);
 	}
 
 	@Override

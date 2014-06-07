@@ -37,7 +37,6 @@ import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.holder.RoboGuiceDelegate;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -49,6 +48,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
+import org.androidannotations.process.ElementValidation;
 
 public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
@@ -57,10 +57,10 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.hasEActivity(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.hasEActivity(element, validation);
 
-		validatorHelper.hasRoboGuiceJars(element, valid);
+		validatorHelper.hasRoboGuiceJars(validation);
 	}
 
 	@Override

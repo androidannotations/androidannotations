@@ -22,7 +22,7 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.holder.EServiceHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 
 public class EServiceHandler extends BaseGeneratingAnnotationHandler<EServiceHolder> {
@@ -37,12 +37,12 @@ public class EServiceHandler extends BaseGeneratingAnnotationHandler<EServiceHol
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
-		validatorHelper.extendsService(element, valid);
+		validatorHelper.extendsService(element, validation);
 
-		validatorHelper.componentRegistered(element, androidManifest, valid);
+		validatorHelper.componentRegistered(element, androidManifest, validation);
 	}
 
 	@Override

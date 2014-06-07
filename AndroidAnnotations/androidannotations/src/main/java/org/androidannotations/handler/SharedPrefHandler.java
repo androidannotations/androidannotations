@@ -58,7 +58,7 @@ import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import org.androidannotations.holder.SharedPrefHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
@@ -122,35 +122,35 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
 		TypeElement typeElement = (TypeElement) element;
 
-		validatorHelper.isInterface(typeElement, valid);
+		validatorHelper.isInterface(typeElement, validation);
 
 		List<? extends Element> inheritedMembers = processingEnv.getElementUtils().getAllMembers(typeElement);
 
 		for (Element memberElement : inheritedMembers) {
 			if (!memberElement.getEnclosingElement().asType().toString().equals("java.lang.Object")) {
-				validatorHelper.isPrefMethod(memberElement, valid);
+				validatorHelper.isPrefMethod(memberElement, validation);
 
-				DefaultPrefInfo<?> info = null;
+				DefaultPrefInfo<?> info;
 				IdValidatorHelper defaultAnnotationValidatorHelper = null;
 
-				if (valid.isValid()) {
+				if (validation.isValid()) {
 					info = DEFAULT_PREF_INFOS.get(((ExecutableElement) memberElement).getReturnType().toString());
-					validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement, valid);
+					validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement, validation);
 
-					if (valid.isValid() && memberElement.getAnnotation(DefaultRes.class) != null) {
+					if (validation.isValid() && memberElement.getAnnotation(DefaultRes.class) != null) {
 						defaultAnnotationValidatorHelper = new IdValidatorHelper(new IdAnnotationHelper(processingEnv, DefaultRes.class.getName(), rClass));
-						defaultAnnotationValidatorHelper.resIdsExist(memberElement, info.resType, FallbackStrategy.USE_ELEMENT_NAME, valid);
-					} else if (valid.isValid() && memberElement.getAnnotation(info.annotationClass) != null) {
+						defaultAnnotationValidatorHelper.resIdsExist(memberElement, info.resType, FallbackStrategy.USE_ELEMENT_NAME, validation);
+					} else if (validation.isValid() && memberElement.getAnnotation(info.annotationClass) != null) {
 						defaultAnnotationValidatorHelper = new IdValidatorHelper(new IdAnnotationHelper(processingEnv, info.annotationClass.getName(), rClass));
 					}
 
-					if (valid.isValid() && defaultAnnotationValidatorHelper != null) {
-						defaultAnnotationValidatorHelper.annotationParameterIsOptionalValidResId(memberElement, IRClass.Res.STRING, "keyRes", valid);
+					if (validation.isValid() && defaultAnnotationValidatorHelper != null) {
+						defaultAnnotationValidatorHelper.annotationParameterIsOptionalValidResId(memberElement, IRClass.Res.STRING, "keyRes", validation);
 					}
 				}
 			}

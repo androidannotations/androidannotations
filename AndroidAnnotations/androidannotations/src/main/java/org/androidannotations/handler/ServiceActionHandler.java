@@ -34,7 +34,7 @@ import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EIntentServiceHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -55,13 +55,13 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
 
-		validatorHelper.enclosingElementHasEIntentService(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEIntentService(element, validation);
 
-		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
+		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override

@@ -24,6 +24,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -31,13 +36,8 @@ import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.holder.NonConfigurationHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JVar;
 
 public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
@@ -50,10 +50,10 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEActivity(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override

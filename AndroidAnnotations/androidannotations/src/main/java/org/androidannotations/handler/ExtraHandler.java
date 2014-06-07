@@ -32,7 +32,7 @@ import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.HasExtras;
 import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -53,17 +53,17 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
 		/*
 		 * TODO since we override setIntent(), we should check that the
 		 * setIntent() method can be overridden
 		 */
 
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+		validatorHelper.enclosingElementHasEActivity(element,  validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.canBePutInABundle(element, valid);
+		validatorHelper.canBePutInABundle(element, validation);
 	}
 
 	@Override

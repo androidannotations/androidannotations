@@ -15,12 +15,8 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.ref;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
 import org.androidannotations.annotations.FromHtml;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
@@ -28,11 +24,14 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.ref;
 
 public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
@@ -49,14 +48,14 @@ public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSup
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element,  validation);
 
-		validatorHelper.hasViewByIdAnnotation(element, validatedElements, valid);
+		validatorHelper.hasViewByIdAnnotation(element, validatedElements, validation);
 
-		validatorHelper.extendsTextView(element, valid);
+		validatorHelper.extendsTextView(element, validation);
 
-		validatorHelper.resIdsExist(element, IRClass.Res.STRING, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
+		validatorHelper.resIdsExist(element, IRClass.Res.STRING, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
 	}
 
 	@Override

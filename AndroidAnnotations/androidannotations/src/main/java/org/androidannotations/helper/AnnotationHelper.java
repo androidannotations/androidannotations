@@ -24,6 +24,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import com.sun.codemodel.JFieldRef;
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.ResId;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
+import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.rclass.IRInnerClass;
+import org.androidannotations.rclass.RInnerClass;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -39,18 +48,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.OptionsItem;
-import org.androidannotations.annotations.ResId;
 import org.androidannotations.annotations.SeekBarTouchStop;
-import org.androidannotations.logger.Level;
-import org.androidannotations.logger.Logger;
-import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.rclass.IRInnerClass;
-import org.androidannotations.rclass.RInnerClass;
-
-import com.sun.codemodel.JFieldRef;
 
 public class AnnotationHelper {
 
@@ -113,27 +111,6 @@ public class AnnotationHelper {
 
 	public boolean isAnnotation(TypeElement annotation, String annotationName) {
 		return annotation.getQualifiedName().toString().equals(annotationName);
-	}
-
-	public void printAnnotationError(Element annotatedElement, String annotationName, String message) {
-		printAnnotationMessage(Level.ERROR, annotatedElement, annotationName, message);
-	}
-
-	public void printAnnotationWarning(Element annotatedElement, String annotationName, String message) {
-		printAnnotationMessage(Level.WARN, annotatedElement, annotationName, message);
-	}
-
-	public void printAnnotationMessage(Level level, Element annotatedElement, String annotationName, String message) {
-		AnnotationMirror annotationMirror = findAnnotationMirror(annotatedElement, annotationName);
-		if (annotationMirror != null) {
-			LOGGER.log(level, message, annotatedElement, annotationMirror, null);
-		} else {
-			printError(annotatedElement, message);
-		}
-	}
-
-	public void printError(Element element, String message) {
-		LOGGER.error(message, element);
 	}
 
 	public boolean isPrivate(Element element) {
@@ -378,6 +355,10 @@ public class AnnotationHelper {
 		return annotationSimpleName + "ed";
 	}
 
+	public List<DeclaredType> extractAnnotationClassArrayParameter(Element element, Class<? extends Annotation> annotation, String methodName) {
+		return extractAnnotationClassArrayParameter(element, annotation.getName(), methodName);
+	}
+
 	public List<DeclaredType> extractAnnotationClassArrayParameter(Element element, String annotationName, String methodName) {
 		AnnotationMirror annotationMirror = findAnnotationMirror(element, annotationName);
 
@@ -405,6 +386,10 @@ public class AnnotationHelper {
 		}
 
 		return null;
+	}
+
+	public DeclaredType extractAnnotationClassParameter(Element element, Class<? extends Annotation> annotation, String methodName) {
+		return extractAnnotationClassParameter(element, annotation.getName(), methodName);
 	}
 
 	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName, String methodName) {

@@ -15,14 +15,14 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
 import org.androidannotations.annotations.AfterExtras;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 
 public class AfterExtrasHandler extends BaseAnnotationHandler<EActivityHolder> {
 
@@ -31,8 +31,8 @@ public class AfterExtrasHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEActivity(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

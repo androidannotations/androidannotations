@@ -15,25 +15,6 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
-
-import java.util.List;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -44,6 +25,24 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.IdAnnotationHelper;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.model.AndroidSystemServices;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rclass.IRClass;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import java.util.List;
+
+import static com.sun.codemodel.JExpr.invoke;
 
 public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> {
 
@@ -66,14 +65,16 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.resIdsExist(element, getResourceType(), IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.resIdsExist(element, getResourceType(), IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
 
-		validatorHelper.doesntThrowException(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.uniqueResourceId(element, validatedElements, getResourceType(), valid);
+		validatorHelper.doesntThrowException(element, validation);
+
+		validatorHelper.uniqueResourceId(element, validatedElements, getResourceType(), validation);
 	}
 
 	@Override

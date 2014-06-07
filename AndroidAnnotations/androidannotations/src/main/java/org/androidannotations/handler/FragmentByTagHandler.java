@@ -31,7 +31,7 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
@@ -52,12 +52,12 @@ public class FragmentByTagHandler extends BaseAnnotationHandler<EComponentWithVi
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element,  validation);
 
-		validatorHelper.extendsFragment(element, valid);
+		validatorHelper.extendsFragment(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override

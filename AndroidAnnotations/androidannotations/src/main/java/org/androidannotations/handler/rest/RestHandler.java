@@ -34,7 +34,7 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.holder.RestHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -58,30 +58,30 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
 		TypeElement typeElement = (TypeElement) element;
 
-		validatorHelper.notAlreadyValidated(element, validatedElements, valid);
+		validatorHelper.notAlreadyValidated(element, validatedElements, validation);
 
-		validatorHelper.hasSpringAndroidJars(element, valid);
+		validatorHelper.hasSpringAndroidJars(validation);
 
-		validatorHelper.isInterface(typeElement, valid);
+		validatorHelper.isInterface(typeElement, validation);
 
-		validatorHelper.isTopLevel(typeElement, valid);
+		validatorHelper.isTopLevel(typeElement, validation);
 
-		validatorHelper.doesNotExtendInvalidInterfaces(typeElement, valid);
+		validatorHelper.doesNotExtendInvalidInterfaces(typeElement, validation);
 
-		validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, valid);
+		validatorHelper.unannotatedMethodReturnsRestTemplate(typeElement, validation);
 
-		validatorHelper.validateConverters(element, valid);
+		validatorHelper.validateConverters(element, validation);
 
-		validatorHelper.validateInterceptors(element, valid);
+		validatorHelper.validateInterceptors(element, validation);
 
-		validatorHelper.validateRequestFactory(element, valid);
+		validatorHelper.validateRequestFactory(element, validation);
 
-		validatorHelper.hasInternetPermission(typeElement, androidManifest, valid);
+		validatorHelper.hasInternetPermission(androidManifest, validation);
 	}
 
 	@Override

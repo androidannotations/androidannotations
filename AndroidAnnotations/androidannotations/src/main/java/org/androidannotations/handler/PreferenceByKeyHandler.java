@@ -28,7 +28,7 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JClass;
@@ -50,8 +50,9 @@ public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, valid);
+
 		validatorHelper.enclosingElementExtendsPreferenceActivityOrPreferenceFragment(element, valid);
 
 		validatorHelper.isDeclaredType(element, valid);

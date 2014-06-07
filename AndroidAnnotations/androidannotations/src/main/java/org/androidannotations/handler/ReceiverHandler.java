@@ -34,7 +34,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasReceiverRegistration;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -61,24 +61,24 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(element, validatedElements, valid);
+	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
+		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
 		validatorHelper.param.anyOrder() //
 				.type(CanonicalNameConstants.CONTEXT).optional() //
 				.type(CanonicalNameConstants.INTENT).optional() //
 				.annotatedWith(Receiver.Extra.class).multiple().optional() //
-				.validate((ExecutableElement) element, valid);
+				.validate((ExecutableElement) element, validation);
 
-		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element.getEnclosingElement(), valid, Receiver.class);
+		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element.getEnclosingElement(), validation, Receiver.class);
 
-		validatorHelper.hasRightRegisterAtValueDependingOnEnclosingElement(element, valid);
+		validatorHelper.hasRightRegisterAtValueDependingOnEnclosingElement(element, validation);
 
-		validatorHelper.hasSupportV4JarIfLocal(element, valid);
+		validatorHelper.hasSupportV4JarIfLocal(element, validation);
 	}
 
 	@Override

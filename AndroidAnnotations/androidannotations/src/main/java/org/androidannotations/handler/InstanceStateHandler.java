@@ -26,7 +26,7 @@ import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.holder.HasInstanceState;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -46,12 +46,12 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.canBePutInABundle(element, valid);
+		validatorHelper.canBePutInABundle(element, validation);
 	}
 
 	@Override

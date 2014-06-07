@@ -31,7 +31,6 @@ import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -40,6 +39,8 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
+import org.androidannotations.process.ElementValidation;
+
 
 public abstract class ExtraParameterHandler extends BaseAnnotationHandler<GeneratedClassHolder> {
 
@@ -53,7 +54,7 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		validatorHelper.enclosingMethodHasAnnotation(methodAnnotationClass, element, validatedElements, valid);
 
 		validatorHelper.canBePutInABundle(element, valid);

@@ -22,7 +22,7 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 
 public class EBeanHandler extends BaseGeneratingAnnotationHandler<EBeanHolder> {
@@ -37,7 +37,7 @@ public class EBeanHandler extends BaseGeneratingAnnotationHandler<EBeanHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		super.validate(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);

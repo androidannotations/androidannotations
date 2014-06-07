@@ -22,7 +22,7 @@ import javax.lang.model.element.ExecutableElement;
 import org.androidannotations.annotations.AfterPreferences;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 public class AfterPreferencesHandler extends BaseAnnotationHandler<HasPreferences> {
 
@@ -31,8 +31,8 @@ public class AfterPreferencesHandler extends BaseAnnotationHandler<HasPreference
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, valid);
 		validatorHelper.enclosingElementExtendsPreferenceActivityOrPreferenceFragment(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;

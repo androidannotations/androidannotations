@@ -22,7 +22,7 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.holder.EReceiverHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 
 public class EReceiverHandler extends BaseGeneratingAnnotationHandler<EReceiverHolder> {
@@ -37,13 +37,13 @@ public class EReceiverHandler extends BaseGeneratingAnnotationHandler<EReceiverH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
-		validatorHelper.extendsReceiver(element, valid);
+		validatorHelper.extendsReceiver(element, validation);
 
 		final boolean NO_WARNING = false;
-		validatorHelper.componentRegistered(element, androidManifest, NO_WARNING, valid);
+		validatorHelper.componentRegistered(element, androidManifest, NO_WARNING, validation);
 	}
 
 	@Override

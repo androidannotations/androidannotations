@@ -15,12 +15,12 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 
 public abstract class SupposeThreadHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -29,8 +29,8 @@ public abstract class SupposeThreadHandler extends BaseAnnotationHandler<ECompon
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, valid);
 		validatorHelper.isNotPrivate(element, valid);
 		validatorHelper.isNotFinal(element, valid);
 	}

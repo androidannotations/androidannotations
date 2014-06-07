@@ -27,7 +27,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -44,14 +44,14 @@ public class ClickHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, validation);
 
-		validatorHelper.param.extendsType(CanonicalNameConstants.VIEW).optional().validate(executableElement, valid);
+		validatorHelper.param.extendsType(CanonicalNameConstants.VIEW).optional().validate(executableElement, validation);
 	}
 
 	@Override

@@ -15,18 +15,20 @@
  */
 package org.androidannotations.process;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.lang.model.element.Element;
-
-import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.exception.ValidationException;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ModelValidator {
 
@@ -37,9 +39,10 @@ public class ModelValidator {
 		this.annotationHandlers = annotationHandlers;
 	}
 
-	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ProcessingException, Exception {
+	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ValidationException {
 
 		LOGGER.info("Validating elements");
+		List<ElementValidation> failedValidations = new ArrayList<ElementValidation>();
 
 		/*
 		 * We currently do not validate the elements on the ancestors, assuming
@@ -63,23 +66,30 @@ public class ModelValidator {
 			}
 
 			for (Element annotatedElement : annotatedElements) {
-				if (validateThrowing(annotationHandler, annotatedElement, validatedElements)) {
+				ElementValidation elementValidation = annotationHandler.validate(annotatedElement, validatedElements);
+
+				AnnotationMirror annotationMirror = elementValidation.getAnnotationMirror();
+				for (ElementValidation.Error error : elementValidation.getErrors()) {
+					LOGGER.error(error.getMessage(), error.getElement(), annotationMirror);
+				}
+
+				for (String warning : elementValidation.getWarnings()) {
+					LOGGER.warn(warning, elementValidation.getElement(), elementValidation.getAnnotationMirror());
+				}
+
+				if (elementValidation.isValid()) {
 					validatedAnnotatedElements.add(annotatedElement);
 				} else {
-					LOGGER.warn("Element {} unvalidated by {}", annotatedElement, validatorSimpleName);
+					failedValidations.add(elementValidation);
+					LOGGER.warn("Element {} invalidated by {}", annotatedElement, annotatedElement, validatorSimpleName);
 				}
 			}
 		}
 
+		if (!failedValidations.isEmpty()) {
+			throw new ValidationException(failedValidations);
+		}
+
 		return validatedElements;
 	}
-
-	private boolean validateThrowing(AnnotationHandler<?> handler, Element element, AnnotationElements validatedElements) throws Exception, ProcessingException {
-		try {
-			return handler.validate(element, validatedElements);
-		} catch (Exception e) {
-			throw new ProcessingException(e, element);
-		}
-	}
-
 }

@@ -15,25 +15,24 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JExpr.ref;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.annotations.RootContext;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.EBeanHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
+import org.androidannotations.annotations.RootContext;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.EBeanHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JExpr.ref;
 
 public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
 
@@ -42,12 +41,12 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEBeanAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEBeanAnnotation(element, validation);
 
-		validatorHelper.extendsContext(element, valid);
+		validatorHelper.extendsContext(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override

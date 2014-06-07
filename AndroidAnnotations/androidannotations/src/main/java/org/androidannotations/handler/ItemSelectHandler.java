@@ -20,6 +20,10 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 
 import java.util.List;
+import org.androidannotations.annotations.ItemSelect;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -27,11 +31,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.annotations.ItemSelect;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -52,17 +51,17 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		super.validate(element, validatedElements, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, validation);
 
 		validatorHelper.param.inOrder() //
 				.primitiveOrWrapper(TypeKind.BOOLEAN) //
 				.anyType().optional() //
-				.validate(executableElement, valid);
+				.validate(executableElement, validation);
 	}
 
 	@Override

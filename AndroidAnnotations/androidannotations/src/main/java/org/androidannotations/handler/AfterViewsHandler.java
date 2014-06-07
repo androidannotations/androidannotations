@@ -15,14 +15,14 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 
 public class AfterViewsHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
@@ -31,18 +31,18 @@ public class AfterViewsHandler extends BaseAnnotationHandler<EComponentWithViewS
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
+		validatorHelper.returnTypeIsVoid(executableElement, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.doesntThrowException(executableElement, valid);
+		validatorHelper.doesntThrowException(executableElement, validation);
 
-		validatorHelper.param.noParam().validate(executableElement, valid);
+		validatorHelper.param.noParam().validate(executableElement, validation);
 	}
 
 	@Override

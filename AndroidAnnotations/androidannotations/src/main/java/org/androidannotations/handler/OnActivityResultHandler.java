@@ -18,8 +18,6 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 
-import java.util.List;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -31,7 +29,6 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasOnActivityResult;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpr;
@@ -39,6 +36,9 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JOp;
 import com.sun.codemodel.JVar;
+import org.androidannotations.process.ElementValidation;
+
+import java.util.List;
 
 public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivityResult> {
 
@@ -55,25 +55,24 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
-		validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.doesntThrowException(element, valid);
+		validatorHelper.doesntThrowException(element, validation);
 
 		OnActivityResult onResultAnnotation = element.getAnnotation(OnActivityResult.class);
-		validatorHelper.annotationValuePositiveAndInAShort(element, valid, onResultAnnotation.value());
+		validatorHelper.annotationValuePositiveAndInAShort(onResultAnnotation.value(), validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
-
+		validatorHelper.returnTypeIsVoid(executableElement, validation);
 
 		validatorHelper.param.anyOrder() //
 				.type(CanonicalNameConstants.INTENT).optional() //
 				.primitiveOrWrapper(TypeKind.INT).optional() //
 				.annotatedWith(OnActivityResult.Extra.class).multiple().optional() //
-				.validate((ExecutableElement) element, valid); //
+				.validate((ExecutableElement) element, validation); //
 	}
 
 	@Override

@@ -15,16 +15,16 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.holder.EIntentServiceHolder;
 import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 
 public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceHolder> implements GeneratingAnnotationHandler<EIntentServiceHolder> {
 
@@ -38,16 +38,16 @@ public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.extendsIntentService(element, valid);
+	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+		validatorHelper.extendsIntentService(element, validation);
 
-		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element, valid, ServiceAction.class);
+		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element, validation, ServiceAction.class);
 
-		validatorHelper.isNotFinal(element, valid);
+		validatorHelper.isNotFinal(element, validation);
 
-		validatorHelper.componentRegistered(element, androidManifest, valid);
+		validatorHelper.componentRegistered(element, androidManifest, validation);
 
-		validatorHelper.isAbstractOrHasEmptyConstructor(element, valid);
+		validatorHelper.isAbstractOrHasEmptyConstructor(element, validation);
 	}
 
 	@Override
