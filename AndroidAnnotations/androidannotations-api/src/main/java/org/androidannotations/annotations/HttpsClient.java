@@ -50,7 +50,7 @@ import java.lang.annotation.Target;
  * <b>Note</b>:
  * <tt>Prior to ICS, Android accepts [Key|Trust]store only in BKS format
  * (Bouncycastle Key Store)</tt>
- *
+ * 
  * <blockquote>
  * 
  * Example :
@@ -93,9 +93,13 @@ public @interface HttpsClient {
 
 	int trustStore() default ResId.DEFAULT_VALUE;
 
+	String trustStoreResName() default "";
+
 	String trustStorePwd() default DEFAULT_PASSWD;
 
 	int keyStore() default ResId.DEFAULT_VALUE;
+
+	String keyStoreResName() default "";
 
 	String keyStorePwd() default DEFAULT_PASSWD;
 
