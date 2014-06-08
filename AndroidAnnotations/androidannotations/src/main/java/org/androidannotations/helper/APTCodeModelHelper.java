@@ -19,6 +19,10 @@ import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.lit;
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.holder.GeneratedClassHolder;
+
+import javax.lang.model.util.ElementFilter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -41,13 +45,10 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
-import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.holder.EBeanHolder;
-import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.holder.GeneratedClassHolder;
 
 import com.sun.codemodel.JAnnotatable;
 import com.sun.codemodel.JAnnotationUse;
@@ -376,19 +377,14 @@ public class APTCodeModelHelper {
 		throw new IllegalStateException("Unable to extract target name from JFieldRef");
 	}
 
-	public JDefinedClass createDelegatingAnonymousRunnableClass(EComponentHolder holder, JMethod delegatedMethod) {
-
+	public JDefinedClass createDelegatingAnonymousRunnableClass(EComponentHolder holder, JBlock previousBody) {
 		JCodeModel codeModel = holder.codeModel();
 
-		JDefinedClass anonymousRunnableClass;
-		JBlock previousMethodBody = removeBody(delegatedMethod);
-
-		anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
+		JDefinedClass anonymousRunnableClass = codeModel.anonymousClass(Runnable.class);
 
 		JMethod runMethod = anonymousRunnableClass.method(JMod.PUBLIC, codeModel.VOID, "run");
 		runMethod.annotate(Override.class);
-
-		runMethod.body().add(previousMethodBody);
+		runMethod.body().add(previousBody);
 
 		return anonymousRunnableClass;
 	}
