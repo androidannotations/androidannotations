@@ -15,20 +15,23 @@
  */
 package org.androidannotations.annotations.res;
 
+import org.androidannotations.annotations.ResId;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.annotations.ResId;
-
 /**
+ * <p>
  * Use on {@link java.lang.Integer} or <code>int</code> fields in any enhanced
  * classes that should be injected with this specific dimension pixel size
  * resource.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value must be one of R.dimen.* fields. If the value is not
  * set, the field name will be used as the R.dimen.* field name.
+ * </p>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

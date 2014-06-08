@@ -21,23 +21,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.CompoundButton.OnCheckedChangeListener#onCheckedChanged(android.widget.CompoundButton, boolean)}
  * after the checked state is changed on the targeted CompoundButton or subclass
  * of CompoundButton.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.id.* fields that refers to
  * CompoundButton or subclasses of CompoundButton. If not set, the method name
  * will be used as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have multiple parameter:
+ * </p>
  * <ul>
  * <li>A {@link android.widget.CompoundButton} parameter to know which view has
- * targeted this event
- * <li>An {@link boolean} to know the new state of the view.
+ * targeted this event</li>
+ * <li>An {@link boolean} to know the new state of the view.</li>
  * </ul>
- * <p/>
  * <blockquote>
  * 
  * Example :

@@ -21,10 +21,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use it on {@link EActivity} annotated classes to set a custom title layout.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value is mandatory and should be one of R.layout.* fields.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

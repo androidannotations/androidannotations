@@ -15,21 +15,23 @@
  */
 package org.androidannotations.annotations.sharedpreferences;
 
+import android.content.Context;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.content.Context;
-
 /**
+ * <p>
  * Apply @{@link SharedPref} on an interface to create a SharedPreference helper
  * that will contain access methods related to the methods you define in the
  * interface.
- * <p/>
+ * </p>
+ * <p>
  * You should then inject your SharedPreference generated class by using
  * {@link Pref} annotation.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

@@ -15,27 +15,31 @@
  */
 package org.androidannotations.annotations;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.os.Parcelable;
-
 /**
+ * <p>
  * Use on any native, {@link Parcelable} or {@link Serializable} field in an
  * {@link EFragment} annotated class to bind it with Android's arguments.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value is the key used for argument. If not set, the field name
  * will be used as the key.
- * <p/>
+ * </p>
+ * <p>
  * When {@link FragmentArg} is used, the intent builder will hold dedicated
  * methods for each annotated fields.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected extra should go in an {@link AfterInject}
  * annotated method.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

@@ -21,11 +21,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Injects an {@link EApplication} annotated class in an enhanced class.
- * <p/>
+ * </p>
+ * <p>
  * Please check that your registered the application in the AndroidManifest.xml
  * class prior to using this annotation.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :
