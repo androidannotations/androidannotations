@@ -51,7 +51,11 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, Res res, boolean useElementName) {
-		return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName);
+		return extractAnnotationFieldRefs(holder, element, res, useElementName, DEFAULT_FIELD_NAME_VALUE, DEFAULT_FIELD_NAME_RESNAME);
+	}
+
+	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, Res res, boolean useElementName, String idFieldName, String resFieldName) {
+		return super.extractAnnotationFieldRefs(holder, element, getTarget(), rClass.get(res), useElementName, idFieldName, resFieldName);
 	}
 
 	public JFieldRef extractOneAnnotationFieldRef(ProcessHolder holder, Element element, Res res, boolean useElementName) {
@@ -59,7 +63,15 @@ public class IdAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public JFieldRef extractOneAnnotationFieldRef(ProcessHolder holder, Element element, String annotationName, Res res, boolean useElementName) {
-		List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, annotationName, rClass.get(res), useElementName);
+		return extractOneAnnotationFieldRef(holder, element, annotationName, res, useElementName, DEFAULT_FIELD_NAME_VALUE, DEFAULT_FIELD_NAME_RESNAME);
+	}
+
+	public JFieldRef extractOneAnnotationFieldRef(ProcessHolder holder, Element element, String annotationName, Res res, boolean useElementName, String idFieldName, String resFieldName) {
+		return extractOneAnnotationFieldRef(holder, element, annotationName, rClass.get(res), useElementName, idFieldName, resFieldName);
+	}
+
+	public JFieldRef extractOneAnnotationFieldRef(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName, String idFieldName, String resFieldName) {
+		List<JFieldRef> jFieldRefs = extractAnnotationFieldRefs(holder, element, annotationName, rInnerClass, useElementName, idFieldName, resFieldName);
 
 		if (jFieldRefs.size() == 1) {
 			return jFieldRefs.get(0);
