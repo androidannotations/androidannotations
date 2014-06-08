@@ -3,9 +3,6 @@ android:
   components:
     - build-tools-19.1
     - android-14
-jdk:
-  - oraclejdk7
-  - openjdk6
 script:
   - mvn -f AndroidAnnotations/pom.xml install
   - mvn -f examples/maveneclipse/pom.xml install
