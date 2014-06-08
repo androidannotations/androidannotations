@@ -5,4 +5,4 @@ android:
     - android-14
 script:
   - mvn -f AndroidAnnotations/pom.xml install
-  - mvn -f examples/maveneclipse/pom.xml compile
+  - mvn -f examples/maveneclipse/pom.xml install
