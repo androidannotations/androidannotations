@@ -47,6 +47,10 @@ public abstract class EditorHelper<T extends EditorHelper<T>> {
 		return new StringPrefEditorField<T>(cast(), key);
 	}
 
+	protected StringSetPrefEditorField<T> stringSetField(String key) {
+		return new StringSetPrefEditorField<T>(cast(), key);
+	}
+
 	protected BooleanPrefEditorField<T> booleanField(String key) {
 		return new BooleanPrefEditorField<T>(cast(), key);
 	}
