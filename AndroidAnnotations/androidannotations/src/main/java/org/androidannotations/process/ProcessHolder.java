@@ -162,6 +162,7 @@ public class ProcessHolder {
 		public final JClass CLIENT_CONNECTION_MANAGER = refClass(CanonicalNameConstants.CLIENT_CONNECTION_MANAGER);
 		public final JClass DEFAULT_HTTP_CLIENT = refClass(CanonicalNameConstants.DEFAULT_HTTP_CLIENT);
 		public final JClass SSL_SOCKET_FACTORY = refClass(CanonicalNameConstants.SSL_SOCKET_FACTORY);
+		public final JClass PLAIN_SOCKET_FACTORY = refClass(CanonicalNameConstants.PLAIN_SOCKET_FACTORY);
 		public final JClass SCHEME = refClass(CanonicalNameConstants.SCHEME);
 		public final JClass SCHEME_REGISTRY = refClass(CanonicalNameConstants.SCHEME_REGISTRY);
 		public final JClass SINGLE_CLIENT_CONN_MANAGER = refClass(CanonicalNameConstants.SINGLE_CLIENT_CONN_MANAGER);
