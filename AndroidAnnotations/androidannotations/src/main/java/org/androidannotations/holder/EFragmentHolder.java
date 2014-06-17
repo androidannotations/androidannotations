@@ -126,7 +126,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private void setFragmentBuilder() throws JClassAlreadyExistsException {
 		fragmentBuilderClass = generatedClass._class(PUBLIC | STATIC, "FragmentBuilder_");
 		JClass superClass = refClass(org.androidannotations.api.builder.FragmentBuilder.class);
-		superClass = superClass.narrow(fragmentBuilderClass, getGeneratedClass());
+		superClass = superClass.narrow(fragmentBuilderClass, getAnnotatedClass());
 		fragmentBuilderClass._extends(superClass);
 		fragmentArgumentsBuilderField = ref("args");
 		setFragmentBuilderBuild();
