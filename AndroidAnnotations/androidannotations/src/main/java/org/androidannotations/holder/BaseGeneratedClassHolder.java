@@ -15,25 +15,23 @@
  */
 package org.androidannotations.holder;
 
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.process.ProcessHolder;
+
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.process.ProcessHolder;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.NestingKind;
-
-import static com.sun.codemodel.JMod.*;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
@@ -52,15 +50,14 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	protected void setGeneratedClass() throws Exception {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
 
-		if (annotatedElement.getNestingKind() == NestingKind.TOP_LEVEL) {
-			String generatedClassQualifiedName = annotatedComponentQualifiedName + GENERATION_SUFFIX;
-			generatedClass = codeModel()._class(PUBLIC | FINAL, generatedClassQualifiedName, ClassType.CLASS);
-
-		} else {
+		if (annotatedElement.getNestingKind().isNested()) {
 			Element enclosingElement = annotatedElement.getEnclosingElement();
 			GeneratedClassHolder enclosingHolder = processHolder.getGeneratedClassHolder(enclosingElement);
 			String generatedBeanSimpleName = annotatedElement.getSimpleName().toString() + GENERATION_SUFFIX;
 			generatedClass = enclosingHolder.getGeneratedClass()._class(PUBLIC | FINAL | STATIC, generatedBeanSimpleName, ClassType.CLASS);
+		} else {
+			String generatedClassQualifiedName = annotatedComponentQualifiedName + GENERATION_SUFFIX;
+			generatedClass = codeModel()._class(PUBLIC | FINAL, generatedClassQualifiedName, ClassType.CLASS);
 		}
 		for (TypeParameterElement typeParam : annotatedElement.getTypeParameters()) {
 			JClass bound = codeModelHelper.typeBoundsToJClass(this, typeParam.getBounds());
@@ -74,6 +71,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 		JClass annotatedComponent = codeModel().directClass(annotatedElement.asType().toString());
 		generatedClass._extends(annotatedComponent);
 	}
+
 	@Override
 	public JDefinedClass getGeneratedClass() {
 		return generatedClass;

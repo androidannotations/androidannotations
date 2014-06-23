@@ -15,67 +15,9 @@
  */
 package org.androidannotations.helper;
 
-import static java.util.Arrays.asList;
-import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
-import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
-import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
-import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
-import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
-import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
-
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.EIntentService;
-import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.Receiver;
-import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.annotations.rest.Head;
-import org.androidannotations.annotations.rest.Options;
-import org.androidannotations.annotations.rest.Post;
-import org.androidannotations.annotations.rest.Put;
-import org.androidannotations.annotations.rest.Rest;
-import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
-import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
-import org.androidannotations.annotations.sharedpreferences.DefaultInt;
-import org.androidannotations.annotations.sharedpreferences.DefaultLong;
-import org.androidannotations.annotations.sharedpreferences.DefaultString;
-import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.rest.*;
+import org.androidannotations.annotations.sharedpreferences.*;
 import org.androidannotations.api.rest.RestClientErrorHandling;
 import org.androidannotations.api.rest.RestClientHeaders;
 import org.androidannotations.api.rest.RestClientRootUrl;
@@ -84,6 +26,18 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
+
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
+import java.lang.annotation.Annotation;
+import java.util.*;
+
+import static java.util.Arrays.asList;
+import static org.androidannotations.helper.AndroidConstants.*;
+import static org.androidannotations.helper.CanonicalNameConstants.*;
+import static org.androidannotations.helper.ModelConstants.*;
 
 public class ValidatorHelper {
 
@@ -265,19 +219,6 @@ public class ValidatorHelper {
 		boolean foundAnnotation = false;
 		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
 			if (element.getAnnotation(validAnnotation) != null) {
-
-				Set<? extends Element> layoutAnnotatedElements = validatedElements.getRootAnnotatedElements(validAnnotation.getName());
-
-				/*
-				 * This is for the case where the element has the right
-				 * annotation, but that annotation was not validated. We do not
-				 * add any compile error (should already exist on the
-				 * annotation), but we still invalidate this element.
-				 */
-				if (!layoutAnnotatedElements.contains(element)) {
-					valid.invalidate();
-				}
-
 				foundAnnotation = true;
 				break;
 			}
