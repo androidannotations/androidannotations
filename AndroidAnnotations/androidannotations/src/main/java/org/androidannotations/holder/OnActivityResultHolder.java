@@ -15,6 +15,8 @@
  */
 package org.androidannotations.holder;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
 
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JOp;
 import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
@@ -38,6 +41,7 @@ public class OnActivityResultHolder {
 	private JVar requestCodeParam;
 	private JVar dataParam;
 	private JVar resultCodeParam;
+	private JVar resultExtras;
 	private HashMap<Integer, JBlock> caseBlocks = new HashMap<Integer, JBlock>();
 
 	public OnActivityResultHolder(EComponentHolder holder) {
@@ -63,6 +67,13 @@ public class OnActivityResultHolder {
 			setOnActivityResult();
 		}
 		return resultCodeParam;
+	}
+
+	public JVar getResultExtras() {
+		if (resultExtras == null) {
+			setOnActivityResult();
+		}
+		return resultExtras;
 	}
 
 	public JBlock getCaseBlock(int requestCode) {
@@ -107,6 +118,9 @@ public class OnActivityResultHolder {
 		dataParam = method.param(classes().INTENT, "data");
 		JBlock body = method.body();
 		body.invoke(_super(), method).arg(requestCodeParam).arg(resultCodeParam).arg(dataParam);
+		resultExtras = body.decl(classes().BUNDLE, "extras_",
+				JOp.cond(dataParam.eq(_null()).cor(dataParam.invoke("getExtras").eq(_null())), _new(classes().BUNDLE),
+						dataParam.invoke("getExtras")));
 		afterSuperBlock = body.block();
 	}
 

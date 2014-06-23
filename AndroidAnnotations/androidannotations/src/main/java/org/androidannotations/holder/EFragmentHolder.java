@@ -15,16 +15,34 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr.TRUE;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.ref;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+
+import javax.lang.model.element.TypeElement;
+
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.HoloEverywhereHelper;
 import org.androidannotations.process.ProcessHolder;
 
-import javax.lang.model.element.TypeElement;
-
-import static com.sun.codemodel.JExpr.*;
-import static com.sun.codemodel.JMod.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
@@ -414,6 +432,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	public JVar getOnActivityResultResultCodeParam() {
 		return onActivityResultHolder.getResultCodeParam();
+	}
+
+	@Override
+	public JVar getOnActivityResultExtras() {
+		return onActivityResultHolder.getResultExtras();
 	}
 
 	@Override

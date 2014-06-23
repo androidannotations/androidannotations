@@ -15,11 +15,15 @@
  */
 package org.androidannotations.test15;
 
+import java.util.ArrayList;
+
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.Result;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 
 @EFragment(R.layout.views_injected)
 public class AwaitingResultFragment extends Fragment {
@@ -27,6 +31,7 @@ public class AwaitingResultFragment extends Fragment {
 	private static final int FIRST_REQUEST = 11;
 	private static final int SECOND_REQUEST = 22;
 	private static final int THIRD_REQUEST = 33;
+	private static final int FORTH_REQUEST = 44;
 
 	@OnActivityResult(FIRST_REQUEST)
 	void onResult() {
@@ -52,4 +57,8 @@ public class AwaitingResultFragment extends Fragment {
 	void onResultWithIntegerResultCode(Integer resultCodeInteger) {
 	}
 
+	@OnActivityResult(FORTH_REQUEST)
+	void onResultWithResultExtra(int resultCode, @Result("value") int i, @Result String s, @Result Uri uri,
+	        @Result ArrayList<Uri> uris, @Result String[] strings) {
+	}
 }

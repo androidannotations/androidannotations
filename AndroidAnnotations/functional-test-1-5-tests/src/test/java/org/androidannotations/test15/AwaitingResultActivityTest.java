@@ -38,6 +38,7 @@ public class AwaitingResultActivityTest {
 				.isFalse();
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
+		assertThat(activity.onResultWithResultExtraCodeCalled).isFalse();
 	}
 
 	@Test
@@ -55,6 +56,7 @@ public class AwaitingResultActivityTest {
 				.isTrue();
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
+		assertThat(activity.onResultWithResultExtraCodeCalled).isFalse();
 	}
 
 	@Test
@@ -71,6 +73,23 @@ public class AwaitingResultActivityTest {
 				.isFalse();
 		assertThat(activity.onResultWithIntResultCodeCalled).isTrue();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isTrue();
+		assertThat(activity.onResultWithResultExtraCodeCalled).isFalse();
 	}
 
+	@Test
+	public void onlyForthRequestAnnotatedMethodAreCalled() {
+		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
+
+		activity.onActivityResult(AwaitingResultActivity.FORTH_REQUEST, 0, null);
+
+		assertThat(activity.onResultCalled).isFalse();
+		assertThat(activity.onResultWithDataCalled).isFalse();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
+				.isFalse();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
+				.isFalse();
+		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
+		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
+		assertThat(activity.onResultWithResultExtraCodeCalled).isTrue();
+	}
 }
