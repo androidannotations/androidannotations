@@ -19,17 +19,19 @@ import static org.androidannotations.test15.MyAssertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.view.View;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class EmptyActivityWithoutLayoutTest {
 
 	@Test
 	public void shouldHaveNoLayoutAfterCreate() {
-		EmptyActivityWithoutLayout_ activity = new EmptyActivityWithoutLayout_();
-
-		activity.onCreate(null);
+		EmptyActivityWithoutLayout_ activity = Robolectric
+				.buildActivity(EmptyActivityWithoutLayout_.class).create()
+				.get();
 		activity.setContentView(new View(activity));
 
 		assertThat(activity.findViewById(R.id.helloTextView)).isNull();

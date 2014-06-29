@@ -21,6 +21,7 @@ import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
 import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
 import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
 import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
 import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
 import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
@@ -29,7 +30,14 @@ import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPON
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -46,7 +54,14 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
-import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.Receiver;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.rest.Delete;
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Head;
@@ -83,7 +98,7 @@ public class ValidatorHelper {
 
 	private static final String METHOD_NAME_GET_ROOT_URL = "getRootUrl";
 
-	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING);
+	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING, CanonicalNameConstants.STRING_SET);
 
 	private static final List<String> INVALID_PREF_METHOD_NAMES = Arrays.asList("edit", "getSharedPreferences", "clear", "getEditor", "apply");
 
@@ -92,7 +107,6 @@ public class ValidatorHelper {
 	private static final List<Receiver.RegisterAt> VALID_ACTIVITY_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop);
 	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy);
 	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
-
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -190,10 +204,10 @@ public class ValidatorHelper {
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
 
-	public void enclosingElementHasEActivityOrEFragmentOrEService(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		@SuppressWarnings("unchecked")
-		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class);
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class, EIntentService.class);
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
 
@@ -506,6 +520,20 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void extendsListOfView(Element element, IsValid valid) {
+		DeclaredType elementType = (DeclaredType) element.asType();
+		List<? extends TypeMirror> elementTypeArguments = elementType.getTypeArguments();
+
+		TypeMirror viewType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW).asType();
+
+		if (!elementType.toString().equals(CanonicalNameConstants.LIST)
+				&& elementTypeArguments.size() == 1
+				&& !annotationHelper.isSubtype(elementTypeArguments.get(0), viewType)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on a "+CanonicalNameConstants.LIST+ " of elements extending " + CanonicalNameConstants.VIEW);
+		}
+	}
+
 	public void hasASqlLiteOpenHelperParameterizedType(Element element, IsValid valid) {
 		TypeMirror helperType = annotationHelper.extractAnnotationParameter(element, "helper");
 
@@ -630,24 +658,19 @@ public class ValidatorHelper {
 	public void hasRoboGuiceJars(Element element, IsValid valid) {
 		Elements elementUtils = annotationHelper.getElementUtils();
 
-		if (elementUtils.getTypeElement(CanonicalNameConstants.INJECTOR_PROVIDER) == null) {
+		if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_CONTEXT) == null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR_PROVIDER);
-		}
-
-		if (elementUtils.getTypeElement(RoboGuiceConstants.ROBOGUICE_APPLICATION_CLASS) == null) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the RoboApplication class in the classpath, are you using RoboGuice 1.1.1 ?");
+			annotationHelper.printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_CONTEXT);
 		}
 
 		try {
-			if (elementUtils.getTypeElement(CanonicalNameConstants.INJECTOR) == null) {
+			if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_INJECTOR) == null) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR);
+				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
 			}
 		} catch (RuntimeException e) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.INJECTOR);
+			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
 		}
 	}
 
@@ -695,6 +718,7 @@ public class ValidatorHelper {
 			} else {
 
 				String returnType = executableElement.getReturnType().toString();
+
 				if (!VALID_PREF_RETURN_TYPES.contains(returnType)) {
 					annotationHelper.printError(element, "Method " + methodName + " should only return preference simple types in an " + annotationHelper.annotationName() + " annotated interface");
 				} else {
@@ -1058,14 +1082,19 @@ public class ValidatorHelper {
 				Element converterElement = converterType.asElement();
 				if (converterElement.getKind().isClass()) {
 					if (!annotationHelper.isAbstract(converterElement)) {
-						List<ExecutableElement> constructors = ElementFilter.constructorsIn(converterElement.getEnclosedElements());
-						for (ExecutableElement constructor : constructors) {
-							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
-								return;
+						if (converterElement.getAnnotation(EBean.class) == null) {
+							List<ExecutableElement> constructors = ElementFilter.constructorsIn(converterElement.getEnclosedElements());
+							boolean hasPublicWithNoArgumentConstructor = false;
+							for (ExecutableElement constructor : constructors) {
+								if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
+									hasPublicWithNoArgumentConstructor = true;
+								}
+							}
+							if (!hasPublicWithNoArgumentConstructor) {
+								valid.invalidate();
+								annotationHelper.printAnnotationError(element, "The converter class must have a public no argument constructor");
 							}
 						}
-						valid.invalidate();
-						annotationHelper.printAnnotationError(element, "The converter class must have a public no argument constructor");
 					} else {
 						valid.invalidate();
 						annotationHelper.printAnnotationError(element, "The converter class must not be abstract");
@@ -1079,7 +1108,47 @@ public class ValidatorHelper {
 				annotationHelper.printAnnotationError(element, "The converter class must be a subtype of " + HTTP_MESSAGE_CONVERTER);
 			}
 		}
+	}
 
+	public void validateInterceptors(Element element, IsValid valid) {
+		TypeMirror clientHttpRequestInterceptorType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_INTERCEPTOR).asType();
+		TypeMirror clientHttpRequestInterceptorTypeErased = annotationHelper.getTypeUtils().erasure(clientHttpRequestInterceptorType);
+		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "interceptors");
+		if (interceptors == null) {
+			return;
+		}
+		for (DeclaredType interceptorType : interceptors) {
+			TypeMirror erasedInterceptorType = annotationHelper.getTypeUtils().erasure(interceptorType);
+			if (annotationHelper.isSubtype(erasedInterceptorType, clientHttpRequestInterceptorTypeErased)) {
+				Element interceptorElement = interceptorType.asElement();
+				if (interceptorElement.getKind().isClass()) {
+					if (!annotationHelper.isAbstract(interceptorElement)) {
+						if (interceptorElement.getAnnotation(EBean.class) == null) {
+							List<ExecutableElement> constructors = ElementFilter.constructorsIn(interceptorElement.getEnclosedElements());
+							boolean hasPublicWithNoArgumentConstructor = false;
+							for (ExecutableElement constructor : constructors) {
+								if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
+									hasPublicWithNoArgumentConstructor = true;
+								}
+							}
+							if (!hasPublicWithNoArgumentConstructor) {
+								valid.invalidate();
+								annotationHelper.printAnnotationError(element, "The interceptor class must have a public no argument constructor or be annotated with @EBean");
+							}
+						}
+					} else {
+						valid.invalidate();
+						annotationHelper.printAnnotationError(element, "The interceptor class must not be abstract");
+					}
+				} else {
+					valid.invalidate();
+					annotationHelper.printAnnotationError(element, "The interceptor class must be a class");
+				}
+			} else {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "The interceptor class must be a subtype of " + CLIENT_HTTP_REQUEST_INTERCEPTOR);
+			}
+		}
 	}
 
 	public void isDebuggable(Element element, AndroidManifest androidManifest, IsValid valid) {
@@ -1103,38 +1172,36 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void validateInterceptors(Element element, IsValid valid) {
-		TypeMirror clientHttpRequestInterceptorType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_INTERCEPTOR).asType();
-		TypeMirror clientHttpRequestInterceptorTypeErased = annotationHelper.getTypeUtils().erasure(clientHttpRequestInterceptorType);
-		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "interceptors");
-		if (interceptors == null) {
-			return;
-		}
-		for (DeclaredType interceptorType : interceptors) {
-			TypeMirror erasedInterceptorType = annotationHelper.getTypeUtils().erasure(interceptorType);
-			if (annotationHelper.isSubtype(erasedInterceptorType, clientHttpRequestInterceptorTypeErased)) {
-				Element interceptorElement = interceptorType.asElement();
-				if (interceptorElement.getKind().isClass()) {
-					if (!annotationHelper.isAbstract(interceptorElement)) {
-						List<ExecutableElement> constructors = ElementFilter.constructorsIn(interceptorElement.getEnclosedElements());
+	public void validateRequestFactory(Element element, IsValid valid) {
+		TypeMirror clientHttpRequestFactoryType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_FACTORY).asType();
+		DeclaredType requestFactory = annotationHelper.extractAnnotationClassParameter(element, annotationHelper.getTarget(), "requestFactory");
+		if (requestFactory != null) {
+			if (annotationHelper.isSubtype(requestFactory, clientHttpRequestFactoryType)) {
+				Element requestFactoryElement = requestFactory.asElement();
+				if (requestFactoryElement.getKind().isClass()) {
+					if (!annotationHelper.isAbstract(requestFactoryElement)) {
+						if (requestFactoryElement.getAnnotation(EBean.class) != null) {
+							return;
+						}
+						List<ExecutableElement> constructors = ElementFilter.constructorsIn(requestFactoryElement.getEnclosedElements());
 						for (ExecutableElement constructor : constructors) {
 							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
 								return;
 							}
 						}
 						valid.invalidate();
-						annotationHelper.printAnnotationError(element, "The interceptor class must have a public no argument constructor");
+						annotationHelper.printAnnotationError(element, "The requestFactory class must have a public no argument constructor or must be annotated with @EBean");
 					} else {
 						valid.invalidate();
-						annotationHelper.printAnnotationError(element, "The interceptor class must not be abstract");
+						annotationHelper.printAnnotationError(element, "The requestFactory class must not be abstract");
 					}
 				} else {
 					valid.invalidate();
-					annotationHelper.printAnnotationError(element, "The interceptor class must be a class");
+					annotationHelper.printAnnotationError(element, "The requestFactory class must be a class");
 				}
 			} else {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "The interceptor class must be a subtype of " + CLIENT_HTTP_REQUEST_INTERCEPTOR);
+				annotationHelper.printAnnotationError(element, "The requestFactory class must be a subtype of " + CLIENT_HTTP_REQUEST_FACTORY);
 			}
 		}
 	}
@@ -1352,9 +1419,9 @@ public class ValidatorHelper {
 		for (Map.Entry<String, List<Receiver.RegisterAt>> validRegisterAt : validRegisterAts.entrySet()) {
 			String enclosingType = validRegisterAt.getKey();
 			Collection<Receiver.RegisterAt> validRegisterAtValues = validRegisterAt.getValue();
-			if(extendsType(enclosingElement, enclosingType) && !validRegisterAtValues.contains(registerAt)) {
+			if (extendsType(enclosingElement, enclosingType) && !validRegisterAtValues.contains(registerAt)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "The parameter registerAt of @Receiver in "+enclosingType+" can only be one of the following values : "+validRegisterAtValues);
+				annotationHelper.printAnnotationError(element, "The parameter registerAt of @Receiver in " + enclosingType + " can only be one of the following values : " + validRegisterAtValues);
 			}
 		}
 	}

@@ -15,21 +15,23 @@
  */
 package org.androidannotations.annotations.rest;
 
+import org.androidannotations.api.rest.MediaType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.rest.MediaType;
-
 /**
+ * <p>
  * Use on {@link Get}, {@link Post}, … annotated methods to negotiate the
  * response format expected, and so the converter to use.
- * <p/>
+ * </p>
+ * <p>
  * The annotation {@link #value()} is mandatory and define the <a
  * href="https://en.wikipedia.org/wiki/Internet_media_type">media type</a> to
  * accept. We provide a {@link MediaType} class to help you.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

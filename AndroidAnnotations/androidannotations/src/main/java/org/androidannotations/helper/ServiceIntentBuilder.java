@@ -15,12 +15,8 @@
  */
 package org.androidannotations.helper;
 
-import static com.sun.codemodel.JMod.PUBLIC;
-
+import com.sun.codemodel.JClass;
 import org.androidannotations.holder.HasIntentBuilder;
-
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JMethod;
 
 public class ServiceIntentBuilder extends IntentBuilder {
 
@@ -29,20 +25,8 @@ public class ServiceIntentBuilder extends IntentBuilder {
 	}
 
 	@Override
-	public void build() throws JClassAlreadyExistsException {
-		super.build();
-		createStart();
-		createStop();
+	protected JClass getSuperClass() {
+		JClass superClass = holder.refClass(org.androidannotations.api.builder.ServiceIntentBuilder.class);
+		return superClass.narrow(builderClass);
 	}
-
-	private void createStart() {
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.classes().COMPONENT_NAME, "start");
-		method.body()._return(contextField.invoke("startService").arg(holder.getIntentField()));
-	}
-
-	private void createStop() {
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.codeModel().BOOLEAN, "stop");
-		method.body()._return(contextField.invoke("stopService").arg(holder.getIntentField()));
-	}
-
 }

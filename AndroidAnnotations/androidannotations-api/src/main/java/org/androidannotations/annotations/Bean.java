@@ -21,11 +21,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Injects an {@link EBean} annotated class in an enhanced class.
- * <p/>
+ * </p>
+ * <p>
  * You can specify a specific implementation to inject using the value
  * attribute.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

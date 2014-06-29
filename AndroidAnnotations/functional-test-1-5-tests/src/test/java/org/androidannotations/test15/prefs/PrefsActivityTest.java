@@ -17,15 +17,21 @@ package org.androidannotations.test15.prefs;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.androidannotations.api.sharedpreferences.SetXmlSerializer;
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.SharedPreferences;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
 
 	private PrefsActivity_ activity;
@@ -35,8 +41,7 @@ public class PrefsActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new PrefsActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(PrefsActivity_.class).create().get();
 		somePrefs = activity.somePrefs;
 		sharedPref = somePrefs.getSharedPreferences();
 	}
@@ -68,6 +73,13 @@ public class PrefsActivityTest {
 		long now = System.currentTimeMillis();
 		somePrefs.lastUpdated().put(now);
 		assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
+	}
+
+	@Test
+	public void putStringSet() {
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		somePrefs.types().put(values);
+		assertThat(sharedPref.getStringSet("types", null)).isEqualTo(values);
 	}
 
 	@Test
@@ -149,6 +161,24 @@ public class PrefsActivityTest {
 	}
 
 	@Test
+	public void getStringSetCompat() {
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		
+		sharedPref.edit().putString("types", SetXmlSerializer.serialize(values)).commit();
+		
+		assertThat(somePrefs.types().get()).isEqualTo(values);
+	}
+
+	@Test
+	public void getStringSet() {
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		
+		sharedPref.edit().putStringSet("types", values).commit();
+		
+		assertThat(somePrefs.types().get()).isEqualTo(values);
+	}
+	
+	@Test
 	public void defaultValue() {
 		assertThat(somePrefs.name().get()).isEqualTo("John");
 	}
@@ -166,4 +196,9 @@ public class PrefsActivityTest {
 		assertThat(sharedPref.contains("name")).isFalse();
 	}
 
+	@Test
+	public void stringResourcePrefKey() {
+		somePrefs.stringResKeyPref().put(88);
+		assertThat(sharedPref.getInt(activity.getString(R.string.prefStringKey), 0)).isEqualTo(88);
+	}
 }

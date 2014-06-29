@@ -17,13 +17,12 @@ package org.androidannotations.test15.ebean;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.androidannotations.test15.EmptyActivityWithoutLayout_;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.androidannotations.test15.EmptyActivityWithoutLayout_;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class CyclicSingletonTest {
 
 	@Test

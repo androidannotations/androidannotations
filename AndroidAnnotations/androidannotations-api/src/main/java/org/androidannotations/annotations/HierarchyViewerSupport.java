@@ -21,14 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link EActivity} classes to enable the use of <a href=
  * "https://developer.android.com/tools/debugging/debugging-ui.html#HierarchyViewer"
  * >HierarchyViewer</a> inside the application.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> To use this annotation, your application must require the
  * INTERNET permission and <code>android:debuggable</code> must be set to true
  * in the AndroidManifest.xml
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * Example :

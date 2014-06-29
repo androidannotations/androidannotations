@@ -49,6 +49,7 @@ import com.sun.codemodel.JVar;
 public class RestHolder extends BaseGeneratedClassHolder {
 
 	private JMethod init;
+	private JVar initContextParam;
 	private JFieldVar rootUrlField;
 	private JFieldVar restTemplateField;
 	private JFieldVar availableHeadersField;
@@ -204,6 +205,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JMethod setErrorHandlerMethod = codeModelHelper.implementMethod(this, methods, "setRestErrorHandler", TypeKind.VOID.toString(), RestErrorHandler.class.getName());
 
 		if (setErrorHandlerMethod != null) {
+			setRestErrorHandlerField();
 			setErrorHandlerMethod.body().assign(_this().ref(getRestErrorHandlerField()), setErrorHandlerMethod.params().get(0));
 		}
 	}
@@ -215,8 +217,16 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		return init;
 	}
 
+	public JVar getInitContextParam() {
+		if (initContextParam == null) {
+			setInit();
+		}
+		return initContextParam;
+	}
+
 	private void setInit() {
 		init = getGeneratedClass().constructor(JMod.PUBLIC);
+		initContextParam = init.param(classes().CONTEXT, "context");
 	}
 
 	public JFieldVar getRootUrlField() {
@@ -282,9 +292,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	public JFieldVar getRestErrorHandlerField() {
-		if (restErrorHandlerField == null) {
-			setRestErrorHandlerField();
-		}
+		// restErrorHandlerField is created only if the method setRestErrorHandler is implemented
 		return restErrorHandlerField;
 	}
 

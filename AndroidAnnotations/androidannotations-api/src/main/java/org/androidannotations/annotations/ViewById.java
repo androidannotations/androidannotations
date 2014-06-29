@@ -21,16 +21,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use it on {@link android.view.View} or {@link android.view.View} subtype
  * fields in a view related (ie {@link EActivity}, {@link EFragment},
  * {@link EViewGroup}, ...) annotated class.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one of R.id.* fields. If not set, the field
  * name will be used as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected views should go in an {@link AfterViews}
  * annotated method.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

@@ -21,15 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to run it into a database
  * transaction.
- * <p/>
+ * </p>
+ * <p>
  * The method MUST have at least one parameter :
+ * </p>
  * <ul>
  * <li>A {@link android.database.sqlite.SQLiteDatabase} parameter at **FIRST**
  * position</li>
  * </ul>
- * <p/>
  * <blockquote>
  * 
  * Example :

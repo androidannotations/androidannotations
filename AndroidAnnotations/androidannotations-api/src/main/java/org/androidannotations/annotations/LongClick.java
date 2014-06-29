@@ -21,24 +21,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.view.View.OnLongClickListener#onLongClick(android.view.View)}
  * when the view has been long clicked by the user.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several of R.id.* fields. If not set,
  * the method name will be used as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method may return a <code>boolean</code>, void, or a
  * {@link java.lang.Boolean}. If returning void, it will be considered as
  * returning true (ie: the method has handled the event).
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have one parameter:
+ * </p>
  * <ul>
  * <li>A {@link android.view.View} parameter to know which view has been long
- * clicked
+ * clicked</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Example :

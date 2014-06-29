@@ -19,22 +19,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.robolectric.RobolectricTestRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class HttpMethodServiceTest {
 	
 	@Test
 	public void use_delete_http_method() {
-		HttpMethodsService_ service = new HttpMethodsService_();
+		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		service.setRestTemplate(restTemplate);
@@ -46,7 +46,7 @@ public class HttpMethodServiceTest {
 
 	@Test
 	public void use_get_http_method() {
-		HttpMethodsService_ service = new HttpMethodsService_();
+		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		service.setRestTemplate(restTemplate);
@@ -59,7 +59,7 @@ public class HttpMethodServiceTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void use_head_http_method() {
-		HttpMethodsService_ service = new HttpMethodsService_();
+		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
@@ -75,7 +75,7 @@ public class HttpMethodServiceTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void use_options_http_method() {
-		HttpMethodsService_ service = new HttpMethodsService_();
+		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
@@ -92,7 +92,7 @@ public class HttpMethodServiceTest {
 
 	@Test
 	public void use_post_http_method() {
-		HttpMethodsService_ service = new HttpMethodsService_();
+		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		service.setRestTemplate(restTemplate);
@@ -104,7 +104,7 @@ public class HttpMethodServiceTest {
 
 	@Test
 	public void use_put_http_method() {
-		HttpMethodsService_ service = new HttpMethodsService_();
+		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		service.setRestTemplate(restTemplate);

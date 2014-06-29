@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.androidannotations.test15.rest.RequestTestBuilder.RequestTestBuilderExecutor;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
@@ -34,18 +33,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import com.xtremelabs.robolectric.Robolectric;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MyServiceTest {
 
-	private MyService_ myService = new MyService_();
+	private MyService_ myService = new MyService_(null);
 
 	private void addPendingResponse(String jsonResponse) {
 		addPendingResponse(jsonResponse, "_=_");
@@ -62,7 +61,7 @@ public class MyServiceTest {
 
 	@Test
 	public void can_override_root_url() {
-		MyService_ myService = new MyService_();
+		MyService_ myService = new MyService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		myService.setRestTemplate(restTemplate);
@@ -180,8 +179,7 @@ public class MyServiceTest {
 
 	@Test
 	public void manualFullUrl() {
-
-		MyService_ myService = new MyService_();
+		MyService_ myService = new MyService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		myService.setRestTemplate(restTemplate);
@@ -204,7 +202,7 @@ public class MyServiceTest {
 		final String locationValue = "somePlace";
 		final int yearValue = 2013;
 
-		MyService_ myService = new MyService_();
+		MyService_ myService = new MyService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		myService.setRestTemplate(restTemplate);

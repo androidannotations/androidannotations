@@ -15,12 +15,16 @@
  */
 package org.androidannotations.api;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.os.Build;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewDebug;
+
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -32,15 +36,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.os.Build;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewDebug;
 
 /**
  * <p>
@@ -165,6 +160,7 @@ public class ViewServer implements Runnable {
 	 * @param context
 	 *            A Context used to check whether the application is debuggable,
 	 *            this can be the application context
+	 * @return the instance of the view server.
 	 */
 	public static ViewServer get(Context context) {
 		ApplicationInfo info = context.getApplicationInfo();
@@ -214,7 +210,7 @@ public class ViewServer implements Runnable {
 	 * 
 	 * @see #stop()
 	 * @see #isRunning()
-	 * @see WindowManagerService#startViewServer(int)
+	 * see WindowManagerService#startViewServer(int)
 	 */
 	public boolean start() throws IOException {
 		if (mThread != null) {
@@ -236,7 +232,7 @@ public class ViewServer implements Runnable {
 	 * 
 	 * @see #start()
 	 * @see #isRunning()
-	 * @see WindowManagerService#stopViewServer()
+	 * see WindowManagerService#stopViewServer()
 	 */
 	public boolean stop() {
 		if (mThread != null) {
@@ -285,7 +281,7 @@ public class ViewServer implements Runnable {
 	 * 
 	 * @see #start()
 	 * @see #stop()
-	 * @see WindowManagerService#isViewServerRunning()
+	 * see WindowManagerService#isViewServerRunning()
 	 */
 	public boolean isRunning() {
 		return mThread != null && mThread.isAlive();
@@ -326,9 +322,8 @@ public class ViewServer implements Runnable {
 	/**
 	 * Invoke this method to register a new view hierarchy.
 	 * 
-	 * @param view
-	 *            A view that belongs to the view hierarchy/window to register
-	 * @name name The name of the view hierarchy/window to register
+	 * @param view A view that belongs to the view hierarchy/window to register
+	 * @param name The name of the view hierarchy/window to register
 	 * 
 	 * @see #removeWindow(View)
 	 */

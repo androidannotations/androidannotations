@@ -29,16 +29,15 @@ import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.RestTemplate;
 
-import com.xtremelabs.robolectric.Robolectric;
-
 public class RequestTestBuilder {
-	private MyService_ myService = new MyService_();
+	private MyService_ myService = new MyService_(null);
 	private HttpEntityArgumentMatcher entityArgumentMatcher = new HttpEntityArgumentMatcher();;
 	private RestTemplate restTemplate;
 

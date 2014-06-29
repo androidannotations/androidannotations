@@ -15,39 +15,44 @@
  */
 package org.androidannotations.annotations.rest;
 
+import org.androidannotations.api.rest.RestClientHeaders;
+import org.androidannotations.api.rest.RestClientRootUrl;
+import org.androidannotations.api.rest.RestClientSupport;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.rest.RestClientHeaders;
-import org.androidannotations.api.rest.RestClientRootUrl;
-import org.androidannotations.api.rest.RestClientSupport;
-
 /**
+ * <p>
  * Apply @{@link Rest} on an interface to create a RestService class that will
  * contain implementation of rest calls related to the methods you define in the
  * interface.
- * <p/>
+ * </p>
+ * <p>
  * You should then inject your RestService class by using {@link RestService}
  * annotation in any enhanced classes.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> Implementation is based on <a href=
  * "http://docs.spring.io/spring-android/docs/current/reference/htmlsingle/"
  * >Spring Android Rest-template</a> library. So you <b>MUST</b> have the
  * library in your classpath and we highly recommend you to take some time to
  * read this document and understand how the library works.
- * <p/>
+ * </p>
  * 
  * 
  * <h1>Converters</h1>
+ * <p>
  * Every {@link Rest} annotated interface MUST define at least one
  * {@link #converters()} to tell the library how to convert received data into
  * Java objects.
- * <p/>
+ * </p>
+ * <p>
  * {@link #converters()} value MAY contain one or several
  * {@link org.springframework.http.converter.HttpMessageConverter} sub-classes
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b> The following RestClient will use <a
@@ -67,10 +72,12 @@ import org.androidannotations.api.rest.RestClientSupport;
  * 
  * 
  * <h1>Root url</h1>
+ * <p>
  * If you don't wan't to repeat the root URL in each method, you MAY like the
  * {@link #rootUrl()} field. It let you define a common root URL which will be
  * prefixed on every method of your RestClient.
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * <b>Example :</b>
@@ -91,14 +98,16 @@ import org.androidannotations.api.rest.RestClientSupport;
  * 
  * 
  * <h1>Interceptors</h1>
+ * <p>
  * Sometimes you may want to do extra processing right before or after requests.
  * {@link #interceptors()} field let you define one or several
  * {@link org.springframework.http.client.ClientHttpRequestInterceptor}.
- * <p/>
+ * </p>
+ * <p>
  * An interceptor allow the developer to customize the execution flow of
  * requests. It may be useful to handle custom authentication, automatically log
  * each requests, and so on.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>
@@ -125,15 +134,17 @@ import org.androidannotations.api.rest.RestClientSupport;
  * 
  * 
  * <h1>Magic methods</h1>
+ * <p>
  * AA will automatically detect and implement some methods in {@link Rest}
  * annotated interface. These methods will let you dynamically customize the
  * RestClient.
- * 
+ * </p>
  * <h2>RootUrl</h2>
+ * <p>
  * We seen earlier that root url can be set via {@link #rootUrl()} annotation
  * field, but it only takes a constant. If you want to dynamically inject or
  * retrieve the root url, you can add the following code :
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <pre>
@@ -149,9 +160,10 @@ import org.androidannotations.api.rest.RestClientSupport;
  * </blockquote>
  * 
  * <h2>RestTemplate</h2>
+ * <p>
  * If you want to configure the injected RestTemplate used internally, AA will
  * also detect getter and setter for this object.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <pre>
@@ -167,11 +179,14 @@ import org.androidannotations.api.rest.RestClientSupport;
  * </blockquote>
  * 
  * <h2>Bundle interfaces</h2>
+ * <p>
  * Since 3.0, we're also providing some bundle interface your RestClient can
  * extends of. Each of them provide handled methods subset and let you clean
  * your code by using extends composition instead of writing methods.
- * <p/>
+ * </p>
+ * <p>
  * Available bundle interfaces :
+ * </p>
  * <ul>
  * <li><b>RestClientRootUrl</b>: provide <code>getRootUrl()</code> and
  * <code>setRootUrl()</code></li>
@@ -196,4 +211,5 @@ public @interface Rest {
 	Class<?>[] converters();
 
 	Class<?>[] interceptors() default {};
+	Class<?> requestFactory() default Void.class;
 }

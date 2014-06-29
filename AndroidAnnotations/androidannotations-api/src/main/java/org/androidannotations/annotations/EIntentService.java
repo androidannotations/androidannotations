@@ -21,23 +21,28 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link android.app.IntentService} classes to enable usage
  * of AndroidAnnotations.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected beans should go in an {@link AfterInject}
  * annotated method.
- * <p/>
+ * </p>
+ * <p>
  * If the class is abstract, the enhanced intentservice will not be generated.
  * Otherwise, it will be generated as a final class. You can use
  * AndroidAnnotations to create Abstract classes that handle common code.
- * <p/>
+ * </p>
+ * <p>
  * The generated class will also contain an IntentBuilder to start activity with
  * a fluent API. Android's extra can also be enhanced by using {@link Extra}
  * annotation on every native or serializable/parcelable field.
- * <p/>
+ * </p>
+ * <p>
  * The IntentService class should contain a {@link ServiceAction} annotated
  * method in order to respond to an action.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

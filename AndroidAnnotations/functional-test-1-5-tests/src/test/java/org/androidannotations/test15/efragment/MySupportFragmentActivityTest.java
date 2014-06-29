@@ -17,20 +17,20 @@ package org.androidannotations.test15.efragment;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MySupportFragmentActivityTest {
 
 	private MySupportFragmentActivity_ activity;
 
 	@Before
 	public void setup() {
-		activity = new MySupportFragmentActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(MySupportFragmentActivity_.class).create().get();
 	}
 
 	@Test

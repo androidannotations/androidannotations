@@ -15,26 +15,26 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
+import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.ModelConstants;
+import org.androidannotations.process.ProcessHolder;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.ModelConstants;
-import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
 
 public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
 	protected final ProcessHolder processHolder;
 	protected JDefinedClass generatedClass;
+	protected JClass annotatedClass;
 	protected final TypeElement annotatedElement;
 	protected final APTCodeModelHelper codeModelHelper;
 
@@ -48,14 +48,19 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	protected void setGeneratedClass() throws Exception {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
 		String subComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
-		JClass annotatedComponent = codeModel().directClass(annotatedElement.asType().toString());
+		annotatedClass = codeModel().directClass(annotatedElement.asType().toString());
 
 		generatedClass = codeModel()._class(PUBLIC | FINAL, subComponentQualifiedName, ClassType.CLASS);
 		for (TypeParameterElement typeParam : annotatedElement.getTypeParameters()) {
 			JClass bound = codeModelHelper.typeBoundsToJClass(this, typeParam.getBounds());
 			generatedClass.generify(typeParam.getSimpleName().toString(), bound);
 		}
-		generatedClass._extends(annotatedComponent);
+		generatedClass._extends(annotatedClass);
+		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors(), this);
+	}
+	
+	public JClass getAnnotatedClass() {
+		return annotatedClass;
 	}
 
 	@Override

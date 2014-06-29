@@ -21,11 +21,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use on methods in {@link Rest} annotated class to add a new rest service of
  * type DELETE.
- * <p/>
+ * </p>
+ * <p>
  * This annotation as the EXACT same constraints as {@link Post}.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

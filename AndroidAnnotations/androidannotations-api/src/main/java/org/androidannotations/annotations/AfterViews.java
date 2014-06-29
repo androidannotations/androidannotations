@@ -15,26 +15,30 @@
  */
 package org.androidannotations.annotations;
 
+import android.app.Activity;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.app.Activity;
-
 /**
+ * <p>
  * Methods annotated with @{@link AfterViews} will be called after
  * {@link Activity#setContentView(int)} is called by the generated activity.
- * <p/>
+ * </p>
+ * <p>
  * This occurs AFTER <code>setContentView(View)</code> which is called at the
  * end of super.onCreate(). Any view depending code should be done in an
  * {@link AfterViews} annotated method.
- * <p/>
+ * </p>
+ * <p>
  * The method MUST have zero parameters.
- * <p/>
+ * </p>
+ * <p>
  * There MAY be several methods annotated with @{@link AfterViews} in the same
  * activity.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

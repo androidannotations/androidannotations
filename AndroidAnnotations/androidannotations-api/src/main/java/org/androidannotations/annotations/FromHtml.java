@@ -15,22 +15,25 @@
  */
 package org.androidannotations.annotations;
 
+import org.androidannotations.annotations.res.HtmlRes;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.annotations.res.HtmlRes;
-
 /**
+ * <p>
  * Use on a {@link android.widget.TextView} field or a
  * {@link android.widget.TextView} subclass field annotated with
  * {@link ViewById} to inject text as HTML.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be a R.string.* field that refers to string
  * resource. If not set, the method name will be used as the R.string.* field
  * name.
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * Example :

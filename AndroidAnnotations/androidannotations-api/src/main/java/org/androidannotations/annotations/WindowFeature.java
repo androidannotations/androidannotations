@@ -21,13 +21,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link EActivity} classes to set custom window features.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several of {@link android.view.Window}
  * constants.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> This should replace {@link NoTitle} annotation.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

@@ -15,16 +15,7 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.*;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
@@ -34,15 +25,13 @@ import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.*;
 
 public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
@@ -112,7 +101,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
 	private void createBuilderInjectionMethod(Element element, EFragmentHolder holder, BundleHelper bundleHelper, JFieldVar argKeyStaticField, String fieldName) {
 		JDefinedClass builderClass = holder.getBuilderClass();
-		JVar builderArgsField = holder.getBuilderArgsField();
+		JFieldRef builderArgsField = holder.getBuilderArgsField();
 		TypeMirror elementType = element.asType();
 		JClass paramClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
 

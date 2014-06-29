@@ -33,4 +33,7 @@ public class SSLConnection extends Activity {
 	@HttpsClient
 	HttpClient mHttpsClientTest3;
 
+	@HttpsClient(trustStoreResName = "cacerts", keyStoreResName = "cacerts")
+	HttpClient mHttpsClientTest4;
+
 }
