@@ -19,7 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-public class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> extends IntentBuilder<I> {
+public abstract class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> extends IntentBuilder<I> {
 
 	public ActivityIntentBuilder(Context context, Class<?> clazz) {
 		super(context, clazz);
