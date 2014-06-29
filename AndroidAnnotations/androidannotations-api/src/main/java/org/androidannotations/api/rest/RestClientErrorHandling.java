@@ -23,7 +23,8 @@ public interface RestClientErrorHandling {
 	/**
 	 * Sets the error handler called when a rest error occurs.
 	 * 
-	 * @param handler
+	 * @param handler {@link org.androidannotations.api.rest.RestErrorHandler}
+	 *      which handle exception from rest service
 	 */
 	void setRestErrorHandler(RestErrorHandler handler);
 }

@@ -15,7 +15,27 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JFieldRef;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
@@ -26,23 +46,14 @@ import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.*;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.MirroredTypeException;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.sun.codemodel.JFieldRef;
 
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 public class AnnotationHelper {
+
+	public static final String DEFAULT_FIELD_NAME_VALUE = "value";
+	public static final String DEFAULT_FIELD_NAME_RESNAME = "resName";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationHelper.class);
 
@@ -162,9 +173,13 @@ public class AnnotationHelper {
 	 * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
 	 */
 	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
+		return extractAnnotationFieldRefs(holder, element, annotationName, rInnerClass, useElementName, DEFAULT_FIELD_NAME_VALUE, DEFAULT_FIELD_NAME_RESNAME);
+	}
+
+	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName, String idFieldName, String resFieldName) {
 		List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
 
-		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName)) {
+		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName, idFieldName, resFieldName)) {
 			fieldRefs.add(RInnerClass.extractIdStaticRef(holder, refQualifiedName));
 		}
 
@@ -190,7 +205,11 @@ public class AnnotationHelper {
 	 *         class
 	 */
 	public List<String> extractAnnotationResources(Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
-		int[] values = extractAnnotationResIdValueParameter(element, annotationName);
+		return extractAnnotationResources(element, annotationName, rInnerClass, useElementName, DEFAULT_FIELD_NAME_VALUE, DEFAULT_FIELD_NAME_RESNAME);
+	}
+
+	public List<String> extractAnnotationResources(Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName, String idFieldName, String resFieldName) {
+		int[] values = extractAnnotationResIdValueParameter(element, annotationName, idFieldName);
 
 		List<String> resourceIdQualifiedNames = new ArrayList<String>();
 		/*
@@ -199,7 +218,7 @@ public class AnnotationHelper {
 		 */
 		if (defaultResIdValue(values)) {
 
-			String[] resNames = extractAnnotationResNameParameter(element, annotationName);
+			String[] resNames = extractAnnotationResNameParameter(element, annotationName, resFieldName);
 
 			if (defaultResName(resNames)) {
 				/*
@@ -256,10 +275,14 @@ public class AnnotationHelper {
 	}
 
 	public String[] extractAnnotationResNameParameter(Element element, String annotationName) {
+		return extractAnnotationResNameParameter(element, annotationName, DEFAULT_FIELD_NAME_RESNAME);
+	}
+
+	public String[] extractAnnotationResNameParameter(Element element, String annotationName, String fieldName) {
 		/*
 		 * Annotation resName() parameter can be a String or a String[]
 		 */
-		Object annotationResName = extractAnnotationParameter(element, annotationName, "resName");
+		Object annotationResName = extractAnnotationParameter(element, annotationName, fieldName);
 		if (annotationResName == null) {
 			// This case happened during refactoring, if the id has been changed
 			// in the layout and compiler throws an error on the annotation
@@ -278,10 +301,14 @@ public class AnnotationHelper {
 	}
 
 	public int[] extractAnnotationResIdValueParameter(Element element, String annotationName) {
+		return extractAnnotationResIdValueParameter(element, annotationName, DEFAULT_FIELD_NAME_VALUE);
+	}
+
+	public int[] extractAnnotationResIdValueParameter(Element element, String annotationName, String fieldName) {
 		/*
 		 * Annotation value() parameter can be an int or an int[]
 		 */
-		Object annotationValue = extractAnnotationParameter(element, annotationName, "value");
+		Object annotationValue = extractAnnotationParameter(element, annotationName, fieldName);
 		if (annotationValue == null) {
 			// This case happened during refactoring, if the id has been changed
 			// in the layout and compiler throws an error on the annotation
@@ -387,7 +414,7 @@ public class AnnotationHelper {
 	}
 
 	public DeclaredType extractAnnotationClassParameter(Element element, String annotationName) {
-		return extractAnnotationClassParameter(element, annotationName, "value");
+		return extractAnnotationClassParameter(element, annotationName, DEFAULT_FIELD_NAME_VALUE);
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, Class<? extends Annotation> validAnnotation) {

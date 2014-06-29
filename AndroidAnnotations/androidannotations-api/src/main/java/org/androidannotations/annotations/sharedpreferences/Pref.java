@@ -15,22 +15,25 @@
  */
 package org.androidannotations.annotations.sharedpreferences;
 
+import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
-
 /**
+ * <p>
  * Injects an {@link SharedPref} annotated class in any enhanced class.
- * <p/>
+ * </p>
+ * <p>
  * The field MUST be of a type that is generated using {@link SharedPref} and
  * therefore extends {@link SharedPreferencesHelper}.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> To prevent you from any building issues, you should use fully
  * qualified name for the field type.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

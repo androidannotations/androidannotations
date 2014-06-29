@@ -1,12 +1,11 @@
-package com.googlecode.androidannotations.maveneclipse;
+package org.androidannotations.maveneclipse;
 
 import java.util.Date;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
-
+import org.androidannotations.maveneclipse.R;
 import android.app.Activity;
 import android.widget.TextView;
 

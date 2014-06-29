@@ -21,28 +21,32 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.text.TextWatcher#beforeTextChanged(CharSequence s, int start, int count, int after)}
  * before the text is changed on the targeted TextView or subclass of TextView.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.id.* fields that refers to
  * TextView or subclasses of TextView. If not set, the method name will be used
  * as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have multiple parameters:
+ * </p>
  * <ul>
  * <li>A {@link android.widget.TextView} parameter to know which view has
- * targeted this event
+ * targeted this event</li>
  * <li>An {@link java.lang.CharSequence} parameter to get the text before
- * modification.
+ * modification.</li>
  * <li>An int parameter named start to get the start position of the modified
- * text.
- * <li>An int parameter named count to know the number of modified characters.
+ * text.</li>
+ * <li>An int parameter named count to know the number of modified characters.</li>
  * <li>An int parameter named after to know the text length after the text
- * modification.
+ * modification.</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Example :

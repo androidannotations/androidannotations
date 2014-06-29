@@ -21,15 +21,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use it on a {@link java.util.List} of {@link android.view.View} or {@link android.view.View} subtype
  * fields in a view related (ie {@link org.androidannotations.annotations.EActivity}, {@link org.androidannotations.annotations.EFragment},
  * {@link org.androidannotations.annotations.EViewGroup}, ...) annotated class.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be an array of R.id.* fields.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected views should go in an {@link org.androidannotations.annotations.AfterViews}
  * annotated method.
- * <p/>
+ * </p>
  * <blockquote>
  *
  * Example :
@@ -40,10 +43,10 @@ import java.lang.annotation.Target;
  *
  * 	// Injects R.id.myEditText
  * 	&#064;ViewsById({R.id.edit1, R.id.edit2})
- * 	List<EditText> myEditTexts;
+ * 	List&lt;EditText&gt; myEditTexts;
  *
  * 	&#064;ViewsById({R.id.myTextView1, R.id.myOtherTextView})
- * 	List<TextView> textViews;
+ * 	List&lt;TextView&gt; textViews;
  *
  * 	&#064;AfterViews
  * 	void updateTextWithDate() {

@@ -37,6 +37,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
 	protected final ProcessHolder processHolder;
 	protected JDefinedClass generatedClass;
+	protected JClass annotatedClass;
 	protected final TypeElement annotatedElement;
 	protected final APTCodeModelHelper codeModelHelper;
 
@@ -49,6 +50,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
 	protected void setGeneratedClass() throws Exception {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
+		annotatedClass = codeModel().directClass(annotatedElement.asType().toString());
 
 		if (annotatedElement.getNestingKind().isNested()) {
 			Element enclosingElement = annotatedElement.getEnclosingElement();
@@ -65,6 +67,10 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 		}
 		setExtends();
 		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors(), this);
+	}
+	
+	public JClass getAnnotatedClass() {
+		return annotatedClass;
 	}
 
 	protected void setExtends() {

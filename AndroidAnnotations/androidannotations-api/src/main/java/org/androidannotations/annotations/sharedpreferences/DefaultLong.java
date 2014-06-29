@@ -15,22 +15,26 @@
  */
 package org.androidannotations.annotations.sharedpreferences;
 
+import org.androidannotations.annotations.ResId;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.annotations.ResId;
-
 /**
+ * <p>
  * Use on methods in {@link SharedPref} annotated class to specified the default
  * value of this preference.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value must be a <code>long</code>.
- * <p/>
+ * </p>
+ * <p>
  * The key of the preference will be the method name by default. This can be
  * overridden by specifying a string resource with the {@link #keyRes()}
  * parameter.
+ * </p>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

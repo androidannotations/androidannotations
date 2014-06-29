@@ -15,6 +15,8 @@
  */
 package org.androidannotations.test15.prefs;
 
+import java.util.Set;
+
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
@@ -47,4 +49,5 @@ public interface SomePrefs {
 
 	long lastUpdated();
 
+	Set<String> types();
 }

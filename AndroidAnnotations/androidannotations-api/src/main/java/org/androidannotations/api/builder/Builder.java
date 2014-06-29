@@ -15,5 +15,5 @@
  */
 package org.androidannotations.api.builder;
 
-public class Builder {
+public abstract class Builder {
 }

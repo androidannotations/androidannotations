@@ -21,15 +21,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Methods annotated with @{@link AfterInject} will be called after the
  * constructor is called in an enhanced class. Any code depending on injected
  * fields should be done in an {@link AfterInject} annotated method.
- * <p/>
+ * </p>
+ * <p>
  * The method MUST have zero parameters.
- * <p/>
+ * </p>
+ * <p>
  * There MAY be several methods annotated with @{@link AfterInject} in the same
  * class.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

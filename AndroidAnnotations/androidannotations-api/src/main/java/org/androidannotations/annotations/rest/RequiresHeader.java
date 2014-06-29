@@ -15,27 +15,31 @@
  */
 package org.androidannotations.annotations.rest;
 
+import org.androidannotations.api.rest.RestClientHeaders;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.rest.RestClientHeaders;
-
 /**
+ * <p>
  * Use on {@link Get}, {@link Post}, … annotated methods to inject a header in
  * the request.
- * <p/>
+ * </p>
+ * <p>
  * The annotation {@link #value()} is mandatory and define the header's name you
  * want to inject.
- * <p/>
+ * </p>
+ * <p>
  * To set a header's value you MUST either let your RestClient interface extends
  * of {@link RestClientHeaders} or add the following method to your interface :
  * <code>void setHeader(String name, String value)</code>.
- * <p/>
+ * </p>
+ * <p>
  * You can also add the getter version to read a header value :
  * <code>void getHeader(String name)</code>.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

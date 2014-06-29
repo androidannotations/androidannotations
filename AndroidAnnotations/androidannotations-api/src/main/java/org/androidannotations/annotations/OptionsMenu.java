@@ -21,13 +21,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link EActivity} or {@link EFragment} annotated classes to
  * inject one or multiple menus.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.menu.* fields.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> Fragment menus are compounds with parent Activity menus
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

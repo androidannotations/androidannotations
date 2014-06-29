@@ -21,16 +21,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use it on {@link android.app.Fragment} or
- * {@link android.support.v4.app.Fragment} fields in activity classes to inject
+ * <p>
+ * Use it on android.app.Fragment or
+ * android.support.v4.app.Fragment fields in activity classes to inject
  * a menu item.
- * <p/>
- * The field MUST be of type {@link link android.view.MenuItem} or
- * {@link com.actionbarsherlock.view.MenuItem}.
- * <p/>
+ * </p>
+ * <p>
+ * The field MUST be of type {@link android.view.MenuItem} or
+ * com.actionbarsherlock.view.MenuItem.
+ * </p>
+ * <p>
  * The annotation value should be one or several of R.id.* fields. If not set,
  * the method name will be used as the R.id.* field name.
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * Example :

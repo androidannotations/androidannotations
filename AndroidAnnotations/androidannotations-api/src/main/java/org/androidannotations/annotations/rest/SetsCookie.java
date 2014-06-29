@@ -21,16 +21,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use on {@link Get}, {@link Post}, … annotated methods to retrieve and store
  * cookies from the HTTP response.
- * <p/>
+ * </p>
+ * <p>
  * The annotation {@link #value()} is mandatory and define a list of cookie's
  * names you want to keep.
- * <p/>
+ * </p>
+ * <p>
  * Each stored cookies can be re-used with {@link RequiresCookie} and
  * {@link RequiresCookieInUrl} annotations. The <code>getCookie</code> method
  * will also be able to read these cookies.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>
