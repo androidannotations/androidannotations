@@ -15,7 +15,7 @@
  */
 package org.androidannotations.api.sharedpreferences;
 
-public final class FloatPrefEditorField<T extends EditorHelper<T>> extends AbstractPrefEditorField<T> {
+public class FloatPrefEditorField<T extends EditorHelper<T>> extends AbstractPrefEditorField<T> {
 
 	FloatPrefEditorField(T editorHelper, String key) {
 		super(editorHelper, key);

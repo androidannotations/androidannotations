@@ -28,7 +28,7 @@ public abstract class AbstractPrefField {
 		this.key = key;
 	}
 
-	public final boolean exists() {
+	public boolean exists() {
 		return sharedPreferences.contains(key);
 	}
 
@@ -36,7 +36,7 @@ public abstract class AbstractPrefField {
 		return this.key;
 	}
 
-	public final void remove() {
+	public void remove() {
 		apply(edit().remove(key));
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbstractPrefField {
 		return sharedPreferences.edit();
 	}
 
-	protected final void apply(Editor editor) {
+	protected void apply(Editor editor) {
 		SharedPreferencesCompat.apply(editor);
 	}
 

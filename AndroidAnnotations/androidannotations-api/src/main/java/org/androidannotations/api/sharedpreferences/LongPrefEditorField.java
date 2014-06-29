@@ -15,7 +15,7 @@
  */
 package org.androidannotations.api.sharedpreferences;
 
-public final class LongPrefEditorField<T extends EditorHelper<T>> extends AbstractPrefEditorField<T> {
+public class LongPrefEditorField<T extends EditorHelper<T>> extends AbstractPrefEditorField<T> {
 
 	LongPrefEditorField(T editorHelper, String key) {
 		super(editorHelper, key);
