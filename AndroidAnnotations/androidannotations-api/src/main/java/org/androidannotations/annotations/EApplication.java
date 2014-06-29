@@ -21,22 +21,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link android.app.Application} classes to enable usage of
  * AndroidAnnotations.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected beans should go in an {@link AfterInject}
  * annotated method.
- * <p/>
+ * </p>
+ * <p>
  * If the class is abstract, the enhanced application will not be generated.
  * Otherwise, it will be generated as a final class. You can use
  * AndroidAnnotations to create Abstract classes that handle common code.
- * <p/>
+ * </p>
+ * <p>
  * Most annotations are supported in {@link EApplication} classes, except the
  * ones related to views and extras.
- * <p/>
+ * </p>
+ * <p>
  * The enhanced application can also be injected in any enhanced class by using
  * {@link App} annotation.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

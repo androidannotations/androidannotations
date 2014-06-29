@@ -15,24 +15,23 @@
  */
 package org.androidannotations.test15;
 
-//import static org.fest.assertions.Assertions.assertThat;
+import static org.androidannotations.test15.MyAssertions.assertThat;
+
 import org.fest.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import static org.androidannotations.test15.MyAssertions.assertThat;
-
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ViewsInjectedActivityTest {
 
 	private ViewsInjectedActivity_ activity;
 
 	@Before
 	public void setup() {
-		activity = new ViewsInjectedActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(ViewsInjectedActivity_.class).create().get();
 	}
 
 	@Test

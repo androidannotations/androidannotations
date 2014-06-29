@@ -13,17 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15;
+package org.androidannotations.api.builder;
 
-import java.io.File;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 
-import org.junit.runners.model.InitializationError;
+public abstract class ServiceIntentBuilder<I extends ServiceIntentBuilder<I>> extends IntentBuilder<I> {
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
+	public ServiceIntentBuilder(Context context, Class<?> clazz) {
+		super(context, clazz);
+	}
 
-public class AndroidAnnotationsTestRunner extends RobolectricTestRunner {
-	public AndroidAnnotationsTestRunner(Class<?> testClass)
-			throws InitializationError {
-		super(testClass, new File("../functional-test-1-5"));
+	public ServiceIntentBuilder(Context context, Intent intent) {
+		super(context, intent);
+	}
+
+	public ComponentName start() {
+		return context.startService(intent);
+	}
+
+	public boolean stop() {
+		return context.stopService(intent);
 	}
 }

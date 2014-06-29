@@ -21,14 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use on methods in {@link Rest} annotated class to add a new rest service of
  * type POST.
- * <p/>
+ * </p>
+ * <p>
  * This annotation as the same constraints as {@link Get}.
- * <p/>
+ * </p>
+ * <p>
  * If an extra parameter is present (ie the only one not mapped with URI
  * placeholders) it will be send in the request body using given converter.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

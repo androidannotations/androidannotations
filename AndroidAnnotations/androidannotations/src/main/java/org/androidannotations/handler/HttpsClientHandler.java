@@ -27,8 +27,10 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.HttpsClient;
-import org.androidannotations.annotations.ResId;
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
@@ -48,6 +50,8 @@ import com.sun.codemodel.JVar;
 
 public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> {
 
+	private IdAnnotationHelper annotationHelper;
+
 	public HttpsClientHandler(ProcessingEnvironment processingEnvironment) {
 		super(HttpsClient.class, processingEnvironment);
 	}
@@ -63,16 +67,23 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 	}
 
 	@Override
+	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
+		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	}
+
+	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
+		IRInnerClass rInnerClass = rClass.get(IRClass.Res.RAW);
 		HttpsClient annotation = element.getAnnotation(HttpsClient.class);
-		int trustStoreRawId = annotation.trustStore();
+		JFieldRef trustStoreRawIdRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, getTarget(), rInnerClass, false, "trustStore", "trustStoreResName");
+		JFieldRef keyStoreRawIdRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, getTarget(), rInnerClass, false, "keyStore", "keyStoreResName");
 		String trustStorePwd = annotation.trustStorePwd();
-		int keyStoreRawId = annotation.keyStore();
 		String keyStorePwd = annotation.keyStorePwd();
 
 		boolean allowAllHostnames = annotation.allowAllHostnames();
-		boolean useCustomTrustStore = ResId.DEFAULT_VALUE != trustStoreRawId;
-		boolean useCustomKeyStore = ResId.DEFAULT_VALUE != keyStoreRawId;
+		boolean useCustomTrustStore = trustStoreRawIdRef != null;
+		boolean useCustomKeyStore = keyStoreRawIdRef != null;
 
 		String fieldName = element.getSimpleName().toString();
 		JBlock methodBody = holder.getInitBody();
@@ -110,16 +121,13 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 			jVarRes = jTryBlock.body().decl(classes.RESOURCES, "res", invoke("getResources"));
 		}
 
-		IRInnerClass rInnerClass = rClass.get(IRClass.Res.RAW);
 		if (useCustomKeyStore) {
-			JFieldRef rawIdRef = rInnerClass.getIdStaticRef(keyStoreRawId, processHolder);
-			JInvocation jInvRawKey = jVarRes.invoke("openRawResource").arg(rawIdRef);
+			JInvocation jInvRawKey = jVarRes.invoke("openRawResource").arg(keyStoreRawIdRef);
 			jVarKeyFile = jTryBlock.body().decl(classes.INPUT_STREAM, "inKeystore", jInvRawKey);
 		}
 
 		if (useCustomTrustStore) {
-			JFieldRef rawIdRef = rInnerClass.getIdStaticRef(trustStoreRawId, processHolder);
-			JInvocation jInvRawTrust = jVarRes.invoke("openRawResource").arg(rawIdRef);
+			JInvocation jInvRawTrust = jVarRes.invoke("openRawResource").arg(trustStoreRawIdRef);
 			jVarTrstFile = jTryBlock.body().decl(classes.INPUT_STREAM, "inTrustStore", jInvRawTrust);
 
 		} else if (useCustomKeyStore) {

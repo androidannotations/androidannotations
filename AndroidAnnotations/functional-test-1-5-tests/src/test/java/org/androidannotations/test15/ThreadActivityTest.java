@@ -15,7 +15,6 @@
  */
 package org.androidannotations.test15;
 
-//import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -36,11 +35,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.os.Handler;
 import android.os.Looper;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ThreadActivityTest {
 
 	private static final int MAX_WAITING_TIME = 3000; /* milliseconds */
@@ -53,8 +54,7 @@ public class ThreadActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new ThreadActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(ThreadActivity_.class).create().get();
 		defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 	}
 
@@ -337,8 +337,7 @@ public class ThreadActivityTest {
 			@Override
 			public void run() {
 				synchronized (threadActivityHolder) {
-					threadActivityHolder[0] = new ThreadActivity_();
-					threadActivityHolder[0].onCreate(null);
+					threadActivityHolder[0] = Robolectric.buildActivity(ThreadActivity_.class).create().get();
 					threadActivityHolder.notify();
 				}
 			}

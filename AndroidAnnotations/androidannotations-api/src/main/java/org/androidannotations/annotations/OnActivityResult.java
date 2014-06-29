@@ -15,29 +15,33 @@
  */
 package org.androidannotations.annotations;
 
+import android.content.Intent;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.content.Intent;
-
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive results from a
  * previously started activity using
  * {@link android.app.Activity#startActivityForResult(Intent, int)} or the
  * generated <code>IntentBuilder.startActivityForResult()</code> method of the
  * activity.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value must be an integer constant that represents the
  * <b>requestCode</b> associated with the given result.
- * <p/>
+ * </p>
+ * <p>
  * The method may have multiple parameter :
+ * </p>
  * <ul>
- * <li>A {@link android.content.Intent} that contains data
- * <li>An <code>int</code> or an {@link java.lang.Integer} to get the resultCode
+ * <li>A {@link android.content.Intent} that contains data</li>
+ * <li>An <code>int</code> or an {@link java.lang.Integer} to get the resultCode</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Some usage examples of &#064;OnActivityResult annotation:

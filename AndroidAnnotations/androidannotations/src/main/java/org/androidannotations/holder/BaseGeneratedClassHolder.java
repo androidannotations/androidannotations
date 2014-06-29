@@ -34,6 +34,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
 	protected final ProcessHolder processHolder;
 	protected JDefinedClass generatedClass;
+	protected JClass annotatedClass;
 	protected final TypeElement annotatedElement;
 	protected final APTCodeModelHelper codeModelHelper;
 
@@ -47,15 +48,19 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	protected void setGeneratedClass() throws Exception {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
 		String subComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
-		JClass annotatedComponent = codeModel().directClass(annotatedElement.asType().toString());
+		annotatedClass = codeModel().directClass(annotatedElement.asType().toString());
 
 		generatedClass = codeModel()._class(PUBLIC | FINAL, subComponentQualifiedName, ClassType.CLASS);
 		for (TypeParameterElement typeParam : annotatedElement.getTypeParameters()) {
 			JClass bound = codeModelHelper.typeBoundsToJClass(this, typeParam.getBounds());
 			generatedClass.generify(typeParam.getSimpleName().toString(), bound);
 		}
-		generatedClass._extends(annotatedComponent);
+		generatedClass._extends(annotatedClass);
 		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors(), this);
+	}
+	
+	public JClass getAnnotatedClass() {
+		return annotatedClass;
 	}
 
 	@Override

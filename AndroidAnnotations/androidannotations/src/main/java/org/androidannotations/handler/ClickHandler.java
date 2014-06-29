@@ -24,6 +24,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.Click;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -58,7 +59,7 @@ public class ClickHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
+	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		boolean hasItemParameter = parameters.size() == 1;
 
 		JVar viewParam = listenerMethod.param(classes().VIEW, "view");

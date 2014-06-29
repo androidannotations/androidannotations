@@ -15,6 +15,8 @@
  */
 package org.androidannotations.api.sharedpreferences;
 
+import java.util.Set;
+
 import android.content.SharedPreferences;
 
 public abstract class SharedPreferencesHelper {
@@ -39,6 +41,10 @@ public abstract class SharedPreferencesHelper {
 
 	protected StringPrefField stringField(String key, String defaultValue) {
 		return new StringPrefField(sharedPreferences, key, defaultValue);
+	}
+
+	protected StringSetPrefField stringSetField(String key, Set<String> defaultValue) {
+		return new StringSetPrefField(sharedPreferences, key, defaultValue);
 	}
 
 	protected BooleanPrefField booleanField(String key, boolean defaultValue) {

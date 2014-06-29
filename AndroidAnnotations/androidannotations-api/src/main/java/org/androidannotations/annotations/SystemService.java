@@ -21,9 +21,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use it on a SystemService fields in any enhanced classes to inject the
  * according manager.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

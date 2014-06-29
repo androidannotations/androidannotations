@@ -230,7 +230,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			JTryBlock tryBlock = newBlock._try();
 			codeModelHelper.copy(block, tryBlock.body());
 
-			JCatchBlock jCatch = tryBlock._catch(classes().REST_CLIENT_EXCEPTION);
+			JCatchBlock jCatch = tryBlock._catch(classes().NESTED_RUNTIME_EXCEPTION);
 
 			JBlock catchBlock = jCatch.body();
 			JConditional conditional = catchBlock._if(JOp.ne(holder.getRestErrorHandlerField(), JExpr._null()));

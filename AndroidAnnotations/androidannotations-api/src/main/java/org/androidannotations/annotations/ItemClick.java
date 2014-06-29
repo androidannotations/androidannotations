@@ -21,21 +21,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by {@link
- * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.
- * AdapterView<?>, android.view.View, int, long)} when a list item has been
- * clicked by the user.
- * <p/>
+ * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)}
+ * when a list item has been clicked by the user.
+ * </p>
+ * <p>
  * The annotation value should be one or several of R.id.* fields. If not set,
  * the method name will be used as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have one parameter :
+ * </p>
  * <ul>
  * <li>An <code>int</code> parameter to know the position of the clicked item.
  * Or, a parameter of the type of the Adapter linked to the listview.</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Example :

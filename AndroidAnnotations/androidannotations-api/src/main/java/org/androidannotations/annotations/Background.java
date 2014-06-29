@@ -23,19 +23,23 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
+ * <p>
  * Should be used on method that must be run in a background thread.
- * <p/>
+ * </p>
+ * <p>
  * The annotated method MUST return void and MAY contain parameters.
- * <p/>
- * The generated code is based on {@link BackgroundExecutor} methods.
- * 
+ * </p>
+ * <p>
+ * The generated code is based on {@link org.androidannotations.api.BackgroundExecutor} methods.
+ * </p>
  * 
  * <h2>Cancellation</h2>
+ * <p>
  * Since 3.0, you're able to cancel a background task by calling
  * <code>BackgroundExecutor.cancelAll("id")</code> where "id" matches the
  * {@link #id()} value.
  * 
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example</b> :
@@ -58,28 +62,31 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * </pre>
  * 
  * </blockquote>
- * <p/>
+ * <p>
  * <b>Note</b>: Cancellation may or may not be successful. If the task wasn't
  * executed yet, it will be removed from the pool. But it could fail if task has
  * already completed, has already been cancelled, or could not be cancelled for
  * some other reason. See {@link Future#cancel(boolean)} for more information.
- * 
+ * </p>
  * 
  * <h2>Execution flow</h2>
+ * <p>
  * By default, all tasks will be put in a {@link ScheduledThreadPoolExecutor}
  * with a core pool size of <code>2 * numberOfCpu</code>. Which means that
  * background methods will be executed in <b>PARALLEL</b>. You can change this
  * by calling <code>BackgroundExecutor.setExecutor(...)</code>.
- * 
+ * </p>
+ * <p>
  * If you want execute ALL background methods SEQUENTIALLY, the best way is to
- * change the executor of {@link BackgroundExecutor} to a
+ * change the executor of {@link org.androidannotations.api.BackgroundExecutor} to a
  * {@link ScheduledThreadPoolExecutor} with a core pool size of <code>1</code>.
- * <p/>
+ * </p>
+ * <p>
  * If you want execute some background methods SEQUENTIALLY, you should simply
  * use {@link #serial()} field. All task with the same serial key will be
  * executed sequentially.
- * 
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * <b>Example 1</b> (all tasks executed sequentially) :
@@ -132,11 +139,13 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * 
  * 
  * <h2>Delay</h2>
+ * <p>
  * Sometimes you may want to delay execution of a background method. To do so,
  * you should use the {@link #delay()} field.
- * <p/>
+ * </p>
  * <b>Example</b> :
- * 
+ *
+ * <blockquote>
  * <pre>
  * &#064;EBean
  * public class MyBean {
@@ -152,7 +161,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * 
  * 
  * @see UiThread
- * @see BackgroundExecutor
+ * @see org.androidannotations.api.BackgroundExecutor
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
@@ -166,11 +175,15 @@ public @interface Background {
 	 * boolean mayInterruptIfRunning = true;
 	 * BackgroundExecutor.cancelAll(&quot;my_background_id&quot;, mayInterruptIfRunning);
 	 * </pre>
+	 *
+	 * @return the identifier for task cancellation
 	 **/
 	String id() default "";
 
 	/**
 	 * Minimum delay, in milliseconds, before the background task is executed.
+	 *
+	 * @return the minimum delay before execution
 	 */
 	int delay() default 0;
 
@@ -179,6 +192,8 @@ public @interface Background {
 	 * 
 	 * All background tasks having the same <code>serial</code> will be executed
 	 * sequentially.
+	 *
+	 * @return the serial execution group
 	 **/
 	String serial() default "";
 }

@@ -21,17 +21,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.SeekBar.OnSeekBarChangeListener#onProgressChanged(android.widget.SeekBar, int, boolean)}
  * when the progress level of a SeekBar has changed.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.id.* fields that refers to an
  * android.widget.SeekBar. If not set, the method name will be used as the
  * R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have multiple parameter :
- * <p/>
+ * </p>
  * <ul>
  * <li>A {@link android.widget.SeekBar} parameter to determine which view has
  * targeted this event</li>
@@ -39,9 +42,9 @@ import java.lang.annotation.Target;
  * <li>A <code>boolean</code> parameter to determine if this event was triggered
  * by the user</li>
  * </ul>
- * <p/>
+ * <p>
  * All these parameters are optional. Parameter names do not matter.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

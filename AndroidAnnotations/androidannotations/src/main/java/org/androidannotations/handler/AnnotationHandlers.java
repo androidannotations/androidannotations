@@ -106,6 +106,7 @@ public class AnnotationHandlers {
 		add(new WindowFeatureHandler(processingEnvironment));
 		add(new ReceiverHandler(processingEnvironment));
 
+		add(new IgnoredWhenDetachedHandler(processingEnvironment));
 		/* After injection methods must be after injections */
 		add(new AfterInjectHandler(processingEnvironment));
 		add(new AfterViewsHandler(processingEnvironment));
@@ -113,9 +114,14 @@ public class AnnotationHandlers {
 		if (optionsHelper.shouldLogTrace()) {
 			add(new TraceHandler(processingEnvironment));
 		}
-		/* UIThreadHandler and BackgroundHandler must be after TraceHandler */
+		/* UIThreadHandler and BackgroundHandler must be after TraceHandler and IgnoredWhenDetached */
 		add(new UiThreadHandler(processingEnvironment));
 		add(new BackgroundHandler(processingEnvironment));
+
+		/* SupposeUiThreadHandler and SupposeBackgroundHandler must be
+		 after all handlers that modifies generated method body */
+        add(new SupposeUiThreadHandler(processingEnvironment));
+        add(new SupposeBackgroundHandler(processingEnvironment));
 	}
 
 	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,36 +21,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Should be used on editor action listener methods in enhanced classes with view support
- * 
- * The method may have some parameters amoung :
- *  - a TextView
- *  - an int : the actionId
- *  - a KeyEvent
- * 
- * The annotation value should be one of R.id.* fields. If not set, the method
- * name will be used as the R.id.* field name.
- * 
- */
-
-/**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)}
  * when an action is performed on the editor.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.id.* fields that refers to
  * TextView or subclasses of TextView. If not set, the method name will be used
  * as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have multiple parameter :
+ * </p>
  * <ul>
  * <li>A {@link android.widget.TextView} parameter to know which view has
- * targeted this event
- * <li>An int parameter to get the actionId
- * <li>A {@link android.view.KeyEvent} parameter
+ * targeted this event</li>
+ * <li>An int parameter to get the actionId</li>
+ * <li>A {@link android.view.KeyEvent} parameter</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  *
  * Examples :
