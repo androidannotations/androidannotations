@@ -15,34 +15,19 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.sun.codemodel.*;
+import org.androidannotations.process.ProcessHolder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.androidannotations.helper.ModelConstants;
-import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JMod.*;
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 public class EViewHolder extends EComponentWithViewSupportHolder {
 
@@ -68,23 +53,6 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 		super(processHolder, annotatedElement);
 		addSuppressWarning();
 		createConstructorAndBuilder();
-	}
-
-	@Override
-	protected void setGeneratedClass() throws Exception {
-		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
-		String generatedBeanQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
-		JClass annotatedComponent = codeModel().directClass(annotatedComponentQualifiedName);
-
-		int modifiers;
-		if (annotatedElement.getModifiers().contains(Modifier.ABSTRACT)) {
-			modifiers = JMod.PUBLIC | JMod.ABSTRACT;
-		} else {
-			modifiers = JMod.PUBLIC | JMod.FINAL;
-		}
-
-		generatedClass = codeModel()._class(modifiers, generatedBeanQualifiedName, ClassType.CLASS);
-		generatedClass._extends(annotatedComponent);
 	}
 
 	private void addSuppressWarning() {

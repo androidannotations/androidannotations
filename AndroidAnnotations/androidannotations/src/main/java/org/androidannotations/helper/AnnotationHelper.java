@@ -48,6 +48,8 @@ import org.androidannotations.rclass.RInnerClass;
 
 import com.sun.codemodel.JFieldRef;
 
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
 public class AnnotationHelper {
 
 	public static final String DEFAULT_FIELD_NAME_VALUE = "value";
@@ -79,6 +81,16 @@ public class AnnotationHelper {
 	 */
 	public TypeElement typeElementFromQualifiedName(String qualifiedName) {
 		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
+	}
+
+	public String generatedClassQualifiedNameFromQualifiedName(String qualifiedName) {
+		TypeElement type = typeElementFromQualifiedName(qualifiedName);
+		if (type.getNestingKind() == NestingKind.MEMBER) {
+			String parentGeneratedClass = generatedClassQualifiedNameFromQualifiedName(type.getEnclosingElement().asType().toString());
+			return parentGeneratedClass+"."+type.getSimpleName().toString()+GENERATION_SUFFIX;
+		} else {
+			return qualifiedName+GENERATION_SUFFIX;
+		}
 	}
 
 	public AnnotationMirror findAnnotationMirror(Element annotatedElement, String annotationName) {

@@ -15,17 +15,17 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 
-public class EBeanHandler extends BaseAnnotationHandler<EBeanHolder> implements GeneratingAnnotationHandler<EBeanHolder> {
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
+public class EBeanHandler extends BaseGeneratingAnnotationHandler<EBeanHolder> {
 
 	public EBeanHandler(ProcessingEnvironment processingEnvironment) {
 		super(EBean.class, processingEnvironment);
@@ -38,7 +38,7 @@ public class EBeanHandler extends BaseAnnotationHandler<EBeanHolder> implements 
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.isNotFinal(element, valid);
+		super.validate(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

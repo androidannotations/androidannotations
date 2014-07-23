@@ -15,27 +15,20 @@
  */
 package org.androidannotations.process;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.GeneratedClassHolder;
-
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.GeneratedClassHolder;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 public class ProcessHolder {
 
@@ -220,7 +213,12 @@ public class ProcessHolder {
 	}
 
 	public GeneratedClassHolder getGeneratedClassHolder(Element element) {
-		return generatedClassHolders.get(element);
+		for (Element key : generatedClassHolders.keySet()) {
+			if(key.asType().toString().equals(element.asType().toString())) {
+				return generatedClassHolders.get(key);
+			}
+		}
+		return null;
 	}
 
 	public JClass refClass(Class<?> clazz) {

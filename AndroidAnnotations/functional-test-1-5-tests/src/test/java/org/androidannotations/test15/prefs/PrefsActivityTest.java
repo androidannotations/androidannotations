@@ -57,6 +57,11 @@ public class PrefsActivityTest {
 	}
 
 	@Test
+	public void innerPrefsNotNull() {
+		assertThat(activity.innerPrefs).isNotNull();
+	}
+
+	@Test
 	public void putString() {
 		somePrefs.name().put("John");
 		assertThat(sharedPref.getString("name", null)).isEqualTo("John");
