@@ -2,6 +2,7 @@ language: android
 android:
   components:
     - android-14
+    - build-tools-20.0.0
   licenses:
     - android-sdk-license-5be876d5
 script:
