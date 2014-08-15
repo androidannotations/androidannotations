@@ -25,12 +25,17 @@ import org.androidannotations.process.ProcessHolder;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 public class EReceiverHolder extends EComponentHolder {
 
 	private JFieldVar contextField;
+	private JBlock onReceiveBody;
+	private JVar onReceiveIntentAction;
+	private JVar onReceiveIntent;
+	private JMethod onReceiveMethod;
 
 	public EReceiverHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -49,14 +54,45 @@ public class EReceiverHolder extends EComponentHolder {
 	}
 
 	private void createOnReceive() {
-		JMethod onReceive = generatedClass.method(PUBLIC, codeModel().VOID, "onReceive");
-		JVar contextParam = onReceive.param(classes().CONTEXT, "context");
-		JVar intentParam = onReceive.param(classes().INTENT, "intent");
-		onReceive.annotate(Override.class);
-		JBlock onReceiveBody = onReceive.body();
+		onReceiveMethod = generatedClass.method(PUBLIC, codeModel().VOID, "onReceive");
+		JVar contextParam = onReceiveMethod.param(classes().CONTEXT, "context");
+		onReceiveIntent = onReceiveMethod.param(classes().INTENT, "intent");
+		onReceiveMethod.annotate(Override.class);
+		onReceiveBody = onReceiveMethod.body();
 		onReceiveBody.assign(getContextField(), contextParam);
 		onReceiveBody.invoke(getInit());
-		onReceiveBody.invoke(JExpr._super(), onReceive).arg(contextParam).arg(intentParam);
+		onReceiveBody.invoke(JExpr._super(), onReceiveMethod).arg(contextParam).arg(onReceiveIntent);
+
+		JInvocation getActionInvocation = JExpr.invoke(onReceiveIntent, "getAction");
+		onReceiveIntentAction = onReceiveBody.decl(classes().STRING, "action", getActionInvocation);
+	}
+
+	public JMethod getOnReceiveMethod() {
+		if (onReceiveMethod == null) {
+			createOnReceive();
+		}
+		return onReceiveMethod;
+	}
+
+	public JBlock getOnReceiveBody() {
+		if (onReceiveBody == null) {
+			createOnReceive();
+		}
+		return onReceiveBody;
+	}
+
+	public JVar getOnReceiveIntent() {
+		if (onReceiveIntent == null) {
+			createOnReceive();
+		}
+		return onReceiveIntent;
+	}
+
+	public JVar getOnReceiveIntentAction() {
+		if (onReceiveIntentAction == null) {
+			createOnReceive();
+		}
+		return onReceiveIntentAction;
 	}
 
 	public JFieldVar getContextField() {
