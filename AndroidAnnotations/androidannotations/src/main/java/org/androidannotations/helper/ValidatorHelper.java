@@ -917,29 +917,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void hasEmptyConstructor(Element element, IsValid valid) {
-
-		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
-
-		if (constructors.size() == 1) {
-
-			ExecutableElement constructor = constructors.get(0);
-
-			if (!annotationHelper.isPrivate(constructor)) {
-				if (constructor.getParameters().size() != 0) {
-					annotationHelper.printAnnotationError(element, "%s annotated element should have an empty constructor");
-					valid.invalidate();
-				}
-			} else {
-				annotationHelper.printAnnotationError(element, "%s annotated element should not have a private constructor");
-				valid.invalidate();
-			}
-		} else {
-			annotationHelper.printAnnotationError(element, "%s annotated element should have only one constructor");
-			valid.invalidate();
-		}
-	}
-
 	public void hasValidLogLevel(Element element, IsValid isValid) {
 
 		Trace annotation = element.getAnnotation(Trace.class);
