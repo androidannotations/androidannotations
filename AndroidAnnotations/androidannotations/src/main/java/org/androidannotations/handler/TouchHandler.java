@@ -15,7 +15,12 @@
  */
 package org.androidannotations.handler;
 
-import java.util.List;
+import com.sun.codemodel.*;
+import org.androidannotations.annotations.Touch;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -23,21 +28,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-
-import org.androidannotations.annotations.Touch;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import java.util.List;
 
 public class TouchHandler extends AbstractListenerHandler {
 
@@ -53,7 +44,11 @@ public class TouchHandler extends AbstractListenerHandler {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.hasOneMotionEventOrTwoMotionEventViewParameters(executableElement, valid);
+		validatorHelper.param.hasZeroOrOneMotionEventParameter(executableElement, valid);
+
+		validatorHelper.param.hasZeroOrOneViewParameter(executableElement, valid);
+
+		validatorHelper.param.hasNoOtherParameterThanMotionEventOrView(executableElement, valid);
 	}
 
 	@Override
@@ -72,21 +67,12 @@ public class TouchHandler extends AbstractListenerHandler {
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
 		JVar eventParam = listenerMethod.param(classes().MOTION_EVENT, "event");
-		boolean hasItemParameter = parameters.size() == 2;
 
-		VariableElement first = parameters.get(0);
-		String firstType = first.asType().toString();
-		if (firstType.equals(CanonicalNameConstants.MOTION_EVENT)) {
-			call.arg(eventParam);
-		} else {
-			call.arg(viewParam);
-		}
-		if (hasItemParameter) {
-			VariableElement second = parameters.get(1);
-			String secondType = second.asType().toString();
-			if (secondType.equals(CanonicalNameConstants.MOTION_EVENT)) {
+		for (VariableElement parameter : parameters) {
+			String parameterType = parameter.asType().toString();
+			if (parameterType.equals(CanonicalNameConstants.MOTION_EVENT)) {
 				call.arg(eventParam);
-			} else {
+			} else if (parameterType.equals(CanonicalNameConstants.VIEW)) {
 				call.arg(viewParam);
 			}
 		}

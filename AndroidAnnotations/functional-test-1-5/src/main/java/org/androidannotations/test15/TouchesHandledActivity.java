@@ -53,6 +53,10 @@ public class TouchesHandledActivity extends EventsHandledAbstractActivity {
 		this.viewArgument = viewArgument;
 	}
 
+	@Touch
+	public void buttonWithOnlyViewArgument(View viewArgument) {
+	}
+
 	@Touch({ R.id.button1, R.id.button2 })
 	public void multipleButtonWithViewArgument(MotionEvent evt,
 			View viewArgument) {
