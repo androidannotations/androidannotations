@@ -119,11 +119,6 @@ public final class CanonicalNameConstants {
 	public static final String SHERLOCK_MENU_INFLATER = "com.actionbarsherlock.view.MenuInflater";
 
 	/*
-	 * HoloEverywhere
-	 */
-	public static final String HOLO_EVERYWHERE_LAYOUT_INFLATER = "org.holoeverywhere.LayoutInflater";
-
-	/*
 	 * SpringFramework
 	 */
 	public static final String RESPONSE_ENTITY = "org.springframework.http.ResponseEntity";
