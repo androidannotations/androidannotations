@@ -54,7 +54,7 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.hasEmptyConstructor(element, valid);
+		validatorHelper.isAbstractOrHasEmptyConstructor(element, valid);
 
 		validatorHelper.extendsFragment(element, valid);
 	}
