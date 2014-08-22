@@ -28,32 +28,34 @@ import static com.sun.codemodel.JMod.PRIVATE;
 public class ReceiverRegistrationHolder {
 
 	private EComponentHolder holder;
-	private Map<Set<String>, JFieldVar> intentFilterFields = new HashMap<Set<String>, JFieldVar>();
+	private Map<IntentFilterData, JFieldVar> intentFilterFields = new HashMap<IntentFilterData, JFieldVar>();
 	private IllegalStateException illegalStateException = new IllegalStateException("This shouldn't happen unless the validation is bad");
 
 	public ReceiverRegistrationHolder(EComponentHolder holder) {
 		this.holder = holder;
 	}
 
-	public JFieldVar getIntentFilterField(String[] actions) {
-		Arrays.sort(actions);
-		Set<String> actionSet = new HashSet<String>(Arrays.asList(actions));
-		JFieldVar intentFilterField = intentFilterFields.get(actionSet);
+	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
+		IntentFilterData intentFilterData = new IntentFilterData(actions, dataSchemes);
+		JFieldVar intentFilterField = intentFilterFields.get(intentFilterData);
 		if (intentFilterField == null) {
-			intentFilterField = createIntentFilterField(actionSet);
-			intentFilterFields.put(actionSet, intentFilterField);
+			intentFilterField = createIntentFilterField(intentFilterData);
+			intentFilterFields.put(intentFilterData, intentFilterField);
 		}
 		return intentFilterField;
 	}
 
-	private JFieldVar createIntentFilterField(Set<String> actionSet) {
-		String intentFilterName = "intentFilter"+(intentFilterFields.size()+1)+ ModelConstants.GENERATION_SUFFIX;
+	private JFieldVar createIntentFilterField(IntentFilterData intentFilterData) {
+		String intentFilterName = "intentFilter" + (intentFilterFields.size() + 1) + ModelConstants.GENERATION_SUFFIX;
 		JExpression newIntentFilterExpr = _new(classes().INTENT_FILTER);
 		JFieldVar intentFilterField = getGeneratedClass().field(PRIVATE | FINAL, classes().INTENT_FILTER, intentFilterName, newIntentFilterExpr);
 
 		JBlock initBody = holder.getInitBody();
-		for(String action : actionSet) {
+		for (String action : intentFilterData.getActionSet()) {
 			initBody.invoke(intentFilterField, "addAction").arg(action);
+		}
+		for (String dataScheme : intentFilterData.getDataSchemeSet()) {
+			initBody.invoke(intentFilterField, "addDataScheme").arg(dataScheme);
 		}
 
 		return intentFilterField;
@@ -85,5 +87,62 @@ public class ReceiverRegistrationHolder {
 
 	public ProcessHolder.Classes classes() {
 		return holder.classes();
+	}
+
+	private static class IntentFilterData {
+
+		private final Set<String> actionSet;
+		private final Set<String> dataSchemeSet;
+
+		public IntentFilterData(String[] actions, String[] dataSchemes) {
+			actionSet = new HashSet<String>(Arrays.asList(actions));
+			dataSchemeSet = new HashSet<String>(Arrays.asList(dataSchemes));
+		}
+
+		public Set<String> getActionSet() {
+			return actionSet;
+		}
+
+		public Set<String> getDataSchemeSet() {
+			return dataSchemeSet;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + (actionSet == null ? 0 : actionSet.hashCode());
+			result = prime * result + (dataSchemeSet == null ? 0 : dataSchemeSet.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			IntentFilterData other = (IntentFilterData) obj;
+			if (actionSet == null) {
+				if (other.actionSet != null) {
+					return false;
+				}
+			} else if (!actionSet.equals(other.actionSet)) {
+				return false;
+			}
+			if (dataSchemeSet == null) {
+				if (other.dataSchemeSet != null) {
+					return false;
+				}
+			} else if (!dataSchemeSet.equals(other.dataSchemeSet)) {
+				return false;
+			}
+			return true;
+		}
 	}
 }
