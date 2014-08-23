@@ -41,7 +41,7 @@ import java.lang.annotation.Target;
  * &#064;EActivity(R.layout.main)
  * public class MyActivity extends Activity {
  *
- * 	// Injects R.id.myEditText
+ * 	// Injects R.id.edit1 and R.id.edit2 into the List.
  * 	&#064;ViewsById({R.id.edit1, R.id.edit2})
  * 	List&lt;EditText&gt; myEditTexts;
  *
