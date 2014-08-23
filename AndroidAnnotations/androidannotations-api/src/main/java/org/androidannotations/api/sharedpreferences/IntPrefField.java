@@ -31,20 +31,19 @@ public final class IntPrefField extends AbstractPrefField {
 	}
 
 	public int getOr(int defaultValue) {
-		try{ 
+		try {
 			return sharedPreferences.getInt(key, defaultValue);
-		}catch( ClassCastException e ){
-                // The pref could be a String, if that is the case try this 
-                // recovery bit 
-                try{ 
-                        String value = sharedPreferences.getString(key, ""+defaultValue);
-                        int result = Integer.parseInt(value);
-                        return result ; 
-                }catch( Exception e2){
-                        // our  recovery bit failed. The problem is elsewhere. Send the original error
-                        throw e ; 
-                }
-         }
+		} catch (ClassCastException e) {
+			// The pref could be a String, if that is the case try this
+			// recovery bit
+			try {
+				String value = sharedPreferences.getString(key, "" + defaultValue);
+				return Integer.parseInt(value);
+			} catch (Exception e2) {
+				// our  recovery bit failed. The problem is elsewhere. Send the original error
+				throw e;
+			}
+		}
 
 	}
 
