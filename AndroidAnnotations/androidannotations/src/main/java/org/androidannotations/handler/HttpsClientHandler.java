@@ -175,6 +175,7 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 			JVar jVarSchemeReg = jTryBlock.body().decl(classes.SCHEME_REGISTRY, "registry");
 			jVarSchemeReg.init(_new(classes.SCHEME_REGISTRY));
 			jTryBlock.body().add(invoke(jVarSchemeReg, "register").arg(_new(classes.SCHEME).arg("https").arg(jVarSslFact).arg(lit(443))));
+			jTryBlock.body().add(invoke(jVarSchemeReg, "register").arg(_new(classes.SCHEME).arg("http").arg(classes.PLAIN_SOCKET_FACTORY.staticInvoke("getSocketFactory")).arg(lit(80))));
 
 			JVar jVarCcm = jTryBlock.body().decl(classes.CLIENT_CONNECTION_MANAGER, "ccm");
 			jVarCcm.init(_new(classes.SINGLE_CLIENT_CONN_MANAGER).arg(invoke("getParams")).arg(jVarSchemeReg));

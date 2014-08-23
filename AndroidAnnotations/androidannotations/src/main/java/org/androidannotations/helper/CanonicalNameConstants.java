@@ -179,6 +179,7 @@ public final class CanonicalNameConstants {
 	public static final String CLIENT_CONNECTION_MANAGER = "org.apache.http.conn.ClientConnectionManager";
 	public static final String DEFAULT_HTTP_CLIENT = "org.apache.http.impl.client.DefaultHttpClient";
 	public static final String SSL_SOCKET_FACTORY = "org.apache.http.conn.ssl.SSLSocketFactory";
+	public static final String PLAIN_SOCKET_FACTORY = "org.apache.http.conn.scheme.PlainSocketFactory";
 	public static final String SCHEME = "org.apache.http.conn.scheme.Scheme";
 	public static final String SCHEME_REGISTRY = "org.apache.http.conn.scheme.SchemeRegistry";
 	public static final String SINGLE_CLIENT_CONN_MANAGER = "org.apache.http.impl.conn.SingleClientConnManager";
