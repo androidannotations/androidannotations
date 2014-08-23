@@ -79,7 +79,6 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JInvocation currentTimeInvoke = classes().SYSTEM.staticInvoke("currentTimeMillis");
 		JBlock _thenBody = ifStatement._then();
-		JVar startDeclaration = _thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
 
 		String methodName = "[" + element.toString() + "]";
 
@@ -91,6 +90,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		JExpression enterMessage = JExpr.lit("Entering " + methodName);
 		logEnterInvoke.arg(enterMessage);
 		_thenBody.add(logEnterInvoke);
+		JVar startDeclaration = _thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
 
 		JTryBlock tryBlock = _thenBody._try();
 
