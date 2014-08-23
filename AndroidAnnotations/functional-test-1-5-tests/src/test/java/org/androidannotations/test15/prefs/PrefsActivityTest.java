@@ -15,12 +15,7 @@
  */
 package org.androidannotations.test15.prefs;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
-
+import android.content.SharedPreferences;
 import org.androidannotations.api.sharedpreferences.SetXmlSerializer;
 import org.androidannotations.test15.R;
 import org.junit.Before;
@@ -29,7 +24,11 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-import android.content.SharedPreferences;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
@@ -205,5 +204,23 @@ public class PrefsActivityTest {
 	public void stringResourcePrefKey() {
 		somePrefs.stringResKeyPref().put(88);
 		assertThat(sharedPref.getInt(activity.getString(R.string.prefStringKey), 0)).isEqualTo(88);
+	}
+
+	@Test
+	public void setStringInIntFieldAndGetInt() {
+		sharedPref.edit().putString("age", "18").commit();
+		assertThat(somePrefs.age().get()).isEqualTo(18);
+	}
+
+	@Test
+	public void setStringInFloatFieldAndGetFloat() {
+		sharedPref.edit().putString("ageFloat", "6.1").commit();
+		assertThat(somePrefs.ageFloat().get()).isEqualTo(6.1f);
+	}
+
+	@Test
+	public void setStringInLongFieldAndGetLong() {
+		sharedPref.edit().putString("ageLong", "90211105578124").commit();
+		assertThat(somePrefs.ageLong().get()).isEqualTo(90211105578124l);
 	}
 }
