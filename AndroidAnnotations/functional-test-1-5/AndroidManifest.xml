@@ -60,7 +60,7 @@
         <activity android:name=".prefs.PrefsActivity_" />
         <activity android:name=".res.ResActivity_" />
         <activity android:name=".ThreadActivity_" />
-        <activity android:name=".TracedActivity_" />
+        <activity android:name="org.androidannotations.test15.trace.TracedActivity_" />
         <activity android:name=".TextWatchedActivity_" />
 		<activity android:name=".innerclasses.ActivityWithInnerEnhancedClasses_" />
         <activity android:name=".MultiFindViewActivity_" />
