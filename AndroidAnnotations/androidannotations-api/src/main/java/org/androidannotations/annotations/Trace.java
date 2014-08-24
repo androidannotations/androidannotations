@@ -28,6 +28,10 @@ import java.lang.annotation.Target;
  * execution time.
  * </p>
  * <p>
+ * Since <i>AndroidAnnotations 3.1</i> log messages contain the method parameter
+ * and return values
+ * </p>
+ * <p>
  * All annotation values are optional :
  * </p>
  * <ul>
@@ -46,6 +50,11 @@ import java.lang.annotation.Target;
  * void doWork() {
  * 	// ... Do Work ...
  * }
+ * 
+ * &#064;Trace
+ * boolean doMoreWork(String someString) {
+ * 	// ... Do more Work ...
+ * }
  * </pre>
  * 
  * This will log these lines :
@@ -53,6 +62,8 @@ import java.lang.annotation.Target;
  * <pre>
  * I/TracedMethodActivity(  302): Entering [void doWork() ]
  * I/TracedMethodActivity(  302): Exiting [void doWork() ], duration in ms: 1002
+ * I/TracedMethodActivity(  302): Entering [boolean doMoreWork(someString = Hello World)]
+ * I/TracedMethodActivity(  302): Exiting [boolean doMoreWork(String) returning: true], duration in ms: 651
  * </pre>
  * 
  * </blockquote>
