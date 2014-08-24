@@ -13,7 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15;
+package org.androidannotations.test15.trace;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -28,13 +29,14 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.test15.instancestate.MySerializableBean;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 
 @EActivity
 public class TracedActivity extends Activity {
-
+	
 	public boolean tracedMethodCalled = false;
 	public boolean voidTracedMethodCalled = false;
 	public boolean voidTracedMethodDebugCalled = false;
@@ -124,8 +126,48 @@ public class TracedActivity extends Activity {
 	}
 
 	@Trace
-	void tracedUsingArrayParameters(//
-			MySerializableBean[] array, MySerializableBean[][] multiDimArray) {
-
+	void tracedUsingArrayParameters(MySerializableBean[] array,
+			MySerializableBean[][] multiDimArray) {
 	}
+
+	@Trace
+	public void noReturnNoParam() {
+	}
+
+	@Trace
+	public void noReturnStringParam(String param) {
+	}
+
+	@Trace
+	public void noReturnIntArrayParam(int[] param) {
+	}
+
+	@Trace
+	public void noReturnStringAndIntArrayParam(String param1, int[] param2) {
+	}
+
+	@Trace
+	public void noReturnIntentParam(Intent param) {
+	}
+
+	@Trace
+	public boolean booleanReturnNoParam() {
+		return true;
+	}
+
+	@Trace
+	public String stringReturnStringParam(String param) {
+		return param;
+	}
+
+	@Trace
+	public int[] intArrayReturnIntArrayParam(int[] param) {
+		return param;
+	}
+
+	@Trace
+	public Intent intentReturnIntentParam(Intent param) {
+		return param;
+	}
+
 }
