@@ -112,7 +112,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 					paramName = annotation.value();
 				}
 
-				String extraParamName = paramName + "Extra";
+				String extraParamName = paramName.replaceAll("\\.", "_") + "_Extra";
 				JFieldVar paramVar = getStaticExtraField(holder, paramName);
 				JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
 				BundleHelper bundleHelper = new BundleHelper(annotationHelper, param);
