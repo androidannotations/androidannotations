@@ -36,6 +36,11 @@ import java.lang.annotation.Target;
  * You MAY use the {@link ReceiverAction.Extra} annotation on parameters to
  * define a different extra name.
  * </p>
+ * <p>
+ * Parameters of type {@link android.content.Intent} or
+ * {@link android.content.Context} will get the corresponding parameter of
+ * {@code void onReceive(Context context, Intent intent)} assigned.
+ * </p>
  * <blockquote>
  * 
  * Example :

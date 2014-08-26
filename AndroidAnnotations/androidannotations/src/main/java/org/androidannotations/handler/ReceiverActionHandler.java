@@ -106,6 +106,15 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 			// Extras params
 			for (VariableElement param : methodParameters) {
 				String paramName = param.getSimpleName().toString();
+				JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
+
+				if (extraParamClass.equals(classes().CONTEXT)) {
+					callActionInvocation.arg(holder.getOnReceiveContext());
+					continue;
+				} else if (extraParamClass.equals(classes().INTENT)) {
+					callActionInvocation.arg(holder.getOnReceiveIntent());
+					continue;
+				}
 
 				Extra annotation = param.getAnnotation(ReceiverAction.Extra.class);
 				if (annotation != null && !annotation.value().isEmpty()) {
@@ -114,7 +123,6 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 
 				String extraParamName = paramName.replaceAll("\\.", "_") + "_Extra";
 				JFieldVar paramVar = getStaticExtraField(holder, paramName);
-				JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
 				BundleHelper bundleHelper = new BundleHelper(annotationHelper, param);
 
 				JExpression getExtraExpression = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(paramVar);
