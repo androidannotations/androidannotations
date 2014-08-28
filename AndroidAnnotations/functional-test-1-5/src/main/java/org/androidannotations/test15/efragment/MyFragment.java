@@ -48,7 +48,7 @@ public class MyFragment extends AbstractFragment {
 	@SystemService
 	ActivityManager activityManager;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
 	
 	@Click
