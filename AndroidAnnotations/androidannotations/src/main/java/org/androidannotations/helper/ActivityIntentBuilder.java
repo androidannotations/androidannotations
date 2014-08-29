@@ -15,14 +15,24 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.*;
-import org.androidannotations.holder.HasIntentBuilder;
-
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+
+import org.androidannotations.holder.HasIntentBuilder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 public class ActivityIntentBuilder extends IntentBuilder {
 

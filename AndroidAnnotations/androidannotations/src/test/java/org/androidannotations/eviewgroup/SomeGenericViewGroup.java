@@ -15,10 +15,11 @@
  */
 package org.androidannotations.eviewgroup;
 
-import android.content.Context;
-import android.widget.FrameLayout;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.UiThread;
+
+import android.content.Context;
+import android.widget.FrameLayout;
 
 @EViewGroup
 public class SomeGenericViewGroup<T extends CharSequence> extends FrameLayout {

@@ -35,14 +35,14 @@ public class MyIntentServiceTest {
 		// Simulate call to intent builder and retrieve the configured Intent
 		EmptyActivityWithoutLayout context = new EmptyActivityWithoutLayout_();
 		Intent intent = IntentServiceHandledAction_.intent(context) //
-				.MyActionOneParam("test") //
+				.myActionOneParam("test") //
 				.get();
 
 		// Simulate the creation of IntentService by Android
 		IntentServiceHandledAction intentServiceHandledAction = new IntentServiceHandledAction_();
 		intentServiceHandledAction.onHandleIntent(intent);
 
-		assertThat(IntentServiceHandledAction_.actionForTestHandled).isEqualTo("test");
+		assertThat(IntentServiceHandledAction.actionForTestHandled).isEqualTo("test");
 	}
 
 }

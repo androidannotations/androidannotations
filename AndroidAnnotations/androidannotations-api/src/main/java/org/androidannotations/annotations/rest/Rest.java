@@ -15,10 +15,6 @@
  */
 package org.androidannotations.annotations.rest;
 
-import org.androidannotations.api.rest.RestClientHeaders;
-import org.androidannotations.api.rest.RestClientRootUrl;
-import org.androidannotations.api.rest.RestClientSupport;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -199,9 +195,9 @@ import java.lang.annotation.Target;
  * 
  * 
  * @see RestService
- * @see RestClientSupport
- * @see RestClientRootUrl
- * @see RestClientHeaders
+ * @see org.androidannotations.api.rest.RestClientSupport
+ * @see org.androidannotations.api.rest.RestClientRootUrl
+ * @see org.androidannotations.api.rest.RestClientHeaders
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
@@ -211,5 +207,6 @@ public @interface Rest {
 	Class<?>[] converters();
 
 	Class<?>[] interceptors() default {};
+
 	Class<?> requestFactory() default Void.class;
 }

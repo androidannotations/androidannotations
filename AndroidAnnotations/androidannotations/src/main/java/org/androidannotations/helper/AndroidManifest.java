@@ -35,6 +35,8 @@ public class AndroidManifest {
 		return "AndroidManifest [applicationPackage=" + applicationPackage + ", componentQualifiedNames=" + componentQualifiedNames + ", permissionQualifiedNames=" + permissionQualifiedNames + ", applicationClassName=" + applicationClassName + ", libraryProject=" + libraryProject + ", debugabble=" + debugabble + ", minSdkVersion=" + minSdkVersion + ", maxSdkVersion=" + maxSdkVersion + ", targetSdkVersion=" + targetSdkVersion + "]";
 	}
 
+	// CHECKSTYLE:OFF
+
 	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debugabble) {
 		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, debugabble);
 	}
@@ -54,6 +56,8 @@ public class AndroidManifest {
 		this.targetSdkVersion = targetSdkVersion;
 		debugabble = debuggable;
 	}
+
+	// CHECKSTYLE:ON
 
 	public String getApplicationPackage() {
 		return applicationPackage;

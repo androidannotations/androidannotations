@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.os.Handler;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -90,7 +88,7 @@ import java.lang.annotation.Target;
  * </blockquote>
  * 
  * @see Background
- * @see Handler
+ * @see android.os.Handler
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
@@ -103,7 +101,8 @@ public @interface UiThread {
 	 * using the handler. The default value is ENQUEUE, which will always call
 	 * the handler.
 	 * 
-	 * @return whether the method should be posted or executed if it's in the UI thread
+	 * @return whether the method should be posted or executed if it's in the UI
+	 *         thread
 	 */
 	Propagation propagation() default Propagation.ENQUEUE;
 

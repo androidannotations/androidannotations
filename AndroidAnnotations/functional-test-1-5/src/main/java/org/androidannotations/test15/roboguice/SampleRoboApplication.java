@@ -20,14 +20,13 @@ import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.test15.ebean.EmptyDependency;
 import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.User;
 import org.androidannotations.test15.ormlite.UserDao;
 
 import android.app.Application;
 
 @EApplication
 public class SampleRoboApplication extends Application {
-	
+
 	@Bean
 	public EmptyDependency someDependency;
 

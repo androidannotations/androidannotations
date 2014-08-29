@@ -15,23 +15,28 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+
+import javax.lang.model.element.TypeElement;
+
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.helper.ServiceIntentBuilder;
 import org.androidannotations.process.ProcessHolder;
 
-import javax.lang.model.element.TypeElement;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
 import javax.lang.model.type.TypeMirror;
-
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
 
 public class EServiceHolder extends EComponentHolder implements HasIntentBuilder, HasReceiverRegistration {
 
-    private ServiceIntentBuilder intentBuilder;
+	private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
 	private ReceiverRegistrationHolder receiverRegistrationHolder;
 	private JBlock onDestroyBeforeSuperBlock;
@@ -39,16 +44,16 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	public EServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
 		super(processHolder, annotatedElement);
 		receiverRegistrationHolder = new ReceiverRegistrationHolder(this);
-        intentBuilder = new ServiceIntentBuilder(this, androidManifest);
-        intentBuilder.build();
+		intentBuilder = new ServiceIntentBuilder(this, androidManifest);
+		intentBuilder.build();
 	}
 
-    @Override
-    public IntentBuilder getIntentBuilder() {
-        return intentBuilder;
-    }
+	@Override
+	public IntentBuilder getIntentBuilder() {
+		return intentBuilder;
+	}
 
-    @Override
+	@Override
 	protected void setContextRef() {
 		contextRef = _this();
 	}

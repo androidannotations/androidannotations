@@ -15,12 +15,12 @@
  */
 package org.androidannotations.annotations.res;
 
-import org.androidannotations.annotations.ResId;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.androidannotations.annotations.ResId;
 
 /**
  * <p>

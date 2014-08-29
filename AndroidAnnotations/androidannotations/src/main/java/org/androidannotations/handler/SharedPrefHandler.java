@@ -99,7 +99,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 			put("boolean", new DefaultPrefInfo<Boolean>(DefaultBoolean.class, BooleanPrefField.class, IRClass.Res.BOOL, false, "booleanField"));
 			put("float", new DefaultPrefInfo<Float>(DefaultFloat.class, FloatPrefField.class, IRClass.Res.INTEGER, 0f, "floatField"));
 			put("int", new DefaultPrefInfo<Integer>(DefaultInt.class, IntPrefField.class, IRClass.Res.INTEGER, 0, "intField"));
-			put("long", new DefaultPrefInfo<Long>(DefaultLong.class, LongPrefField.class, IRClass.Res.INTEGER, 0l, "longField"));
+			put("long", new DefaultPrefInfo<Long>(DefaultLong.class, LongPrefField.class, IRClass.Res.INTEGER, 0L, "longField"));
 			put(CanonicalNameConstants.STRING, new DefaultPrefInfo<String>(DefaultString.class, StringPrefField.class, IRClass.Res.STRING, "", "stringField"));
 			put(CanonicalNameConstants.STRING_SET, new DefaultPrefInfo<Set<String>>(DefaultStringSet.class, StringSetPrefField.class, null, null, "stringSetField"));
 		}

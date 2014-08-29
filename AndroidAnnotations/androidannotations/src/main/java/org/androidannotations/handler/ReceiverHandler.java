@@ -128,7 +128,8 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 	}
 
 	private void registerAndUnregisterReceiver(HasReceiverRegistration holder, Receiver.RegisterAt registerAt, JFieldVar intentFilterField, JFieldVar receiverField, boolean local) {
-		JBlock registerBlock = null, unregisterBlock = null;
+		JBlock registerBlock = null;
+		JBlock unregisterBlock = null;
 		switch (registerAt) {
 		case OnCreateOnDestroy:
 			registerBlock = holder.getOnCreateAfterSuperBlock();

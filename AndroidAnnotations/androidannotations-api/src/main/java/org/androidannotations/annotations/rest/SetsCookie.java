@@ -62,5 +62,5 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface SetsCookie {
 
-	public String[] value();
+	String[] value();
 }

@@ -26,22 +26,23 @@ import android.app.Activity;
 @EActivity
 public class ActivityWithGenerics extends Activity {
 
-    //@UiThread
-    //<T, S extends Number & List<String>> void emptyUiMethod(T param, S param2) {
-    //}
+	// @UiThread
+	// <T, S extends Number & List<String>> void emptyUiMethod(T param, S
+	// param2) {
+	// }
 
-    @UiThread
-    <T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
-    }
+	@UiThread
+	<T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
+	}
 
 	@UiThread
 	<T, S extends Number> void emptyUiMethod(T param) {
 
 	}
-	
+
 	@Background
 	<T, S extends Number> void emptyBackgroundMethod(T param) {
-		
+
 	}
 
 	@Background

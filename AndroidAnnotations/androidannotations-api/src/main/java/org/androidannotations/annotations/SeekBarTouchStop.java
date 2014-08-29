@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.widget.SeekBar;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,8 +24,9 @@ import java.lang.annotation.Target;
  * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
- * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStopTrackingTouch(SeekBar seekBar)}
- * when the user has finished to move the cursor of the targeted SeekBar.
+ * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStopTrackingTouch(android.widget.SeekBar)
+ * SeekBar.OnSeekBarChangeListener#onStopTrackingTouch(SeekBar)} when the user
+ * has finished to move the cursor of the targeted SeekBar.
  * </p>
  * <p>
  * The annotation value should be one or several R.id.* fields that refers to an
@@ -38,8 +37,8 @@ import java.lang.annotation.Target;
  * The method MAY have one parameter :
  * </p>
  * <ul>
- * <li>A {@link android.widget.SeekBar} parameter to determine which view has
- * targeted this event</li>
+ * <li>A {@link android.widget.SeekBar SeekBar} parameter to determine which
+ * view has targeted this event</li>
  * </ul>
  *
  * <blockquote>

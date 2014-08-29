@@ -69,6 +69,12 @@ public @interface OrmLiteDao {
 
 	Class<?> helper();
 
+	/**
+	 * 
+	 * @deprecated Since <b>3.1</b> the model class is inferred from the type of
+	 *             the annotated field. This parameter will be removed in a
+	 *             future version.
+	 */
 	@Deprecated
 	Class<?> model() default Void.class;
 

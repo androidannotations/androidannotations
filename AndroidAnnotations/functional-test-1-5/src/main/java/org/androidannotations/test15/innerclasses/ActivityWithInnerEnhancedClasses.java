@@ -15,13 +15,18 @@
  */
 package org.androidannotations.test15.innerclasses;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.test15.R;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import org.androidannotations.annotations.*;
-import org.androidannotations.test15.R;
 
 @EActivity(R.layout.views_injected)
 public class ActivityWithInnerEnhancedClasses extends Activity {
@@ -34,7 +39,6 @@ public class ActivityWithInnerEnhancedClasses extends Activity {
 
 		@ViewById(R.id.injected_text_view)
 		TextView textView;
-
 
 		public InnerViewGroup(Context context) {
 			super(context);

@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.view.ViewGroup;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Should be used on {@link android.view.View} classes to enable usage of
+ * Should be used on {@link android.view.View View} classes to enable usage of
  * AndroidAnnotations.
  * </p>
  * <p>
@@ -62,7 +60,7 @@ import java.lang.annotation.Target;
  * 
  * @see AfterInject
  * @see AfterViews
- * @see ViewGroup
+ * @see android.view.ViewGroup
  * @see <a
  *      href="http://developer.android.com/guide/topics/ui/custom-components.html"
  *      >How to build a custom component.</a>

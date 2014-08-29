@@ -89,7 +89,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface HttpsClient {
-	public static final String DEFAULT_PASSWD = "changeit";
+	String DEFAULT_PASSWD = "changeit";
 
 	int trustStore() default ResId.DEFAULT_VALUE;
 

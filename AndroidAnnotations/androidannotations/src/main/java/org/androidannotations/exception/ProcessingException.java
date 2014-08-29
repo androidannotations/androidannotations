@@ -21,7 +21,7 @@ public class ProcessingException extends Exception {
 
 	private static final long serialVersionUID = -1282996599471872615L;
 
-	private Element element;
+	private final Element element;
 
 	public ProcessingException(Throwable cause, Element element) {
 		super(cause);

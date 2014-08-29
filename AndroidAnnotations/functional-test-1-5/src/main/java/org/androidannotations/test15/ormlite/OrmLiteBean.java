@@ -18,10 +18,6 @@ package org.androidannotations.test15.ormlite;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.OrmLiteDao;
 
-import org.androidannotations.test15.ormlite.User;
-import org.androidannotations.test15.ormlite.UserDao;
-import org.androidannotations.test15.ormlite.DatabaseHelper;
-
 @EBean
 public class OrmLiteBean {
 

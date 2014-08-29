@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.text.Editable;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,8 +23,8 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * This annotation is intended to be used on methods to receive events defined
- * by {@link android.text.TextWatcher#afterTextChanged(Editable s)} after the
- * text is changed on the targeted TextView or subclass of TextView.
+ * by {@link android.text.TextWatcher#afterTextChanged(android.text.Editable s)}
+ * after the text is changed on the targeted TextView or subclass of TextView.
  * </p>
  * <p>
  * The annotation value should be one or several R.id.* fields that refers to

@@ -17,18 +17,18 @@ package org.androidannotations.test15.instancestate;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.os.Bundle;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.test15.R;
+
+import android.app.Activity;
+import android.os.Bundle;
 
 @EActivity(R.layout.main)
 public class SaveInstanceStateActivity extends Activity {
 
 	@InstanceState
-	Long nullWrappedLong = 42l;
+	Long nullWrappedLong = 42L;
 
 	@InstanceState
 	boolean myBoolean;
@@ -167,13 +167,13 @@ public class SaveInstanceStateActivity extends Activity {
 
 	@InstanceState
 	MyGenericParcelableBean<Integer>[] myGenericParcelableBeanArray;
-	
+
 	@InstanceState
 	ArrayList<MyParcelableBean> myParcelableBeanArrayList;
-	
+
 	@InstanceState
 	ArrayList<MyGenericParcelableBean<Integer>> myGenericParcelableBeanArrayList;
-	
+
 	@InstanceState
 	ArrayList<MySerializableBean> mySerializableBeanArrayList;
 

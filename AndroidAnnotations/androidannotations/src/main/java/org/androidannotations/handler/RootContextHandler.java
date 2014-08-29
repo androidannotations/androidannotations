@@ -35,9 +35,9 @@ import com.sun.codemodel.JConditional;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 
-public class RootContextHanlder extends BaseAnnotationHandler<EBeanHolder> {
+public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
 
-	public RootContextHanlder(ProcessingEnvironment processingEnvironment) {
+	public RootContextHandler(ProcessingEnvironment processingEnvironment) {
 		super(RootContext.class, processingEnvironment);
 	}
 
@@ -63,17 +63,17 @@ public class RootContextHanlder extends BaseAnnotationHandler<EBeanHolder> {
 		if (CanonicalNameConstants.CONTEXT.equals(typeQualifiedName)) {
 			body.assign(ref(fieldName), contextRef);
 		} else {
-            JClass extendingContextClass = holder.refClass(typeQualifiedName);
-            JConditional cond = body._if(holder.getContextRef()._instanceof(extendingContextClass));
-            cond._then() //
-                    .assign(ref(fieldName), cast(extendingContextClass, holder.getContextRef()));
+			JClass extendingContextClass = holder.refClass(typeQualifiedName);
+			JConditional cond = body._if(holder.getContextRef()._instanceof(extendingContextClass));
+			cond._then() //
+					.assign(ref(fieldName), cast(extendingContextClass, holder.getContextRef()));
 
-            JInvocation warningInvoke = holder.classes().LOG.staticInvoke("w");
-            warningInvoke.arg(holder.getGeneratedClass().name());
-            JExpression expr = lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName")).plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated"));
-            warningInvoke.arg(expr);
-            cond._else() //
-                    .add(warningInvoke);
+			JInvocation warningInvoke = holder.classes().LOG.staticInvoke("w");
+			warningInvoke.arg(holder.getGeneratedClass().name());
+			JExpression expr = lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName")).plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated"));
+			warningInvoke.arg(expr);
+			cond._else() //
+					.add(warningInvoke);
 		}
 	}
 }

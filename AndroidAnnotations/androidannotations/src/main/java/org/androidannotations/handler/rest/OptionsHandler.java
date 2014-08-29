@@ -49,10 +49,10 @@ public class OptionsHandler extends RestMethodHandler {
 		return annotation.value();
 	}
 
-    @Override
-    protected JExpression getResponseClass(Element element, RestHolder holder) {
-        return JExpr._null();
-    }
+	@Override
+	protected JExpression getResponseClass(Element element, RestHolder holder) {
+		return JExpr._null();
+	}
 
 	@Override
 	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {

@@ -15,7 +15,11 @@
  */
 package org.androidannotations.test15.ebean;
 
-import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.SupposeBackground;
+import org.androidannotations.annotations.SupposeUiThread;
+import org.androidannotations.annotations.UiThread;
 
 @EBean
 public class ThreadControlledBean {
@@ -31,7 +35,7 @@ public class ThreadControlledBean {
 	public void backgroundSupposed() {
 	}
 
-	@SupposeBackground(serial = {SERIAL1, SERIAL2})
+	@SupposeBackground(serial = { SERIAL1, SERIAL2 })
 	public void serialBackgroundSupposed() {
 	}
 

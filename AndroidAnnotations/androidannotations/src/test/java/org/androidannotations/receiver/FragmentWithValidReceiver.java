@@ -15,10 +15,11 @@
  */
 package org.androidannotations.receiver;
 
-import android.app.Fragment;
-import android.content.Intent;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver;
+
+import android.app.Fragment;
+import android.content.Intent;
 
 @EFragment
 public class FragmentWithValidReceiver extends Fragment {

@@ -15,8 +15,9 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JClass;
 import org.androidannotations.holder.HasIntentBuilder;
+
+import com.sun.codemodel.JClass;
 
 public class ServiceIntentBuilder extends IntentBuilder {
 

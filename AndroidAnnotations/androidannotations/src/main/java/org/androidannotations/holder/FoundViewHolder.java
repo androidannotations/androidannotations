@@ -15,12 +15,12 @@
  */
 package org.androidannotations.holder;
 
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.cast;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
-
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.cast;
 
 public class FoundViewHolder {
 

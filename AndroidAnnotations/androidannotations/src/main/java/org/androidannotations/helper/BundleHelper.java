@@ -15,61 +15,62 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
+import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JMethod;
 
 public class BundleHelper {
-	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
+	public static final Map<String, String> METHOD_SUFFIX_BY_TYPE_NAME = new HashMap<String, String>();
 
 	static {
 
-		methodSuffixNameByTypeName.put(BUNDLE, "Bundle");
+		METHOD_SUFFIX_BY_TYPE_NAME.put(BUNDLE, "Bundle");
 
-		methodSuffixNameByTypeName.put("boolean", "Boolean");
-		methodSuffixNameByTypeName.put("boolean[]", "BooleanArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("boolean", "Boolean");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("boolean[]", "BooleanArray");
 
-		methodSuffixNameByTypeName.put("byte", "Byte");
-		methodSuffixNameByTypeName.put("byte[]", "ByteArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("byte", "Byte");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("byte[]", "ByteArray");
 
-		methodSuffixNameByTypeName.put("char", "Char");
-		methodSuffixNameByTypeName.put("char[]", "CharArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("char", "Char");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("char[]", "CharArray");
 
-		methodSuffixNameByTypeName.put(CHAR_SEQUENCE, "CharSequence");
+		METHOD_SUFFIX_BY_TYPE_NAME.put(CHAR_SEQUENCE, "CharSequence");
 
-		methodSuffixNameByTypeName.put("double", "Double");
-		methodSuffixNameByTypeName.put("double[]", "DoubleArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("double", "Double");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("double[]", "DoubleArray");
 
-		methodSuffixNameByTypeName.put("float", "Float");
-		methodSuffixNameByTypeName.put("float[]", "FloatArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("float", "Float");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("float[]", "FloatArray");
 
-		methodSuffixNameByTypeName.put("int", "Int");
-		methodSuffixNameByTypeName.put("int[]", "IntArray");
-		methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.Integer>", "IntegerArrayList");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("int", "Int");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("int[]", "IntArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("java.util.ArrayList<java.lang.Integer>", "IntegerArrayList");
 
-		methodSuffixNameByTypeName.put("long", "Long");
-		methodSuffixNameByTypeName.put("long[]", "LongArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("long", "Long");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("long[]", "LongArray");
 
-		methodSuffixNameByTypeName.put("short", "Short");
-		methodSuffixNameByTypeName.put("short[]", "ShortArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("short", "Short");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("short[]", "ShortArray");
 
-		methodSuffixNameByTypeName.put(STRING, "String");
-		methodSuffixNameByTypeName.put("java.lang.String[]", "StringArray");
-		methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.String>", "StringArrayList");
+		METHOD_SUFFIX_BY_TYPE_NAME.put(STRING, "String");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("java.lang.String[]", "StringArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("java.util.ArrayList<java.lang.String>", "StringArrayList");
 	}
 
 	private AnnotationHelper annotationHelper;
@@ -90,10 +91,10 @@ public class BundleHelper {
 		String typeString = element.toString();
 		TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 
-		if (methodSuffixNameByTypeName.containsKey(typeString)) {
+		if (METHOD_SUFFIX_BY_TYPE_NAME.containsKey(typeString)) {
 
-			methodNameToSave = "put" + methodSuffixNameByTypeName.get(typeString);
-			methodNameToRestore = "get" + methodSuffixNameByTypeName.get(typeString);
+			methodNameToSave = "put" + METHOD_SUFFIX_BY_TYPE_NAME.get(typeString);
+			methodNameToRestore = "get" + METHOD_SUFFIX_BY_TYPE_NAME.get(typeString);
 
 		} else if (element.getKind() == TypeKind.ARRAY) {
 

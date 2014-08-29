@@ -15,12 +15,12 @@
  */
 package org.androidannotations.annotations;
 
-import android.util.Log;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import android.util.Log;
 
 /**
  * <p>
@@ -72,7 +72,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Trace {
 
-	public static final String DEFAULT_TAG = "NO_TAG";
+	String DEFAULT_TAG = "NO_TAG";
 
 	String tag() default DEFAULT_TAG;
 

@@ -266,7 +266,7 @@ public class ValidatorHelper {
 	}
 
 	private void hasClassAnnotation(Element reportElement, Element element, AnnotationElements validatedElements, Class<? extends Annotation> validAnnotation, IsValid valid) {
-		ArrayList<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
+		List<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
 		validAnnotations.add(validAnnotation);
 		hasOneOfClassAnnotations(reportElement, element, validatedElements, validAnnotations, valid);
 	}
@@ -1074,7 +1074,7 @@ public class ValidatorHelper {
 	}
 
 	private boolean isKnownBundleCompatibleType(String type) {
-		return BundleHelper.methodSuffixNameByTypeName.containsKey(type);
+		return BundleHelper.METHOD_SUFFIX_BY_TYPE_NAME.containsKey(type);
 	}
 
 	public void componentRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {

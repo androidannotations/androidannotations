@@ -33,7 +33,7 @@ public class PutHandler extends RestMethodHandler {
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		super.validate(element, validatedElements, valid);
 
-        validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, valid);
+		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, valid);
 
 		restAnnotationHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter((ExecutableElement) element, valid);
 	}

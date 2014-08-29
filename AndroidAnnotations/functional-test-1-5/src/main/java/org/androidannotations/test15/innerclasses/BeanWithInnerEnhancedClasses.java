@@ -40,12 +40,13 @@ public class BeanWithInnerEnhancedClasses {
 	@EBean
 	public static class InnerEnhancedBean {
 
-		@StringRes(R.string.hello) String hello;
+		@StringRes(R.string.hello)
+		String hello;
 
 	}
 
 	@SharedPref
-	public static interface InnerPrefs {
+	public interface InnerPrefs {
 
 		@DefaultInt(12)
 		int intValue();

@@ -44,13 +44,14 @@ public class ActionBarSherlockHelper {
 	 * types
 	 */
 	public boolean usesActionBarSherlock(TypeElement typeElement) {
-		TypeMirror superType;
-		while (!((superType = typeElement.getSuperclass()) instanceof NoType)) {
+		TypeMirror superType = typeElement.getSuperclass();
+		while (!(superType instanceof NoType)) {
 			typeElement = (TypeElement) ((DeclaredType) superType).asElement();
 			String qName = typeElement.getQualifiedName().toString();
 			if (qName.startsWith("com.actionbarsherlock.app")) {
 				return true;
 			}
+			superType = typeElement.getSuperclass();
 		}
 		return false;
 	}

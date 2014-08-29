@@ -23,6 +23,9 @@ import com.sun.codemodel.JVar;
 public class RoboGuiceHolder {
 
 	private EActivityHolder holder;
+
+	// TODO access for these fields should be refactored
+
 	protected JFieldVar scopedObjects;
 	protected JFieldVar scope;
 	protected JFieldVar eventManager;

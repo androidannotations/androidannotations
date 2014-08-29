@@ -15,22 +15,26 @@
  */
 package org.androidannotations.test15.menu;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.MenuItem;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.test15.R;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 @EActivity
 @OptionsMenu({ R.menu.my_menu, R.menu.my_menu2 })
 public class OptionsMenuActivity extends Activity {
 
+	// CHECKSTYLE:OFF
+
 	@OptionsMenuItem
 	MenuItem menu_refresh;
+
+	// CHECKSTYLE:ON
 
 	@OptionsMenuItem(R.id.menu_search)
 	MenuItem aMenuById;
@@ -40,7 +44,7 @@ public class OptionsMenuActivity extends Activity {
 
 	boolean menuRefreshSelected;
 	boolean multipleMenuItems;
-	boolean menu_add;
+	boolean menuAdd;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,10 @@ public class OptionsMenuActivity extends Activity {
 	}
 
 	@OptionsItem
+	// CHECKSTYLE:OFF
 	void menu_add(MenuItem item) {
-		menu_add = true;
+		// CHECKSTYLE:ON
+		menuAdd = true;
 	}
 
 }
