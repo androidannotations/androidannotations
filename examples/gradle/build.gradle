@@ -4,9 +4,9 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:0.12.2'
         // the latest version of the android-apt plugin
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.1'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
@@ -15,7 +15,7 @@ repositories {
     mavenLocal()
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 def AAVersion = '3.0.1'
 
@@ -27,7 +27,7 @@ dependencies {
 apt {
     arguments {
         androidManifestFile variant.processResources.manifestFile 
-        resourcePackageName 'com.googlecode.androidannotations.gradle'
+        resourcePackageName 'org.androidannotations.gradle'
 
         // If you're using Android NBS flavors you should use the following line instead of hard-coded packageName
         // resourcePackageName android.defaultConfig.packageName
@@ -40,20 +40,10 @@ apt {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "20.0.0"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 18
-    }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
-            resources.srcDirs = ['res']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
+        targetSdkVersion 19
     }
 }
