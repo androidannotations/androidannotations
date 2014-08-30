@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.gradle.activity;
+package org.androidannotations.gradle.activity;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import org.androidannotations.annotations.res.StringRes;
 import android.app.Activity;
 import android.widget.TextView;
 
-import com.googlecode.androidannotations.gradle.R;
+import org.androidannotations.gradle.R;
 
 @EActivity(R.layout.main)
 public class HelloAndroidActivity extends Activity {
