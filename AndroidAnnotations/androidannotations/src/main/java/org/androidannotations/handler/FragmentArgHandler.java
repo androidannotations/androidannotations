@@ -60,7 +60,9 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 			argKey = fieldName;
 		}
 
-		BundleHelper bundleHelper = new BundleHelper(annotationHelper, element);
+		TypeMirror actualType = codeModelHelper.getActualType(element, holder);
+
+		BundleHelper bundleHelper = new BundleHelper(annotationHelper, actualType);
 		JFieldVar argKeyStaticField = createStaticArgField(holder, argKey, fieldName);
 		injectArgInComponent(element, holder, bundleHelper, argKeyStaticField, fieldName);
 		createBuilderInjectionMethod(element, holder, bundleHelper, argKeyStaticField, fieldName);
@@ -85,7 +87,8 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JExpression restoreMethodCall = JExpr.invoke(bundle, bundleHelper.getMethodNameToRestore()).arg(extraKeyStaticField);
 		if (bundleHelper.restoreCallNeedCastStatement()) {
 
-			JClass jclass = codeModelHelper.typeMirrorToJClass(element.asType(), holder);
+			TypeMirror type = codeModelHelper.getActualType(element, holder);
+			JClass jclass = codeModelHelper.typeMirrorToJClass(type, holder);
 			restoreMethodCall = JExpr.cast(jclass, restoreMethodCall);
 
 			if (bundleHelper.restoreCallNeedsSuppressWarning()) {
@@ -102,8 +105,8 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 	private void createBuilderInjectionMethod(Element element, EFragmentHolder holder, BundleHelper bundleHelper, JFieldVar argKeyStaticField, String fieldName) {
 		JDefinedClass builderClass = holder.getBuilderClass();
 		JFieldRef builderArgsField = holder.getBuilderArgsField();
-		TypeMirror elementType = element.asType();
-		JClass paramClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
+		TypeMirror type = codeModelHelper.getActualType(element, holder);
+		JClass paramClass = codeModelHelper.typeMirrorToJClass(type, holder);
 
 		JMethod method = builderClass.method(PUBLIC, builderClass, fieldName);
 		JVar arg = method.param(paramClass, fieldName);

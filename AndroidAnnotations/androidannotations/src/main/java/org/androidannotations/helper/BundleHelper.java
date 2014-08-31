@@ -77,10 +77,10 @@ public class BundleHelper {
 	private String methodNameToSave;
 	private String methodNameToRestore;
 
-	public BundleHelper(AnnotationHelper helper, Element element) {
+	public BundleHelper(AnnotationHelper helper, TypeMirror element) {
 		annotationHelper = helper;
 
-		String typeString = element.asType().toString();
+		String typeString = element.toString();
 		TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 
 		if (methodSuffixNameByTypeName.containsKey(typeString)) {
@@ -88,9 +88,9 @@ public class BundleHelper {
 			methodNameToSave = "put" + methodSuffixNameByTypeName.get(typeString);
 			methodNameToRestore = "get" + methodSuffixNameByTypeName.get(typeString);
 
-		} else if (element.asType().getKind() == TypeKind.ARRAY) {
+		} else if (element.getKind() == TypeKind.ARRAY) {
 
-			ArrayType arrayType = (ArrayType) element.asType();
+			ArrayType arrayType = (ArrayType) element;
 
 			boolean hasTypeArguments = false;
 			if (arrayType.getComponentType() instanceof DeclaredType) {
@@ -119,9 +119,8 @@ public class BundleHelper {
 		} else if (typeString.startsWith(CanonicalNameConstants.ARRAYLIST)) {
 
 			boolean hasTypeArguments = false;
-			TypeMirror elementAsType = element.asType();
-			if (elementAsType instanceof DeclaredType) {
-				DeclaredType declaredType = (DeclaredType) elementAsType;
+			if (element instanceof DeclaredType) {
+				DeclaredType declaredType = (DeclaredType) element;
 				List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 				if (typeArguments.size() == 1) {
 					TypeMirror typeArgument = typeArguments.get(0);
@@ -154,10 +153,9 @@ public class BundleHelper {
 
 		} else {
 
-			TypeMirror elementAsType = element.asType();
 			boolean hasTypeArguments = false;
-			if (elementAsType instanceof DeclaredType) {
-				DeclaredType declaredType = (DeclaredType) elementAsType;
+			if (element instanceof DeclaredType) {
+				DeclaredType declaredType = (DeclaredType) element;
 				typeString = declaredType.asElement().toString();
 				elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 				hasTypeArguments = declaredType.getTypeArguments().size() > 0;
