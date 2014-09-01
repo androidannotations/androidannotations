@@ -31,6 +31,32 @@ import java.lang.annotation.Target;
  * instance of the bean using a Service context, and you use {@link RootContext}
  * on a field that extends Activity, this field will be null at runtime.
  * </p>
+ * <blockquote>
+ *
+ * Example :
+ *
+ * <pre>
+ * &#064;EBean
+ * public class MyClass {
+ * 
+ * 	&#064;RootContext
+ * 	Context context;
+ * 
+ * 	// Only injected if the root context is an activity
+ * 	&#064;RootContext
+ * 	Activity activity;
+ * 
+ * 	// Only injected if the root context is a service
+ * 	&#064;RootContext
+ * 	Service service;
+ * 
+ * 	// Only injected if the root context is an instance of MyActivity
+ * 	&#064;RootContext
+ * 	MyActivity myActivity;
+ * }
+ * </pre>
+ *
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

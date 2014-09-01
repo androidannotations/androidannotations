@@ -32,6 +32,25 @@ import java.lang.annotation.Target;
  * There may be several methods annotated with @{@link AfterExtras} in the same
  * class.
  * 
+ * <blockquote>
+ *
+ * Example :
+ *
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;Extra
+ * 	String myExtra;
+ * 
+ * 	&#064;AfterExtras
+ * 	void afterExtras() {
+ * 		// myExtra is now available
+ * 	}
+ * }
+ * </pre>
+ *
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
