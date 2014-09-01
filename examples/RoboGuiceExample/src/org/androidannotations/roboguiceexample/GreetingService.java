@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.roboguiceexample;
+package org.androidannotations.roboguiceexample;
 
 public interface GreetingService {
 	void greet(String name);

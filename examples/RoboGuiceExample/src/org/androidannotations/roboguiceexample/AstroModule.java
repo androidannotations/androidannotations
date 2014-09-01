@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.roboguiceexample;
+package org.androidannotations.roboguiceexample;
 
 import roboguice.config.AbstractAndroidModule;
 
