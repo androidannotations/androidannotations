@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.helloworldeclipse;
+package org.androidannotations.helloworldeclipse;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;

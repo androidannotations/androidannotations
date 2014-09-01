@@ -1,4 +1,4 @@
-package com.googlecode.androidannotations.helloworldeclipse;
+package org.androidannotations.helloworldeclipse;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;

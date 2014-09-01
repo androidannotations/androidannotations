@@ -1,12 +1,11 @@
-package com.googlecode.androidannotations.helloworldeclipse;
+package org.androidannotations.helloworldeclipse;
 
 import java.util.Date;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
+import org.androidannotations.helloworldeclipse.R;
 import android.app.Activity;
 import android.widget.TextView;
 
