@@ -129,6 +129,13 @@ public class AnnotationHandlers {
 		if (optionsHelper.shouldLogTrace()) {
 			add(new TraceHandler(processingEnvironment));
 		}
+
+		/*
+		 * WakeLockHandler must be after TraceHandler but before UiThreadHandler
+		 * and BackgroundHandler
+		 */
+		add(new WakeLockHandler(processingEnvironment));
+
 		/*
 		 * UIThreadHandler and BackgroundHandler must be after TraceHandler and
 		 * IgnoredWhenDetached
