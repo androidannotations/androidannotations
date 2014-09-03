@@ -1112,16 +1112,19 @@ public class ValidatorHelper {
 	}
 
 	public void hasInternetPermission(Element element, AndroidManifest androidManifest, IsValid valid) {
-		if (androidManifest.isLibraryProject()) {
-			return;
-		}
+		hasPermission(element, androidManifest, valid, INTERNET_PERMISSION);
+	}
 
-		String internetPermissionQualifiedName = INTERNET_PERMISSION;
 
+	public void hasPermission(Element element, AndroidManifest androidManifest, IsValid valid, String permissionQualifiedName) {
 		List<String> permissionQualifiedNames = androidManifest.getPermissionQualifiedNames();
-		if (!permissionQualifiedNames.contains(internetPermissionQualifiedName)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Your application must require the INTERNET permission.");
+		if (!permissionQualifiedNames.contains(permissionQualifiedName)) {
+			if (androidManifest.isLibraryProject()) {
+				annotationHelper.printAnnotationWarning(element, "Your library should require the " + permissionQualifiedName + " permission.");
+			} else {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "Your application must require the " + permissionQualifiedName + " permission.");
+			}
 		}
 	}
 
