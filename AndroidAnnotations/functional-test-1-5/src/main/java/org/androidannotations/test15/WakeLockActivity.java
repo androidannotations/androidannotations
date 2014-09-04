@@ -17,6 +17,7 @@ package org.androidannotations.test15;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.WakeLock;
+import org.androidannotations.annotations.WakeLock.Flag;
 import org.androidannotations.annotations.WakeLock.Level;
 
 import android.app.Activity;
@@ -24,9 +25,36 @@ import android.app.Activity;
 @EActivity
 public class WakeLockActivity extends Activity {
 
-	@WakeLock(level = Level.PARTIAL_WAKE_LOCK)
-	public void useWakeLock(Callback callback) {
-		callback.onCall();
+	@WakeLock
+	public void useWakeLockDefaultValues(Callback callback) {
+		if (callback != null) {
+			callback.onCall();
+		}
+	}
+	
+	@WakeLock(level = Level.FULL_WAKE_LOCK)
+	public void useWakeLockCustomLevel() {
+		
+	}
+	
+	@WakeLock(flags = Flag.ACQUIRE_CAUSES_WAKEUP)
+	public void useWakeLockCustomFlag() {
+		
+	}
+	
+	@WakeLock(flags = { Flag.ACQUIRE_CAUSES_WAKEUP, Flag.ON_AFTER_RELEASE})
+	public void useWakeLockMultipleFlags() {
+		
+	}
+	
+	@WakeLock(level = Level.FULL_WAKE_LOCK, flags = Flag.ACQUIRE_CAUSES_WAKEUP)
+	public void useWakeLockCustomLevelAndFlag() {
+		
+	}
+	
+	@WakeLock(tag = "HelloWakeLock")
+	public void useWakeLockCustomTag() {
+		
 	}
 
 	public interface Callback {
