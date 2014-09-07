@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>androidannotations-parent</artifactId>
 		<groupId>org.androidannotations</groupId>
-		<version>3.1-SNAPSHOT</version>
+		<version>3.1</version>
 	</parent>
 
 	<artifactId>functional-test-1-5</artifactId>
@@ -163,7 +163,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
