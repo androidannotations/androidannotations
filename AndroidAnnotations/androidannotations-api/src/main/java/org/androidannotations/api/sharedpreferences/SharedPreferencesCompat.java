@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,42 +17,74 @@ package org.androidannotations.api.sharedpreferences;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 
 /**
- * Reflection utils to call SharedPreferences$Editor.apply when possible,
- * falling back to commit when apply isn't available.
+ * Reflection utils to call most efficient methods of SharedPreferences and
+ * SharedPreferences$Editor or fall back to another implementations.
  */
 public abstract class SharedPreferencesCompat {
 
 	private SharedPreferencesCompat() {
 	}
 
-	private static final Method sApplyMethod = findApplyMethod();
+	private static final Method sApplyMethod = findMethod(SharedPreferences.Editor.class, "apply");
+	private static final Method sGetStringSetMethod = findMethod(SharedPreferences.class, "getStringSet", String.class, Set.class);
+	private static final Method sPutStringSetMethod = findMethod(SharedPreferences.Editor.class, "putStringSet", String.class, Set.class);
 
-	private static Method findApplyMethod() {
+	public static void apply(SharedPreferences.Editor editor) {
 		try {
-			Class<Editor> cls = SharedPreferences.Editor.class;
-			return cls.getMethod("apply");
+			invoke(sApplyMethod, editor);
+			return;
+		} catch (NoSuchMethodException e) {
+			editor.commit();
+		}
+	}
+
+	public static Set<String> getStringSet(SharedPreferences preferences, String key, Set<String> defValues) {
+		try {
+			return invoke(sGetStringSetMethod, preferences, key, defValues);
+		} catch (NoSuchMethodException e) {
+			String serializedSet = preferences.getString(key, null);
+			return SetXmlSerializer.deserialize(serializedSet);
+		}
+	}
+
+	public static void putStringSet(SharedPreferences.Editor editor, String key, Set<String> values) {
+		try {
+			invoke(sPutStringSetMethod, editor, key, values);
+		} catch (NoSuchMethodException e1) {
+			editor.putString(key, SetXmlSerializer.serialize(values));
+		}
+	}
+
+	private static Method findMethod(Class<?> clazz, String name, Class<?>... parameterTypes) {
+		try {
+			return clazz.getMethod(name, parameterTypes);
 		} catch (NoSuchMethodException unused) {
 			// fall through
 		}
 		return null;
 	}
 
-	public static void apply(SharedPreferences.Editor editor) {
-		if (sApplyMethod != null) {
-			try {
-				sApplyMethod.invoke(editor);
-				return;
-			} catch (InvocationTargetException unused) {
-				// fall through
-			} catch (IllegalAccessException unused) {
-				// fall through
-			}
+	@SuppressWarnings("unchecked")
+	public static <T> T invoke(Method method, Object obj, Object... args) throws NoSuchMethodException {
+		if (method == null) {
+			throw new NoSuchMethodException();
 		}
-		editor.commit();
+
+		try {
+			return (T) method.invoke(obj, args);
+		} catch (IllegalAccessException e) {
+			// fall through
+		} catch (IllegalArgumentException e) {
+			// fall through
+		} catch (InvocationTargetException e) {
+			// fall through
+		}
+
+		throw new NoSuchMethodException(method.getName());
 	}
 }

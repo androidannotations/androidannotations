@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,17 +21,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on a method that must respond to a specific action in an
  * {@link EIntentService} annotated class. The method name will be used as
  * action name unless the {@link #value()} field is set.
- * <p/ >
+ * </p>
+ * <p>
  * The method signature (ie with attributes) will be a part of the IntentBuilder
  * generated for the {@link EIntentService}.
- * <p/>
+ * </p>
+ * <p>
  * The method could contain any type or parameters.
- * <p/>
+ * </p>
+ * <p>
  * The class MAY contain several {@link ServiceAction} annotated methods.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :
@@ -43,7 +47,7 @@ import java.lang.annotation.Target;
  * 	public void launchAction() {
  * 		// Note the use of generated class instead of original one
  * 		MyIntentService_.intent(this)
- * 				.<b>myAction</b>("test", 10L)
+ * 				.&lt;b&gt;myAction&lt;/b&gt;("test", 10L)
  * 				.start();
  * 	}
  * 
@@ -58,7 +62,7 @@ import java.lang.annotation.Target;
  * 	}
  * 
  * 	&#064;ServiceAction
- * 	void <b>myAction</b>(String valueString, long valueLong) {
+ * 	void &lt;b&gt;myAction&lt;/b&gt;(String valueString, long valueLong) {
  * 		// ...
  * 	}
  * }
@@ -75,6 +79,8 @@ public @interface ServiceAction {
 	/**
 	 * Define the action's name. If this field isn't set the annotated method
 	 * name will be used.
+	 *
+	 * @return the action's name
 	 */
 	String value() default "";
 

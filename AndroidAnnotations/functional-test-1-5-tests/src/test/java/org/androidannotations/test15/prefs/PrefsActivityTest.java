@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,22 @@
  */
 package org.androidannotations.test15.prefs;
 
-import static org.fest.assertions.Assertions.assertThat;
-
+import android.content.SharedPreferences;
+import org.androidannotations.api.sharedpreferences.SetXmlSerializer;
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import android.content.SharedPreferences;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
+import static org.fest.assertions.Assertions.assertThat;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
 
 	private PrefsActivity_ activity;
@@ -35,8 +40,7 @@ public class PrefsActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new PrefsActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(PrefsActivity_.class).create().get();
 		somePrefs = activity.somePrefs;
 		sharedPref = somePrefs.getSharedPreferences();
 	}
@@ -49,6 +53,11 @@ public class PrefsActivityTest {
 	@Test
 	public void sharedPrefsNotNull() {
 		assertThat(sharedPref).isNotNull();
+	}
+
+	@Test
+	public void innerPrefsNotNull() {
+		assertThat(activity.innerPrefs).isNotNull();
 	}
 
 	@Test
@@ -68,6 +77,13 @@ public class PrefsActivityTest {
 		long now = System.currentTimeMillis();
 		somePrefs.lastUpdated().put(now);
 		assertThat(sharedPref.getLong("lastUpdated", 0)).isEqualTo(now);
+	}
+
+	@Test
+	public void putStringSet() {
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		somePrefs.types().put(values);
+		assertThat(sharedPref.getStringSet("types", null)).isEqualTo(values);
 	}
 
 	@Test
@@ -149,6 +165,24 @@ public class PrefsActivityTest {
 	}
 
 	@Test
+	public void getStringSetCompat() {
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		
+		sharedPref.edit().putString("types", SetXmlSerializer.serialize(values)).commit();
+		
+		assertThat(somePrefs.types().get()).isEqualTo(values);
+	}
+
+	@Test
+	public void getStringSet() {
+		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
+		
+		sharedPref.edit().putStringSet("types", values).commit();
+		
+		assertThat(somePrefs.types().get()).isEqualTo(values);
+	}
+	
+	@Test
 	public void defaultValue() {
 		assertThat(somePrefs.name().get()).isEqualTo("John");
 	}
@@ -166,4 +200,27 @@ public class PrefsActivityTest {
 		assertThat(sharedPref.contains("name")).isFalse();
 	}
 
+	@Test
+	public void stringResourcePrefKey() {
+		somePrefs.stringResKeyPref().put(88);
+		assertThat(sharedPref.getInt(activity.getString(R.string.prefStringKey), 0)).isEqualTo(88);
+	}
+
+	@Test
+	public void setStringInIntFieldAndGetInt() {
+		sharedPref.edit().putString("age", "18").commit();
+		assertThat(somePrefs.age().get()).isEqualTo(18);
+	}
+
+	@Test
+	public void setStringInFloatFieldAndGetFloat() {
+		sharedPref.edit().putString("ageFloat", "6.1").commit();
+		assertThat(somePrefs.ageFloat().get()).isEqualTo(6.1f);
+	}
+
+	@Test
+	public void setStringInLongFieldAndGetLong() {
+		sharedPref.edit().putString("ageLong", "90211105578124").commit();
+		assertThat(somePrefs.ageLong().get()).isEqualTo(90211105578124l);
+	}
 }

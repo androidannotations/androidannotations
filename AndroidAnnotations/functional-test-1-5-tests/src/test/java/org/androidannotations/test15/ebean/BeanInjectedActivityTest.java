@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,18 +20,17 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class BeanInjectedActivityTest {
 	
 	private BeanInjectedActivity_ activity;
 
 	@Before
 	public void setup() {
-		activity = new BeanInjectedActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
 	}
 
 	@Test
@@ -53,8 +52,7 @@ public class BeanInjectedActivityTest {
 	public void singleton_dependency_is_same_reference() {
 		SomeSingleton initialDependency = activity.singletonDependency;
 		
-		BeanInjectedActivity_ newActivity = new BeanInjectedActivity_();
-		newActivity.onCreate(null);
+		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
 		
 		assertThat(newActivity.singletonDependency).isSameAs(initialDependency);
 	}

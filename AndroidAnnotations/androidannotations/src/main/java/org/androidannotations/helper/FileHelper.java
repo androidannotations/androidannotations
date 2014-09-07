@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,8 @@ import java.net.URISyntaxException;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.JavaFileObject;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
 
 public class FileHelper {
 
@@ -45,9 +46,9 @@ public class FileHelper {
 	public static Option<FileHolder> findRootProjectHolder(ProcessingEnvironment processingEnv) {
 		Filer filer = processingEnv.getFiler();
 
-		JavaFileObject dummySourceFile;
+		FileObject dummySourceFile;
 		try {
-			dummySourceFile = filer.createSourceFile("dummy" + System.currentTimeMillis());
+			dummySourceFile = filer.createResource(StandardLocation.SOURCE_OUTPUT, "", "dummy" + System.currentTimeMillis());
 		} catch (IOException ignored) {
 			return Option.absent();
 		}

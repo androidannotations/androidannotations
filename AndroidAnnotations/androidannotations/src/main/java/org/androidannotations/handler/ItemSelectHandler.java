@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,11 +15,12 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.lit;
+import com.sun.codemodel.*;
 
-import java.util.List;
+import org.androidannotations.annotations.ItemSelect;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -28,19 +29,9 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.annotations.ItemSelect;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import java.util.List;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr.*;
 
 public class ItemSelectHandler extends AbstractListenerHandler {
 
@@ -67,7 +58,7 @@ public class ItemSelectHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(JMethod listenerMethod, JInvocation itemSelectedCall, List<? extends VariableElement> parameters) {
+	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation itemSelectedCall, List<? extends VariableElement> parameters) {
 		JClass narrowAdapterViewClass = classes().ADAPTER_VIEW.narrow(codeModel().wildcard());
 		JVar onItemClickParentParam = listenerMethod.param(narrowAdapterViewClass, "parent");
 		listenerMethod.param(classes().VIEW, "view");
@@ -95,7 +86,10 @@ public class ItemSelectHandler extends AbstractListenerHandler {
 		}
 
 		onNothingSelectedMethod.param(narrowAdapterViewClass, "parent");
-		JInvocation nothingSelectedCall = onNothingSelectedMethod.body().invoke(getMethodName());
+		JExpression activityRef = holder.getGeneratedClass().staticRef("this");
+
+		JInvocation nothingSelectedCall = invoke(activityRef, getMethodName());
+		onNothingSelectedMethod.body().add(nothingSelectedCall);
 		nothingSelectedCall.arg(JExpr.FALSE);
 		if (hasItemParameter) {
 			if (secondParameterIsInt) {
@@ -124,7 +118,7 @@ public class ItemSelectHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected JType getViewClass() {
+	protected JClass getViewClass() {
 		return classes().ADAPTER_VIEW.narrow(codeModel().wildcard());
 	}
 

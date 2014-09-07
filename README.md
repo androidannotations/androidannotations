@@ -9,4 +9,4 @@ It takes care of the **plumbing**, and lets you concentrate on what's really imp
 
 ### [**Documentation**](https://github.com/excilys/androidannotations/wiki/Home)
 
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/a2b0e064a3f1d4fb3d5406cc596797f2 "githalytics.com")](http://githalytics.com/excilys/androidannotations)
+[![Build Status](https://travis-ci.org/excilys/androidannotations.svg?branch=develop)](https://travis-ci.org/excilys/androidannotations/builds)

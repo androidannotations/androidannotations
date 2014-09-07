@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr._null;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -31,12 +28,14 @@ import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 
-public class EFragmentHandler extends BaseAnnotationHandler<EFragmentHolder> implements GeneratingAnnotationHandler<EFragmentHolder> {
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr._null;
+
+public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentHolder> {
 
 	public EFragmentHandler(ProcessingEnvironment processingEnvironment) {
 		super(EFragment.class, processingEnvironment);
@@ -49,13 +48,13 @@ public class EFragmentHandler extends BaseAnnotationHandler<EFragmentHolder> imp
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.isNotFinal(element, valid);
+		super.validate(element, validatedElements, valid);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.hasEmptyConstructor(element, valid);
+		validatorHelper.isAbstractOrHasEmptyConstructor(element, valid);
 
 		validatorHelper.extendsFragment(element, valid);
 	}

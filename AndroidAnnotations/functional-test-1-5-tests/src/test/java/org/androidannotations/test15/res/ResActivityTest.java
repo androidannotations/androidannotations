@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,29 +19,25 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.content.res.Resources;
 import android.text.Html;
 import android.view.animation.AnimationUtils;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.androidannotations.test15.R;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowHtml;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ResActivityTest {
 
 	private ResActivity_ activity;
 
 	@Before
 	public void setup() {
-		Robolectric.bindShadowClass(ShadowHtml.class);
-		activity = new ResActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(ResActivity_.class).create().get();
 	}
 
 	@Test

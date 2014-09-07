@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,7 +48,7 @@ public class MyFragment extends AbstractFragment {
 	@SystemService
 	ActivityManager activityManager;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
 	
 	@Click

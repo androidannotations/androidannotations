@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,20 +15,14 @@
  */
 package org.androidannotations.test15;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.annotations.ItemLongClick;
-import org.androidannotations.annotations.ItemSelect;
-import org.androidannotations.annotations.ViewById;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import org.androidannotations.annotations.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EActivity(R.layout.item_clicks_handled)
 public class ItemClicksHandledActivity extends Activity {
@@ -114,13 +108,13 @@ public class ItemClicksHandledActivity extends Activity {
 		listViewParametrizedItemClicked = true;
 	}
 
-	@ItemClick
-	public void spinner() {
+	@ItemSelect
+	public void spinner(boolean selected, int position) {
 		spinnerItemClicked = true;
 	}
 
-	@ItemClick
-	public void spinnerWithArgument(String selectedItem) {
+	@ItemSelect
+	public void spinnerWithArgument(boolean selected, String selectedItem) {
 		spinnerWithArgumentSelectedItem = selectedItem;
 	}
 
@@ -139,10 +133,23 @@ public class ItemClicksHandledActivity extends Activity {
 	void listViewWithOneParamItemSelected(boolean selected) {
 		listViewWithOneParamItemSelected = selected;
 	}
+	
+	@ItemSelect(R.id.listView)
+	void onItemSelected(boolean selected, int position) {
+		
+	}
 
 	@ItemLongClick
 	void listViewWithPositionItemLongClicked(int position) {
 
+	}
+
+	@ItemLongClick(R.id.listViewWithArgumentWithParameterType)
+	protected void listViewWithArgumentWithParameterTypeLongClick(ArrayList<String> item) {
+	}
+
+	@ItemLongClick(R.id.listViewWithArgumentWithGenericWildcard)
+	protected void listViewWithArgumentWithGenericWildcardTypeLongClick(ArrayList<?> item) {
 	}
 
 	private List<ArrayList<String>> stringLists() {

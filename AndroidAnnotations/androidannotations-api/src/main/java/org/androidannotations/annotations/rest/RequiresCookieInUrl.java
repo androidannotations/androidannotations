@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,11 +21,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use on {@link Get}, {@link Post}, … annotated methods to inject a cookie in
  * the URI.
- * <p/>
+ * </p>
+ * <p>
  * It works exactly as {@link RequiresCookie} but cookies will be injected in
  * URL's placeholders instead of in headers.
+ * </p>
  * 
  * @see Rest
  * @see RequiresCookie

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,22 +21,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.view.View.OnFocusChangeListener#onFocusChange(android.view.View, boolean)}
  * after focus is changed on the targeted View or subclass of View.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.id.* fields that refers to
  * View or subclasses of View. If not set, the method name will be used as the
  * R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have multiple parameter:
+ * </p>
  * <ul>
  * <li>A {@link android.view.View} parameter to know which view has targeted
  * this event</li>
  * <li>An {@link boolean} to know the view has focus.</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Example :

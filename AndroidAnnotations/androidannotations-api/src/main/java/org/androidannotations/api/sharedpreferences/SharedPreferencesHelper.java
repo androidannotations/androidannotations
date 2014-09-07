@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package org.androidannotations.api.sharedpreferences;
+
+import java.util.Set;
 
 import android.content.SharedPreferences;
 
@@ -39,6 +41,10 @@ public abstract class SharedPreferencesHelper {
 
 	protected StringPrefField stringField(String key, String defaultValue) {
 		return new StringPrefField(sharedPreferences, key, defaultValue);
+	}
+
+	protected StringSetPrefField stringSetField(String key, Set<String> defaultValue) {
+		return new StringSetPrefField(sharedPreferences, key, defaultValue);
 	}
 
 	protected BooleanPrefField booleanField(String key, boolean defaultValue) {

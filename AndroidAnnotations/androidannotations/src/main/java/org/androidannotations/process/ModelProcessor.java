@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,14 +15,7 @@
  */
 package org.androidannotations.process;
 
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-
+import com.sun.codemodel.JCodeModel;
 import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
@@ -33,7 +26,10 @@ import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
 
-import com.sun.codemodel.JCodeModel;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.*;
+import java.util.Set;
+
 
 public class ModelProcessor {
 
@@ -72,34 +68,11 @@ public class ModelProcessor {
 
 		LOGGER.info("Processing root elements");
 
-		for (GeneratingAnnotationHandler generatingAnnotationHandler : annotationHandlers.getGenerating()) {
-			String annotationName = generatingAnnotationHandler.getTarget();
-			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
-
-			if (!annotatedElements.isEmpty()) {
-				LOGGER.debug("Processing root elements {}: {}", generatingAnnotationHandler.getClass().getSimpleName(), annotatedElements);
-			}
-
-			for (Element annotatedElement : annotatedElements) {
-				/*
-				 * We do not generate code for abstract classes, because the
-				 * generated classes are final anyway (we do not want anyone to
-				 * extend them).
-				 */
-				if (!isAbstractClass(annotatedElement)) {
-					TypeElement typeElement = (TypeElement) annotatedElement;
-					GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
-					processHolder.put(annotatedElement, generatedClassHolder);
-					processThrowing(generatingAnnotationHandler, annotatedElement, generatedClassHolder);
-				} else {
-					LOGGER.trace("Skip element {} because it's abstract", annotatedElement);
-				}
-			}
-			/*
-			 * We currently do not take into account class annotations from
-			 * ancestors. We should careful design the priority rules first.
-			 */
-		}
+		/*
+		 * We generate top classes then inner classes, then inner classes of inner classes, etc...
+		 * until there is no more classes to generate.
+		 */
+		while (generateElements(validatedModel,processHolder));
 
 		LOGGER.info("Processing enclosed elements");
 
@@ -174,6 +147,48 @@ public class ModelProcessor {
 		} else {
 			return false;
 		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private boolean generateElements(AnnotationElements validatedModel, ProcessHolder processHolder) throws Exception {
+		boolean isElementRemaining = false;
+		for (GeneratingAnnotationHandler generatingAnnotationHandler : annotationHandlers.getGenerating()) {
+			String annotationName = generatingAnnotationHandler.getTarget();
+			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
+
+			if (!annotatedElements.isEmpty()) {
+				LOGGER.debug("Processing root elements {}: {}", generatingAnnotationHandler.getClass().getSimpleName(), annotatedElements);
+			}
+
+			for (Element annotatedElement : annotatedElements) {
+				/*
+				 * We do not generate code for abstract classes, because the
+				 * generated classes are final anyway (we do not want anyone to
+				 * extend them).
+				 */
+				if (!isAbstractClass(annotatedElement)) {
+					if (processHolder.getGeneratedClassHolder(annotatedElement) == null) {
+						TypeElement typeElement = (TypeElement) annotatedElement;
+						Element enclosingElement = annotatedElement.getEnclosingElement();
+
+						if (typeElement.getNestingKind() == NestingKind.MEMBER && processHolder.getGeneratedClassHolder(enclosingElement) == null) {
+							isElementRemaining = true;
+						} else {
+							GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
+							processHolder.put(annotatedElement, generatedClassHolder);
+							generatingAnnotationHandler.process(annotatedElement, generatedClassHolder);
+						}
+					}
+				}  else {
+					LOGGER.trace("Skip element {} because it's abstract", annotatedElement);
+				}
+			}
+			/*
+			 * We currently do not take into account class annotations from
+			 * ancestors. We should careful design the priority rules first.
+			 */
+		}
+		return isElementRemaining;
 	}
 
 }

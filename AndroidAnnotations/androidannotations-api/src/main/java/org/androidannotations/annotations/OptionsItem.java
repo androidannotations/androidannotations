@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,22 +21,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive click on menu
  * items.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several of R.id.* fields. If not set,
  * the method name will be used as the R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method may return a <code>boolean</code>, void, or a
  * {@link java.lang.Boolean}. If returning void, it will be considered as
  * returning true (ie: the method has handled the event).
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have one parameter:
+ * </p>
  * <ul>
  * <li>A {@link android.view.MenuItem} parameter to know which menu item has
- * been clicked
+ * been clicked</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Example :

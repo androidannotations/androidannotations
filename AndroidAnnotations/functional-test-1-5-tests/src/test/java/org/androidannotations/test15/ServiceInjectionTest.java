@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,36 +17,17 @@ package org.androidannotations.test15;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import android.content.Context;
-
-import com.xtremelabs.robolectric.shadows.ShadowApplication;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ServiceInjectionTest {
-
-	@Before
-	public void setup() throws Exception {
-		Field serviceMapField = ShadowApplication.class
-				.getDeclaredField("SYSTEM_SERVICE_MAP");
-		serviceMapField.setAccessible(true);
-		@SuppressWarnings("unchecked")
-		Map<String, String> SYSTEM_SERVICE_MAP = (Map<String, String>) serviceMapField
-				.get(null);
-
-		SYSTEM_SERVICE_MAP.put(Context.CLIPBOARD_SERVICE, "android.content.ClipboardManager");
-	}
 
 	@Test
 	public void servicesAreInjected() {
-		ActivityWithServices_ activity = new ActivityWithServices_();
-		activity.onCreate(null);
+		ActivityWithServices_ activity = Robolectric.buildActivity(ActivityWithServices_.class).create().get();
 
 		assertThat(activity.windowManager).isNotNull();
 		assertThat(activity.layoutInflater).isNotNull();

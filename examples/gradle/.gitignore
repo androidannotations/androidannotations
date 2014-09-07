@@ -5,6 +5,10 @@ target
 gen
 bin
 
+#Gradle
+build
+.gradle
+
 # Eclipse
 .classpath
 .apt_generated
@@ -18,3 +22,4 @@ org.maven.ide.eclipse.prefs
 *.iws
 *.iml
 *.idea
+local.properties

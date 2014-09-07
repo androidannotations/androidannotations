@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link EActivity} or {@link EFragment} annotated classes to
  * inject one or multiple menus.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.menu.* fields.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> Fragment menus are compounds with parent Activity menus
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

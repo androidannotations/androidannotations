@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,25 +21,31 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link android.view.View} classes to enable usage of
  * AndroidAnnotations.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected beans should go in an {@link AfterInject}
  * annotated method.
- * <p/>
+ * </p>
+ * <p>
  * Any view related code should happen in an {@link AfterViews} annotated
  * method.
- * <p/>
+ * </p>
+ * <p>
  * If the class is abstract, the enhanced view will not be generated. Otherwise,
  * it will be generated as a final class. You can use AndroidAnnotations to
  * create Abstract classes that handle common code.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one of R.layout.* fields. If not set, no
  * content view will be set, and you should inflate the layout yourself by
- * calling View.inflate() method</b>
- * <p/>
+ * calling View.inflate() method
+ * </p>
+ *
  * <blockquote>
- * 
+ *
  * Example :
  * 
  * <pre>
@@ -61,7 +67,7 @@ import java.lang.annotation.Target;
  * @see AfterInject
  * @see AfterViews
  * @see ViewById
- * @see View
+ * @see android.view.View
  * @see <a
  *      href="http://developer.android.com/guide/topics/ui/custom-components.html"
  *      >How to build a custom component.</a>

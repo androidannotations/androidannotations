@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,18 @@
  */
 package org.androidannotations.logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.appender.Appender;
 import org.androidannotations.logger.appender.ConsoleAppender;
 import org.androidannotations.logger.appender.FileAppender;
 import org.androidannotations.logger.appender.MessagerAppender;
 import org.androidannotations.logger.formatter.Formatter;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoggerContext {
 
@@ -70,14 +69,14 @@ public class LoggerContext {
 	}
 
 	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
+		OptionsHelper optionsHelper = new OptionsHelper(processingEnv);
+		resolveLogLevel(optionsHelper);
+		addConsoleAppender(optionsHelper);
+
 		for (Appender appender : appenders) {
 			appender.setProcessingEnv(processingEnv);
 			appender.open();
 		}
-
-		OptionsHelper optionsHelper = new OptionsHelper(processingEnv);
-		resolveLogLevel(optionsHelper);
-		addConsoleAppender(optionsHelper);
 	}
 
 	public void close() {

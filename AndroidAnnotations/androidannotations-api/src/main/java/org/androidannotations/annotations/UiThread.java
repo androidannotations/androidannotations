@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,25 +15,30 @@
  */
 package org.androidannotations.annotations;
 
+import android.os.Handler;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.os.Handler;
-
 /**
+ * <p>
  * Should be used on method that must be run in the Ui thread
- * <p/>
+ * </p>
+ * <p>
  * The annotated method MUST return void and MAY contain parameters.
- * <p/>
+ * </p>
+ * <p>
  * The generated code is based on a local {@link android.os.Handler} instance.
+ * </p>
  * 
  * 
  * <h2>Delay</h2>
+ * <p>
  * Sometimes you may want to delay execution of a Ui thread method. To do so,
  * you should use the {@link #delay()} field.
- * <p/>
+ * </p>
  * <blockquote> <b>Example</b> :
  * 
  * <pre>
@@ -50,11 +55,12 @@ import android.os.Handler;
  * </blockquote>
  * 
  * <h2>Execution flow</h2>
- * <p/>
+ * <p>
  * Prior to 3.0, {@link UiThread} annotated method calls was always added in the
  * handler execution queue to ensure that execution was done in Ui thread. In
  * 3.0, we kept the same behavior for compatibility purpose.
- * <p/>
+ * </p>
+ * <p>
  * But, if you want to optimize UiThread calls, you may want to change
  * {@link #propagation()} value to <code>REUSE</code>. In this configuration,
  * the code will make a direct call to the method if current thread is already
@@ -97,7 +103,7 @@ public @interface UiThread {
 	 * using the handler. The default value is ENQUEUE, which will always call
 	 * the handler.
 	 * 
-	 * @return
+	 * @return whether the method should be posted or executed if it's in the UI thread
 	 */
 	Propagation propagation() default Propagation.ENQUEUE;
 

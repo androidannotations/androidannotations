@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,15 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * This annotation is intended to be used on methods to run it into a database
  * transaction.
- * <p/>
+ * </p>
+ * <p>
  * The method MUST have at least one parameter :
+ * </p>
  * <ul>
  * <li>A {@link android.database.sqlite.SQLiteDatabase} parameter at **FIRST**
  * position</li>
  * </ul>
- * <p/>
  * <blockquote>
  * 
  * Example :

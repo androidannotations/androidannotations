@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,19 +17,19 @@ package org.androidannotations.test15.eviewgroup;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
 import org.androidannotations.test15.EmptyActivityWithoutLayout;
 import org.androidannotations.test15.EmptyActivityWithoutLayout_;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class CustomFrameLayoutTest {
 
 	@Test
 	public void shouldHaveLayoutAfterCreate() {
-		EmptyActivityWithoutLayout activity = new EmptyActivityWithoutLayout_();
+		EmptyActivityWithoutLayout activity = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
 		CustomFrameLayout component = CustomFrameLayout_.build(activity, 0);
 		assertThat(component.subtitle).isNotNull();
 		assertThat(component.tv).isNotNull();

@@ -10,7 +10,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>3.0.1</version>
+	<version>3.1</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -168,7 +168,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>13.0.1</version>
+				<version>15.0</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -180,7 +180,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.2.1</version>
+					<version>2.5</version>
 					<configuration>
 						<mavenExecutorId>forked-path</mavenExecutorId>
 					</configuration>
@@ -193,7 +193,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -290,7 +290,8 @@
 		<connection>scm:git:git@github.com:excilys/androidannotations.git</connection>
 		<developerConnection>scm:git:git@github.com:excilys/androidannotations.git</developerConnection>
 		<url>https://github.com/excilys/androidannotations</url>
-	</scm>
+	  <tag>androidannotations-3.1</tag>
+  </scm>
 
 	<profiles>
 		<profile>

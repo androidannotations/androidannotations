@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,27 +17,30 @@ package org.androidannotations.test15.greendroid;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.androidannotations.test15.R;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import org.androidannotations.test15.R;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MyGreenDroidActivityTest {
+	
+	MyGreenDroidActivity_ activity;
+	
+	@Before
+	public void setup() {
+		activity = Robolectric.buildActivity(MyGreenDroidActivity_.class).create().get();
+	}
 	
 	@Test
 	public void when_layout_defined_then_onCreate_calls_setActionBarContentView_with_layout_id_value() {
-		MyGreenDroidActivity_ activity = new MyGreenDroidActivity_();
-		activity.onCreate(null);
 		assertThat(activity.layoutResID).isEqualTo(R.layout.main);
 	}
 	
 	@Test
 	public void afterViews_method_is_called_in_setActionBarContentView() {
-		MyGreenDroidActivity_ activity = new MyGreenDroidActivity_();
-		activity.onCreate(null);
-		activity.setActionBarContentView(0);
 		assertThat(activity.afterViewsCalled).isTrue();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,27 +15,30 @@
  */
 package org.androidannotations.annotations.rest;
 
+import org.androidannotations.api.rest.RestClientHeaders;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.rest.RestClientHeaders;
-
 /**
+ * <p>
  * Use on {@link Get}, {@link Post}, … annotated methods to use authentication
  * on the request.
- * <p/>
+ * </p>
+ * <p>
  * To set the current authentication object to use, you MUST either let your
  * RestClient interface extends of {@link RestClientHeaders} or add the
  * following method to your interface :
  * <code>void setAuthentication(org.springframework.http.HttpAuthentication auth)</code>.
- * <p/>
+ * </p>
+ * <p>
  * You can also add this specific method for <a
  * href="https://en.wikipedia.org/wiki/Basic_access_authentication">Basic
  * Authentication</a> :
  * <code>setHttpBasicAuth(String username, String password)</code>.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

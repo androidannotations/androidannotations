@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.googlecode.androidannotations</groupId>
+	<groupId>org.androidannotations</groupId>
 	<artifactId>maveneclipse</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>apk</packaging>
@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>4.1.1.4</android.version>
 		<android.platform>16</android.platform>
-		<androidannotations.version>3.0</androidannotations.version>
+		<androidannotations.version>3.0.1</androidannotations.version>
 		<java.version>1.6</java.version>
 	</properties>
 
@@ -51,7 +51,7 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.9.0-rc.3</version>
 				<configuration>
 					<sdk>
 						<platform>${android.platform}</platform>

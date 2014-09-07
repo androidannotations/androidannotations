@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,8 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on Activity classes that use the RoboGuice framework.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :
@@ -67,6 +68,8 @@ public @interface RoboGuice {
 	/**
 	 * The RoboGuice listener classes to bind to this activity. Will add an
 	 * injected listener field to the subclass.
+	 *
+	 * @return The RoboGuice listener classes to bind to this activity
 	 */
 	Class<?>[] value() default {};
 }

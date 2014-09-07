@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,19 +21,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link android.app.Service} classes to enable usage of
  * AndroidAnnotations.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected beans should go in an {@link AfterInject}
  * annotated method.
- * <p/>
+ * </p>
+ * <p>
  * If the class is abstract, the enhanced service will not be generated.
  * Otherwise, it will be generated as a final class. You can use
  * AndroidAnnotations to create Abstract classes that handle common code.
- * <p/>
+ * </p>
+ * <p>
  * The generated class will also contain an IntentBuilder to start service with
  * a fluent API.
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * Example :
@@ -54,7 +59,6 @@ import java.lang.annotation.Target;
  * 
  * }
  * 
- * <pre>
  * &#064;EService
  * public class MyService extends Service {
  * 

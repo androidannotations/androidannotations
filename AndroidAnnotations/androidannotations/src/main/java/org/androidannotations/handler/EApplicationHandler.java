@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,17 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.holder.EApplicationHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 
-public class EApplicationHandler extends BaseAnnotationHandler<EApplicationHolder> implements GeneratingAnnotationHandler<EApplicationHolder> {
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
+public class EApplicationHandler extends BaseGeneratingAnnotationHandler<EApplicationHolder> {
 
 	public EApplicationHandler(ProcessingEnvironment processingEnvironment) {
 		super(EApplication.class, processingEnvironment);
@@ -38,9 +38,9 @@ public class EApplicationHandler extends BaseAnnotationHandler<EApplicationHolde
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.extendsApplication(element, valid);
+		super.validate(element, validatedElements, valid);
 
-		validatorHelper.isNotFinal(element, valid);
+		validatorHelper.extendsApplication(element, valid);
 
 		validatorHelper.applicationRegistered(element, androidManifest, valid);
 	}

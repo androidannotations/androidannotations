@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,29 +15,33 @@
  */
 package org.androidannotations.annotations;
 
+import android.widget.SeekBar;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.widget.SeekBar;
-
 /**
+ * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
  * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStopTrackingTouch(SeekBar seekBar)}
  * when the user has finished to move the cursor of the targeted SeekBar.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value should be one or several R.id.* fields that refers to an
  * android.widget.SeekBar. If not set, the method name will be used as the
  * R.id.* field name.
- * <p/>
+ * </p>
+ * <p>
  * The method MAY have one parameter :
+ * </p>
  * <ul>
  * <li>A {@link android.widget.SeekBar} parameter to determine which view has
  * targeted this event</li>
  * </ul>
- * <p/>
+ *
  * <blockquote>
  * 
  * Example :

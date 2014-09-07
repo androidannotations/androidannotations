@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,8 @@ public interface RestClientErrorHandling {
 	/**
 	 * Sets the error handler called when a rest error occurs.
 	 * 
-	 * @param handler
+	 * @param handler {@link org.androidannotations.api.rest.RestErrorHandler}
+	 *      which handle exception from rest service
 	 */
 	void setRestErrorHandler(RestErrorHandler handler);
 }

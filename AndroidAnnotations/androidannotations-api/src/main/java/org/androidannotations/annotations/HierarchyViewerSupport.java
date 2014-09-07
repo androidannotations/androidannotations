@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,14 +21,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on {@link EActivity} classes to enable the use of <a href=
  * "https://developer.android.com/tools/debugging/debugging-ui.html#HierarchyViewer"
  * >HierarchyViewer</a> inside the application.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> To use this annotation, your application must require the
  * INTERNET permission and <code>android:debuggable</code> must be set to true
  * in the AndroidManifest.xml
- * <p/>
+ * </p>
+ *
  * <blockquote>
  * 
  * Example :

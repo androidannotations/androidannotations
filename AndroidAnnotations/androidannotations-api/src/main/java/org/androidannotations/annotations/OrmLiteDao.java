@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,19 +21,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Use it on fields of any enhanced class to injects an OrmLite Dao, configured
  * with the provided mode and helper classes.
- * <p/>
+ * </p>
+ * <p>
  * All parameters are mandatory:
+ * </p>
  * <ul>
  * <li><i>helper</i>: should hold the class of your database helper which should
- * extend {@link com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper}</li>
+ * extend com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper</li>
  * <li><i>model</i>: should point to the model class that the DAO relates to. It
  * should match the type of the first generic parameter of your Dao.</li>
  * </ul>
- * <p/>
+ * <p>
  * <b>Note:</b> The minimum version required of ORMLite is 4.21
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :
@@ -59,6 +62,7 @@ public @interface OrmLiteDao {
 
 	Class<?> helper();
 
-	Class<?> model();
+	@Deprecated
+	Class<?> model() default Void.class;
 
 }

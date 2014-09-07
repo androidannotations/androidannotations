@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,31 +21,38 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Should be used on custom classes to enable usage of AndroidAnnotations.
- * <p/>
+ * </p>
+ * <p>
  * This class MUST have either a default constructor (ie without parameters) or
- * a constructor with only a parameter of type {@link android.app.Context}.
- * <p/>
+ * a constructor with only a parameter of type {@link android.content.Context}.
+ * </p>
+ * <p>
  * Your code related to injected beans should go in an {@link AfterInject}
  * annotated method.
- * <p/>
+ * </p>
+ * <p>
  * If the class is abstract, the enhanced bean will not be generated. Otherwise,
  * it will be generated as a final class. You can use AndroidAnnotations to
  * create Abstract classes that handle common code.
- * <p/>
+ * </p>
+ * <p>
  * Most annotations are supported in {@link EBean} classes, except the ones
  * related to extras. Views related annotations will only work if the bean was
  * injected in an activity with a layout containing the views you're dealing
- * with. If your bean needs a {@link android.app.Context} you can inject on by
+ * with. If your bean needs a {@link android.content.Context} you can inject on by
  * using an {@link RootContext} annotated field.
- * <p/>
+ * </p>
+ * <p>
  * Beans have two possible scopes : default or singleton. Default scope should
  * be preferred but in some case it may be useful to use a singleton scope
  * (mainly if you want to keep some runtime state in your bean).
- * <p/>
+ * </p>
+ * <p>
  * The enhanced bean can also be injected in any enhanced class by using
  * {@link Bean} annotation.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

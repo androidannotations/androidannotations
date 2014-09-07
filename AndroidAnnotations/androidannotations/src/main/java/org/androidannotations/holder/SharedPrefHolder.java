@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,10 @@
  */
 package org.androidannotations.holder;
 
+import com.sun.codemodel.*;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,21 +33,10 @@ import org.androidannotations.api.sharedpreferences.IntPrefEditorField;
 import org.androidannotations.api.sharedpreferences.LongPrefEditorField;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
+import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
 
 public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
@@ -67,61 +58,63 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 			put("int", new EditorFieldHolder(IntPrefEditorField.class, "intField"));
 			put("long", new EditorFieldHolder(LongPrefEditorField.class, "longField"));
 			put(CanonicalNameConstants.STRING, new EditorFieldHolder(StringPrefEditorField.class, "stringField"));
+			put(CanonicalNameConstants.STRING_SET, new EditorFieldHolder(StringSetPrefEditorField.class, "stringSetField"));
 		}
 	};
 
+	private JMethod constructor;
 	private JBlock constructorSuperBlock;
 	private JVar constructorContextParam;
 	private JFieldVar contextField;
 	private JDefinedClass editorClass;
+	private JFieldVar editorContextField;
+	private JMethod editorConstructor;
+	private JInvocation editMethodEditorInvocation;
 
 	public SharedPrefHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-
 		createEditorClass();
 		createEditMethod();
 	}
 
 	@Override
-	protected void setGeneratedClass() throws Exception {
-		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
-		String subComponentQualifiedName = annotatedComponentQualifiedName + ModelConstants.GENERATION_SUFFIX;
-		generatedClass = codeModel()._class(PUBLIC | FINAL, subComponentQualifiedName, ClassType.CLASS);
+	protected void setExtends() {
 		generatedClass._extends(SharedPreferencesHelper.class);
 	}
 
 	private void createEditorClass() throws JClassAlreadyExistsException {
 		String interfaceSimpleName = annotatedElement.getSimpleName().toString();
-		editorClass = generatedClass._class(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
+		editorClass = generatedClass._class(PUBLIC | STATIC | FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
 		editorClass._extends(processHolder.refClass(EditorHelper.class).narrow(editorClass));
 
 		createEditorConstructor();
 	}
 
 	private void createEditorConstructor() {
-		JMethod editorConstructor = editorClass.constructor(JMod.NONE);
+		editorConstructor = editorClass.constructor(JMod.NONE);
 		JClass sharedPreferencesClass = processHolder.refClass("android.content.SharedPreferences");
 		JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
 		editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
 	}
 
 	private void createEditMethod() {
-		JMethod editMethod = generatedClass.method(JMod.PUBLIC, editorClass, "edit");
-		editMethod.body()._return(JExpr._new(editorClass).arg(JExpr.invoke("getSharedPreferences")));
+		JMethod editMethod = generatedClass.method(PUBLIC, editorClass, "edit");
+		editMethodEditorInvocation = JExpr._new(editorClass).arg(JExpr.invoke("getSharedPreferences"));
+		editMethod.body()._return(editMethodEditorInvocation);
 	}
 
-	public void createFieldMethod(Class<?> prefFieldHelperClass, String fieldName, String fieldHelperMethodName, JExpression defaultValue) {
-		JMethod fieldMethod = generatedClass.method(JMod.PUBLIC, prefFieldHelperClass, fieldName);
-		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(fieldName).arg(defaultValue));
+	public void createFieldMethod(Class<?> prefFieldHelperClass, JExpression keyExpression, String fieldName, String fieldHelperMethodName, JExpression defaultValue) {
+		JMethod fieldMethod = generatedClass.method(PUBLIC, prefFieldHelperClass, fieldName);
+		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(keyExpression).arg(defaultValue));
 	}
 
-	public void createEditorFieldMethods(ExecutableElement method) {
+	public void createEditorFieldMethods(ExecutableElement method, JExpression keyExpression) {
 		String returnType = method.getReturnType().toString();
 		EditorFieldHolder editorFieldHolder = EDITOR_FIELD_BY_TYPE.get(returnType);
 		JClass editorFieldClass = processHolder.refClass(editorFieldHolder.fieldClass);
 		String fieldName = method.getSimpleName().toString();
-		JMethod editorFieldMethod = editorClass.method(JMod.PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
-		editorFieldMethod.body()._return(JExpr.invoke(editorFieldHolder.fieldMethodName).arg(fieldName));
+		JMethod editorFieldMethod = editorClass.method(PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
+		editorFieldMethod.body()._return(JExpr.invoke(editorFieldHolder.fieldMethodName).arg(keyExpression));
 	}
 
 	public JBlock getConstructorSuperBlock() {
@@ -138,12 +131,18 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		return constructorContextParam;
 	}
 
+	public JMethod getConstructor() {
+		if (constructor == null) {
+			setConstructor();
+		}
+		return constructor;
+	}
+
 	private void setConstructor() {
-		JMethod constructor = generatedClass.constructor(JMod.PUBLIC);
+		constructor = generatedClass.constructor(PUBLIC);
 		constructorContextParam = constructor.param(classes().CONTEXT, "context");
 		JBlock constructorBody = constructor.body();
 		constructorSuperBlock = constructorBody.block();
-		constructorBody.assign(JExpr._this().ref(getContextField()), constructorContextParam);
 	}
 
 	public JFieldVar getContextField() {
@@ -155,5 +154,20 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
 	protected void setContextField() {
 		contextField = generatedClass.field(JMod.PRIVATE, classes().CONTEXT, "context_");
+		getConstructor().body().assign(JExpr._this().ref(contextField), getConstructorContextParam());
+	}
+
+	public JFieldVar getEditorContextField() {
+		if (editorContextField == null) {
+			setEditorContextField();
+		}
+		return editorContextField;
+	}
+
+	protected void setEditorContextField() {
+		editorContextField = editorClass.field(JMod.PRIVATE, classes().CONTEXT, "context_");
+		JVar contextParam = editorConstructor.param(classes().CONTEXT, "context");
+		editorConstructor.body().assign(JExpr._this().ref(editorContextField), contextParam);
+		editMethodEditorInvocation.arg(getContextField());
 	}
 }

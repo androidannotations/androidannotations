@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,6 +45,10 @@ public abstract class EditorHelper<T extends EditorHelper<T>> {
 
 	protected StringPrefEditorField<T> stringField(String key) {
 		return new StringPrefEditorField<T>(cast(), key);
+	}
+
+	protected StringSetPrefEditorField<T> stringSetField(String key) {
+		return new StringSetPrefEditorField<T>(cast(), key);
 	}
 
 	protected BooleanPrefEditorField<T> booleanField(String key) {

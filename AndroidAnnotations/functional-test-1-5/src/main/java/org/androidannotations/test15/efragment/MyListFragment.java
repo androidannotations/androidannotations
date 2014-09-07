@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,11 @@
  */
 package org.androidannotations.test15.efragment;
 
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.IgnoredWhenDetached;
 import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.test15.R;
 
@@ -33,6 +36,8 @@ public class MyListFragment extends ListFragment {
 	@ViewById(value=android.R.id.list)
 	ListView list;
 
+	boolean didExecute;
+
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -43,6 +48,37 @@ public class MyListFragment extends ListFragment {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		list.setAdapter(adapter);
+	}
+
+	@UiThread
+	void uiThread() {
+		didExecute = true;
+	}
+
+	@UiThread(propagation = UiThread.Propagation.REUSE)
+	@IgnoredWhenDetached
+	void uiThreadIgnored() {
+		didExecute = true;
+	}
+
+	@Background
+	void backgroundThread() {
+		didExecute = true;
+	}
+
+	@Background
+	@IgnoredWhenDetached
+	void backgroundThreadIgnored() {
+		didExecute = true;
+	}
+
+	@IgnoredWhenDetached
+	void ignored() {
+		didExecute = true;
+	}
+
+	void notIgnored() {
+		didExecute = true;
 	}
 
 	@ItemClick

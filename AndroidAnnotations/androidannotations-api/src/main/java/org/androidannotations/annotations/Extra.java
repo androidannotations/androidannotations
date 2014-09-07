@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,31 +15,36 @@
  */
 package org.androidannotations.annotations;
 
+import android.app.Activity;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import android.app.Activity;
-import android.os.Parcelable;
-
 /**
+ * <p>
  * Use on any native, {@link Parcelable} or {@link Serializable} field in an
  * {@link EActivity} annotated class to bind it with Android's extra.
- * <p/>
+ * </p>
+ * <p>
  * The annotation value is the key used for extra. If not set, the field name
  * will be used as the key.
- * <p/>
+ * </p>
+ * <p>
  * When {@link Extra} is used, the intent builder will hold dedicated methods
  * for each annotated fields.
- * <p/>
+ * </p>
+ * <p>
  * Your code related to injected extra should go in an {@link AfterInject}
  * annotated method.
- * <p/>
+ * </p>
+ * <p>
  * Calling {@link Activity#setIntent(android.content.Intent)} will automatically
  * update the annotated extras.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

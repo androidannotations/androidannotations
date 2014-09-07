@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,10 +26,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.database.sqlite.SQLiteDatabase;
 
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TransactionalActivityTest {
 
 	private SQLiteDatabase mockDb;
@@ -37,8 +39,7 @@ public class TransactionalActivityTest {
 
 	@Before
 	public void setup() {
-		activity = new TransactionalActivity_();
-		activity.onCreate(null);
+		activity = Robolectric.buildActivity(TransactionalActivity_.class).create().get();
 		mockDb = mock(SQLiteDatabase.class);
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,6 +33,8 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesCompat;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
+import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
+import org.androidannotations.api.sharedpreferences.StringSetPrefField;
 import org.androidannotations.manifest.SomeClass;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
@@ -54,7 +56,9 @@ public class SharedPrefsApiDependenciesTest extends AAProcessorTestHelper {
 			SharedPreferencesCompat.class,//
 			SharedPreferencesHelper.class,//
 			StringPrefEditorField.class,//
-			StringPrefField.class //
+			StringPrefField.class, //
+			StringSetPrefEditorField.class,//
+			StringSetPrefField.class //
 	};
 
 	@Before

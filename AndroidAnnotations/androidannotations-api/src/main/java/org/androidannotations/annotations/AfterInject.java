@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,15 +21,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Methods annotated with @{@link AfterInject} will be called after the
  * constructor is called in an enhanced class. Any code depending on injected
  * fields should be done in an {@link AfterInject} annotated method.
- * <p/>
+ * </p>
+ * <p>
  * The method MUST have zero parameters.
- * <p/>
+ * </p>
+ * <p>
  * There MAY be several methods annotated with @{@link AfterInject} in the same
  * class.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * Example :

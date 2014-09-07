@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,35 +15,24 @@
  */
 package org.androidannotations.test15.instancestate;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import android.os.Bundle;
 
-import org.androidannotations.test15.AndroidAnnotationsTestRunner;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.CustomShadowBundle;
-
-@RunWith(AndroidAnnotationsTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class SaveInstanceStateActivityTest {
-
-	@Before
-	public void setup() throws Exception {
-		Robolectric.bindShadowClass(CustomShadowBundle.class);
-	}
 
 	@Test
 	public void can_create_with_empty_bundle() {
-		SaveInstanceStateActivity_ activity = new SaveInstanceStateActivity_();
-		Bundle emptyBundle = new Bundle();
-		activity.onCreate(emptyBundle);
+		Robolectric.buildActivity(SaveInstanceStateActivity_.class).create(new Bundle());
 	}
 
 	@Test
 	public void can_create_without_saved_state() {
-		SaveInstanceStateActivity_ activity = new SaveInstanceStateActivity_();
-		activity.onCreate(null);
+		Robolectric.buildActivity(SaveInstanceStateActivity_.class).create();
 	}
 
 }

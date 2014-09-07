@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,19 +21,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Apply @{@link Rest} on an interface to create a RestService class that will
  * contain implementation of rest calls related to the methods you define in the
  * interface.
- * <p/>
+ * </p>
+ * <p>
  * You should then inject your RestService class by using {@link RestService}
  * annotation in any enhanced classes.
- * <p/>
+ * </p>
+ * <p>
  * <b>Note:</b> Implementation is based on <a href=
  * "http://docs.spring.io/spring-android/docs/current/reference/htmlsingle/"
  * >Spring Android Rest-template</a> library. So you <b>MUST</b> have the
  * library in your classpath and we highly recommend you to take some time to
  * read this document and understand how the library works.
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

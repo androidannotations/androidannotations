@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,12 +22,14 @@ import java.lang.annotation.Target;
 import java.util.Set;
 
 /**
+ * <p>
  * Use on methods in {@link Rest} annotated class to add a new rest service of
  * type OPTIONS.
- * <p/>
+ * </p>
+ * <p>
  * This annotation as the same constraints as {@link Get} but it MUST return a
  * {@link Set} of {@link org.springframework.http.HttpMethod}
- * <p/>
+ * </p>
  * <blockquote>
  * 
  * <b>Example :</b>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2013 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,10 @@ import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
 import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -40,6 +44,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
@@ -79,22 +84,29 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JInvocation currentTimeInvoke = classes().SYSTEM.staticInvoke("currentTimeMillis");
 		JBlock _thenBody = ifStatement._then();
-		JVar startDeclaration = _thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
-
-		String methodName = "[" + element.toString() + "]";
 
 		// Log In
 		String logMethodName = logMethodNameFromLevel(level);
 		JInvocation logEnterInvoke = classes().LOG.staticInvoke(logMethodName);
 		logEnterInvoke.arg(tag);
 
-		JExpression enterMessage = JExpr.lit("Entering " + methodName);
-		logEnterInvoke.arg(enterMessage);
+		logEnterInvoke.arg(getEnterMessage(method, executableElement));
 		_thenBody.add(logEnterInvoke);
+		JVar startDeclaration = _thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
 
-		JTryBlock tryBlock = _thenBody._try();
+		JTryBlock tryBlock;
 
-		tryBlock.body().add(previousMethodBody);
+		JVar result = null;
+		if (method.type().fullName().equals("void")) {
+			tryBlock = _thenBody._try();
+			tryBlock.body().add(previousMethodBody);
+		} else {
+			JInvocation superCall = codeModelHelper.getSuperCall(holder, method);
+			result = _thenBody.decl(refClass(Object.class), "result", JExpr._null());
+			tryBlock = _thenBody._try();
+			tryBlock.body().assign(result, superCall);
+			tryBlock.body()._return(JExpr.cast(boxify(method.type()), result));
+		}
 
 		JBlock finallyBlock = tryBlock._finally();
 
@@ -103,13 +115,87 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		JInvocation logExitInvoke = classes().LOG.staticInvoke(logMethodName);
 		logExitInvoke.arg(tag);
 
-		JExpression exitMessage = JExpr.lit("Exiting " + methodName + ", duration in ms: ").plus(durationDeclaration);
-		logExitInvoke.arg(exitMessage);
+		logExitInvoke.arg(getExitMessage(executableElement, method, result, durationDeclaration));
 		finallyBlock.add(logExitInvoke);
 
 		JBlock elseBlock = ifStatement._else();
 
 		elseBlock.add(previousMethodBody);
+	}
+
+	private JClass boxify(JType type) throws ClassNotFoundException {
+		return codeModel().parseType(type.fullName()).boxify();
+	}
+
+	private JExpression getExitMessage(ExecutableElement element, JMethod method, JVar result, JVar duration) throws ClassNotFoundException {
+		String methodName = getMethodName(element);
+
+		List<JVar> params = method.params();
+		StringBuilder paramStr = new StringBuilder();
+		for (int i = 0; i < params.size(); i++) {
+			if (i > 0) {
+				paramStr.append(", ");
+			}
+			JVar var = params.get(i);
+			paramStr.append(var.type().name());
+		}
+
+		methodName += "(" + paramStr.toString() + ")";
+
+		JInvocation format = refClass(String.class).staticInvoke("format");
+		if (result == null) {
+			format.arg("Exiting [" + methodName + "], duration in ms: %d");
+		} else {
+			format.arg("Exiting [" + methodName + " returning: %s], duration in ms: %d");
+			if (method.type().isArray()) {
+				JClass arraysClass = refClass(Arrays.class);
+				format.arg(arraysClass.staticInvoke("toString").arg(JExpr.cast(boxify(method.type()), result)));
+			} else {
+				format.arg(result);
+			}
+		}
+
+		return format.arg(duration);
+	}
+
+	private JExpression getEnterMessage(JMethod method, ExecutableElement element) {
+		String methodName = getMethodName(element);
+
+		List<JVar> params = method.params();
+		if (params.isEmpty()) {
+			// early exit if the method has no parameters
+			return JExpr.lit("Entering [" + methodName + "()]");
+		}
+
+		JClass arraysClass = refClass(Arrays.class);
+		StringBuilder paramStr = new StringBuilder();
+		List<JExpression> paramExpressions = new ArrayList<JExpression>();
+		for (int i = 0; i < params.size(); i++) {
+			if (i > 0) {
+				paramStr.append(", ");
+			}
+			JVar var = params.get(i);
+			paramStr.append(var.name()).append(" = %s");
+			if (var.type().isArray()) {
+				paramExpressions.add(arraysClass.staticInvoke("toString").arg(var));
+			} else {
+				paramExpressions.add(var);
+			}
+		}
+
+		JInvocation format = refClass(String.class).staticInvoke("format");
+		format.arg(JExpr.lit("Entering [" + methodName + "(" + paramStr + ")]"));
+		for (JExpression expr : paramExpressions) {
+			format.arg(expr);
+		}
+
+		return format;
+	}
+
+	private String getMethodName(ExecutableElement element) {
+		String returnType = element.getReturnType().toString();
+		String simpleName = element.getSimpleName().toString();
+		return returnType + " " + simpleName;
 	}
 
 	private String logMethodNameFromLevel(int level) {
