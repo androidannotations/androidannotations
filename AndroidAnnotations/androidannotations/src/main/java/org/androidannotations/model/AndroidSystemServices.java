@@ -65,6 +65,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.net.wifi.WifiManager", "android.content.Context.WIFI_SERVICE");
 		registeredServices.put("android.net.wifi.p2p.WifiP2pManager", "android.content.Context.WIFI_P2P_SERVICE");
 		registeredServices.put("android.view.WindowManager", "android.content.Context.WINDOW_SERVICE");
+		registeredServices.put("android.bluetooth.BluetoothManager", "android.content.Context.BLUETOOTH_SERVICE");
 	}
 
 	public boolean contains(TypeMirror serviceType) {
