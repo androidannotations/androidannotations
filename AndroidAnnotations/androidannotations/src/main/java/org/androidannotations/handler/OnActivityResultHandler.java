@@ -25,6 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import android.content.Intent;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.Result;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -81,10 +82,10 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		for (VariableElement parameter : parameters) {
 			TypeMirror parameterType = parameter.asType();
 
-			Result annotation = parameter.getAnnotation(Result.class);
-			if (annotation != null) {
-				JExpression extraValue = getExtraValue(holder, onResultBlock, parameter);
-				onResultArgs.add(extraValue);
+			Result resultAnnotation = parameter.getAnnotation(Result.class);
+			if (resultAnnotation != null) {
+				JExpression extraParameter = ResultHandler.getExtraValue(holder, onResultBlock, parameter);
+				onResultArgs.add(extraParameter);
 			} else if (CanonicalNameConstants.INTENT.equals(parameterType.toString())) {
 				JVar intentParameter = holder.getOnActivityResultDataParam();
 				onResultArgs.add(intentParameter);
@@ -102,21 +103,4 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		}
 	}
 
-	private JExpression getExtraValue(HasOnActivityResult holder, JBlock onActivityResultBlock,
-	        VariableElement parameter) {
-		Result annotation = parameter.getAnnotation(Result.class);
-		String extraKey = annotation.value();
-		if (extraKey == null || extraKey.length() == 0) {
-			extraKey = parameter.getSimpleName().toString();
-		}
-
-		JVar extras = holder.getOnActivityResultExtras();
-		BundleHelper bundleHelper = new BundleHelper(new AnnotationHelper(processingEnv), parameter);
-		JExpression restoreMethodCall = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(extraKey);
-		JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType(), holder);
-		if (bundleHelper.restoreCallNeedCastStatement()) {
-			restoreMethodCall = JExpr.cast(parameterClass, restoreMethodCall);
-		}
-		return onActivityResultBlock.decl(parameterClass, extraKey + "_", restoreMethodCall);
-	}
 }
