@@ -41,7 +41,13 @@ import java.lang.annotation.Target;
  * <li>An int parameter to get the actionId</li>
  * <li>A {@link android.view.KeyEvent} parameter</li>
  * </ul>
- *
+ * <p>
+ * The return type of the method can be either <b>void</b> or <b>boolean</b>. In
+ * case of <b>boolean</b>, the value returned from the annotated method will be
+ * returned in the generated listener method (indicating event consumption). If
+ * the annotated method is <b>void</b>, always <b>true</b> will be returned in
+ * the listener method (so the event is consumed).
+ * </p>
  * <blockquote>
  *
  * Examples :
@@ -65,6 +71,12 @@ import java.lang.annotation.Target;
  * &#064;EditorAction(<b>R.id.helloTextView</b>)
  * void onEditorActionsOnHelloTextView() {
  * 	// Something Here
+ * }
+ *
+ * &#064;EditorAction(R.id.helloTextView)
+ * <b>boolean</b> onEditorActionsOnHelloTextView() {
+ * 	// Something Here
+ * 	<b>return false;</b>
  * }
  * </pre>
  *
