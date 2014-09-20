@@ -216,6 +216,13 @@ public class APTCodeModelHelper {
 		return method;
 	}
 
+	public void generifyStaticHelper(GeneratedClassHolder holder, JMethod staticHelper, TypeElement annotatedClass) {
+		for (TypeParameterElement param : annotatedClass.getTypeParameters()) {
+			JClass bounds = typeBoundsToJClass(holder, param.getBounds());
+			staticHelper.generify(param.getSimpleName().toString(), bounds);
+		}
+	}
+
 	private JMethod findAlreadyGeneratedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
 		JDefinedClass definedClass = holder.getGeneratedClass();
 		String methodName = executableElement.getSimpleName().toString();
@@ -503,5 +510,4 @@ public class APTCodeModelHelper {
 			return lit((String) o);
 		}
 	}
-
 }
