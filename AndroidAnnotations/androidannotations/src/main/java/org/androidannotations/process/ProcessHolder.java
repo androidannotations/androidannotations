@@ -106,6 +106,8 @@ public class ProcessHolder {
 		public final JClass VIEW_SERVER = refClass(CanonicalNameConstants.VIEW_SERVER);
 		public final JClass PARCELABLE = refClass(CanonicalNameConstants.PARCELABLE);
 		public final JClass LOOPER = refClass(CanonicalNameConstants.LOOPER);
+		public final JClass POWER_MANAGER = refClass(CanonicalNameConstants.POWER_MANAGER);
+		public final JClass WAKE_LOCK = refClass(CanonicalNameConstants.WAKE_LOCK);
 
 		/*
 		 * Sherlock

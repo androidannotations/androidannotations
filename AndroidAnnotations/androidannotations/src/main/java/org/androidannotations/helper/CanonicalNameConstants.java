@@ -105,11 +105,14 @@ public final class CanonicalNameConstants {
 	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
 	public static final String VIEW_SERVER = "org.androidannotations.api.ViewServer";
 	public static final String LOOPER = "android.os.Looper";
+	public static final String POWER_MANAGER = "android.os.PowerManager";
+	public static final String WAKE_LOCK = "android.os.PowerManager.WakeLock";
 
 	/*
 	 * Android permission
 	 */
 	public static final String INTERNET_PERMISSION = "android.permission.INTERNET";
+	public static final String WAKELOCK_PERMISSION = "android.permission.WAKE_LOCK";
 
 	/*
 	 * Sherlock
