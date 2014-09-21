@@ -42,7 +42,7 @@ public class ActivityWithReceiver extends Activity {
 	}
 
 	@Receiver(actions = "CUSTOM_HTTP_ACTION", dataSchemes = "http", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
-	protected void onDataShemeHttp(Intent intent) {
+	protected void onDataSchemeHttp(Intent intent) {
 		dataSchemeHttpIntentReceived = true;
 	}
 
