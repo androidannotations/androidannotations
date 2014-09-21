@@ -81,6 +81,8 @@ public @interface Receiver {
 
 	String[] actions();
 
+	String[] dataSchemes() default {};
+
 	RegisterAt registerAt() default RegisterAt.OnCreateOnDestroy;
 
 	boolean local() default false;
