@@ -30,7 +30,6 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.HoloEverywhereHelper;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -215,15 +214,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod onCreateView = generatedClass.method(PUBLIC, classes().VIEW, "onCreateView");
 		onCreateView.annotate(Override.class);
 
-		HoloEverywhereHelper holoEverywhereHelper = new HoloEverywhereHelper(this);
-		JClass inflaterClass;
-		if (holoEverywhereHelper.usesHoloEverywhere()) {
-			inflaterClass = classes().HOLO_EVERYWHERE_LAYOUT_INFLATER;
-		} else {
-			inflaterClass = classes().LAYOUT_INFLATER;
-		}
-
-		inflater = onCreateView.param(inflaterClass, "inflater");
+		inflater = onCreateView.param(classes().LAYOUT_INFLATER, "inflater");
 		container = onCreateView.param(classes().VIEW_GROUP, "container");
 
 		JVar savedInstanceState = onCreateView.param(classes().BUNDLE, "savedInstanceState");
