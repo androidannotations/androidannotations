@@ -24,6 +24,7 @@ public class RoboGuiceHolder {
 
 	private EActivityHolder holder;
 	protected JFieldVar scopedObjects;
+	protected JFieldVar scope;
 	protected JFieldVar eventManager;
 	public JFieldVar contentViewListenerField;
 	protected JBlock onRestartBeforeSuperBlock;
@@ -55,6 +56,13 @@ public class RoboGuiceHolder {
 			holder.setScopedObjectsField();
 		}
 		return scopedObjects;
+	}
+
+	public JFieldVar getScopeField() {
+		if (scope == null) {
+			holder.setScopeField();
+		}
+		return scope;
 	}
 
 	public JFieldVar getContentViewListenerField() {

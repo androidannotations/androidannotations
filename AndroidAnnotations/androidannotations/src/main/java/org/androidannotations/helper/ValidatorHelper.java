@@ -678,14 +678,9 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_CONTEXT);
 		}
 
-		try {
-			if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_INJECTOR) == null) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
-			}
-		} catch (RuntimeException e) {
+		if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_APPLICATION) != null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
+			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 2.0!");
 		}
 	}
 
