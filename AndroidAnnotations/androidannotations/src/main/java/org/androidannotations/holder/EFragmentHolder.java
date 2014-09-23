@@ -51,7 +51,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
-public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
+public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration, HasPreferences {
 
 	private JFieldVar contentView;
 	private JBlock setContentViewBlock;
@@ -559,5 +559,10 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
 
 		return databaseHelperRef;
+	}
+
+	@Override
+	public JBlock getPreferenceScreenInitializationBlock() {
+		return getOnCreateAfterSuperBlock();
 	}
 }

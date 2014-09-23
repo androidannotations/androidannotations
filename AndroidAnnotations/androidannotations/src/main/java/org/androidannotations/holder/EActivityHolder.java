@@ -60,7 +60,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
+public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration, HasPreferences {
 
 	private static final String ON_CONTENT_CHANGED_JAVADOC = "We cannot simply copy the " + "code from RoboActivity, because that can cause classpath issues. " + "For further details see issue #1116.";
 
@@ -773,4 +773,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return databaseHelperRef;
 	}
 
+	@Override
+	public JBlock getPreferenceScreenInitializationBlock() {
+		return getInitBody();
+	}
 }
