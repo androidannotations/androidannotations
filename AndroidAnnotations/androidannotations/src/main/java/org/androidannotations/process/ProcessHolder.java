@@ -125,6 +125,7 @@ public class ProcessHolder {
 
 		public final JClass PREFERENCE = refClass(CanonicalNameConstants.PREFERENCE);
 		public final JClass PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.PREFERENCE_CHANGE_LISTENER);
+		public final JClass PREFERENCE_CLICK_LISTENER = refClass(CanonicalNameConstants.PREFERENCE_CLICK_LISTENER);
 
 		/*
 		 * Sherlock

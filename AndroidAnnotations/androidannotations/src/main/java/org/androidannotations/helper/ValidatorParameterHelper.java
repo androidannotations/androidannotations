@@ -98,6 +98,10 @@ public class ValidatorParameterHelper {
 		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.BUNDLE, valid);
 	}
 
+	public void zeroOrOnePreferenceParameter(ExecutableElement executableElement, IsValid valid) {
+		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.PREFERENCE, valid);
+	}
+
 	public void hasOneOrTwoParametersAndFirstIsBoolean(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
