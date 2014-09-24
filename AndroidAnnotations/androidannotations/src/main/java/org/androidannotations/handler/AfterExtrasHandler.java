@@ -49,5 +49,8 @@ public class AfterExtrasHandler extends BaseAnnotationHandler<EActivityHolder> {
 	public void process(Element element, EActivityHolder holder) {
 		String methodName = element.getSimpleName().toString();
 		holder.getInjectExtrasBlock().invoke(methodName);
+
+		// ensure that onNewIntent is overridden
+		holder.getOnNewIntent();
 	}
 }

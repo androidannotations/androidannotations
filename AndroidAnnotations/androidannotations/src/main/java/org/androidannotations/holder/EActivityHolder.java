@@ -64,6 +64,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private ActivityIntentBuilder intentBuilder;
 	private JMethod onCreate;
 	private JMethod setIntent;
+	private JMethod onNewIntentMethod;
 	private JMethod setContentViewLayout;
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
@@ -180,11 +181,12 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	protected void setOnNewIntent() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
-		method.annotate(Override.class);
-		JVar intent = method.param(classes().INTENT, "intent");
-		JBlock body = method.body();
-		body.invoke(_super(), method).arg(intent);
+		onNewIntentMethod = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
+		onNewIntentMethod.annotate(Override.class);
+		JVar intent = onNewIntentMethod.param(classes().INTENT, "intent");
+		JBlock body = onNewIntentMethod.body();
+		body.invoke(_super(), onNewIntentMethod).arg(intent);
+		body.invoke(getSetIntent()).arg(intent);
 		getRoboGuiceHolder().onNewIntentAfterSuperBlock = body.block();
 	}
 
@@ -368,15 +370,15 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 			onKeyDownBody._if( //
 					sdkInt.lt(JExpr.lit(5)) //
-							.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
-							.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
+					.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
+					.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
 					._then() //
 					.invoke("onBackPressed");
 
 			onKeyDownBody._return( //
 					JExpr._super().invoke(onKeyDownMethod) //
-							.arg(keyCodeParam) //
-							.arg(eventParam));
+					.arg(keyCodeParam) //
+					.arg(eventParam));
 
 		}
 	}
@@ -406,7 +408,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 				&& method.getModifiers().contains(Modifier.PUBLIC) //
 				&& method.getReturnType().getKind().equals(TypeKind.VOID) //
 				&& method.getParameters().size() == 0 //
-		;
+				;
 	}
 
 	@Override
@@ -480,6 +482,13 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 		getSetIntent().body().invoke(injectExtrasMethod);
 		getInitBody().invoke(injectExtrasMethod);
+	}
+
+	public JMethod getOnNewIntent() {
+		if (onNewIntentMethod == null) {
+			setOnNewIntent();
+		}
+		return onNewIntentMethod;
 	}
 
 	@Override
