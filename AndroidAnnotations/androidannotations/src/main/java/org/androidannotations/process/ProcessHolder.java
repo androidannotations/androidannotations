@@ -124,6 +124,7 @@ public class ProcessHolder {
 		public final JClass ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ACTIVITY_COMPAT);
 
 		public final JClass PREFERENCE = refClass(CanonicalNameConstants.PREFERENCE);
+		public final JClass PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.PREFERENCE_CHANGE_LISTENER);
 
 		/*
 		 * Sherlock

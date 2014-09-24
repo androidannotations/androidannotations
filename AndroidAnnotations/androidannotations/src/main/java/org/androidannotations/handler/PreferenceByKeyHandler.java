@@ -52,7 +52,7 @@ public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences
 	@Override
 	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validatedElements, valid);
-		validatorHelper.extendsPreferenceActivityOrPreferenceFragment(element.getEnclosingElement(), valid);
+		validatorHelper.enclosingElementExtendsPreferenceActivityOrPreferenceFragment(element, valid);
 
 		validatorHelper.isDeclaredType(element, valid);
 
