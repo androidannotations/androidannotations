@@ -17,15 +17,17 @@ package org.androidannotations.holder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JExpression;
 
-public interface HasPreferences extends GeneratedClassHolder {
+public class FoundPreferenceHolder extends FoundHolder {
 
-	JBlock getPreferenceScreenInitializationBlock();
+	public FoundPreferenceHolder(GeneratedClassHolder holder, JClass type, JExpression ref, JBlock block) {
+		super(holder, type, ref, block);
+	}
 
-	JBlock getAddPreferencesFromResourceBlock();
+	@Override
+	protected JClass getBaseType() {
+		return holder.classes().PREFERENCE;
+	}
 
-	void assignFindPreferenceByKey(JFieldRef idRef, JClass preferenceClass, JFieldRef fieldRef);
-
-	FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass);
 }

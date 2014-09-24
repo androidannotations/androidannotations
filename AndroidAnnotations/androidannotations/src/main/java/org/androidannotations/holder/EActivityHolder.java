@@ -53,6 +53,7 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -75,6 +76,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private OnActivityResultHolder onActivityResultHolder;
 	private ReceiverRegistrationHolder<EActivityHolder> receiverRegistrationHolder;
 	private RoboGuiceHolder roboGuiceHolder;
+	private PreferencesHolder preferencesHolder;
 	private JMethod injectExtrasMethod;
 	private JBlock injectExtrasBlock;
 	private JVar injectExtras;
@@ -102,6 +104,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
 		receiverRegistrationHolder = new ReceiverRegistrationHolder<EActivityHolder>(this);
+		preferencesHolder = new PreferencesHolder(this);
 		setSetContentView();
 		intentBuilder = new ActivityIntentBuilder(this, androidManifest);
 		intentBuilder.build();
@@ -777,4 +780,20 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	public JBlock getPreferenceScreenInitializationBlock() {
 		return getInitBody();
 	}
+
+	@Override
+	public JBlock getAddPreferencesFromResourceBlock() {
+		return preferencesHolder.getAddPreferencesFromResourceBlock();
+	}
+
+	@Override
+	public void assignFindPreferenceByKey(JFieldRef idRef, JClass preferenceClass, JFieldRef fieldRef) {
+		preferencesHolder.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
+	}
+
+	@Override
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass) {
+		return preferencesHolder.getFoundPreferenceHolder(idRef, preferenceClass);
+	}
+
 }

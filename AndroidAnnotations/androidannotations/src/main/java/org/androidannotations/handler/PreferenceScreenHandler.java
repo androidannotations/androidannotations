@@ -15,15 +15,11 @@
  */
 package org.androidannotations.handler;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.PreferenceScreen;
 import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
@@ -34,8 +30,6 @@ import com.sun.codemodel.JFieldRef;
 
 public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreferences> {
 
-	private static final List<String> VALID_SUPER_CLASSES = Arrays.asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT);
-
 	private final AnnotationHelper annotationHelper;
 
 	public PreferenceScreenHandler(ProcessingEnvironment processingEnvironment) {
@@ -45,7 +39,7 @@ public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreference
 
 	@Override
 	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-		validatorHelper.extendsOneOfTypes(element, VALID_SUPER_CLASSES, valid);
+		validatorHelper.extendsPreferenceActivityOrPreferenceFragment(element, valid);
 		validatorHelper.hasEActivityOrEFragment(element, validatedElements, valid);
 		validatorHelper.resIdsExist(element, IRClass.Res.XML, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);
 	}

@@ -115,6 +115,8 @@ public class ValidatorHelper {
 	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy);
 	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
 
+	private static final List<String> VALID_PREFERENCE_CLASSES = asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT);
+
 	protected final TargetAnnotationHelper annotationHelper;
 
 	public final ValidatorParameterHelper param;
@@ -581,6 +583,10 @@ public class ValidatorHelper {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s can only be used on a " + CanonicalNameConstants.LIST + " of elements extending " + CanonicalNameConstants.VIEW);
 		}
+	}
+
+	public void extendsPreference(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.PREFERENCE, valid);
 	}
 
 	public void hasASqlLiteOpenHelperParameterizedType(Element element, IsValid valid) {
@@ -1496,6 +1502,10 @@ public class ValidatorHelper {
 				annotationHelper.printAnnotationError(element, "To use the LocalBroadcastManager, you MUST include the android-support-v4 jar");
 			}
 		}
+	}
+
+	public void extendsPreferenceActivityOrPreferenceFragment(Element element, IsValid valid) {
+		extendsOneOfTypes(element, VALID_PREFERENCE_CLASSES, valid);
 	}
 
 }

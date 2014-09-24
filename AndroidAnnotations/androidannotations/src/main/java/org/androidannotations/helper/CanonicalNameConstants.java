@@ -112,6 +112,7 @@ public final class CanonicalNameConstants {
 	public static final String PREFERENCE_ACTIVITY = "android.preference.PreferenceActivity";
 	public static final String PREFERENCE_FRAGMENT = "android.preference.PreferenceFragment";
 	public static final String ACTIVITY_COMPAT = "android.support.v4.app.ActivityCompat";
+	public static final String PREFERENCE = "android.preference.Preference";
 
 	/*
 	 * Android permission

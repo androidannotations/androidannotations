@@ -80,7 +80,7 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<ECom
 	@Override
 	public void process(Element element, EComponentWithViewSupportHolder holder) {
 		this.holder = holder;
-		this.methodName = element.getSimpleName().toString();
+		methodName = element.getSimpleName().toString();
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 		List<? extends VariableElement> parameters = executableElement.getParameters();
@@ -103,7 +103,7 @@ public abstract class AbstractListenerHandler extends BaseAnnotationHandler<ECom
 
 		for (JFieldRef idRef : idsRefs) {
 			FoundViewHolder foundViewHolder = holder.getFoundViewHolder(idRef, getViewClass());
-			foundViewHolder.getIfNotNullBlock().invoke(foundViewHolder.getView(), getSetterName()).arg(_new(listenerAnonymousClass));
+			foundViewHolder.getIfNotNullBlock().invoke(foundViewHolder.getRef(), getSetterName()).arg(_new(listenerAnonymousClass));
 		}
 	}
 
