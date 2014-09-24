@@ -36,7 +36,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class ClickHandler extends AbstractListenerHandler {
+public class ClickHandler extends AbstractViewListenerHandler {
 
 	public ClickHandler(ProcessingEnvironment processingEnvironment) {
 		super(Click.class, processingEnvironment);

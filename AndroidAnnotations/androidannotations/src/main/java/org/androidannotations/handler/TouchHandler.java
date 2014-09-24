@@ -39,7 +39,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class TouchHandler extends AbstractListenerHandler {
+public class TouchHandler extends AbstractViewListenerHandler {
 
 	public TouchHandler(ProcessingEnvironment processingEnvironment) {
 		super(Touch.class, processingEnvironment);

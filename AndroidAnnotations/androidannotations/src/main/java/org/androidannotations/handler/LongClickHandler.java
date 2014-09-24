@@ -38,7 +38,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class LongClickHandler extends AbstractListenerHandler {
+public class LongClickHandler extends AbstractViewListenerHandler {
 
 	public LongClickHandler(ProcessingEnvironment processingEnvironment) {
 		super(LongClick.class, processingEnvironment);

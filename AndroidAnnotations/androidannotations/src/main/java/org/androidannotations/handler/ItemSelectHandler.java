@@ -43,7 +43,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class ItemSelectHandler extends AbstractListenerHandler {
+public class ItemSelectHandler extends AbstractViewListenerHandler {
 
 	private JMethod onNothingSelectedMethod;
 
@@ -128,7 +128,7 @@ public class ItemSelectHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected JClass getViewClass() {
+	protected JClass getListenerTargetClass() {
 		return classes().ADAPTER_VIEW.narrow(codeModel().wildcard());
 	}
 
