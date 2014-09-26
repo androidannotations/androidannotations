@@ -31,9 +31,9 @@ public class RestConverterTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void client_with_no_converters_compiles() {
+	public void client_with_no_converters_does_not_compile() throws IOException {
 		CompileResult result = compileFiles(ClientWithNoConverters.class);
-		assertCompilationSuccessful(result);
+		assertCompilationErrorOn(ClientWithNoConverters.class, "@Rest", result);
 	}
 
 	@Test

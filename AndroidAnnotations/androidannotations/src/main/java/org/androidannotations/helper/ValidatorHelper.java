@@ -1086,8 +1086,9 @@ public class ValidatorHelper {
 		TypeMirror httpMessageConverterTypeErased = annotationHelper.getTypeUtils().erasure(httpMessageConverterType);
 		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "converters");
 
-		if (converters == null) {
+		if (converters == null || converters.isEmpty()) {
 			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "At least one converter is required");
 			return;
 		}
 
