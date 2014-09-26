@@ -103,6 +103,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "converters");
 		JFieldVar restTemplateField = holder.getRestTemplateField();
 		JBlock init = holder.getInit().body();
+		init.add(invoke(restTemplateField, "getMessageConverters").invoke("clear"));
 		for (DeclaredType converterType : converters) {
 			JInvocation newConverter = codeModelHelper.newBeanOrEBean(holder, converterType, holder.getInitContextParam());
 			init.add(invoke(restTemplateField, "getMessageConverters").invoke("add").arg(newConverter));
