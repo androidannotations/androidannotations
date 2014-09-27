@@ -71,6 +71,6 @@ public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSup
 		JClass viewClass = refClass(typeQualifiedName);
 		JFieldRef fieldRef = ref(fieldName);
 
-		holder.assignFindViewById(idRef, viewClass, fieldRef);
+		holder.processViewById(idRef, viewClass, fieldRef);
 	}
 }
