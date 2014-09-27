@@ -104,6 +104,10 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		return findViewById;
 	}
 
+	public void processViewById(JFieldRef idRef, JClass viewClass, JFieldRef fieldRef) {
+		assignFindViewById(idRef, viewClass, fieldRef);
+	}
+
 	public void assignFindViewById(JFieldRef idRef, JClass viewClass, JFieldRef fieldRef) {
 		String idRefString = codeModelHelper.getIdStringFromIdFieldRef(idRef);
 		FoundViewHolder foundViewHolder = (FoundViewHolder) foundHolders.get(idRefString);
