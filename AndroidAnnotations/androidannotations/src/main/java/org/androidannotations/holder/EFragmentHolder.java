@@ -28,20 +28,13 @@ import static com.sun.codemodel.JMod.STATIC;
 
 import javax.lang.model.element.TypeElement;
 
+import com.sun.codemodel.*;
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
@@ -50,6 +43,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar inflater;
 	private JVar container;
 	private JDefinedClass fragmentBuilderClass;
+	private JClass narrowBuilderClass;
 	private JFieldRef fragmentArgumentsBuilderField;
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
@@ -124,12 +118,27 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setFragmentBuilder() throws JClassAlreadyExistsException {
 		fragmentBuilderClass = generatedClass._class(PUBLIC | STATIC, "FragmentBuilder_");
+
+		narrowBuilderClass = narrow(fragmentBuilderClass);
+
+		generify(fragmentBuilderClass);
 		JClass superClass = refClass(org.androidannotations.api.builder.FragmentBuilder.class);
-		superClass = superClass.narrow(fragmentBuilderClass, getAnnotatedClass());
+		superClass = superClass.narrow(narrowBuilderClass, getAnnotatedClass());
 		fragmentBuilderClass._extends(superClass);
 		fragmentArgumentsBuilderField = ref("args");
 		setFragmentBuilderBuild();
 		setFragmentBuilderCreate();
+	}
+
+	private JClass narrow(JClass toNarrow) {
+		List<JClass> classes = new ArrayList<JClass>();
+		for (JTypeVar type : generatedClass.typeParams()) {
+			classes.add(codeModel().directClass(type.name()));
+		}
+		if (classes.isEmpty()) {
+			return toNarrow;
+		}
+		return toNarrow.narrow(classes);
 	}
 
 	private void setFragmentBuilderBuild() {
@@ -137,14 +146,22 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JBlock body = method.body();
 
-		JVar fragment = body.decl(generatedClass, "fragment_", _new(generatedClass));
+		JClass result = narrow(generatedClass);
+		JVar fragment = body.decl(result, "fragment_", _new(result));
 		body.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);
 		body._return(fragment);
 	}
 
 	private void setFragmentBuilderCreate() {
-		JMethod method = generatedClass.method(STATIC | PUBLIC, fragmentBuilderClass, "builder");
-		method.body()._return(_new(fragmentBuilderClass));
+		JMethod method = generatedClass.method(STATIC | PUBLIC, narrowBuilderClass, "builder");
+		generify(method);
+		method.body()._return(_new(narrowBuilderClass));
+	}
+
+	private void generify(JGenerifiable generifiable) {
+		for (JTypeVar type : generatedClass.typeParams()) {
+			generifiable.generify(type.name(), type._extends());
+		}
 	}
 
 	private void setOnCreateOptionsMenu() {
