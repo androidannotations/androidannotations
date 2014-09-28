@@ -70,10 +70,10 @@ import java.lang.annotation.Target;
  *      &#064;Receiver(actions = {@link android.net.wifi.WifiManager#WIFI_STATE_CHANGED_ACTION}, registerAt = RegisterAt.OnResumeOnPause)
  *      public void onWifiStateChangedWithoutIntent();
  *      
- *      &#064;Receiver(actions = {@link android.Intent.ACTION_VIEW}, dataSchemes = "http")
+ *      &#064;Receiver(actions = {@link android.content.Intent#ACTION_VIEW}, dataSchemes = "http")
  *      public void onHttpUrlOpened(Intent intent);
  *      
- *      &#064;Receiver(actions = {@link android.Intent.ACTION_VIEW}, dataSchemes = {"http", "https"})
+ *      &#064;Receiver(actions = {@link android.content.Intent#ACTION_VIEW}, dataSchemes = {"http", "https"})
  *      public void onHttpOrHttpsUrlOpened(Intent intent);
  * 
  * }

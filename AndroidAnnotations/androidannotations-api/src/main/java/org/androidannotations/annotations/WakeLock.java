@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * <b>NOTE</b>: To use WakeLocks you need the
- * {@link android.permission.WAKE_LOCK} permission.
+ * <i>android.permission.WAKE_LOCK</i> permission.
  * </p>
  * 
  * <b>Example</b>:
@@ -62,34 +62,34 @@ public @interface WakeLock {
 
 	public enum Level {
 		/**
-		 * @see android.os.PowerManager.FULL_WAKE_LOCK
+		 * @see android.os.PowerManager#FULL_WAKE_LOCK
 		 */
 		FULL_WAKE_LOCK,
 
 		/**
-		 * @see android.os.PowerManager.PARTIAL_WAKE_LOCK
+		 * @see android.os.PowerManager#PARTIAL_WAKE_LOCK
 		 */
 		PARTIAL_WAKE_LOCK,
 
 		/**
-		 * @see android.os.PowerManager.SCREEN_BRIGHT_WAKE_LOCK
+		 * @see android.os.PowerManager#SCREEN_BRIGHT_WAKE_LOCK
 		 */
 		SCREEN_BRIGHT_WAKE_LOCK,
 
 		/**
-		 * @see android.os.PowerManager.SCREEN_DIM_WAKE_LOCK
+		 * @see android.os.PowerManager#SCREEN_DIM_WAKE_LOCK
 		 */
 		SCREEN_DIM_WAKE_LOCK;
 	}
 
 	public enum Flag {
 		/**
-		 * @see android.os.PowerManager.ACQUIRE_CAUSES_WAKEUP
+		 * @see android.os.PowerManager#ACQUIRE_CAUSES_WAKEUP
 		 */
 		ACQUIRE_CAUSES_WAKEUP,
 
 		/**
-		 * @see android.os.PowerManager.ON_AFTER_RELEASE
+		 * @see android.os.PowerManager#ON_AFTER_RELEASE
 		 */
 		ON_AFTER_RELEASE
 	}
