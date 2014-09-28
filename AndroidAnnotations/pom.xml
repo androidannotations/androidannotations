@@ -102,7 +102,6 @@
 		<module>androidannotations</module>
 		<module>androidannotations-api</module>
 		<module>functional-test-1-5</module>
-		<module>functional-test-1-5-tests</module>
 		<module>androidannotations-with-codemodel</module>
 		<module>androidannotations-bundle</module>
 	</modules>
