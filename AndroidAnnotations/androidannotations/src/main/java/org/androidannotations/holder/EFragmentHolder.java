@@ -219,6 +219,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		if (contentView == null) {
 			setContentView();
 			setOnCreateView();
+			setOnDestroyView();
 		}
 		return contentView;
 	}
@@ -242,6 +243,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		setContentViewBlock = body.block();
 
 		body._return(contentView);
+	}
+
+	private void setOnDestroyView() {
+		JMethod onDestroyView = generatedClass.method(PUBLIC, codeModel().VOID, "onDestroyView");
+		onDestroyView.annotate(Override.class);
+		JBlock body = onDestroyView.body();
+		body.assign(contentView, _null());
+		body.invoke(_super(), onDestroyView);
 	}
 
 	private void setOnStart() {
