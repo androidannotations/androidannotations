@@ -29,24 +29,60 @@ public class ServiceInjectionTest {
 	public void servicesAreInjected() {
 		ActivityWithServices_ activity = Robolectric.buildActivity(ActivityWithServices_.class).create().get();
 
-		assertThat(activity.windowManager).isNotNull();
-		assertThat(activity.layoutInflater).isNotNull();
+		// in alphabetical order
+		
+		// assertThat(activity.accessibilityManager).isNotNull(); // TODO Robolectric 2.4
+		// assertThat(activity.accountManager).isNotNull(); // TODO no support yet in Robolectric
 		assertThat(activity.activityManager).isNotNull();
-		assertThat(activity.powerManager).isNotNull();
 		assertThat(activity.alarmManager).isNotNull();
-		assertThat(activity.notificationManager).isNotNull();
-		assertThat(activity.keyguardManager).isNotNull();
-		assertThat(activity.locationManager).isNotNull();
-		assertThat(activity.searchManager).isNotNull();
-		assertThat(activity.vibrator).isNotNull();
-		assertThat(activity.connectivityManager).isNotNull();
-		assertThat(activity.wifiManager).isNotNull();
-		assertThat(activity.inputMethodManager).isNotNull();
-		assertThat(activity.sensorManager).isNotNull();
-		assertThat(activity.telephonyManager).isNotNull();
+		// assertThat(activity.appOpsManager).isNotNull(); // TODO API 19
+		// assertThat(activity.appWidgetManager).isNotNull(); // hidden API
 		assertThat(activity.audioManager).isNotNull();
-		assertThat(activity.textClipboardManager).isNotNull();
+		// assertThat(activity.backupManager).isNotNull(); // hidden API
+		// assertThat(activity.bluetoothAdapter).isNotNull(); // TODO API 18
+		// assertThat(activity.cameraManager).isNotNull(); // hidden API
+		// assertThat(activity.captioningManager).isNotNull(); // TODO API 19
 		assertThat(activity.contentClipboardManager).isNotNull();
+		assertThat(activity.textClipboardManager).isNotNull();
+		assertThat(activity.connectivityManager).isNotNull();
+		// assertThat(activity.consumerIrManager).isNotNull(); // TODO API 19
+		// assertThat(activity.countryDetector).isNotNull(); // hidden API
+		assertThat(activity.devicePolicyManager).isNotNull();
+		// assertThat(activity.displayManager).isNotNull(); // TODO API 17
+		assertThat(activity.downloadManager).isNotNull();
+		assertThat(activity.dropBoxManager).isNotNull();
+		// assertThat(activity.inputManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.inputMethodManager).isNotNull();
+		assertThat(activity.keyguardManager).isNotNull();
+		assertThat(activity.layoutInflater).isNotNull();
+		assertThat(activity.locationManager).isNotNull();
+		// assertThat(activity.mediaRouter).isNotNull(); // TODO Robolectric 2.4
+		// assertThat(activity.networkManagementService).isNotNull(); // hidden API
+		// assertThat(activity.networkPolicyManager).isNotNull(); // hidden API
+		// assertThat(activity.networkStatsService).isNotNull(); // hidden API
+		// assertThat(activity.nfcManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.notificationManager).isNotNull();
+		// assertThat(activity.nsdManager).isNotNull(); // TODO no support yet in Robolectric
+		// assertThat(activity.printManager).isNotNull(); // TODO API 19
+		assertThat(activity.powerManager).isNotNull();
+		assertThat(activity.searchManager).isNotNull();
+		assertThat(activity.sensorManager).isNotNull();
+		// assertThat(activity.serialManager).isNotNull(); // hidden API
+		// assertThat(activity.sipManager).isNotNull(); // hidden API
+		// assertThat(activity.statusBarManager).isNotNull(); // hidden API
+		assertThat(activity.storageManager).isNotNull();
+		assertThat(activity.telephonyManager).isNotNull();
+		assertThat(activity.textServicesManager).isNotNull();
+		// assertThat(activity.throttleManager).isNotNull(); // hidden API
+		assertThat(activity.uiModeManager).isNotNull();
+		// assertThat(activity.updateLock).isNotNull(); // hidden API
+		// assertThat(activity.usbManager).isNotNull(); // TODO no support yet in Robolectric
+		// assertThat(activity.userManager).isNotNull(); // TODO API 19
+		assertThat(activity.vibrator).isNotNull();
+		// assertThat(activity.wallpaperManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.wifiManager).isNotNull();
+		// assertThat(activity.wifiP2pManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.windowManager).isNotNull();
 	}
 
 }
