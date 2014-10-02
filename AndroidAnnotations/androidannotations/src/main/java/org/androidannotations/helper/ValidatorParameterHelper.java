@@ -15,6 +15,7 @@
  */
 package org.androidannotations.helper;
 
+import org.androidannotations.annotations.ReceiverAction;
 import org.androidannotations.process.IsValid;
 
 import javax.lang.model.element.ExecutableElement;
@@ -175,6 +176,18 @@ public class ValidatorParameterHelper {
 			String parameterType = parameter.asType().toString();
 			if (!types.contains(parameterType)) {
 				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type "+Arrays.toString(typesCanonicalNames));
+				valid.invalidate();
+			}
+		}
+	}
+
+	public void hasNoOtherParameterThanContextOrIntentOrExtraAnnotated(ExecutableElement executableElement, IsValid valid) {
+		for (VariableElement parameter : executableElement.getParameters()) {
+			String parameterType = parameter.asType().toString();
+			if (!parameterType.equals(CanonicalNameConstants.CONTEXT)
+					&& !parameterType.equals(CanonicalNameConstants.INTENT)
+					&& parameter.getAnnotation(ReceiverAction.Extra.class) == null) {
+				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type Context, Intent or parameters annotated with @ReceiverAction.Extra");
 				valid.invalidate();
 			}
 		}

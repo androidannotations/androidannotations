@@ -15,37 +15,31 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-
-import java.util.List;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.ReceiverAction;
-import org.androidannotations.annotations.ReceiverAction.Extra;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EReceiverHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import java.util.List;
+
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder> {
 
@@ -65,6 +59,8 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
+
+		validatorHelper.param.hasNoOtherParameterThanContextOrIntentOrExtraAnnotated((ExecutableElement) element, valid);
 	}
 
 	@Override
@@ -94,65 +90,26 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 		JBlock callActionBlock = holder.getOnReceiveBody()._if(actionCondition)._then();
 		JInvocation callActionInvocation = JExpr._super().invoke(methodName);
 
-		// For each method params, we get back value from extras and put it
-		// in super calls
+		JVar extras = null;
+
 		List<? extends VariableElement> methodParameters = executableElement.getParameters();
-		if (methodParameters.size() > 0) {
-			// Extras
-			JVar extras = callActionBlock.decl(classes().BUNDLE, "extras");
-			extras.init(holder.getOnReceiveIntent().invoke("getExtras"));
-			JBlock extrasNotNullBlock = callActionBlock._if(extras.ne(_null()))._then();
+		for (VariableElement param : methodParameters) {
+			JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
 
-			// Extras params
-			for (VariableElement param : methodParameters) {
-				String paramName = param.getSimpleName().toString();
-				JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
-
-				if (extraParamClass.equals(classes().CONTEXT)) {
-					callActionInvocation.arg(holder.getOnReceiveContext());
-					continue;
-				} else if (extraParamClass.equals(classes().INTENT)) {
-					callActionInvocation.arg(holder.getOnReceiveIntent());
-					continue;
+			if (extraParamClass.equals(classes().CONTEXT)) {
+				callActionInvocation.arg(holder.getOnReceiveContext());
+			} else if (extraParamClass.equals(classes().INTENT)) {
+				callActionInvocation.arg(holder.getOnReceiveIntent());
+			} else if (param.getAnnotation(ReceiverAction.Extra.class) != null) {
+				if (extras == null){
+					extras = callActionBlock.decl(classes().BUNDLE, "extras");
+					extras.init(holder.getOnReceiveIntent().invoke("getExtras"));
+					callActionBlock = callActionBlock._if(extras.ne(_null()))._then();
 				}
-
-				Extra annotation = param.getAnnotation(ReceiverAction.Extra.class);
-				if (annotation != null && !annotation.value().isEmpty()) {
-					paramName = annotation.value();
-				}
-
-				String extraParamName = paramName.replaceAll("\\.", "_") + "_Extra";
-				JFieldVar paramVar = getStaticExtraField(holder, paramName);
-				BundleHelper bundleHelper = new BundleHelper(annotationHelper, param);
-
-				JExpression getExtraExpression = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(paramVar);
-				if (bundleHelper.restoreCallNeedCastStatement()) {
-					getExtraExpression = JExpr.cast(extraParamClass, getExtraExpression);
-
-					if (bundleHelper.restoreCallNeedsSuppressWarning()) {
-						JMethod onHandleIntentMethod = holder.getOnReceiveMethod();
-						if (onHandleIntentMethod.annotations().size() == 0) {
-							onHandleIntentMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
-						}
-					}
-				}
-
-				JVar extraField = extrasNotNullBlock.decl(extraParamClass, extraParamName, getExtraExpression);
-				callActionInvocation.arg(extraField);
+				callActionInvocation.arg(ReceiverActionExtraHandler.extractedFieldInExtra(param, extras, callActionBlock, holder, codeModelHelper, annotationHelper));
 			}
-			extrasNotNullBlock.add(callActionInvocation);
-		} else {
-			callActionBlock.add(callActionInvocation);
 		}
+		callActionBlock.add(callActionInvocation);
 		callActionBlock._return();
-	}
-
-	private JFieldVar getStaticExtraField(EReceiverHolder holder, String extraName) {
-		String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, extraName, "Extra");
-		JFieldVar staticExtraField = holder.getGeneratedClass().fields().get(staticFieldName);
-		if (staticExtraField == null) {
-			staticExtraField = holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(extraName));
-		}
-		return staticExtraField;
 	}
 }
