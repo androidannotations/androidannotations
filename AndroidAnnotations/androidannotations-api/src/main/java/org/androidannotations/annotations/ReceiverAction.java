@@ -27,20 +27,17 @@ import java.lang.annotation.Target;
  * name unless the {@link #value()} field is set.
  * </p>
  * <p>
- * The method could contain any type or parameters.
- * </p>
- * <p>
  * The class MAY contain several {@link ReceiverAction} annotated methods.
  * </p>
  * <p>
- * You MAY use the {@link ReceiverAction.Extra} annotation on parameters to
- * define a different extra name.
+ * The method annotated with {@link ReceiverAction} may have as parameters :
+ * - A {@link android.content.Context} which will be the context given in {@code void onReceive(Context context, Intent intent)}
+ * - A {@link android.content.Intent} which will be the intent given in {@code void onReceive(Context context, Intent intent)}
+ * - Some any native, {@link android.os.Parcelable} or {@link java.io.Serializable} parameters
+ * annotated with {@link ReceiverAction.Extra} which will be the extra put in the intent. The key of this extra is
+ * the value of the annotation {@link ReceiverAction.Extra} if set or the name of the parameter.
  * </p>
- * <p>
- * Parameters of type {@link android.content.Intent} or
- * {@link android.content.Context} will get the corresponding parameter of
- * {@code void onReceive(Context context, Intent intent)} assigned.
- * </p>
+ *
  * <blockquote>
  * 
  * Example :
@@ -50,17 +47,17 @@ import java.lang.annotation.Target;
  * public class MyIntentService extends BroadcastReceiver {
  * 
  * 	&#064;ReceiverAction
- * 	void mySimpleAction() {
+ * 	void mySimpleAction(Intent intent) {
  * 		// ...
  * 	}
  * 
  * 	&#064;ReceiverAction
- * 	void myAction(String valueString, long valueLong) {
+ * 	void myAction(@ReceiverAction.Extra String valueString, Context context) {
  * 		// ...
  * 	}
  * 
  * 	&#064;ReceiverAction
- * 	void anotherAction(@ReceiverAction.Extra(&quot;specialExtraName&quot;) String valueString, long valueLong) {
+ * 	void anotherAction(@ReceiverAction.Extra(&quot;specialExtraName&quot;) String valueString, @ReceiverAction.Extra long valueLong) {
  * 		// ...
  * 	}
  * }
@@ -68,7 +65,7 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
- * @see EIntentService
+ * @see EReceiver
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
@@ -82,6 +79,16 @@ public @interface ReceiverAction {
 	 */
 	String value() default "";
 
+
+	/**
+	 * <p>
+	 * Should be used on any native, {@link android.os.Parcelable} or {@link java.io.Serializable} parameter of a method
+	 * annotated with {@link ReceiverAction} to inject the extra put in the intent parameter
+	 * of {@code void onReceive(Context context, Intent intent)}.
+	 * The key of this extra is the value of the annotation {@link ReceiverAction.Extra} if it is set
+	 * or the name of the parameter.
+	 * </p>
+	 */
 	@Retention(RetentionPolicy.CLASS)
 	@Target(ElementType.PARAMETER)
 	public @interface Extra {
