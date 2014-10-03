@@ -50,7 +50,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.canBeSavedAsInstanceState(element, valid);
+		validatorHelper.canBePutInABundle(element, valid);
 	}
 
 	@Override

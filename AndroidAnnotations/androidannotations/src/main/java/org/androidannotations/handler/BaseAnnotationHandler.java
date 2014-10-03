@@ -15,9 +15,8 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -28,8 +27,8 @@ import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 
 public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> implements AnnotationHandler<T> {
 
@@ -43,7 +42,7 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 	protected ProcessHolder processHolder;
 
 	public BaseAnnotationHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		this(targetClass.getName(), processingEnvironment);
+		this(targetClass.getCanonicalName(), processingEnvironment);
 	}
 
 	public BaseAnnotationHandler(String target, ProcessingEnvironment processingEnvironment) {
