@@ -193,7 +193,7 @@ public class ValidatorHelper {
 	}
 
 	public void isStatic(Element element, IsValid valid) {
-		if (!annotationHelper.isPublic(element)) {
+		if (!annotationHelper.isStatic(element)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a non static inner element");
 		}
