@@ -60,7 +60,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.param.hasNoOtherParameterThanContextOrIntentOrExtraAnnotated((ExecutableElement) element, valid);
+		validatorHelper.param.hasNoOtherParameterThanContextOrIntentOrReceiverActionExtraAnnotated((ExecutableElement) element, valid);
 	}
 
 	@Override

@@ -15,6 +15,7 @@
  */
 package org.androidannotations.helper;
 
+import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ReceiverAction;
 import org.androidannotations.process.IsValid;
 
@@ -22,9 +23,10 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -181,13 +183,22 @@ public class ValidatorParameterHelper {
 		}
 	}
 
-	public void hasNoOtherParameterThanContextOrIntentOrExtraAnnotated(ExecutableElement executableElement, IsValid valid) {
+	public void hasNoOtherParameterThanContextOrIntentOrReceiverActionExtraAnnotated(ExecutableElement executableElement, IsValid valid) {
+		String[] types = new String[] {CanonicalNameConstants.CONTEXT, CanonicalNameConstants.INTENT};
+		hasNotOtherParameterThanTypesOrAnnotatedWith(types, ReceiverAction.Extra.class, executableElement, valid);
+	}
+
+	public void hasNoOtherParameterThanIntentOrIntOrOnActivityResultExtraAnnotated(ExecutableElement executableElement, IsValid valid) {
+		String[] types = new String[] {CanonicalNameConstants.INTENT, CanonicalNameConstants.INTEGER, "int"};
+		hasNotOtherParameterThanTypesOrAnnotatedWith(types, OnActivityResult.Extra.class, executableElement, valid);
+	}
+
+	public void hasNotOtherParameterThanTypesOrAnnotatedWith(String[] typesCanonicalNames, Class<? extends Annotation> annotationClass, ExecutableElement executableElement, IsValid valid) {
+		Collection<String> types = Arrays.asList(typesCanonicalNames);
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterType = parameter.asType().toString();
-			if (!parameterType.equals(CanonicalNameConstants.CONTEXT)
-					&& !parameterType.equals(CanonicalNameConstants.INTENT)
-					&& parameter.getAnnotation(ReceiverAction.Extra.class) == null) {
-				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type Context, Intent or parameters annotated with @ReceiverAction.Extra");
+			if (!types.contains(parameterType) && parameter.getAnnotation(annotationClass) == null) {
+				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type "+Arrays.toString(typesCanonicalNames)+" or parameters annotated with @"+annotationClass.getCanonicalName());
 				valid.invalidate();
 			}
 		}

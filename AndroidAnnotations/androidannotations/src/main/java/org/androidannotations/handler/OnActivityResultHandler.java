@@ -54,7 +54,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.hasOnResultMethodParameters(executableElement, valid);
+		validatorHelper.param.hasNoOtherParameterThanIntentOrIntOrOnActivityResultExtraAnnotated(executableElement, valid);
 	}
 
 	@Override
