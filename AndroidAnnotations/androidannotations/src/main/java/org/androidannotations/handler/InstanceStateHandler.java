@@ -15,12 +15,13 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.ref;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
@@ -29,19 +30,20 @@ import org.androidannotations.holder.HasInstanceState;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import static com.sun.codemodel.JExpr.ref;
 
 public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState> {
 
+	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+	private AnnotationHelper annotationHelper;
+
 	public InstanceStateHandler(ProcessingEnvironment processingEnvironment) {
 		super(InstanceState.class, processingEnvironment);
+		annotationHelper = new AnnotationHelper(processingEnv);
 	}
 
 	@Override
@@ -55,6 +57,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 
 	@Override
 	public void process(Element element, HasInstanceState holder) {
+		JClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType(), holder);
 		String fieldName = element.getSimpleName().toString();
 
 		JBlock saveStateBody = holder.getSaveStateMethodBody();
@@ -63,9 +66,6 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 		JBlock restoreStateBody = restoreStateMethod.body();
 		JVar restoreStateBundleParam = holder.getRestoreStateBundleParam();
 
-		AnnotationHelper annotationHelper = new AnnotationHelper(processingEnv);
-		APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
-
 		TypeMirror type = codeModelHelper.getActualType(element, holder);
 
 		BundleHelper bundleHelper = new BundleHelper(annotationHelper, type);
@@ -73,21 +73,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 		JFieldRef ref = ref(fieldName);
 		saveStateBody.invoke(saveStateBundleParam, bundleHelper.getMethodNameToSave()).arg(fieldName).arg(ref);
 
-		JInvocation restoreMethodCall = JExpr.invoke(restoreStateBundleParam, bundleHelper.getMethodNameToRestore()).arg(fieldName);
-		if (bundleHelper.restoreCallNeedCastStatement()) {
-
-			JClass jclass = codeModelHelper.typeMirrorToJClass(element.asType(), holder);
-			JExpression castStatement = JExpr.cast(jclass, restoreMethodCall);
-			restoreStateBody.assign(ref, castStatement);
-
-			if (bundleHelper.restoreCallNeedsSuppressWarning()) {
-				if (restoreStateMethod.annotations().size() == 0) {
-					restoreStateMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
-				}
-			}
-
-		} else {
-			restoreStateBody.assign(ref, restoreMethodCall);
-		}
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, restoreStateBundleParam, JExpr.lit(fieldName), restoreStateMethod);
+		restoreStateBody.assign(ref, restoreMethodCall);
 	}
 }

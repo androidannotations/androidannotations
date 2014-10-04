@@ -79,26 +79,16 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 	}
 
 	private void injectArgInComponent(Element element, EFragmentHolder holder, BundleHelper bundleHelper, JFieldVar extraKeyStaticField, String fieldName) {
+		TypeMirror elementType = codeModelHelper.getActualType(element, holder);
+		JClass elementClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
+
 		JVar bundle = holder.getInjectBundleArgs();
 		JBlock injectExtrasBlock = holder.getInjectArgsBlock();
+		JMethod injectExtrasMethod = holder.getInjectArgsMethod();
 		JFieldRef extraField = JExpr.ref(fieldName);
 
 		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(bundle, "containsKey").arg(extraKeyStaticField))._then();
-		JExpression restoreMethodCall = JExpr.invoke(bundle, bundleHelper.getMethodNameToRestore()).arg(extraKeyStaticField);
-		if (bundleHelper.restoreCallNeedCastStatement()) {
-
-			TypeMirror type = codeModelHelper.getActualType(element, holder);
-			JClass jclass = codeModelHelper.typeMirrorToJClass(type, holder);
-			restoreMethodCall = JExpr.cast(jclass, restoreMethodCall);
-
-			if (bundleHelper.restoreCallNeedsSuppressWarning()) {
-				JMethod injectExtrasMethod = holder.getInjectArgsMethod();
-				if (injectExtrasMethod.annotations().size() == 0) {
-					injectExtrasMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
-				}
-			}
-
-		}
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, bundle, extraKeyStaticField, injectExtrasMethod);
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 
