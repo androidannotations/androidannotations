@@ -17,10 +17,10 @@ package org.androidannotations.handler;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JOp;
 import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.ReceiverAction;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -35,6 +35,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
 
+import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JMod.FINAL;
@@ -93,8 +94,10 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 		// If action match, call the method
 		JInvocation actionCondition = actionKeyField.invoke("equals").arg(holder.getOnReceiveIntentAction());
 		JBlock callActionBlock = holder.getOnReceiveBody()._if(actionCondition)._then();
-		JInvocation callActionInvocation = JExpr._super().invoke(methodName);
+		JExpression receiverRef = holder.getGeneratedClass().staticRef("this");
+		JInvocation callActionInvocation = receiverRef.invoke(methodName);
 
+		JVar intent = holder.getOnReceiveIntent();
 		JVar extras = null;
 
 		List<? extends VariableElement> methodParameters = executableElement.getParameters();
@@ -104,12 +107,12 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 			if (extraParamClass.equals(classes().CONTEXT)) {
 				callActionInvocation.arg(holder.getOnReceiveContext());
 			} else if (extraParamClass.equals(classes().INTENT)) {
-				callActionInvocation.arg(holder.getOnReceiveIntent());
+				callActionInvocation.arg(intent);
 			} else if (param.getAnnotation(ReceiverAction.Extra.class) != null) {
 				if (extras == null){
-					extras = callActionBlock.decl(classes().BUNDLE, "extras");
-					extras.init(holder.getOnReceiveIntent().invoke("getExtras"));
-					callActionBlock = callActionBlock._if(extras.ne(_null()))._then();
+					extras = callActionBlock.decl(classes().BUNDLE, "extras_",
+							JOp.cond(intent.invoke("getExtras").ne(_null()),
+									intent.invoke("getExtras"), _new(classes().BUNDLE)));
 				}
 				callActionInvocation.arg(extraHandler.getExtraValue(param, extras, callActionBlock, holder));
 			}

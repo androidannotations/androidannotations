@@ -26,7 +26,5 @@ public interface HasOnActivityResult extends GeneratedClassHolder {
 
 	JVar getOnActivityResultResultCodeParam();
 
-	JVar getOnActivityResultExtras();
-
 	JMethod getOnActivityResultMethod();
 }

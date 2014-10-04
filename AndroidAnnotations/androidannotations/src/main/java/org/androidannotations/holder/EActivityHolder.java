@@ -678,11 +678,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JVar getOnActivityResultExtras() {
-		return onActivityResultHolder.getResultExtras();
-	}
-
-	@Override
 	public JMethod getOnActivityResultMethod() {
 		return onActivityResultHolder.getMethod();
 	}

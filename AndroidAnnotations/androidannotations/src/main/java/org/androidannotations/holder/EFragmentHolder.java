@@ -463,11 +463,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JVar getOnActivityResultExtras() {
-		return onActivityResultHolder.getResultExtras();
-	}
-
-	@Override
 	public JMethod getOnActivityResultMethod() {
 		return onActivityResultHolder.getMethod();
 	}
