@@ -15,54 +15,18 @@
  */
 package org.androidannotations.helper;
 
-import static java.util.Arrays.asList;
-import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
-import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
-import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
-import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
-import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
-import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
-
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.Result;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.WakeLock;
+import org.androidannotations.annotations.WakeLock.Level;
 import org.androidannotations.annotations.rest.Delete;
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Head;
@@ -84,6 +48,46 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static java.util.Arrays.asList;
+import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
+import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
+import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 
 public class ValidatorHelper {
 
@@ -188,6 +192,13 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void isStatic(Element element, IsValid valid) {
+		if (!annotationHelper.isPublic(element)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a non static inner element");
+		}
+	}
+
 	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EBean.class, valid);
@@ -222,6 +233,11 @@ public class ValidatorHelper {
 		hasClassAnnotation(element, enclosingElement, validatedElements, EIntentService.class, valid);
 	}
 
+	public void enclosingElementHasEReceiver(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasClassAnnotation(element, enclosingElement, validatedElements, EReceiver.class, valid);
+	}
+
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
 		hasClassAnnotation(element, element, validatedElements, EActivity.class, valid);
 	}
@@ -242,6 +258,11 @@ public class ValidatorHelper {
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, VALID_ENHANCED_COMPONENT_ANNOTATIONS, valid);
 	}
 
+	public void enclosingElementHasAndroidAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, VALID_ANDROID_ANNOTATIONS, valid);
+	}
+
 	private void hasClassAnnotation(Element reportElement, Element element, AnnotationElements validatedElements, Class<? extends Annotation> validAnnotation, IsValid valid) {
 		ArrayList<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
 		validAnnotations.add(validAnnotation);
@@ -253,19 +274,6 @@ public class ValidatorHelper {
 		boolean foundAnnotation = false;
 		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
 			if (element.getAnnotation(validAnnotation) != null) {
-
-				Set<? extends Element> layoutAnnotatedElements = validatedElements.getRootAnnotatedElements(validAnnotation.getName());
-
-				/*
-				 * This is for the case where the element has the right
-				 * annotation, but that annotation was not validated. We do not
-				 * add any compile error (should already exist on the
-				 * annotation), but we still invalidate this element.
-				 */
-				if (!layoutAnnotatedElements.contains(element)) {
-					valid.invalidate();
-				}
-
 				foundAnnotation = true;
 				break;
 			}
@@ -299,6 +307,11 @@ public class ValidatorHelper {
 	public void enclosingElementHasRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		String error = "can only be used in an interface annotated with";
 		enclosingElementHasAnnotation(Rest.class, element, validatedElements, valid, error);
+	}
+
+	public void enclosingMethodHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, IsValid valid) {
+		String error = "can only be used with a method annotated with";
+		enclosingElementHasAnnotation(annotation, element, validatedElements, valid, error);
 	}
 
 	public void enclosingElementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, IsValid valid, String error) {
@@ -430,6 +443,21 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void doesNotHaveTraceAnnotationAndReturnValue(ExecutableElement executableElement, AnnotationElements validatedElements, IsValid valid) {
+		TypeMirror returnType = executableElement.getReturnType();
+
+		if (elementHasAnnotation(Trace.class, executableElement, validatedElements) && returnType.getKind() != TypeKind.VOID) {
+			annotationHelper.printAnnotationError(executableElement, "@WakeLock annotated methods with a return value are not supported by @Trace");
+		}
+	}
+
+	public void doesNotUseFlagsWithPartialWakeLock(Element element, AnnotationElements validatedElements, IsValid valid) {
+		WakeLock annotation = element.getAnnotation(WakeLock.class);
+		if (annotation.level().equals(Level.PARTIAL_WAKE_LOCK) && annotation.flags().length > 0) {
+			annotationHelper.printAnnotationWarning(element, "Flags have no effect when combined with a PARTIAL_WAKE_LOCK");
+		}
+	}
+
 	public void returnTypeIsNotVoid(ExecutableElement executableElement, IsValid valid) {
 		TypeMirror returnType = executableElement.getReturnType();
 
@@ -497,10 +525,8 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void extendsOrmLiteDaoWithValidModelParameter(Element element, IsValid valid) {
+	public void extendsOrmLiteDao(Element element, IsValid valid) {
 		TypeMirror elementType = element.asType();
-
-		TypeMirror modelTypeMirror = annotationHelper.extractAnnotationParameter(element, "model");
 
 		TypeElement daoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO);
 		TypeElement runtimeExceptionDaoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
@@ -508,15 +534,15 @@ public class ValidatorHelper {
 		if (daoTypeElement != null) {
 
 			TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
-			DeclaredType daoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, modelTypeMirror, wildcardType);
-			DeclaredType runtimeExceptionDaoParameterizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, modelTypeMirror, wildcardType);
+			DeclaredType daoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, wildcardType, wildcardType);
+			DeclaredType runtimeExceptionDaoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, wildcardType, wildcardType);
 
-			// Checks that elementType extends Dao<ModelType, ?> or
-			// RuntimeExceptionDao<ModelType, ?>
-			if (!annotationHelper.isSubtype(elementType, daoParameterizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParameterizedType)) {
+			// Checks that elementType extends Dao<?, ?> or
+			// RuntimeExceptionDao<?, ?>
+			if (!annotationHelper.isSubtype(elementType, daoParametrizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParametrizedType)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParameterizedType.toString() //
-						+ " or " + runtimeExceptionDaoParameterizedType.toString());
+				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParametrizedType.toString() //
+						+ " or " + runtimeExceptionDaoParametrizedType.toString());
 			}
 		}
 	}
@@ -527,11 +553,9 @@ public class ValidatorHelper {
 
 		TypeMirror viewType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW).asType();
 
-		if (!elementType.toString().equals(CanonicalNameConstants.LIST)
-				&& elementTypeArguments.size() == 1
-				&& !annotationHelper.isSubtype(elementTypeArguments.get(0), viewType)) {
+		if (!elementType.toString().equals(CanonicalNameConstants.LIST) && elementTypeArguments.size() == 1 && !annotationHelper.isSubtype(elementTypeArguments.get(0), viewType)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on a "+CanonicalNameConstants.LIST+ " of elements extending " + CanonicalNameConstants.VIEW);
+			annotationHelper.printAnnotationError(element, "%s can only be used on a " + CanonicalNameConstants.LIST + " of elements extending " + CanonicalNameConstants.VIEW);
 		}
 	}
 
@@ -587,6 +611,7 @@ public class ValidatorHelper {
 			boolean sharedPrefValidatedInRound = false;
 			if (elementTypeName.endsWith(GENERATION_SUFFIX)) {
 				String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - GENERATION_SUFFIX.length());
+				prefTypeName = prefTypeName.replace("_.", ".");
 
 				Set<? extends Element> sharedPrefElements = validatedElements.getRootAnnotatedElements(SharedPref.class.getName());
 
@@ -940,26 +965,26 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void hasEmptyConstructor(Element element, IsValid valid) {
-
+	public void isAbstractOrHasEmptyConstructor(Element element, IsValid valid) {
 		List<ExecutableElement> constructors = ElementFilter.constructorsIn(element.getEnclosedElements());
 
-		if (constructors.size() == 1) {
+		if (!annotationHelper.isAbstract(element)) {
+			if (constructors.size() == 1) {
+				ExecutableElement constructor = constructors.get(0);
 
-			ExecutableElement constructor = constructors.get(0);
-
-			if (!annotationHelper.isPrivate(constructor)) {
-				if (constructor.getParameters().size() != 0) {
-					annotationHelper.printAnnotationError(element, "%s annotated element should have an empty constructor");
+				if (!annotationHelper.isPrivate(constructor)) {
+					if (constructor.getParameters().size() != 0) {
+						annotationHelper.printAnnotationError(element, "%s annotated element should have an empty constructor");
+						valid.invalidate();
+					}
+				} else {
+					annotationHelper.printAnnotationError(element, "%s annotated element should not have a private constructor");
 					valid.invalidate();
 				}
 			} else {
-				annotationHelper.printAnnotationError(element, "%s annotated element should not have a private constructor");
+				annotationHelper.printAnnotationError(element, "%s annotated element should have only one constructor");
 				valid.invalidate();
 			}
-		} else {
-			annotationHelper.printAnnotationError(element, "%s annotated element should have only one constructor");
-			valid.invalidate();
 		}
 	}
 
@@ -975,10 +1000,10 @@ public class ValidatorHelper {
 
 	}
 
-	public void canBeSavedAsInstanceState(Element element, IsValid isValid) {
+	public void canBePutInABundle(Element element, IsValid isValid) {
 		String typeString = element.asType().toString();
 
-		if (!isKnowInstanceStateType(typeString)) {
+		if (!isKnownBundleCompatibleType(typeString)) {
 
 			if (element.asType() instanceof DeclaredType) {
 
@@ -1029,7 +1054,7 @@ public class ValidatorHelper {
 		return annotationHelper.typeElementFromQualifiedName(typeString);
 	}
 
-	private boolean isKnowInstanceStateType(String type) {
+	private boolean isKnownBundleCompatibleType(String type) {
 		return BundleHelper.methodSuffixNameByTypeName.containsKey(type);
 	}
 
@@ -1160,16 +1185,22 @@ public class ValidatorHelper {
 	}
 
 	public void hasInternetPermission(Element element, AndroidManifest androidManifest, IsValid valid) {
-		if (androidManifest.isLibraryProject()) {
-			return;
-		}
+		hasPermission(element, androidManifest, valid, INTERNET_PERMISSION);
+	}
 
-		String internetPermissionQualifiedName = INTERNET_PERMISSION;
+	public void hasWakeLockPermission(Element element, AndroidManifest androidManifest, IsValid valid) {
+		hasPermission(element, androidManifest, valid, WAKELOCK_PERMISSION);
+	}
 
+	public void hasPermission(Element element, AndroidManifest androidManifest, IsValid valid, String permissionQualifiedName) {
 		List<String> permissionQualifiedNames = androidManifest.getPermissionQualifiedNames();
-		if (!permissionQualifiedNames.contains(internetPermissionQualifiedName)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Your application must require the INTERNET permission.");
+		if (!permissionQualifiedNames.contains(permissionQualifiedName)) {
+			if (androidManifest.isLibraryProject()) {
+				annotationHelper.printAnnotationWarning(element, "Your library should require the " + permissionQualifiedName + " permission.");
+			} else {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "Your application must require the " + permissionQualifiedName + " permission.");
+			}
 		}
 	}
 

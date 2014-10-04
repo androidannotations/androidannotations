@@ -29,7 +29,7 @@ public class FocusChangeHandledActivity extends EventsHandledAbstractActivity {
 	}
 
 	@FocusChange
-	public void snakeCaseButton() {
+	public void snakeCaseButton(boolean hasFocus) {
 
 	}
 

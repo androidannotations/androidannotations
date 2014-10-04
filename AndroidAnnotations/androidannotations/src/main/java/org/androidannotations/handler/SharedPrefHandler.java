@@ -72,7 +72,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> implements GeneratingAnnotationHandler<SharedPrefHolder> {
+public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPrefHolder> {
 
 	private IdAnnotationHelper annotationHelper;
 	private APTCodeModelHelper aptCodeModelHelper;
@@ -123,6 +123,8 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		super.validate(element, validatedElements, valid);
+
 		TypeElement typeElement = (TypeElement) element;
 
 		validatorHelper.isInterface(typeElement, valid);
@@ -285,7 +287,7 @@ public class SharedPrefHandler extends BaseAnnotationHandler<SharedPrefHolder> i
 		} else {
 			IRInnerClass idClass = rClass.get(IRClass.Res.STRING);
 			JFieldRef idRef = idClass.getIdStaticRef(keyResId, processHolder);
-			keyExpression = holder.getContextField().invoke("getString").arg(idRef);
+			keyExpression = holder.getEditorContextField().invoke("getString").arg(idRef);
 		}
 
 		holder.createFieldMethod(prefFieldClass, keyExpression, fieldName, fieldHelperMethodName, defaultValueExpr);

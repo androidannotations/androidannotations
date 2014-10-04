@@ -22,7 +22,8 @@ import java.net.URISyntaxException;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.JavaFileObject;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
 
 public class FileHelper {
 
@@ -45,9 +46,9 @@ public class FileHelper {
 	public static Option<FileHolder> findRootProjectHolder(ProcessingEnvironment processingEnv) {
 		Filer filer = processingEnv.getFiler();
 
-		JavaFileObject dummySourceFile;
+		FileObject dummySourceFile;
 		try {
-			dummySourceFile = filer.createSourceFile("dummy" + System.currentTimeMillis());
+			dummySourceFile = filer.createResource(StandardLocation.SOURCE_OUTPUT, "", "dummy" + System.currentTimeMillis());
 		} catch (IOException ignored) {
 			return Option.absent();
 		}

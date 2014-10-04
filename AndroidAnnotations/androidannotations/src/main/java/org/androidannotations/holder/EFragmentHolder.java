@@ -15,6 +15,26 @@
  */
 package org.androidannotations.holder;
 
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JGenerifiable;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JTypeVar;
+import com.sun.codemodel.JVar;
+import org.androidannotations.helper.ActionBarSherlockHelper;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.process.ProcessHolder;
+
+import javax.lang.model.element.TypeElement;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr.TRUE;
 import static com.sun.codemodel.JExpr._new;
@@ -26,24 +46,6 @@ import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 
-import javax.lang.model.element.TypeElement;
-
-import org.androidannotations.helper.ActionBarSherlockHelper;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.HoloEverywhereHelper;
-import org.androidannotations.process.ProcessHolder;
-
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
-
 public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
 	private JFieldVar contentView;
@@ -51,6 +53,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar inflater;
 	private JVar container;
 	private JDefinedClass fragmentBuilderClass;
+	private JClass narrowBuilderClass;
 	private JFieldRef fragmentArgumentsBuilderField;
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
@@ -125,26 +128,50 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setFragmentBuilder() throws JClassAlreadyExistsException {
 		fragmentBuilderClass = generatedClass._class(PUBLIC | STATIC, "FragmentBuilder_");
+
+		narrowBuilderClass = narrow(fragmentBuilderClass);
+
+		generify(fragmentBuilderClass);
 		JClass superClass = refClass(org.androidannotations.api.builder.FragmentBuilder.class);
-		superClass = superClass.narrow(fragmentBuilderClass);
+		superClass = superClass.narrow(narrowBuilderClass, getAnnotatedClass());
 		fragmentBuilderClass._extends(superClass);
 		fragmentArgumentsBuilderField = ref("args");
 		setFragmentBuilderBuild();
 		setFragmentBuilderCreate();
 	}
 
+	private JClass narrow(JClass toNarrow) {
+		List<JClass> classes = new ArrayList<JClass>();
+		for (JTypeVar type : generatedClass.typeParams()) {
+			classes.add(codeModel().directClass(type.name()));
+		}
+		if (classes.isEmpty()) {
+			return toNarrow;
+		}
+		return toNarrow.narrow(classes);
+	}
+
 	private void setFragmentBuilderBuild() {
 		JMethod method = fragmentBuilderClass.method(PUBLIC, generatedClass._extends(), "build");
+		method.annotate(Override.class);
 		JBlock body = method.body();
 
-		JVar fragment = body.decl(generatedClass, "fragment_", _new(generatedClass));
+		JClass result = narrow(generatedClass);
+		JVar fragment = body.decl(result, "fragment_", _new(result));
 		body.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);
 		body._return(fragment);
 	}
 
 	private void setFragmentBuilderCreate() {
-		JMethod method = generatedClass.method(STATIC | PUBLIC, fragmentBuilderClass, "builder");
-		method.body()._return(_new(fragmentBuilderClass));
+		JMethod method = generatedClass.method(STATIC | PUBLIC, narrowBuilderClass, "builder");
+		generify(method);
+		method.body()._return(_new(narrowBuilderClass));
+	}
+
+	private void generify(JGenerifiable generifiable) {
+		for (JTypeVar type : generatedClass.typeParams()) {
+			generifiable.generify(type.name(), type._extends());
+		}
 	}
 
 	private void setOnCreateOptionsMenu() {
@@ -202,6 +229,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		if (contentView == null) {
 			setContentView();
 			setOnCreateView();
+			setOnDestroyView();
 		}
 		return contentView;
 	}
@@ -214,15 +242,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod onCreateView = generatedClass.method(PUBLIC, classes().VIEW, "onCreateView");
 		onCreateView.annotate(Override.class);
 
-		HoloEverywhereHelper holoEverywhereHelper = new HoloEverywhereHelper(this);
-		JClass inflaterClass;
-		if (holoEverywhereHelper.usesHoloEverywhere()) {
-			inflaterClass = classes().HOLO_EVERYWHERE_LAYOUT_INFLATER;
-		} else {
-			inflaterClass = classes().LAYOUT_INFLATER;
-		}
-
-		inflater = onCreateView.param(inflaterClass, "inflater");
+		inflater = onCreateView.param(classes().LAYOUT_INFLATER, "inflater");
 		container = onCreateView.param(classes().VIEW_GROUP, "container");
 
 		JVar savedInstanceState = onCreateView.param(classes().BUNDLE, "savedInstanceState");
@@ -233,6 +253,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		setContentViewBlock = body.block();
 
 		body._return(contentView);
+	}
+
+	private void setOnDestroyView() {
+		JMethod onDestroyView = generatedClass.method(PUBLIC, codeModel().VOID, "onDestroyView");
+		onDestroyView.annotate(Override.class);
+		JBlock body = onDestroyView.body();
+		body.assign(contentView, _null());
+		body.invoke(_super(), onDestroyView);
 	}
 
 	private void setOnStart() {
@@ -440,8 +468,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions) {
-		return receiverRegistrationHolder.getIntentFilterField(actions);
+	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
+		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
 	}
 
 	@Override

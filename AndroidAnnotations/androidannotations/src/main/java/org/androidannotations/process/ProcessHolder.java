@@ -15,27 +15,20 @@
  */
 package org.androidannotations.process;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.GeneratedClassHolder;
-
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.GeneratedClassHolder;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 public class ProcessHolder {
 
@@ -113,6 +106,8 @@ public class ProcessHolder {
 		public final JClass VIEW_SERVER = refClass(CanonicalNameConstants.VIEW_SERVER);
 		public final JClass PARCELABLE = refClass(CanonicalNameConstants.PARCELABLE);
 		public final JClass LOOPER = refClass(CanonicalNameConstants.LOOPER);
+		public final JClass POWER_MANAGER = refClass(CanonicalNameConstants.POWER_MANAGER);
+		public final JClass WAKE_LOCK = refClass(CanonicalNameConstants.WAKE_LOCK);
 
 		/*
 		 * Sherlock
@@ -120,11 +115,6 @@ public class ProcessHolder {
 		public final JClass SHERLOCK_MENU = refClass(CanonicalNameConstants.SHERLOCK_MENU);
 		public final JClass SHERLOCK_MENU_ITEM = refClass(CanonicalNameConstants.SHERLOCK_MENU_ITEM);
 		public final JClass SHERLOCK_MENU_INFLATER = refClass(CanonicalNameConstants.SHERLOCK_MENU_INFLATER);
-
-		/*
-		 * HoloEverywhre
-		 */
-		public final JClass HOLO_EVERYWHERE_LAYOUT_INFLATER = refClass(CanonicalNameConstants.HOLO_EVERYWHERE_LAYOUT_INFLATER);
 
 		/*
 		 * RoboGuice
@@ -162,6 +152,7 @@ public class ProcessHolder {
 		public final JClass CLIENT_CONNECTION_MANAGER = refClass(CanonicalNameConstants.CLIENT_CONNECTION_MANAGER);
 		public final JClass DEFAULT_HTTP_CLIENT = refClass(CanonicalNameConstants.DEFAULT_HTTP_CLIENT);
 		public final JClass SSL_SOCKET_FACTORY = refClass(CanonicalNameConstants.SSL_SOCKET_FACTORY);
+		public final JClass PLAIN_SOCKET_FACTORY = refClass(CanonicalNameConstants.PLAIN_SOCKET_FACTORY);
 		public final JClass SCHEME = refClass(CanonicalNameConstants.SCHEME);
 		public final JClass SCHEME_REGISTRY = refClass(CanonicalNameConstants.SCHEME_REGISTRY);
 		public final JClass SINGLE_CLIENT_CONN_MANAGER = refClass(CanonicalNameConstants.SINGLE_CLIENT_CONN_MANAGER);
@@ -220,7 +211,12 @@ public class ProcessHolder {
 	}
 
 	public GeneratedClassHolder getGeneratedClassHolder(Element element) {
-		return generatedClassHolders.get(element);
+		for (Element key : generatedClassHolders.keySet()) {
+			if(key.asType().toString().equals(element.asType().toString())) {
+				return generatedClassHolders.get(key);
+			}
+		}
+		return null;
 	}
 
 	public JClass refClass(Class<?> clazz) {

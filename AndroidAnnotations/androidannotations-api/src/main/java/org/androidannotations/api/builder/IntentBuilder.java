@@ -24,7 +24,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 @SuppressWarnings("unchecked")
-public class IntentBuilder<I extends IntentBuilder<I>> extends Builder {
+public abstract class IntentBuilder<I extends IntentBuilder<I>> extends Builder {
 
 	protected final Context context;
 	protected final Intent intent;

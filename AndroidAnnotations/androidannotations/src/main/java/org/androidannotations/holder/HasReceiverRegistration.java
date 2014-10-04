@@ -22,7 +22,8 @@ import com.sun.codemodel.JFieldVar;
 public interface HasReceiverRegistration extends GeneratedClassHolder {
 
 	JExpression getContextRef();
-	JFieldVar getIntentFilterField(String[] actions);
+
+	JFieldVar getIntentFilterField(String[] actions, String[] dataSchemas);
 
 	JBlock getOnCreateAfterSuperBlock();
 	JBlock getOnDestroyBeforeSuperBlock();

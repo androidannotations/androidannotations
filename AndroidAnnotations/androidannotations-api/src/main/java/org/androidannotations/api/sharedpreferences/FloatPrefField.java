@@ -31,7 +31,20 @@ public final class FloatPrefField extends AbstractPrefField {
 	}
 
 	public float getOr(float defaultValue) {
-		return sharedPreferences.getFloat(key, defaultValue);
+		try {
+			return sharedPreferences.getFloat(key, defaultValue);
+		} catch (ClassCastException e) {
+			// The pref could be a String, if that is the case try this
+			// recovery bit
+			try {
+				String value = sharedPreferences.getString(key, "" + defaultValue);
+				return Float.parseFloat(value);
+			} catch (Exception e2) {
+				// our  recovery bit failed. The problem is elsewhere. Send the original error
+				throw e;
+			}
+		}
+
 	}
 
 	public void put(float value) {

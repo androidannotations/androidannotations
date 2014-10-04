@@ -43,7 +43,6 @@ import org.androidannotations.helper.ActivityIntentBuilder;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.GreenDroidHelper;
 import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.process.ProcessHolder;
 
@@ -62,10 +61,10 @@ import com.sun.codemodel.JVar;
 
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
-	private GreenDroidHelper greenDroidHelper;
 	private ActivityIntentBuilder intentBuilder;
 	private JMethod onCreate;
 	private JMethod setIntent;
+	private JMethod onNewIntentMethod;
 	private JMethod setContentViewLayout;
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
@@ -182,11 +181,12 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	protected void setOnNewIntent() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
-		method.annotate(Override.class);
-		JVar intent = method.param(classes().INTENT, "intent");
-		JBlock body = method.body();
-		body.invoke(_super(), method).arg(intent);
+		onNewIntentMethod = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
+		onNewIntentMethod.annotate(Override.class);
+		JVar intent = onNewIntentMethod.param(classes().INTENT, "intent");
+		JBlock body = onNewIntentMethod.body();
+		body.invoke(_super(), onNewIntentMethod).arg(intent);
+		body.invoke(getSetIntent()).arg(intent);
 		getRoboGuiceHolder().onNewIntentAfterSuperBlock = body.block();
 	}
 
@@ -323,22 +323,15 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private void setSetContentView() {
 		getOnCreate();
 
-		String setContentViewMethodName;
-		if (usesGreenDroid()) {
-			setContentViewMethodName = "setActionBarContentView";
-		} else {
-			setContentViewMethodName = "setContentView";
-		}
-
 		JClass layoutParamsClass = classes().VIEW_GROUP_LAYOUT_PARAMS;
 
-		setContentViewLayout = setContentViewMethod(setContentViewMethodName, new JType[] { codeModel().INT }, new String[] { "layoutResID" });
-		setContentViewMethod(setContentViewMethodName, new JType[] { classes().VIEW, layoutParamsClass }, new String[] { "view", "params" });
-		setContentViewMethod(setContentViewMethodName, new JType[] { classes().VIEW }, new String[] { "view" });
+		setContentViewLayout = setContentViewMethod(new JType[] { codeModel().INT }, new String[] { "layoutResID" });
+		setContentViewMethod(new JType[] { classes().VIEW, layoutParamsClass }, new String[] { "view", "params" });
+		setContentViewMethod(new JType[] { classes().VIEW }, new String[] { "view" });
 	}
 
-	private JMethod setContentViewMethod(String setContentViewMethodName, JType[] paramTypes, String[] paramNames) {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, setContentViewMethodName);
+	private JMethod setContentViewMethod(JType[] paramTypes, String[] paramNames) {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "setContentView");
 		method.annotate(Override.class);
 
 		ArrayList<JVar> params = new ArrayList<JVar>();
@@ -359,13 +352,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return initSavedInstanceParam;
 	}
 
-	private boolean usesGreenDroid() {
-		if (greenDroidHelper == null) {
-			greenDroidHelper = new GreenDroidHelper(processingEnvironment());
-		}
-		return greenDroidHelper.usesGreenDroid(annotatedElement);
-	}
-
 	private void handleBackPressed() {
 		Element declaredOnBackPressedMethod = getOnBackPressedMethod(annotatedElement);
 		if (declaredOnBackPressedMethod != null) {
@@ -384,15 +370,15 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 			onKeyDownBody._if( //
 					sdkInt.lt(JExpr.lit(5)) //
-							.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
-							.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
+					.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
+					.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
 					._then() //
 					.invoke("onBackPressed");
 
 			onKeyDownBody._return( //
 					JExpr._super().invoke(onKeyDownMethod) //
-							.arg(keyCodeParam) //
-							.arg(eventParam));
+					.arg(keyCodeParam) //
+					.arg(eventParam));
 
 		}
 	}
@@ -422,7 +408,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 				&& method.getModifiers().contains(Modifier.PUBLIC) //
 				&& method.getReturnType().getKind().equals(TypeKind.VOID) //
 				&& method.getParameters().size() == 0 //
-		;
+				;
 	}
 
 	@Override
@@ -496,6 +482,13 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 		getSetIntent().body().invoke(injectExtrasMethod);
 		getInitBody().invoke(injectExtrasMethod);
+	}
+
+	public JMethod getOnNewIntent() {
+		if (onNewIntentMethod == null) {
+			setOnNewIntent();
+		}
+		return onNewIntentMethod;
 	}
 
 	@Override
@@ -754,8 +747,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions) {
-		return receiverRegistrationHolder.getIntentFilterField(actions);
+	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
+		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
 	}
 
 }

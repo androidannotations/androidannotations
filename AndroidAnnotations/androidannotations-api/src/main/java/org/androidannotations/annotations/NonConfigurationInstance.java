@@ -42,6 +42,25 @@ import java.lang.annotation.Target;
  * This caution doesn't apply to beans annotated with {@link Bean}, because
  * AndroidAnnotations automatically takes care of rebinding their context.
  * </p>
+ *
+ * <blockquote>
+ *
+ * Example :
+ *
+ * <pre>
+ * &#064;EActivity(R.layout.main)
+ * public class MyActivity extends Activity {
+ * 
+ * 	&#064;NonConfigurationInstance
+ * 	Bitmap someBitmap;
+ * 
+ * 	&#064;NonConfigurationInstance
+ * 	&#064;Bean
+ * 	MyBackgroundTask myBackgroundTask;
+ * }
+ * </pre>
+ *
+ * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)

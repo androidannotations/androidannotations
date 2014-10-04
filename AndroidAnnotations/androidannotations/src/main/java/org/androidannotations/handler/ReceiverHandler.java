@@ -63,10 +63,11 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 		Receiver annotation = element.getAnnotation(Receiver.class);
 		String[] actions = annotation.actions();
+		String[] dataSchemes = annotation.dataSchemes();
 		Receiver.RegisterAt registerAt = annotation.registerAt();
 		boolean local = annotation.local();
 
-		JFieldVar intentFilterField = holder.getIntentFilterField(actions);
+		JFieldVar intentFilterField = holder.getIntentFilterField(actions, dataSchemes);
 		JFieldVar receiverField = createReceiverField(holder, receiverName, methodName, hasIntentParam);
 		registerAndUnregisterReceiver(holder, registerAt, intentFilterField, receiverField, local);
 	}

@@ -15,15 +15,14 @@
  */
 package org.androidannotations.test15;
 
-import java.util.ArrayList;
-
+import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.Result;
 
-import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
+import java.util.ArrayList;
 
 @EFragment(R.layout.views_injected)
 public class AwaitingResultFragment extends Fragment {
@@ -33,28 +32,41 @@ public class AwaitingResultFragment extends Fragment {
 	private static final int THIRD_REQUEST = 33;
 	private static final int FORTH_REQUEST = 44;
 
+	boolean	onResultCalled = false;
+	boolean	onResultWithDataCalled = false;
+	boolean	onActivityResultWithResultCodeAndDataCalled = false;
+	boolean	onActivityResultWithDataAndResultCodeCalled = false;
+	boolean	onResultWithIntResultCodeCalled = false;
+	boolean	onResultWithIntegerResultCodeCalled = false;
+
 	@OnActivityResult(FIRST_REQUEST)
 	void onResult() {
+		onResultCalled = true;
 	}
 
 	@OnActivityResult(SECOND_REQUEST)
 	void onResultWithData(Intent intentData) {
+		onResultWithDataCalled = true;
 	}
 
 	@OnActivityResult(SECOND_REQUEST)
 	void onActivityResultWithResultCodeAndData(int result, Intent intentData) {
+		onActivityResultWithResultCodeAndDataCalled = true;
 	}
 
 	@OnActivityResult(SECOND_REQUEST)
 	void onActivityResultWithDataAndResultCode(Intent intentData, int result) {
+		onActivityResultWithDataAndResultCodeCalled = true;
 	}
 
 	@OnActivityResult(THIRD_REQUEST)
 	void onResultWithIntResultCode(int resultCode) {
+		onResultWithIntResultCodeCalled = true;
 	}
 
 	@OnActivityResult(THIRD_REQUEST)
 	void onResultWithIntegerResultCode(Integer resultCodeInteger) {
+		onResultWithIntegerResultCodeCalled = true;
 	}
 
 	@OnActivityResult(FORTH_REQUEST)

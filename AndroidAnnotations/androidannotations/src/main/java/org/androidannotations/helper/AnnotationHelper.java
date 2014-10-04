@@ -15,6 +15,9 @@
  */
 package org.androidannotations.helper;
 
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -73,12 +76,26 @@ public class AnnotationHelper {
 		return isSubtype(t1.asType(), t2.asType());
 	}
 
+	public List<? extends TypeMirror> directSupertypes(TypeMirror typeMirror) {
+		return processingEnv.getTypeUtils().directSupertypes(typeMirror);
+	}
+
 	/**
 	 * This method may return null if the {@link TypeElement} cannot be found in
 	 * the processor classpath
 	 */
 	public TypeElement typeElementFromQualifiedName(String qualifiedName) {
 		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
+	}
+
+	public String generatedClassQualifiedNameFromQualifiedName(String qualifiedName) {
+		TypeElement type = typeElementFromQualifiedName(qualifiedName);
+		if (type.getNestingKind() == NestingKind.MEMBER) {
+			String parentGeneratedClass = generatedClassQualifiedNameFromQualifiedName(type.getEnclosingElement().asType().toString());
+			return parentGeneratedClass + "." + type.getSimpleName().toString() + GENERATION_SUFFIX;
+		} else {
+			return qualifiedName + GENERATION_SUFFIX;
+		}
 	}
 
 	public AnnotationMirror findAnnotationMirror(Element annotatedElement, String annotationName) {
@@ -157,7 +174,7 @@ public class AnnotationHelper {
 	/**
 	 * Returns a list of {@link JFieldRef} linking to the R class, based on the
 	 * given annotation
-	 * 
+	 *
 	 * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
 	 */
 	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
@@ -179,7 +196,7 @@ public class AnnotationHelper {
 	 * set using the value() parameter of the annotation (as int or int[]), the
 	 * resName() parameter of the annotation (as String or String[]), the
 	 * element name.
-	 * 
+	 *
 	 * @param element
 	 *            the annotated element
 	 * @param annotationName
@@ -409,6 +426,11 @@ public class AnnotationHelper {
 		List<Class<? extends Annotation>> annotations = new ArrayList<Class<? extends Annotation>>();
 		annotations.add(validAnnotation);
 		return hasOneOfClassAnnotations(element, annotations);
+	}
+
+	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
+		Element enclosingElement = element.getEnclosingElement();
+		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations) {

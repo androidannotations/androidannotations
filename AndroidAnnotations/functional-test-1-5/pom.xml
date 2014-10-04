@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>androidannotations-parent</artifactId>
 		<groupId>org.androidannotations</groupId>
-		<version>3.1-SNAPSHOT</version>
+		<version>3.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>functional-test-1-5</artifactId>
@@ -94,14 +94,54 @@
 			<artifactId>support-v4</artifactId>
 			<version>r7</version>
 		</dependency>
+		<dependency>
+			<groupId>org.robolectric</groupId>
+			<artifactId>robolectric</artifactId>
+			<version>2.3</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+          			<groupId>com.android.support</groupId>
+          			<artifactId>support-v4</artifactId>
+        		</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup</groupId>
+			<artifactId>fest-android</artifactId>
+			<version>1.0.8</version>
+			<scope>test</scope>
+			<exclusions>
+			<exclusion>
+				<groupId>com.android.support</groupId>
+				<artifactId>support-v4</artifactId>
+			</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>140</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.8.2</version>
+				<version>3.9.0-rc.3</version>
 				<configuration>
 					<sdk>
 						<platform>14</platform>
@@ -121,6 +161,11 @@
 					<source>1.6</source>
 					<target>1.6</target>
 					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>-Atrace=true</arg>
+						<arg>-AlogLevel=ERROR</arg>
+						<arg>-AlogFile=${project.build.directory}/functional-test.log</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 
@@ -158,7 +203,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>

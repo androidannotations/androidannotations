@@ -105,11 +105,14 @@ public final class CanonicalNameConstants {
 	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
 	public static final String VIEW_SERVER = "org.androidannotations.api.ViewServer";
 	public static final String LOOPER = "android.os.Looper";
+	public static final String POWER_MANAGER = "android.os.PowerManager";
+	public static final String WAKE_LOCK = "android.os.PowerManager.WakeLock";
 
 	/*
 	 * Android permission
 	 */
 	public static final String INTERNET_PERMISSION = "android.permission.INTERNET";
+	public static final String WAKELOCK_PERMISSION = "android.permission.WAKE_LOCK";
 
 	/*
 	 * Sherlock
@@ -117,11 +120,6 @@ public final class CanonicalNameConstants {
 	public static final String SHERLOCK_MENU = "com.actionbarsherlock.view.Menu";
 	public static final String SHERLOCK_MENU_ITEM = "com.actionbarsherlock.view.MenuItem";
 	public static final String SHERLOCK_MENU_INFLATER = "com.actionbarsherlock.view.MenuInflater";
-
-	/*
-	 * HoloEverywhere
-	 */
-	public static final String HOLO_EVERYWHERE_LAYOUT_INFLATER = "org.holoeverywhere.LayoutInflater";
 
 	/*
 	 * SpringFramework
@@ -179,6 +177,7 @@ public final class CanonicalNameConstants {
 	public static final String CLIENT_CONNECTION_MANAGER = "org.apache.http.conn.ClientConnectionManager";
 	public static final String DEFAULT_HTTP_CLIENT = "org.apache.http.impl.client.DefaultHttpClient";
 	public static final String SSL_SOCKET_FACTORY = "org.apache.http.conn.ssl.SSLSocketFactory";
+	public static final String PLAIN_SOCKET_FACTORY = "org.apache.http.conn.scheme.PlainSocketFactory";
 	public static final String SCHEME = "org.apache.http.conn.scheme.Scheme";
 	public static final String SCHEME_REGISTRY = "org.apache.http.conn.scheme.SchemeRegistry";
 	public static final String SINGLE_CLIENT_CONN_MANAGER = "org.apache.http.impl.conn.SingleClientConnManager";

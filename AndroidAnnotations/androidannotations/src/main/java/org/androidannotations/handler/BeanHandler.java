@@ -15,14 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.ref;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.NonConfigurationInstance;
@@ -32,10 +28,12 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.ref;
 
 public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -57,16 +55,16 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
-		TypeMirror elementType = annotationHelper.extractAnnotationClassParameter(element);
-		if (elementType == null) {
-			elementType = element.asType();
-			elementType = holder.processingEnvironment().getTypeUtils().erasure(elementType);
+		TypeMirror typeMirror = annotationHelper.extractAnnotationClassParameter(element);
+		if (typeMirror == null) {
+			typeMirror = element.asType();
+			typeMirror = holder.processingEnvironment().getTypeUtils().erasure(typeMirror);
 		}
 
-		String fieldName = element.getSimpleName().toString();
-		String typeQualifiedName = elementType.toString();
-		JClass injectedClass = refClass(typeQualifiedName + GENERATION_SUFFIX);
+		String typeQualifiedName = typeMirror.toString();
+		JClass injectedClass = refClass(annotationHelper.generatedClassQualifiedNameFromQualifiedName(typeQualifiedName));
 
+		String fieldName = element.getSimpleName().toString();
 		JFieldRef beanField = ref(fieldName);
 		JBlock block = holder.getInitBody();
 

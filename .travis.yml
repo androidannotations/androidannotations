@@ -1,8 +1,16 @@
 language: android
+jdk:
+  - oraclejdk8
+  - oraclejdk7
 android:
   components:
-    - build-tools-19.1
     - android-14
+    - build-tools-20.0.0
+  licenses:
+    - android-sdk-license-5be876d5
+before_script:
+  - export TERM=dumb
 script:
   - mvn -f AndroidAnnotations/pom.xml install
-  - mvn -f examples/maveneclipse/pom.xml install
+  - mvn -f examples/maveneclipse/pom.xml install -Dandroidannotations.version=3.2-SNAPSHOT
+  - ./examples/gradle/gradlew build --build-file examples/gradle/build.gradle

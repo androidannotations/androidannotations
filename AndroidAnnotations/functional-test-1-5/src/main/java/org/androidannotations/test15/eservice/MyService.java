@@ -42,7 +42,7 @@ public class MyService extends IntentService {
 	@Bean
 	EnhancedClass dependency;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
 
 	public MyService() {

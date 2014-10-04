@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>4.1.1.4</android.version>
 		<android.platform>16</android.platform>
-		<androidannotations.version>3.0.1</androidannotations.version>
+		<androidannotations.version>3.1</androidannotations.version>
 		<java.version>1.6</java.version>
 	</properties>
 
@@ -51,7 +51,7 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.8.2</version>
+				<version>3.9.0-rc.3</version>
 				<configuration>
 					<sdk>
 						<platform>${android.platform}</platform>

@@ -62,6 +62,7 @@ public @interface OrmLiteDao {
 
 	Class<?> helper();
 
-	Class<?> model();
+	@Deprecated
+	Class<?> model() default Void.class;
 
 }

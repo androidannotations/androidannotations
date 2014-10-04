@@ -20,8 +20,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import org.androidannotations.annotations.rest.Rest;
-import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.handler.GeneratingAnnotationHandler;
+import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.holder.RestHolder;
@@ -39,7 +38,7 @@ import static com.sun.codemodel.JExpr.*;
 import static org.androidannotations.helper.CanonicalNameConstants.ARRAYLIST;
 import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
 
-public class RestHandler extends BaseAnnotationHandler<RestHolder> implements GeneratingAnnotationHandler<RestHolder> {
+public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 	private final AnnotationHelper annotationHelper;
 	private final APTCodeModelHelper codeModelHelper;
@@ -57,6 +56,8 @@ public class RestHandler extends BaseAnnotationHandler<RestHolder> implements Ge
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		super.validate(element, validatedElements, valid);
+
 		TypeElement typeElement = (TypeElement) element;
 
 		validatorHelper.notAlreadyValidated(element, validatedElements, valid);

@@ -22,3 +22,4 @@ org.maven.ide.eclipse.prefs
 *.iws
 *.iml
 *.idea
+local.properties

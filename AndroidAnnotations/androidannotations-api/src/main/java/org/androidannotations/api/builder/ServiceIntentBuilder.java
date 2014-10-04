@@ -19,7 +19,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
-public class ServiceIntentBuilder<I extends ServiceIntentBuilder<I>> extends IntentBuilder<I> {
+public abstract class ServiceIntentBuilder<I extends ServiceIntentBuilder<I>> extends IntentBuilder<I> {
 
 	public ServiceIntentBuilder(Context context, Class<?> clazz) {
 		super(context, clazz);

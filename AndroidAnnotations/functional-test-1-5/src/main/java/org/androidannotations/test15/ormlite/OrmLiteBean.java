@@ -25,7 +25,7 @@ import org.androidannotations.test15.ormlite.DatabaseHelper;
 @EBean
 public class OrmLiteBean {
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
 
 }
