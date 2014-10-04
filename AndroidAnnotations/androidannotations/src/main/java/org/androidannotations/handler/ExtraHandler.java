@@ -15,16 +15,14 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
@@ -35,14 +33,15 @@ import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
 
 public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 
@@ -92,44 +91,20 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 	}
 
 	private void injectExtraInComponent(Element element, HasExtras hasExtras, JFieldVar extraKeyStaticField, String fieldName) {
+		JMethod injectExtrasMethod = hasExtras.getInjectExtrasMethod();
 		JVar extras = hasExtras.getInjectExtras();
 		JBlock injectExtrasBlock = hasExtras.getInjectExtrasBlock();
 
 		TypeMirror type = codeModelHelper.getActualType(element, hasExtras);
+		JClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType(), hasExtras);
 		BundleHelper bundleHelper = new BundleHelper(annotationHelper, type);
 
 		JFieldRef extraField = JExpr.ref(fieldName);
+		JExpression intent = invoke("getIntent");
 		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(extras, "containsKey").arg(extraKeyStaticField))._then();
 
-		JExpression restoreMethodCall = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(extraKeyStaticField);
-		if (bundleHelper.restoreCallNeedCastStatement()) {
-
-			JClass jclass = codeModelHelper.typeMirrorToJClass(element.asType(), hasExtras);
-			restoreMethodCall = JExpr.cast(jclass, restoreMethodCall);
-
-			if (bundleHelper.restoreCallNeedsSuppressWarning()) {
-				JMethod injectExtrasMethod = hasExtras.getInjectExtrasMethod();
-				if (injectExtrasMethod.annotations().size() == 0) {
-					injectExtrasMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
-				}
-			}
-
-		}
-
-		/*
-		 * Handle the android bug : getIntent().getExtras().getByteArray()
-		 * always returns null;
-		 */
-		restoreMethodCall = handleByteArrayExtraBug(element, extraKeyStaticField, restoreMethodCall);
-
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(elementClass, intent, extras, extraKeyStaticField, injectExtrasMethod);
 		ifContainsKey.assign(extraField, restoreMethodCall);
-	}
-
-	private JExpression handleByteArrayExtraBug(Element element, JFieldVar extraKeyStaticField, JExpression restoreMethodCall) {
-		if ("byte[]".equals(element.asType().toString())) {
-			restoreMethodCall = invoke("getIntent").invoke("getByteArrayExtra").arg(extraKeyStaticField);
-		}
-		return restoreMethodCall;
 	}
 
 	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName) {

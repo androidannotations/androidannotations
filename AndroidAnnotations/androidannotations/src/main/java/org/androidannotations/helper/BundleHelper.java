@@ -206,8 +206,16 @@ public class BundleHelper {
 		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
 	}
 
-	public JExpression getExpressionToRestore(JClass variableClass, JExpression extras, JExpression extraKey, JMethod method) {
-		JExpression expressionToRestore = JExpr.invoke(extras, methodNameToRestore).arg(extraKey);
+	public JExpression getExpressionToRestoreFromIntentOrBundle(JClass variableClass, JExpression intent, JExpression extras, JExpression extraKey, JMethod method) {
+		if ("byte[]".equals(element.toString())) {
+			return intent.invoke("getByteArrayExtra").arg(extraKey);
+		} else {
+			return getExpressionToRestoreFromBundle(variableClass, extras, extraKey, method);
+		}
+	}
+
+	public JExpression getExpressionToRestoreFromBundle(JClass variableClass, JExpression bundle, JExpression extraKey, JMethod method) {
+		JExpression expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
 		if (restoreCallNeedCastStatement()) {
 			expressionToRestore = JExpr.cast(variableClass, expressionToRestore);
 

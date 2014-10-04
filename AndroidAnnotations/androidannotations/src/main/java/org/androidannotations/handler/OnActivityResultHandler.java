@@ -107,7 +107,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		}
 
 		public JExpression getExtraValue(VariableElement parameter, JBlock block, HasOnActivityResult holder) {
-			return super.getExtraValue(parameter, holder.getOnActivityResultExtras(), block, holder.getOnActivityResultMethod(), holder);
+			return super.getExtraValue(parameter, holder.getOnActivityResultDataParam(), holder.getOnActivityResultExtras(), block, holder.getOnActivityResultMethod(), holder);
 		}
 	}
 

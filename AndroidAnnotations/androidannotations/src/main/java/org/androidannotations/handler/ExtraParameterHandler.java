@@ -48,7 +48,7 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 		// Don't do anything here.
 	}
 
-	public JExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, JMethod annotatedMethod, GeneratedClassHolder holder) {
+	public JExpression getExtraValue(VariableElement parameter, JVar intent, JVar extras, JBlock block, JMethod annotatedMethod, GeneratedClassHolder holder) {
 		String parameterName = parameter.getSimpleName().toString();
 		JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType(), holder);
 
@@ -58,7 +58,7 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 		}
 
 		BundleHelper bundleHelper = new BundleHelper(annotationHelper, parameter.asType());
-		JExpression restoreMethodCall = bundleHelper.getExpressionToRestore(parameterClass, extras, getStaticExtraField(holder, extraKey), annotatedMethod);
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(parameterClass, intent, extras, getStaticExtraField(holder, extraKey), annotatedMethod);
 
 		return block.decl(parameterClass, parameterName, restoreMethodCall);
 	}
