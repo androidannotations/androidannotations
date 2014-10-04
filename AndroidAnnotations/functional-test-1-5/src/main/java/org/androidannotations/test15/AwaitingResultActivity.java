@@ -15,15 +15,13 @@
  */
 package org.androidannotations.test15;
 
-import java.util.ArrayList;
-
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.Result;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OnActivityResult;
+
+import java.util.ArrayList;
 
 @EActivity(R.layout.views_injected)
 public class AwaitingResultActivity extends Activity {
@@ -71,8 +69,9 @@ public class AwaitingResultActivity extends Activity {
 	}
 
 	@OnActivityResult(FORTH_REQUEST)
-	void onResultWithResultExtra(int resultCode, @Result("value") int i, @Result String s, @Result Uri uri,
-	        @Result ArrayList<Uri> uris, @Result String[] strings) {
+	void onResultWithResultExtra(int resultCode, @OnActivityResult.Extra("value") int i, @OnActivityResult.Extra String s,
+	                             @OnActivityResult.Extra Uri uri, @OnActivityResult.Extra ArrayList<Uri> uris,
+	                             @OnActivityResult.Extra String[] strings) {
 		onResultWithResultExtraCodeCalled = true;
 	}
 }

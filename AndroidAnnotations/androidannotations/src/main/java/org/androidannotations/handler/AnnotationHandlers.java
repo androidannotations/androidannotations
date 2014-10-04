@@ -115,6 +115,7 @@ public class AnnotationHandlers {
 		add(new InstanceStateHandler(processingEnvironment));
 		add(new HttpsClientHandler(processingEnvironment));
 		add(new OnActivityResultHandler(processingEnvironment));
+		add(new OnActivityResultExtraHandler(processingEnvironment));
 		add(new HierarchyViewerSupportHandler(processingEnvironment));
 		add(new WindowFeatureHandler(processingEnvironment));
 		add(new ReceiverHandler(processingEnvironment));

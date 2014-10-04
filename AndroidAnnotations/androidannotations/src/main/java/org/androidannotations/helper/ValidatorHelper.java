@@ -21,8 +21,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.Receiver;
-import org.androidannotations.annotations.Result;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.WakeLock;
@@ -1398,7 +1398,7 @@ public class ValidatorHelper {
 		boolean intentParameterFound = false;
 		for (VariableElement parameter : parameters) {
 			TypeMirror parameterType = parameter.asType();
-			if (parameter.getAnnotation(Result.class) != null) {
+			if (parameter.getAnnotation(OnActivityResult.Extra.class) != null) {
 				continue;
 			}
 			if (parameterType.toString().equals(CanonicalNameConstants.INTEGER) //

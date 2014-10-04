@@ -15,35 +15,45 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.Name;
-import javax.lang.model.element.VariableElement;
-
-import org.androidannotations.annotations.Result;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.BundleHelper;
-import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.helper.TargetAnnotationHelper;
-import org.androidannotations.helper.ValidatorHelper;
-import org.androidannotations.holder.HasOnActivityResult;
-import org.androidannotations.model.AnnotationElements;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JVar;
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.BundleHelper;
+import org.androidannotations.holder.HasOnActivityResult;
+import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-public class ResultHandler {
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.VariableElement;
+
+public class OnActivityResultExtraHandler extends BaseAnnotationHandler<HasOnActivityResult> {
 
 	private final static APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-	public static JExpression getExtraValue(HasOnActivityResult holder, JBlock block,
-	        VariableElement parameter) {
-		Result annotation = parameter.getAnnotation(Result.class);
+	public OnActivityResultExtraHandler(ProcessingEnvironment processingEnvironment) {
+		super(OnActivityResult.Extra.class, processingEnvironment);
+	}
+
+	@Override
+	protected void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		validatorHelper.enclosingMethodHasAnnotation(OnActivityResult.class, element, validatedElements, valid);
+
+		validatorHelper.canBePutInABundle(element, valid);
+	}
+
+	@Override
+	public void process(Element element, HasOnActivityResult holder) throws Exception {
+		// Don't do anything
+	}
+
+	public static JExpression getExtraValue(HasOnActivityResult holder, JBlock block, VariableElement parameter) {
+		OnActivityResult.Extra annotation = parameter.getAnnotation(OnActivityResult.Extra.class);
 		String parameterName = parameter.getSimpleName().toString();
 		String extraKey = annotation.value();
 		if (extraKey.isEmpty()) {
@@ -51,7 +61,7 @@ public class ResultHandler {
 		}
 
 		JVar extras = holder.getOnActivityResultExtras();
-		BundleHelper bundleHelper = new BundleHelper(new AnnotationHelper(holder.processingEnvironment()), parameter);
+		BundleHelper bundleHelper = new BundleHelper(new AnnotationHelper(holder.processingEnvironment()), parameter.asType());
 		JExpression restoreMethodCall = JExpr.invoke(extras, bundleHelper.getMethodNameToRestore()).arg(extraKey);
 		JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType(), holder);
 		if (bundleHelper.restoreCallNeedCastStatement()) {

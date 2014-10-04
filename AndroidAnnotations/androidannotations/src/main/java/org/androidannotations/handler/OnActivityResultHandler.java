@@ -20,8 +20,6 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.Result;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasOnActivityResult;
 import org.androidannotations.model.AnnotationElements;
@@ -37,8 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivityResult> {
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public OnActivityResultHandler(ProcessingEnvironment processingEnvironment) {
 		super(OnActivityResult.class, processingEnvironment);
@@ -75,9 +71,8 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		for (VariableElement parameter : parameters) {
 			TypeMirror parameterType = parameter.asType();
 
-			Result resultAnnotation = parameter.getAnnotation(Result.class);
-			if (resultAnnotation != null) {
-				JExpression extraParameter = ResultHandler.getExtraValue(holder, onResultBlock, parameter);
+			if (parameter.getAnnotation(OnActivityResult.Extra.class) != null) {
+				JExpression extraParameter = OnActivityResultExtraHandler.getExtraValue(holder, onResultBlock, parameter);
 				onResultArgs.add(extraParameter);
 			} else if (CanonicalNameConstants.INTENT.equals(parameterType.toString())) {
 				JVar intentParameter = holder.getOnActivityResultDataParam();
