@@ -15,14 +15,6 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._super;
-
-import java.util.HashMap;
-
-import org.androidannotations.process.ProcessHolder;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JCodeModel;
@@ -32,10 +24,18 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JOp;
 import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
+import org.androidannotations.process.ProcessHolder;
+
+import java.util.HashMap;
+
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
 
 public class OnActivityResultHolder {
 
 	private EComponentHolder holder;
+	private JMethod method;
 	private JBlock afterSuperBlock;
 	private JSwitch zwitch;
 	private JVar requestCodeParam;
@@ -46,6 +46,13 @@ public class OnActivityResultHolder {
 
 	public OnActivityResultHolder(EComponentHolder holder) {
 		this.holder = holder;
+	}
+
+	public JMethod getMethod() {
+		if (method == null) {
+			setOnActivityResult();
+		}
+		return method;
 	}
 
 	public JVar getRequestCodeParam() {
@@ -111,7 +118,7 @@ public class OnActivityResultHolder {
 	}
 
 	private void setOnActivityResult() {
-		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, "onActivityResult");
+		method = holder.getGeneratedClass().method(JMod.PUBLIC, codeModel().VOID, "onActivityResult");
 		method.annotate(Override.class);
 		requestCodeParam = method.param(codeModel().INT, "requestCode");
 		resultCodeParam = method.param(codeModel().INT, "resultCode");

@@ -468,6 +468,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
+	public JMethod getOnActivityResultMethod() {
+		return onActivityResultHolder.getMethod();
+	}
+
+	@Override
 	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
 		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
 	}

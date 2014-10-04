@@ -16,6 +16,7 @@
 package org.androidannotations.handler;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
@@ -31,13 +32,20 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.ArrayList;
 import java.util.List;
 
 public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivityResult> {
 
+	private ExtraHandler extraHandler;
+
 	public OnActivityResultHandler(ProcessingEnvironment processingEnvironment) {
 		super(OnActivityResult.class, processingEnvironment);
+		extraHandler = new ExtraHandler(processingEnvironment);
+	}
+
+	public void register(AnnotationHandlers annotationHandlers) {
+		annotationHandlers.add(this);
+		annotationHandlers.add(extraHandler);
 	}
 
 	@Override
@@ -67,27 +75,39 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		int requestCode = executableElement.getAnnotation(OnActivityResult.class).value();
 		JBlock onResultBlock = holder.getOnActivityResultCaseBlock(requestCode).block();
 
-		List<JExpression> onResultArgs = new ArrayList<JExpression>();
+		JExpression activityRef = holder.getGeneratedClass().staticRef("this");
+		JInvocation onResultInvocation = JExpr.invoke(activityRef, methodName);
+
 		for (VariableElement parameter : parameters) {
 			TypeMirror parameterType = parameter.asType();
-
 			if (parameter.getAnnotation(OnActivityResult.Extra.class) != null) {
-				JExpression extraParameter = OnActivityResultExtraHandler.getExtraValue(holder, onResultBlock, parameter);
-				onResultArgs.add(extraParameter);
+				JExpression extraParameter = extraHandler.getExtraValue(parameter, onResultBlock, holder);
+				onResultInvocation.arg(extraParameter);
 			} else if (CanonicalNameConstants.INTENT.equals(parameterType.toString())) {
 				JVar intentParameter = holder.getOnActivityResultDataParam();
-				onResultArgs.add(intentParameter);
+				onResultInvocation.arg(intentParameter);
 			} else if (parameterType.getKind().equals(TypeKind.INT) //
 			        || CanonicalNameConstants.INTEGER.equals(parameterType.toString())) {
 				JVar resultCodeParameter = holder.getOnActivityResultResultCodeParam();
-				onResultArgs.add(resultCodeParameter);
+				onResultInvocation.arg(resultCodeParameter);
 			}
 		}
+		onResultBlock.add(onResultInvocation);
+	}
 
-		JExpression activityRef = holder.getGeneratedClass().staticRef("this");
-		JInvocation onResultInvocation = onResultBlock.invoke(activityRef, methodName);
-		for (JExpression onResultArg : onResultArgs) {
-			onResultInvocation.arg(onResultArg);
+	private static class ExtraHandler extends ExtraParameterHandler {
+
+		public ExtraHandler(ProcessingEnvironment processingEnvironment) {
+			super(OnActivityResult.Extra.class, OnActivityResult.class, processingEnvironment);
+		}
+
+		@Override
+		public String getAnnotationValue(VariableElement parameter) {
+			return parameter.getAnnotation(OnActivityResult.Extra.class).value();
+		}
+
+		public JExpression getExtraValue(VariableElement parameter, JBlock block, HasOnActivityResult holder) {
+			return super.getExtraValue(parameter, holder.getOnActivityResultExtras(), block, holder.getOnActivityResultMethod(), holder);
 		}
 	}
 
