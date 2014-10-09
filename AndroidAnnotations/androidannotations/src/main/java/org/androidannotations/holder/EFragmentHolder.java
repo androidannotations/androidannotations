@@ -55,7 +55,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar container;
 	private JDefinedClass fragmentBuilderClass;
 	private JClass narrowBuilderClass;
-	private JFieldVar forceLayoutInjection;
 	private JFieldRef fragmentArgumentsBuilderField;
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
@@ -230,7 +229,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	public JFieldVar getContentView() {
 		if (contentView == null) {
 			setContentView();
-			setForceLayoutInjection();
 			setOnCreateView();
 			setOnDestroyView();
 		}
@@ -239,17 +237,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setContentView() {
 		contentView = generatedClass.field(PRIVATE, classes().VIEW, "contentView_");
-	}
-
-	public JFieldVar getForceLayoutInjection() {
-		if (forceLayoutInjection == null) {
-			setForceLayoutInjection();
-		}
-		return forceLayoutInjection;
-	}
-
-	private void setForceLayoutInjection() {
-		forceLayoutInjection = generatedClass.field(PRIVATE, boolean.class, "forceLayoutInjection_");
 	}
 
 	private void setOnCreateView() {
@@ -261,9 +248,12 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 		JVar savedInstanceState = onCreateView.param(classes().BUNDLE, "savedInstanceState");
 
+		boolean forceInjection = getAnnotatedElement().getAnnotation(EFragment.class).forceLayoutInjection();
+
 		JBlock body = onCreateView.body();
-		body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
-		body.assign(forceLayoutInjection, JExpr.lit(getAnnotatedElement().getAnnotation(EFragment.class).forceLayoutInjection()));
+
+		if (!forceInjection)
+			body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
 
 		setContentViewBlock = body.block();
 
