@@ -15,20 +15,23 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JMethod;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 public class BundleHelper {
 	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
@@ -70,6 +73,9 @@ public class BundleHelper {
 	}
 
 	private AnnotationHelper annotationHelper;
+	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+
+	private TypeMirror element;
 
 	private boolean restoreCallNeedCastStatement = false;
 	private boolean restoreCallNeedsSuppressWarning = false;
@@ -77,10 +83,11 @@ public class BundleHelper {
 	private String methodNameToSave;
 	private String methodNameToRestore;
 
-	public BundleHelper(AnnotationHelper helper, Element element) {
+	public BundleHelper(AnnotationHelper helper, TypeMirror element) {
 		annotationHelper = helper;
+		this.element = element;
 
-		String typeString = element.asType().toString();
+		String typeString = element.toString();
 		TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 
 		if (methodSuffixNameByTypeName.containsKey(typeString)) {
@@ -88,9 +95,9 @@ public class BundleHelper {
 			methodNameToSave = "put" + methodSuffixNameByTypeName.get(typeString);
 			methodNameToRestore = "get" + methodSuffixNameByTypeName.get(typeString);
 
-		} else if (element.asType().getKind() == TypeKind.ARRAY) {
+		} else if (element.getKind() == TypeKind.ARRAY) {
 
-			ArrayType arrayType = (ArrayType) element.asType();
+			ArrayType arrayType = (ArrayType) element;
 
 			boolean hasTypeArguments = false;
 			if (arrayType.getComponentType() instanceof DeclaredType) {
@@ -119,9 +126,8 @@ public class BundleHelper {
 		} else if (typeString.startsWith(CanonicalNameConstants.ARRAYLIST)) {
 
 			boolean hasTypeArguments = false;
-			TypeMirror elementAsType = element.asType();
-			if (elementAsType instanceof DeclaredType) {
-				DeclaredType declaredType = (DeclaredType) elementAsType;
+			if (element instanceof DeclaredType) {
+				DeclaredType declaredType = (DeclaredType) element;
 				List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 				if (typeArguments.size() == 1) {
 					TypeMirror typeArgument = typeArguments.get(0);
@@ -154,10 +160,9 @@ public class BundleHelper {
 
 		} else {
 
-			TypeMirror elementAsType = element.asType();
 			boolean hasTypeArguments = false;
-			if (elementAsType instanceof DeclaredType) {
-				DeclaredType declaredType = (DeclaredType) elementAsType;
+			if (element instanceof DeclaredType) {
+				DeclaredType declaredType = (DeclaredType) element;
 				typeString = declaredType.asElement().toString();
 				elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 				hasTypeArguments = declaredType.getTypeArguments().size() > 0;
@@ -199,5 +204,27 @@ public class BundleHelper {
 		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE);
 
 		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
+	}
+
+	public JExpression getExpressionToRestoreFromIntentOrBundle(JClass variableClass, JExpression intent, JExpression extras, JExpression extraKey, JMethod method) {
+		if ("byte[]".equals(element.toString())) {
+			return intent.invoke("getByteArrayExtra").arg(extraKey);
+		} else {
+			return getExpressionToRestoreFromBundle(variableClass, extras, extraKey, method);
+		}
+	}
+
+	public JExpression getExpressionToRestoreFromBundle(JClass variableClass, JExpression bundle, JExpression extraKey, JMethod method) {
+		JExpression expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
+		if (restoreCallNeedCastStatement()) {
+			expressionToRestore = JExpr.cast(variableClass, expressionToRestore);
+
+			if (restoreCallNeedsSuppressWarning()) {
+				if (!codeModelHelper.hasAnnotation(method, SuppressWarnings.class)) {
+					method.annotate(SuppressWarnings.class).param("value", "unchecked");
+				}
+			}
+		}
+		return expressionToRestore;
 	}
 }

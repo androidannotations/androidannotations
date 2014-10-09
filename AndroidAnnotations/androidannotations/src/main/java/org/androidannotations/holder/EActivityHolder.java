@@ -15,37 +15,6 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.util.ElementFilter;
-
-import org.androidannotations.api.SdkVersionHelper;
-import org.androidannotations.helper.ActionBarSherlockHelper;
-import org.androidannotations.helper.ActivityIntentBuilder;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.IntentBuilder;
-import org.androidannotations.process.ProcessHolder;
-
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -58,6 +27,35 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
+import org.androidannotations.api.SdkVersionHelper;
+import org.androidannotations.helper.ActionBarSherlockHelper;
+import org.androidannotations.helper.ActivityIntentBuilder;
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.IntentBuilder;
+import org.androidannotations.process.ProcessHolder;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.ElementFilter;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr.TRUE;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
@@ -677,6 +675,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	public JVar getOnActivityResultRequestCodeParam() {
 		return onActivityResultHolder.getRequestCodeParam();
+	}
+
+	@Override
+	public JMethod getOnActivityResultMethod() {
+		return onActivityResultHolder.getMethod();
 	}
 
 	public JBlock getOnDestroyAfterSuperBlock() {

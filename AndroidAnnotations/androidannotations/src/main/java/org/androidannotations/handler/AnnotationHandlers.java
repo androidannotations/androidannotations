@@ -15,14 +15,6 @@
  */
 package org.androidannotations.handler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-
 import org.androidannotations.handler.rest.DeleteHandler;
 import org.androidannotations.handler.rest.GetHandler;
 import org.androidannotations.handler.rest.HeadHandler;
@@ -39,6 +31,13 @@ import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AnnotationHandlers {
 
@@ -115,10 +114,11 @@ public class AnnotationHandlers {
 		add(new SubscribeHandler(processingEnvironment));
 		add(new InstanceStateHandler(processingEnvironment));
 		add(new HttpsClientHandler(processingEnvironment));
-		add(new OnActivityResultHandler(processingEnvironment));
 		add(new HierarchyViewerSupportHandler(processingEnvironment));
 		add(new WindowFeatureHandler(processingEnvironment));
 		add(new ReceiverHandler(processingEnvironment));
+		new ReceiverActionHandler(processingEnvironment).register(this);
+		new OnActivityResultHandler(processingEnvironment).register(this);
 
 		add(new IgnoredWhenDetachedHandler(processingEnvironment));
 		/* After injection methods must be after injections */
@@ -151,12 +151,12 @@ public class AnnotationHandlers {
 		add(new SupposeBackgroundHandler(processingEnvironment));
 	}
 
-	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
+	public void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
 		annotationHandlers.add(annotationHandler);
 		decoratingAnnotationHandlers.add(annotationHandler);
 	}
 
-	private void add(GeneratingAnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
+	public void add(GeneratingAnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
 		annotationHandlers.add(annotationHandler);
 		generatingAnnotationHandlers.add(annotationHandler);
 	}
