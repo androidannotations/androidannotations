@@ -16,7 +16,6 @@
 package org.androidannotations.handler;
 
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JVar;
