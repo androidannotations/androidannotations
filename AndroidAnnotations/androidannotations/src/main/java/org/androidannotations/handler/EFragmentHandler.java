@@ -16,6 +16,7 @@
 package org.androidannotations.handler;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JVar;
@@ -73,8 +74,9 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 			JVar container = holder.getContainer();
 
 			JFieldVar contentView = holder.getContentView();
+			JFieldVar forceLayoutInjection = holder.getForceLayoutInjection();
 
-			block._if(contentView.eq(_null())) //
+			block._if(contentView.eq(_null()).cor(forceLayoutInjection.eq(JExpr.TRUE))) //
 					._then() //
 					.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
 		}
