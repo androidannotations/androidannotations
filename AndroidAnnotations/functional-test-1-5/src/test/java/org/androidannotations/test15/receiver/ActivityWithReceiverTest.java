@@ -36,24 +36,25 @@ public class ActivityWithReceiverTest {
 
 	@Before
 	public void setup() {
-		activity = Robolectric.buildActivity(ActivityWithReceiver_.class)
-				.create().start().resume().get();
+		activity = Robolectric.buildActivity(ActivityWithReceiver_.class).create().start().resume().get();
 	}
 
 	@Test
 	public void onWifiStateChangedTest() {
+		final String SSID = "TEST SSID";
 		Intent intent = new Intent(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+		intent.putExtra(WifiManager.EXTRA_BSSID, SSID);
 		activity.sendBroadcast(intent);
 
 		assertTrue(activity.wifiChangeIntentReceived);
+		assertTrue(SSID.equals(activity.wifiSsid));
 	}
 
 	@Test
 	public void onLocalWifiStateChangedTest() {
 		Intent intent = new Intent(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
-		LocalBroadcastManager.getInstance(Robolectric.application)
-				.sendBroadcast(intent);
+		LocalBroadcastManager.getInstance(Robolectric.application).sendBroadcast(intent);
 
 		assertTrue(activity.localWifiChangeIntentReceived);
 	}

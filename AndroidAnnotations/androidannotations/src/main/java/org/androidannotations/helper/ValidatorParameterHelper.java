@@ -15,20 +15,22 @@
  */
 package org.androidannotations.helper;
 
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.ReceiverAction;
-import org.androidannotations.process.IsValid;
+import static java.util.Arrays.asList;
 
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.Receiver;
+import org.androidannotations.annotations.ReceiverAction;
+import org.androidannotations.process.IsValid;
 
 public class ValidatorParameterHelper {
 
@@ -181,6 +183,11 @@ public class ValidatorParameterHelper {
 				valid.invalidate();
 			}
 		}
+	}
+
+	public void hasNoOtherParameterThanContextOrIntentOrReceiverExtraAnnotated(ExecutableElement executableElement, IsValid valid) {
+		String[] types = new String[] { CanonicalNameConstants.CONTEXT, CanonicalNameConstants.INTENT };
+		hasNotOtherParameterThanTypesOrAnnotatedWith(types, Receiver.Extra.class, executableElement, valid);
 	}
 
 	public void hasNoOtherParameterThanContextOrIntentOrReceiverActionExtraAnnotated(ExecutableElement executableElement, IsValid valid) {

@@ -97,4 +97,27 @@ public @interface Receiver {
 	public enum RegisterAt {
 		OnCreateOnDestroy, OnStartOnStop, OnResumeOnPause, OnAttachOnDetach
 	}
+
+	/**
+	 * <p>
+	 * Should be used on any native, {@link android.os.Parcelable} or
+	 * {@link java.io.Serializable} parameter of a method annotated with
+	 * {@link ReceiverAction} to inject the extra put in the intent parameter of
+	 * {@code void onReceive(Context context, Intent intent)}. The key of this
+	 * extra is the value of the annotation {@link ReceiverAction.Extra} if it
+	 * is set or the name of the parameter.
+	 * </p>
+	 */
+	@Retention(RetentionPolicy.CLASS)
+	@Target(ElementType.PARAMETER)
+	public @interface Extra {
+
+		/**
+		 * Define the extra's name. If this parameter isn't set the annotated
+		 * parameter name will be used.
+		 *
+		 * @return the extra's name
+		 */
+		String value() default "";
+	}
 }
