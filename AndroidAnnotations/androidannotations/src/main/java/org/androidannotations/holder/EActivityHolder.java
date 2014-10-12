@@ -59,6 +59,8 @@ import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
+	private static final String ON_CONTENT_CHANGED_JAVADOC = "We cannot simply copy the " + "code from RoboActivity, because that can cause classpath issues. " + "For further details see issue #1116.";
+
 	private ActivityIntentBuilder intentBuilder;
 	private JMethod onCreate;
 	private JMethod setIntent;
@@ -230,6 +232,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	protected void setOnContentChanged() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onContentChanged");
 		method.annotate(Override.class);
+		method.javadoc().append(ON_CONTENT_CHANGED_JAVADOC);
 		JBlock body = method.body();
 		body.invoke(_super(), method);
 		getRoboGuiceHolder().onContentChangedAfterSuperBlock = body.block();
@@ -446,6 +449,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	protected void setContentViewListenerField() {
 		getRoboGuiceHolder().contentViewListenerField = generatedClass.field(JMod.NONE, classes().CONTENT_VIEW_LISTENER, "ignored" + GENERATION_SUFFIX);
 		getRoboGuiceHolder().contentViewListenerField.annotate(classes().INJECT);
+	}
+
+	protected void setScopeField() {
+		getRoboGuiceHolder().scope = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope_");
+
 	}
 
 	@Override

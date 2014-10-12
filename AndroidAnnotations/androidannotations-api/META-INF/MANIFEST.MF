@@ -10,6 +10,7 @@ Export-Package: org.androidannotations.annotations,
  org.androidannotations.api,
  org.androidannotations.api.builder,
  org.androidannotations.api.rest,
+ org.androidannotations.api.roboguice,
  org.androidannotations.api.sharedpreferences,
  org.androidannotations.api.view
 Bundle-Vendor: androidannotations

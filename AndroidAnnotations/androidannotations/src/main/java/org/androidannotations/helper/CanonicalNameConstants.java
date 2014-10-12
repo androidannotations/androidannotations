@@ -141,6 +141,7 @@ public final class CanonicalNameConstants {
 	/*
 	 * RoboGuice
 	 */
+	public static final String ROBO_APPLICATION = "roboguice.application.RoboApplication";
 	public static final String ROBO_CONTEXT = "roboguice.util.RoboContext";
 	public static final String ROBO_INJECTOR = "roboguice.inject.RoboInjector";
 	public static final String KEY = "com.google.inject.Key";
@@ -152,6 +153,7 @@ public final class CanonicalNameConstants {
 	public static final String ON_NEW_INTENT_EVENT = "roboguice.activity.event.OnNewIntentEvent";
 	public static final String EVENT_MANAGER = "roboguice.event.EventManager";
 	public static final String CONTEXT_SCOPE = "roboguice.inject.ContextScope";
+	public static final String VIEW_MEMBERS_INJECTOR = "roboguice.inject.ViewListener.ViewMembersInjector";
 	public static final String ROBO_GUICE = "roboguice.RoboGuice";
 	public static final String INJECT = "com.google.inject.Inject";
 	public static final String ON_STOP_EVENT = "roboguice.activity.event.OnStopEvent";

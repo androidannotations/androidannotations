@@ -69,12 +69,13 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
 		holder.getGeneratedClass()._implements(classes().ROBO_CONTEXT);
 
+		JFieldVar scope = roboGuiceHolder.getScopeField();
 		JFieldVar scopedObjects = roboGuiceHolder.getScopedObjectsField();
 		JFieldVar eventManager = roboGuiceHolder.getEventManagerField();
 		roboGuiceHolder.getContentViewListenerField();
 		listenerFields(element, holder);
 
-		beforeCreateMethod(holder, scopedObjects, eventManager);
+		beforeCreateMethod(holder, scope, scopedObjects, eventManager);
 		onRestartMethod(roboGuiceHolder, eventManager);
 		onStartMethod(roboGuiceHolder, eventManager);
 		onResumeMethod(roboGuiceHolder, eventManager);
@@ -83,7 +84,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		onStopMethod(roboGuiceHolder, eventManager);
 		onDestroyMethod(roboGuiceHolder, eventManager);
 		onConfigurationChangedMethod(roboGuiceHolder, eventManager);
-		onContentChangedMethod(roboGuiceHolder, eventManager);
+		onContentChangedMethod(roboGuiceHolder, holder, scope, eventManager);
 		onActivityResultMethod(roboGuiceHolder, eventManager);
 		getScopedObjectMap(holder, scopedObjects);
 	}
@@ -131,13 +132,14 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		return new ArrayList<String>(0);
 	}
 
-	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scopedObjects, JFieldVar eventManager) {
+	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scope, JFieldVar scopedObjects, JFieldVar eventManager) {
 		JBlock body = holder.getInitBody();
 		JClass keyWildCard = classes().KEY.narrow(codeModel().wildcard());
 		JClass scopedHashMap = classes().HASH_MAP.narrow(keyWildCard, classes().OBJECT);
 		body.assign(scopedObjects, JExpr._new(scopedHashMap));
 
 		JVar injector = body.decl(classes().ROBO_INJECTOR, "injector_", classes().ROBO_GUICE.staticInvoke("getInjector").arg(_this()));
+		body.assign(scope, invoke(injector, "getInstance").arg(classes().CONTEXT_SCOPE.dotclass()));
 		body.assign(eventManager, invoke(injector, "getInstance").arg(classes().EVENT_MANAGER.dotclass()));
 		body.add(injector.invoke("injectMembersWithoutViews").arg(_this()));
 		fireEvent(eventManager, body, classes().ON_CREATE_EVENT, holder.getInitSavedInstanceParam());
@@ -203,9 +205,19 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		fireEvent(eventManager, onConfigurationChangedAfterSuperBlock, classes().ON_CONFIGURATION_CHANGED_EVENT, currentConfig, newConfig);
 	}
 
-	private void onContentChangedMethod(RoboGuiceHolder holder, JFieldVar eventManager) {
+	private void onContentChangedMethod(RoboGuiceHolder holder, EActivityHolder eActivityHolder, JFieldVar scope, JFieldVar eventManager) {
 		JBlock onContentChangedAfterSuperBlock = holder.getOnContentChangedAfterSuperBlock();
-		onContentChangedAfterSuperBlock.add(classes().ROBO_GUICE.staticInvoke("getInjector").arg(_this()).invoke("injectViewMembers").arg(_this()));
+
+		// no synchronized in CodeModel
+		// https://java.net/jira/browse/CODEMODEL-6
+		onContentChangedAfterSuperBlock.directStatement("synchronized(" + classes().CONTEXT_SCOPE.name() + ".class" + ")");
+		JBlock synchronizedBlock = new JBlock(true, true);
+		synchronizedBlock.invoke(scope, "enter").arg(_this());
+		JTryBlock tryBlock = synchronizedBlock._try();
+		tryBlock.body().staticInvoke(eActivityHolder.refClass(org.androidannotations.api.roboguice.RoboGuiceHelper.class), "callInjectViews").arg(_this());
+		tryBlock._finally().invoke(scope, "exit").arg(_this());
+		onContentChangedAfterSuperBlock.add(synchronizedBlock);
+
 		fireEvent(eventManager, onContentChangedAfterSuperBlock, classes().ON_CONTENT_CHANGED_EVENT);
 	}
 
