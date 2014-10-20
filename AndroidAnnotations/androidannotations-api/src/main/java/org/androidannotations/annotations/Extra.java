@@ -80,5 +80,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Extra {
 
+	/**
+	 * The key of the injected extra.
+	 */
 	String value() default "";
 }

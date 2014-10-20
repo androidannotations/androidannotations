@@ -35,7 +35,15 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface ColorStateListRes {
+
+	/**
+	 * The R.color.* field which refers to the ColorStateList resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refers to the ColorStateList
+	 * resource.
+	 */
 	String resName() default "";
 }

@@ -35,7 +35,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface TextRes {
+
+	/**
+	 * The R.string.* field which refers to the text resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refers to the text resource.
+	 */
 	String resName() default "";
 }

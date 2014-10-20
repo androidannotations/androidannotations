@@ -72,5 +72,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface FragmentArg {
 
+	/**
+	 * The key of the injected Fragment argument.
+	 */
 	String value() default "";
 }

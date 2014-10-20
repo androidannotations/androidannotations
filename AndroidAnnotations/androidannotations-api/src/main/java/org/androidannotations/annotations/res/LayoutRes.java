@@ -35,7 +35,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface LayoutRes {
+
+	/**
+	 * The R.layout.* field which refers to the layout resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refers to the layout resource.
+	 */
 	String resName() default "";
 }

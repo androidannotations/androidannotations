@@ -86,16 +86,46 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Receiver {
 
+	/**
+	 * The strings indicating the actions which will spark the method.
+	 */
 	String[] actions();
 
+	/**
+	 * The strings indicating the data schemes which should be handled.
+	 */
 	String[] dataSchemes() default {};
 
+	/**
+	 * The event pair when the receiver should be registered/unregistered.
+	 */
 	RegisterAt registerAt() default RegisterAt.OnCreateOnDestroy;
 
+	/**
+	 * <b>true</b>, if LocalBroadcastManager should be used.
+	 */
 	boolean local() default false;
 
+	/**
+	 * Represents event pairs for BroadcastReceiver registration/unregistration.
+	 */
 	public enum RegisterAt {
-		OnCreateOnDestroy, OnStartOnStop, OnResumeOnPause, OnAttachOnDetach
+		/**
+		 * Register in the onCreate method, unregister in the onDestroy method.
+		 */
+		OnCreateOnDestroy, //
+		/**
+		 * Register in the onStart method, unregister in the onStop method.
+		 */
+		OnStartOnStop, //
+		/**
+		 * Register in the onResume method, unregister in the onPause method.
+		 */
+		OnResumeOnPause, //
+		/**
+		 * Register in the onAttach method, unregister in the onDetach method.
+		 */
+		OnAttachOnDetach
 	}
 
 	/**
@@ -115,8 +145,6 @@ public @interface Receiver {
 		/**
 		 * Define the extra's name. If this parameter isn't set the annotated
 		 * parameter name will be used.
-		 *
-		 * @return the extra's name
 		 */
 		String value() default "";
 	}

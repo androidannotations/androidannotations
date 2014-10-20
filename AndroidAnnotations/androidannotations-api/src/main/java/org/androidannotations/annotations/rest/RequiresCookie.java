@@ -81,5 +81,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface RequiresCookie {
+
+	/**
+	 * The names of the cookies.
+	 */
 	String[] value();
 }

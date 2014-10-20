@@ -78,8 +78,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface SeekBarTouchStop {
 
+	/**
+	 * The R.id.* fields which refer to the SeekBars.
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the SeekBars.
+	 */
 	String[] resName() default "";
 
 }

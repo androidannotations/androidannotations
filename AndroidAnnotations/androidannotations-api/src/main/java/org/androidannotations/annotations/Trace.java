@@ -29,7 +29,7 @@ import android.util.Log;
  * </p>
  * <p>
  * Since <i>AndroidAnnotations 3.1</i> log messages contain the method parameter
- * and return values
+ * and return values.
  * </p>
  * <p>
  * All annotation values are optional :
@@ -72,10 +72,19 @@ import android.util.Log;
 @Target(ElementType.METHOD)
 public @interface Trace {
 
+	/**
+	 * The string indicating that no tag was given for the log message.
+	 */
 	String DEFAULT_TAG = "NO_TAG";
 
+	/**
+	 * The tag used for the log message.
+	 */
 	String tag() default DEFAULT_TAG;
 
+	/**
+	 * The log level used for the log message.
+	 */
 	int level() default Log.INFO;
 
 }

@@ -35,7 +35,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface MovieRes {
+
+	/**
+	 * The R.movie.* field which refers to the movie resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the movie resource.
+	 */
 	String resName() default "";
 }

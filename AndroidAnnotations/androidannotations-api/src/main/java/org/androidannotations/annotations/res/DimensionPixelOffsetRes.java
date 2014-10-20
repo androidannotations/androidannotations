@@ -36,7 +36,15 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface DimensionPixelOffsetRes {
+
+	/**
+	 * The R.dimen.* field which refers to the dimension pixel offset resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as string which refers to the dimension pixel offset
+	 * resource.
+	 */
 	String resName() default "";
 }

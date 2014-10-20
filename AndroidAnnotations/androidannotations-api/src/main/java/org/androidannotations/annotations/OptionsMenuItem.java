@@ -22,9 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on android.app.Fragment or
- * android.support.v4.app.Fragment fields in activity classes to inject
- * a menu item.
+ * Use it on android.app.Fragment or android.support.v4.app.Fragment fields in
+ * activity classes to inject a menu item.
  * </p>
  * <p>
  * The field MUST be of type {@link android.view.MenuItem} or
@@ -58,8 +57,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface OptionsMenuItem {
 
+	/**
+	 * The R.id.* fields which refers to the menu items.
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refers to the menu items.
+	 */
 	String[] resName() default "";
 
 }

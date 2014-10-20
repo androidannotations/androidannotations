@@ -35,7 +35,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface AnimationRes {
+
+	/**
+	 * The R.anim.* field which refers to the animation.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the animation.
+	 */
 	String resName() default "";
 }

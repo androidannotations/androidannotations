@@ -81,5 +81,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface RequiresHeader {
+
+	/**
+	 * The names of the headers.
+	 */
 	String[] value();
 }

@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * This annotation is intended to be used on methods to receive events defined
- * by {@link
- * android.widget.AdapterView.OnItemSelectedListener#onItemSelected(android.widget.AdapterView, android.view.View, int, long)}
+ * by
+ * {@link android.widget.AdapterView.OnItemSelectedListener#onItemSelected(android.widget.AdapterView, android.view.View, int, long)}
  * when a list item has been selected by the user.
  * </p>
  * <p>
@@ -74,7 +74,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface ItemSelect {
+
+	/**
+	 * The R.id.* fields which refer to the AdapterViews.
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the AdapterViews.
+	 */
 	String[] resName() default "";
 }

@@ -35,7 +35,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface BooleanRes {
+
+	/**
+	 * The R.boolean.* field which refers to the boolean resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refers to the boolean resource.
+	 */
 	String resName() default "";
 }

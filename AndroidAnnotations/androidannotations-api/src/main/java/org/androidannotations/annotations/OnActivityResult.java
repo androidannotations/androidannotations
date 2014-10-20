@@ -78,6 +78,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface OnActivityResult {
 
+	/**
+	 * The <b>requestCode</b> associated with the given result.
+	 */
 	int value();
 
 	/**
@@ -119,6 +122,10 @@ public @interface OnActivityResult {
 	@Retention(RetentionPolicy.CLASS)
 	@Target(ElementType.PARAMETER)
 	public @interface Extra {
+
+		/**
+		 * They key of the result data.
+		 */
 		String value() default "";
 	}
 

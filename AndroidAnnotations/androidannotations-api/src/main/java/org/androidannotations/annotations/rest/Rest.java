@@ -202,11 +202,26 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Rest {
+
+	/**
+	 * The root url of the webservice.
+	 */
 	String rootUrl() default "";
 
+	/**
+	 * The classes of the converters which should be used to convert received
+	 * data into Java objects.
+	 */
 	Class<?>[] converters();
 
+	/**
+	 * The classes of interceptors which are used to do extra processing before
+	 * or after requests.
+	 */
 	Class<?>[] interceptors() default {};
 
+	/**
+	 * TODO .
+	 */
 	Class<?> requestFactory() default Void.class;
 }

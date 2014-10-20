@@ -68,8 +68,6 @@ public @interface RoboGuice {
 	/**
 	 * The RoboGuice listener classes to bind to this activity. Will add an
 	 * injected listener field to the subclass.
-	 *
-	 * @return The RoboGuice listener classes to bind to this activity
 	 */
 	Class<?>[] value() default {};
 }

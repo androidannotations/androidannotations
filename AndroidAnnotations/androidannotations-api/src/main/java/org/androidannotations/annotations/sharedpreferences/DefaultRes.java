@@ -41,9 +41,20 @@ import org.androidannotations.annotations.ResId;
 @Target(ElementType.METHOD)
 public @interface DefaultRes {
 
+	/**
+	 * The R.id.* field which refers the the resource which is used as the
+	 * default value of the preference.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers the the resource which is used as the
+	 * default value of the preference.
+	 */
 	String resName() default "";
 
+	/**
+	 * The R.string.* field which refers to the key of the preference.
+	 */
 	int keyRes() default ResId.DEFAULT_VALUE;
 }

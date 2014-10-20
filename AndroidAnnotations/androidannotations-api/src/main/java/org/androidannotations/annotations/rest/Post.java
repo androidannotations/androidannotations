@@ -60,5 +60,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Post {
+
+	/**
+	 * The URI or the full URL of the web service.
+	 */
 	String value();
 }

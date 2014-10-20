@@ -39,7 +39,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface DefaultString {
+
+	/**
+	 * The default value of the preference.
+	 */
 	String value();
 
+	/**
+	 * The R.string.* field which refers to the key of the preference.
+	 */
 	int keyRes() default ResId.DEFAULT_VALUE;
 }

@@ -69,12 +69,20 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
- * @author Rostislav Chekan
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface CheckedChange {
+
+	/**
+	 * The R.id.* fields which refer to the CompoundButtons or subclasses of
+	 * CompoundButton.
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the CompoundButtons or
+	 * subclasses of CompoundButton.
+	 */
 	String[] resName() default "";
 }

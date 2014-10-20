@@ -36,7 +36,13 @@ import org.androidannotations.annotations.ResId;
 @Target(ElementType.FIELD)
 public @interface StringArrayRes {
 
+	/**
+	 * The R.array.* field which refers to the string array resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the string array resource.
+	 */
 	String resName() default "";
 }

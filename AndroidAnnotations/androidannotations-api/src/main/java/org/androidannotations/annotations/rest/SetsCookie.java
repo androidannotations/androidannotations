@@ -62,5 +62,8 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface SetsCookie {
 
+	/**
+	 * The names of the cookies to be kept.
+	 */
 	String[] value();
 }

@@ -127,8 +127,11 @@
 		<module name="UpperEll" />
 		<module name="OuterTypeFilename" />
 		<module name="OuterTypeNumber" />
+		<module name="JavadocType" />
+		<module name="JavadocMethod" />
+		<module name="JavadocVariable" />
+		<module name="JavadocStyle" />
 	</module>
 	<module name="FileLength" />
-	<module name="SuppressionCommentFilter">
-	</module>
+	<module name="SuppressionCommentFilter" />
 </module>

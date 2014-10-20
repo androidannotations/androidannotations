@@ -75,7 +75,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EViewGroup {
+
+	/**
+	 * The R.layout.* field which refer to the layout.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refer to the layout.
+	 */
 	String resName() default "";
 }

@@ -35,7 +35,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface DrawableRes {
+
+	/**
+	 * The R.id.* field which refers to the drawable resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refers to the drawable resource.
+	 */
 	String resName() default "";
 }

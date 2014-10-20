@@ -57,7 +57,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface OptionsMenu {
+
+	/**
+	 * The R.menu.* fields which refers to the menus.
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refers to the menus.
+	 */
 	String[] resName() default "";
 }

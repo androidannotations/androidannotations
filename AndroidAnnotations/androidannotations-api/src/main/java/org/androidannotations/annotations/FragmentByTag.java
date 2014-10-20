@@ -22,9 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on android.app.Fragment or
- * android.support.v4.app.Fragment fields in activity classes to
- * retrieve and inject a fragment.
+ * Use it on android.app.Fragment or android.support.v4.app.Fragment fields in
+ * activity classes to retrieve and inject a fragment.
  * </p>
  * <p>
  * The annotation value should be one of fragment tag. If not set, the field
@@ -73,5 +72,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface FragmentByTag {
+
+	/**
+	 * The tag of the Fragment.
+	 */
 	String value() default "";
 }

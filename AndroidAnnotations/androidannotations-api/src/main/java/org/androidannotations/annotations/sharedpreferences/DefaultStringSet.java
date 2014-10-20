@@ -50,5 +50,8 @@ import org.androidannotations.annotations.ResId;
 @Target(ElementType.METHOD)
 public @interface DefaultStringSet {
 
+	/**
+	 * The R.string.* field which refers to the key of the preference.
+	 */
 	int keyRes() default ResId.DEFAULT_VALUE;
 }

@@ -89,19 +89,44 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface HttpsClient {
+
+	/**
+	 * The default value of {@link #trustStorePwd()} and {@link #keyStorePwd()}.
+	 */
 	String DEFAULT_PASSWD = "changeit";
 
+	/**
+	 * The R.id.* field id which refers to the trust store file.
+	 */
 	int trustStore() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the trust store file.
+	 */
 	String trustStoreResName() default "";
 
+	/**
+	 * The trust store password.
+	 */
 	String trustStorePwd() default DEFAULT_PASSWD;
 
+	/**
+	 * The R.id.* field id which refers to the key store file.
+	 */
 	int keyStore() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the key store file.
+	 */
 	String keyStoreResName() default "";
 
+	/**
+	 * The key store password.
+	 */
 	String keyStorePwd() default DEFAULT_PASSWD;
 
+	/**
+	 * <b>true</b> if authorizes any TLS/SSL hostname, <b>false</b> otherwise.
+	 */
 	boolean allowAllHostnames() default true;
 }

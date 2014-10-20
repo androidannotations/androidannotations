@@ -35,7 +35,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface DimensionRes {
+
+	/**
+	 * The resource name as string which refers to the dimension resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as string which refers to the dimension resource.
+	 */
 	String resName() default "";
 }

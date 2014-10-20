@@ -15,10 +15,20 @@
  */
 package org.androidannotations.annotations;
 
+/**
+ * This class holds the default resource id.
+ */
 public abstract class ResId {
 
+	/**
+	 * This value is used when the client does not defines the resource id for a
+	 * resource.
+	 */
 	public static final int DEFAULT_VALUE = -1;
 
+	/**
+	 * Utility classes should not be instantiated.
+	 */
 	private ResId() {
 	}
 

@@ -58,7 +58,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface FromHtml {
+
+	/**
+	 * The R.string.* field which refers to the html string resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the html string resource.
+	 */
 	String resName() default "";
 }

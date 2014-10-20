@@ -67,9 +67,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface OrmLiteDao {
 
+	/**
+	 * The class of the used database helper.
+	 */
 	Class<?> helper();
 
 	/**
+	 * The class of the model what this DAO can manage.
 	 * 
 	 * @deprecated Since <b>3.1</b> the model class is inferred from the type of
 	 *             the annotated field. This parameter will be removed in a

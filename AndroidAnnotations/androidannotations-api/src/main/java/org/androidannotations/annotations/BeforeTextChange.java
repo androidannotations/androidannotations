@@ -82,8 +82,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface BeforeTextChange {
 
+	/**
+	 * The R.id.* fields which refer to the TextViews.
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as a strings which refer to the TextViews.
+	 */
 	String[] resName() default "";
 
 }

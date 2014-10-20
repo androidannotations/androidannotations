@@ -36,7 +36,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface IntArrayRes {
+
+	/**
+	 * The R.array.* field which refers to the integer array resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the integer array resource.
+	 */
 	String resName() default "";
 }

@@ -44,5 +44,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface CustomTitle {
+
+	/**
+	 * R.layout.* field which refers the the title layout.
+	 */
 	int value();
 }

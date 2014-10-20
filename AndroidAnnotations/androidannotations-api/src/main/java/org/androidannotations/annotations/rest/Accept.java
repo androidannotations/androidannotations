@@ -62,5 +62,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface Accept {
+
+	/**
+	 * The accepted media type.
+	 * 
+	 * @see {@link org.androidannotations.api.rest.MediaType MediaType}
+	 */
 	String value();
 }

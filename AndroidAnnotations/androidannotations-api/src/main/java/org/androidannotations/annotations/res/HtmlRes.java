@@ -36,7 +36,14 @@ import org.androidannotations.annotations.ResId;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface HtmlRes {
+
+	/**
+	 * The R.id.* field which refers to the HTML string resource.
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refers to the HTML string resource.
+	 */
 	String resName() default "";
 }

@@ -70,11 +70,46 @@ import android.content.Context;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface SharedPref {
+
+	/**
+	 * Represents the scope of a SharedPreference.
+	 */
 	public enum Scope {
-		APPLICATION_DEFAULT, ACTIVITY, ACTIVITY_DEFAULT, UNIQUE;
+		/**
+		 * The default shared SharedPreference.
+		 */
+		APPLICATION_DEFAULT, //
+		/**
+		 * The name of the SharedPreference will contain the name of the
+		 * Activity and the name annotated interface.
+		 */
+		ACTIVITY, //
+
+		/**
+		 * The name of the SharedPreference will contain the name of the
+		 * Activity (also available through activity.getPreferences()).
+		 */
+		ACTIVITY_DEFAULT, //
+
+		/**
+		 * The name of the SharedPreference will be the name of the annotated
+		 * interface.
+		 */
+		UNIQUE;
 	}
 
+	/**
+	 * The scope of the preferences, this will change the name of the
+	 * SharedPreference.
+	 */
 	Scope value() default Scope.ACTIVITY;
 
+	/**
+	 * The operating mode.
+	 * 
+	 * @see Context#MODE_PRIVATE
+	 * @see Context#MODE_WORLD_READABLE
+	 * @see Context#MODE_WORLD_WRITEABLE
+	 */
 	int mode() default Context.MODE_PRIVATE;
 }
