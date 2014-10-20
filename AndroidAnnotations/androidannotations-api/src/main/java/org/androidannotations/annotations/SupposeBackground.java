@@ -64,6 +64,8 @@ public @interface SupposeBackground {
 	 * then any background thread is allowed.
 	 *
 	 * @see org.androidannotations.api.BackgroundExecutor#checkBgThread(String...)
+	 * 
+	 * @return the allowed serials
 	 */
 	String[] serial() default {};
 

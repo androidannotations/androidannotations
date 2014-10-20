@@ -59,6 +59,8 @@ public @interface Put {
 
 	/**
 	 * The URI or the full URL of the web service.
+	 * 
+	 * @return the address of the web service
 	 */
 	String value();
 }

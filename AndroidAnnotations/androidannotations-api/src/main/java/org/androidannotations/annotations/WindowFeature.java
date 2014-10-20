@@ -53,6 +53,8 @@ public @interface WindowFeature {
 
 	/**
 	 * An array of integers which are <code>Window.FEATURE_*</code> fields.
+	 * 
+	 * @return the Window feature constants
 	 */
 	int[] value();
 }

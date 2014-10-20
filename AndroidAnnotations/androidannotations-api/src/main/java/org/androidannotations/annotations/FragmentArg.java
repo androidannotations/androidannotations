@@ -74,6 +74,8 @@ public @interface FragmentArg {
 
 	/**
 	 * The key of the injected Fragment argument.
+	 * 
+	 * @return the key of the argument
 	 */
 	String value() default "";
 }

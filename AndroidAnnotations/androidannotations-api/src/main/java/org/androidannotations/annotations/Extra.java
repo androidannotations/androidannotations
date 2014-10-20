@@ -82,6 +82,8 @@ public @interface Extra {
 
 	/**
 	 * The key of the injected extra.
+	 * 
+	 * @return the key of the extra
 	 */
 	String value() default "";
 }

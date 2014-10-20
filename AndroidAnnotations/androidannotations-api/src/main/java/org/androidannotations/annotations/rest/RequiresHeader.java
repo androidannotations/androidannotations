@@ -84,6 +84,8 @@ public @interface RequiresHeader {
 
 	/**
 	 * The names of the headers.
+	 * 
+	 * @return the header names
 	 */
 	String[] value();
 }

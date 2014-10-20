@@ -80,6 +80,8 @@ public @interface OnActivityResult {
 
 	/**
 	 * The <b>requestCode</b> associated with the given result.
+	 * 
+	 * @return the requestCode
 	 */
 	int value();
 
@@ -125,6 +127,8 @@ public @interface OnActivityResult {
 
 		/**
 		 * They key of the result data.
+		 * 
+		 * @return the key
 		 */
 		String value() default "";
 	}

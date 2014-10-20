@@ -84,11 +84,15 @@ public @interface SeekBarProgressChange {
 
 	/**
 	 * The R.id.* fields which refer to the SeekBars.
+	 * 
+	 * @return the ids of the SeekBars
 	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource names as strings which refer to the SeekBars.
+	 * 
+	 * @return the resource names of the SeekBars
 	 */
 	String[] resName() default "";
 

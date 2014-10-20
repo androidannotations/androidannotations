@@ -39,11 +39,15 @@ public @interface HtmlRes {
 
 	/**
 	 * The R.id.* field which refers to the HTML string resource.
+	 * 
+	 * @return the id of the resource
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name as a string which refers to the HTML string resource.
+	 * 
+	 * @return the resource name of the resource
 	 */
 	String resName() default "";
 }

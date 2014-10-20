@@ -69,11 +69,15 @@ public @interface ViewsById {
 
 	/**
 	 * The array of R.id.* fields which refer to the injected Views.
+	 * 
+	 * @return the ids of the Views
 	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The array resource names which refer to the injected Views.
+	 * 
+	 * @return the resource names of the Views
 	 */
 	String[] resName() default "";
 }

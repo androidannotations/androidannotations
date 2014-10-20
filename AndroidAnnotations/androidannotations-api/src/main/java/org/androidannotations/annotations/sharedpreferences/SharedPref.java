@@ -101,6 +101,8 @@ public @interface SharedPref {
 	/**
 	 * The scope of the preferences, this will change the name of the
 	 * SharedPreference.
+	 * 
+	 * @return the scope of the preferences
 	 */
 	Scope value() default Scope.ACTIVITY;
 
@@ -110,6 +112,8 @@ public @interface SharedPref {
 	 * @see Context#MODE_PRIVATE
 	 * @see Context#MODE_WORLD_READABLE
 	 * @see Context#MODE_WORLD_WRITEABLE
+	 * 
+	 * @return the operating mode
 	 */
 	int mode() default Context.MODE_PRIVATE;
 }

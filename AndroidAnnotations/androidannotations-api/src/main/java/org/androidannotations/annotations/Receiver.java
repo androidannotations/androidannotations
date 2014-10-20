@@ -88,21 +88,31 @@ public @interface Receiver {
 
 	/**
 	 * The strings indicating the actions which will spark the method.
+	 * 
+	 * @return the actions which will spark the method
 	 */
 	String[] actions();
 
 	/**
 	 * The strings indicating the data schemes which should be handled.
+	 * 
+	 * @return the data schemes which should be handled
 	 */
 	String[] dataSchemes() default {};
 
 	/**
 	 * The event pair when the receiver should be registered/unregistered.
+	 * 
+	 * @return the registration/unregistration point
 	 */
 	RegisterAt registerAt() default RegisterAt.OnCreateOnDestroy;
 
 	/**
-	 * <b>true</b>, if LocalBroadcastManager should be used.
+	 * Whether to use LocalBroadcastManager.
+	 * 
+	 * @return <b>true</b>, if LocalBroadcastManager should be used,
+	 *         <b>false</b> otherwise
+	 *
 	 */
 	boolean local() default false;
 
@@ -143,8 +153,10 @@ public @interface Receiver {
 	public @interface Extra {
 
 		/**
-		 * Define the extra's name. If this parameter isn't set the annotated
+		 * Defines the extra's name. If this parameter isn't set the annotated
 		 * parameter name will be used.
+		 * 
+		 * @return the name of the extra
 		 */
 		String value() default "";
 	}

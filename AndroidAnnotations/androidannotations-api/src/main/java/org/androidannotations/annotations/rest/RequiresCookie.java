@@ -84,6 +84,8 @@ public @interface RequiresCookie {
 
 	/**
 	 * The names of the cookies.
+	 * 
+	 * @return the cookie names
 	 */
 	String[] value();
 }

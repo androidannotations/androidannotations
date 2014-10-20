@@ -128,7 +128,8 @@
 		<module name="OuterTypeFilename" />
 		<module name="OuterTypeNumber" />
 		<module name="JavadocType" />
-		<module name="JavadocMethod" />
+		<!-- sourceforge.net/p/checkstyle/bugs/543/ -->
+        <!-- <module name="JavadocMethod" /> -->
 		<module name="JavadocVariable" />
 		<module name="JavadocStyle" />
 	</module>

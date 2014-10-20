@@ -39,11 +39,15 @@ public @interface IntArrayRes {
 
 	/**
 	 * The R.array.* field which refers to the integer array resource.
+	 * 
+	 * @return the id of the resource
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name which refers to the integer array resource.
+	 * 
+	 * @return the resource name of the resource
 	 */
 	String resName() default "";
 }

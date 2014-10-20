@@ -78,11 +78,15 @@ public @interface EViewGroup {
 
 	/**
 	 * The R.layout.* field which refer to the layout.
+	 * 
+	 * @return the id of the layout
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name as a string which refer to the layout.
+	 * 
+	 * @return the resource name of the layout
 	 */
 	String resName() default "";
 }

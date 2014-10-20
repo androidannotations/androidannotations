@@ -74,11 +74,15 @@ public @interface FragmentById {
 
 	/**
 	 * The R.id.* field which is the id of the Fragment.
+	 * 
+	 * @return the id of the Fragment
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name which refers to the id of the Fragment.
+	 * 
+	 * @return the resource name of the Fragment
 	 */
 	String resName() default "";
 }

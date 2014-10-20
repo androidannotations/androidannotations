@@ -38,11 +38,15 @@ public @interface AnimationRes {
 
 	/**
 	 * The R.anim.* field which refers to the animation.
+	 * 
+	 * @return the id of the resource
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name which refers to the animation.
+	 * 
+	 * @return the resource name of the resource
 	 */
 	String resName() default "";
 }

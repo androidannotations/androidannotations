@@ -69,6 +69,8 @@ public @interface OrmLiteDao {
 
 	/**
 	 * The class of the used database helper.
+	 * 
+	 * @return the helper class
 	 */
 	Class<?> helper();
 
@@ -78,6 +80,8 @@ public @interface OrmLiteDao {
 	 * @deprecated Since <b>3.1</b> the model class is inferred from the type of
 	 *             the annotated field. This parameter will be removed in a
 	 *             future version.
+	 * 
+	 * @return the model class
 	 */
 	@Deprecated
 	Class<?> model() default Void.class;

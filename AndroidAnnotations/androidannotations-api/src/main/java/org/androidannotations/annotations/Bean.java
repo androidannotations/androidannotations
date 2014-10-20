@@ -62,7 +62,9 @@ import java.lang.annotation.Target;
 public @interface Bean {
 
 	/**
-	 * The implementation class.
+	 * The implementation class of the injected bean.
+	 * 
+	 * @return the implementation class
 	 */
 	Class<?> value() default Void.class;
 }

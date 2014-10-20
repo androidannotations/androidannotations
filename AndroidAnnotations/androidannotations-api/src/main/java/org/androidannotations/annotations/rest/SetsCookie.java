@@ -64,6 +64,8 @@ public @interface SetsCookie {
 
 	/**
 	 * The names of the cookies to be kept.
+	 * 
+	 * @return the cookie names
 	 */
 	String[] value();
 }

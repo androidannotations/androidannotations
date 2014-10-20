@@ -38,11 +38,15 @@ public @interface ColorRes {
 
 	/**
 	 * The R.color.* field which refers to the color resource.
+	 * 
+	 * @return the id of the resource
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name as a string which refers to the color resource.
+	 * 
+	 * @return the resource name of the resource
 	 */
 	String resName() default "";
 }

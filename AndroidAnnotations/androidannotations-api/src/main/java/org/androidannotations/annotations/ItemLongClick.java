@@ -71,11 +71,15 @@ public @interface ItemLongClick {
 
 	/**
 	 * The R.id.* fields which refer to the AdapterViews.
+	 * 
+	 * @return the ids of the AdapterViews
 	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource names as strings which refer to the AdapterViews.
+	 * 
+	 * @return the resource names of the AdapterViews
 	 */
 	String[] resName() default "";
 }

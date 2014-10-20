@@ -47,6 +47,8 @@ public @interface CustomTitle {
 
 	/**
 	 * R.layout.* field which refers the the title layout.
+	 * 
+	 * @return the id of the layout
 	 */
 	int value();
 }

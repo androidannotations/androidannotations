@@ -38,11 +38,15 @@ public @interface TextRes {
 
 	/**
 	 * The R.string.* field which refers to the text resource.
+	 * 
+	 * @return the id of the resource
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name as a string which refers to the text resource.
+	 * 
+	 * @return the resource name of the resource
 	 */
 	String resName() default "";
 }

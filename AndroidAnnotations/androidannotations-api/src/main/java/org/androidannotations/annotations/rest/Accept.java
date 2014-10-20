@@ -66,7 +66,9 @@ public @interface Accept {
 	/**
 	 * The accepted media type.
 	 * 
-	 * @see {@link org.androidannotations.api.rest.MediaType MediaType}
+	 * @see org.androidannotations.api.rest.MediaType
+	 * 
+	 * @return the media type
 	 */
 	String value();
 }

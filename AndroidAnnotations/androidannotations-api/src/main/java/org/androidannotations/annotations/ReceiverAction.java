@@ -30,15 +30,7 @@ import java.lang.annotation.Target;
  * The class MAY contain several {@link ReceiverAction} annotated methods.
  * </p>
  * <p>
- * The method annotated with {@link ReceiverAction} may have as parameters : - A
- * {@link android.content.Context} which will be the context given in
- * {@code void onReceive(Context context, Intent intent)} - A
- * {@link android.content.Intent} which will be the intent given in
- * {@code void onReceive(Context context, Intent intent)} - Some any native,
- * {@link android.os.Parcelable} or {@link java.io.Serializable} parameters
- * annotated with {@link ReceiverAction.Extra} which will be the extra put in
- * the intent. The key of this extra is the value of the annotation
- * {@link ReceiverAction.Extra} if set or the name of the parameter.
+ * The method annotated with {@link ReceiverAction} may have as parameters :
  * </p>
  * <ul>
  * <li>A {@link android.content.Context} which will be the context given in
@@ -104,6 +96,8 @@ public @interface ReceiverAction {
 	/**
 	 * Define a set of actions this method should handle. If this field isn't
 	 * set the annotated method name will be used.
+	 *
+	 * @return the actions
 	 */
 	String[] value() default {};
 
@@ -132,8 +126,8 @@ public @interface ReceiverAction {
 		/**
 		 * Define the extra's name. If this parameter isn't set the annotated
 		 * parameter name will be used.
-		 * 
-		 * @return the name of the extra
+		 *
+		 * @return the extra's name
 		 */
 		String value() default "";
 	}

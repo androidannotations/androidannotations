@@ -181,12 +181,15 @@ public @interface Background {
 	 * boolean mayInterruptIfRunning = true;
 	 * BackgroundExecutor.cancelAll(&quot;my_background_id&quot;, mayInterruptIfRunning);
 	 * </pre>
+	 * 
+	 * @return the task id for cancellation
 	 **/
 	String id() default "";
 
 	/**
 	 * Minimum delay, in milliseconds, before the background task is executed.
 	 *
+	 * @return the delay of the execution
 	 */
 	int delay() default 0;
 
@@ -196,6 +199,7 @@ public @interface Background {
 	 * All background tasks having the same <code>serial</code> will be executed
 	 * sequentially.
 	 *
+	 * @return the serial execution group
 	 **/
 	String serial() default "";
 }

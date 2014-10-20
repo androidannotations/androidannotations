@@ -38,11 +38,15 @@ public @interface DimensionRes {
 
 	/**
 	 * The resource name as string which refers to the dimension resource.
+	 * 
+	 * @return the id of the resource
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name as string which refers to the dimension resource.
+	 * 
+	 * @return the resource name of the resource
 	 */
 	String resName() default "";
 }

@@ -74,7 +74,9 @@ import java.lang.annotation.Target;
 public @interface FragmentByTag {
 
 	/**
-	 * The tag of the Fragment.
+	 * The tag of the injected Fragment.
+	 * 
+	 * @return the tag of the Fragment
 	 */
 	String value() default "";
 }

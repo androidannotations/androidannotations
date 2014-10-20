@@ -40,6 +40,8 @@ public @interface RequiresCookieInUrl {
 
 	/**
 	 * The names of the cookies.
+	 * 
+	 * @return the cookie names
 	 */
 	String[] value();
 }

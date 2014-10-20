@@ -110,6 +110,8 @@ public @interface EBean {
 
 	/**
 	 * The scope of the enhanced bean.
+	 * 
+	 * @return the scope of the bean.
 	 */
 	Scope scope() default Scope.Default;
 

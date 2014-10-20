@@ -76,13 +76,15 @@ public @interface AfterTextChange {
 
 	/**
 	 * The R.id.* fields which refer to the TextViews.
+	 * 
+	 * @return the ids of the TextViews.
 	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource names as a strings which refer to the TextViews.
 	 * 
-	 * @return
+	 * @return the resource names of the TextViews.
 	 */
 	String[] resName() default "";
 

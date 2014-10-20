@@ -58,9 +58,11 @@ public @interface WakeLock {
 	String DEFAULT_TAG = "NO_TAG";
 
 	/**
-	 * The tag of the WakeLock.
+	 * The tag of the created WakeLock.
 	 * 
-	 * @see {@link android.os.PowerManager#newWakeLock(int, String)}
+	 * @see android.os.PowerManager#newWakeLock(int, String)
+	 * 
+	 * @return the tag of the WakeLock
 	 */
 	String tag() default DEFAULT_TAG;
 
@@ -68,7 +70,9 @@ public @interface WakeLock {
 	 * The level of the created {@link android.os.PowerManager.WakeLock
 	 * WakeLock}.
 	 * 
-	 * @see {@link android.os.PowerManager#newWakeLock(int, String)}
+	 * @see android.os.PowerManager#newWakeLock(int, String)
+	 * 
+	 * @return the level of the WakeLock
 	 */
 	Level level() default Level.PARTIAL_WAKE_LOCK;
 
@@ -76,7 +80,9 @@ public @interface WakeLock {
 	 * The optional flags for the created
 	 * {@link android.os.PowerManager.WakeLock WakeLock}.
 	 * 
-	 * @see {@link android.os.PowerManager#newWakeLock(int, String)}
+	 * @see android.os.PowerManager#newWakeLock(int, String)
+	 * 
+	 * @return the flags of the WakeLock
 	 */
 	Flag[] flags() default {};
 

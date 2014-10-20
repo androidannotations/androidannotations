@@ -79,11 +79,15 @@ public @interface Trace {
 
 	/**
 	 * The tag used for the log message.
+	 * 
+	 * @return the tag of the message
 	 */
 	String tag() default DEFAULT_TAG;
 
 	/**
 	 * The log level used for the log message.
+	 * 
+	 * @return the logging level of the message
 	 */
 	int level() default Log.INFO;
 

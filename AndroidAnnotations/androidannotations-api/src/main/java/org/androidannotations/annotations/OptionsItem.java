@@ -79,11 +79,15 @@ public @interface OptionsItem {
 
 	/**
 	 * The R.id.* field which refers to the menu item.
+	 * 
+	 * @return the id of the menu item
 	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name which refers to the menu item.
+	 *
+	 * @return the resource name of the menu item
 	 */
 	String[] resName() default "";
 
