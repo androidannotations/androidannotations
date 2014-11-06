@@ -15,7 +15,16 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 import org.androidannotations.holder.HasIntentBuilder;
 
 import javax.lang.model.type.TypeKind;
@@ -25,9 +34,15 @@ import javax.lang.model.util.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.sun.codemodel.JExpr.*;
-import static com.sun.codemodel.JMod.*;
-import static org.androidannotations.helper.CanonicalNameConstants.*;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.ref;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 public abstract class IntentBuilder {
 
@@ -91,37 +106,33 @@ public abstract class IntentBuilder {
 	}
 
 	private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
-		boolean castToSerializable = false;
-		boolean castToParcelable = false;
+		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
+		JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
+		JVar extraParameterVar = method.param(parameterClass, parameterName);
+		JInvocation superCall = getSuperPutExtraInvocation(elementType, extraParameterVar, extraKeyField);
+		method.body()._return(superCall);
+		return method;
+	}
+
+	public JInvocation getSuperPutExtraInvocation(TypeMirror elementType, JVar extraParam, JFieldVar extraKeyField) {
+		JExpression extraParameterArg = extraParam;
+		// Cast to Parcelable or Serializable if needed
 		if (elementType.getKind() == TypeKind.DECLARED) {
 			Elements elementUtils = holder.processingEnvironment().getElementUtils();
 			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
 			if (!typeUtils.isSubtype(elementType, parcelableType)) {
 				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
 				if (!typeUtils.isSubtype(elementType, stringType)) {
-					castToSerializable = true;
+					extraParameterArg = cast(holder.classes().SERIALIZABLE, extraParameterArg);
 				}
 			} else {
 				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
 				if (typeUtils.isSubtype(elementType, serializableType)) {
-					castToParcelable = true;
+					extraParameterArg = cast(holder.classes().PARCELABLE, extraParameterArg);
 				}
 			}
 		}
-
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
-		JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
-		JVar extraParameterVar = method.param(parameterClass, parameterName);
-		JInvocation invocation = _super().invoke("extra").arg(extraKeyField);
-		if (castToSerializable) {
-			invocation.arg(cast(holder.classes().SERIALIZABLE, extraParameterVar));
-		} else if (castToParcelable) {
-			invocation.arg(cast(holder.classes().PARCELABLE, extraParameterVar));
-		} else {
-			invocation.arg(extraParameterVar);
-		}
-		method.body()._return(invocation);
-		return method;
+		return _super().invoke("extra").arg(extraKeyField).arg(extraParameterArg);
 	}
 
 	protected abstract JClass getSuperClass();
