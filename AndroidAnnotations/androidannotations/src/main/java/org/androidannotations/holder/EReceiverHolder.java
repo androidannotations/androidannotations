@@ -34,6 +34,7 @@ public class EReceiverHolder extends EComponentHolder {
 	private JFieldVar contextField;
 	private JBlock onReceiveBody;
 	private JVar onReceiveIntentAction;
+	private JVar onReceiveIntentDataScheme;
 	private JVar onReceiveIntent;
 	private JVar onReceiveContext;
 	private JMethod onReceiveMethod;
@@ -67,7 +68,9 @@ public class EReceiverHolder extends EComponentHolder {
 		onReceiveBody.invoke(JExpr._super(), onReceiveMethod).arg(onReceiveContext).arg(onReceiveIntent);
 
 		JInvocation getActionInvocation = JExpr.invoke(onReceiveIntent, "getAction");
+		JInvocation getDataSchemeInvocation = JExpr.invoke(onReceiveIntent, "getScheme");
 		onReceiveIntentAction = onReceiveBody.decl(classes().STRING, "action", getActionInvocation);
+		onReceiveIntentDataScheme = onReceiveBody.decl(classes().STRING, "dataScheme", getDataSchemeInvocation);
 	}
 
 	public JMethod getOnReceiveMethod() {
@@ -103,6 +106,13 @@ public class EReceiverHolder extends EComponentHolder {
 			createOnReceive();
 		}
 		return onReceiveIntentAction;
+	}
+
+	public JVar getOnReceiveIntentDataScheme() {
+		if (onReceiveIntentDataScheme == null) {
+			createOnReceive();
+		}
+		return onReceiveIntentDataScheme;
 	}
 
 	public JFieldVar getContextField() {

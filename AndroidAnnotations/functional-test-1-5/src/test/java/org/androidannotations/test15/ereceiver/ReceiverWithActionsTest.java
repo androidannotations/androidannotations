@@ -15,15 +15,17 @@
  */
 package org.androidannotations.test15.ereceiver;
 
-import android.content.Intent;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import android.content.Intent;
+import android.net.Uri;
 
 @RunWith(RobolectricTestRunner.class)
 public class ReceiverWithActionsTest {
@@ -36,10 +38,17 @@ public class ReceiverWithActionsTest {
 
 	@Test
 	public void onSimpleActionTest() {
-		receiver.onReceive(Robolectric.application, new Intent(
-				"ACTION_SIMPLE_TEST"));
+		receiver.onReceive(Robolectric.application, new Intent("ACTION_SIMPLE_TEST"));
 
 		assertTrue(receiver.simpleActionReceived);
+	}
+
+	@Test
+	public void onActionWithReceiverTest() {
+		Intent intent = new Intent("ACTION_SCHEME_TEST", Uri.parse("http://androidannotations.org"));
+		receiver.onReceive(Robolectric.application, intent);
+
+		assertTrue(receiver.actionWithSchemeReceived);
 	}
 
 	@Test

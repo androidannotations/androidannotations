@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
+
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,6 +63,7 @@ public class ProcessHolder {
 		public final JClass HASH_MAP = refClass(HashMap.class);
 		public final JClass LIST = refClass(List.class);
 		public final JClass OBJECT = refClass(Object.class);
+		public final JClass ARRAYS = refClass(Arrays.class);
 
 		/*
 		 * Android

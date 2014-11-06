@@ -31,12 +31,17 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * The method annotated with {@link ReceiverAction} may have as parameters :
- * - A {@link android.content.Context} which will be the context given in {@code void onReceive(Context context, Intent intent)}
- * - A {@link android.content.Intent} which will be the intent given in {@code void onReceive(Context context, Intent intent)}
- * - Some any native, {@link android.os.Parcelable} or {@link java.io.Serializable} parameters
- * annotated with {@link ReceiverAction.Extra} which will be the extra put in the intent. The key of this extra is
- * the value of the annotation {@link ReceiverAction.Extra} if set or the name of the parameter.
  * </p>
+ * <ul>
+ * <li>A {@link android.content.Context} which will be the context given in
+ * {@code void onReceive(Context context, Intent intent)}</li>
+ * <li>A {@link android.content.Intent} which will be the intent given in
+ * {@code void onReceive(Context context, Intent intent)}</li>
+ * <li>Any native, {@link android.os.Parcelable} or {@link java.io.Serializable}
+ * parameters annotated with {@link ReceiverAction.Extra} which will be the
+ * extra put in the intent. The key of this extra is the value of the annotation
+ * {@link ReceiverAction.Extra} if set or the name of the parameter.</li>
+ * </ul>
  *
  * <blockquote>
  * 
@@ -79,14 +84,22 @@ public @interface ReceiverAction {
 	 */
 	String value() default "";
 
+	/**
+	 * Define a set of data schemes to filter the Intent. If this field isn't
+	 * all schemes are allowed
+	 *
+	 * @return the data schemes to filter
+	 */
+	String[] dataSchemes() default {};
 
 	/**
 	 * <p>
-	 * Should be used on any native, {@link android.os.Parcelable} or {@link java.io.Serializable} parameter of a method
-	 * annotated with {@link ReceiverAction} to inject the extra put in the intent parameter
-	 * of {@code void onReceive(Context context, Intent intent)}.
-	 * The key of this extra is the value of the annotation {@link ReceiverAction.Extra} if it is set
-	 * or the name of the parameter.
+	 * Should be used on any native, {@link android.os.Parcelable} or
+	 * {@link java.io.Serializable} parameter of a method annotated with
+	 * {@link ReceiverAction} to inject the extra put in the intent parameter of
+	 * {@code void onReceive(Context context, Intent intent)}. The key of this
+	 * extra is the value of the annotation {@link ReceiverAction.Extra} if it
+	 * is set or the name of the parameter.
 	 * </p>
 	 */
 	@Retention(RetentionPolicy.CLASS)
