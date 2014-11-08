@@ -10,13 +10,11 @@
 
 	<artifactId>functional-test-1-5</artifactId>
 	<packaging>apk</packaging>
-	<name>functional-test-1-5</name>
+	<name>AndroidAnnotations functional test suite</name>
 
 	<properties>
-		<spring-android-version>1.0.0.RELEASE</spring-android-version>
-		<jackson-version>1.9.6</jackson-version>
-		<simple-version>2.4.1</simple-version>
-		<android-rome-version>1.0.0-r2</android-rome-version>
+		<jackson-version>1.9.11</jackson-version>
+		<simple-version>2.7.1</simple-version>
 	</properties>
 	
 	<dependencies>
@@ -49,18 +47,17 @@
 		<dependency>
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-android</artifactId>
-			<version>4.41</version>
+			<version>4.48</version>
 		</dependency>
 		<dependency>
 			<groupId>com.squareup</groupId>
 			<artifactId>otto</artifactId>
-			<version>1.3.4</version>
+			<version>1.3.5</version>
 		</dependency>
 		<dependency>
 			<!-- spring-android-rest-template is required to use the Rest API -->
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-rest-template</artifactId>
-			<version>${spring-android-version}</version>
 		</dependency>
 		<dependency>
 			<!-- Using Jackson for JSON marshaling -->
@@ -82,6 +79,10 @@
 					<artifactId>stax-api</artifactId>
 					<groupId>stax</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>xpp3</groupId>
+					<artifactId>xpp3</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -96,9 +97,9 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-          			<groupId>com.android.support</groupId>
-          			<artifactId>support-v4</artifactId>
-        		</exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-v4</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -116,13 +117,12 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
+			<version>1.10.8</version>
 			<scope>test</scope>
-	</dependency>
-	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>bouncycastle</groupId>
@@ -139,7 +139,7 @@
 				<version>3.9.0-rc.3</version>
 				<configuration>
 					<sdk>
-						<platform>14</platform>
+						<platform>16</platform>
 					</sdk>
 					<dex>
 						<jvmArguments>
