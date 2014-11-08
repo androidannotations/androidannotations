@@ -69,8 +69,8 @@ public class BackgroundExecutor {
 
 	private static WrongThreadListener wrongThreadListener = DEFAULT_WRONG_THREAD_LISTENER;
 
-	private static final List<Task> TASKS = new ArrayList<Task>();
-	private static final ThreadLocal<String> CURRENT_SERIAL = new ThreadLocal<String>();
+	private static final List<Task> TASKS = new ArrayList<>();
+	private static final ThreadLocal<String> CURRENT_SERIAL = new ThreadLocal<>();
 
 	private BackgroundExecutor() {
 	}

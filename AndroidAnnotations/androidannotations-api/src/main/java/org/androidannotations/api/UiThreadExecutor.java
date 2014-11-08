@@ -42,7 +42,7 @@ public class UiThreadExecutor {
 		}
 	};
 
-	private static final Map<String, Token> TOKENS = new HashMap<String, Token>();
+	private static final Map<String, Token> TOKENS = new HashMap<>();
 
 	private UiThreadExecutor() {
 		// should not be instantiated

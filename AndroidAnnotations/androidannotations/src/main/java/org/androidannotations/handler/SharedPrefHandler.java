@@ -96,11 +96,11 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 	private static final Map<String, DefaultPrefInfo<?>> DEFAULT_PREF_INFOS = new HashMap<String, SharedPrefHandler.DefaultPrefInfo<?>>() {
 		private static final long serialVersionUID = 1L;
 		{
-			put("boolean", new DefaultPrefInfo<Boolean>(DefaultBoolean.class, BooleanPrefField.class, IRClass.Res.BOOL, false, "booleanField"));
-			put("float", new DefaultPrefInfo<Float>(DefaultFloat.class, FloatPrefField.class, IRClass.Res.INTEGER, 0f, "floatField"));
-			put("int", new DefaultPrefInfo<Integer>(DefaultInt.class, IntPrefField.class, IRClass.Res.INTEGER, 0, "intField"));
-			put("long", new DefaultPrefInfo<Long>(DefaultLong.class, LongPrefField.class, IRClass.Res.INTEGER, 0L, "longField"));
-			put(CanonicalNameConstants.STRING, new DefaultPrefInfo<String>(DefaultString.class, StringPrefField.class, IRClass.Res.STRING, "", "stringField"));
+			put("boolean", new DefaultPrefInfo<>(DefaultBoolean.class, BooleanPrefField.class, IRClass.Res.BOOL, false, "booleanField"));
+			put("float", new DefaultPrefInfo<>(DefaultFloat.class, FloatPrefField.class, IRClass.Res.INTEGER, 0f, "floatField"));
+			put("int", new DefaultPrefInfo<>(DefaultInt.class, IntPrefField.class, IRClass.Res.INTEGER, 0, "intField"));
+			put("long", new DefaultPrefInfo<>(DefaultLong.class, LongPrefField.class, IRClass.Res.INTEGER, 0L, "longField"));
+			put(CanonicalNameConstants.STRING, new DefaultPrefInfo<>(DefaultString.class, StringPrefField.class, IRClass.Res.STRING, "", "stringField"));
 			put(CanonicalNameConstants.STRING_SET, new DefaultPrefInfo<Set<String>>(DefaultStringSet.class, StringSetPrefField.class, null, null, "stringSetField"));
 		}
 	};
@@ -176,7 +176,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		case ACTIVITY_DEFAULT: {
 			JMethod getLocalClassName = getLocalClassName(holder);
 			constructorSuperBlock.invoke("super") //
-					.arg(contextParam.invoke("getSharedPreferences") //
+				.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam)) //
 							.arg(lit(mode)));
 			break;
@@ -184,7 +184,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		case ACTIVITY: {
 			JMethod getLocalClassName = getLocalClassName(holder);
 			constructorSuperBlock.invoke("super") //
-					.arg(contextParam.invoke("getSharedPreferences") //
+				.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam) //
 									.plus(lit("_" + interfaceSimpleName))) //
 							.arg(lit(mode)));
@@ -244,7 +244,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 	private List<ExecutableElement> getValidMethods(Element element) {
 		List<? extends Element> members = element.getEnclosedElements();
 		List<ExecutableElement> methods = ElementFilter.methodsIn(members);
-		List<ExecutableElement> validMethods = new ArrayList<ExecutableElement>();
+		List<ExecutableElement> validMethods = new ArrayList<>();
 		for (ExecutableElement method : methods) {
 			validMethods.add(method);
 		}

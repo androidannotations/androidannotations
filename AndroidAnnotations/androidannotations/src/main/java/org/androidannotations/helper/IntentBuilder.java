@@ -57,7 +57,7 @@ public abstract class IntentBuilder {
 	protected JFieldRef intentField;
 	protected JClass contextClass;
 	protected JClass intentClass;
-	protected Map<Pair<TypeMirror, String>, JMethod> putExtraMethods = new HashMap<Pair<TypeMirror, String>, JMethod>();
+	protected Map<Pair<TypeMirror, String>, JMethod> putExtraMethods = new HashMap<>();
 
 	protected Elements elementUtils;
 	protected Types typeUtils;
@@ -100,7 +100,7 @@ public abstract class IntentBuilder {
 	}
 
 	public JMethod getPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
-		Pair<TypeMirror, String> signature = new Pair<TypeMirror, String>(elementType, parameterName);
+		Pair<TypeMirror, String> signature = new Pair<>(elementType, parameterName);
 		JMethod putExtraMethod = putExtraMethods.get(signature);
 		if (putExtraMethod == null) {
 			putExtraMethod = addPutExtraMethod(elementType, parameterName, extraKeyField);

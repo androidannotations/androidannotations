@@ -25,7 +25,7 @@ import javax.lang.model.util.ElementFilter;
 
 public class RClass implements IRClass {
 
-	private final Map<String, RInnerClass> rClass = new HashMap<String, RInnerClass>();
+	private final Map<String, RInnerClass> rClass = new HashMap<>();
 
 	public RClass(TypeElement rClassElement) {
 		List<TypeElement> rInnerTypeElements = extractRInnerTypeElements(rClassElement);
@@ -50,7 +50,7 @@ public class RClass implements IRClass {
 		if (rInnerClass != null) {
 			return rInnerClass;
 		} else {
-			return RInnerClass.EMPTY_R_INNER_CLASS;
+			return IRInnerClass.EMPTY_R_INNER_CLASS;
 		}
 	}
 }

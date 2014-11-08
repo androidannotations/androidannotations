@@ -196,17 +196,17 @@ public class ProcessHolder {
 
 	// CHECKSTYLE:ON
 
-	private final Map<Element, GeneratedClassHolder> generatedClassHolders = new HashMap<Element, GeneratedClassHolder>();
+	private final Map<Element, GeneratedClassHolder> generatedClassHolders = new HashMap<>();
 
 	private final ProcessingEnvironment processingEnvironment;
 
 	private final JCodeModel codeModel;
 
-	private final Map<String, JClass> loadedClasses = new HashMap<String, JClass>();
+	private final Map<String, JClass> loadedClasses = new HashMap<>();
 
 	private final Classes classes;
 
-	private final Set<Class<?>> apiClassesToGenerate = new HashSet<Class<?>>();
+	private final Set<Class<?>> apiClassesToGenerate = new HashSet<>();
 
 	private final OriginatingElements originatingElements = new OriginatingElements();
 

@@ -100,7 +100,7 @@ public class APTCodeModelHelper {
 
 		List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 
-		List<JClass> typeArgumentJClasses = new ArrayList<JClass>();
+		List<JClass> typeArgumentJClasses = new ArrayList<>();
 		for (TypeMirror typeArgument : typeArguments) {
 			typeArgumentJClasses.add(typeMirrorToJClass(typeArgument, holder, substitute));
 		}
@@ -136,13 +136,13 @@ public class APTCodeModelHelper {
 	}
 
 	private Map<String, TypeMirror> getActualTypes(Types typeUtils, DeclaredType baseClass, TypeMirror annotatedClass) {
-		List<TypeMirror> superTypes = new ArrayList<TypeMirror>();
+		List<TypeMirror> superTypes = new ArrayList<>();
 		superTypes.add(annotatedClass);
 		while (!superTypes.isEmpty()) {
 			TypeMirror x = superTypes.remove(0);
 			if (typeUtils.isSameType(typeUtils.erasure(x), typeUtils.erasure(baseClass))) {
 				DeclaredType type = (DeclaredType) x;
-				Map<String, TypeMirror> actualTypes = new HashMap<String, TypeMirror>();
+				Map<String, TypeMirror> actualTypes = new HashMap<>();
 				for (int i = 0; i < type.getTypeArguments().size(); i++) {
 					TypeMirror actualArg = type.getTypeArguments().get(i);
 					TypeMirror formalArg = baseClass.getTypeArguments().get(i);
@@ -177,7 +177,7 @@ public class APTCodeModelHelper {
 		Types typeUtils = holder.processingEnvironment().getTypeUtils();
 
 		Map<String, TypeMirror> actualTypes = getActualTypes(typeUtils, baseClass, annotatedClass);
-		Map<String, JClass> methodTypes = new LinkedHashMap<String, JClass>();
+		Map<String, JClass> methodTypes = new LinkedHashMap<>();
 
 		for (TypeParameterElement typeParameter : executableElement.getTypeParameters()) {
 			List<? extends TypeMirror> bounds = typeParameter.getBounds();
@@ -419,7 +419,7 @@ public class APTCodeModelHelper {
 	 */
 	public List<ExecutableElement> getMethods(TypeElement typeElement) {
 		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
-		List<ExecutableElement> methods = new ArrayList<ExecutableElement>(ElementFilter.methodsIn(enclosedElements));
+		List<ExecutableElement> methods = new ArrayList<>(ElementFilter.methodsIn(enclosedElements));
 
 		// Add methods of the interfaces. These will be valid as they have gone
 		// through the validator.

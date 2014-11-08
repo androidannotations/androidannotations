@@ -39,7 +39,7 @@ public class OnActivityResultHolder extends GeneratedClassHolderDecorator<ECompo
 	private JVar requestCodeParam;
 	private JVar dataParam;
 	private JVar resultCodeParam;
-	private Map<Integer, JBlock> caseBlocks = new HashMap<Integer, JBlock>();
+	private Map<Integer, JBlock> caseBlocks = new HashMap<>();
 
 	public OnActivityResultHolder(EComponentHolder holder) {
 		super(holder);

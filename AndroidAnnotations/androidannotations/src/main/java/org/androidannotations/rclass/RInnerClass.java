@@ -35,8 +35,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class RInnerClass implements IRInnerClass {
 
-	private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<Integer, String>();
-	private final Set<String> idQualifiedNames = new HashSet<String>();
+	private final Map<Integer, String> idQualifiedNamesByIdValues = new HashMap<>();
+	private final Set<String> idQualifiedNames = new HashSet<>();
 
 	private final String rInnerQualifiedName;
 

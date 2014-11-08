@@ -186,7 +186,7 @@ public class AnnotationHelper {
 	}
 
 	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName, String idFieldName, String resFieldName) {
-		List<JFieldRef> fieldRefs = new ArrayList<JFieldRef>();
+		List<JFieldRef> fieldRefs = new ArrayList<>();
 
 		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName, idFieldName, resFieldName)) {
 			fieldRefs.add(RInnerClass.extractIdStaticRef(holder, refQualifiedName));
@@ -220,7 +220,7 @@ public class AnnotationHelper {
 	public List<String> extractAnnotationResources(Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName, String idFieldName, String resFieldName) {
 		int[] values = extractAnnotationResIdValueParameter(element, annotationName, idFieldName);
 
-		List<String> resourceIdQualifiedNames = new ArrayList<String>();
+		List<String> resourceIdQualifiedNames = new ArrayList<>();
 		/*
 		 * if nothing defined in the annotation value() parameter, we check for
 		 * its resName() parameter
@@ -389,7 +389,7 @@ public class AnnotationHelper {
 				@SuppressWarnings("unchecked")
 				List<AnnotationValue> annotationClassArray = (List<AnnotationValue>) annotationValue.getValue();
 
-				List<DeclaredType> result = new ArrayList<DeclaredType>(annotationClassArray.size());
+				List<DeclaredType> result = new ArrayList<>(annotationClassArray.size());
 
 				for (AnnotationValue annotationClassValue : annotationClassArray) {
 					result.add((DeclaredType) annotationClassValue.getValue());
@@ -427,7 +427,7 @@ public class AnnotationHelper {
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, Class<? extends Annotation> validAnnotation) {
-		List<Class<? extends Annotation>> annotations = new ArrayList<Class<? extends Annotation>>();
+		List<Class<? extends Annotation>> annotations = new ArrayList<>();
 		annotations.add(validAnnotation);
 		return hasOneOfClassAnnotations(element, annotations);
 	}

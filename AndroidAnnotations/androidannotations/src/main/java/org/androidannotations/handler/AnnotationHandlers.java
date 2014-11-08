@@ -42,9 +42,9 @@ import org.androidannotations.rclass.IRClass;
 
 public class AnnotationHandlers {
 
-	private List<AnnotationHandler<? extends GeneratedClassHolder>> annotationHandlers = new ArrayList<AnnotationHandler<? extends GeneratedClassHolder>>();
-	private List<GeneratingAnnotationHandler<? extends GeneratedClassHolder>> generatingAnnotationHandlers = new ArrayList<GeneratingAnnotationHandler<? extends GeneratedClassHolder>>();
-	private List<AnnotationHandler<? extends GeneratedClassHolder>> decoratingAnnotationHandlers = new ArrayList<AnnotationHandler<? extends GeneratedClassHolder>>();
+	private List<AnnotationHandler<? extends GeneratedClassHolder>> annotationHandlers = new ArrayList<>();
+	private List<GeneratingAnnotationHandler<? extends GeneratedClassHolder>> generatingAnnotationHandlers = new ArrayList<>();
+	private List<AnnotationHandler<? extends GeneratedClassHolder>> decoratingAnnotationHandlers = new ArrayList<>();
 	private Set<String> supportedAnnotationNames;
 	private OptionsHelper optionsHelper;
 
@@ -206,7 +206,7 @@ public class AnnotationHandlers {
 
 	public Set<String> getSupportedAnnotationTypes() {
 		if (supportedAnnotationNames == null) {
-			Set<String> annotationNames = new HashSet<String>();
+			Set<String> annotationNames = new HashSet<>();
 			for (AnnotationHandler<?> annotationHandler : annotationHandlers) {
 				annotationNames.add(annotationHandler.getTarget());
 			}

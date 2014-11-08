@@ -116,7 +116,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 						AnnotationValue action = entry.getValue();
 						@SuppressWarnings("unchecked")
 						List<AnnotationValue> elements = (List<AnnotationValue>) action.getValue();
-						List<TypeMirror> listenerTypeMirrors = new ArrayList<TypeMirror>(elements.size());
+						List<TypeMirror> listenerTypeMirrors = new ArrayList<>(elements.size());
 
 						for (AnnotationValue annotationValue : elements) {
 							listenerTypeMirrors.add((TypeMirror) annotationValue.getValue());

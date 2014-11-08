@@ -192,17 +192,12 @@ public class ProcessorTestHelper {
 	}
 
 	private static String[] getContents(File file) {
-		List<String> content = new ArrayList<String>();
+		List<String> content = new ArrayList<>();
 
-		try {
-			BufferedReader input = new BufferedReader(new FileReader(file));
-			try {
-				String line = null; // not declared within while loop
-				while ((line = input.readLine()) != null) {
-					content.add(line);
-				}
-			} finally {
-				input.close();
+		try (BufferedReader input = new BufferedReader(new FileReader(file))) {
+			String line = null; // not declared within while loop
+			while ((line = input.readLine()) != null) {
+				content.add(line);
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -211,9 +206,9 @@ public class ProcessorTestHelper {
 		return content.toArray(new String[] {});
 	}
 
-	private final List<String> compilerOptions = new ArrayList<String>();
+	private final List<String> compilerOptions = new ArrayList<>();
 
-	private final List<Class<? extends Processor>> processorsClasses = new ArrayList<Class<? extends Processor>>();
+	private final List<Class<? extends Processor>> processorsClasses = new ArrayList<>();
 
 	public ProcessorTestHelper() {
 		compilerOptions.add("-classpath");
@@ -267,7 +262,7 @@ public class ProcessorTestHelper {
 	public CompileResult compileFiles(Type... compilationUnits) {
 		assert compilationUnits != null;
 
-		List<File> files = new ArrayList<File>();
+		List<File> files = new ArrayList<>();
 
 		addCollection(files, compilationUnits);
 
@@ -277,7 +272,7 @@ public class ProcessorTestHelper {
 	public CompileResult compileFiles(Object... elements) {
 		assert elements != null;
 
-		List<File> files = new ArrayList<File>();
+		List<File> files = new ArrayList<>();
 		for (Object element : elements) {
 			if (element instanceof Type) {
 				addCollection(files, (Type) element);
@@ -293,31 +288,28 @@ public class ProcessorTestHelper {
 	}
 
 	public CompileResult compileFiles(Collection<File> compilationUnits) {
-		DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<JavaFileObject>();
+		DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
 
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
-		StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnosticCollector, null, null);
+		try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnosticCollector, null, null)) {
+			CompilationTask task = compiler.getTask(null, fileManager, diagnosticCollector, compilerOptions, null, fileManager.getJavaFileObjectsFromFiles(compilationUnits));
 
-		CompilationTask task = compiler.getTask(null, fileManager, diagnosticCollector, compilerOptions, null, fileManager.getJavaFileObjectsFromFiles(compilationUnits));
+			List<Processor> processors = new ArrayList<>();
 
-		List<Processor> processors = new ArrayList<Processor>();
-
-		for (Class<? extends Processor> processorClass : processorsClasses) {
-			try {
-				processors.add(processorClass.newInstance());
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+			for (Class<? extends Processor> processorClass : processorsClasses) {
+				try {
+					processors.add(processorClass.newInstance());
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 			}
-		}
 
-		task.setProcessors(processors);
+			task.setProcessors(processors);
 
-		task.call();
+			task.call();
+		} catch (IOException e) {
 
-		try {
-			fileManager.close();
-		} catch (IOException exception) {
 		}
 
 		return new CompileResult(diagnosticCollector.getDiagnostics());

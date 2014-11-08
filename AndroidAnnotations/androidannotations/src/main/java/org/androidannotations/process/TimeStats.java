@@ -28,8 +28,8 @@ public class TimeStats {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TimeStats.class);
 
-	private final Map<String, Long> measures = new HashMap<String, Long>();
-	private final List<Duration> durations = new ArrayList<Duration>();
+	private final Map<String, Long> measures = new HashMap<>();
+	private final List<Duration> durations = new ArrayList<>();
 
 	private static class Duration implements Comparable<Duration> {
 		public final String key;
@@ -68,10 +68,10 @@ public class TimeStats {
 		Collections.sort(durations);
 		for (Duration duration : durations) {
 			sb.append("[") //
-					.append(duration.key) //
-					.append(" = ") //
-					.append(duration.durationInMs) //
-					.append(" ms], ");
+				.append(duration.key) //
+				.append(" = ") //
+				.append(duration.durationInMs) //
+				.append(" ms], ");
 		}
 
 		return sb.toString();

@@ -36,7 +36,7 @@ import com.sun.codemodel.JFieldVar;
 
 public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiverRegistration> extends GeneratedClassHolderDecorator<T> {
 
-	private Map<IntentFilterData, JFieldVar> intentFilterFields = new HashMap<IntentFilterData, JFieldVar>();
+	private Map<IntentFilterData, JFieldVar> intentFilterFields = new HashMap<>();
 	private IllegalStateException illegalStateException = new IllegalStateException("This shouldn't happen unless the validation is bad");
 
 	public ReceiverRegistrationHolder(T holder) {
@@ -104,8 +104,8 @@ public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiver
 
 		public IntentFilterData(String[] actions, String[] dataSchemes, RegisterAt registerAt) {
 			this.registerAt = registerAt;
-			actionSet = new HashSet<String>(Arrays.asList(actions));
-			dataSchemeSet = new HashSet<String>(Arrays.asList(dataSchemes));
+			actionSet = new HashSet<>(Arrays.asList(actions));
+			dataSchemeSet = new HashSet<>(Arrays.asList(dataSchemes));
 		}
 
 		public RegisterAt getRegisterAt() {

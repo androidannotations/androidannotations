@@ -33,22 +33,8 @@ public class RoboGuiceHelper {
 			Method injectViewsMethod = viewMembersInjectorClass.getDeclaredMethod("injectViews", Object.class);
 			injectViewsMethod.setAccessible(true);
 			injectViewsMethod.invoke(null, activity);
-		} catch (ClassNotFoundException e) {
-			propagateRuntimeException(e);
-		} catch (NoSuchMethodException e) {
-			propagateRuntimeException(e);
-		} catch (SecurityException e) {
-			propagateRuntimeException(e);
-		} catch (IllegalAccessException e) {
-			propagateRuntimeException(e);
-		} catch (IllegalArgumentException e) {
-			propagateRuntimeException(e);
-		} catch (InvocationTargetException e) {
-			propagateRuntimeException(e);
+		} catch (ClassNotFoundException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchMethodException e) {
+			throw new RuntimeException("Could not invoke RoboGuice method!", e);
 		}
-	}
-
-	private static void propagateRuntimeException(Throwable t) {
-		throw new RuntimeException("Could not invoke RoboGuice method!", t);
 	}
 }

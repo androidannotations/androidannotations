@@ -45,7 +45,7 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 
 	public EServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
 		super(processHolder, annotatedElement);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder<EServiceHolder>(this);
+		receiverRegistrationHolder = new ReceiverRegistrationHolder<>(this);
 		intentBuilder = new ServiceIntentBuilder(this, androidManifest);
 		intentBuilder.build();
 	}
