@@ -16,25 +16,27 @@
 package org.androidannotations.test15;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import android.os.Build;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
 import android.view.KeyEvent;
 
-//@RunWith(AndroidAnnotationsTestRunner.class)
-public class BackpressedActivityTestSkipped {
+@RunWith(RobolectricTestRunner.class)
+public class BackpressedActivityTest {
 
-	/**
-	 * Test skipped because {@link Build.VERSION#RELEASE} is set to null in
-	 * robolectric
-	 */
-	// @Test
+	@Config(reportSdk = 4)
+	@Test
 	public void backKeyHandled() {
 
-		BackpressedActivity_ activity = new BackpressedActivity_();
-		activity.onCreate(null);
+		BackpressedActivity activity = Robolectric.setupActivity(BackpressedActivity_.class);
 
 		assertThat(activity.backPressed).isFalse();
 
-		activity.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(null));
+		activity.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
 
 		assertThat(activity.backPressed).isTrue();
 
