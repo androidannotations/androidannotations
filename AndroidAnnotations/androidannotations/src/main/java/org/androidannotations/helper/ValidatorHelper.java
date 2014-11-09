@@ -15,9 +15,31 @@
  */
 package org.androidannotations.helper;
 
-import org.androidannotations.annotations.*;
-import org.androidannotations.annotations.rest.*;
-import org.androidannotations.annotations.sharedpreferences.*;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EIntentService;
+import org.androidannotations.annotations.EReceiver;
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.Receiver;
+import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.WakeLock;
+import org.androidannotations.annotations.WakeLock.Level;
+import org.androidannotations.annotations.rest.Delete;
+import org.androidannotations.annotations.rest.Get;
+import org.androidannotations.annotations.rest.Head;
+import org.androidannotations.annotations.rest.Options;
+import org.androidannotations.annotations.rest.Post;
+import org.androidannotations.annotations.rest.Put;
+import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.api.rest.RestClientErrorHandling;
 import org.androidannotations.api.rest.RestClientHeaders;
 import org.androidannotations.api.rest.RestClientRootUrl;
@@ -27,17 +49,45 @@ import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import javax.lang.model.element.*;
-import javax.lang.model.type.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
-import static org.androidannotations.helper.AndroidConstants.*;
-import static org.androidannotations.helper.CanonicalNameConstants.*;
-import static org.androidannotations.helper.ModelConstants.*;
+import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
+import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
+import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 
 public class ValidatorHelper {
 
@@ -143,7 +193,7 @@ public class ValidatorHelper {
 	}
 
 	public void isStatic(Element element, IsValid valid) {
-		if (!annotationHelper.isPublic(element)) {
+		if (!annotationHelper.isStatic(element)) {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s cannot be used on a non static inner element");
 		}
@@ -181,6 +231,11 @@ public class ValidatorHelper {
 	public void enclosingElementHasEIntentService(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EIntentService.class, valid);
+	}
+
+	public void enclosingElementHasEReceiver(Element element, AnnotationElements validatedElements, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		hasClassAnnotation(element, enclosingElement, validatedElements, EReceiver.class, valid);
 	}
 
 	public void hasEActivity(Element element, AnnotationElements validatedElements, IsValid valid) {
@@ -252,6 +307,11 @@ public class ValidatorHelper {
 	public void enclosingElementHasRestAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		String error = "can only be used in an interface annotated with";
 		enclosingElementHasAnnotation(Rest.class, element, validatedElements, valid, error);
+	}
+
+	public void enclosingMethodHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, IsValid valid) {
+		String error = "can only be used with a method annotated with";
+		enclosingElementHasAnnotation(annotation, element, validatedElements, valid, error);
 	}
 
 	public void enclosingElementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, IsValid valid, String error) {
@@ -383,6 +443,21 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void doesNotHaveTraceAnnotationAndReturnValue(ExecutableElement executableElement, AnnotationElements validatedElements, IsValid valid) {
+		TypeMirror returnType = executableElement.getReturnType();
+
+		if (elementHasAnnotation(Trace.class, executableElement, validatedElements) && returnType.getKind() != TypeKind.VOID) {
+			annotationHelper.printAnnotationError(executableElement, "@WakeLock annotated methods with a return value are not supported by @Trace");
+		}
+	}
+
+	public void doesNotUseFlagsWithPartialWakeLock(Element element, AnnotationElements validatedElements, IsValid valid) {
+		WakeLock annotation = element.getAnnotation(WakeLock.class);
+		if (annotation.level().equals(Level.PARTIAL_WAKE_LOCK) && annotation.flags().length > 0) {
+			annotationHelper.printAnnotationWarning(element, "Flags have no effect when combined with a PARTIAL_WAKE_LOCK");
+		}
+	}
+
 	public void returnTypeIsNotVoid(ExecutableElement executableElement, IsValid valid) {
 		TypeMirror returnType = executableElement.getReturnType();
 
@@ -478,11 +553,9 @@ public class ValidatorHelper {
 
 		TypeMirror viewType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW).asType();
 
-		if (!elementType.toString().equals(CanonicalNameConstants.LIST)
-				&& elementTypeArguments.size() == 1
-				&& !annotationHelper.isSubtype(elementTypeArguments.get(0), viewType)) {
+		if (!elementType.toString().equals(CanonicalNameConstants.LIST) && elementTypeArguments.size() == 1 && !annotationHelper.isSubtype(elementTypeArguments.get(0), viewType)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s can only be used on a "+CanonicalNameConstants.LIST+ " of elements extending " + CanonicalNameConstants.VIEW);
+			annotationHelper.printAnnotationError(element, "%s can only be used on a " + CanonicalNameConstants.LIST + " of elements extending " + CanonicalNameConstants.VIEW);
 		}
 	}
 
@@ -616,14 +689,9 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "Could not find the RoboGuice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_CONTEXT);
 		}
 
-		try {
-			if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_INJECTOR) == null) {
-				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
-			}
-		} catch (RuntimeException e) {
+		if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_APPLICATION) != null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Could not find the Guice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_INJECTOR);
+			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 2.0!");
 		}
 	}
 
@@ -927,10 +995,10 @@ public class ValidatorHelper {
 
 	}
 
-	public void canBeSavedAsInstanceState(Element element, IsValid isValid) {
+	public void canBePutInABundle(Element element, IsValid isValid) {
 		String typeString = element.asType().toString();
 
-		if (!isKnowInstanceStateType(typeString)) {
+		if (!isKnownBundleCompatibleType(typeString)) {
 
 			if (element.asType() instanceof DeclaredType) {
 
@@ -981,7 +1049,7 @@ public class ValidatorHelper {
 		return annotationHelper.typeElementFromQualifiedName(typeString);
 	}
 
-	private boolean isKnowInstanceStateType(String type) {
+	private boolean isKnownBundleCompatibleType(String type) {
 		return BundleHelper.methodSuffixNameByTypeName.containsKey(type);
 	}
 
@@ -1112,16 +1180,22 @@ public class ValidatorHelper {
 	}
 
 	public void hasInternetPermission(Element element, AndroidManifest androidManifest, IsValid valid) {
-		if (androidManifest.isLibraryProject()) {
-			return;
-		}
+		hasPermission(element, androidManifest, valid, INTERNET_PERMISSION);
+	}
 
-		String internetPermissionQualifiedName = INTERNET_PERMISSION;
+	public void hasWakeLockPermission(Element element, AndroidManifest androidManifest, IsValid valid) {
+		hasPermission(element, androidManifest, valid, WAKELOCK_PERMISSION);
+	}
 
+	public void hasPermission(Element element, AndroidManifest androidManifest, IsValid valid, String permissionQualifiedName) {
 		List<String> permissionQualifiedNames = androidManifest.getPermissionQualifiedNames();
-		if (!permissionQualifiedNames.contains(internetPermissionQualifiedName)) {
-			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "Your application must require the INTERNET permission.");
+		if (!permissionQualifiedNames.contains(permissionQualifiedName)) {
+			if (androidManifest.isLibraryProject()) {
+				annotationHelper.printAnnotationWarning(element, "Your library should require the " + permissionQualifiedName + " permission.");
+			} else {
+				valid.invalidate();
+				annotationHelper.printAnnotationError(element, "Your application must require the " + permissionQualifiedName + " permission.");
+			}
 		}
 	}
 
@@ -1319,6 +1393,9 @@ public class ValidatorHelper {
 		boolean intentParameterFound = false;
 		for (VariableElement parameter : parameters) {
 			TypeMirror parameterType = parameter.asType();
+			if (parameter.getAnnotation(OnActivityResult.Extra.class) != null) {
+				continue;
+			}
 			if (parameterType.toString().equals(CanonicalNameConstants.INTEGER) //
 					|| parameterType.getKind().equals(TypeKind.INT)) {
 				if (resultCodeParameterFound) {

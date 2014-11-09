@@ -71,14 +71,17 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 		for (ExecutableElement userConstructor : constructors) {
 			JMethod copyConstructor = generatedClass.constructor(PUBLIC);
 			JMethod staticHelper = generatedClass.method(PUBLIC | STATIC, generatedClass._extends(), "build");
+
+			codeModelHelper.generifyStaticHelper(this, staticHelper, getAnnotatedElement());
+
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");
 			JInvocation newInvocation = JExpr._new(generatedClass);
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
-				String paramType = param.asType().toString();
-				copyConstructor.param(refClass(paramType), paramName);
-				staticHelper.param(refClass(paramType), paramName);
+				JClass paramType = codeModelHelper.typeMirrorToJClass(param.asType(), this);
+				copyConstructor.param(paramType, paramName);
+				staticHelper.param(paramType, paramName);
 				superCall.arg(JExpr.ref(paramName));
 				newInvocation.arg(JExpr.ref(paramName));
 			}

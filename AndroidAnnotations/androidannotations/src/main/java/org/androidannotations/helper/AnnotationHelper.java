@@ -15,12 +15,16 @@
  */
 package org.androidannotations.helper;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.sun.codemodel.JFieldRef;
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.ResId;
+import org.androidannotations.logger.Level;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
+import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.rclass.IRInnerClass;
+import org.androidannotations.rclass.RInnerClass;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -35,20 +39,15 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.OptionsItem;
-import org.androidannotations.annotations.ResId;
-import org.androidannotations.logger.Level;
-import org.androidannotations.logger.Logger;
-import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.rclass.IRInnerClass;
-import org.androidannotations.rclass.RInnerClass;
-
-import com.sun.codemodel.JFieldRef;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 
 public class AnnotationHelper {
 
@@ -91,9 +90,9 @@ public class AnnotationHelper {
 		TypeElement type = typeElementFromQualifiedName(qualifiedName);
 		if (type.getNestingKind() == NestingKind.MEMBER) {
 			String parentGeneratedClass = generatedClassQualifiedNameFromQualifiedName(type.getEnclosingElement().asType().toString());
-			return parentGeneratedClass+"."+type.getSimpleName().toString()+GENERATION_SUFFIX;
+			return parentGeneratedClass + "." + type.getSimpleName().toString() + GENERATION_SUFFIX;
 		} else {
-			return qualifiedName+GENERATION_SUFFIX;
+			return qualifiedName + GENERATION_SUFFIX;
 		}
 	}
 
@@ -142,6 +141,10 @@ public class AnnotationHelper {
 		return element.getModifiers().contains(Modifier.PUBLIC);
 	}
 
+	public boolean isStatic(Element element) {
+		return element.getModifiers().contains(Modifier.STATIC);
+	}
+
 	public boolean isAbstract(Element element) {
 		return element.getModifiers().contains(Modifier.ABSTRACT);
 	}
@@ -173,7 +176,7 @@ public class AnnotationHelper {
 	/**
 	 * Returns a list of {@link JFieldRef} linking to the R class, based on the
 	 * given annotation
-	 * 
+	 *
 	 * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
 	 */
 	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
@@ -195,7 +198,7 @@ public class AnnotationHelper {
 	 * set using the value() parameter of the annotation (as int or int[]), the
 	 * resName() parameter of the annotation (as String or String[]), the
 	 * element name.
-	 * 
+	 *
 	 * @param element
 	 *            the annotated element
 	 * @param annotationName
@@ -425,6 +428,11 @@ public class AnnotationHelper {
 		List<Class<? extends Annotation>> annotations = new ArrayList<Class<? extends Annotation>>();
 		annotations.add(validAnnotation);
 		return hasOneOfClassAnnotations(element, annotations);
+	}
+
+	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
+		Element enclosingElement = element.getEnclosingElement();
+		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations) {

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="roboguice_modules">
+        <item>org.androidannotations.roboguiceexample.AstroModule</item>
+    </string-array>
+
+</resources>

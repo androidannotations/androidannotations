@@ -17,7 +17,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
-def AAVersion = '3.1-SNAPSHOT' // change this to your desired version, for example the latest stable: 3.0.1
+def AAVersion = '3.2-SNAPSHOT' // change this to your desired version, for example the latest stable: 3.1
 
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"

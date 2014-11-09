@@ -84,8 +84,8 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions) {
-		return receiverRegistrationHolder.getIntentFilterField(actions);
+	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
+		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
 	}
 
 	@Override

@@ -15,11 +15,26 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import org.androidannotations.api.SdkVersionHelper;
-import org.androidannotations.helper.*;
+import org.androidannotations.helper.ActionBarSherlockHelper;
+import org.androidannotations.helper.ActivityIntentBuilder;
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.process.ProcessHolder;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -30,16 +45,26 @@ import javax.lang.model.util.ElementFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sun.codemodel.JExpr.*;
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr.TRUE;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
 
-	private GreenDroidHelper greenDroidHelper;
+	private static final String ON_CONTENT_CHANGED_JAVADOC = "We cannot simply copy the " + "code from RoboActivity, because that can cause classpath issues. " + "For further details see issue #1116.";
+
 	private ActivityIntentBuilder intentBuilder;
 	private JMethod onCreate;
 	private JMethod setIntent;
+	private JMethod onNewIntentMethod;
 	private JMethod setContentViewLayout;
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
@@ -156,11 +181,12 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	protected void setOnNewIntent() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
-		method.annotate(Override.class);
-		JVar intent = method.param(classes().INTENT, "intent");
-		JBlock body = method.body();
-		body.invoke(_super(), method).arg(intent);
+		onNewIntentMethod = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
+		onNewIntentMethod.annotate(Override.class);
+		JVar intent = onNewIntentMethod.param(classes().INTENT, "intent");
+		JBlock body = onNewIntentMethod.body();
+		body.invoke(_super(), onNewIntentMethod).arg(intent);
+		body.invoke(getSetIntent()).arg(intent);
 		getRoboGuiceHolder().onNewIntentAfterSuperBlock = body.block();
 	}
 
@@ -206,6 +232,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	protected void setOnContentChanged() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onContentChanged");
 		method.annotate(Override.class);
+		method.javadoc().append(ON_CONTENT_CHANGED_JAVADOC);
 		JBlock body = method.body();
 		body.invoke(_super(), method);
 		getRoboGuiceHolder().onContentChangedAfterSuperBlock = body.block();
@@ -297,22 +324,15 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private void setSetContentView() {
 		getOnCreate();
 
-		String setContentViewMethodName;
-		if (usesGreenDroid()) {
-			setContentViewMethodName = "setActionBarContentView";
-		} else {
-			setContentViewMethodName = "setContentView";
-		}
-
 		JClass layoutParamsClass = classes().VIEW_GROUP_LAYOUT_PARAMS;
 
-		setContentViewLayout = setContentViewMethod(setContentViewMethodName, new JType[] { codeModel().INT }, new String[] { "layoutResID" });
-		setContentViewMethod(setContentViewMethodName, new JType[] { classes().VIEW, layoutParamsClass }, new String[] { "view", "params" });
-		setContentViewMethod(setContentViewMethodName, new JType[] { classes().VIEW }, new String[] { "view" });
+		setContentViewLayout = setContentViewMethod(new JType[] { codeModel().INT }, new String[] { "layoutResID" });
+		setContentViewMethod(new JType[] { classes().VIEW, layoutParamsClass }, new String[] { "view", "params" });
+		setContentViewMethod(new JType[] { classes().VIEW }, new String[] { "view" });
 	}
 
-	private JMethod setContentViewMethod(String setContentViewMethodName, JType[] paramTypes, String[] paramNames) {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, setContentViewMethodName);
+	private JMethod setContentViewMethod(JType[] paramTypes, String[] paramNames) {
+		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "setContentView");
 		method.annotate(Override.class);
 
 		ArrayList<JVar> params = new ArrayList<JVar>();
@@ -333,13 +353,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return initSavedInstanceParam;
 	}
 
-	private boolean usesGreenDroid() {
-		if (greenDroidHelper == null) {
-			greenDroidHelper = new GreenDroidHelper(processingEnvironment());
-		}
-		return greenDroidHelper.usesGreenDroid(annotatedElement);
-	}
-
 	private void handleBackPressed() {
 		Element declaredOnBackPressedMethod = getOnBackPressedMethod(annotatedElement);
 		if (declaredOnBackPressedMethod != null) {
@@ -358,15 +371,15 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 			onKeyDownBody._if( //
 					sdkInt.lt(JExpr.lit(5)) //
-							.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
-							.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
+					.cand(keyCodeParam.eq(keyEventClass.staticRef("KEYCODE_BACK"))) //
+					.cand(eventParam.invoke("getRepeatCount").eq(JExpr.lit(0)))) //
 					._then() //
 					.invoke("onBackPressed");
 
 			onKeyDownBody._return( //
 					JExpr._super().invoke(onKeyDownMethod) //
-							.arg(keyCodeParam) //
-							.arg(eventParam));
+					.arg(keyCodeParam) //
+					.arg(eventParam));
 
 		}
 	}
@@ -396,7 +409,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 				&& method.getModifiers().contains(Modifier.PUBLIC) //
 				&& method.getReturnType().getKind().equals(TypeKind.VOID) //
 				&& method.getParameters().size() == 0 //
-		;
+				;
 	}
 
 	@Override
@@ -438,6 +451,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		getRoboGuiceHolder().contentViewListenerField.annotate(classes().INJECT);
 	}
 
+	protected void setScopeField() {
+		getRoboGuiceHolder().scope = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope_");
+
+	}
+
 	@Override
 	public JMethod getInjectExtrasMethod() {
 		if (injectExtrasMethod == null) {
@@ -470,6 +488,13 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 		getSetIntent().body().invoke(injectExtrasMethod);
 		getInitBody().invoke(injectExtrasMethod);
+	}
+
+	public JMethod getOnNewIntent() {
+		if (onNewIntentMethod == null) {
+			setOnNewIntent();
+		}
+		return onNewIntentMethod;
 	}
 
 	@Override
@@ -660,6 +685,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return onActivityResultHolder.getRequestCodeParam();
 	}
 
+	@Override
+	public JMethod getOnActivityResultMethod() {
+		return onActivityResultHolder.getMethod();
+	}
+
 	public JBlock getOnDestroyAfterSuperBlock() {
 		if (onDestroyAfterSuperBlock == null) {
 			setOnDestroy();
@@ -723,8 +753,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions) {
-		return receiverRegistrationHolder.getIntentFilterField(actions);
+	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
+		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
 	}
 
 }

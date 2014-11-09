@@ -26,6 +26,7 @@
         android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name="org.androidannotations.test15.roboguice.SampleRoboApplication_"
@@ -75,7 +76,6 @@
         <activity android:name="org.androidannotations.test15.rest.MyServiceActivity_" />
         <activity android:name="org.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
         <activity android:name="org.androidannotations.test15.afterinject.AfterInjectActivity_" />
-        <activity android:name="org.androidannotations.test15.greendroid.MyGreenDroidActivity_" />
         <activity android:name="org.androidannotations.test15.nonconfiguration.NonConfigurationActivity_" />
         <activity android:name="org.androidannotations.test15.sherlock.MySherlockActivity_" />
         <activity android:name="org.androidannotations.test15.efragment.MyFragmentActivity_" />
@@ -87,6 +87,7 @@
         <activity android:name=".HierarchyViewerActivity_" />
         <activity android:name="org.androidannotations.test15.CustomTitleActivity_" />
         <activity android:name=".ActivityWithGenerics_" />
+        <activity android:name=".WakeLockActivity_" />
 
         <receiver android:name="org.androidannotations.test15.ereceiver.MyReceiver_" />
 

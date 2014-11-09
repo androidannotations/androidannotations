@@ -23,15 +23,19 @@ import java.lang.annotation.Target;
 import org.androidannotations.annotations.ResId;
 
 /**
+ * <p>
  * Use on methods in {@link SharedPref} annotated class. The generated method
  * will return an empty {@link java.util.Set} of Strings by default.
- * <p/>
+ * </p>
+ * <p>
  * The key of the preference will be the method name by default. This can be
  * overridden by specifying a string resource with the {@link #keyRes()}
  * parameter.
- * <p/>
+ * </p>
+ * <p>
  * <b>Implementation note:</b>
- * <p/>
+ * </p>
+ * <p>
  * Since {@code SharedPreferences.getStringSet} is only available from API 11,
  * the generated method serializes the {@code Set<String>} into a {@code String}
  * , and persists it with
@@ -40,6 +44,7 @@ import org.androidannotations.annotations.ResId;
  * From API 11 and up, the generated method simply uses the native
  * {@link android.content.SharedPreferences SharedPreferences}
  * {@code Set<String>} methods.
+ * </p>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

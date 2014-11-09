@@ -15,7 +15,14 @@
  */
 package org.androidannotations.handler;
 
-import org.androidannotations.handler.rest.*;
+import org.androidannotations.handler.rest.DeleteHandler;
+import org.androidannotations.handler.rest.GetHandler;
+import org.androidannotations.handler.rest.HeadHandler;
+import org.androidannotations.handler.rest.OptionsHandler;
+import org.androidannotations.handler.rest.PostHandler;
+import org.androidannotations.handler.rest.PutHandler;
+import org.androidannotations.handler.rest.RestHandler;
+import org.androidannotations.handler.rest.RestServiceHandler;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -26,7 +33,11 @@ import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AnnotationHandlers {
 
@@ -99,12 +110,15 @@ public class AnnotationHandlers {
 		add(new SeekBarTouchStartHandler(processingEnvironment));
 		add(new SeekBarTouchStopHandler(processingEnvironment));
 		add(new ServiceActionHandler(processingEnvironment));
+		add(new ProduceHandler(processingEnvironment));
+		add(new SubscribeHandler(processingEnvironment));
 		add(new InstanceStateHandler(processingEnvironment));
 		add(new HttpsClientHandler(processingEnvironment));
-		add(new OnActivityResultHandler(processingEnvironment));
 		add(new HierarchyViewerSupportHandler(processingEnvironment));
 		add(new WindowFeatureHandler(processingEnvironment));
-		add(new ReceiverHandler(processingEnvironment));
+		new ReceiverHandler(processingEnvironment).register(this);
+		new ReceiverActionHandler(processingEnvironment).register(this);
+		new OnActivityResultHandler(processingEnvironment).register(this);
 
 		add(new IgnoredWhenDetachedHandler(processingEnvironment));
 		/* After injection methods must be after injections */
@@ -115,22 +129,34 @@ public class AnnotationHandlers {
 		if (optionsHelper.shouldLogTrace()) {
 			add(new TraceHandler(processingEnvironment));
 		}
-		/* UIThreadHandler and BackgroundHandler must be after TraceHandler and IgnoredWhenDetached */
+
+		/*
+		 * WakeLockHandler must be after TraceHandler but before UiThreadHandler
+		 * and BackgroundHandler
+		 */
+		add(new WakeLockHandler(processingEnvironment));
+
+		/*
+		 * UIThreadHandler and BackgroundHandler must be after TraceHandler and
+		 * IgnoredWhenDetached
+		 */
 		add(new UiThreadHandler(processingEnvironment));
 		add(new BackgroundHandler(processingEnvironment));
 
-		/* SupposeUiThreadHandler and SupposeBackgroundHandler must be
-		 after all handlers that modifies generated method body */
-        add(new SupposeUiThreadHandler(processingEnvironment));
-        add(new SupposeBackgroundHandler(processingEnvironment));
+		/*
+		 * SupposeUiThreadHandler and SupposeBackgroundHandler must be after all
+		 * handlers that modifies generated method body
+		 */
+		add(new SupposeUiThreadHandler(processingEnvironment));
+		add(new SupposeBackgroundHandler(processingEnvironment));
 	}
 
-	private void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
+	public void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
 		annotationHandlers.add(annotationHandler);
 		decoratingAnnotationHandlers.add(annotationHandler);
 	}
 
-	private void add(GeneratingAnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
+	public void add(GeneratingAnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
 		annotationHandlers.add(annotationHandler);
 		generatingAnnotationHandlers.add(annotationHandler);
 	}

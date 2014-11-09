@@ -5,14 +5,13 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:maxSdkVersion="17"
-        android:minSdkVersion="3"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="4"
+        android:targetSdkVersion="20" />
 
     <application
-        android:name=".AstroApplication"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:allowBackup="true" >
         <activity
             android:name=".AstroGirl_"
             android:label="@string/app_name" >

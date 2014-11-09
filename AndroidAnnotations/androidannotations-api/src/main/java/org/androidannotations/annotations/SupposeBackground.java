@@ -23,12 +23,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Ensures that the method is called from the background thread with (optionally) restrictions by allowed serials.
  * If it is not called from a supposed background thread, then {@link IllegalStateException}
  * will be thrown (by default).
- * <p/>
+ * </p>
  * <blockquote> <b>Example</b> :
- * <p/>
+ *
  * <pre>
  * &#064;EBean
  * public class MyBean {
@@ -46,7 +47,6 @@ import java.lang.annotation.Target;
  *
  * }
  * </pre>
- * <p/>
  * </blockquote>
  *
  * @see BackgroundExecutor#setWrongThreadListener(BackgroundExecutor.WrongThreadListener)
@@ -58,7 +58,8 @@ import java.lang.annotation.Target;
 public @interface SupposeBackground {
 
 	/**
-	 * Allowed serials to restrict a calling thread. If it is an empty list, then any background thread is allowed.
+	 * @return Allowed serials to restrict a calling thread. If it is an empty list, 
+	 * then any background thread is allowed.
 	 *
 	 * @see BackgroundExecutor#checkBgThread(String...)
 	 */

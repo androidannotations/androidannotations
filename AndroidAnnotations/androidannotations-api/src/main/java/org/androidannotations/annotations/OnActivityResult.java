@@ -40,6 +40,8 @@ import java.lang.annotation.Target;
  * <ul>
  * <li>A {@link android.content.Intent} that contains data</li>
  * <li>An <code>int</code> or an {@link java.lang.Integer} to get the resultCode</li>
+ * <li>Any native, {@link android.os.Parcelable} or {@link java.io.Serializable} parameter
+ * annotated with {@link org.androidannotations.annotations.OnActivityResult.Extra} to get an object put in the extras of the intent.</li>
  * </ul>
  *
  * <blockquote>
@@ -60,7 +62,7 @@ import java.lang.annotation.Target;
  * }
  * 
  * &#064;OnActivityResult(<b>ANOTHER_REQUEST_CODE</b>)
- * void onResult() {
+ * void onResult(&#064;OnActivityResult.Extra anExtra) {
  * }
  * </pre>
  * 
@@ -76,5 +78,45 @@ import java.lang.annotation.Target;
 public @interface OnActivityResult {
 
 	int value();
+
+	/**
+	 * <p>
+	 * Use on any native, {@link android.os.Parcelable} or {@link java.io.Serializable} parameter of an
+	 * {@link OnActivityResult} annotated method to bind it with the value from the Intent.
+	 * </p>
+	 * <p>
+	 * The annotation value is the key used for the result data. If not set, the field name
+	 * will be used as the key.
+	 * </p>
+	 *
+	 * <blockquote>
+	 *
+	 * Some usage examples of &#064;Result annotation:
+	 *
+	 * <pre>
+	 * &#064;OnActivityResult(REQUEST_CODE)
+	 * void onResult(int resultCode, Intent data, <b>@Extra String value</b>) {
+	 * }
+	 *
+	 * &#064;OnActivityResult(REQUEST_CODE)
+	 * void onResult(int resultCode, <b>@Extra(value = "key") String value</b>) {
+	 * }
+	 *
+	 * &#064;OnActivityResult(REQUEST_CODE)
+	 * void onResult(<b>@Extra String strVal</b>, <b>@Extra int intVal</b>) {
+	 * }
+	 * </pre>
+	 *
+	 * </blockquote>
+	 *
+	 * @see android.app.Activity#onActivityResult(int, int, Intent)
+	 * @see OnActivityResult
+	 */
+
+	@Retention(RetentionPolicy.CLASS)
+	@Target(ElementType.PARAMETER)
+	public @interface Extra {
+		String value() default "";
+	}
 
 }

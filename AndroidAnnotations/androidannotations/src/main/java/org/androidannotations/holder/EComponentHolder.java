@@ -15,6 +15,7 @@
  */
 package org.androidannotations.holder;
 
+import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.PRIVATE;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -44,6 +46,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	protected JExpression contextRef;
 	protected JMethod init;
 	private JVar resourcesRef;
+	private JFieldVar powerManagerRef;
 	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<TypeMirror, JFieldVar>();
 	private JVar handler;
 
@@ -82,6 +85,22 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
 	private void setResourcesRef() {
 		resourcesRef = getInitBody().decl(classes().RESOURCES, "resources_", getContextRef().invoke("getResources"));
+	}
+
+	public JFieldVar getPowerManagerRef() {
+		if (powerManagerRef == null) {
+			setPowerManagerRef();
+		}
+
+		return powerManagerRef;
+	}
+
+	private void setPowerManagerRef() {
+		JBlock methodBody = getInitBody();
+
+		JFieldRef serviceRef = classes().CONTEXT.staticRef("POWER_SERVICE");
+		powerManagerRef = getGeneratedClass().field(PRIVATE, classes().POWER_MANAGER, "powerManager_");
+		methodBody.assign(powerManagerRef, cast(classes().POWER_MANAGER, getContextRef().invoke("getSystemService").arg(serviceRef)));
 	}
 
 	public JFieldVar getDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {

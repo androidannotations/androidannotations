@@ -105,11 +105,14 @@ public final class CanonicalNameConstants {
 	public static final String SQLLITE_OPEN_HELPER = "android.database.sqlite.SQLiteOpenHelper";
 	public static final String VIEW_SERVER = "org.androidannotations.api.ViewServer";
 	public static final String LOOPER = "android.os.Looper";
+	public static final String POWER_MANAGER = "android.os.PowerManager";
+	public static final String WAKE_LOCK = "android.os.PowerManager.WakeLock";
 
 	/*
 	 * Android permission
 	 */
 	public static final String INTERNET_PERMISSION = "android.permission.INTERNET";
+	public static final String WAKELOCK_PERMISSION = "android.permission.WAKE_LOCK";
 
 	/*
 	 * Sherlock
@@ -117,11 +120,6 @@ public final class CanonicalNameConstants {
 	public static final String SHERLOCK_MENU = "com.actionbarsherlock.view.Menu";
 	public static final String SHERLOCK_MENU_ITEM = "com.actionbarsherlock.view.MenuItem";
 	public static final String SHERLOCK_MENU_INFLATER = "com.actionbarsherlock.view.MenuInflater";
-
-	/*
-	 * HoloEverywhere
-	 */
-	public static final String HOLO_EVERYWHERE_LAYOUT_INFLATER = "org.holoeverywhere.LayoutInflater";
 
 	/*
 	 * SpringFramework
@@ -143,6 +141,7 @@ public final class CanonicalNameConstants {
 	/*
 	 * RoboGuice
 	 */
+	public static final String ROBO_APPLICATION = "roboguice.application.RoboApplication";
 	public static final String ROBO_CONTEXT = "roboguice.util.RoboContext";
 	public static final String ROBO_INJECTOR = "roboguice.inject.RoboInjector";
 	public static final String KEY = "com.google.inject.Key";
@@ -154,6 +153,7 @@ public final class CanonicalNameConstants {
 	public static final String ON_NEW_INTENT_EVENT = "roboguice.activity.event.OnNewIntentEvent";
 	public static final String EVENT_MANAGER = "roboguice.event.EventManager";
 	public static final String CONTEXT_SCOPE = "roboguice.inject.ContextScope";
+	public static final String VIEW_MEMBERS_INJECTOR = "roboguice.inject.ViewListener.ViewMembersInjector";
 	public static final String ROBO_GUICE = "roboguice.RoboGuice";
 	public static final String INJECT = "com.google.inject.Inject";
 	public static final String ON_STOP_EVENT = "roboguice.activity.event.OnStopEvent";
