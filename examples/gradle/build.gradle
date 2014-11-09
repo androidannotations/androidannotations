@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:0.12.2'
+        classpath 'com.android.tools.build:gradle:0.14.1'
         // the latest version of the android-apt plugin
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
@@ -17,7 +17,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
-def AAVersion = '3.2-SNAPSHOT' // change this to your desired version, for example the latest stable: 3.1
+def AAVersion = '3.3-SNAPSHOT' // change this to your desired version, for example the latest stable: 3.2
 
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
@@ -40,7 +40,7 @@ apt {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "20.0.0"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         minSdkVersion 9
