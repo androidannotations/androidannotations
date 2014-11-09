@@ -10,7 +10,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>3.2-SNAPSHOT</version>
+	<version>3.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
