@@ -88,6 +88,7 @@
         <activity android:name="org.androidannotations.test15.CustomTitleActivity_" android:theme="@android:style/Theme" />
         <activity android:name=".ActivityWithGenerics_" />
         <activity android:name=".WakeLockActivity_" />
+        <activity android:name=".FragmentStartedActivity_" />
 
         <receiver android:name="org.androidannotations.test15.ereceiver.MyReceiver_" />
 
