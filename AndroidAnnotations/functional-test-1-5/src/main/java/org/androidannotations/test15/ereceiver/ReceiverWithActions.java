@@ -43,29 +43,29 @@ public class ReceiverWithActions extends AbstractBroadcastReceiver {
 
 	public int multipleActionCall = 0;
 
-	@ReceiverAction(ACTION_SIMPLE_TEST)
+	@ReceiverAction(actions = ACTION_SIMPLE_TEST)
 	public void onSimpleAction() {
 		simpleActionReceived = true;
 	}
 
-	@ReceiverAction(value = ACTION_SCHEME_TEST, dataSchemes = DATA_SCHEME)
+	@ReceiverAction(actions = ACTION_SCHEME_TEST, dataSchemes = DATA_SCHEME)
 	public void onActionWithReceiver() {
 		actionWithSchemeReceived = true;
 	}
 
-	@ReceiverAction(ACTION_PARAMETER_TEST)
+	@ReceiverAction(actions = ACTION_PARAMETER_TEST)
 	public void onParameterAction(@ReceiverAction.Extra String thisIsMyParameter) {
 		parameterActionReceived = true;
 		parameterActionValue = thisIsMyParameter;
 	}
 
-	@ReceiverAction(ACTION_EXTRA_PARAMETER_TEST)
+	@ReceiverAction(actions = ACTION_EXTRA_PARAMETER_TEST)
 	public void onExtraParameterAction(@ReceiverAction.Extra(EXTRA_ARG_NAME1) String thisIsAParameter) {
 		extraParameterActionReceived = true;
 		extraParameterActionValue = thisIsAParameter;
 	}
 
-	@ReceiverAction({ ACTION_MULTIPLE_TEST_1, ACTION_MULTIPLE_TEST_2 })
+	@ReceiverAction(actions = { ACTION_MULTIPLE_TEST_1, ACTION_MULTIPLE_TEST_2 })
 	public void onMultipleActions() {
 		multipleActionCall++;
 	}
