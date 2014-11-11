@@ -77,12 +77,12 @@ import java.lang.annotation.Target;
 public @interface ReceiverAction {
 
 	/**
-	 * Define the action's name. If this field isn't set the annotated method
-	 * name will be used.
+	 * Define a set of actions this method should handle. If this field isn't
+	 * set the annotated method name will be used.
 	 *
-	 * @return the action's name
+	 * @return the actions
 	 */
-	String value() default "";
+	String[] value() default {};
 
 	/**
 	 * Define a set of data schemes to filter the Intent. If this field isn't
