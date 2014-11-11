@@ -85,7 +85,7 @@
         <activity android:name="org.androidannotations.test15.SeekBarChangeListenedActivity_" />
         <activity android:name="org.androidannotations.test15.AwaitingResultActivity_" />
         <activity android:name=".HierarchyViewerActivity_" />
-        <activity android:name="org.androidannotations.test15.CustomTitleActivity_" />
+        <activity android:name="org.androidannotations.test15.CustomTitleActivity_" android:theme="@android:style/Theme" />
         <activity android:name=".ActivityWithGenerics_" />
         <activity android:name=".WakeLockActivity_" />
 
