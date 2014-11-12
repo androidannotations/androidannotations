@@ -110,6 +110,8 @@ import java.lang.annotation.Target;
 public @interface EFragment {
 	int value() default ResId.DEFAULT_VALUE;
 
+	boolean forceLayoutInjection() default false;
+
 	String resName() default "";
 
 	/**
