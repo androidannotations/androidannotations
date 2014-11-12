@@ -15,6 +15,14 @@
  */
 package org.androidannotations.test15.efragment;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.Executor;
+
+import org.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,20 +35,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ListView;
-import org.androidannotations.api.BackgroundExecutor;
-
-import java.util.concurrent.Executor;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class MyListFragmentTest {
 
 	private static final int TESTED_CLICKED_INDEX = 4;
 
-	MyListFragment_	myListFragment;
+	MyListFragment_ myListFragment;
 	FragmentManager fragmentManager;
 
 	@Before
@@ -110,8 +111,16 @@ public class MyListFragmentTest {
 		assertFalse(myListFragment.didExecute);
 	}
 
+	@Test
+	public void layout_not_injected_without_force() {
+		View buttonInInjectedLayout = myListFragment.getView().findViewById(R.id.conventionButton);
+
+		assertThat(buttonInInjectedLayout).isNull();
+	}
+
 	private void runBackgroundsOnSameThread() {
-		//Simplify the threading by making a dummy executor that runs off the same thread
+		// Simplify the threading by making a dummy executor that runs off the
+		// same thread
 		BackgroundExecutor.setExecutor(new Executor() {
 			@Override
 			public void execute(Runnable command) {

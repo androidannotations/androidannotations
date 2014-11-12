@@ -74,9 +74,16 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 
 			JFieldVar contentView = holder.getContentView();
 
-			block._if(contentView.eq(_null())) //
-					._then() //
-					.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+			boolean forceInjection = element.getAnnotation(EFragment.class).forceLayoutInjection();
+
+			if (!forceInjection) {
+				block._if(contentView.eq(_null())) //
+						._then() //
+						.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+			} else {
+				block.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+			}
+
 		}
 
 	}
