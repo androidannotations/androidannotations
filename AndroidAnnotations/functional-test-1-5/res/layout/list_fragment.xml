@@ -37,5 +37,10 @@
         android:layout_height="match_parent"
         android:background="#FF0000"
         android:text="No data" />
+    
+    <Button
+        android:id="@+id/conventionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
