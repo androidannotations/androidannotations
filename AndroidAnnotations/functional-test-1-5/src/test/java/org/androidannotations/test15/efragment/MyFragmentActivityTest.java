@@ -43,4 +43,14 @@ public class MyFragmentActivityTest {
 		assertThat(activity.myFragment2).isNotNull();
 	}
 
+	@Test
+	public void can_inject_native_fragment_with_with_default_tag() {
+		assertThat(activity.myFragmentTag).isNotNull();
+	}
+
+	@Test
+	public void can_inject_native_fragment_with_with_tag() {
+		assertThat(activity.myFragmentTag2).isNotNull();
+	}
+
 }
