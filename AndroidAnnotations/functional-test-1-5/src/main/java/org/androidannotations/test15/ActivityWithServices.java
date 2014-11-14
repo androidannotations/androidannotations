@@ -83,7 +83,7 @@ public class ActivityWithServices extends Activity {
 	
 	// TODO API 18
 	// @SystemService
-	// BluetoothAdapter bluetoothAdapter;
+	// BluetoothManager bluetoothManager;
 	
 	// @SystemService
 	// CameraManager cameraManager; // hidden API

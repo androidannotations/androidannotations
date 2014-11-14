@@ -39,7 +39,7 @@ public class ServiceInjectionTest {
 		// assertThat(activity.appWidgetManager).isNotNull(); // hidden API
 		assertThat(activity.audioManager).isNotNull();
 		// assertThat(activity.backupManager).isNotNull(); // hidden API
-		// assertThat(activity.bluetoothAdapter).isNotNull(); // TODO API 18
+		// assertThat(activity.bluetoothManager).isNotNull(); // TODO API 18
 		// assertThat(activity.cameraManager).isNotNull(); // hidden API
 		// assertThat(activity.captioningManager).isNotNull(); // TODO API 19
 		assertThat(activity.contentClipboardManager).isNotNull();

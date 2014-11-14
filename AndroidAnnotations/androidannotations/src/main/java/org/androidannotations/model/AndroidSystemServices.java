@@ -38,7 +38,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.appwidget.AppWidgetManager", "android.content.Context.APPWIDGET_SERVICE");
 		registeredServices.put("android.media.AudioManager", "android.content.Context.AUDIO_SERVICE");
 		registeredServices.put("android.app.backup.IBackupManager", "android.content.Context.BACKUP_SERVICE");
-		registeredServices.put("android.bluetooth.BluetoothAdapter", "android.content.Context.BLUETOOTH_SERVICE");
+		registeredServices.put("android.bluetooth.BluetoothManager", "android.content.Context.BLUETOOTH_SERVICE");
 		registeredServices.put("android.hardware.camera2.CameraManager", "android.content.Context.CAMERA_SERVICE");
 		registeredServices.put("android.view.accessibility.CaptioningManager", "android.content.Context.CAPTIONING_SERVICE");
 		registeredServices.put("android.content.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE");
