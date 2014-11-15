@@ -65,11 +65,16 @@ public class EReceiverHolder extends EComponentHolder {
 		onReceiveBody = onReceiveMethod.body();
 		onReceiveBody.invoke(getInit()).arg(onReceiveContext);
 		onReceiveBody.invoke(JExpr._super(), onReceiveMethod).arg(onReceiveContext).arg(onReceiveIntent);
+	}
 
-		JInvocation getActionInvocation = JExpr.invoke(onReceiveIntent, "getAction");
-		JInvocation getDataSchemeInvocation = JExpr.invoke(onReceiveIntent, "getScheme");
-		onReceiveIntentAction = onReceiveBody.decl(classes().STRING, "action", getActionInvocation);
-		onReceiveIntentDataScheme = onReceiveBody.decl(classes().STRING, "dataScheme", getDataSchemeInvocation);
+	private void setOnReceiveIntentAction() {
+		JInvocation getActionInvocation = JExpr.invoke(getOnReceiveIntent(), "getAction");
+		onReceiveIntentAction = getOnReceiveBody().decl(classes().STRING, "action", getActionInvocation);
+	}
+
+	private void setOnReceiveIntentDataScheme() {
+		JInvocation getDataSchemeInvocation = JExpr.invoke(getOnReceiveIntent(), "getScheme");
+		onReceiveIntentDataScheme = getOnReceiveBody().decl(classes().STRING, "dataScheme", getDataSchemeInvocation);
 	}
 
 	public JMethod getOnReceiveMethod() {
@@ -102,14 +107,14 @@ public class EReceiverHolder extends EComponentHolder {
 
 	public JVar getOnReceiveIntentAction() {
 		if (onReceiveIntentAction == null) {
-			createOnReceive();
+			setOnReceiveIntentAction();
 		}
 		return onReceiveIntentAction;
 	}
 
 	public JVar getOnReceiveIntentDataScheme() {
 		if (onReceiveIntentDataScheme == null) {
-			createOnReceive();
+			setOnReceiveIntentDataScheme();
 		}
 		return onReceiveIntentDataScheme;
 	}
