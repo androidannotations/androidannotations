@@ -97,13 +97,14 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 	private void setConverters(Element element, RestHolder holder) {
 		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "converters");
-		JFieldVar restTemplateField = holder.getRestTemplateField();
-		JBlock init = holder.getInit().body();
-		for (DeclaredType converterType : converters) {
-			JInvocation newConverter = codeModelHelper.newBeanOrEBean(holder, converterType, holder.getInitContextParam());
-			init.add(invoke(restTemplateField, "getMessageConverters").invoke("add").arg(newConverter));
+			JFieldVar restTemplateField = holder.getRestTemplateField();
+			JBlock init = holder.getInit().body();
+			init.add(invoke(restTemplateField, "getMessageConverters").invoke("clear"));
+			for (DeclaredType converterType : converters) {
+				JInvocation newConverter = codeModelHelper.newBeanOrEBean(holder, converterType, holder.getInitContextParam());
+				init.add(invoke(restTemplateField, "getMessageConverters").invoke("add").arg(newConverter));
+			}
 		}
-	}
 
 	private void setInterceptors(Element element, RestHolder holder) {
 		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "interceptors");

@@ -13,7 +13,7 @@
 	<name>functional-test-1-5</name>
 
 	<properties>
-		<spring-android-version>1.0.0.RELEASE</spring-android-version>
+		<spring-android-version>1.0.1.RELEASE</spring-android-version>
 		<jackson-version>1.9.6</jackson-version>
 		<simple-version>2.4.1</simple-version>
 		<android-rome-version>1.0.0-r2</android-rome-version>
