@@ -17,7 +17,7 @@ package org.androidannotations.helper;
 
 import static com.sun.codemodel.JExpr._null;
 
-import org.androidannotations.holder.HasReceiverRegistration;
+import org.androidannotations.holder.HasLifecycleMethods;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -25,8 +25,8 @@ import com.sun.codemodel.JFieldVar;
 
 public class OrmLiteHelper {
 
-	public static void injectReleaseInDestroy(JFieldVar databaseHelperRef, HasReceiverRegistration receiverHolder, ProcessHolder.Classes classes) {
-		JBlock destroyBody = receiverHolder.getOnDestroyBeforeSuperBlock();
+	public static void injectReleaseInDestroy(JFieldVar databaseHelperRef, HasLifecycleMethods holder, ProcessHolder.Classes classes) {
+		JBlock destroyBody = holder.getOnDestroyBeforeSuperBlock();
 
 		destroyBody.staticInvoke(classes.OPEN_HELPER_MANAGER, "releaseHelper");
 		destroyBody.assign(databaseHelperRef, _null());
