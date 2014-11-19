@@ -26,14 +26,10 @@ import java.lang.annotation.Target;
  * with the provided mode and helper classes.
  * </p>
  * <p>
- * All parameters are mandatory:
+ * The helper paramter is mandatory and should hold the class of your database
+ * helper which should extend
+ * com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper
  * </p>
- * <ul>
- * <li><i>helper</i>: should hold the class of your database helper which should
- * extend com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper</li>
- * <li><i>model</i>: should point to the model class that the DAO relates to. It
- * should match the type of the first generic parameter of your Dao.</li>
- * </ul>
  * <p>
  * <b>Note:</b> The minimum version required of ORMLite is 4.21
  * </p>
@@ -53,10 +49,10 @@ import java.lang.annotation.Target;
  * public class MyActivity extends Activity {
  * 
  * 	// UserDao is a Dao&lt;User, Long&gt;
- * 	&#064;OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+ * 	&#064;OrmLiteDao(helper = DatabaseHelper.class)
  * 	UserDao userDao;
  * 
- * 	&#064;OrmLiteDao(helper = DatabaseHelper.class, model = Car.class)
+ * 	&#064;OrmLiteDao(helper = DatabaseHelper.class)
  * 	Dao&lt;Car, Long&gt; carDao;
  * }
  * </pre>
@@ -73,17 +69,4 @@ public @interface OrmLiteDao {
 	 * @return the helper class
 	 */
 	Class<?> helper();
-
-	/**
-	 * The class of the model what this DAO can manage.
-	 * 
-	 * @deprecated Since <b>3.1</b> the model class is inferred from the type of
-	 *             the annotated field. This parameter will be removed in a
-	 *             future version.
-	 * 
-	 * @return the model class
-	 */
-	@Deprecated
-	Class<?> model() default Void.class;
-
 }
