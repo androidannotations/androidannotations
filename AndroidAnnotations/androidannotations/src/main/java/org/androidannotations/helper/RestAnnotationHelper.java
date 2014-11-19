@@ -333,7 +333,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	public JExpression getResponseClass(Element element, RestHolder holder) {
 		ExecutableElement executableElement = (ExecutableElement) element;
-		JExpression responseClassExpr = JExpr._null();
+		JExpression responseClassExpr = nullCastedToNarrowedClass(holder);
 		TypeMirror returnType = executableElement.getReturnType();
 		if (returnType.getKind() != TypeKind.VOID) {
 			JClass responseClass = retrieveResponseClass(returnType, holder);
@@ -492,5 +492,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 		return plainName;
+	}
+
+	public JExpression nullCastedToNarrowedClass(RestHolder holder) {
+		return JExpr.cast(holder.refClass(Class.class).narrow(holder.refClass(Void.class)), JExpr._null());
 	}
 }
