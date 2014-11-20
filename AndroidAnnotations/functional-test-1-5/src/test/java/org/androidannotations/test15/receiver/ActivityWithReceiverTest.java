@@ -59,9 +59,7 @@ public class ActivityWithReceiverTest {
 		assertTrue(activity.localWifiChangeIntentReceived);
 	}
 
-	// @Test
-	// due to a bug in robolectric this test does not yet work
-	// see https://github.com/robolectric/robolectric/issues/1244
+	@Test
 	public void onDataShemeHttpTest() {
 		Intent intentFtp = new Intent("CUSTOM_HTTP_ACTION");
 		intentFtp.setData(Uri.parse("ftp://androidannotations.org"));
