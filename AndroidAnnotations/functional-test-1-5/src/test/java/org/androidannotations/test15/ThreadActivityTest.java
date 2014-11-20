@@ -17,6 +17,7 @@ package org.androidannotations.test15;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.fest.reflect.core.Reflection.staticField;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -24,17 +25,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.androidannotations.api.BackgroundExecutor;
+import org.fest.reflect.reference.TypeRef;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.internal.util.MockUtil;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -59,8 +63,41 @@ public class ThreadActivityTest {
 	}
 
 	@After
-	public void after() {
+	public void after() throws InterruptedException {
 		Thread.setDefaultUncaughtExceptionHandler(defaultExceptionHandler);
+
+		List<String> tasks = staticField("tasks") //
+				.ofType(new TypeRef<List<String>>() {
+				}) //
+				.in(BackgroundExecutor.class) //
+				.get();
+
+		tasks.clear();
+
+		ThreadLocal<String> currentSerial = staticField("currentSerial") //
+				.ofType(new TypeRef<ThreadLocal<String>>() {
+				}) //
+				.in(BackgroundExecutor.class) //
+				.get();
+
+		currentSerial.set(null);
+
+		Executor executor = staticField("executor") //
+				.ofType(Executor.class) //
+				.in(BackgroundExecutor.class) //
+				.get();
+
+		if (new MockUtil().isMock(executor) || !(executor instanceof ExecutorService)) {
+			return;
+		}
+
+		ExecutorService service = (ExecutorService) executor;
+
+		service.shutdownNow();
+		boolean termination = service.awaitTermination(MAX_WAITING_TIME, TimeUnit.MILLISECONDS);
+		if (!termination) {
+			throw new IllegalStateException("The Executor could not terminate after the test!");
+		}
 	}
 
 	@Test
