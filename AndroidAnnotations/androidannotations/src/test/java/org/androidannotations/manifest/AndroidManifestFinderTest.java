@@ -17,16 +17,16 @@ package org.androidannotations.manifest;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteStreams;
 
 public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 
@@ -78,13 +78,12 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	private void copyManifestToParentOfOutputDirectory() throws FileNotFoundException, IOException {
-		InputSupplier<InputStream> from = new InputSupplier<InputStream>() {
-			@Override
-			public InputStream getInput() throws IOException {
-				return AndroidManifestFinderTest.class.getResourceAsStream("AndroidManifest.xml");
-			}
-		};
-		Files.copy(from, manifestFileInParentOfOutputDirectory());
+		final OutputStream out = new FileOutputStream(manifestFileInParentOfOutputDirectory());
+		try {
+			ByteStreams.copy(AndroidManifestFinderTest.class.getResourceAsStream("AndroidManifest.xml"), out);
+		} finally {
+			out.close();
+		}
 	}
 
 	private File manifestFileInParentOfOutputDirectory() {
