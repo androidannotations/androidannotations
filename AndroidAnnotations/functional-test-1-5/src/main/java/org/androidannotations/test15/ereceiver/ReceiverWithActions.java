@@ -17,13 +17,10 @@ package org.androidannotations.test15.ereceiver;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.ReceiverAction;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import org.androidannotations.api.support.content.AbstractBroadcastReceiver;
 
 @EReceiver
-public class ReceiverWithActions extends BroadcastReceiver {
+public class ReceiverWithActions extends AbstractBroadcastReceiver {
 
 	public static final String ACTION_SIMPLE_TEST = "ACTION_SIMPLE_TEST";
 	public static final String ACTION_SCHEME_TEST = "ACTION_SCHEME_TEST";
@@ -45,10 +42,6 @@ public class ReceiverWithActions extends BroadcastReceiver {
 	public String extraParameterActionValue = null;
 
 	public int multipleActionCall = 0;
-
-	@Override
-	public void onReceive(Context context, Intent intent) {
-	}
 
 	@ReceiverAction(ACTION_SIMPLE_TEST)
 	public void onSimpleAction() {

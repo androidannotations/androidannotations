@@ -49,7 +49,7 @@ import java.lang.annotation.Target;
  * 
  * <pre>
  * &#064;EReceiver
- * public class MyIntentService extends BroadcastReceiver {
+ * public class MyReceiver extends BroadcastReceiver {
  * 
  * 	&#064;ReceiverAction
  * 	void mySimpleAction(Intent intent) {
@@ -65,12 +65,29 @@ import java.lang.annotation.Target;
  * 	void anotherAction(@ReceiverAction.Extra(&quot;specialExtraName&quot;) String valueString, @ReceiverAction.Extra long valueLong) {
  * 		// ...
  * 	}
+ * 
+ * 	&#064;Override
+ * 	public void onReceive(Context context, Intent intent) {
+ * 		// empty, will be overridden in generated subclass
+ * 	}
  * }
  * </pre>
  * 
  * </blockquote>
  * 
+ * <p>
+ * Note: Since
+ * {@link android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+ * BroadcastReceiver#onReceive} is abstract, you have to add an empty
+ * implementation. For convenience, we provide the
+ * {@link org.androidannotations.api.support.content.AbstractBroadcastReceiver
+ * AbstractBroadcastReceiver} class, which implements that method, so you do not
+ * have to do in your actual class if you derive it.
+ * </p>
+ * 
  * @see EReceiver
+ * @see org.androidannotations.api.support.content.AbstractBroadcastReceiver
+ *      AbstractBroadcastReceiver
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

@@ -65,12 +65,29 @@ import java.lang.annotation.Target;
  * 	void &lt;b&gt;myAction&lt;/b&gt;(String valueString, long valueLong) {
  * 		// ...
  * 	}
+ * 
+ * 	&#064;Override
+ * 	protected void onHandleIntent(Intent intent) {
+ * 	 	// empty, will be overridden in generated subclass 	
+ * 	}
  * }
  * </pre>
  * 
  * </blockquote>
  * 
+ * <p>
+ * Note: Since
+ * {@link android.app.IntentService#onHandleIntent(android.content.Intent)
+ * IntentService#onHandleIntent} is abstract, you have to add an empty
+ * implementation. For convenience, we provide the
+ * {@link org.androidannotations.api.support.app.AbstractIntentService
+ * AbstractIntentService} class, which implements that method, so you do not
+ * have to do in your actual class if you derive it.
+ * </p>
+ * 
  * @see EIntentService
+ * @see org.androidannotations.api.support.app.AbstractIntentService
+ *      AbstractIntentService
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
