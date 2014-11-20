@@ -27,6 +27,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
+
 import org.androidannotations.api.SdkVersionHelper;
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.ActivityIntentBuilder;
@@ -34,16 +35,19 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IntentBuilder;
+import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.process.ProcessHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr.TRUE;
@@ -757,4 +761,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
 	}
 
+	@Override
+	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
+		JFieldVar databaseHelperRef = super.setDatabaseHelperRef(databaseHelperTypeMirror);
+		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
+
+		return databaseHelperRef;
+	}
 }

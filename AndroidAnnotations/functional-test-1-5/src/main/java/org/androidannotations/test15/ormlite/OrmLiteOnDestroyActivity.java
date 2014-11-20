@@ -13,14 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.holder;
+package org.androidannotations.test15.ormlite;
 
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OrmLiteDao;
 
-public interface HasReceiverRegistration extends HasLifecycleMethods {
+import android.app.Activity;
 
-	JExpression getContextRef();
+@EActivity
+public class OrmLiteOnDestroyActivity extends Activity {
 
-	JFieldVar getIntentFilterField(String[] actions, String[] dataSchemas);
+	@OrmLiteDao(helper = DatabaseHelper.class)
+	UserDao userDao;
 }

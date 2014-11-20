@@ -13,14 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.holder;
+package org.androidannotations.helper;
 
-import com.sun.codemodel.JExpression;
+import static com.sun.codemodel.JExpr._null;
+
+import org.androidannotations.holder.HasLifecycleMethods;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JFieldVar;
 
-public interface HasReceiverRegistration extends HasLifecycleMethods {
+public class OrmLiteHelper {
 
-	JExpression getContextRef();
+	public static void injectReleaseInDestroy(JFieldVar databaseHelperRef, HasLifecycleMethods holder, ProcessHolder.Classes classes) {
+		JBlock destroyBody = holder.getOnDestroyBeforeSuperBlock();
 
-	JFieldVar getIntentFilterField(String[] actions, String[] dataSchemas);
+		destroyBody.staticInvoke(classes.OPEN_HELPER_MANAGER, "releaseHelper");
+		destroyBody.assign(databaseHelperRef, _null());
+	}
 }

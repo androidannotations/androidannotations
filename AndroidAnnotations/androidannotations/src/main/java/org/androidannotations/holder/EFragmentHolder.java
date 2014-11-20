@@ -27,14 +27,18 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
+
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.process.ProcessHolder;
 
-import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr.TRUE;
@@ -539,5 +543,13 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 			setOnDetach();
 		}
 		return onDetachBeforeSuperBlock;
+	}
+
+	@Override
+	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
+		JFieldVar databaseHelperRef = super.setDatabaseHelperRef(databaseHelperTypeMirror);
+		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
+
+		return databaseHelperRef;
 	}
 }
