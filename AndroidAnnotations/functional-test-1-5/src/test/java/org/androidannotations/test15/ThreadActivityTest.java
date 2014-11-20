@@ -394,7 +394,9 @@ public class ThreadActivityTest {
 
 	@Test
 	public void propagateExceptionToGlobalExceptionHandler() {
-
+		/* set an executor with 4 threads */
+		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
+		
 		// Prepare lock on which we'll wait for the
 		// background exception handler to catch the exception
 		final Object LOCK = new Object();
