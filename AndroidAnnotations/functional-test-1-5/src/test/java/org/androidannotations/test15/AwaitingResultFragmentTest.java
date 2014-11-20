@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.efragment;
+package org.androidannotations.test15;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -22,35 +22,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.util.FragmentTestUtil;
+
+import android.app.Activity;
+import android.content.Intent;
 
 @RunWith(RobolectricTestRunner.class)
-public class MyFragmentActivityTest {
+public class AwaitingResultFragmentTest {
 
-	private MyFragmentActivity_ activity;
+	private AwaitingResultFragment fragment;
 
 	@Before
-	public void setup() {
-		activity = Robolectric.buildActivity(MyFragmentActivity_.class).create().get();
+	public void setUp() {
+		fragment = new AwaitingResultFragment_();
+		FragmentTestUtil.startFragment(fragment);
+
+		assertThat(fragment.onResultCalled).isFalse();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_default_id() {
-		assertThat(activity.myFragment).isNotNull();
-	}
+	public void testOnResultCalledInFragment() {
+		FragmentStartedActivity_.intent(fragment).startForResult(AwaitingResultFragment.FIRST_REQUEST);
 
-	@Test
-	public void can_inject_native_fragment_with_id() {
-		assertThat(activity.myFragment2).isNotNull();
-	}
+		ShadowActivity a = Robolectric.shadowOf_(fragment.getActivity());
+		a.receiveResult(FragmentStartedActivity_.intent(fragment).get(), Activity.RESULT_OK, new Intent());
 
-	@Test
-	public void can_inject_native_fragment_with_with_default_tag() {
-		assertThat(activity.myFragmentTag).isNotNull();
+		assertThat(fragment.onResultCalled).isTrue();
 	}
-
-	@Test
-	public void can_inject_native_fragment_with_with_tag() {
-		assertThat(activity.myFragmentTag2).isNotNull();
-	}
-
 }

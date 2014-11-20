@@ -15,7 +15,7 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import org.androidannotations.annotations.EFragment;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 @EFragment(R.layout.views_injected)
 public class AwaitingResultFragment extends Fragment {
 
-	private static final int FIRST_REQUEST = 11;
+	static final int FIRST_REQUEST = 11;
 	private static final int SECOND_REQUEST = 22;
 	private static final int THIRD_REQUEST = 33;
 	private static final int FORTH_REQUEST = 44;

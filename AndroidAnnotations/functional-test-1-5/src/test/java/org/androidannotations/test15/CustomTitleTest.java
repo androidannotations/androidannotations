@@ -15,12 +15,29 @@
  */
 package org.androidannotations.test15;
 
-import org.androidannotations.annotations.CustomTitle;
-import org.androidannotations.annotations.EActivity;
+import static org.fest.assertions.api.ANDROID.assertThat;
+import static org.robolectric.Robolectric.setupActivity;
 
-import android.app.Activity;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
-@EActivity(R.layout.main)
-@CustomTitle(R.layout.component)
-public class CustomTitleActivity extends Activity {
+import android.view.Window;
+
+@RunWith(RobolectricTestRunner.class)
+public class CustomTitleTest {
+
+	private CustomTitleActivity_ activity;
+
+	@Before
+	public void setUp() {
+		activity = setupActivity(CustomTitleActivity_.class);
+	}
+
+	@Test
+	// TODO insufficient test, should verify title view
+	public void testActivityHasCustomTitleFeature() {
+		assertThat(activity.getWindow()).hasFeature(Window.FEATURE_CUSTOM_TITLE);
+	}
 }

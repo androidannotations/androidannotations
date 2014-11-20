@@ -13,44 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.efragment;
+package org.androidannotations.test15;
 
+import static org.fest.assertions.api.ANDROID.assertThat;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.robolectric.Robolectric.setupActivity;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
-public class MyFragmentActivityTest {
+import android.view.Window;
 
-	private MyFragmentActivity_ activity;
+@RunWith(RobolectricTestRunner.class)
+public class WindowFeatureTest {
+
+	private WindowFeatureActivity_ activity;
 
 	@Before
-	public void setup() {
-		activity = Robolectric.buildActivity(MyFragmentActivity_.class).create().get();
+	public void setUp() {
+		activity = setupActivity(WindowFeatureActivity_.class);
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_default_id() {
-		assertThat(activity.myFragment).isNotNull();
+	public void testActivityHasWindowFeatures() {
+		assertThat(activity.getWindow()).hasFeature(Window.FEATURE_NO_TITLE).hasFeature(Window.FEATURE_NO_TITLE);
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_id() {
-		assertThat(activity.myFragment2).isNotNull();
+	public void testActivityHasWindowFlags() {
+		assertThat((activity.getWindow().getAttributes().flags & android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0).isTrue();
 	}
-
-	@Test
-	public void can_inject_native_fragment_with_with_default_tag() {
-		assertThat(activity.myFragmentTag).isNotNull();
-	}
-
-	@Test
-	public void can_inject_native_fragment_with_with_tag() {
-		assertThat(activity.myFragmentTag2).isNotNull();
-	}
-
 }

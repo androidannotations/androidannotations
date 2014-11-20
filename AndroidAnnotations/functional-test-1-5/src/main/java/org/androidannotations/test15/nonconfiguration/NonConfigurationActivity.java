@@ -15,8 +15,6 @@
  */
 package org.androidannotations.test15.nonconfiguration;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.NonConfigurationInstance;
@@ -24,11 +22,22 @@ import org.androidannotations.test15.ebean.EmptyDependency;
 import org.androidannotations.test15.ebean.SomeImplementation;
 import org.androidannotations.test15.ebean.SomeInterface;
 
-/**
- * TODO test that on configuration changes, the fields are reinjected
- */
+import android.app.Activity;
+
 @EActivity
 public class NonConfigurationActivity extends Activity {
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// Robolectric does not create a new instance after Activity.recreate
+		// we simulate the new instance by clearing our fields
+
+		maintainedDependency = null;
+		recreatedDependency = null;
+		maintainedAbstracted = null;
+		someObject = null;
+	}
 
 	@Bean
 	@NonConfigurationInstance
@@ -40,7 +49,7 @@ public class NonConfigurationActivity extends Activity {
 	@Bean(SomeImplementation.class)
 	@NonConfigurationInstance
 	SomeInterface maintainedAbstracted;
-	
+
 	@NonConfigurationInstance
 	Object someObject;
 

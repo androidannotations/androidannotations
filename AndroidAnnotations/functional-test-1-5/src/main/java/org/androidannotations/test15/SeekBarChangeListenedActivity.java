@@ -26,16 +26,24 @@ import android.widget.SeekBar;
 @EActivity(R.layout.seekbars)
 public class SeekBarChangeListenedActivity extends Activity {
 
+	boolean handled;
+	int progress;
+	boolean fromUser;
+	SeekBar seekBar;
+
 	@SeekBarProgressChange(R.id.seekBar1)
 	void m1(SeekBar seekBar) {
+		handled = true;
 	}
 
 	@SeekBarProgressChange(R.id.seekBar1)
 	void m2(SeekBar seekBar, int progress) {
+		this.progress = progress;
 	}
 
 	@SeekBarProgressChange(R.id.seekBar1)
 	void m3(SeekBar seekBar, int progress, boolean fromUser) {
+		this.fromUser = fromUser;
 	}
 
 	@SeekBarProgressChange(R.id.seekBar1)
@@ -44,6 +52,7 @@ public class SeekBarChangeListenedActivity extends Activity {
 
 	@SeekBarProgressChange({ R.id.seekBar1, R.id.seekBar2 })
 	void m5(SeekBar seekBar, boolean fromUser, int progress) {
+		this.seekBar = seekBar;
 	}
 
 	@SeekBarProgressChange({ R.id.seekBar1, R.id.seekBar2 })

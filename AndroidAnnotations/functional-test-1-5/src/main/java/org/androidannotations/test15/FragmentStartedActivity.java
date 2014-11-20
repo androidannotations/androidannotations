@@ -13,8 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.test;
+package org.androidannotations.test15;
 
-public @interface SimpleAnnotation {
-	String value();
+import org.androidannotations.annotations.EActivity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+@EActivity
+public class FragmentStartedActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setResult(RESULT_OK);
+		finish();
+	}
 }

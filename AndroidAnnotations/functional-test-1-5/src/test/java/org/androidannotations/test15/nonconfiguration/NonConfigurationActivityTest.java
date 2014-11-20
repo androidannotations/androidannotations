@@ -13,44 +13,43 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test15.efragment;
+package org.androidannotations.test15.nonconfiguration;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import org.androidannotations.test15.ebean.EmptyDependency;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.util.ActivityController;
 
 @RunWith(RobolectricTestRunner.class)
-public class MyFragmentActivityTest {
+public class NonConfigurationActivityTest {
 
-	private MyFragmentActivity_ activity;
+	private NonConfigurationActivity_ activity;
 
 	@Before
-	public void setup() {
-		activity = Robolectric.buildActivity(MyFragmentActivity_.class).create().get();
+	public void setUp() {
+		ActivityController<NonConfigurationActivity_> controller = ActivityController.of(NonConfigurationActivity_.class);
+		activity = controller.create().get();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_default_id() {
-		assertThat(activity.myFragment).isNotNull();
+	public void testNonConfigurationFieldReinjected() {
+		activity.someObject = new Object();
+
+		activity.recreate();
+
+		assertThat(activity.someObject).isSameAs(activity.someObject);
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_id() {
-		assertThat(activity.myFragment2).isNotNull();
-	}
+	public void testConfigurationFieldDoesNotGetReinjected() {
+		EmptyDependency dep = activity.recreatedDependency;
 
-	@Test
-	public void can_inject_native_fragment_with_with_default_tag() {
-		assertThat(activity.myFragmentTag).isNotNull();
-	}
+		activity.recreate();
 
-	@Test
-	public void can_inject_native_fragment_with_with_tag() {
-		assertThat(activity.myFragmentTag2).isNotNull();
+		assertThat(activity.recreatedDependency).isNotSameAs(dep);
 	}
-
 }
