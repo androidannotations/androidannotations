@@ -37,6 +37,13 @@ import java.lang.annotation.Target;
  * <p>
  * <b>Note:</b> The minimum version required of ORMLite is 4.21
  * </p>
+ * <p>
+ * <b>Note:</b> For getting and releasing the helper, we use the <a href=
+ * "http://ormlite.com/javadoc/ormlite-android/com/j256/ormlite/android/apptools/OpenHelperManager.html"
+ * >OpenHelperManager</a> class, which cannot handle two different helpers at
+ * the same time. So if you are using multiple database helpers, be careful with
+ * {@link OrmLiteDao} annotations.
+ * </p>
  * <blockquote>
  * 
  * Example :
