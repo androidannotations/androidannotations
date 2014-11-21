@@ -12,6 +12,8 @@ Export-Package: org.androidannotations.annotations,
  org.androidannotations.api.rest,
  org.androidannotations.api.roboguice,
  org.androidannotations.api.sharedpreferences,
+ org.androidannotations.api.support.app,
+ org.androidannotations.api.support.content,
  org.androidannotations.api.view
 Bundle-Vendor: androidannotations
 Bundle-Activator: org.androidannotations.api.Activator

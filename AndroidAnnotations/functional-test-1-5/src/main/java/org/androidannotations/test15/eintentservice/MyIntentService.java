@@ -18,13 +18,11 @@ package org.androidannotations.test15.eintentservice;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.api.support.app.AbstractIntentService;
 import org.androidannotations.test15.ebean.EnhancedClass;
 
-import android.app.IntentService;
-import android.content.Intent;
-
 @EIntentService
-public class MyIntentService extends IntentService {
+public class MyIntentService extends AbstractIntentService {
 
 	@Bean
 	EnhancedClass dependency;
@@ -46,11 +44,6 @@ public class MyIntentService extends IntentService {
 	@ServiceAction("myAction")
 	void actionThree(String valueString, long valueLong) {
 
-	}
-
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		// Do nothing here
 	}
 
 }
