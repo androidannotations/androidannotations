@@ -16,18 +16,10 @@
     the License.
 
 -->
-<resources>
-    
-    <bool name="prefsDefaultBool">true</bool>
-    <string name="prefDefaultString">default pref</string>
-    <integer name="prefDefaultInt">42</integer>
-    <integer name="prefDefaultLong">4200</integer>
-    <integer name="prefDefaultFloat">42</integer>
-    <string name="prefStringKey">stringKey</string>
-    
-    <string name="conventionKey">conventionKey</string>
-    <string name="listPreferenceKey">listPreferenceKey</string>
-    <string name="checkBoxPrefKey">checkBoxPrefKey</string>
-    <string name="switchPrefKey">switchPrefKey</string>
-    
-</resources>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+    <header android:fragment="org.androidannotations.test15.preference.PreferenceScreenFragment_" tools:ignore="UnusedAttribute"
+        android:title="@string/hello"
+        />
+
+</preference-headers>
