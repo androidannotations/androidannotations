@@ -20,6 +20,48 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>
+ * Use it on a {@link android.preference.Preference Preference} or
+ * {@link android.preference.Preference Preference} subtype fields in a
+ * {@link org.androidannotations.annotations.EActivity EActivity} or
+ * {@link org.androidannotations.annotations.EFragment EFragment} annotated
+ * class, which is a subclass of {@link android.preference.PreferenceActivity
+ * PreferenceActivity} or <code>PreferenceFragment</code>, respectively.
+ * </p>
+ * <p>
+ * The annotation value should be an array of R.string.* fields.
+ * </p>
+ * <p>
+ * Your code related to injected views should go in an
+ * {@link org.androidannotations.annotations.AfterPreferences AfterPreferences}
+ * annotated method.
+ * </p>
+ * <blockquote>
+ *
+ * Example :
+ *
+ * <pre>
+ * &#064;EActivity
+ * public class SettingsActivity extends PreferenceActivity {
+ * 
+ * 	&#064;PreferenceByKey(R.string.myPref1)
+ * 	Preference myPreference1;
+ * 
+ * 	&#064;PreferenceByKey(R.string.checkBoxPref)
+ * 	CheckBoxPreference checkBoxPref;
+ * 
+ * 	&#064;AfterPreferences
+ * 	void initPrefs() {
+ * 		checkBoxPref.setChecked(false);
+ * 	}
+ * }
+ * </pre>
+ *
+ * </blockquote>
+ *
+ * @see org.androidannotations.annotations.AfterPreferences AfterPreferences
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface PreferenceByKey {

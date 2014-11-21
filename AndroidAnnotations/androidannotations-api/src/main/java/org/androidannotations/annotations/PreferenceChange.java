@@ -20,6 +20,61 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>
+ * This annotation is intended to be used on methods to receive events defined
+ * by
+ * {@link android.preference.Preference.OnPreferenceChangeListener#onPreferenceChange(android.preference.Preference, Object)
+ * OnPreferenceChangeListener#onPreferenceChange} when the value of a
+ * {@link android.preference.Preference Preference} has been changed by the user
+ * and is about to be set and/or persisted.
+ * </p>
+ * <p>
+ * The annotation value should be one or several R.string.* fields that refers
+ * to {@link android.preference.Preference Preference} or subclasses of
+ * {@link android.preference.Preference Preference}. If not set, the method name
+ * will be used as the R.string.* field name.
+ * </p>
+ * <p>
+ * The method MAY have multiple parameter:
+ * </p>
+ * <ul>
+ * <li>A {@link android.preference.Preference Preference} parameter to know
+ * which preference was targeted by this event</li>
+ * <li>An {@link Object} or {@link java.util.Set Set of strings} or
+ * {@link Boolean} or {@link String} to obtain the new value of the
+ * {@link android.preference.Preference Preference}</li>
+ * </ul>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;PreferenceChange(<b>R.string.myPref</b>)
+ * void checkedChangedOnMyButton(boolean newValue, Preference preference) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;PreferenceChange
+ * void <b>myPref</b>PreferenceChanged(Preference preference) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;PreferenceChange(<b>{R.string.myPref1, R.string.myPref2}</b>)
+ * void preferenceChangeOnMultiplePrefs(Preference preference, String newValue) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;PreferenceChange(<b>R.string.myPref</b>)
+ * void preferenceChangeOnMyPref() {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see PreferenceClick
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface PreferenceChange {

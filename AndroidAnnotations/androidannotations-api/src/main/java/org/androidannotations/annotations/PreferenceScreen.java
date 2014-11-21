@@ -20,6 +20,44 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>
+ * Should be used on {@link org.androidannotations.annotations.EActivity
+ * EActivity} or {@link org.androidannotations.annotations.EFragment EFragment}
+ * classes which are subclass of {@link android.preference.PreferenceActivity
+ * PreferenceActivity} or <code>PreferenceFragment</code>, to inject the
+ * preference screen from resource.
+ * </p>
+ * <p>
+ * The annotation value should be one of R.xml.* fields.
+ * </p>
+ * 
+ * <blockquote>
+ *
+ * Example :
+ *
+ * <pre>
+ * &#064;PreferenceScreen(R.xml.settings)
+ * &#064;EActivity
+ * public class SettingsActivity extends PreferenceActivity {
+ * 
+ * 	&#064;PreferenceByKey(R.string.myPref1)
+ * 	Preference myPreference1;
+ * 
+ * 	&#064;PreferenceByKey(R.string.checkBoxPref)
+ * 	CheckBoxPreference checkBoxPref;
+ * 
+ * 	&#064;AfterPreferences
+ * 	void initPrefs() {
+ * 		checkBoxPref.setChecked(false);
+ * 	}
+ * }
+ * </pre>
+ *
+ * </blockquote>
+ * 
+ * @see PreferenceHeaders
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface PreferenceScreen {

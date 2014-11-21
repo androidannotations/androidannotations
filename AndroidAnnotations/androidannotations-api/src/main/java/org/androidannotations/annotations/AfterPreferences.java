@@ -20,6 +20,44 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>
+ * Methods annotated with {@link AfterPreferences} will be called after
+ * <code>addPreferenceFromResource</code> is called by the generated classs.
+ * </p>
+ * <p>
+ * This occurs AFTER <code>addPreferencesFromResource</code> which is called at
+ * the end of super.onCreate(). Any preference depending code should be done in
+ * an {@link AfterPreferences} annotated method.
+ * </p>
+ * <p>
+ * The method MUST have zero parameters.
+ * </p>
+ * <p>
+ * There MAY be several methods annotated with {@link AfterPreferences} in the
+ * same class.
+ * </p>
+ * <blockquote>
+ *
+ * Example :
+ *
+ * <pre>
+ * &#064;EActivity
+ * public class SettingsActivity extends PreferenceActivity {
+ * 
+ * 	&#064;PreferenceByKey(R.string.checkBoxPref)
+ * 	CheckBoxPreference checkBoxPref;
+ * 
+ * 	&#064;AfterPreferences
+ * 	void initPrefs() {
+ * 		checkBoxPref.setChecked(false);
+ * 	}
+ * }
+ * </pre>
+ *
+ * </blockquote>
+ * 
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface AfterPreferences {

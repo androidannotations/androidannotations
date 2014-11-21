@@ -20,6 +20,46 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * <p>
+ * This annotation is intended to be used on methods to receive events defined
+ * by
+ * {@link android.preference.Preference.OnPreferenceClickListener#onPreferenceClick(android.preference.Preference)
+ * OnPreferenceClickListener#onPreferenceClick} when the
+ * {@link android.preference.Preference Preference} has been clicked by the
+ * user.
+ * </p>
+ * <p>
+ * The annotation value should be one or several of R.string.* fields. If not
+ * set, the method name will be used as the R.string.* field name.
+ * </p>
+ * <p>
+ * The method MAY have one parameter:
+ * </p>
+ * <ul>
+ * <li>A {@link android.preference.Preference Preference} parameter to know
+ * which preference has been clicked</li>
+ * </ul>
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &#064;PreferenceClick(<b>R.string.myPref</b>)
+ * void clickOnMyPref() {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;PreferenceClick
+ * void <b>myPref</b>PreferenceClicked(Preference preference) {
+ * 	// Something Here
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * @see PreferenceChange
+ */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface PreferenceClick {
