@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:0.14.1'
+        classpath 'com.android.tools.build:gradle:0.14.4'
         // the latest version of the android-apt plugin
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
@@ -26,7 +26,9 @@ dependencies {
 
 apt {
     arguments {
-        androidManifestFile variant.processResources.manifestFile 
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+		// if you have multiple outputs (when using splits), you may want to have other index than 0
+		
         resourcePackageName 'org.androidannotations.gradle'
 
         // If you're using Android NBS flavors you should use the following line instead of hard-coded packageName
