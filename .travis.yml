@@ -11,6 +11,6 @@ android:
 before_script:
   - export TERM=dumb
 script:
-  - mvn -f AndroidAnnotations/pom.xml install
+  - mvn -f AndroidAnnotations/pom.xml --s settings.xml deploy
   - mvn -f examples/maveneclipse/pom.xml install -Dandroidannotations.version=3.3-SNAPSHOT
   - ./examples/gradle/gradlew build --build-file examples/gradle/build.gradle
