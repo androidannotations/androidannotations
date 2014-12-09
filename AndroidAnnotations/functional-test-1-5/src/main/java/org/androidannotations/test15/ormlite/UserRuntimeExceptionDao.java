@@ -15,29 +15,13 @@
  */
 package org.androidannotations.test15.ormlite;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OrmLiteDao;
-
-import android.app.Activity;
-
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-@EActivity
-public class OrmLiteActivity extends Activity {
-	@OrmLiteDao(helper = DatabaseHelper.class)
-	UserDao userDao;
+public class UserRuntimeExceptionDao extends RuntimeExceptionDao<User, Long> {
 
-	@OrmLiteDao(helper = DatabaseHelper.class)
-	Dao<Car, Long> carDao;
+	public UserRuntimeExceptionDao(Dao<User, Long> dao) {
+		super(dao);
+	}
 
-	@OrmLiteDao(helper = DatabaseHelper.class)
-	UserRuntimeExceptionDao userRuntimeExceptionDao;
-
-	@OrmLiteDao(helper = DatabaseHelper.class)
-	RuntimeExceptionDao<Car, Long> runtimeExceptionDao;
-
-	@Bean
-	OrmLiteBean ormLiteBean;
 }

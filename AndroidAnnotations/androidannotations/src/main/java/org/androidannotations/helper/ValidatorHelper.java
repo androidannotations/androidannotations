@@ -15,6 +15,48 @@
  */
 package org.androidannotations.helper;
 
+import static java.util.Arrays.asList;
+import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
+import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
+import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
@@ -48,46 +90,6 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import static java.util.Arrays.asList;
-import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
-import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
-import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
-import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
-import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
-import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
-import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 
 public class ValidatorHelper {
 
@@ -525,24 +527,46 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void extendsOrmLiteDao(Element element, IsValid valid) {
-		TypeMirror elementType = element.asType();
+	public void extendsOrmLiteDao(Element element, IsValid valid, OrmLiteHelper ormLiteHelper) {
+		if (!valid.isValid()) {
+			// we now that the element is invalid. early exit as the reason
+			// could be missing ormlite classes
+			return;
+		}
 
-		TypeElement daoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO);
-		TypeElement runtimeExceptionDaoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
+		TypeMirror elementTypeMirror = element.asType();
+		Types typeUtils = annotationHelper.getTypeUtils();
 
-		if (daoTypeElement != null) {
+		DeclaredType daoParametrizedType = ormLiteHelper.getDaoParametrizedType();
+		DeclaredType runtimeExceptionDaoParametrizedType = ormLiteHelper.getRuntimeExceptionDaoParametrizedType();
 
-			TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
-			DeclaredType daoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, wildcardType, wildcardType);
-			DeclaredType runtimeExceptionDaoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, wildcardType, wildcardType);
+		// Checks that elementType extends Dao<?, ?> or
+		// RuntimeExceptionDao<?, ?>
+		if (!annotationHelper.isSubtype(elementTypeMirror, daoParametrizedType) && !annotationHelper.isSubtype(elementTypeMirror, runtimeExceptionDaoParametrizedType)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParametrizedType.toString() //
+					+ " or " + runtimeExceptionDaoParametrizedType.toString());
+			return;
+		}
 
-			// Checks that elementType extends Dao<?, ?> or
-			// RuntimeExceptionDao<?, ?>
-			if (!annotationHelper.isSubtype(elementType, daoParametrizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParametrizedType)) {
+		if (annotationHelper.isSubtype(elementTypeMirror, runtimeExceptionDaoParametrizedType) //
+				&& !typeUtils.isAssignable(ormLiteHelper.getTypedRuntimeExceptionDao(element), elementTypeMirror)) {
+
+			boolean hasConstructor = false;
+			Element elementType = typeUtils.asElement(elementTypeMirror);
+			DeclaredType daoWithTypedParameters = ormLiteHelper.getTypedDao(element);
+			for (ExecutableElement constructor : ElementFilter.constructorsIn(elementType.getEnclosedElements())) {
+				List<? extends VariableElement> parameters = constructor.getParameters();
+				if (parameters.size() == 1) {
+					TypeMirror type = parameters.get(0).asType();
+					if (annotationHelper.isSubtype(type, daoWithTypedParameters)) {
+						hasConstructor = true;
+					}
+				}
+			}
+			if (!hasConstructor) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParametrizedType.toString() //
-						+ " or " + runtimeExceptionDaoParametrizedType.toString());
+				annotationHelper.printAnnotationError(element, elementTypeMirror.toString() + " requires a constructor that takes only a " + daoWithTypedParameters.toString());
 			}
 		}
 	}
