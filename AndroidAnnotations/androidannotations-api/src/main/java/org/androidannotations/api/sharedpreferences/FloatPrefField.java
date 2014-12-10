@@ -17,20 +17,13 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class FloatPrefField extends AbstractPrefField {
+public final class FloatPrefField extends AbstractPrefField<Float> {
 
-	private final float defaultValue;
-
-	FloatPrefField(SharedPreferences sharedPreferences, String key, float defaultValue) {
-		super(sharedPreferences, key);
-		this.defaultValue = defaultValue;
+	FloatPrefField(SharedPreferences sharedPreferences, String key, Float defaultValue) {
+		super(sharedPreferences, key, defaultValue);
 	}
 
-	public float get() {
-		return getOr(defaultValue);
-	}
-
-	public float getOr(float defaultValue) {
+	public Float getOr(Float defaultValue) {
 		try {
 			return sharedPreferences.getFloat(key, defaultValue);
 		} catch (ClassCastException e) {
@@ -40,14 +33,15 @@ public final class FloatPrefField extends AbstractPrefField {
 				String value = sharedPreferences.getString(key, "" + defaultValue);
 				return Float.parseFloat(value);
 			} catch (Exception e2) {
-				// our  recovery bit failed. The problem is elsewhere. Send the original error
+				// our recovery bit failed. The problem is elsewhere. Send the
+				// original error
 				throw e;
 			}
 		}
 
 	}
 
-	public void put(float value) {
+	public void put(Float value) {
 		apply(edit().putFloat(key, value));
 	}
 

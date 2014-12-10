@@ -17,17 +17,10 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class StringPrefField extends AbstractPrefField {
-
-	private final String defaultValue;
+public final class StringPrefField extends AbstractPrefField<String> {
 
 	StringPrefField(SharedPreferences sharedPreferences, String key, String defaultValue) {
-		super(sharedPreferences, key);
-		this.defaultValue = defaultValue;
-	}
-
-	public String get() {
-		return getOr(defaultValue);
+		super(sharedPreferences, key, defaultValue);
 	}
 
 	public String getOr(String defaultValue) {
@@ -37,4 +30,5 @@ public final class StringPrefField extends AbstractPrefField {
 	public void put(String value) {
 		apply(edit().putString(key, value));
 	}
+
 }

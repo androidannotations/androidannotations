@@ -19,17 +19,10 @@ import java.util.Set;
 
 import android.content.SharedPreferences;
 
-public final class StringSetPrefField extends AbstractPrefField {
-
-	private final Set<String> defaultValue;
+public final class StringSetPrefField extends AbstractPrefField<Set<String>> {
 
 	StringSetPrefField(SharedPreferences sharedPreferences, String key, Set<String> defaultValue) {
-		super(sharedPreferences, key);
-		this.defaultValue = defaultValue;
-	}
-
-	public Set<String> get() {
-		return getOr(defaultValue);
+		super(sharedPreferences, key, defaultValue);
 	}
 
 	public Set<String> getOr(Set<String> defaultValue) {
@@ -41,4 +34,5 @@ public final class StringSetPrefField extends AbstractPrefField {
 		SharedPreferencesCompat.putStringSet(editor, key, value);
 		apply(editor);
 	}
+
 }
