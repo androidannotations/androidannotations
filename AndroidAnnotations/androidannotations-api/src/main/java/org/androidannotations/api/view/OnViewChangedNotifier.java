@@ -15,8 +15,8 @@
  */
 package org.androidannotations.api.view;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class OnViewChangedNotifier {
 
@@ -34,7 +34,7 @@ public class OnViewChangedNotifier {
 		}
 	}
 
-	private final List<OnViewChangedListener> listeners = new LinkedList<OnViewChangedListener>();
+	private final Set<OnViewChangedListener> listeners = new LinkedHashSet<OnViewChangedListener>();
 
 	public void notifyViewChanged(HasViews hasViews) {
 		for (OnViewChangedListener listener : listeners) {
