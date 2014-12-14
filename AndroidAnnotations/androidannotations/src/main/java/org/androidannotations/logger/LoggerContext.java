@@ -15,18 +15,19 @@
  */
 package org.androidannotations.logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.appender.Appender;
 import org.androidannotations.logger.appender.ConsoleAppender;
 import org.androidannotations.logger.appender.FileAppender;
 import org.androidannotations.logger.appender.MessagerAppender;
 import org.androidannotations.logger.formatter.Formatter;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoggerContext {
 
@@ -48,7 +49,6 @@ public class LoggerContext {
 	}
 
 	LoggerContext() {
-		appenders.add(new FileAppender());
 		appenders.add(new MessagerAppender());
 	}
 
@@ -72,6 +72,7 @@ public class LoggerContext {
 		OptionsHelper optionsHelper = new OptionsHelper(processingEnv);
 		resolveLogLevel(optionsHelper);
 		addConsoleAppender(optionsHelper);
+		addFileAppender(optionsHelper);
 
 		for (Appender appender : appenders) {
 			appender.setProcessingEnv(processingEnv);
@@ -92,6 +93,12 @@ public class LoggerContext {
 	private void addConsoleAppender(OptionsHelper optionsHelper) {
 		if (optionsHelper.shouldUseConsoleAppender()) {
 			appenders.add(new ConsoleAppender());
+		}
+	}
+
+	private void addFileAppender(OptionsHelper optionsHelper) {
+		if (optionsHelper.shouldUseFileAppender()) {
+			appenders.add(new FileAppender());
 		}
 	}
 
