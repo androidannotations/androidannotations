@@ -16,13 +16,13 @@
 package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr.ref;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EApplication;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.EApplicationHolder;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -49,7 +49,7 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 	public void process(Element element, EComponentHolder holder) {
 		String fieldName = element.getSimpleName().toString();
 		String applicationQualifiedName = element.asType().toString();
-		JClass applicationClass = refClass(applicationQualifiedName + ModelConstants.GENERATION_SUFFIX);
+		JClass applicationClass = refClass(applicationQualifiedName + classSuffix());
 
 		holder.getInitBody().assign(ref(fieldName), applicationClass.staticInvoke(EApplicationHolder.GET_APPLICATION_INSTANCE));
 	}

@@ -15,8 +15,8 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -92,9 +92,9 @@ public class AnnotationHelper {
 		TypeElement type = typeElementFromQualifiedName(qualifiedName);
 		if (type.getNestingKind() == NestingKind.MEMBER) {
 			String parentGeneratedClass = generatedClassQualifiedNameFromQualifiedName(type.getEnclosingElement().asType().toString());
-			return parentGeneratedClass + "." + type.getSimpleName().toString() + GENERATION_SUFFIX;
+			return parentGeneratedClass + "." + type.getSimpleName().toString() + classSuffix();
 		} else {
-			return qualifiedName + GENERATION_SUFFIX;
+			return qualifiedName + classSuffix();
 		}
 	}
 

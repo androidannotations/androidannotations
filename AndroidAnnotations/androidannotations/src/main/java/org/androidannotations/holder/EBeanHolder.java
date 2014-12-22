@@ -20,7 +20,7 @@ import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ import com.sun.codemodel.JVar;
 
 public class EBeanHolder extends EComponentWithViewSupportHolder {
 
-	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + GENERATION_SUFFIX;
+	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + generationSuffix();
 
 	private JFieldVar contextField;
 	private JMethod constructor;
@@ -61,7 +61,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	public JFieldVar getContextField() {
 		if (contextField == null) {
-			contextField = generatedClass.field(PRIVATE, classes().CONTEXT, "context_");
+			contextField = generatedClass.field(PRIVATE, classes().CONTEXT, "context" + generationSuffix());
 		}
 		return contextField;
 	}
@@ -73,7 +73,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, processHolder.codeModel().VOID, "init_");
+		init = generatedClass.method(PRIVATE, processHolder.codeModel().VOID, "init" + generationSuffix());
 	}
 
 	public void invokeInitInConstructor() {
@@ -94,7 +94,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 		 */
 		if (hasSingletonScope) {
 
-			JFieldVar instanceField = generatedClass.field(PRIVATE | STATIC, generatedClass, "instance_");
+			JFieldVar instanceField = generatedClass.field(PRIVATE | STATIC, generatedClass, "instance" + generationSuffix());
 
 			JBlock creationBlock = factoryMethodBody //
 					._if(instanceField.eq(_null())) //

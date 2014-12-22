@@ -17,6 +17,7 @@ package org.androidannotations.holder;
 
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.PRIVATE;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.helper.CaseHelper;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -84,7 +84,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setResourcesRef() {
-		resourcesRef = getInitBody().decl(classes().RESOURCES, "resources_", getContextRef().invoke("getResources"));
+		resourcesRef = getInitBody().decl(classes().RESOURCES, "resources" + generationSuffix(), getContextRef().invoke("getResources"));
 	}
 
 	public JFieldVar getPowerManagerRef() {
@@ -99,7 +99,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		JBlock methodBody = getInitBody();
 
 		JFieldRef serviceRef = classes().CONTEXT.staticRef("POWER_SERVICE");
-		powerManagerRef = getGeneratedClass().field(PRIVATE, classes().POWER_MANAGER, "powerManager_");
+		powerManagerRef = getGeneratedClass().field(PRIVATE, classes().POWER_MANAGER, "powerManager" + generationSuffix());
 		methodBody.assign(powerManagerRef, cast(classes().POWER_MANAGER, getContextRef().invoke("getSystemService").arg(serviceRef)));
 	}
 
@@ -113,7 +113,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
 	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
 		JClass databaseHelperClass = refClass(databaseHelperTypeMirror.toString());
-		String fieldName = CaseHelper.lowerCaseFirst(databaseHelperClass.name()) + ModelConstants.GENERATION_SUFFIX;
+		String fieldName = CaseHelper.lowerCaseFirst(databaseHelperClass.name()) + generationSuffix();
 		JFieldVar databaseHelperRef = generatedClass.field(PRIVATE, databaseHelperClass, fieldName);
 		databaseHelperRefs.put(databaseHelperTypeMirror, databaseHelperRef);
 
@@ -135,6 +135,6 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		JClass handlerClass = classes().HANDLER;
 		JClass looperClass = classes().LOOPER;
 		JInvocation arg = JExpr._new(handlerClass).arg(looperClass.staticInvoke(METHOD_MAIN_LOOPER));
-		handler = generatedClass.field(JMod.PRIVATE, handlerClass, "handler_", arg);
+		handler = generatedClass.field(JMod.PRIVATE, handlerClass, "handler" + generationSuffix(), arg);
 	}
 }

@@ -20,6 +20,7 @@ import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.List;
 
@@ -93,10 +94,10 @@ public class ActivityIntentBuilder extends IntentBuilder {
 
 	private void createAdditionalConstructor() {
 		if (hasFragmentInClasspath()) {
-			fragmentField = addFragmentConstructor(holder.classes().FRAGMENT, "fragment_");
+			fragmentField = addFragmentConstructor(holder.classes().FRAGMENT, "fragment" + generationSuffix());
 		}
 		if (hasFragmentSupportInClasspath()) {
-			fragmentSupportField = addFragmentConstructor(holder.classes().SUPPORT_V4_FRAGMENT, "fragmentSupport_");
+			fragmentSupportField = addFragmentConstructor(holder.classes().SUPPORT_V4_FRAGMENT, "fragmentSupport" + generationSuffix());
 		}
 	}
 

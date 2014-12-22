@@ -20,6 +20,7 @@ import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.List;
 
@@ -30,7 +31,6 @@ import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.HasReceiverRegistration;
 import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
 import org.androidannotations.model.AnnotationElements;
@@ -82,7 +82,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 	public void process(Element element, HasReceiverRegistration holder) throws Exception {
 
 		String methodName = element.getSimpleName().toString();
-		String receiverName = methodName + "Receiver" + ModelConstants.GENERATION_SUFFIX;
+		String receiverName = methodName + "Receiver" + generationSuffix();
 
 		Receiver annotation = element.getAnnotation(Receiver.class);
 		String[] actions = annotation.actions();

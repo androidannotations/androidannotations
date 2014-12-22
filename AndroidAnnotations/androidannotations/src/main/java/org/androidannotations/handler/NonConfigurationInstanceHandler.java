@@ -18,7 +18,7 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -91,7 +91,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 				elementType = element.asType();
 			}
 			String typeQualifiedName = elementType.toString();
-			JClass fieldGeneratedBeanClass = refClass(typeQualifiedName + GENERATION_SUFFIX);
+			JClass fieldGeneratedBeanClass = refClass(typeQualifiedName + classSuffix());
 
 			initIfNonConfigurationNotNullBlock.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}
