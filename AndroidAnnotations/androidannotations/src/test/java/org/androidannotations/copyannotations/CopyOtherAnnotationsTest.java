@@ -75,4 +75,13 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 
 		assertGeneratedClassDoesNotContain(toGeneratedFile(HasOtherAnnotations.class), methodSignature);
 	}
+	
+	@Test
+	public void testInheritedAnnotationsNotCopied() {
+		compileFiles(HasOtherAnnotations.class);
+		
+		String[] annotation = { "@RunWith(Runner.class)" };
+		
+		assertGeneratedClassDoesNotContain(toGeneratedFile(HasOtherAnnotations.class), annotation);
+	}
 }
