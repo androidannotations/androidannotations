@@ -117,7 +117,14 @@ public class ModelProcessor {
 				 */
 				if (!isAbstractClass(enclosingElement)) {
 					GeneratedClassHolder holder = processHolder.getGeneratedClassHolder(enclosingElement);
-					processThrowing(annotationHandler, annotatedElement, holder);
+					
+					/*
+					 * The holder can be null if the annotated holder class is
+					 * already invalidated.
+					 */
+					if (holder != null) {
+						processThrowing(annotationHandler, annotatedElement, holder);
+					}
 				} else {
 					LOGGER.trace("Skip element {} because enclosing element {} is abstract", annotatedElement, enclosingElement);
 				}
