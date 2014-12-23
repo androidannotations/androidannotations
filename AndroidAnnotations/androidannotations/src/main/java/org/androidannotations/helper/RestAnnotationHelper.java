@@ -17,6 +17,7 @@ package org.androidannotations.helper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,6 +41,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 
 import org.androidannotations.annotations.rest.Accept;
+import org.androidannotations.annotations.rest.Header;
+import org.androidannotations.annotations.rest.Headers;
 import org.androidannotations.annotations.rest.RequiresAuthentication;
 import org.androidannotations.annotations.rest.RequiresCookie;
 import org.androidannotations.annotations.rest.RequiresCookieInUrl;
@@ -183,16 +186,49 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public String[] requiredHeaders(ExecutableElement executableElement) {
-		RequiresHeader cookieAnnotation = executableElement.getAnnotation(RequiresHeader.class);
-		if (cookieAnnotation == null) {
-			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
+		RequiresHeader requiresHeaderAnnotation = executableElement.getAnnotation(RequiresHeader.class);
+		if (requiresHeaderAnnotation == null) {
+			requiresHeaderAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
 		}
-		if (cookieAnnotation != null) {
-			return cookieAnnotation.value();
+		if (requiresHeaderAnnotation != null) {
+			return requiresHeaderAnnotation.value();
 		} else {
 			return null;
 		}
 	}
+
+    private Map<String, String> declaredHeaders(ExecutableElement executableElement) {
+        Headers headers = executableElement.getAnnotation(Headers.class);
+        //HEY CODE REVIEWER: DO I NEED TO CALL .getEnclosingElement HERE() WHY/WHY NOT?
+        Map<String, String> headerMap = new HashMap<String, String>();
+        if (headers != null) {
+            Header[] headerList = headers.value();
+
+            // Prevent an empty annotation from crashing things
+            if (headerList != null) {
+                for (Header header : headerList) {
+                    headerMap.putAll(processHeader(header));
+                }
+            }
+        }
+
+        Header header = executableElement.getAnnotation(Header.class);
+        if (header != null) {
+            headerMap.putAll(processHeader(header));
+        }
+
+        return headerMap;
+    }
+
+    private Map<String, String> processHeader(Header singleHeader) {
+        if (singleHeader == null) {
+            return null;
+        } else {
+            Map<String, String> headerInfo = new HashMap<String, String>();
+            headerInfo.put(singleHeader.headerName(), singleHeader.value());
+            return headerInfo;
+        }
+    }
 
 	public String[] requiredCookies(ExecutableElement executableElement) {
 		RequiresCookie cookieAnnotation = executableElement.getAnnotation(RequiresCookie.class);
@@ -252,7 +288,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		boolean requiresAuth = requiredAuthentication(executableElement);
 
-		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
+        Map<String, String> declaredHeaders = declaredHeaders(executableElement);;
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth || declaredHeaders.size() > 0) {
 			// we need the headers
 			httpHeadersVar = body.decl(holder.classes().HTTP_HEADERS, "httpHeaders", JExpr._new(holder.classes().HTTP_HEADERS));
 		}
@@ -264,6 +302,14 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
 		}
+
+        // Set pre-defined headers here so that they can be overridden by any runtime calls
+
+        if (declaredHeaders != null) {
+            for (Map.Entry<String, String> declaredHeader: declaredHeaders.entrySet()) {
+                body.add(JExpr.invoke(httpHeadersVar, "set").arg(declaredHeader.getKey()).arg(declaredHeader.getValue()));
+            }
+        }
 
 		if (requiresCookies) {
 			JClass stringBuilderClass = holder.classes().STRING_BUILDER;
@@ -279,12 +325,11 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			body.add(JExpr.invoke(httpHeadersVar, "set").arg("Cookie").arg(cookiesToString));
 		}
 
-		if (requiresHeaders) {
+        if (requiresHeaders) {
 			for (String header : headers) {
 				JInvocation headerValue = JExpr.invoke(holder.getAvailableHeadersField(), "get").arg(header);
 				body.add(JExpr.invoke(httpHeadersVar, "set").arg(header).arg(headerValue));
 			}
-
 		}
 
 		if (requiresAuth) {
