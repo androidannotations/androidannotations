@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
@@ -33,18 +34,17 @@ import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 
-public class ReceiverRegistrationHolder {
+public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiverRegistration> {
 
-	private EComponentHolder holder;
+	private T holder;
 	private Map<IntentFilterData, JFieldVar> intentFilterFields = new HashMap<IntentFilterData, JFieldVar>();
 	private IllegalStateException illegalStateException = new IllegalStateException("This shouldn't happen unless the validation is bad");
 
-	public ReceiverRegistrationHolder(EComponentHolder holder) {
+	public ReceiverRegistrationHolder(T holder) {
 		this.holder = holder;
 	}
 
-	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
-		IntentFilterData intentFilterData = new IntentFilterData(actions, dataSchemes);
+	public JFieldVar getIntentFilterField(IntentFilterData intentFilterData) {
 		JFieldVar intentFilterField = intentFilterFields.get(intentFilterData);
 		if (intentFilterField == null) {
 			intentFilterField = createIntentFilterField(intentFilterData);
@@ -58,12 +58,12 @@ public class ReceiverRegistrationHolder {
 		JExpression newIntentFilterExpr = _new(classes().INTENT_FILTER);
 		JFieldVar intentFilterField = getGeneratedClass().field(PRIVATE | FINAL, classes().INTENT_FILTER, intentFilterName, newIntentFilterExpr);
 
-		JBlock initBody = holder.getInitBody();
+		JBlock intentFilterTarget = holder.getIntentFilterInitializationBlock(intentFilterData);
 		for (String action : intentFilterData.getActionSet()) {
-			initBody.invoke(intentFilterField, "addAction").arg(action);
+			intentFilterTarget.invoke(intentFilterField, "addAction").arg(action);
 		}
 		for (String dataScheme : intentFilterData.getDataSchemeSet()) {
-			initBody.invoke(intentFilterField, "addDataScheme").arg(dataScheme);
+			intentFilterTarget.invoke(intentFilterField, "addDataScheme").arg(dataScheme);
 		}
 
 		return intentFilterField;
@@ -97,14 +97,20 @@ public class ReceiverRegistrationHolder {
 		return holder.classes();
 	}
 
-	private static class IntentFilterData {
+	public static class IntentFilterData {
 
+		private final RegisterAt registerAt;
 		private final Set<String> actionSet;
 		private final Set<String> dataSchemeSet;
 
-		public IntentFilterData(String[] actions, String[] dataSchemes) {
+		public IntentFilterData(String[] actions, String[] dataSchemes, RegisterAt registerAt) {
+			this.registerAt = registerAt;
 			actionSet = new HashSet<String>(Arrays.asList(actions));
 			dataSchemeSet = new HashSet<String>(Arrays.asList(dataSchemes));
+		}
+
+		public RegisterAt getRegisterAt() {
+			return registerAt;
 		}
 
 		public Set<String> getActionSet() {
@@ -120,6 +126,7 @@ public class ReceiverRegistrationHolder {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + (actionSet == null ? 0 : actionSet.hashCode());
+			result = prime * result + (registerAt == null ? 0 : registerAt.hashCode());
 			result = prime * result + (dataSchemeSet == null ? 0 : dataSchemeSet.hashCode());
 			return result;
 		}
@@ -141,6 +148,13 @@ public class ReceiverRegistrationHolder {
 					return false;
 				}
 			} else if (!actionSet.equals(other.actionSet)) {
+				return false;
+			}
+			if (registerAt == null) {
+				if (other.registerAt != null) {
+					return false;
+				}
+			} else if (!registerAt.equals(other.registerAt)) {
 				return false;
 			}
 			if (dataSchemeSet == null) {
