@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -57,7 +58,12 @@ public class ItemClickHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.zeroOrOneParameter(executableElement, valid);
+		validatorHelper.param.inorder().extendsType(CanonicalNameConstants.ADAPTER_VIEW).optional() //
+		.anyType().optional() //
+		.extendsType(CanonicalNameConstants.VIEW).optional() //
+		.type(int.class.getName()).optional() //
+		.type(long.class.getName()).optional() //
+		.validate(executableElement, valid);
 	}
 
 	@Override

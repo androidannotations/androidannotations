@@ -58,7 +58,7 @@ public class ProduceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.param.zeroParameter(executableElement, valid);
+		validatorHelper.param.noparam().validate(executableElement, valid);
 	}
 
 	@Override

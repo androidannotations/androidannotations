@@ -68,6 +68,8 @@ public class AfterTextChangeHandler extends BaseAnnotationHandler<EComponentWith
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
 
 		validatorHelper.hasAfterTextChangedMethodParameters((ExecutableElement) element, valid);
+
+		validatorHelper.param.anyorder().type(CanonicalNameConstants.TEXT_VIEW).optional().type(CanonicalNameConstants.EDITABLE).optional().validate((ExecutableElement) element, valid);
 	}
 
 	@Override
