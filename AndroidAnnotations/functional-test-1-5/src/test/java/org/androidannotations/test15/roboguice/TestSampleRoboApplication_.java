@@ -10,12 +10,11 @@ import android.app.Application;
 
 // CHECKSTYLE:OFF
 public class TestSampleRoboApplication_ extends Application implements TestLifecycleApplication {
-// CHECKSTYLE:ON
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		RoboGuice.setBaseApplicationInjector(this, RoboGuice.DEFAULT_STAGE, RoboGuice.newDefaultRoboModule(this), new RobolectricSampleModule());
+		RoboGuice.overrideApplicationInjector(this, RoboGuice.newDefaultRoboModule(this), new RobolectricSampleModule());
 	}
 
 	@Override
@@ -26,7 +25,7 @@ public class TestSampleRoboApplication_ extends Application implements TestLifec
 	public void prepareTest(Object test) {
 		TestSampleRoboApplication_ application = (TestSampleRoboApplication_) Robolectric.application;
 
-		RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE, RoboGuice.newDefaultRoboModule(application), new RobolectricSampleTestModule());
+		RoboGuice.overrideApplicationInjector(application, RoboGuice.newDefaultRoboModule(application), new RobolectricSampleTestModule());
 
 		RoboGuice.getInjector(application).injectMembers(test);
 	}

@@ -231,7 +231,13 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void fireEvent(JFieldVar eventManager, JBlock body, JClass eventClass, JExpression... eventArguments) {
-		JInvocation newEvent = _new(eventClass);
+		JClass actualEventClass = eventClass;
+		if (eventClass.fullName().startsWith("roboguice.context.event")) {
+			actualEventClass = eventClass.narrow(classes().ACTIVITY);
+		}
+
+		JInvocation newEvent = _new(actualEventClass);
+		newEvent.arg(_this());
 		for (JExpression eventArgument : eventArguments) {
 			newEvent.arg(eventArgument);
 		}
