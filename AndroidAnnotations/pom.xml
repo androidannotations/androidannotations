@@ -270,6 +270,7 @@
 						<configLocation>checkstyle-checks.xml</configLocation>
 						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
 						<consoleOutput>true</consoleOutput>
+						<linkXRef>false</linkXRef>
 					</configuration>
 				</plugin>
 			</plugins>
