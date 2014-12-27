@@ -63,7 +63,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface ViewById {
+
+	/**
+	 * The R.id.* field which refers to the injected View.
+	 * 
+	 * @return the id of the View
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the injected View.
+	 * 
+	 * @return the resource name of the View
+	 */
 	String resName() default "";
 }

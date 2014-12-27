@@ -30,21 +30,21 @@ import java.util.List;
 
 public class LoggerContext {
 
-	private static LoggerContext INSTANCE = null;
+	private static LoggerContext instance = null;
 	private static final Level DEFAULT_LEVEL = Level.DEBUG;
 
 	private Level currentLevel = DEFAULT_LEVEL;
 	private List<Appender> appenders = new ArrayList<Appender>();
 
 	public static LoggerContext getInstance() {
-		if (INSTANCE == null) {
+		if (instance == null) {
 			synchronized (LoggerContext.class) {
-				if (INSTANCE == null) {
-					INSTANCE = new LoggerContext();
+				if (instance == null) {
+					instance = new LoggerContext();
 				}
 			}
 		}
-		return INSTANCE;
+		return instance;
 	}
 
 	public void writeLog(Level level, String loggerName, String message, Element element, AnnotationMirror annotationMirror, Throwable thr, Object... args) {

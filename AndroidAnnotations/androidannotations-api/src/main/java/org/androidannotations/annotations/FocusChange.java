@@ -68,13 +68,22 @@ import java.lang.annotation.Target;
  * </pre>
  * 
  * </blockquote>
- * 
- * @author Rostislav Chekan
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface FocusChange {
+
+	/**
+	 * The R.id.* fields which refer to the Views.
+	 * 
+	 * @return the ids of the Views
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the Views.
+	 * 
+	 * @return the resource names of the Views
+	 */
 	String[] resName() default "";
 }

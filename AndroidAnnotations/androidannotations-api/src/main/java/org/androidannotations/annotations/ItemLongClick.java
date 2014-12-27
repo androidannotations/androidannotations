@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * This annotation is intended to be used on methods to receive events defined
- * by {@link
- * android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)}
+ * by
+ * {@link android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)}
  * when a list item has been long clicked by the user.
  * </p>
  * <p>
@@ -68,7 +68,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface ItemLongClick {
+
+	/**
+	 * The R.id.* fields which refer to the AdapterViews.
+	 * 
+	 * @return the ids of the AdapterViews
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the AdapterViews.
+	 * 
+	 * @return the resource names of the AdapterViews
+	 */
 	String[] resName() default "";
 }

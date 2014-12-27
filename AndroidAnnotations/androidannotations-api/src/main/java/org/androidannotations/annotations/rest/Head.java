@@ -57,5 +57,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Head {
+
+	/**
+	 * The URI or the full URL of the web service.
+	 * 
+	 * @return the address of the web service
+	 */
 	String value();
 }

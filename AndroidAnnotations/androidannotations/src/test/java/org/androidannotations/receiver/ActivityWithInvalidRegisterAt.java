@@ -15,9 +15,10 @@
  */
 package org.androidannotations.receiver;
 
-import android.app.Activity;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Receiver;
+
+import android.app.Activity;
 
 @EActivity
 public class ActivityWithInvalidRegisterAt extends Activity {

@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations.rest;
 
-import org.androidannotations.api.rest.RestClientHeaders;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,7 +31,8 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * To set a cookie's value you MUST either let your RestClient interface extends
- * of {@link RestClientHeaders} or add the following method to your interface :
+ * of {@link org.androidannotations.api.rest.RestClientHeaders
+ * RestClientHeaders} or add the following method to your interface :
  * <code>void setCookie(String name, String value)</code>.
  * </p>
  * <p>
@@ -82,5 +81,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface RequiresCookie {
-	public String[] value();
+
+	/**
+	 * The names of the cookies.
+	 * 
+	 * @return the cookie names
+	 */
+	String[] value();
 }

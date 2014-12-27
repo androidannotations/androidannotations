@@ -15,12 +15,12 @@
  */
 package org.androidannotations.annotations.sharedpreferences;
 
-import org.androidannotations.annotations.ResId;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.androidannotations.annotations.ResId;
 
 /**
  * <p>
@@ -39,7 +39,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface DefaultInt {
+
+	/**
+	 * The default value of the preference.
+	 * 
+	 * @return the default value
+	 */
 	int value();
 
+	/**
+	 * The R.string.* field which refers to the key of the preference.
+	 * 
+	 * @return the resource name of the preference key
+	 */
 	int keyRes() default ResId.DEFAULT_VALUE;
 }

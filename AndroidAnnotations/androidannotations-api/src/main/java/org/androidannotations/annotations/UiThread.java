@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.os.Handler;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -90,24 +88,43 @@ import java.lang.annotation.Target;
  * </blockquote>
  * 
  * @see Background
- * @see Handler
+ * @see android.os.Handler
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface UiThread {
+
+	/**
+	 * The delay of the execution in milliseconds.
+	 * 
+	 * @return the delay of the execution
+	 */
 	long delay() default 0;
 
 	/**
-	 * If propagation = REUSE, the method will check first if it is inside the
-	 * UI thread already. If so, it will directly call the method instead of
-	 * using the handler. The default value is ENQUEUE, which will always call
-	 * the handler.
+	 * If propagation is {@link Propagation#REUSE}, the method will check first
+	 * if it is inside the UI thread already. If so, it will directly call the
+	 * method instead of using the handler. The default value is
+	 * {@link Propagation#ENQUEUE}, which will always call the handler.
 	 * 
-	 * @return whether the method should be posted or executed if it's in the UI thread
+	 * @return {@link Propagation#ENQUEUE} to always call the handler,
+	 *         {@link Propagation#REUSE}, to check whether it is already on the
+	 *         UI thread
 	 */
 	Propagation propagation() default Propagation.ENQUEUE;
 
+	/**
+	 * Indicates the propagation behavior of the UiThread annotated method.
+	 */
 	public enum Propagation {
-		ENQUEUE, REUSE
+
+		/**
+		 * The method will always call the Handler.
+		 */
+		ENQUEUE, //
+		/**
+		 * The method will check first if it is inside the UI thread already.
+		 */
+		REUSE
 	}
 }

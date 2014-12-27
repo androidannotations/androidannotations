@@ -15,13 +15,9 @@
  */
 package org.androidannotations.test15.roboguice;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.RoboGuice;
 
 import roboguice.activity.RoboActivity;
-import roboguice.activity.RoboMapActivity;
 
 //Commented because Maps is not Open Source
 @EActivity

@@ -15,21 +15,25 @@
  */
 package org.androidannotations.test15.menu;
 
-import android.app.Fragment;
-import android.view.MenuItem;
-
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.test15.R;
 
+import android.app.Fragment;
+import android.view.MenuItem;
+
 @EFragment
 @OptionsMenu({ R.menu.my_menu, R.menu.my_menu2 })
 public class OptionsMenuFragment extends Fragment {
 
+	// CHECKSTYLE:OFF
+
 	@OptionsMenuItem
 	MenuItem menu_refresh;
+
+	// CHECKSTYLE:ON
 
 	@OptionsMenuItem(R.id.menu_search)
 	MenuItem aMenuById;
@@ -47,7 +51,9 @@ public class OptionsMenuFragment extends Fragment {
 	}
 
 	@OptionsItem
+	// CHECKSTYLE:OFF
 	void menu_add(MenuItem item) {
+		// CHECKSTYLE:ON
 	}
 
 }

@@ -41,6 +41,7 @@ import com.sun.codemodel.JDefinedClass;
 
 public class ProcessHolder {
 
+	// CHECKSTYLE:OFF
 	public class Classes {
 
 		/*
@@ -183,6 +184,8 @@ public class ProcessHolder {
 		public final JClass REST_CLIENT_EXCEPTION = refClass(CanonicalNameConstants.REST_CLIENT_EXCEPTION);
 		public final JClass NESTED_RUNTIME_EXCEPTION = refClass(CanonicalNameConstants.NESTED_RUNTIME_EXCEPTION);
 	}
+
+	// CHECKSTYLE:ON
 
 	private final Map<Element, GeneratedClassHolder> generatedClassHolders = new HashMap<Element, GeneratedClassHolder>();
 

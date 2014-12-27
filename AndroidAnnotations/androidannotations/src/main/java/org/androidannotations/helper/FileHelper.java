@@ -27,6 +27,9 @@ import javax.tools.StandardLocation;
 
 public class FileHelper {
 
+	private FileHelper() {
+	}
+
 	public static Option<File> findRootProject(ProcessingEnvironment processingEnv) {
 		Option<FileHolder> rootProjectHolder = findRootProjectHolder(processingEnv);
 		if (rootProjectHolder.isAbsent()) {

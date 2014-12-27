@@ -15,10 +15,11 @@
  */
 package org.androidannotations.receiver;
 
-import android.app.Activity;
-import android.content.Intent;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Receiver;
+
+import android.app.Activity;
+import android.content.Intent;
 
 @EActivity
 public class ActivityWithValidReceiver extends Activity {

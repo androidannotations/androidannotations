@@ -32,7 +32,7 @@ import android.os.Bundle;
 public class FragmentArguments extends Fragment {
 
 	@FragmentArg("test")
-	Long nullWrappedLong = 42l;
+	Long nullWrappedLong = 42L;
 
 	@FragmentArg
 	boolean myBoolean;
@@ -178,8 +178,7 @@ public class FragmentArguments extends Fragment {
 	}
 
 	static {
-		FragmentArguments_.builder().myBundle(null).myCharSequence(null)
-				.build();
+		FragmentArguments_.builder().myBundle(null).myCharSequence(null).build();
 	}
 
 }

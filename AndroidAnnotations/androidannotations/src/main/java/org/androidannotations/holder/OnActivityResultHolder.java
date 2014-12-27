@@ -15,6 +15,13 @@
  */
 package org.androidannotations.holder;
 
+import static com.sun.codemodel.JExpr._super;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.androidannotations.process.ProcessHolder;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCase;
 import com.sun.codemodel.JCodeModel;
@@ -23,11 +30,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
-import org.androidannotations.process.ProcessHolder;
-
-import java.util.HashMap;
-
-import static com.sun.codemodel.JExpr._super;
 
 public class OnActivityResultHolder {
 
@@ -38,7 +40,7 @@ public class OnActivityResultHolder {
 	private JVar requestCodeParam;
 	private JVar dataParam;
 	private JVar resultCodeParam;
-	private HashMap<Integer, JBlock> caseBlocks = new HashMap<Integer, JBlock>();
+	private Map<Integer, JBlock> caseBlocks = new HashMap<Integer, JBlock>();
 
 	public OnActivityResultHolder(EComponentHolder holder) {
 		this.holder = holder;

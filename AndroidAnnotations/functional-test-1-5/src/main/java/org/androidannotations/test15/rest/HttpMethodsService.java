@@ -25,7 +25,6 @@ import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.annotations.rest.Put;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.api.rest.RestClientErrorHandling;
-import org.androidannotations.api.rest.RestErrorHandler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
@@ -52,7 +51,7 @@ public interface HttpMethodsService extends RestClientErrorHandling {
 
 	@Put("/put/")
 	void put();
-	
+
 	void setRestTemplate(RestTemplate restTemplate);
 
 }

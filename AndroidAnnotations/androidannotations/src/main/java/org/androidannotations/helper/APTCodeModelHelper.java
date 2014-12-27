@@ -15,6 +15,40 @@
  */
 package org.androidannotations.helper;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.lit;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
+import java.io.StringWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
+
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.holder.EBeanHolder;
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.holder.GeneratedClassHolder;
+
 import com.sun.codemodel.JAnnotatable;
 import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JBlock;
@@ -32,38 +66,6 @@ import com.sun.codemodel.JStatement;
 import com.sun.codemodel.JSuperWildcard;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.holder.EBeanHolder;
-import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.holder.GeneratedClassHolder;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.WildcardType;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Types;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 public class APTCodeModelHelper {
 
@@ -224,6 +226,8 @@ public class APTCodeModelHelper {
 		JDefinedClass definedClass = holder.getGeneratedClass();
 		String methodName = executableElement.getSimpleName().toString();
 		List<? extends VariableElement> parameters = executableElement.getParameters();
+		// CHECKSTYLE:OFF
+		// TODO: refactor the nasty label jump
 		method: for (JMethod method : definedClass.methods()) {
 			if (method.name().equals(methodName) && method.params().size() == parameters.size()) {
 				int i = 0;
@@ -237,6 +241,7 @@ public class APTCodeModelHelper {
 				return method;
 			}
 		}
+		// CHECKSTYLE:ON
 		return null;
 	}
 
@@ -402,7 +407,7 @@ public class APTCodeModelHelper {
 	/**
 	 * Gets all of the methods of the class and includes the methods of any
 	 * implemented interfaces.
-	 * 
+	 *
 	 * @param typeElement
 	 * @return full list of methods.
 	 */
@@ -508,7 +513,7 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	//TODO it would be nice to cache the result map for better performance
+	// TODO it would be nice to cache the result map for better performance
 	public TypeMirror getActualType(Element element, GeneratedClassHolder holder) {
 		Types types = holder.processingEnvironment().getTypeUtils();
 		DeclaredType typeMirror = (DeclaredType) element.getEnclosingElement().asType();

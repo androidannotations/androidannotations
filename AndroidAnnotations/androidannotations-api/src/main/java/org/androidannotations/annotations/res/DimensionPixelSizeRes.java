@@ -15,12 +15,12 @@
  */
 package org.androidannotations.annotations.res;
 
-import org.androidannotations.annotations.ResId;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.androidannotations.annotations.ResId;
 
 /**
  * <p>
@@ -36,7 +36,19 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface DimensionPixelSizeRes {
+
+	/**
+	 * The R.dimen.* field which refers to the dimension pixel size resource.
+	 * 
+	 * @return the id of the resource
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as string which refers to the dimension pixel size
+	 * resource.
+	 * 
+	 * @return the resource name of the resource
+	 */
 	String resName() default "";
 }

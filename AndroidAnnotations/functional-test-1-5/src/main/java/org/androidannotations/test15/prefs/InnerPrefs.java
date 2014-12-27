@@ -22,7 +22,7 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 public class InnerPrefs {
 
 	@SharedPref
-	public static interface InnerSharedPrefs {
+	public interface InnerSharedPrefs {
 
 	}
 }

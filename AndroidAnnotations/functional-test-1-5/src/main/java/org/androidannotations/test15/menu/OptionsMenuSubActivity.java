@@ -26,7 +26,10 @@ import android.view.MenuItem;
 @OptionsMenu(R.menu.my_menu3)
 public class OptionsMenuSubActivity extends OptionsMenuActivity {
 
+	// CHECKSTYLE:OFF
+
 	@OptionsMenuItem
 	MenuItem menu_settings;
 
+	// CHECKSTYLE:ON
 }

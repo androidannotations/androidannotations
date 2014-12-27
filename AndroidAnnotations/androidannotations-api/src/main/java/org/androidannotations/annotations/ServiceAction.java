@@ -96,8 +96,8 @@ public @interface ServiceAction {
 	/**
 	 * Define the action's name. If this field isn't set the annotated method
 	 * name will be used.
-	 *
-	 * @return the action's name
+	 * 
+	 * @return the name of the action
 	 */
 	String value() default "";
 

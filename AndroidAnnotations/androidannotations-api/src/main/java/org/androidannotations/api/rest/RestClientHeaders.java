@@ -26,7 +26,8 @@ public interface RestClientHeaders {
 	/**
 	 * Gets a cookie by name.
 	 * 
-	 * @param name Name of the cookie
+	 * @param name
+	 *            Name of the cookie
 	 * @return the cookie value.
 	 */
 	String getCookie(String name);
@@ -34,15 +35,18 @@ public interface RestClientHeaders {
 	/**
 	 * Sets a cookie by name.
 	 * 
-	 * @param name Name of the cookie
-	 * @param value Value of the cookie
+	 * @param name
+	 *            Name of the cookie
+	 * @param value
+	 *            Value of the cookie
 	 */
 	void setCookie(String name, String value);
 
 	/**
 	 * Gets a header by name.
 	 * 
-	 * @param name Name of the header
+	 * @param name
+	 *            Name of the header
 	 * @return the header value.
 	 */
 	String getHeader(String name);
@@ -50,30 +54,36 @@ public interface RestClientHeaders {
 	/**
 	 * Sets a header by name.
 	 * 
-	 * @param name Name of the header
-	 * @param value Value of the header
+	 * @param name
+	 *            Name of the header
+	 * @param value
+	 *            Value of the header
 	 */
 	void setHeader(String name, String value);
 
 	/**
 	 * Sets the authentication object.
 	 * 
-	 * @param auth Authentication data
+	 * @param auth
+	 *            Authentication data
 	 */
 	void setAuthentication(HttpAuthentication auth);
 
 	/**
 	 * Sets the basic authentication user/password.
 	 * 
-	 * @param user Name of the user
-	 * @param password Password of the user
+	 * @param user
+	 *            Name of the user
+	 * @param password
+	 *            Password of the user
 	 */
 	void setHttpBasicAuth(String user, String password);
 
-    /**
-     * Sets the Authorization: Bearer header as documented in RFC6750
-     *
-     * @param token Token used for authentication
-     */
-    void setBearerAuth(String token);
+	/**
+	 * Sets the Authorization: Bearer header as documented in RFC6750
+	 *
+	 * @param token
+	 *            Token used for authentication
+	 */
+	void setBearerAuth(String token);
 }

@@ -15,12 +15,12 @@
  */
 package org.androidannotations.receiver;
 
+import java.io.IOException;
+
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class ReceiverRegistrationTest extends AAProcessorTestHelper {
 

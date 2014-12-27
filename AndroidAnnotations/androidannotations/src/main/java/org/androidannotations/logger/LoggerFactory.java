@@ -22,6 +22,9 @@ public class LoggerFactory {
 
 	private static final Map<String, Logger> LOGGER_CACHE = new HashMap<String, Logger>();
 
+	private LoggerFactory() {
+	}
+
 	public static Logger getLogger(Class<?> clazz) {
 		return getLogger(simpleLoggerName(clazz));
 	}

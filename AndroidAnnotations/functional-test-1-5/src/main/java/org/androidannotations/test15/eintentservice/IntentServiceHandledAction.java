@@ -41,7 +41,7 @@ public class IntentServiceHandledAction extends IntentService {
 	}
 
 	@ServiceAction
-	void MyActionOneParam(String valueString) {
+	void myActionOneParam(String valueString) {
 		actionForTestHandled = valueString;
 	}
 

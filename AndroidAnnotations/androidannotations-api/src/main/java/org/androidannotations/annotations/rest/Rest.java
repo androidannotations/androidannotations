@@ -15,10 +15,6 @@
  */
 package org.androidannotations.annotations.rest;
 
-import org.androidannotations.api.rest.RestClientHeaders;
-import org.androidannotations.api.rest.RestClientRootUrl;
-import org.androidannotations.api.rest.RestClientSupport;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -199,17 +195,41 @@ import java.lang.annotation.Target;
  * 
  * 
  * @see RestService
- * @see RestClientSupport
- * @see RestClientRootUrl
- * @see RestClientHeaders
+ * @see org.androidannotations.api.rest.RestClientSupport
+ * @see org.androidannotations.api.rest.RestClientRootUrl
+ * @see org.androidannotations.api.rest.RestClientHeaders
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Rest {
+
+	/**
+	 * The root url of the web service.
+	 * 
+	 * @return the root url of the web service
+	 */
 	String rootUrl() default "";
 
+	/**
+	 * The classes of the converters which should be used to convert received
+	 * data into Java objects.
+	 * 
+	 * @return the converter classes
+	 */
 	Class<?>[] converters();
 
+	/**
+	 * The classes of interceptors which are used to do extra processing before
+	 * or after requests.
+	 * 
+	 * @return the interceptor classes
+	 */
 	Class<?>[] interceptors() default {};
+
+	/**
+	 * TODO .
+	 * 
+	 * @return TODO
+	 */
 	Class<?> requestFactory() default Void.class;
 }

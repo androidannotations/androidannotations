@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations.sharedpreferences;
 
-import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,7 +26,9 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * The field MUST be of a type that is generated using {@link SharedPref} and
- * therefore extends {@link SharedPreferencesHelper}.
+ * therefore extends
+ * {@link org.androidannotations.api.sharedpreferences.SharedPreferencesHelper
+ * SharedPreferencesHelper}.
  * </p>
  * <p>
  * <b>Note:</b> To prevent you from any building issues, you should use fully

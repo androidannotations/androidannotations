@@ -45,6 +45,8 @@ public class JSuperWildcard extends JClass {
 		return "? super " + bound.fullName();
 	}
 
+	// CHECKSTYLE:OFF
+
 	@Override
 	public JPackage _package() {
 		return null;
@@ -52,7 +54,7 @@ public class JSuperWildcard extends JClass {
 
 	/**
 	 * Returns the class bound of this variable.
-	 * 
+	 *
 	 * <p>
 	 * If no bound is given, this method returns {@link Object}.
 	 */
@@ -72,6 +74,8 @@ public class JSuperWildcard extends JClass {
 	public Iterator<JClass> _implements() {
 		return bound._implements();
 	}
+
+	// CHECKSTYLE:ON
 
 	@Override
 	public boolean isInterface() {

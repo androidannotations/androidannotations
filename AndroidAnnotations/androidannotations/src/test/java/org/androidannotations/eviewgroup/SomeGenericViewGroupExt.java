@@ -15,9 +15,10 @@
  */
 package org.androidannotations.eviewgroup;
 
-import android.content.Context;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.UiThread;
+
+import android.content.Context;
 
 @EViewGroup
 public class SomeGenericViewGroupExt extends SomeGenericViewGroup<String> {

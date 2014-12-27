@@ -20,9 +20,13 @@ import android.os.Build.VERSION;
 
 public class SdkVersionHelper {
 
+	private SdkVersionHelper() {
+	}
+
 	public static int getSdkInt() {
-		if (Build.VERSION.RELEASE.startsWith("1.5"))
+		if (Build.VERSION.RELEASE.startsWith("1.5")) {
 			return 3;
+		}
 
 		return HelperInternal.getSdkIntInternal();
 	}

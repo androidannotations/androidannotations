@@ -83,7 +83,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		JConditional ifStatement = methodBody._if(isLoggableInvocation);
 
 		JInvocation currentTimeInvoke = classes().SYSTEM.staticInvoke("currentTimeMillis");
-		JBlock _thenBody = ifStatement._then();
+		JBlock thenBody = ifStatement._then();
 
 		// Log In
 		String logMethodName = logMethodNameFromLevel(level);
@@ -91,19 +91,19 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		logEnterInvoke.arg(tag);
 
 		logEnterInvoke.arg(getEnterMessage(method, executableElement));
-		_thenBody.add(logEnterInvoke);
-		JVar startDeclaration = _thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
+		thenBody.add(logEnterInvoke);
+		JVar startDeclaration = thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
 
 		JTryBlock tryBlock;
 
 		JVar result = null;
 		if (method.type().fullName().equals("void")) {
-			tryBlock = _thenBody._try();
+			tryBlock = thenBody._try();
 			tryBlock.body().add(previousMethodBody);
 		} else {
 			JInvocation superCall = codeModelHelper.getSuperCall(holder, method);
-			result = _thenBody.decl(refClass(Object.class), "result", JExpr._null());
-			tryBlock = _thenBody._try();
+			result = thenBody.decl(refClass(Object.class), "result", JExpr._null());
+			tryBlock = thenBody._try();
 			tryBlock.body().assign(result, superCall);
 			tryBlock.body()._return(JExpr.cast(boxify(method.type()), result));
 		}

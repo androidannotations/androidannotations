@@ -15,9 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import org.androidannotations.api.BackgroundExecutor;
-
-import java.lang.IllegalStateException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -32,19 +29,20 @@ import java.lang.annotation.Target;
  * <pre>
  * &#064;EBean
  * public class MyBean {
- *
+ * 
  * 	&#064;SupposeUiThread
  * 	boolean someMethodThatShouldBeCalledOnlyFromUiThread() {
- * 		//if this method will be called from a background thread an exception will be thrown
- *    }
+ * 		// if this method will be called from a background thread an exception
+ * 		// will be thrown
+ * 	}
  * }
  * </pre>
  *
  * </blockquote>
  *
- * @see BackgroundExecutor#setWrongThreadListener(BackgroundExecutor.WrongThreadListener)
- * @see BackgroundExecutor#DEFAULT_WRONG_THREAD_LISTENER
- * @see BackgroundExecutor#checkUiThread()
+ * @see org.androidannotations.api.BackgroundExecutor#setWrongThreadListener(org.androidannotations.api.BackgroundExecutor.WrongThreadListener)
+ * @see org.androidannotations.api.BackgroundExecutor#DEFAULT_WRONG_THREAD_LISTENER
+ * @see org.androidannotations.api.BackgroundExecutor#checkUiThread()
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

@@ -76,7 +76,7 @@ public class MySherlockActivityTest {
 
 		activity.onOptionsItemSelected(item);
 
-		assertThat(activity.menu_add).isTrue();
+		assertThat(activity.menuAdd).isTrue();
 	}
 
 }

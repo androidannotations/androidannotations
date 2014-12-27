@@ -15,18 +15,17 @@
  */
 package org.androidannotations.test15.sherlock;
 
-
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.test15.R;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.MenuItem;
+
 @EFragment
 @OptionsMenu(R.menu.my_menu)
 public class MySherlockFragment extends SherlockFragment {
-
 
 	@OptionsItem
 	void menuRefreshSelected() {
@@ -38,7 +37,9 @@ public class MySherlockFragment extends SherlockFragment {
 	}
 
 	@OptionsItem
+	// CHECKSTYLE:OFF
 	void menu_add(MenuItem item) {
+		// CHECKSTYLE:ON
 	}
-	
+
 }

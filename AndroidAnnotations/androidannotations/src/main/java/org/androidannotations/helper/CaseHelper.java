@@ -22,12 +22,15 @@ import java.util.regex.Pattern;
 
 public class CaseHelper {
 
-	private static final Pattern pattern = Pattern.compile("([A-Z]|[a-z])[a-z0-9]*");
+	private static final Pattern PATTERN = Pattern.compile("([A-Z]|[a-z])[a-z0-9]*");
+
+	private CaseHelper() {
+	}
 
 	public static String camelCaseToSnakeCase(String camelCase) {
 
 		List<String> tokens = new ArrayList<String>();
-		Matcher matcher = pattern.matcher(camelCase);
+		Matcher matcher = PATTERN.matcher(camelCase);
 		String acronym = "";
 		while (matcher.find()) {
 			String found = matcher.group();

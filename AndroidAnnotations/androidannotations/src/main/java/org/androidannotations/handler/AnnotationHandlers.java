@@ -100,7 +100,7 @@ public class AnnotationHandlers {
 		add(new FullscreenHandler(processingEnvironment));
 		add(new RestServiceHandler(processingEnvironment));
 		add(new OrmLiteDaoHandler(processingEnvironment));
-		add(new RootContextHanlder(processingEnvironment));
+		add(new RootContextHandler(processingEnvironment));
 		add(new NonConfigurationInstanceHandler(processingEnvironment));
 		add(new BeanHandler(processingEnvironment));
 		add(new ExtraHandler(processingEnvironment));

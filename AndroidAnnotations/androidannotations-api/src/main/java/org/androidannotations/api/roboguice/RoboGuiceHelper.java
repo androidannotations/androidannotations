@@ -24,6 +24,9 @@ import java.lang.reflect.Method;
  */
 public class RoboGuiceHelper {
 
+	private RoboGuiceHelper() {
+	}
+
 	public static void callInjectViews(Object activity) {
 		try {
 			Class<?> viewMembersInjectorClass = Class.forName("roboguice.inject.ViewListener$ViewMembersInjector");

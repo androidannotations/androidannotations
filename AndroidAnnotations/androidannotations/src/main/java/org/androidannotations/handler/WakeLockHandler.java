@@ -92,8 +92,8 @@ public class WakeLockHandler extends BaseAnnotationHandler<EComponentHolder> {
 		tryBlock.body().add(previousMethodBody);
 
 		JBlock finallyBlock = tryBlock._finally();
-		JConditional _if = finallyBlock._if(wakeLock.ne(JExpr._null()));
-		_if._then().add(wakeLock.invoke("release"));
+		JConditional ifStatement = finallyBlock._if(wakeLock.ne(JExpr._null()));
+		ifStatement._then().add(wakeLock.invoke("release"));
 	}
 
 	private String extractTag(Element element) {
