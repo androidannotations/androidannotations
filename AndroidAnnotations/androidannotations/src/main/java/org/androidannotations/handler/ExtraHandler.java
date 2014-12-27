@@ -105,7 +105,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		JExpression intent = invoke("getIntent");
 		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(extras, "containsKey").arg(extraKeyStaticField))._then();
 
-		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(elementClass, intent, extras, extraKeyStaticField, injectExtrasMethod);
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(elementClass, intent, extras, extraKeyStaticField, injectExtrasMethod, hasExtras);
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 
