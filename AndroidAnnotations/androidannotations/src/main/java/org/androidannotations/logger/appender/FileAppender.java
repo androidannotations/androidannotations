@@ -80,9 +80,7 @@ public class FileAppender extends Appender {
 	@Override
 	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
 		super.setProcessingEnv(processingEnv);
-		if (file == null) {
-			resolveLogFile();
-		}
+		resolveLogFile();
 	}
 
 	private void resolveLogFile() {
