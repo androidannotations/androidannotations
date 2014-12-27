@@ -29,7 +29,7 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void testGeneretedClassWithCopiedAnnotationsCompiles() {
+	public void testGeneratedClassWithCopiedAnnotationsCompiles() {
 		assertCompilationSuccessful(compileFiles(HasOtherAnnotations.class));
 	}
 
@@ -74,5 +74,14 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 				"    public String toString() {" };
 
 		assertGeneratedClassDoesNotContain(toGeneratedFile(HasOtherAnnotations.class), methodSignature);
+	}
+	
+	@Test
+	public void testInheritedAnnotationsNotCopied() {
+		compileFiles(HasOtherAnnotations.class);
+		
+		String[] annotation = { "@RunWith(Runner.class)" };
+		
+		assertGeneratedClassDoesNotContain(toGeneratedFile(HasOtherAnnotations.class), annotation);
 	}
 }

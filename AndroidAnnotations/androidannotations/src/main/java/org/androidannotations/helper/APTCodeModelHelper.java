@@ -21,6 +21,7 @@ import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
 
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -254,9 +255,11 @@ public class APTCodeModelHelper {
 
 	public void addNonAAAnotations(JAnnotatable annotatable, List<? extends AnnotationMirror> annotationMirrors, GeneratedClassHolder holder) {
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
-			JClass annotationClass = typeMirrorToJClass(annotationMirror.getAnnotationType(), holder);
-			if (!annotationClass.fullName().startsWith("org.androidannotations")) {
-				addAnnotation(annotatable, annotationMirror, holder);
+			if (annotationMirror.getAnnotationType().asElement().getAnnotation(Inherited.class) == null) {
+				JClass annotationClass = typeMirrorToJClass(annotationMirror.getAnnotationType(), holder);
+				if (!annotationClass.fullName().startsWith("org.androidannotations")) {
+					addAnnotation(annotatable, annotationMirror, holder);
+				}
 			}
 		}
 	}
