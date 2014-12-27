@@ -23,6 +23,7 @@
 	<module name="TreeWalker">
 		<property name="tabWidth" value="4" />
 		<module name="FileContentsHolder" />
+		<module name="SuppressWarningsHolder" />
 		<module name="AnnotationUseStyle" />
 		<module name="ClassTypeParameterName" />
 		<module name="ConstantName" />
@@ -135,4 +136,5 @@
 	</module>
 	<module name="FileLength" />
 	<module name="SuppressionCommentFilter" />
+	<module name="SuppressWarningsFilter" />
 </module>
