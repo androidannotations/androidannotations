@@ -24,13 +24,13 @@ import org.junit.Test;
 public class RClassFinderTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(RClassFinderTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void fails_if_cannot_find_R_class() {
+	public void failsIfCannotFindRClass() {
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
 		assertCompilationErrorCount(1, result);

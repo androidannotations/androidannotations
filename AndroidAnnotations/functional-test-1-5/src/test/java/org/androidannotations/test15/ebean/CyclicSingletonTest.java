@@ -26,7 +26,7 @@ import org.robolectric.RobolectricTestRunner;
 public class CyclicSingletonTest {
 
 	@Test
-	public void cyclic_singleton() {
+	public void cyclicSingleton() {
 		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
 		SomeCyclicSingletonA_ singletonA = SomeCyclicSingletonA_.getInstance_(context);
 		SomeCyclicSingletonB_ singletonB = SomeCyclicSingletonB_.getInstance_(context);

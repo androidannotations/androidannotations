@@ -25,31 +25,31 @@ import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class OrmLiteActivityTest {
-	
+
 	private OrmLiteActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(OrmLiteActivity_.class).create().get();
 	}
 
 	@Test
-	public void custom_dao_is_injected() {
+	public void customDaoIsInjected() {
 		assertThat((Object) activity.userDao).isNotNull();
 	}
 
 	@Test
-	public void dao_is_injected() {
+	public void daoIsInjected() {
 		assertThat((Object) activity.carDao).isNotNull();
 	}
 
 	@Test
-	public void bean_is_injected() {
+	public void beanIsInjected() {
 		assertThat((Object) activity.ormLiteBean).isNotNull();
 	}
 
 	@Test
-	public void dao_in_bean_is_injected() {
+	public void daoInBeanIsInjected() {
 		assertThat((Object) activity.ormLiteBean.userDao).isNotNull();
 	}
 }

@@ -32,7 +32,7 @@ public class ClicksHandledActivityTest {
 	private ClicksHandledActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(ClicksHandledActivity_.class).create().get();
 	}
 

@@ -35,7 +35,7 @@ public class ActivityWithReceiverTest {
 	private ActivityWithReceiver_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(ActivityWithReceiver_.class).create().start().resume().get();
 	}
 

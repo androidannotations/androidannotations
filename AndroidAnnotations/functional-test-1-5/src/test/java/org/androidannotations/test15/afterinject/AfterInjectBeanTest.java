@@ -27,20 +27,20 @@ import android.app.Activity;
 
 @RunWith(RobolectricTestRunner.class)
 public class AfterInjectBeanTest {
-	
+
 	AfterInjectBean bean;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		Activity activity = Robolectric.buildActivity(Activity.class).create().get();
 		bean = AfterInjectBean_.getInstance_(activity);
 	}
-	
+
 	@Test
 	public void afterInjectIsCalled() {
 		assertThat(bean.afterInjectCalled).isTrue();
 	}
-	
+
 	@Test
 	public void injectionDoneWhenAfterInjectCalled() {
 		assertThat(bean.notificationManagerNullAfterInject).isFalse();

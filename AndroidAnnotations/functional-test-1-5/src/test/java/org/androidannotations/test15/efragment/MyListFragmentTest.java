@@ -45,13 +45,13 @@ public class MyListFragmentTest {
 	FragmentManager fragmentManager;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		myListFragment = new MyListFragment_();
 		startFragment(myListFragment);
 	}
 
 	@Test
-	public void is_item_click_available_from_list_fragment() {
+	public void isItemClickAvailableFromListFragment() {
 		ListView listView = (ListView) myListFragment.findViewById(android.R.id.list);
 		long itemId = listView.getAdapter().getItemId(TESTED_CLICKED_INDEX);
 		View view = listView.getChildAt(TESTED_CLICKED_INDEX);
@@ -62,21 +62,21 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void not_ignored_method_is_called() {
+	public void notIgnoredMethodIsCalled() {
 		assertFalse(myListFragment.didExecute);
 		myListFragment.notIgnored();
 		assertTrue(myListFragment.didExecute);
 	}
 
 	@Test
-	public void uithread_method_is_called() {
+	public void uithreadMethodIsCalled() {
 		assertFalse(myListFragment.didExecute);
 		myListFragment.uiThread();
 		assertTrue(myListFragment.didExecute);
 	}
 
 	@Test
-	public void background_method_is_called() {
+	public void backgroundMethodIsCalled() {
 		assertFalse(myListFragment.didExecute);
 		runBackgroundsOnSameThread();
 		myListFragment.backgroundThread();
@@ -84,7 +84,7 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void ignored_when_detached_works_for_uithread_method() {
+	public void ignoredWhenDetachedWorksForUithreadMethod() {
 		popBackStack();
 
 		assertFalse(myListFragment.didExecute);
@@ -93,7 +93,7 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void ignored_when_detached_works_for_background_method() {
+	public void ignoredWhenDetachedWorksForBackgroundMethod() {
 		popBackStack();
 
 		assertFalse(myListFragment.didExecute);
@@ -103,7 +103,7 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void ignored_when_detached_works_for_ignored_method() {
+	public void ignoredWhenDetachedWorksForIgnoredMethod() {
 		popBackStack();
 
 		assertFalse(myListFragment.didExecute);
@@ -112,7 +112,7 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void layout_not_injected_without_force() {
+	public void layoutNotInjectedWithoutForce() {
 		View buttonInInjectedLayout = myListFragment.getView().findViewById(R.id.conventionButton);
 
 		assertThat(buttonInInjectedLayout).isNull();

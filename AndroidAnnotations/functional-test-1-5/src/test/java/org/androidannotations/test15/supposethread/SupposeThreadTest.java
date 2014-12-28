@@ -23,8 +23,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.test15.EmptyActivityWithoutLayout;
-import org.androidannotations.test15.ebean.BeanInjectedActivity;
-import org.androidannotations.test15.ebean.BeanInjectedActivity_;
 import org.androidannotations.test15.ebean.ThreadControlledBean;
 import org.androidannotations.test15.ebean.ThreadControlledBean_;
 import org.junit.Assert;

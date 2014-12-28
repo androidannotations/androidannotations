@@ -57,7 +57,7 @@ public class ThreadActivityTest {
 	private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(ThreadActivity_.class).create().get();
 		defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 	}
@@ -342,7 +342,7 @@ public class ThreadActivityTest {
 	}
 
 	@Test
-	public void assertHandlerWithMainThread() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void assertHandlerWithMainThread() throws Exception {
 		/*
 		 * For this test we need to recreate the activity in a separate thread,
 		 * in order to check the handler is well associated to the main thread.

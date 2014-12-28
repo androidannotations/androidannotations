@@ -17,7 +17,9 @@ package org.androidannotations.rest;
 
 import org.androidannotations.annotations.rest.Rest;
 
+// CHECKSTYLE:OFF
 @Rest(converters = {})
+// CHECKSTYLE:ON
 public interface ClientWithNoConverters {
 
 }

@@ -34,7 +34,7 @@ public class MySherlockActivityTest {
 	private MySherlockActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(MySherlockActivity_.class).create().get();
 	}
 

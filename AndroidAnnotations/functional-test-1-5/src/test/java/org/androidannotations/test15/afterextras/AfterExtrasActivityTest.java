@@ -33,7 +33,7 @@ public class AfterExtrasActivityTest {
 	Intent intent;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activityController = ActivityController.of(AfterExtrasActivity_.class);
 		activity = activityController.get();
 
@@ -41,7 +41,7 @@ public class AfterExtrasActivityTest {
 	}
 
 	@Test
-	public void afterExtra_called_activity_after_setIntent() {
+	public void afterExtraCalledActivityAfterSetIntent() {
 		activityController.create();
 		assertThat(activity.extraDataSet).isFalse();
 		assertThat(activity.afterExtrasCalled).isFalse();
@@ -52,7 +52,7 @@ public class AfterExtrasActivityTest {
 	}
 
 	@Test
-	public void afterExtra_called_activity_in_onCreate() throws Exception {
+	public void afterExtraCalledActivityInOnCreate() throws Exception {
 		assertThat(activity.extraDataSet).isFalse();
 		assertThat(activity.afterExtrasCalled).isFalse();
 

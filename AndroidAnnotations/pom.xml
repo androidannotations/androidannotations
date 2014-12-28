@@ -271,6 +271,7 @@
 						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
 						<consoleOutput>true</consoleOutput>
 						<linkXRef>false</linkXRef>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
 					</configuration>
 				</plugin>
 			</plugins>

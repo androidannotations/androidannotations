@@ -25,37 +25,37 @@ import org.junit.Test;
 public class RestConverterTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(RestConverterTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void client_with_no_converters_compiles() {
+	public void clientWithNoConvertersCompiles() {
 		CompileResult result = compileFiles(ClientWithNoConverters.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void client_with_valid_converter_compiles() {
+	public void clientWithValidConverterCompiles() {
 		CompileResult result = compileFiles(ClientWithValidConverter.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void client_with_abstract_converter_does_not_compile() throws IOException {
+	public void clientWithAbstractConverterDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithAbstractConverter.class);
 		assertCompilationErrorOn(ClientWithAbstractConverter.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_non_converter_does_not_compile() throws IOException {
+	public void clientWithNonConverterDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithNonConverter.class);
 		assertCompilationErrorOn(ClientWithNonConverter.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_wrong_constructor_converter_does_not_compile() throws IOException {
+	public void clientWithWrongConstructorConverterDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithWrongConstructorConverter.class);
 		assertCompilationErrorOn(ClientWithWrongConstructorConverter.class, "@Rest", result);
 	}

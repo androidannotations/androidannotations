@@ -30,7 +30,7 @@ public class LongClicksHandledActivityTest {
 	private LongClicksHandledActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(LongClicksHandledActivity_.class).create().get();
 	}
 

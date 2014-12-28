@@ -25,23 +25,23 @@ import org.robolectric.util.ActivityController;
 
 @RunWith(RobolectricTestRunner.class)
 public class AfterInjectActivityTest {
-	
+
 	AfterInjectActivity_ activity;
 	ActivityController<AfterInjectActivity_> activityController;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activityController = ActivityController.of(AfterInjectActivity_.class);
 		activity = activityController.get();
 	}
-	
+
 	@Test
 	public void afterInjectIsCalledInOnCreate() {
 		assertThat(activity.afterInjectCalled).isFalse();
 		activityController.create();
 		assertThat(activity.afterInjectCalled).isTrue();
 	}
-	
+
 	@Test
 	public void injectionDoneWhenAfterInjectCalled() {
 		activityController.create();

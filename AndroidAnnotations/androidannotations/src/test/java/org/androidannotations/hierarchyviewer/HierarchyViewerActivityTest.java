@@ -25,27 +25,27 @@ import org.junit.Test;
 public class HierarchyViewerActivityTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(HierarchyViewerActivityTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void hierarchy_viewer_activity_compiles() {
+	public void hierarchyViewerActivityCompiles() {
 		addManifestProcessorParameter(HierarchyViewerActivityTest.class, "AndroidManifest.xml");
 		CompileResult result = compileFiles(HierarchyViewerActivity.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void hierarchy_viewer_activity_with_no_debbugable_does_not_compile() throws IOException {
+	public void hierarchyViewerActivityWithNoDebbugableDoesNotCompile() throws IOException {
 		addManifestProcessorParameter(HierarchyViewerActivityTest.class, "NoDebbugableManifest.xml");
 		CompileResult result = compileFiles(HierarchyViewerActivity.class);
 		assertCompilationErrorOn(HierarchyViewerActivity.class, "@HierarchyViewerSupport", result);
 	}
 
 	@Test
-	public void hierarchy_viewer_activity_with_no_internet_permission_does_not_compile() throws IOException {
+	public void hierarchyViewerActivityWithNoInternetPermissionDoesNotCompile() throws IOException {
 		addManifestProcessorParameter(HierarchyViewerActivityTest.class, "NoInternetPermissionManifest.xml");
 		CompileResult result = compileFiles(HierarchyViewerActivity.class);
 		assertCompilationErrorOn(HierarchyViewerActivity.class, "@HierarchyViewerSupport", result);

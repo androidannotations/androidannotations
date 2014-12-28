@@ -29,27 +29,27 @@ public class MySupportFragmentActivityTest {
 	private MySupportFragmentActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(MySupportFragmentActivity_.class).create().get();
 	}
 
 	@Test
-	public void can_inject_support_fragment_with_default_id() {
+	public void canInjectSupportFragmentWithDefaultId() {
 		assertThat(activity.mySupportFragment).isNotNull();
 	}
 
 	@Test
-	public void can_inject_support_fragment_with_id() {
+	public void canInjectSupportFragmentWithId() {
 		assertThat(activity.mySupportFragment2).isNotNull();
 	}
 
 	@Test
-	public void can_inject_support_fragment_with_default_tag() {
+	public void canInjectSupportFragmentWithDefaultTag() {
 		assertThat(activity.mySupportFragmentTag).isNotNull();
 	}
 
 	@Test
-	public void can_inject_support_fragment_with_tag() {
+	public void canInjectSupportFragmentWithTag() {
 		assertThat(activity.mySupportFragmentTag2).isNotNull();
 	}
 

@@ -25,19 +25,19 @@ import org.junit.Test;
 public class OptionMenuErrorsTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(OptionMenuErrorsTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void android_menuitem_in_sherlock_activity() throws IOException {
+	public void androidMenuitemInSherlockActivity() throws IOException {
 		CompileResult result = compileFiles(SherlockActivityWithAndroidMenu.class);
 		assertCompilationErrorOn(SherlockActivityWithAndroidMenu.class, "@OptionsMenuItem", result);
 	}
 
 	@Test
-	public void sherlock_menuitem_in_android_activity() throws IOException {
+	public void sherlockMenuitemInAndroidActivity() throws IOException {
 		CompileResult result = compileFiles(ActivityWithSherlockMenu.class);
 		assertCompilationErrorOn(ActivityWithSherlockMenu.class, "@OptionsMenuItem", result);
 	}

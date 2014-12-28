@@ -30,7 +30,7 @@ public class ViewsInjectedActivityTest {
 	private ViewsInjectedActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(ViewsInjectedActivity_.class).create().get();
 	}
 
