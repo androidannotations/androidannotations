@@ -36,6 +36,10 @@ public class LoggerContext {
 	private Level currentLevel = DEFAULT_LEVEL;
 	private List<Appender> appenders = new ArrayList<Appender>();
 
+	private LoggerContext() {
+		
+	}
+	
 	public static LoggerContext getInstance() {
 		if (instance == null) {
 			synchronized (LoggerContext.class) {
