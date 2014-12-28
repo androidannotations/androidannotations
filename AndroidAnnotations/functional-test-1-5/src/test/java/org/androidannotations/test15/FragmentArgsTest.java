@@ -17,7 +17,6 @@ package org.androidannotations.test15;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-import org.androidannotations.test15.instancestate.SaveInstanceStateActivityParameterizedTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -33,8 +32,8 @@ public class FragmentArgsTest {
 	 * This test verifies the Fragment argument gets injected. It does not check
 	 * for different types, because we use the same code for every
 	 * Bundle-related operation and types are already tested in
-	 * {@link SaveInstanceStateActivityParameterizedTest}.
-	 *
+	 * {@link org.androidannotations.test15.instancestate.SaveInstanceStateActivityParameterizedTest
+	 * SaveInstanceStateActivityParameterizedTest} .
 	 */
 	@Test
 	public void testFragmentArgInjected() {

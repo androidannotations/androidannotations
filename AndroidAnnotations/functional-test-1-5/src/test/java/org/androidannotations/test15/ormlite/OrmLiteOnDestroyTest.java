@@ -37,7 +37,7 @@ public class OrmLiteOnDestroyTest {
 	private Invoker<Integer> instanceCountInvoker;
 
 	@Before
-	public void setup() throws NoSuchFieldException, IllegalAccessException {
+	public void setUp() throws NoSuchFieldException, IllegalAccessException {
 		staticField("helper").ofType(OrmLiteSqliteOpenHelper.class).in(OpenHelperManager.class).set(null);
 		staticField("helperClass").ofType(Class.class).in(OpenHelperManager.class).set(null);
 		staticField("wasClosed").ofType(boolean.class).in(OpenHelperManager.class).set(false);
@@ -49,11 +49,11 @@ public class OrmLiteOnDestroyTest {
 	}
 
 	@Test
-	public void helper_is_destroyed() throws Exception {
+	public void helperIsDestroyed() throws Exception {
 		controller.destroy();
 
-		Object databaseHelper_ = field("databaseHelper_").ofType(OrmLiteSqliteOpenHelper.class).in(controller.get()).get();
-		assertThat(databaseHelper_).isNull();
+		Object databaseHelper = field("databaseHelper_").ofType(OrmLiteSqliteOpenHelper.class).in(controller.get()).get();
+		assertThat(databaseHelper).isNull();
 		assertThat(instanceCountInvoker.get()).isEqualTo(0);
 	}
 }

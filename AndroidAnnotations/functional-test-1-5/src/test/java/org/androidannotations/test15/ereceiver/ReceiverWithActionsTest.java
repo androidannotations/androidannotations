@@ -34,7 +34,7 @@ public class ReceiverWithActionsTest {
 	private ReceiverWithActions receiver;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		receiver = new ReceiverWithActions_();
 	}
 

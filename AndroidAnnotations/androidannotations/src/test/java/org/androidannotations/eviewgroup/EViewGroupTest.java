@@ -22,13 +22,13 @@ import org.junit.Test;
 
 public class EViewGroupTest extends AAProcessorTestHelper {
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(EViewGroupTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void view_group_with_generic_compiles() {
+	public void viewGroupWithGenericCompiles() {
 		assertCompilationSuccessful(compileFiles(
 				SomeGenericViewGroup.class,
 				SomeGenericViewGroupExt.class));

@@ -29,27 +29,27 @@ public class MyFragmentActivityTest {
 	private MyFragmentActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(MyFragmentActivity_.class).create().get();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_default_id() {
+	public void canInjectNativeFragmentWithDefaultId() {
 		assertThat(activity.myFragment).isNotNull();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_id() {
+	public void canInjectNativeFragmentWithId() {
 		assertThat(activity.myFragment2).isNotNull();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_with_default_tag() {
+	public void canInjectNativeFragmentWithWithDefaultTag() {
 		assertThat(activity.myFragmentTag).isNotNull();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_with_tag() {
+	public void canInjectNativeFragmentWithWithTag() {
 		assertThat(activity.myFragmentTag2).isNotNull();
 	}
 

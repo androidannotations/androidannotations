@@ -25,20 +25,20 @@ import org.junit.Test;
 public class OnBackPressedApiDependenciesTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(OnBackPressedApiDependenciesTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 		ensureOutputDirectoryIsEmpty();
 	}
 
 	@Test
-	public void activity_with_on_back_pressed_generate_api_dependency() throws IOException {
+	public void activityWithOnBackPressedGeneratesApiDependency() throws IOException {
 		CompileResult result = compileFiles(ActivityWithOnBackPressedMethod.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void activity_without_on_back_pressed_do_not_generate_api_dependency() throws IOException {
+	public void activityWithoutOnBackPressedDoesNotGenerateApiDependency() throws IOException {
 		CompileResult result = compileFiles(ActivityWithBackgroundMethod.class);
 		assertCompilationSuccessful(result);
 	}

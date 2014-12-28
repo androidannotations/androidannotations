@@ -38,7 +38,7 @@ public class WakeLockActivityTest {
 	private WakeLockActivity activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.setupActivity(WakeLockActivity_.class);
 	}
 

@@ -34,7 +34,7 @@ public class TouchesHandledActivityTest {
 	private MotionEvent mockedEvent;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(TouchesHandledActivity_.class).create().get();
 
 		mockedEvent = MotionEvent.obtain(0, 0, 0, 0f, 0f, 0);

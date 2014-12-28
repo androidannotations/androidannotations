@@ -32,7 +32,7 @@ public class FromHtmlActivityTest {
 	private FromHtmlActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(FromHtmlActivity_.class).create().get();
 	}
 

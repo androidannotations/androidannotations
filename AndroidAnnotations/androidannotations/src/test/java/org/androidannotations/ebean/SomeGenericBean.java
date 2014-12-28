@@ -24,20 +24,19 @@ import org.androidannotations.annotations.UiThread;
 @EBean
 public class SomeGenericBean<T> {
 
-    @Background
-	void someMethod(List<? super T> list){
+	@Background
+	void someMethod(List<? super T> list) {
 	}
 
-    void someOtherMethod(List<? super T> list){
-    }
+	void someOtherMethod(List<? super T> list) {
+	}
 
-    @Background
-    <N extends T> void someParameterizedMethod(List<? super N> lst, List<? extends N> lst2) {
-    }
+	@Background
+	<N extends T> void someParameterizedMethod(List<? super N> lst, List<? extends N> lst2) {
+	}
 
-    @UiThread
-    <T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
-    }
-
+	@UiThread
+	<T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
+	}
 
 }

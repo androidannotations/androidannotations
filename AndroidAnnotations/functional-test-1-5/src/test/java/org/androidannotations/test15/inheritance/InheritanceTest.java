@@ -31,13 +31,13 @@ import android.content.Context;
 public class InheritanceTest {
 
 	@Test
-	public void after_inject_mother_calls_first() {
+	public void afterInjectMotherCallsFirst() {
 		Child child = Child_.getInstance_(mock(Context.class));
 		assertThat(child.motherInitWasCalled).isTrue();
 	}
-	
+
 	@Test
-	public void after_views_mother_calls_first() {
+	public void afterViewsMotherCallsFirst() {
 		OnViewChangedNotifier notifier = new OnViewChangedNotifier();
 		OnViewChangedNotifier.replaceNotifier(notifier);
 		Child_ child = Child_.getInstance_(mock(Activity.class));

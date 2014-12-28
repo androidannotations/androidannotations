@@ -31,26 +31,26 @@ import com.google.common.io.ByteStreams;
 public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void fails_if_no_manifest() {
+	public void failsIfNoManifest() {
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
 		assertCompilationErrorCount(1, result);
 	}
 
 	@Test
-	public void finds_specified_manifest() {
+	public void findsSpecifiedManifest() {
 		addManifestProcessorParameter(AndroidManifestFinderTest.class);
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void fails_if_cannot_find_specified_manifest() {
+	public void failsIfCannotFindSpecifiedManifest() {
 		addProcessorParameter("androidManifestFile", "/some/random/path/AndroidManifest.xml");
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
@@ -58,7 +58,7 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void finds_manifest_in_generated_source_parent_folder() throws Exception {
+	public void findsManifestInGeneratedSourceParentFolder() throws Exception {
 		copyManifestToParentOfOutputDirectory();
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationSuccessful(result);
@@ -66,7 +66,7 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void fails_if_cannot_parse_manifest() {
+	public void failsIfCannotParseManifest() {
 		addManifestProcessorParameter(AndroidManifestFinderTest.class, "ParseErrorManifest.xml");
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);

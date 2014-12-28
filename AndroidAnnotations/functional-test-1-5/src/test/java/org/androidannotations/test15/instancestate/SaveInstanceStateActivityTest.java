@@ -26,12 +26,12 @@ import android.os.Bundle;
 public class SaveInstanceStateActivityTest {
 
 	@Test
-	public void can_create_with_empty_bundle() {
+	public void canCreateWithEmptyBundle() {
 		Robolectric.buildActivity(SaveInstanceStateActivity_.class).create(new Bundle());
 	}
 
 	@Test
-	public void can_create_without_saved_state() {
+	public void canCreateWithoutSavedState() {
 		Robolectric.buildActivity(SaveInstanceStateActivity_.class).create();
 	}
 

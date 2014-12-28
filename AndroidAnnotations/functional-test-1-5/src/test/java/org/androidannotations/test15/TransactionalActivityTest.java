@@ -38,7 +38,7 @@ public class TransactionalActivityTest {
 	private TransactionalActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(TransactionalActivity_.class).create().get();
 		mockDb = mock(SQLiteDatabase.class);
 	}

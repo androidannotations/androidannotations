@@ -34,7 +34,7 @@ public class OptionsMenuActivityTest {
 	private OptionsMenuActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(OptionsMenuActivity_.class).create().get();
 	}
 
