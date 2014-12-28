@@ -15,8 +15,6 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr.TRUE;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr._super;
@@ -84,7 +82,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JVar onCreateOptionsMenuMenuParam;
 	private JVar onOptionsItemSelectedItem;
 	private JVar onOptionsItemSelectedItemId;
-	private JBlock onOptionsItemSelectedIfElseBlock;
+	private JBlock onOptionsItemSelectedMiddleBlock;
 	private NonConfigurationHolder nonConfigurationHolder;
 	private JBlock initIfNonConfigurationNotNullBlock;
 	private JVar initNonConfigurationInstance;
@@ -273,11 +271,10 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JBlock methodBody = method.body();
 		onOptionsItemSelectedItem = method.param(menuItemClass, "item");
-		JVar handled = methodBody.decl(codeModel().BOOLEAN, "handled", invoke(_super(), method).arg(onOptionsItemSelectedItem));
-		methodBody._if(handled)._then()._return(TRUE);
 		onOptionsItemSelectedItemId = methodBody.decl(codeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
-		onOptionsItemSelectedIfElseBlock = methodBody.block();
-		methodBody._return(FALSE);
+		onOptionsItemSelectedMiddleBlock = methodBody.block();
+
+		methodBody._return(invoke(_super(), method).arg(onOptionsItemSelectedItem));
 	}
 
 	private boolean usesActionBarSherlock() {
@@ -563,11 +560,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JBlock getOnOptionsItemSelectedIfElseBlock() {
-		if (onOptionsItemSelectedIfElseBlock == null) {
+	public JBlock getOnOptionsItemSelectedMiddleBlock() {
+		if (onOptionsItemSelectedMiddleBlock == null) {
 			setOnOptionsItemSelected();
 		}
-		return onOptionsItemSelectedIfElseBlock;
+		return onOptionsItemSelectedMiddleBlock;
 	}
 
 	public NonConfigurationHolder getNonConfigurationHolder() throws JClassAlreadyExistsException {
@@ -769,4 +766,5 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 		return databaseHelperRef;
 	}
+
 }
