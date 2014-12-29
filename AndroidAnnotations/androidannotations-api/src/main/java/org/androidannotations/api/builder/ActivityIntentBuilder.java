@@ -15,11 +15,13 @@
  */
 package org.androidannotations.api.builder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
-public abstract class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> extends IntentBuilder<I> {
+public abstract class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> extends IntentBuilder<I> implements ActivityStarter {
+
+	protected Bundle lastOptions;
 
 	public ActivityIntentBuilder(Context context, Class<?> clazz) {
 		super(context, clazz);
@@ -29,15 +31,16 @@ public abstract class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> 
 		super(context, intent);
 	}
 
-	public void start() {
-		context.startActivity(intent);
+	@Override
+	public final void start() {
+		startForResult(-1);
 	}
 
-	public void startForResult(int requestCode) {
-		if (context instanceof Activity) {
-			((Activity) context).startActivityForResult(intent, requestCode);
-		} else {
-			context.startActivity(intent);
-		}
+	@Override
+	public abstract void startForResult(int requestCode);
+
+	public ActivityStarter withOptions(Bundle options) {
+		lastOptions = options;
+		return this;
 	}
 }
