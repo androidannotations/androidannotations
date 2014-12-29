@@ -36,7 +36,14 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 	@Test
 	public void activityIntentFragmentMinSdkFroyoCompilesWithFroyo() {
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
-		CompileResult result = compileFiles(ActivityInManifest.class);
+		// we need android.os.Build in the classpath
+		CompileResult result = compileFiles(ActivityInManifest.class /*
+		 * ,toPath(
+		 * ActivityIntentFragmentTest
+		 * .class,
+		 * "Build.java"
+		 * )
+		 */);
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
@@ -68,9 +75,25 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 	@Test
 	public void activityIntentFragmentCompilesWithSupport() {
 		// To simulate android support v4 in classpath, we add
-		// android.support.v4.Fragment in classpath
+		// android.support.v4.Fragment and android.support.v4.app.ActivityCompat
+		// in classpath
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
-		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), ActivityInManifest.class);
+		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), //
+				toPath(ActivityIntentFragmentTest.class, "support/ActivityCompat.java"), ActivityInManifest.class);
+		File generatedFile = toGeneratedFile(ActivityInManifest.class);
+
+		assertCompilationSuccessful(result);
+		assertGeneratedClassMatches(generatedFile, INTENT_FRAGMENT_SUPPORT_SIGNATURE);
+	}
+
+	@Test
+	public void activityIntentFragmentCompilesWithSupportContainingBundleOptions() {
+		// To simulate android support v4 in classpath, we add
+		// android.support.v4.Fragment and android.support.v4.app.ActivityCompat
+		// in classpath
+		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
+		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), //
+				toPath(ActivityIntentFragmentTest.class, "ActivityCompat.java"), ActivityInManifest.class);
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
