@@ -15,31 +15,39 @@
  */
 package org.androidannotations.test15.receiver;
 
-import android.app.Fragment;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver;
+
+import android.app.Fragment;
 
 @EFragment
 public class FragmentWithReceiver extends Fragment {
 
-	@Receiver(actions = "org.androidannotations.ACTION_1")
+	public static final String RECEIVER_ACTION = "org.androidannotations.ACTION_1";
+
+	public boolean defaultReceiverCalled;
+	public boolean onAttachReceiverCalled;
+	public boolean onStartReceiverCalled;
+	public boolean onResumeReceiverCalled;
+
+	@Receiver(actions = RECEIVER_ACTION)
 	protected void onActionOnCreate() {
-
+		defaultReceiverCalled = true;
 	}
 
-	@Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnAttachOnDetach)
+	@Receiver(actions = RECEIVER_ACTION, registerAt = Receiver.RegisterAt.OnAttachOnDetach)
 	protected void onActionOnAttach() {
-
+		onAttachReceiverCalled = true;
 	}
 
-	@Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnStartOnStop)
+	@Receiver(actions = RECEIVER_ACTION, registerAt = Receiver.RegisterAt.OnStartOnStop)
 	protected void onActionOnStart() {
-
+		onStartReceiverCalled = true;
 	}
 
-	@Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnResumeOnPause, local = true)
+	@Receiver(actions = RECEIVER_ACTION, registerAt = Receiver.RegisterAt.OnResumeOnPause, local = true)
 	protected void onActionOnResume() {
-
+		onResumeReceiverCalled = true;
 	}
 
 }
