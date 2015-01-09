@@ -17,24 +17,19 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class BooleanPrefField extends AbstractPrefField {
+public final class BooleanPrefField extends AbstractPrefField<Boolean> {
 
-	private final boolean defaultValue;
-
-	BooleanPrefField(SharedPreferences sharedPreferences, String key, boolean defaultValue) {
-		super(sharedPreferences, key);
-		this.defaultValue = defaultValue;
+	BooleanPrefField(SharedPreferences sharedPreferences, String key, Boolean defaultValue) {
+		super(sharedPreferences, key, defaultValue);
 	}
 
-	public boolean get() {
-		return getOr(defaultValue);
-	}
-
-	public boolean getOr(boolean defaultValue) {
+	@Override
+	public Boolean getOr(Boolean defaultValue) {
 		return sharedPreferences.getBoolean(key, defaultValue);
 	}
 
-	public void put(boolean value) {
+	@Override
+	protected void putInternal(Boolean value) {
 		apply(edit().putBoolean(key, value));
 	}
 

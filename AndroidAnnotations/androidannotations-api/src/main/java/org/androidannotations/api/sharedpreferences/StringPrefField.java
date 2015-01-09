@@ -17,24 +17,20 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class StringPrefField extends AbstractPrefField {
-
-	private final String defaultValue;
+public final class StringPrefField extends AbstractPrefField<String> {
 
 	StringPrefField(SharedPreferences sharedPreferences, String key, String defaultValue) {
-		super(sharedPreferences, key);
-		this.defaultValue = defaultValue;
+		super(sharedPreferences, key, defaultValue);
 	}
 
-	public String get() {
-		return getOr(defaultValue);
-	}
-
+	@Override
 	public String getOr(String defaultValue) {
 		return sharedPreferences.getString(key, defaultValue);
 	}
 
-	public void put(String value) {
+	@Override
+	protected void putInternal(String value) {
 		apply(edit().putString(key, value));
 	}
+
 }
