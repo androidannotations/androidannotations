@@ -15,8 +15,7 @@
  */
 package org.androidannotations.logger;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LoggerTest {
