@@ -79,12 +79,12 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 
 	private static final class DefaultPrefInfo<T> {
 		final Class<? extends Annotation> annotationClass;
-		final Class<? extends AbstractPrefField> prefFieldClass;
+		final Class<? extends AbstractPrefField<?>> prefFieldClass;
 		final IRClass.Res resType;
 		final T defaultValue;
 		final String fieldHelperMethodName;
 
-		DefaultPrefInfo(Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField> prefFieldClass, Res resType, T defaultValue, String fieldHelperMethodName) {
+		DefaultPrefInfo(Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass, Res resType, T defaultValue, String fieldHelperMethodName) {
 			this.annotationClass = annotationClass;
 			this.prefFieldClass = prefFieldClass;
 			this.resType = resType;
@@ -256,7 +256,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		return createFieldMethod(holder, method, info.annotationClass, info.prefFieldClass, info.defaultValue, info.resType, info.fieldHelperMethodName);
 	}
 
-	private JExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField> prefFieldClass, Object defaultValue, Res resType, String fieldHelperMethodName) {
+	private JExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass, Object defaultValue, Res resType, String fieldHelperMethodName) {
 		Annotation annotation = method.getAnnotation(annotationClass);
 		JExpression defaultValueExpr;
 
