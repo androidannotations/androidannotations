@@ -64,7 +64,7 @@ public class InstanceStateHolder implements HasInstanceState {
 	private void setSaveStateMethod() {
 		JMethod method = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onSaveInstanceState");
 		method.annotate(Override.class);
-		saveStateBundleParam = method.param(classes().BUNDLE, "bundle");
+		saveStateBundleParam = method.param(classes().BUNDLE, "bundle_");
 
 		saveStateMethodBody = method.body();
 

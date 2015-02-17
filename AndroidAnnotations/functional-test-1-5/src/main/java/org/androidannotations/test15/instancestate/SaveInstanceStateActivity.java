@@ -177,4 +177,7 @@ public class SaveInstanceStateActivity extends Activity {
 	@InstanceState
 	ArrayList<MySerializableBean> mySerializableBeanArrayList;
 
+	@InstanceState
+	Bundle bundle;
+
 }

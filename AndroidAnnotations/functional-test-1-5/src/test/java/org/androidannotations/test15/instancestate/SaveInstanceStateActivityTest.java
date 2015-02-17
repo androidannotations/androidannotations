@@ -35,4 +35,8 @@ public class SaveInstanceStateActivityTest {
 		Robolectric.buildActivity(SaveInstanceStateActivity_.class).create();
 	}
 
+	@Test
+	public void bundleFieldWithBundleNameDoesNotCauseStackoverflow() {
+		Robolectric.buildActivity(SaveInstanceStateActivity_.class).saveInstanceState(new Bundle());
+	}
 }
