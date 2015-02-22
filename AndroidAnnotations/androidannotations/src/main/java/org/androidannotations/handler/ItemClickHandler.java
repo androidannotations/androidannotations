@@ -58,12 +58,12 @@ public class ItemClickHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.inorder().extendsType(CanonicalNameConstants.ADAPTER_VIEW).optional() //
-		.anyType().optional() //
-		.extendsType(CanonicalNameConstants.VIEW).optional() //
-		.type(int.class.getName()).optional() //
-		.type(long.class.getName()).optional() //
-		.validate(executableElement, valid);
+		validatorHelper.param.inOrder().extendsType(CanonicalNameConstants.ADAPTER_VIEW).optional() //
+				.anyType().optional() //
+				.extendsType(CanonicalNameConstants.VIEW).optional() //
+				.type(int.class.getName()).optional() //
+				.type(long.class.getName()).optional() //
+				.validate(executableElement, valid);
 	}
 
 	@Override

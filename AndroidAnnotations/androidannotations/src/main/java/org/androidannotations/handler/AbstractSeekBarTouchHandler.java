@@ -67,7 +67,7 @@ public abstract class AbstractSeekBarTouchHandler extends BaseAnnotationHandler<
 
 		validatorHelper.hasSeekBarTouchTrackingMethodParameters((ExecutableElement) element, valid);
 
-		validatorHelper.param.oneparam().type(CanonicalNameConstants.SEEKBAR).optional().validate((ExecutableElement) element, valid);
+		validatorHelper.param.type(CanonicalNameConstants.SEEKBAR).optional().validate((ExecutableElement) element, valid);
 	}
 
 	@Override

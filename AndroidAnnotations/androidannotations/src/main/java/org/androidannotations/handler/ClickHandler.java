@@ -51,7 +51,7 @@ public class ClickHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.oneparam().extendsType(CanonicalNameConstants.VIEW).optional().validate(executableElement, valid);
+		validatorHelper.param.extendsType(CanonicalNameConstants.VIEW).optional().validate(executableElement, valid);
 	}
 
 	@Override
