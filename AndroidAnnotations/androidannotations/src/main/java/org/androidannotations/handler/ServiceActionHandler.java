@@ -29,6 +29,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.api.builder.IntentServiceStarter;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
@@ -125,7 +126,7 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 	}
 
 	private void addActionToIntentBuilder(EIntentServiceHolder holder, ExecutableElement executableElement, String methodName, JFieldVar actionKeyField) {
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), methodName);
+		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.refClass(IntentServiceStarter.class), methodName);
 		JBlock body = method.body();
 
 		// setAction
