@@ -46,6 +46,8 @@ public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceH
 		validatorHelper.isNotFinal(element, valid);
 
 		validatorHelper.componentRegistered(element, androidManifest, valid);
+
+		validatorHelper.isAbstractOrHasEmptyConstructor(element, valid);
 	}
 
 	@Override
