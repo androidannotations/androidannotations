@@ -17,6 +17,7 @@ package org.androidannotations.handler;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -49,7 +50,15 @@ public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHo
 	}
 
 	private boolean isInnerClass(Element element) {
+		if (!isClassOrInterface(element)) {
+			return false;
+		}
+
 		TypeElement typeElement = (TypeElement) element;
 		return typeElement.getNestingKind().isNested();
+	}
+
+	private boolean isClassOrInterface(Element element) {
+		return element.getKind() == ElementKind.INTERFACE || element.getKind() == ElementKind.CLASS;
 	}
 }
