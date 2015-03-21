@@ -19,7 +19,7 @@ package org.androidannotations.helper;
  * I'd love to use Guava's Optional, but we're trying to keep the dependency
  * level to a minimum.
  */
-public class Option<T> {
+public final class Option<T> {
 
 	private static final Option<?> ABSENT = new Option<>(null, false);
 

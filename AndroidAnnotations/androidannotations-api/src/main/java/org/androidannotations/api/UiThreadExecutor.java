@@ -27,7 +27,7 @@ import android.os.SystemClock;
  * This class provide operations for
  * {@link org.androidannotations.annotations.UiThread UiThread} tasks.
  */
-public class UiThreadExecutor {
+public final class UiThreadExecutor {
 
 	private static final Handler HANDLER = new Handler(Looper.getMainLooper()) {
 		@Override
@@ -112,7 +112,7 @@ public class UiThreadExecutor {
 		HANDLER.removeCallbacksAndMessages(token);
 	}
 
-	private static class Token {
+	private static final class Token {
 		int runnablesCount = 0;
 		final String id;
 

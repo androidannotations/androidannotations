@@ -62,6 +62,7 @@ public class TransactionalActivityTest {
 			activity.rollbackedTransaction(mockDb);
 			fail("This method should throw an exception");
 		} catch (IllegalArgumentException e) {
+			// expected
 		}
 
 		verify(mockDb, never()).setTransactionSuccessful();

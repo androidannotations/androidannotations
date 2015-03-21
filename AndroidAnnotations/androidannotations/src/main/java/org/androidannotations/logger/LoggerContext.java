@@ -15,6 +15,13 @@
  */
 package org.androidannotations.logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.appender.Appender;
 import org.androidannotations.logger.appender.ConsoleAppender;
@@ -22,13 +29,7 @@ import org.androidannotations.logger.appender.FileAppender;
 import org.androidannotations.logger.appender.MessagerAppender;
 import org.androidannotations.logger.formatter.Formatter;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import java.util.ArrayList;
-import java.util.List;
-
-public class LoggerContext {
+public final class LoggerContext {
 
 	private static LoggerContext instance = null;
 	private static final Level DEFAULT_LEVEL = Level.DEBUG;
@@ -37,9 +38,9 @@ public class LoggerContext {
 	private List<Appender> appenders = new ArrayList<>();
 
 	private LoggerContext() {
-		
+
 	}
-	
+
 	public static LoggerContext getInstance() {
 		if (instance == null) {
 			synchronized (LoggerContext.class) {

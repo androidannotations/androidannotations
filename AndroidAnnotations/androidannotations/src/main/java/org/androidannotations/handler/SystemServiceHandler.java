@@ -71,7 +71,8 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 	}
 
 	@SuppressWarnings("checkstyle:parameternumber")
-	private void createSpecialInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody, int apiLevel, String apiLevelName, JClass serviceClass, String injectionMethodName, boolean contextNeeded) {
+	private void createSpecialInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody, int apiLevel, String apiLevelName,
+			JClass serviceClass, String injectionMethodName, boolean contextNeeded) {
 		if (androidManifest.getMinSdkVersion() >= apiLevel) {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		} else {

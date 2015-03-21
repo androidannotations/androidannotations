@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CaseHelper {
+public final class CaseHelper {
 
 	private static final Pattern PATTERN = Pattern.compile("([A-Z]|[a-z])[a-z0-9]*");
 

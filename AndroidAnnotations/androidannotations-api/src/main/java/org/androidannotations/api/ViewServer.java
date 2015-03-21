@@ -111,6 +111,7 @@ import android.view.ViewDebug;
  * }
  * </pre>
  */
+@SuppressWarnings("checkstyle:finalclass")
 public class ViewServer implements Runnable {
 	/**
 	 * The default port used to start view servers.
@@ -518,7 +519,7 @@ public class ViewServer implements Runnable {
 		}
 	}
 
-	private static class NoopViewServer extends ViewServer {
+	private static final class NoopViewServer extends ViewServer {
 		private NoopViewServer() {
 		}
 

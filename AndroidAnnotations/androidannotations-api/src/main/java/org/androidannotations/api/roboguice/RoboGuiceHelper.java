@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  * Reflection utils to call methods which are accessible in RoboGuice package
  * but not from outside.
  */
-public class RoboGuiceHelper {
+public final class RoboGuiceHelper {
 
 	private RoboGuiceHelper() {
 	}

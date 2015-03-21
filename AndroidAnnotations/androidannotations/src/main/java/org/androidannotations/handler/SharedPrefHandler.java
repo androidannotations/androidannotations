@@ -176,7 +176,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		case ACTIVITY_DEFAULT: {
 			JMethod getLocalClassName = getLocalClassName(holder);
 			constructorSuperBlock.invoke("super") //
-				.arg(contextParam.invoke("getSharedPreferences") //
+					.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam)) //
 							.arg(lit(mode)));
 			break;
@@ -184,7 +184,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		case ACTIVITY: {
 			JMethod getLocalClassName = getLocalClassName(holder);
 			constructorSuperBlock.invoke("super") //
-				.arg(contextParam.invoke("getSharedPreferences") //
+					.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam) //
 									.plus(lit("_" + interfaceSimpleName))) //
 							.arg(lit(mode)));
@@ -256,7 +256,8 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		return createFieldMethod(holder, method, info.annotationClass, info.prefFieldClass, info.defaultValue, info.resType, info.fieldHelperMethodName);
 	}
 
-	private JExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass, Object defaultValue, Res resType, String fieldHelperMethodName) {
+	private JExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass,
+			Object defaultValue, Res resType, String fieldHelperMethodName) {
 		Annotation annotation = method.getAnnotation(annotationClass);
 		JExpression defaultValueExpr;
 

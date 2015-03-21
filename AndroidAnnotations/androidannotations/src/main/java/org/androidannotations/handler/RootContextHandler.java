@@ -70,7 +70,8 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
 
 			JInvocation warningInvoke = holder.classes().LOG.staticInvoke("w");
 			warningInvoke.arg(holder.getGeneratedClass().name());
-			JExpression expr = lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName")).plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated"));
+			JExpression expr = lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName")).plus(
+					lit(", the @RootContext " + extendingContextClass.name() + " won't be populated"));
 			warningInvoke.arg(expr);
 			cond._else() //
 					.add(warningInvoke);

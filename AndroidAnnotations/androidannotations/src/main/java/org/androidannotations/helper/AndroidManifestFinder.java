@@ -76,6 +76,7 @@ public class AndroidManifestFinder {
 					LOGGER.debug("Found android.library={} property in project.properties", libraryProject);
 				}
 			} catch (IOException ignored) {
+				// we assume the project is not a library
 			}
 		}
 
@@ -133,7 +134,8 @@ public class AndroidManifestFinder {
 		}
 
 		if (!androidManifestFile.exists()) {
-			LOGGER.error("Could not find the AndroidManifest.xml file, going up from path [{}] found using dummy file [] (max attempts: {})", projectRootHolder.sourcesGenerationFolder.getAbsolutePath(), projectRootHolder.dummySourceFilePath, MAX_PARENTS_FROM_SOURCE_FOLDER);
+			LOGGER.error("Could not find the AndroidManifest.xml file, going up from path [{}] found using dummy file [] (max atempts: {})",
+					projectRootHolder.sourcesGenerationFolder.getAbsolutePath(), projectRootHolder.dummySourceFilePath, MAX_PARENTS_FROM_SOURCE_FOLDER);
 			return Option.absent();
 		} else {
 			LOGGER.debug("AndroidManifest.xml file found in parent folder {}: {}", projectRoot.getAbsolutePath(), androidManifestFile.toString());
@@ -221,7 +223,8 @@ public class AndroidManifestFinder {
 		List<String> permissionQualifiedNames = new ArrayList<>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
 
-		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, applicationDebuggableMode));
+		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion,
+				targetSdkVersion, applicationDebuggableMode));
 	}
 
 	private int extractAttributeIntValue(Node node, String attribute, int defaultValue) {
@@ -234,6 +237,7 @@ public class AndroidManifestFinder {
 				}
 			}
 		} catch (NumberFormatException ignored) {
+			// we assume the manifest is well-formed
 		}
 		return defaultValue;
 	}

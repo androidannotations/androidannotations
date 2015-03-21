@@ -29,6 +29,9 @@
 	<description>The API jar containing the annotations and the runtime helpers</description>
 	<name>AndroidAnnotations API</name>
 
+    <properties>
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
 
 	<dependencies>
 		<dependency>

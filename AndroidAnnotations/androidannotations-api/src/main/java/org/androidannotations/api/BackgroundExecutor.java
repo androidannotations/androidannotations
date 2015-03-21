@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import android.os.Looper;
 import android.util.Log;
 
-public class BackgroundExecutor {
+public final class BackgroundExecutor {
 
 	private static final String TAG = "BackgroundExecutor";
 
@@ -82,12 +82,16 @@ public class BackgroundExecutor {
 	 *            the task to execute
 	 * @param delay
 	 *            the time from now to delay execution, in milliseconds
-	 * @throws IllegalArgumentException
-	 *             if <code>delay</code> is strictly positive and the current
-	 *             executor does not support scheduling (if
-	 *             {@link #setExecutor(Executor)} has been called with such an
-	 *             executor)
+	 * 
+	 *            if <code>delay</code> is strictly positive and the current
+	 *            executor does not support scheduling (if
+	 *            {@link #setExecutor(Executor)} has been called with such an
+	 *            executor)
 	 * @return Future associated to the running task
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the current executor set by {@link #setExecutor(Executor)}
+	 *             does not support scheduling
 	 */
 	private static Future<?> directExecute(Runnable runnable, int delay) {
 		Future<?> future = null;

@@ -80,11 +80,13 @@ public class ProcessorTestHelper {
 	}
 
 	public static void assertGeneratedClassContains(File output, String[] codeFragment) {
-		assertTrue("Code fragment \"" + join(codeFragment) + "\" should be in file " + output.getAbsolutePath(), Collections.indexOfSubList(Arrays.asList(getContents(output)), Arrays.asList(codeFragment)) != -1);
+		assertTrue("Code fragment \"" + join(codeFragment) + "\" should be in file " + output.getAbsolutePath(),
+				Collections.indexOfSubList(Arrays.asList(getContents(output)), Arrays.asList(codeFragment)) != -1);
 	}
 
 	public static void assertGeneratedClassDoesNotContain(File output, String[] codeFragment) {
-		assertTrue("Code fragment \"" + join(codeFragment) + "\" should not be in file " + output.getAbsolutePath(), Collections.indexOfSubList(Arrays.asList(getContents(output)), Arrays.asList(codeFragment)) == -1);
+		assertTrue("Code fragment \"" + join(codeFragment) + "\" should not be in file " + output.getAbsolutePath(),
+				Collections.indexOfSubList(Arrays.asList(getContents(output)), Arrays.asList(codeFragment)) == -1);
 	}
 
 	public static void assertOutput(File expectedResult, File output) {
@@ -310,6 +312,7 @@ public class ProcessorTestHelper {
 			task.call();
 		} catch (IOException e) {
 
+			// we should always be able to close the manager
 		}
 
 		return new CompileResult(diagnosticCollector.getDiagnostics());

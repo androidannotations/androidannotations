@@ -18,7 +18,7 @@ package org.androidannotations.logger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoggerFactory {
+public final class LoggerFactory {
 
 	private static final Map<String, Logger> LOGGER_CACHE = new HashMap<>();
 

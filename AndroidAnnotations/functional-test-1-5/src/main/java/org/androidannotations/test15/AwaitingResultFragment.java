@@ -70,6 +70,7 @@ public class AwaitingResultFragment extends Fragment {
 	}
 
 	@OnActivityResult(FORTH_REQUEST)
-	void onResultWithResultExtra(int resultCode, @OnActivityResult.Extra("value") int i, @OnActivityResult.Extra String s, @OnActivityResult.Extra Uri uri, @OnActivityResult.Extra ArrayList<Uri> uris, @OnActivityResult.Extra String[] strings) {
+	void onResultWithResultExtra(int resultCode, @OnActivityResult.Extra("value") int i, @OnActivityResult.Extra String s, @OnActivityResult.Extra Uri uri,
+			@OnActivityResult.Extra ArrayList<Uri> uris, @OnActivityResult.Extra String[] strings) {
 	}
 }

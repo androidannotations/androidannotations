@@ -113,7 +113,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<main.basedir>${project.basedir}</main.basedir>
 	</properties>
+	
 	
 	<prerequisites>
 		<maven>3.1.1</maven>
@@ -263,14 +265,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.13</version>
-					<configuration>
-						<configLocation>checkstyle-checks.xml</configLocation>
-						<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-						<consoleOutput>true</consoleOutput>
-						<linkXRef>false</linkXRef>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					</configuration>
+					<version>2.15</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -292,6 +287,7 @@
 						<exclude>**/.factorypath</exclude>
 						<exclude>**/project.properties</exclude>
 						<exclude>**/rebel.xml</exclude>
+						<exclude>**/.checkstyle</exclude>
 					</excludes>
 					<strictCheck>true</strictCheck>
 				</configuration>
@@ -316,6 +312,38 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<configuration>
+						<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
+						<suppressionsLocation>${main.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+						<consoleOutput>true</consoleOutput>
+						<linkXRef>false</linkXRef>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>6.7</version>
+							<exclusions>
+								<exclusion>
+									<groupId>com.sun</groupId>
+									<artifactId>tools</artifactId>
+								</exclusion>
+							</exclusions>
+					   </dependency>
+					</dependencies>
+					<executions>
+						<execution>
+							<phase>process-sources</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 		</plugins>
 	</build>
 
@@ -359,15 +387,11 @@
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-checkstyle-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>process-sources</phase>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
+						<configuration>
+							<configLocation>${main.basedir}/checkstyle-checks-ci.xml</configLocation>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
@@ -381,7 +405,7 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.12.1</version>
 				<configuration>
-					<configLocation>checkstyle-checks.xml</configLocation>
+					<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
 				</configuration>
 			</plugin>
 		</plugins>
