@@ -25,7 +25,6 @@ import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 
 public class OptionsHandler extends RestMethodHandler {
@@ -51,7 +50,7 @@ public class OptionsHandler extends RestMethodHandler {
 
 	@Override
 	protected JExpression getResponseClass(Element element, RestHolder holder) {
-		return JExpr._null();
+		return restAnnotationHelper.nullCastedToNarrowedClass(holder);
 	}
 
 	@Override

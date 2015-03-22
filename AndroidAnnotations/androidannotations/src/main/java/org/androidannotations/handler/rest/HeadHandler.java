@@ -51,7 +51,7 @@ public class HeadHandler extends RestMethodHandler {
 
 	@Override
 	protected JExpression getResponseClass(Element element, RestHolder holder) {
-		return JExpr._null();
+		return restAnnotationHelper.nullCastedToNarrowedClass(holder);
 	}
 
 	@Override
