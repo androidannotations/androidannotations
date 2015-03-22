@@ -20,11 +20,13 @@ import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.helper.ServiceIntentBuilder;
+import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -32,18 +34,17 @@ import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
-import javax.lang.model.type.TypeMirror;
 
 public class EServiceHolder extends EComponentHolder implements HasIntentBuilder, HasReceiverRegistration {
 
 	private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
-	private ReceiverRegistrationHolder receiverRegistrationHolder;
+	private ReceiverRegistrationHolder<EServiceHolder> receiverRegistrationHolder;
 	private JBlock onDestroyBeforeSuperBlock;
 
 	public EServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
 		super(processHolder, annotatedElement);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder(this);
+		receiverRegistrationHolder = new ReceiverRegistrationHolder<EServiceHolder>(this);
 		intentBuilder = new ServiceIntentBuilder(this, androidManifest);
 		intentBuilder.build();
 	}
@@ -91,8 +92,13 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
-		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
+	public JFieldVar getIntentFilterField(IntentFilterData intentFilterData) {
+		return receiverRegistrationHolder.getIntentFilterField(intentFilterData);
+	}
+
+	@Override
+	public JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData) {
+		return getInitBody();
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import org.androidannotations.annotations.Receiver;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.HasReceiverRegistration;
+import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -89,7 +90,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 		Receiver.RegisterAt registerAt = annotation.registerAt();
 		boolean local = annotation.local();
 
-		JFieldVar intentFilterField = holder.getIntentFilterField(actions, dataSchemes);
+		JFieldVar intentFilterField = holder.getIntentFilterField(new IntentFilterData(actions, dataSchemes, registerAt));
 		JFieldVar receiverField = createReceiverField(holder, receiverName, methodName, (ExecutableElement) element);
 		registerAndUnregisterReceiver(holder, registerAt, intentFilterField, receiverField, local);
 	}

@@ -33,9 +33,11 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.helper.ActionBarSherlockHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.OrmLiteHelper;
+import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -65,7 +67,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar injectBundleArgs;
 	private InstanceStateHolder instanceStateHolder;
 	private OnActivityResultHolder onActivityResultHolder;
-	private ReceiverRegistrationHolder receiverRegistrationHolder;
+	private ReceiverRegistrationHolder<EFragmentHolder> receiverRegistrationHolder;
 	private JBlock onCreateOptionsMenuMethodBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
 	private JVar onCreateOptionsMenuMenuParam;
@@ -85,7 +87,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		super(processHolder, annotatedElement);
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder(this);
+		receiverRegistrationHolder = new ReceiverRegistrationHolder<EFragmentHolder>(this);
 		setOnCreate();
 		setOnViewCreated();
 		setFragmentBuilder();
@@ -478,8 +480,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
-		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
+	public JFieldVar getIntentFilterField(IntentFilterData intentFilterData) {
+		return receiverRegistrationHolder.getIntentFilterField(intentFilterData);
 	}
 
 	@Override
@@ -544,6 +546,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 			setOnDetach();
 		}
 		return onDetachBeforeSuperBlock;
+	}
+
+	@Override
+	public JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData) {
+		if (RegisterAt.OnAttachOnDetach.equals(intentFilterData.getRegisterAt())) {
+			return getOnAttachAfterSuperBlock();
+		}
+		return getInitBody();
 	}
 
 	@Override
