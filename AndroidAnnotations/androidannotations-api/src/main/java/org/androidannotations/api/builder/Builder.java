@@ -15,5 +15,8 @@
  */
 package org.androidannotations.api.builder;
 
+/**
+ * Base class for fluent builders.
+ */
 public abstract class Builder {
 }

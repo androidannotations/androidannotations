@@ -107,6 +107,9 @@ public final class CanonicalNameConstants {
 	public static final String LOOPER = "android.os.Looper";
 	public static final String POWER_MANAGER = "android.os.PowerManager";
 	public static final String WAKE_LOCK = "android.os.PowerManager.WakeLock";
+	public static final String BUILD_VERSION = "android.os.Build.VERSION";
+	public static final String BUILD_VERSION_CODES = "android.os.Build.VERSION_CODES";
+	public static final String ACTIVITY_COMPAT = "android.support.v4.app.ActivityCompat";
 
 	/*
 	 * Android permission
