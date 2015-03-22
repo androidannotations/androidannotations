@@ -142,12 +142,13 @@ public final class CanonicalNameConstants {
 	 * RoboGuice
 	 */
 	public static final String ROBO_APPLICATION = "roboguice.application.RoboApplication";
+	public static final String ON_START_EVENT_OLD = "roboguice.activity.event.OnStartEvent";
 	public static final String ROBO_CONTEXT = "roboguice.util.RoboContext";
 	public static final String ROBO_INJECTOR = "roboguice.inject.RoboInjector";
 	public static final String KEY = "com.google.inject.Key";
 	public static final String CONTENT_VIEW_LISTENER = "roboguice.inject.ContentViewListener";
 	public static final String ON_RESTART_EVENT = "roboguice.activity.event.OnRestartEvent";
-	public static final String ON_START_EVENT = "roboguice.activity.event.OnStartEvent";
+	public static final String ON_START_EVENT = "roboguice.context.event.OnStartEvent";
 	public static final String ON_RESUME_EVENT = "roboguice.activity.event.OnResumeEvent";
 	public static final String ON_PAUSE_EVENT = "roboguice.activity.event.OnPauseEvent";
 	public static final String ON_NEW_INTENT_EVENT = "roboguice.activity.event.OnNewIntentEvent";
@@ -157,12 +158,12 @@ public final class CanonicalNameConstants {
 	public static final String ROBO_GUICE = "roboguice.RoboGuice";
 	public static final String INJECT = "com.google.inject.Inject";
 	public static final String ON_STOP_EVENT = "roboguice.activity.event.OnStopEvent";
-	public static final String ON_DESTROY_EVENT = "roboguice.activity.event.OnDestroyEvent";
-	public static final String ON_CONFIGURATION_CHANGED_EVENT = "roboguice.activity.event.OnConfigurationChangedEvent";
+	public static final String ON_DESTROY_EVENT = "roboguice.context.event.OnDestroyEvent";
+	public static final String ON_CONFIGURATION_CHANGED_EVENT = "roboguice.context.event.OnConfigurationChangedEvent";
 	public static final String ON_CONTENT_CHANGED_EVENT = "roboguice.activity.event.OnContentChangedEvent";
 	public static final String ON_ACTIVITY_RESULT_EVENT = "roboguice.activity.event.OnActivityResultEvent";
 	public static final String ON_CONTENT_VIEW_AVAILABLE_EVENT = "roboguice.activity.event.OnContentViewAvailableEvent";
-	public static final String ON_CREATE_EVENT = "roboguice.activity.event.OnCreateEvent";
+	public static final String ON_CREATE_EVENT = "roboguice.context.event.OnCreateEvent";
 
 	/*
 	 * ORMLite

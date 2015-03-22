@@ -715,7 +715,12 @@ public class ValidatorHelper {
 
 		if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_APPLICATION) != null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 2.0!");
+			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 3.0!");
+		}
+
+		if (elementUtils.getTypeElement(CanonicalNameConstants.ON_START_EVENT_OLD) != null) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 3.0!");
 		}
 	}
 
