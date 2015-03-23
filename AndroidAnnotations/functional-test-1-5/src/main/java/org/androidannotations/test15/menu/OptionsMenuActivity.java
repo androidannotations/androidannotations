@@ -43,6 +43,7 @@ public class OptionsMenuActivity extends Activity {
 	MenuItem aMenuByResName;
 
 	boolean menuRefreshSelected;
+	boolean menuRefreshSelectedFromAnnotatedClass;
 	boolean multipleMenuItems;
 	boolean menuAdd;
 
@@ -67,6 +68,14 @@ public class OptionsMenuActivity extends Activity {
 	void menu_add(MenuItem item) {
 		// CHECKSTYLE:ON
 		menuAdd = true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			menuRefreshSelectedFromAnnotatedClass = true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

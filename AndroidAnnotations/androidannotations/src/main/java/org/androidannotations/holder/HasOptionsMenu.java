@@ -29,5 +29,5 @@ public interface HasOptionsMenu extends GeneratedClassHolder {
 
 	JVar getOnOptionsItemSelectedItemId();
 
-	JBlock getOnOptionsItemSelectedIfElseBlock();
+	JBlock getOnOptionsItemSelectedMiddleBlock();
 }

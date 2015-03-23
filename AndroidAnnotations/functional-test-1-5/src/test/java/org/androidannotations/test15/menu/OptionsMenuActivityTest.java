@@ -79,4 +79,16 @@ public class OptionsMenuActivityTest {
 		assertThat(activity.menuAdd).isTrue();
 	}
 
+	@Test
+	public void subclassTakesPrecedenceInMenuItemHandling() {
+		MenuItem item = mock(MenuItem.class);
+
+		when(item.getItemId()).thenReturn(R.id.menu_refresh);
+
+		activity.onOptionsItemSelected(item);
+
+		assertThat(activity.menuRefreshSelected).isTrue();
+		assertThat(activity.menuRefreshSelectedFromAnnotatedClass).isFalse();
+	}
+
 }

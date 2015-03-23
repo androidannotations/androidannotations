@@ -87,12 +87,15 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 		boolean hasItemParameter = parameters.size() == 1;
 
 		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
+
+		JBlock block = holder.getOnOptionsItemSelectedMiddleBlock();
+
 		JExpression ifExpr = holder.getOnOptionsItemSelectedItemId().eq(idsRefs.get(0));
 		for (int i = 1; i < idsRefs.size(); i++) {
 			ifExpr = ifExpr.cor(holder.getOnOptionsItemSelectedItemId().eq(idsRefs.get(i)));
 		}
 
-		JBlock itemIfBody = holder.getOnOptionsItemSelectedIfElseBlock()._if(ifExpr)._then();
+		JBlock itemIfBody = block._if(ifExpr)._then();
 		JInvocation methodCall = invoke(methodName);
 
 		if (returnMethodResult) {
