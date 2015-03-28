@@ -66,6 +66,8 @@ import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.UiThread.Propagation;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.WakeLock;
 import org.androidannotations.annotations.WakeLock.Level;
@@ -1531,4 +1533,12 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "The class " + CanonicalNameConstants.PREFERENCE_FRAGMENT + " cannot be found. You have to use at least API 11");
 		}
 	}
+	public void usesEnqueueIfHasId(Element element, IsValid valid) {
+		UiThread annotation = element.getAnnotation(UiThread.class);
+
+		if (!"".equals(annotation.id()) && annotation.propagation() == Propagation.REUSE) {
+			annotationHelper.printAnnotationError(element, "An id only can be used with Propagation.ENQUEUE");
+		}
+	}
+
 }
