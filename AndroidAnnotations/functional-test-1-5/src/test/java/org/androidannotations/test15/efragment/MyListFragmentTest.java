@@ -22,12 +22,14 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.Executor;
 
 import org.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.api.UiThreadExecutor;
 import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowLooper;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -73,6 +75,15 @@ public class MyListFragmentTest {
 		assertFalse(myListFragment.didExecute);
 		myListFragment.uiThread();
 		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void uithreadMethodIsCanceled() {
+		ShadowLooper.pauseMainLooper();
+		myListFragment.uiThreadWithId();
+		UiThreadExecutor.cancelAll("id");
+		ShadowLooper.unPauseMainLooper();
+		assertFalse(myListFragment.uiThreadWithIdDidExecute);
 	}
 
 	@Test
