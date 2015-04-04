@@ -16,6 +16,7 @@
 package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.lit;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -45,6 +46,7 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	private static final String METHOD_MAIN_LOOPER = "getMainLooper";
 	private static final String METHOD_GET_THREAD = "getThread";
 	private static final String METHOD_ADD_TASK = "addTask";
+	private static final String METHOD_DONE = "done";
 
 	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
@@ -70,7 +72,14 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 		long delay = annotation.delay();
 		UiThread.Propagation propagation = annotation.propagation();
 
-		JExpression runnable = createAndStoreRunnable(delegatingMethod.body(), annotation.id(), anonymousRunnableClass, holder);
+		JExpression runnable;
+		String id = annotation.id();
+		if ("".equals(id)) {
+			runnable = _new(anonymousRunnableClass);
+		} else {
+			runnable = createAndStoreRunnable(delegatingMethod.body(), id, anonymousRunnableClass, holder);
+			callCancelOnFinish(previousBody, id);
+		}
 
 		if (delay == 0) {
 			if (propagation == UiThread.Propagation.REUSE) {
@@ -107,13 +116,14 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	}
 
 	private JExpression createAndStoreRunnable(JBlock body, String id, JDefinedClass anonymousRunnableClass, EComponentHolder holder) {
-		if ("".equals(id)) {
-			return _new(anonymousRunnableClass);
-		}
 
 		JVar runnableVar = body.decl(refClass(Runnable.class), "runnable", _new(anonymousRunnableClass));
 		body.add(refClass(UiThreadExecutor.class).staticInvoke(METHOD_ADD_TASK).arg(id).arg(runnableVar).arg(holder.getHandler()));
 
 		return runnableVar;
+	}
+
+	private void callCancelOnFinish(JBlock body, String id) {
+		body.add(refClass(UiThreadExecutor.class).staticInvoke(METHOD_DONE).arg(id).arg(_this()));
 	}
 }
