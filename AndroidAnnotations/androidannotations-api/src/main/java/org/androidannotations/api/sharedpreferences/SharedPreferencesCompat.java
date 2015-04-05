@@ -48,6 +48,9 @@ public abstract class SharedPreferencesCompat {
 			return invoke(GET_STRING_SET_METHOD, preferences, key, defValues);
 		} catch (NoSuchMethodException e) {
 			String serializedSet = preferences.getString(key, null);
+			if (serializedSet == null) {
+				return defValues;
+			}
 			return SetXmlSerializer.deserialize(serializedSet);
 		}
 	}

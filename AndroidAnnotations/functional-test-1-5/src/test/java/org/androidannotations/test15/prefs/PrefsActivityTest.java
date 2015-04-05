@@ -224,4 +224,11 @@ public class PrefsActivityTest {
 		sharedPref.edit().putString("ageLong", "90211105578124").commit();
 		assertThat(somePrefs.ageLong().get()).isEqualTo(90211105578124L);
 	}
+
+	@Test
+	public void getStringSetEmptySetDefaultValue() {
+		sharedPref.edit().clear().commit();
+
+		assertThat(somePrefs.types().get()).isEmpty();
+	}
 }
