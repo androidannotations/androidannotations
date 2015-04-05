@@ -99,7 +99,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JFieldRef extraField = JExpr.ref(fieldName);
 
 		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(bundle, "containsKey").arg(extraKeyStaticField))._then();
-		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, bundle, extraKeyStaticField, injectExtrasMethod);
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, bundle, extraKeyStaticField, injectExtrasMethod, holder);
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 

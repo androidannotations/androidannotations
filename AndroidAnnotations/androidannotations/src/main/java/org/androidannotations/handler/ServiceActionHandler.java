@@ -114,7 +114,7 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 				JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
 
 				BundleHelper bundleHelper = new BundleHelper(annotationHelper, param.asType());
-				JExpression getExtraExpression = bundleHelper.getExpressionToRestoreFromIntentOrBundle(extraParamClass, intent, extras, paramVar, onHandleIntentMethod);
+				JExpression getExtraExpression = bundleHelper.getExpressionToRestoreFromIntentOrBundle(extraParamClass, intent, extras, paramVar, onHandleIntentMethod, holder);
 
 				JVar extraField = callActionBlock.decl(extraParamClass, extraParamName, getExtraExpression);
 				callActionInvocation.arg(extraField);
