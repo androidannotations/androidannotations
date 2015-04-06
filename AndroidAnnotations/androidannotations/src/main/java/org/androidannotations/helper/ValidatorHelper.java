@@ -607,7 +607,7 @@ public class ValidatorHelper {
 			String componentQualifiedName = typeElement.getQualifiedName().toString();
 			String generatedComponentQualifiedName = componentQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
-			if (!applicationClassName.equals(generatedComponentQualifiedName)) {
+			if (!typeElement.getModifiers().contains(Modifier.ABSTRACT) && !applicationClassName.equals(generatedComponentQualifiedName)) {
 				if (applicationClassName.equals(componentQualifiedName)) {
 					valid.invalidate();
 					annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedComponentQualifiedName + " instead of " + componentQualifiedName);
