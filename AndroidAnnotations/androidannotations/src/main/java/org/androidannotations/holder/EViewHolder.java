@@ -22,8 +22,6 @@ import static com.sun.codemodel.JMod.STATIC;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import javax.lang.model.element.Element;
@@ -33,8 +31,6 @@ import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.process.ProcessHolder;
 
-import com.sun.codemodel.JAnnotationArrayMember;
-import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
@@ -71,19 +67,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	private void addSuppressWarning() {
 		generatedClass.javadoc().append(SUPPRESS_WARNING_COMMENT);
 
-		Collection<JAnnotationUse> annotations = getGeneratedClass().annotations();
-		for (JAnnotationUse annotationUse : annotations) {
-			if (annotationUse.getAnnotationClass().fullName().equals(SuppressWarnings.class.getCanonicalName())) {
-				if (!Arrays.asList(getAnnotatedElement().getAnnotation(SuppressWarnings.class).value()).contains("unused")) {
-					JAnnotationArrayMember value = (JAnnotationArrayMember) annotationUse.getAnnotationMembers().get("value");
-					value.param("unused");
-				}
-
-				return;
-			}
-		}
-
-		generatedClass.annotate(SuppressWarnings.class).param("value", "unused");
+		codeModelHelper.addSuppressWarnings(getGeneratedClass(), "unused");
 	}
 
 	private void createConstructorAndBuilder() {

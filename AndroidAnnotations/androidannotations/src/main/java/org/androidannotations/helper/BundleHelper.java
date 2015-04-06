@@ -229,9 +229,7 @@ public class BundleHelper {
 			expressionToRestore = JExpr.cast(variableClass, expressionToRestore);
 
 			if (restoreCallNeedsSuppressWarning()) {
-				if (!codeModelHelper.hasAnnotation(method, SuppressWarnings.class)) {
-					method.annotate(SuppressWarnings.class).param("value", "unchecked");
-				}
+				codeModelHelper.addSuppressWarnings(method, "unchecked");
 			}
 		}
 		return expressionToRestore;

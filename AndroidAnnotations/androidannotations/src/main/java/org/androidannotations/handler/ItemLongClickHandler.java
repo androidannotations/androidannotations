@@ -93,7 +93,7 @@ public class ItemLongClickHandler extends AbstractListenerHandler {
 				call.arg(cast(parameterClass, invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 
 				if (parameterClass.isParameterized()) {
-					listenerMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
+					codeModelHelper.addSuppressWarnings(listenerMethod, "unchecked");
 				}
 			}
 		}

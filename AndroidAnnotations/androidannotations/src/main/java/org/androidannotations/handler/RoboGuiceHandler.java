@@ -96,7 +96,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 			for (String listenerClassName : listenerClasses) {
 				JClass listenerClass = refClass(listenerClassName);
 				JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
-				listener.annotate(SuppressWarnings.class).param("value", "unused");
+				codeModelHelper.addSuppressWarnings(listener, "unused");
 				listener.annotate(classes().INJECT);
 				i++;
 			}
