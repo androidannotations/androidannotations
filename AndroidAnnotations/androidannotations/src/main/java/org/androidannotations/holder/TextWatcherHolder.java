@@ -22,9 +22,8 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPrimitiveType;
 import com.sun.codemodel.JVar;
 
-public class TextWatcherHolder {
+public class TextWatcherHolder extends GeneratedClassHolderDecorator<EComponentWithViewSupportHolder> {
 
-	private EComponentWithViewSupportHolder holder;
 	private JVar textViewVariable;
 	private JDefinedClass listenerClass;
 	private JBlock beforeTextChangedBody;
@@ -41,9 +40,9 @@ public class TextWatcherHolder {
 	private JVar afterTextChangedEditableParam;
 
 	public TextWatcherHolder(EComponentWithViewSupportHolder holder, JVar viewVariable, JDefinedClass onTextChangeListenerClass) {
-		this.holder = holder;
-		this.textViewVariable = viewVariable;
-		this.listenerClass = onTextChangeListenerClass;
+		super(holder);
+		textViewVariable = viewVariable;
+		listenerClass = onTextChangeListenerClass;
 		createBeforeTextChanged();
 		createOnTextChanged();
 		createAfterTextChanged();

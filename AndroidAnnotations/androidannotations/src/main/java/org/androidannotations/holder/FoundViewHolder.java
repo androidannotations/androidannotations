@@ -22,19 +22,18 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
 
-public class FoundViewHolder {
+public class FoundViewHolder extends GeneratedClassHolderDecorator<GeneratedClassHolder> {
 
-	private GeneratedClassHolder holder;
 	private JClass viewClass;
 	private JExpression view;
 	private JBlock ifNotNullBlock;
 	private boolean ifNotNullCreated = false;
 
 	public FoundViewHolder(GeneratedClassHolder holder, JClass viewClass, JExpression view, JBlock block) {
-		this.holder = holder;
+		super(holder);
 		this.viewClass = viewClass;
 		this.view = view;
-		this.ifNotNullBlock = block;
+		ifNotNullBlock = block;
 	}
 
 	public JExpression getView() {

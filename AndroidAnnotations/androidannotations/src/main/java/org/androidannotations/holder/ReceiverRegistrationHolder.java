@@ -34,14 +34,13 @@ import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 
-public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiverRegistration> {
+public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiverRegistration> extends GeneratedClassHolderDecorator<T> {
 
-	private T holder;
 	private Map<IntentFilterData, JFieldVar> intentFilterFields = new HashMap<IntentFilterData, JFieldVar>();
 	private IllegalStateException illegalStateException = new IllegalStateException("This shouldn't happen unless the validation is bad");
 
 	public ReceiverRegistrationHolder(T holder) {
-		this.holder = holder;
+		super(holder);
 	}
 
 	public JFieldVar getIntentFilterField(IntentFilterData intentFilterData) {
