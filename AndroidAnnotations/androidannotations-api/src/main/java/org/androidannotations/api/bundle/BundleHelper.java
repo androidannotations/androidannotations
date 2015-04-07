@@ -47,6 +47,8 @@ public class BundleHelper {
 	 *            the array is associated with this key
 	 * @param type
 	 *            the desired type of the returned array
+	 * @param <T>
+	 *            the element type of the returned array
 	 * @return a {@link Parcelable} subclass typed array which holds the objects
 	 *         from {@link Bundle#getParcelableArray(String)} or
 	 *         <code>null</code> if {@link Bundle#getParcelableArray(String)}
