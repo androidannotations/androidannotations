@@ -15,10 +15,14 @@
  */
 package org.androidannotations.api;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import android.os.Handler;
+import android.os.Looper;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This class provide operations for
@@ -26,8 +30,15 @@ import android.os.Handler;
  */
 public class UiThreadExecutor {
 
-	private static final Map<String, List<Runnable>> TASKS = new HashMap<String, List<Runnable>>();
-	private static final Map<Runnable, Handler> HANDLERS = new HashMap<Runnable, Handler>();
+	private static final Handler HANDLER = new Handler(Looper.getMainLooper());
+
+	static final ConcurrentHashMap<String, Set<Runnable>> TASKS = new ConcurrentHashMap<String, Set<Runnable>>();
+
+	private static final Set<Runnable> JUST_POSTED_TASKS = Collections.newSetFromMap(new ConcurrentHashMap<Runnable, Boolean>());
+
+	private static final ConcurrentLinkedQueue<Set<Runnable>> ALLOCATION_STASH = new ConcurrentLinkedQueue<Set<Runnable>>();
+	private static final AtomicInteger ALLOCATION_STASH_SIZE = new AtomicInteger(0);
+	private static final int ALLOCATION_STASH_MAX_SIZE = 16;
 
 	private UiThreadExecutor() {
 		// should not be instantiated
@@ -41,17 +52,64 @@ public class UiThreadExecutor {
 	 *            the identifier of the task
 	 * @param task
 	 *            the task itself
-	 * @param handler
-	 *            the {@link Handler} which runs the task
+	 * @param delay
+	 *            the delay or zero to run immediately
 	 */
-	public static synchronized void addTask(String id, Runnable task, Handler handler) {
-		List<Runnable> runnables = TASKS.get(id);
-		if (runnables == null) {
-			runnables = new ArrayList<Runnable>();
-			TASKS.put(id, runnables);
+	public static void runTask(String id, Runnable task, long delay) {
+		if ("".equals(id)) {
+			HANDLER.postDelayed(task, delay);
+			return;
 		}
-		runnables.add(task);
-		HANDLERS.put(task, handler);
+		JUST_POSTED_TASKS.add(task);
+		HANDLER.postDelayed(task, delay);
+
+		Set<Runnable> runnables = TASKS.get(id);
+		if (runnables == null) {
+			runnables = allocateRunnables();
+			runnables.add(task);
+
+			while (true) {
+				Set<Runnable> oldRunnables = TASKS.putIfAbsent(id, runnables);
+				if (oldRunnables != null) {
+					if (oldRunnables.isEmpty()) {
+						//it is about to be removed - lets try to replace it
+						if (!TASKS.replace(id, oldRunnables, runnables)) {
+							//it is already has bean replaced by different thread - lets try again
+							continue;
+						}
+					} else {
+						recycle(runnables);
+						oldRunnables.add(task);
+					}
+				}
+				break;
+			}
+		} else {
+			runnables.add(task);
+		}
+
+		//if the task has already been completed - make sure to clean up
+		if (!JUST_POSTED_TASKS.remove(task)) {
+			done(id, task);
+		}
+	}
+
+	private static Set<Runnable> allocateRunnables() {
+		Set<Runnable> runnables = ALLOCATION_STASH.poll();
+		if (runnables != null) {
+			ALLOCATION_STASH_SIZE.getAndDecrement();
+			return runnables;
+		}
+		return Collections.newSetFromMap(new ConcurrentHashMap<Runnable, Boolean>());
+	}
+
+	private static void recycle(Set<Runnable> runnables) {
+		if (ALLOCATION_STASH_SIZE.getAndIncrement() < ALLOCATION_STASH_MAX_SIZE) {
+			runnables.clear();
+			ALLOCATION_STASH.offer(runnables);
+		} else {
+			ALLOCATION_STASH_SIZE.getAndDecrement();
+		}
 	}
 
 	/**
@@ -60,22 +118,31 @@ public class UiThreadExecutor {
 	 * @param id
 	 *            the cancellation identifier
 	 */
-	public static synchronized void cancelAll(String id) {
-		List<Runnable> runnables = TASKS.remove(id);
+	public static void cancelAll(String id) {
+		Set<Runnable> runnables = TASKS.remove(id);
 		if (runnables != null) {
 			for (Runnable runnable : runnables) {
-				HANDLERS.remove(runnable).removeCallbacks(runnable);
+				HANDLER.removeCallbacks(runnable);
 			}
+			recycle(runnables);
 		}
 	}
 
-	public static synchronized void done(String id, Runnable runnable) {
-		Handler handler = HANDLERS.remove(runnable);
-		if (handler != null) {
-			List<Runnable> runnables = TASKS.get(id);
-			runnables.remove(runnable);
-			//potentially empty array stays in map for reducing garbage collecting -
-			//it is highly possible, that array will be reused at the next addTask call
+	/**
+	 * Should be called after the task has been executed. It is ok to call it more then once for the case of cleaning up.
+	 * @param id the task id
+	 * @param runnable the task itself
+	 */
+	public static void done(String id, Runnable runnable) {
+		JUST_POSTED_TASKS.remove(runnable);
+		Set<Runnable> runnables = TASKS.get(id);
+		if (runnables != null) {
+			if (runnables.remove(runnable)) {
+				if (runnables.isEmpty()) {	//if it is empty
+					TASKS.remove(id, runnables);
+					recycle(runnables);
+				}
+			}
 		}
 	}
 
