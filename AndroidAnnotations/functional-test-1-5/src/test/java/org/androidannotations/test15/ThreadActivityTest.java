@@ -19,7 +19,6 @@ import static org.fest.reflect.core.Reflection.staticField;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,9 +40,6 @@ import org.mockito.Matchers;
 import org.mockito.internal.util.MockUtil;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-
-import android.os.Handler;
-import android.os.Looper;
 
 @RunWith(RobolectricTestRunner.class)
 public class ThreadActivityTest {
@@ -339,36 +335,6 @@ public class ThreadActivityTest {
 		} catch (RuntimeException e) {
 			// good
 		}
-	}
-
-	@Test
-	public void assertHandlerWithMainThread() throws Exception {
-		/*
-		 * For this test we need to recreate the activity in a separate thread,
-		 * in order to check the handler is well associated to the main thread.
-		 */
-		final ThreadActivity_[] threadActivityHolder = new ThreadActivity_[1];
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				synchronized (threadActivityHolder) {
-					threadActivityHolder[0] = Robolectric.buildActivity(ThreadActivity_.class).create().get();
-					threadActivityHolder.notify();
-				}
-			}
-		}).start();
-		synchronized (threadActivityHolder) {
-			do {
-				threadActivityHolder.wait();
-			} while (threadActivityHolder[0] == null);
-		}
-
-		Field handlerField = ThreadActivity_.class.getDeclaredField("handler_");
-		handlerField.setAccessible(true);
-
-		Handler handler = (Handler) handlerField.get(threadActivityHolder[0]);
-		Assert.assertTrue("Handler field not associated to the main thread", handler.getLooper() == Looper.getMainLooper());
 	}
 
 	@Test

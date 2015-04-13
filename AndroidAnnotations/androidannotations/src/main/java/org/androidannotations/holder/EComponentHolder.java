@@ -30,25 +30,19 @@ import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
 public abstract class EComponentHolder extends BaseGeneratedClassHolder {
-
-	private static final String METHOD_MAIN_LOOPER = "getMainLooper";
 
 	protected JExpression contextRef;
 	protected JMethod init;
 	private JVar resourcesRef;
 	private JFieldVar powerManagerRef;
 	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<TypeMirror, JFieldVar>();
-	private JVar handler;
 
 	public EComponentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -124,17 +118,4 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		return databaseHelperRef;
 	}
 
-	public JVar getHandler() {
-		if (handler == null) {
-			setHandler();
-		}
-		return handler;
-	}
-
-	private void setHandler() {
-		JClass handlerClass = classes().HANDLER;
-		JClass looperClass = classes().LOOPER;
-		JInvocation arg = JExpr._new(handlerClass).arg(looperClass.staticInvoke(METHOD_MAIN_LOOPER));
-		handler = generatedClass.field(JMod.PRIVATE, handlerClass, "handler" + generationSuffix(), arg);
-	}
 }
