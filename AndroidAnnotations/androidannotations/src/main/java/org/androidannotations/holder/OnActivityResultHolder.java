@@ -31,9 +31,8 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
-public class OnActivityResultHolder {
+public class OnActivityResultHolder extends GeneratedClassHolderDecorator<EComponentHolder> {
 
-	private EComponentHolder holder;
 	private JMethod method;
 	private JBlock afterSuperBlock;
 	private JSwitch zwitch;
@@ -43,7 +42,7 @@ public class OnActivityResultHolder {
 	private Map<Integer, JBlock> caseBlocks = new HashMap<Integer, JBlock>();
 
 	public OnActivityResultHolder(EComponentHolder holder) {
-		this.holder = holder;
+		super(holder);
 	}
 
 	public JMethod getMethod() {
