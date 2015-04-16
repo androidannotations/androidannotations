@@ -129,6 +129,7 @@ public class AnnotationHandlers {
 
 		/* preference screen handler must be after injections */
 		add(new PreferenceScreenHandler(processingEnvironment));
+		add(new PreferenceHeadersHandler(processingEnvironment));
 		/* Preference injections must be after preference screen handler */
 		add(new PreferenceByKeyHandler(processingEnvironment));
 		add(new PreferenceChangeHandler(processingEnvironment));

@@ -1508,8 +1508,19 @@ public class ValidatorHelper {
 		extendsOneOfTypes(element, VALID_PREFERENCE_CLASSES, valid);
 	}
 
+	public void extendsPreferenceActivity(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.PREFERENCE_ACTIVITY, valid);
+	}
+
 	public void enclosingElementExtendsPreferenceActivityOrPreferenceFragment(Element element, IsValid valid) {
 		extendsOneOfTypes(element.getEnclosingElement(), VALID_PREFERENCE_CLASSES, valid);
 	}
 
+	public void isPreferenceFragmentClassPresent(Element element, IsValid valid) {
+		TypeElement preferenceFragmentElement = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.PREFERENCE_FRAGMENT);
+
+		if (preferenceFragmentElement == null) {
+			annotationHelper.printAnnotationError(element, "The class " + CanonicalNameConstants.PREFERENCE_FRAGMENT + " cannot be found. You have to use at least API 11");
+		}
+	}
 }
