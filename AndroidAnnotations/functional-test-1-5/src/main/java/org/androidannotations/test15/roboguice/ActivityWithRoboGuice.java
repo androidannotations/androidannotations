@@ -34,7 +34,7 @@ import org.androidannotations.test15.R;
 /**
  * Adapted from http://pivotal.github.com/robolectric/roboguice.html
  */
-@RoboGuice
+@RoboGuice(Counter.class)
 @EActivity(R.layout.injected)
 public class ActivityWithRoboGuice extends Activity {
 
