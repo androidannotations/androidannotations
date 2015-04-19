@@ -15,14 +15,11 @@
  */
 package org.androidannotations.api;
 
-import java.util.Collections;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 
 /**
  * This class provide operations for
@@ -32,13 +29,7 @@ public class UiThreadExecutor {
 
 	private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
-	private static final ConcurrentHashMap<String, Set<Runnable>> TASKS = new ConcurrentHashMap<String, Set<Runnable>>();
-
-	private static final Set<Runnable> JUST_POSTED_TASKS = Collections.newSetFromMap(new ConcurrentHashMap<Runnable, Boolean>());
-
-	private static final ConcurrentLinkedQueue<Set<Runnable>> ALLOCATION_STASH = new ConcurrentLinkedQueue<Set<Runnable>>();
-	private static final AtomicInteger ALLOCATION_STASH_SIZE = new AtomicInteger(0);
-	private static final int ALLOCATION_STASH_MAX_SIZE = 16;
+	private static final ConcurrentHashMap<String, Object> TOKENS = new ConcurrentHashMap<String, Object>();
 
 	private UiThreadExecutor() {
 		// should not be instantiated
@@ -60,57 +51,21 @@ public class UiThreadExecutor {
 			HANDLER.postDelayed(task, delay);
 			return;
 		}
-		JUST_POSTED_TASKS.add(task);
-		HANDLER.postDelayed(task, delay);
+		long time = SystemClock.uptimeMillis() + delay;
+		HANDLER.postAtTime(task, getToken(id), time);
+	}
 
-		Set<Runnable> runnables = TASKS.get(id);
-		if (runnables == null) {
-			runnables = allocateRunnables();
-			runnables.add(task);
-
-			while (true) {
-				Set<Runnable> oldRunnables = TASKS.putIfAbsent(id, runnables);
-				if (oldRunnables != null) {
-					if (oldRunnables.isEmpty()) {
-						// it is about to be removed - lets try to replace it
-						if (!TASKS.replace(id, oldRunnables, runnables)) {
-							// it is already has bean replaced by different
-							// thread - lets try again
-							continue;
-						}
-					} else {
-						recycle(runnables);
-						oldRunnables.add(task);
-					}
-				}
-				break;
+	private static Object getToken(String id) {
+		Object token = TOKENS.get(id);
+		if (token == null) {
+			token = new Object();
+			Object oldObject = TOKENS.putIfAbsent(id, token);
+			// if a concurrent thread was faster
+			if (oldObject != null) {
+				token = oldObject;
 			}
-		} else {
-			runnables.add(task);
 		}
-
-		// if the task has already been completed - make sure to clean up
-		if (!JUST_POSTED_TASKS.remove(task)) {
-			done(id, task);
-		}
-	}
-
-	private static Set<Runnable> allocateRunnables() {
-		Set<Runnable> runnables = ALLOCATION_STASH.poll();
-		if (runnables != null) {
-			ALLOCATION_STASH_SIZE.getAndDecrement();
-			return runnables;
-		}
-		return Collections.newSetFromMap(new ConcurrentHashMap<Runnable, Boolean>());
-	}
-
-	private static void recycle(Set<Runnable> runnables) {
-		if (ALLOCATION_STASH_SIZE.getAndIncrement() < ALLOCATION_STASH_MAX_SIZE) {
-			runnables.clear();
-			ALLOCATION_STASH.offer(runnables);
-		} else {
-			ALLOCATION_STASH_SIZE.getAndDecrement();
-		}
+		return token;
 	}
 
 	/**
@@ -120,35 +75,12 @@ public class UiThreadExecutor {
 	 *            the cancellation identifier
 	 */
 	public static void cancelAll(String id) {
-		Set<Runnable> runnables = TASKS.remove(id);
-		if (runnables != null) {
-			for (Runnable runnable : runnables) {
-				HANDLER.removeCallbacks(runnable);
-			}
-			recycle(runnables);
+		Object token = TOKENS.get(id);
+		if (token == null) {
+			// nothing to cancel
+			return;
 		}
-	}
-
-	/**
-	 * Should be called after the task has been executed. It is ok to call it
-	 * more then once for the case of cleaning up.
-	 * 
-	 * @param id
-	 *            the task id
-	 * @param runnable
-	 *            the task itself
-	 */
-	public static void done(String id, Runnable runnable) {
-		JUST_POSTED_TASKS.remove(runnable);
-		Set<Runnable> runnables = TASKS.get(id);
-		if (runnables != null) {
-			if (runnables.remove(runnable)) {
-				if (runnables.isEmpty()) { // if it is empty
-					TASKS.remove(id, runnables);
-					recycle(runnables);
-				}
-			}
-		}
+		HANDLER.removeCallbacksAndMessages(token);
 	}
 
 }

@@ -16,7 +16,6 @@
 package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.lit;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -45,7 +44,6 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	private static final String METHOD_MAIN_LOOPER = "getMainLooper";
 	private static final String METHOD_GET_THREAD = "getThread";
 	private static final String METHOD_RUN_TASK = "runTask";
-	private static final String METHOD_DONE = "done";
 
 	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
@@ -71,22 +69,13 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 		long delay = annotation.delay();
 		UiThread.Propagation propagation = annotation.propagation();
 
-		JExpression runnable;
-		String id = annotation.id();
-		if ("".equals(id)) {
-			runnable = _new(anonymousRunnableClass);
-		} else {
-			runnable = delegatingMethod.body().decl(refClass(Runnable.class), "runnable", _new(anonymousRunnableClass));
-			previousBody.add(refClass(UiThreadExecutor.class).staticInvoke(METHOD_DONE).arg(id).arg(_this()));
-		}
-
 		if (delay == 0 && propagation == UiThread.Propagation.REUSE) {
 			// Put in the check for the UI thread.
 			addUIThreadCheck(delegatingMethod, previousBody, holder);
 		}
 		delegatingMethod.body().add(refClass(UiThreadExecutor.class).staticInvoke(METHOD_RUN_TASK) //
-				.arg(id) //
-				.arg(runnable) //
+				.arg(annotation.id()) //
+				.arg(_new(anonymousRunnableClass)) //
 				.arg(lit(delay)));
 	}
 

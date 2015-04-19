@@ -15,19 +15,16 @@
  */
 package org.androidannotations.test15;
 
-import static org.fest.reflect.core.Reflection.staticField;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.androidannotations.api.UiThreadExecutor;
-import org.fest.reflect.reference.TypeRef;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -35,16 +32,15 @@ public class UiThreadExecutorTest {
 
 	@Test
 	public void oneTaskTest() throws Exception {
-		final CountDownLatch latch = new CountDownLatch(1);
+		final AtomicBoolean done = new AtomicBoolean(false);
 		UiThreadExecutor.runTask("test", new Runnable() {
 			@Override
 			public void run() {
-				UiThreadExecutor.done("test", this);
-				latch.countDown();
+				done.set(true);
 			}
 		}, 0);
-		await(latch);
-		assertTrue("The task is leaked", getTasks().isEmpty());
+		Robolectric.runUiThreadTasksIncludingDelayedTasks();
+		assertTrue("Task is still under execution", done.get());
 	}
 
 	@Test
@@ -58,16 +54,14 @@ public class UiThreadExecutorTest {
 					@Override
 					public void run() {
 						await(taskStartedLatch);
-						assertFalse("There is no tasks in map", getTasks().isEmpty());
-						UiThreadExecutor.done("test", this);
 						taskFinishedLatch.countDown();
 					}
 				}, 0);
 				taskStartedLatch.countDown();
-				await(taskFinishedLatch);
-				assertTrue("The task is leaked", getTasks().isEmpty());
+				Robolectric.runUiThreadTasksIncludingDelayedTasks();
 			}
 		}.start();
+		await(taskFinishedLatch);
 	}
 
 	private void await(CountDownLatch latch) {
@@ -78,11 +72,6 @@ public class UiThreadExecutorTest {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private ConcurrentHashMap<String, Set<Runnable>> getTasks() {
-		return staticField("TASKS").ofType(new TypeRef<ConcurrentHashMap<String, Set<Runnable>>>() {
-		}).in(UiThreadExecutor.class).get();
 	}
 
 }
