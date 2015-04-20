@@ -201,6 +201,13 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void enclosingElementIsNotAbstractIfNotAbstract(Element element, IsValid valid) {
+		if (!annotationHelper.isAbstract(element) && annotationHelper.isAbstract(element.getEnclosingElement())) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a non-abstract inner element whose outer element is abstract");
+		}
+	}
+
 	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EBean.class, valid);
