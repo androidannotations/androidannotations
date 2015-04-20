@@ -20,6 +20,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.util.ActivityController;
 
@@ -31,7 +32,7 @@ public class AfterViewsActivityTest {
 
 	@Before
 	public void setUp() {
-		controller = ActivityController.of(AfterViewsActivity_.class);
+		controller = Robolectric.buildActivity(AfterViewsActivity_.class);
 		activity = controller.get();
 	}
 

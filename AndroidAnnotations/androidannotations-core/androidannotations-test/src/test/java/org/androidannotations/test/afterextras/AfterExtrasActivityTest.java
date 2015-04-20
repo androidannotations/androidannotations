@@ -20,6 +20,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.util.ActivityController;
 
@@ -34,7 +35,8 @@ public class AfterExtrasActivityTest {
 
 	@Before
 	public void setUp() {
-		activityController = ActivityController.of(AfterExtrasActivity_.class);
+
+		activityController = Robolectric.buildActivity(AfterExtrasActivity_.class);
 		activity = activityController.get();
 
 		intent = AfterExtrasActivity_.intent(activity).extraDataSet(true).get();

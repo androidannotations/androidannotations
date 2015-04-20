@@ -19,21 +19,24 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Robolectric.setupActivity;
 
 import org.androidannotations.test.R;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import android.preference.PreferenceActivity.Header;
 
-//@RunWith(RobolectricTestRunner.class)
-public class PreferenceHeadersActivityTestSkipped {
+@RunWith(RobolectricTestRunner.class)
+public class PreferenceHeadersActivityTest {
 
-	private PreferenceHeadersActivity_ activity;
+	private PreferenceHeadersActivity activity;
 
-	// @Before
+	@Before
 	public void setUp() {
 		activity = setupActivity(PreferenceHeadersActivity_.class);
 	}
 
-	// TODO: preference headers is not yet implemented in Robolectric
-	// @Test
+	@Test
 	public void testPreferenceHeadersInjected() {
 		assertThat(activity.headers).hasSize(1);
 

@@ -21,6 +21,7 @@ import org.androidannotations.test.ebean.EmptyDependency;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.util.ActivityController;
 
@@ -31,7 +32,7 @@ public class NonConfigurationActivityTest {
 
 	@Before
 	public void setUp() {
-		ActivityController<NonConfigurationActivity_> controller = ActivityController.of(NonConfigurationActivity_.class);
+		ActivityController<NonConfigurationActivity_> controller = Robolectric.buildActivity(NonConfigurationActivity_.class);
 		activity = controller.create().get();
 	}
 

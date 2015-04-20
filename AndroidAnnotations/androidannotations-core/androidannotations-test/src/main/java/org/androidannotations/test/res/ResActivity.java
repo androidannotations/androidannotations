@@ -36,7 +36,7 @@ public class ResActivity extends Activity {
 	// @AnimationRes
 	XmlResourceParser fade_in;
 
-	// @AnimationRes
+	@AnimationRes
 	Animation fadein;
 
 	@DrawableRes

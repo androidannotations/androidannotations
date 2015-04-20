@@ -62,6 +62,12 @@
 			<artifactId>robolectric</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.robolectric</groupId>
+			<artifactId>shadows-support-v4</artifactId>
+			<version>${robolectric.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.easytesting</groupId>
 			<artifactId>fest-reflect</artifactId>
 		</dependency>

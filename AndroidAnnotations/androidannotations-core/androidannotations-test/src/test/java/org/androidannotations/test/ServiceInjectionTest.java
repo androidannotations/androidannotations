@@ -64,7 +64,7 @@ public class ServiceInjectionTest {
 		// assertThat(activity.fingerprintManager).isNotNull(); // TODO API 23
 		// assertThat(activity.hardwarePropertiesManager).isNotNull(); // TODO API 24
 		// assertThat(activity.hdmiControlManager).isNotNull(); // hidden API
-		// assertThat(activity.inputManager).isNotNull(); // TODO no support yet in Robolectric
+		// assertThat(activity.inputManager).isNotNull();
 		assertThat(activity.inputMethodManager).isNotNull();
 		// assertThat(activity.jobScheduler).isNotNull(); // TODO API 21
 		assertThat(activity.keyguardManager).isNotNull();
@@ -79,7 +79,7 @@ public class ServiceInjectionTest {
 		// assertThat(activity.networkManagementService).isNotNull(); // hidden API
 		// assertThat(activity.networkPolicyManager).isNotNull(); // hidden API
 		// assertThat(activity.networkStatsManager).isNotNull(); // TODO API 23
-		// assertThat(activity.nfcManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.nfcManager).isNotNull();
 		assertThat(activity.notificationManager).isNotNull();
 		// assertThat(activity.nsdManager).isNotNull(); // TODO no support yet in Robolectric
 		// assertThat(activity.persistentDataBlockManager).isNotNull(); // hidden API

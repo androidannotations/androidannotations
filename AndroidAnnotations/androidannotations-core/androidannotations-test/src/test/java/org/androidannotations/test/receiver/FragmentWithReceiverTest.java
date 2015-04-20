@@ -21,8 +21,8 @@ import static org.robolectric.util.FragmentTestUtil.startFragment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -69,7 +69,7 @@ public class FragmentWithReceiverTest {
 	public void onResumeReceiverCalled() {
 		Intent intent = new Intent(FragmentWithReceiver.RECEIVER_ACTION);
 
-		LocalBroadcastManager.getInstance(Robolectric.application).sendBroadcast(intent);
+		LocalBroadcastManager.getInstance(RuntimeEnvironment.application).sendBroadcast(intent);
 
 		assertTrue(fragment.onResumeReceiverCalled);
 	}

@@ -42,7 +42,7 @@ public class InjectExtraTest {
 
 	@Before
 	public void setUp() {
-		controller = ActivityController.of(ExtraInjectedActivity_.class);
+		controller = Robolectric.buildActivity(ExtraInjectedActivity_.class);
 		activity = controller.get();
 	}
 

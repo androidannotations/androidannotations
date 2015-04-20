@@ -17,7 +17,7 @@ package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Robolectric.setupActivity;
-import static org.robolectric.Robolectric.shadowOf_;
+import static org.robolectric.internal.ShadowExtractor.extract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -174,21 +174,21 @@ public class TextWatchedActivityTest {
 	}
 
 	private static void afterTextChanged(TextView textView, Editable s) {
-		ShadowTextView shadowTextView = shadowOf_(textView);
+		ShadowTextView shadowTextView = (ShadowTextView) extract(textView);
 		for (TextWatcher textWatcher : shadowTextView.getWatchers()) {
 			textWatcher.afterTextChanged(s);
 		}
 	}
 
 	private static void beforeTextChanged(TextView textView, CharSequence s, int start, int count, int after) {
-		ShadowTextView shadowTextView = shadowOf_(textView);
+		ShadowTextView shadowTextView = (ShadowTextView) extract(textView);
 		for (TextWatcher textWatcher : shadowTextView.getWatchers()) {
 			textWatcher.beforeTextChanged(s, start, count, after);
 		}
 	}
 
 	private static void onTextChanged(TextView textView, CharSequence s, int start, int before, int count) {
-		ShadowTextView shadowTextView = shadowOf_(textView);
+		ShadowTextView shadowTextView = (ShadowTextView) extract(textView);
 		for (TextWatcher textWatcher : shadowTextView.getWatchers()) {
 			textWatcher.onTextChanged(s, start, before, count);
 		}

@@ -17,7 +17,7 @@ package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Robolectric.setupActivity;
-import static org.robolectric.Robolectric.shadowOf_;
+import static org.robolectric.internal.ShadowExtractor.extract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class SeekBarChangeListenedActivityTest {
 	public void setUp() {
 		activity = setupActivity(SeekBarChangeListenedActivity_.class);
 		seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
-		shadowSeekBar = shadowOf_(seekBar);
+		shadowSeekBar = (ShadowSeekBar) extract(seekBar);
 	}
 
 	@Test

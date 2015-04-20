@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -55,7 +56,7 @@ public class ActivityWithReceiverTest {
 	public void onLocalWifiStateChangedTest() {
 		Intent intent = new Intent(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
-		LocalBroadcastManager.getInstance(Robolectric.application).sendBroadcast(intent);
+		LocalBroadcastManager.getInstance(RuntimeEnvironment.application).sendBroadcast(intent);
 
 		assertTrue(activity.localWifiChangeIntentReceived);
 	}

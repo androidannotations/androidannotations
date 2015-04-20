@@ -82,7 +82,7 @@ public class SupposeThreadTest {
 
 	@Test
 	public void testSupposeUiAndUi() throws Exception {
-		Scheduler scheduler = Robolectric.getUiThreadScheduler();
+		Scheduler scheduler = Robolectric.getForegroundThreadScheduler();
 
 		final AtomicBoolean run = new AtomicBoolean(false);
 

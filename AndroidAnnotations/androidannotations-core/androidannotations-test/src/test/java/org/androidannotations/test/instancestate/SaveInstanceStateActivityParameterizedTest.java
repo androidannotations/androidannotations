@@ -24,6 +24,7 @@ import java.util.Collection;
 
 import org.androidannotations.test.CustomShadowBundle;
 import org.fest.util.Lists;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
@@ -33,6 +34,7 @@ import org.robolectric.annotation.Config;
 
 import android.os.Bundle;
 
+@Ignore
 @Config(shadows = CustomShadowBundle.class)
 @RunWith(ParameterizedRobolectricTestRunnerWorkaround.class)
 public class SaveInstanceStateActivityParameterizedTest {
@@ -107,9 +109,6 @@ public class SaveInstanceStateActivityParameterizedTest {
 	private String fieldName;
 	private Field field;
 
-	/**
-	 * @see RobolectricParameterized
-	 */
 	public SaveInstanceStateActivityParameterizedTest(String fieldName, Object value) throws Exception {
 		this.fieldName = fieldName;
 		this.value = value;

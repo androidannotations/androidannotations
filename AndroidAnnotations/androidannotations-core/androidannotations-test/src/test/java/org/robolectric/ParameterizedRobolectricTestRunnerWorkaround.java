@@ -23,12 +23,14 @@ import static org.fest.reflect.core.Reflection.type;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.fest.reflect.reference.TypeRef;
 import org.junit.runner.Runner;
 import org.junit.runners.Suite;
 import org.robolectric.annotation.Config;
+import org.robolectric.internal.SdkConfig;
+import org.robolectric.internal.SdkEnvironment;
+import org.robolectric.manifest.AndroidManifest;
 
 public class ParameterizedRobolectricTestRunnerWorkaround extends Suite {
 
@@ -82,22 +84,22 @@ public class ParameterizedRobolectricTestRunnerWorkaround extends Suite {
 
 		ClassLoaderCreatorRobolectricTestRunner(Class<?> testClass) throws Exception {
 			super(testClass);
-
-			Map<Class<? extends RobolectricTestRunner>, EnvHolder> envHoldersByTestRunner = field("envHoldersByTestRunner") //
-					.ofType(new TypeRef<Map<Class<? extends RobolectricTestRunner>, EnvHolder>>() {
-					})//
-					.in(this)//
-					.get();
-
-			EnvHolder envHolder = envHoldersByTestRunner.get(RobolectricTestRunner.class);
-
-			if (envHolder != null) {
-				Field envHolderField = field("envHolder").ofType(EnvHolder.class).in(RobolectricTestRunner.class).info();
-				envHolderField.setAccessible(true);
-				envHolderField.set(this, envHolder);
-			} else {
-				envHoldersByTestRunner.put(RobolectricTestRunner.class, envHolder);
-			}
+// TODO
+//			Map<Class<? extends RobolectricTestRunner>, EnvHolder> envHoldersByTestRunner = field("envHoldersByTestRunner") //
+//					.ofType(new TypeRef<Map<Class<? extends RobolectricTestRunner>, EnvHolder>>() {
+//					})//
+//					.in(this)//
+//					.get();
+//
+//			EnvHolder envHolder = envHoldersByTestRunner.get(RobolectricTestRunner.class);
+//
+//			if (envHolder != null) {
+//				Field envHolderField = field("envHolder").ofType(EnvHolder.class).in(RobolectricTestRunner.class).info();
+//				envHolderField.setAccessible(true);
+//				envHolderField.set(this, envHolder);
+//			} else {
+//				envHoldersByTestRunner.put(RobolectricTestRunner.class, envHolder);
+//			}
 		}
 
 		@Override

@@ -17,23 +17,38 @@ package org.androidannotations.test.preference;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import org.androidannotations.test.R;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.util.FragmentTestUtil;
 
-// @RunWith(RobolectricTestRunner.class)
-public class PreferenceScreenFragmentTestSkipped {
+import android.preference.Preference;
 
-	private PreferenceScreenFragment_ fragment;
+@RunWith(RobolectricTestRunner.class)
+public class PreferenceAnnotationsFragmentTest {
+
+	private PreferenceAnnotationsFragment_ fragment;
 
 	@Before
 	public void setUp() {
-		fragment = new PreferenceScreenFragment_();
+		fragment = new PreferenceAnnotationsFragment_();
 		FragmentTestUtil.startFragment(fragment);
 	}
 
-	// TODO not yet implemented in Robolectric
-	// @Test
-	public void testPreferenceScreenInjected() {
-		assertThat(fragment.getPreferenceScreen()).isNotNull();
+	@Test
+	public void testPreferenceChangeHandled() {
+		assertThat(fragment.preferenceWithKeyChanged).isFalse();
+
+		Preference preference = fragment.findPreference(fragment.getString(R.string.listPreferenceKey));
+		preference.getOnPreferenceChangeListener().onPreferenceChange(preference, new Object());
+
+		assertThat(fragment.preferenceWithKeyChanged).isTrue();
+	}
+
+	@Test
+	public void testAfterPreferencesCalled() {
+		assertThat(fragment.afterPreferencesCalled).isTrue();
 	}
 }

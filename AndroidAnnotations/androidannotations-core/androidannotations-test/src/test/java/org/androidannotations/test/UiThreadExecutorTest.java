@@ -25,8 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.androidannotations.api.UiThreadExecutor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowLooper;
 
 @RunWith(RobolectricTestRunner.class)
 public class UiThreadExecutorTest {
@@ -40,7 +40,7 @@ public class UiThreadExecutorTest {
 				done.set(true);
 			}
 		}, 10);
-		Robolectric.runUiThreadTasksIncludingDelayedTasks();
+		ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
 		assertTrue("Task is still under execution", done.get());
 	}
 
@@ -54,7 +54,7 @@ public class UiThreadExecutorTest {
 			}
 		}, 10);
 		UiThreadExecutor.cancelAll("test");
-		Robolectric.runUiThreadTasksIncludingDelayedTasks();
+		ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
 		assertFalse("Task is not cancelled", done.get());
 	}
 
@@ -73,7 +73,7 @@ public class UiThreadExecutorTest {
 					}
 				}, 10);
 				taskStartedLatch.countDown();
-				Robolectric.runUiThreadTasksIncludingDelayedTasks();
+				ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
 			}
 		}.start();
 		await(taskFinishedLatch);

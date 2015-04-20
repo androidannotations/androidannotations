@@ -15,15 +15,15 @@
  */
 package org.androidannotations.test;
 
-import static org.robolectric.Robolectric.directlyOn;
+import static org.robolectric.internal.Shadow.directlyOn;
 
 import java.util.Arrays;
 
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.robolectric.annotation.RealObject;
-import org.robolectric.internal.ReflectionHelpers;
 import org.robolectric.shadows.ShadowBundle;
+import org.robolectric.util.ReflectionHelpers;
 
 import android.os.Bundle;
 import android.os.Parcelable;

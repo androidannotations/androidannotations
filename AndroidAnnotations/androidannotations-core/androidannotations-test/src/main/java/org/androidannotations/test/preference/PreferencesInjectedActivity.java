@@ -46,6 +46,7 @@ public class PreferencesInjectedActivity extends PreferenceActivity {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(android.os.Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
 	}
 

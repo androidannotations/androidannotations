@@ -16,7 +16,7 @@
 package org.androidannotations.test.efragment;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.robolectric.util.FragmentTestUtil.startFragment;
+import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
 import org.androidannotations.test.R;
 import org.junit.Test;

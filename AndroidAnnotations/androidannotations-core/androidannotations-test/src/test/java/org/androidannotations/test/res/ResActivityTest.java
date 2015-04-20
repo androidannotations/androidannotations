@@ -58,11 +58,7 @@ public class ResActivityTest {
 		assertNotNull(activity.multiInjectedString);
 	}
 
-	/**
-	 * Cannot be tested right now, because there is no Robolectric shadow class
-	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
-	 */
-	// @Test
+	@Test
 	public void animNotNull() {
 		assertThat(activity.fadein).isNotNull();
 	}
@@ -78,20 +74,12 @@ public class ResActivityTest {
 		assertThat(activity.fade_in).isNotNull();
 	}
 
-	/**
-	 * Cannot be tested right now, because there is no Robolectric shadow class
-	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
-	 */
-	// @Test
+	@Test
 	public void methodInjectedAnimationNotNull() {
 		assertNotNull(activity.methodInjectedAnimation);
 	}
 
-	/**
-	 * Cannot be tested right now, because there is no Robolectric shadow class
-	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
-	 */
-	// @Test
+	@Test
 	public void multiInjectedAnimationNotNull() {
 		assertNotNull(activity.multiInjectedAnimation);
 	}
