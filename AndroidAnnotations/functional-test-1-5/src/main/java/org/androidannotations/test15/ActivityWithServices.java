@@ -81,6 +81,10 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// IBackupManager backupManager; // hidden API
 	
+	// TODO API 21
+	// @SystemService
+	// BatteryManager natteryManager;
+	
 	// TODO API 18
 	// @SystemService
 	// BluetoothManager bluetoothManager;
@@ -121,6 +125,15 @@ public class ActivityWithServices extends Activity {
 	@SystemService
 	DropBoxManager dropBoxManager;
 	
+	// @SystemService
+	// EthernetManager ethernetManager; // hidden API
+
+	// @SystemService
+	// FingerprintManager fingerprintManager; // hidden API
+
+	// @SystemService
+	// HdmiControlManager hdmiControlManager; // hidden API
+
 	// TODO no support yet in Robolectric
 	// @SystemService
 	// InputManager inputManager;
@@ -128,8 +141,16 @@ public class ActivityWithServices extends Activity {
 	@SystemService
 	InputMethodManager inputMethodManager;
 	
+	// TODO API 21
+	// @SystemService
+	// JobScheduler jobScheduler;
+	
 	@SystemService
 	KeyguardManager keyguardManager;
+	
+	// TODO API 21
+	// @SystemService
+	// LauncherApps launcherApps;
 	
 	@SystemService
 	LayoutInflater layoutInflater;
@@ -137,9 +158,20 @@ public class ActivityWithServices extends Activity {
 	@SystemService
 	LocationManager locationManager;
 	
+	// TODO API 21
+	// @SystemService
+	// MediaProjectionManager mediaProjectionManager;
+	
 	@SystemService
 	MediaRouter mediaRouter;
 	
+	// TODO API 21
+	// @SystemService
+	// MediaSessionManager mediaSessionManager;
+	
+	// @SystemService
+	// NetworkScoreManager networkScoreManager; // hidden API
+
 	// @SystemService
 	// NetworkManagementService networkManagementService; // hidden API
 	
@@ -157,13 +189,20 @@ public class ActivityWithServices extends Activity {
 
 	@SystemService
 	NsdManager nsdManager;
-	
+
+	// @SystemService
+	// PersistentDataBlockManager ersistentDataBlockManager; // hidden API
+
 	// TODO API 19
 	// @SystemService
 	// PrintManager printManager;
 	
 	@SystemService
 	PowerManager powerManager;
+	
+	// TODO API 21
+	// @SystemService
+	// RestrictionsManager restrictionsManager;
 	
 	@SystemService
 	SearchManager searchManager;
@@ -183,6 +222,14 @@ public class ActivityWithServices extends Activity {
 	@SystemService
 	StorageManager storageManager;
 	
+	// TODO API 22
+	// @SystemService
+	// SubscriptionManager subscriptionManager;
+	
+	// TODO API 21
+	// @SystemService
+	// TelecomManager telecomManager;
+	
 	@SystemService
 	TelephonyManager telephonyManager;
 	
@@ -192,11 +239,19 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// ThrottleManager throttleManager; // hidden API
 	
+	// TODO API 21
+	// @SystemService
+	// TvInputManager tvInputManager;
+	
 	@SystemService
 	UiModeManager uiModeManager;
 	
 	// @SystemService
 	// IUpdateLock updateLock; // hidden API
+	
+	// TODO API 21
+	// @SystemService
+	// UsageStatsManager usageStatsManager;
 	
 	@SystemService
 	UsbManager usbManager;
@@ -213,7 +268,10 @@ public class ActivityWithServices extends Activity {
 	
 	@SystemService
 	WifiManager wifiManager;
-	
+
+	// @SystemService
+	// WifiPasspointManager wifiPasspointManager; // hidden API
+
 	@SystemService
 	WifiP2pManager wifiP2pManager;
 	
