@@ -29,6 +29,7 @@ import android.app.SearchManager;
 import android.app.UiModeManager;
 import android.app.WallpaperManager;
 import android.app.admin.DevicePolicyManager;
+import android.appwidget.AppWidgetManager;
 import android.hardware.SensorManager;
 import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
@@ -71,10 +72,10 @@ public class ActivityWithServices extends Activity {
 	// TODO API 19
 	// @SystemService
 	// AppOpsManager appOpsManager;
-	
-	// @SystemService
-	// AppWidgetManager appWidgetManager; // hidden API
-	
+
+	@SystemService
+	AppWidgetManager appWidgetManager;
+
 	@SystemService
 	AudioManager audioManager;
 	
