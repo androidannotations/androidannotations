@@ -87,8 +87,39 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
+ * <h2>Cancellation</h2>
+ * <p>
+ * You can cancel UiThread tasks if you provide an id (which cannot be an empty
+ * string) with the {@link #id()} parameter. Please note tasks which use
+ * <code>REUSE</code> {@link #propagation()} cannot have an id hence cannot be
+ * cancelled. To cancel all {@link UiThread} tasks with a given id, call
+ * {@link org.androidannotations.api.UiThreadExecutor#cancelAll(String)
+ * UiThreadExecutor#cancelAll(String)}.
+ * </p>
+ * 
+ * <blockquote> <b>Example</b> :
+ * 
+ * <pre>
+ * &#064;EBean
+ * public class MyBean {
+ * 
+ * 	&#064;UiThread(id = &quot;myId&quot;)
+ * 	void uiThreadTask() {
+ * 		// do sg
+ * 	}
+ * }
+ * 
+ * ...
+ * 
+ * UiThreadExecutor.cancelAll(&quot;myId&quot;);
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * 
  * @see Background
  * @see android.os.Handler
+ * @see org.androidannotations.api.UiThreadExecutor#cancelAll(String)
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
@@ -127,4 +158,17 @@ public @interface UiThread {
 		 */
 		REUSE
 	}
+
+	/**
+	 * Identifier for cancellation.
+	 * 
+	 * To cancel all tasks having a specified id:
+	 * 
+	 * <pre>
+	 * UiThreadExecutor.cancelAll(&quot;my_background_id&quot;);
+	 * </pre>
+	 * 
+	 * @return the id for cancellation
+	 */
+	String id() default "";
 }
