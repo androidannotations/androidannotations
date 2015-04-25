@@ -13,19 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.rclass;
+package org.androidannotations.test15.preference;
 
-import java.util.Locale;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.PreferenceScreen;
+import org.androidannotations.test15.R;
 
-public interface IRClass {
+import android.preference.PreferenceActivity;
 
-	public enum Res {
-		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU, RAW, XML;
-		public String rName() {
-			return toString().toLowerCase(Locale.ENGLISH);
-		}
-	}
-
-	IRInnerClass get(Res res);
+@PreferenceScreen(R.xml.settings)
+@EActivity
+public class PreferenceScreenActivity extends PreferenceActivity {
 
 }

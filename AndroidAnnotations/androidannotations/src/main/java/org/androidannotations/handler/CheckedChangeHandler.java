@@ -38,7 +38,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class CheckedChangeHandler extends AbstractListenerHandler {
+public class CheckedChangeHandler extends AbstractViewListenerHandler {
 
 	public CheckedChangeHandler(ProcessingEnvironment processingEnvironment) {
 		super(CheckedChange.class, processingEnvironment);
@@ -94,7 +94,7 @@ public class CheckedChangeHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected JClass getViewClass() {
+	protected JClass getListenerTargetClass() {
 		return classes().COMPOUND_BUTTON;
 	}
 }

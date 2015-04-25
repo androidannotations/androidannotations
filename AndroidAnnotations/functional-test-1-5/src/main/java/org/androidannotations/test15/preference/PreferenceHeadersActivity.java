@@ -13,19 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.rclass;
+package org.androidannotations.test15.preference;
 
-import java.util.Locale;
+import java.util.List;
 
-public interface IRClass {
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.PreferenceHeaders;
+import org.androidannotations.test15.R;
 
-	public enum Res {
-		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU, RAW, XML;
-		public String rName() {
-			return toString().toLowerCase(Locale.ENGLISH);
-		}
+import android.preference.PreferenceActivity;
+
+@PreferenceHeaders(R.xml.headers)
+@EActivity
+public class PreferenceHeadersActivity extends PreferenceActivity {
+
+	List<Header> headers;
+
+	@Override
+	public void onBuildHeaders(List<Header> target) {
+		headers = target;
+		super.onBuildHeaders(target);
 	}
-
-	IRInnerClass get(Res res);
-
 }

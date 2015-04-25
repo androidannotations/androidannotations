@@ -53,6 +53,7 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
@@ -60,7 +61,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
-public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
+public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration, HasPreferenceHeaders {
 
 	private static final String ON_CONTENT_CHANGED_JAVADOC = "We cannot simply copy the " + "code from RoboActivity, because that can cause classpath issues. " + "For further details see issue #1116.";
 
@@ -75,6 +76,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private OnActivityResultHolder onActivityResultHolder;
 	private ReceiverRegistrationHolder<EActivityHolder> receiverRegistrationHolder;
 	private RoboGuiceHolder roboGuiceHolder;
+	private PreferenceActivityHolder preferencesHolder;
 	private JMethod injectExtrasMethod;
 	private JBlock injectExtrasBlock;
 	private JVar injectExtras;
@@ -102,6 +104,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
 		receiverRegistrationHolder = new ReceiverRegistrationHolder<EActivityHolder>(this);
+		preferencesHolder = new PreferenceActivityHolder(this);
 		setSetContentView();
 		intentBuilder = new ActivityIntentBuilder(this, androidManifest);
 		intentBuilder.build();
@@ -771,6 +774,36 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
 
 		return databaseHelperRef;
+	}
+
+	@Override
+	public JBlock getPreferenceScreenInitializationBlock() {
+		return getInitBody();
+	}
+
+	@Override
+	public JBlock getAddPreferencesFromResourceBlock() {
+		return preferencesHolder.getAddPreferencesFromResourceBlock();
+	}
+
+	@Override
+	public void assignFindPreferenceByKey(JFieldRef idRef, JClass preferenceClass, JFieldRef fieldRef) {
+		preferencesHolder.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
+	}
+
+	@Override
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass) {
+		return preferencesHolder.getFoundPreferenceHolder(idRef, preferenceClass);
+	}
+
+	@Override
+	public JBlock getOnBuildHeadersBlock() {
+		return preferencesHolder.getOnBuildHeadersBlock();
+	}
+
+	@Override
+	public JVar getOnBuildHeadersTargetParam() {
+		return preferencesHolder.getOnBuildHeadersTargetParam();
 	}
 
 }

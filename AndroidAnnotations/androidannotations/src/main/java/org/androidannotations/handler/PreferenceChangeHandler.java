@@ -24,9 +24,10 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.annotations.Touch;
+import org.androidannotations.annotations.PreferenceChange;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
@@ -39,31 +40,31 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class TouchHandler extends AbstractViewListenerHandler {
+public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
-	public TouchHandler(ProcessingEnvironment processingEnvironment) {
-		super(Touch.class, processingEnvironment);
+	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+
+	public PreferenceChangeHandler(ProcessingEnvironment processingEnvironment) {
+		super(PreferenceChange.class, processingEnvironment);
 	}
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		super.validate(element, validatedElements, valid);
+		validatorHelper.enclosingElementExtendsPreferenceActivityOrPreferenceFragment(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.hasZeroOrOneMotionEventParameter(executableElement, valid);
-
-		validatorHelper.param.hasZeroOrOneViewParameter(executableElement, valid);
-
-		validatorHelper.param.hasNoOtherParameterThanMotionEventOrView(executableElement, valid);
+		validatorHelper.param.hasNoOtherParameterThanPreferenceOrObjectOrSetOrStringOrBoolean(executableElement, valid);
+		validatorHelper.param.hasZeroOrOnePreferenceParameter(executableElement, valid);
+		validatorHelper.param.hasAtMostOneStringOrSetOrBooleanOrObjectParameter(executableElement, valid);
 	}
 
 	@Override
 	protected void makeCall(JBlock listenerMethodBody, JInvocation call, TypeMirror returnType) {
 		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
-
 		if (returnMethodResult) {
 			listenerMethodBody._return(call);
 		} else {
@@ -73,32 +74,35 @@ public class TouchHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
-		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
-		JVar eventParam = listenerMethod.param(classes().MOTION_EVENT, "event");
+	protected void processParameters(HasPreferences holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
+		JVar preferenceParam = listenerMethod.param(classes().PREFERENCE, "preference");
+		JVar newValueParam = listenerMethod.param(classes().OBJECT, "newValue");
 
-		for (VariableElement parameter : parameters) {
-			String parameterType = parameter.asType().toString();
-			if (parameterType.equals(CanonicalNameConstants.MOTION_EVENT)) {
-				call.arg(eventParam);
-			} else if (parameterType.equals(CanonicalNameConstants.VIEW)) {
-				call.arg(viewParam);
+		for (VariableElement variableElement : userParameters) {
+			if (variableElement.asType().toString().equals(CanonicalNameConstants.PREFERENCE)) {
+				call.arg(preferenceParam);
+			} else if (variableElement.asType().toString().equals(CanonicalNameConstants.OBJECT)) {
+				call.arg(newValueParam);
+			} else {
+				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType(), holder);
+				call.arg(JExpr.cast(userParamClass, newValueParam));
 			}
 		}
 	}
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onTouch");
+		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onPreferenceChange");
 	}
 
 	@Override
 	protected String getSetterName() {
-		return "setOnTouchListener";
+		return "setOnPreferenceChangeListener";
 	}
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().VIEW_ON_TOUCH_LISTENER;
+		return classes().PREFERENCE_CHANGE_LISTENER;
 	}
+
 }

@@ -109,7 +109,12 @@ public final class CanonicalNameConstants {
 	public static final String WAKE_LOCK = "android.os.PowerManager.WakeLock";
 	public static final String BUILD_VERSION = "android.os.Build.VERSION";
 	public static final String BUILD_VERSION_CODES = "android.os.Build.VERSION_CODES";
+	public static final String PREFERENCE_ACTIVITY = "android.preference.PreferenceActivity";
+	public static final String PREFERENCE_FRAGMENT = "android.preference.PreferenceFragment";
 	public static final String ACTIVITY_COMPAT = "android.support.v4.app.ActivityCompat";
+	public static final String PREFERENCE = "android.preference.Preference";
+	public static final String PREFERENCE_CHANGE_LISTENER = "android.preference.Preference.OnPreferenceChangeListener";
+	public static final String PREFERENCE_CLICK_LISTENER = "android.preference.Preference.OnPreferenceClickListener";
 
 	/*
 	 * Android permission

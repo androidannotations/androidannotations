@@ -38,7 +38,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class FocusChangeHandler extends AbstractListenerHandler {
+public class FocusChangeHandler extends AbstractViewListenerHandler {
 
 	public FocusChangeHandler(ProcessingEnvironment processingEnvironment) {
 		super(FocusChange.class, processingEnvironment);

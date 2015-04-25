@@ -13,19 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.rclass;
+package org.androidannotations.test15.preference;
 
-import java.util.Locale;
+import static org.fest.assertions.api.Assertions.assertThat;
 
-public interface IRClass {
+import org.junit.Before;
+import org.robolectric.util.FragmentTestUtil;
 
-	public enum Res {
-		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU, RAW, XML;
-		public String rName() {
-			return toString().toLowerCase(Locale.ENGLISH);
-		}
+// @RunWith(RobolectricTestRunner.class)
+public class PreferenceScreenFragmentTestSkipped {
+
+	private PreferenceScreenFragment_ fragment;
+
+	@Before
+	public void setUp() {
+		fragment = new PreferenceScreenFragment_();
+		FragmentTestUtil.startFragment(fragment);
 	}
 
-	IRInnerClass get(Res res);
-
+	// TODO not yet implemented in Robolectric
+	// @Test
+	public void testPreferenceScreenInjected() {
+		assertThat(fragment.getPreferenceScreen()).isNotNull();
+	}
 }

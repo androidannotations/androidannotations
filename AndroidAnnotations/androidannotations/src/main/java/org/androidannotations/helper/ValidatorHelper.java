@@ -91,6 +91,7 @@ import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
+@SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
 
 	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
@@ -114,6 +115,8 @@ public class ValidatorHelper {
 	private static final List<Receiver.RegisterAt> VALID_ACTIVITY_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop);
 	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy);
 	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
+
+	private static final List<String> VALID_PREFERENCE_CLASSES = asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -588,6 +591,10 @@ public class ValidatorHelper {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s can only be used on a " + CanonicalNameConstants.LIST + " of elements extending " + CanonicalNameConstants.VIEW);
 		}
+	}
+
+	public void extendsPreference(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.PREFERENCE, valid);
 	}
 
 	public void hasASqlLiteOpenHelperParameterizedType(Element element, IsValid valid) {
@@ -1505,4 +1512,23 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void extendsPreferenceActivityOrPreferenceFragment(Element element, IsValid valid) {
+		extendsOneOfTypes(element, VALID_PREFERENCE_CLASSES, valid);
+	}
+
+	public void extendsPreferenceActivity(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.PREFERENCE_ACTIVITY, valid);
+	}
+
+	public void enclosingElementExtendsPreferenceActivityOrPreferenceFragment(Element element, IsValid valid) {
+		extendsOneOfTypes(element.getEnclosingElement(), VALID_PREFERENCE_CLASSES, valid);
+	}
+
+	public void isPreferenceFragmentClassPresent(Element element, IsValid valid) {
+		TypeElement preferenceFragmentElement = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.PREFERENCE_FRAGMENT);
+
+		if (preferenceFragmentElement == null) {
+			annotationHelper.printAnnotationError(element, "The class " + CanonicalNameConstants.PREFERENCE_FRAGMENT + " cannot be found. You have to use at least API 11");
+		}
+	}
 }

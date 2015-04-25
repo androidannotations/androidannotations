@@ -21,67 +21,74 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.annotations.Click;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.annotations.PreferenceClick;
+import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class ClickHandler extends AbstractViewListenerHandler {
+public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 
-	public ClickHandler(ProcessingEnvironment processingEnvironment) {
-		super(Click.class, processingEnvironment);
+	public PreferenceClickHandler(ProcessingEnvironment processingEnvironment) {
+		super(PreferenceClick.class, processingEnvironment);
 	}
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
 		super.validate(element, validatedElements, valid);
+		validatorHelper.enclosingElementExtendsPreferenceActivityOrPreferenceFragment(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		validatorHelper.returnTypeIsVoid(executableElement, valid);
+		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.zeroOrOneViewParameter(executableElement, valid);
+		validatorHelper.param.zeroOrOnePreferenceParameter(executableElement, valid);
 	}
 
 	@Override
 	protected void makeCall(JBlock listenerMethodBody, JInvocation call, TypeMirror returnType) {
-		listenerMethodBody.add(call);
+		boolean returnMethodResult = returnType.getKind() != TypeKind.VOID;
+		if (returnMethodResult) {
+			listenerMethodBody._return(call);
+		} else {
+			listenerMethodBody.add(call);
+			listenerMethodBody._return(JExpr.TRUE);
+		}
 	}
 
 	@Override
-	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
-		boolean hasItemParameter = parameters.size() == 1;
+	protected void processParameters(HasPreferences holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
+		JVar preferenceParam = listenerMethod.param(classes().PREFERENCE, "preference");
 
-		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
-
-		if (hasItemParameter) {
-			call.arg(viewParam);
+		if (userParameters.size() == 1) {
+			call.arg(preferenceParam);
 		}
 	}
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().VOID, "onClick");
+		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onPreferenceClick");
 	}
 
 	@Override
 	protected String getSetterName() {
-		return "setOnClickListener";
+		return "setOnPreferenceClickListener";
 	}
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().VIEW_ON_CLICK_LISTENER;
+		return classes().PREFERENCE_CLICK_LISTENER;
 	}
 
 }

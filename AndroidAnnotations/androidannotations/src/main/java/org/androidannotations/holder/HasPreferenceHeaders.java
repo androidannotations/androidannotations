@@ -13,19 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.rclass;
+package org.androidannotations.holder;
 
-import java.util.Locale;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JVar;
 
-public interface IRClass {
+public interface HasPreferenceHeaders extends HasPreferences {
 
-	public enum Res {
-		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU, RAW, XML;
-		public String rName() {
-			return toString().toLowerCase(Locale.ENGLISH);
-		}
-	}
+	JBlock getOnBuildHeadersBlock();
 
-	IRInnerClass get(Res res);
-
+	JVar getOnBuildHeadersTargetParam();
 }

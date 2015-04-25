@@ -36,6 +36,7 @@ public class ValidatorParameterHelper {
 
 	private static final List<String> ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES = asList(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM);
 	private static final List<String> EDITOR_ACTION_ALLOWED_PARAMETER_TYPES = asList(CanonicalNameConstants.TEXT_VIEW, CanonicalNameConstants.INTEGER, "int", CanonicalNameConstants.KEY_EVENT);
+	private static final List<String> PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM = asList(CanonicalNameConstants.OBJECT, CanonicalNameConstants.SET, CanonicalNameConstants.STRING, CanonicalNameConstants.BOOLEAN);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -97,6 +98,10 @@ public class ValidatorParameterHelper {
 		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.BUNDLE, valid);
 	}
 
+	public void zeroOrOnePreferenceParameter(ExecutableElement executableElement, IsValid valid) {
+		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.PREFERENCE, valid);
+	}
+
 	public void hasOneOrTwoParametersAndFirstIsBoolean(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
@@ -129,6 +134,10 @@ public class ValidatorParameterHelper {
 
 	public void hasZeroOrOneViewParameter(ExecutableElement executableElement, IsValid valid) {
 		hasZeroOrOneParameterOfType(CanonicalNameConstants.VIEW, executableElement, valid);
+	}
+
+	public void hasZeroOrOnePreferenceParameter(ExecutableElement executableElement, IsValid valid) {
+		hasZeroOrOneParameterOfType(CanonicalNameConstants.PREFERENCE, executableElement, valid);
 	}
 
 	private void hasZeroOrOneParameterOfType(String typeCanonicalName, ExecutableElement executableElement, IsValid valid) {
@@ -170,6 +179,13 @@ public class ValidatorParameterHelper {
 
 	public void hasNoOtherParameterThanViewOrBoolean(ExecutableElement executableElement, IsValid valid) {
 		String[] types = new String[] { CanonicalNameConstants.VIEW, CanonicalNameConstants.BOOLEAN, "boolean" };
+		hasNotOtherParameterThanTypes(types, executableElement, valid);
+	}
+
+	public void hasNoOtherParameterThanPreferenceOrObjectOrSetOrStringOrBoolean(ExecutableElement executableElement, IsValid valid) {
+		String[] types = new String[PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM.size() + 1];
+		types = PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM.toArray(types);
+		types[types.length - 1] = CanonicalNameConstants.PREFERENCE;
 		hasNotOtherParameterThanTypes(types, executableElement, valid);
 	}
 
@@ -248,6 +264,10 @@ public class ValidatorParameterHelper {
 
 	}
 
+	public void hasAtMostOneStringOrSetOrBooleanOrObjectParameter(ExecutableElement executableElement, IsValid valid) {
+		hasAtMostOneSpecificParameter(executableElement, PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM, valid);
+	}
+
 	public void hasAtMostOneSpecificParameter(ExecutableElement executableElement, String qualifiedName, IsValid valid) {
 		hasAtMostOneSpecificParameter(executableElement, Arrays.asList(qualifiedName), valid);
 	}
@@ -275,4 +295,5 @@ public class ValidatorParameterHelper {
 			}
 		}
 	}
+
 }

@@ -127,6 +127,16 @@ public class AnnotationHandlers {
 		add(new AfterExtrasHandler(processingEnvironment));
 		add(new AfterViewsHandler(processingEnvironment));
 
+		/* preference screen handler must be after injections */
+		add(new PreferenceScreenHandler(processingEnvironment));
+		add(new PreferenceHeadersHandler(processingEnvironment));
+		/* Preference injections must be after preference screen handler */
+		add(new PreferenceByKeyHandler(processingEnvironment));
+		add(new PreferenceChangeHandler(processingEnvironment));
+		add(new PreferenceClickHandler(processingEnvironment));
+		/* After preference injection methods must be after preference injections */
+		add(new AfterPreferencesHandler(processingEnvironment));
+
 		if (optionsHelper.shouldLogTrace()) {
 			add(new TraceHandler(processingEnvironment));
 		}

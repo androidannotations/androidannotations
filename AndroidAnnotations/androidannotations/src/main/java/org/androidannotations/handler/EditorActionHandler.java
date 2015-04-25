@@ -39,7 +39,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class EditorActionHandler extends AbstractListenerHandler {
+public class EditorActionHandler extends AbstractViewListenerHandler {
 
 	public EditorActionHandler(ProcessingEnvironment processingEnvironment) {
 		super(EditorAction.class, processingEnvironment);
@@ -108,7 +108,7 @@ public class EditorActionHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected JClass getViewClass() {
+	protected JClass getListenerTargetClass() {
 		return classes().TEXT_VIEW;
 	}
 }
