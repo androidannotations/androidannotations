@@ -45,6 +45,7 @@ public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHo
 
 			validatorHelper.enclosingElementHasAndroidAnnotation(element, validatedElements, valid);
 
+			validatorHelper.enclosingElementIsNotAbstractIfNotAbstract(element, valid);
 		}
 	}
 
