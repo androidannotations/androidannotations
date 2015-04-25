@@ -20,16 +20,10 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PUBLIC;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.TypeElement;
-
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.process.ProcessHolder.Classes;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
@@ -45,46 +39,6 @@ public class PreferencesHolder extends GeneratedClassHolderDecorator<EComponentW
 
 	public PreferencesHolder(EComponentWithViewSupportHolder holder) {
 		super(holder);
-	}
-
-	@Override
-	public JDefinedClass getGeneratedClass() {
-		return holder.getGeneratedClass();
-	}
-
-	@Override
-	public TypeElement getAnnotatedElement() {
-		return holder.getAnnotatedElement();
-	}
-
-	@Override
-	public ProcessingEnvironment processingEnvironment() {
-		return holder.processingEnvironment();
-	}
-
-	@Override
-	public Classes classes() {
-		return holder.classes();
-	}
-
-	@Override
-	public JCodeModel codeModel() {
-		return holder.codeModel();
-	}
-
-	@Override
-	public JClass refClass(String fullyQualifiedClassName) {
-		return holder.refClass(fullyQualifiedClassName);
-	}
-
-	@Override
-	public JClass refClass(Class<?> clazz) {
-		return refClass(clazz);
-	}
-
-	@Override
-	public JDefinedClass definedClass(String fullyQualifiedClassName) {
-		return definedClass(fullyQualifiedClassName);
 	}
 
 	@Override
