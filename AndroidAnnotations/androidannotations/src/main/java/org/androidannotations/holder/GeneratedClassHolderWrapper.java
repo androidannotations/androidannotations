@@ -15,11 +15,11 @@
  */
 package org.androidannotations.holder;
 
-public class GeneratedClassHolderDecorator<T extends GeneratedClassHolder> {
+public class GeneratedClassHolderWrapper<T extends GeneratedClassHolder> {
 
 	protected T holder;
 
-	public GeneratedClassHolderDecorator(T holder) {
+	public GeneratedClassHolderWrapper(T holder) {
 		this.holder = holder;
 	}
 

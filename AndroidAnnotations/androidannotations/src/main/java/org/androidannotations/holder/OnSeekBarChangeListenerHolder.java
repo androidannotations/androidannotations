@@ -21,7 +21,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class OnSeekBarChangeListenerHolder extends GeneratedClassHolderDecorator<EComponentWithViewSupportHolder> {
+public class OnSeekBarChangeListenerHolder extends GeneratedClassHolderWrapper<EComponentWithViewSupportHolder> {
 
 	private JDefinedClass listenerClass;
 	private JBlock onProgressChangedBody;

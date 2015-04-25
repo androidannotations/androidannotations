@@ -31,7 +31,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JSwitch;
 import com.sun.codemodel.JVar;
 
-public class OnActivityResultHolder extends GeneratedClassHolderDecorator<EComponentHolder> {
+public class OnActivityResultHolder extends GeneratedClassHolderWrapper<EComponentHolder> {
 
 	private JMethod method;
 	private JBlock afterSuperBlock;

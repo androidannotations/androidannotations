@@ -22,7 +22,7 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
 
-public abstract class FoundHolder extends GeneratedClassHolderDecorator<GeneratedClassHolder> {
+public abstract class FoundHolder extends GeneratedClassHolderWrapper<GeneratedClassHolder> {
 
 	private JClass type;
 	private JExpression ref;

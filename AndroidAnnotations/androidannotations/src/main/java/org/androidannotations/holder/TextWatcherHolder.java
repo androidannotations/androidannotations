@@ -22,7 +22,7 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPrimitiveType;
 import com.sun.codemodel.JVar;
 
-public class TextWatcherHolder extends GeneratedClassHolderDecorator<EComponentWithViewSupportHolder> {
+public class TextWatcherHolder extends GeneratedClassHolderWrapper<EComponentWithViewSupportHolder> {
 
 	private JVar textViewVariable;
 	private JDefinedClass listenerClass;

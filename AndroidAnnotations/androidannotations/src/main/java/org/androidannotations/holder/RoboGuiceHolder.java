@@ -20,7 +20,7 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class RoboGuiceHolder extends GeneratedClassHolderDecorator<EActivityHolder> {
+public class RoboGuiceHolder extends GeneratedClassHolderWrapper<EActivityHolder> {
 
 
 	// TODO access for these fields should be refactored
