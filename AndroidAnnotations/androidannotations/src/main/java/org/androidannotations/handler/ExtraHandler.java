@@ -64,6 +64,8 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		validatorHelper.enclosingElementHasEActivity(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
+
+		validatorHelper.canBePutInABundle(element, valid);
 	}
 
 	@Override

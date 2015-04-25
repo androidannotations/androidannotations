@@ -59,6 +59,8 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		validatorHelper.enclosingElementHasEFragment(element, validatedElements, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
+
+		validatorHelper.canBePutInABundle(element, valid);
 	}
 
 	@Override

@@ -15,7 +15,7 @@
  */
 package org.androidannotations.test15;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -33,7 +33,7 @@ public class ExtraInjectedActivity extends Activity {
 	CustomData[] arrayExtra;
 
 	@Extra("listExtra")
-	List<String> listExtra;
+	ArrayList<String> listExtra;
 
 	@Extra("intExtra")
 	int intExtra;
