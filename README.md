@@ -9,4 +9,4 @@ It takes care of the **plumbing**, and lets you concentrate on what's really imp
 
 ### [**Documentation**](https://github.com/excilys/androidannotations/wiki/Home)
 
-[![Build Status](https://travis-ci.org/excilys/androidannotations.svg?branch=develop)](https://travis-ci.org/excilys/androidannotations/builds)
+[![Build Status](https://travis-ci.org/excilys/androidannotations.svg?branch=develop)](https://travis-ci.org/excilys/androidannotations/builds) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidAnnotations-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/128)
