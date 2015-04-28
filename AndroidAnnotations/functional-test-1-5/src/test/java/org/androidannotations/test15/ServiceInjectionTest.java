@@ -36,7 +36,7 @@ public class ServiceInjectionTest {
 		assertThat(activity.activityManager).isNotNull();
 		assertThat(activity.alarmManager).isNotNull();
 		// assertThat(activity.appOpsManager).isNotNull(); // TODO API 19
-		// assertThat(activity.appWidgetManager).isNotNull(); // hidden API
+		assertThat(activity.appWidgetManager).isNotNull();
 		assertThat(activity.audioManager).isNotNull();
 		// assertThat(activity.backupManager).isNotNull(); // hidden API
 		// assertThat(activity.batteryManager).isNotNull(); // TODO API 21

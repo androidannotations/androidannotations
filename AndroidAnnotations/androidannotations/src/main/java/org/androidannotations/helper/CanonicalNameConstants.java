@@ -115,6 +115,7 @@ public final class CanonicalNameConstants {
 	public static final String PREFERENCE = "android.preference.Preference";
 	public static final String PREFERENCE_CHANGE_LISTENER = "android.preference.Preference.OnPreferenceChangeListener";
 	public static final String PREFERENCE_CLICK_LISTENER = "android.preference.Preference.OnPreferenceClickListener";
+	public static final String APP_WIDGET_MANAGER = "android.appwidget.AppWidgetManager";
 
 	/*
 	 * Android permission
