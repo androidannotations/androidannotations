@@ -16,7 +16,6 @@
 package org.androidannotations.holder;
 
 import static com.sun.codemodel.JMod.PUBLIC;
-import android.preference.PreferenceActivity.Header;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JMethod;
@@ -52,7 +51,7 @@ public class PreferenceActivityHolder extends PreferencesHolder implements HasPr
 		JMethod method = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onBuildHeaders");
 		method.annotate(Override.class);
 		onBuildHeadersBlock = method.body();
-		onBuildHeadersTargetParam = method.param(classes().LIST.narrow(Header.class), "target");
+		onBuildHeadersTargetParam = method.param(classes().LIST.narrow(classes().PREFERENCE_ACTIVITY_HEADER), "target");
 	}
 
 }
