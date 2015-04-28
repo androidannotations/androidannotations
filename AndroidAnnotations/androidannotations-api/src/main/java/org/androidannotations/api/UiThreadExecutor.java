@@ -17,9 +17,11 @@ package org.androidannotations.api;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.SystemClock;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class provide operations for
@@ -27,9 +29,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UiThreadExecutor {
 
-	static final Handler HANDLER = new Handler(Looper.getMainLooper());
+	static final Handler HANDLER = new Handler(Looper.getMainLooper()) {
+		@Override
+		public void handleMessage(Message msg) {
+			Runnable callback = msg.getCallback();
+			if (callback != null) {
+				callback.run();
+				decrementToken((Token)msg.obj);
+			} else {
+				super.handleMessage(msg);
+			}
+		}
+	};
 
-	static final ConcurrentHashMap<String, Object> TOKENS = new ConcurrentHashMap<String, Object>();
+	static final Map<String, Token> TOKENS = new HashMap<String, Token>();
 
 	private UiThreadExecutor() {
 		// should not be instantiated
@@ -52,20 +65,32 @@ public class UiThreadExecutor {
 			return;
 		}
 		long time = SystemClock.uptimeMillis() + delay;
-		HANDLER.postAtTime(task, getToken(id), time);
+		HANDLER.postAtTime(task, nextToken(id), time);
 	}
 
-	private static Object getToken(String id) {
-		Object token = TOKENS.get(id);
-		if (token == null) {
-			token = new Object();
-			Object oldObject = TOKENS.putIfAbsent(id, token);
-			//if a concurrent thread was faster
-			if (oldObject != null) {
-				token = oldObject;
+	private static Token nextToken(String id) {
+		synchronized (TOKENS) {
+			Token token = TOKENS.get(id);
+			if (token == null) {
+				token = new Token(id);
+				TOKENS.put(id, token);
+			}
+			token.runnablesCount++;
+			return token;
+		}
+	}
+
+	private static void decrementToken(Token token) {
+		synchronized (TOKENS) {
+			if (--token.runnablesCount == 0) {
+				String id = token.id;
+				Token old = TOKENS.remove(id);
+				if (old != token) {
+					//a runnable finished after cancelling, we just removed a wrong token, lets put it back
+					TOKENS.put(id, old);
+				}
 			}
 		}
-		return token;
 	}
 
 	/**
@@ -75,12 +100,21 @@ public class UiThreadExecutor {
 	 *            the cancellation identifier
 	 */
 	public static void cancelAll(String id) {
-		Object token = TOKENS.get(id);
+		Token token = TOKENS.remove(id);
 		if (token == null) {
 			//nothing to cancel
 			return;
 		}
 		HANDLER.removeCallbacksAndMessages(token);
+	}
+
+	private static class Token {
+		int runnablesCount = 0;
+		final String id;
+
+		private Token(String id) {
+			this.id = id;
+		}
 	}
 
 }

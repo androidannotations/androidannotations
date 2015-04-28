@@ -43,9 +43,23 @@ public class UiThreadExecutorTest {
 			public void run() {
 				done.set(true);
 			}
-		}, 0);
+		}, 10);
 		Robolectric.runUiThreadTasksIncludingDelayedTasks();
 		assertTrue("Task is still under execution", done.get());
+	}
+
+	@Test
+	public void oneTaskCancelTest() throws Exception {
+		final AtomicBoolean done = new AtomicBoolean(false);
+		UiThreadExecutor.runTask("test", new Runnable() {
+			@Override
+			public void run() {
+				done.set(true);
+			}
+		}, 10);
+		UiThreadExecutor.cancelAll("test");
+		Robolectric.runUiThreadTasksIncludingDelayedTasks();
+		assertFalse("Task is not cancelled", done.get());
 	}
 
 	@Test
@@ -61,7 +75,7 @@ public class UiThreadExecutorTest {
 						await(taskStartedLatch);
 						taskFinishedLatch.countDown();
 					}
-				}, 0);
+				}, 10);
 				taskStartedLatch.countDown();
 				Robolectric.runUiThreadTasksIncludingDelayedTasks();
 			}
