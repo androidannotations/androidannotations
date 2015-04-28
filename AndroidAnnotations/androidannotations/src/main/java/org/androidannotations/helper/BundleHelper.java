@@ -15,26 +15,24 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JMethod;
+import org.androidannotations.holder.GeneratedClassHolder;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.androidannotations.holder.GeneratedClassHolder;
-
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
+import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 public class BundleHelper {
 	public static final Map<String, String> METHOD_SUFFIX_BY_TYPE_NAME = new HashMap<String, String>();
@@ -185,26 +183,12 @@ public class BundleHelper {
 		}
 	}
 
-	public boolean restoreCallNeedCastStatement() {
-		return restoreCallNeedCastStatement;
-	}
-
-	public boolean restoreCallNeedsSuppressWarning() {
-		return restoreCallNeedsSuppressWarning;
-	}
-
 	public String getMethodNameToSave() {
 		return methodNameToSave;
 	}
 
-	public String getMethodNameToRestore() {
-		return methodNameToRestore;
-	}
-
 	private boolean isTypeParcelable(TypeElement elementType) {
-
 		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE);
-
 		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
 	}
 
@@ -225,10 +209,10 @@ public class BundleHelper {
 			expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
 		}
 
-		if (restoreCallNeedCastStatement()) {
+		if (restoreCallNeedCastStatement) {
 			expressionToRestore = JExpr.cast(variableClass, expressionToRestore);
 
-			if (restoreCallNeedsSuppressWarning()) {
+			if (restoreCallNeedsSuppressWarning) {
 				codeModelHelper.addSuppressWarnings(method, "unchecked");
 			}
 		}
