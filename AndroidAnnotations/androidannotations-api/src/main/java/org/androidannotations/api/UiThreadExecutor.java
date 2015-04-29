@@ -100,7 +100,10 @@ public class UiThreadExecutor {
 	 *            the cancellation identifier
 	 */
 	public static void cancelAll(String id) {
-		Token token = TOKENS.remove(id);
+		Token token;
+		synchronized (TOKENS) {
+			token = TOKENS.remove(id);
+		}
 		if (token == null) {
 			//nothing to cancel
 			return;

@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class)
 public class UiThreadExecutorTest {
 
-	//remove this after upgrading robolectric to 3+
+	//TODO remove this after upgrading robolectric to 3+
 	@BeforeClass
 	public static void hackOldRobolectric() {
 		final Handler handler = UiThreadExecutor.HANDLER;
