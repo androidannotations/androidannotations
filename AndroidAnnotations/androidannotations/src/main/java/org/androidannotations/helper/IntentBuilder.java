@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,26 @@
  */
 package org.androidannotations.helper;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.ref;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+
+import org.androidannotations.holder.HasIntentBuilder;
+
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
@@ -25,24 +45,6 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.holder.HasIntentBuilder;
-
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 
 public abstract class IntentBuilder {
 

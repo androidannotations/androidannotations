@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JOp;
-import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.HasOnActivityResult;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.IsValid;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -33,10 +26,19 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.List;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.HasOnActivityResult;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JOp;
+import com.sun.codemodel.JVar;
 
 public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivityResult> {
 
@@ -89,16 +91,14 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 			TypeMirror parameterType = parameter.asType();
 			if (parameter.getAnnotation(OnActivityResult.Extra.class) != null) {
 				if (extras == null) {
-					extras = onResultBlock.decl(classes().BUNDLE, "extras_",
-							JOp.cond(intent.ne(_null()).cand(intent.invoke("getExtras").ne(_null())),
-									intent.invoke("getExtras"), _new(classes().BUNDLE)));
+					extras = onResultBlock.decl(classes().BUNDLE, "extras_", JOp.cond(intent.ne(_null()).cand(intent.invoke("getExtras").ne(_null())), intent.invoke("getExtras"), _new(classes().BUNDLE)));
 				}
 				JExpression extraParameter = extraHandler.getExtraValue(parameter, extras, onResultBlock, holder);
 				onResultInvocation.arg(extraParameter);
 			} else if (CanonicalNameConstants.INTENT.equals(parameterType.toString())) {
 				onResultInvocation.arg(intent);
 			} else if (parameterType.getKind().equals(TypeKind.INT) //
-			        || CanonicalNameConstants.INTEGER.equals(parameterType.toString())) {
+					|| CanonicalNameConstants.INTEGER.equals(parameterType.toString())) {
 				onResultInvocation.arg(holder.getOnActivityResultResultCodeParam());
 			}
 		}

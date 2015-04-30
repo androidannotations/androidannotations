@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,6 @@
  */
 package org.androidannotations.test15.efragment;
 
-import android.app.ActivityManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.widget.TextView;
-
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
@@ -32,25 +28,28 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.test15.R;
 import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.User;
 import org.androidannotations.test15.ormlite.UserDao;
 import org.androidannotations.test15.roboguice.SampleRoboApplication;
 
+import android.app.ActivityManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.widget.TextView;
+
 @EFragment(R.layout.injected)
 public class MyFragment extends AbstractFragment {
-	
+
 	@ViewById
 	TextView myTextView;
 
 	@App
 	SampleRoboApplication customApplication;
-	
+
 	@SystemService
 	ActivityManager activityManager;
 
 	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
-	
+
 	@Click
 	void myButton() {
 	}
@@ -62,7 +61,7 @@ public class MyFragment extends AbstractFragment {
 
 	@Trace
 	void trace() {
-		
+
 	}
 
 	@Transactional
@@ -73,10 +72,10 @@ public class MyFragment extends AbstractFragment {
 	void calledAfterInjection() {
 
 	}
-	
+
 	@AfterViews
 	void calledAfterViewInjection() {
 
 	}
-	
+
 }

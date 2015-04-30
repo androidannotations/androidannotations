@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,31 +25,31 @@ import org.junit.Test;
 public class RestInterceptorTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(RestInterceptorTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void client_with_valid_interceptor_compiles() {
+	public void clientWithValidInterceptorCompiles() {
 		CompileResult result = compileFiles(ClientWithValidInterceptor.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void client_with_abstract_interceptor_does_not_compile() throws IOException {
+	public void clientWithAbstractInterceptorDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithAbstractInterceptor.class);
 		assertCompilationErrorOn(ClientWithAbstractInterceptor.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_non_interceptor_does_not_compile() throws IOException {
+	public void clientWithNonInterceptorDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithNonInterceptor.class);
 		assertCompilationErrorOn(ClientWithNonInterceptor.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_wrong_constructor_interceptor_does_not_compile() throws IOException {
+	public void clientWithWrongConstructorInterceptorDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithWrongConstructorInterceptor.class);
 		assertCompilationErrorOn(ClientWithWrongConstructorInterceptor.class, "@Rest", result);
 	}

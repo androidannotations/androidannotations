@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,6 @@
  */
 package org.androidannotations.test15.eviewgroup;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.animation.Animation;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -35,6 +28,13 @@ import org.androidannotations.annotations.res.AnimationRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.test15.R;
 
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.animation.Animation;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
 @EViewGroup(R.layout.component)
 public class CustomFrameLayout extends FrameLayout {
 
@@ -43,26 +43,26 @@ public class CustomFrameLayout extends FrameLayout {
 
 	@ViewById
 	protected TextView subtitle;
-	
+
 	@StringRes(R.string.app_name)
 	protected String res;
-	
+
 	@AnimationRes(R.anim.fadein)
 	protected Animation anim;
 
 	public CustomFrameLayout(Context context, int i) {
 		super(context);
 	}
-	
+
 	public CustomFrameLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
 	@Trace
 	@AfterViews
-	protected void afterViews(){
+	protected void afterViews() {
 	}
-	
+
 	@Click
 	protected void title() {
 	}
@@ -76,11 +76,11 @@ public class CustomFrameLayout extends FrameLayout {
 	}
 
 	@Background
-	protected void someBackgroundTask(){
+	protected void someBackgroundTask() {
 	}
-	
+
 	@UiThread
-	protected void someUIThreadTask(){
+	protected void someUIThreadTask() {
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,12 +15,12 @@
  */
 package org.androidannotations.annotations.sharedpreferences;
 
-import org.androidannotations.annotations.ResId;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.androidannotations.annotations.ResId;
 
 /**
  * <p>
@@ -41,9 +41,26 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface DefaultRes {
 
+	/**
+	 * The R.id.* field which refers the the resource which is used as the
+	 * default value of the preference.
+	 * 
+	 * @return the default value
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers the the resource which is used as the
+	 * default value of the preference.
+	 * 
+	 * @return the resource name of the default value
+	 */
 	String resName() default "";
 
+	/**
+	 * The R.string.* field which refers to the key of the preference.
+	 * 
+	 * @return the resource name of the preference key
+	 */
 	int keyRes() default ResId.DEFAULT_VALUE;
 }

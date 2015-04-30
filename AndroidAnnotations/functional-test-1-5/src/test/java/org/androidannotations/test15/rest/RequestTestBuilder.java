@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,6 +28,7 @@ import junit.framework.AssertionFailedError;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.springframework.http.HttpEntity;
@@ -112,24 +113,25 @@ public class RequestTestBuilder {
 
 	private void checkRequest() {
 		if (hasUrlVariables) {
-			verify(restTemplate).exchange(Mockito.anyString(), //
-					Mockito.any(HttpMethod.class), //
+			verify(restTemplate).exchange(Matchers.anyString(), //
+					Matchers.any(HttpMethod.class), //
 					argThat(entityArgumentMatcher), //
-					Mockito.<Class<Object>> any(),//
-					Mockito.<Map<String, Object>> any());
+					Matchers.<Class<Object>> any(), //
+					Matchers.<Map<String, Object>> any());
 		} else {
-			verify(restTemplate).exchange(Mockito.anyString(), //
-					Mockito.any(HttpMethod.class), //
+			verify(restTemplate).exchange(Matchers.anyString(), //
+					Matchers.any(HttpMethod.class), //
 					argThat(entityArgumentMatcher), //
-					Mockito.<Class<Object>> any());
+					Matchers.<Class<Object>> any());
 		}
 	}
 
 	private void checkResponseCookies() throws AssertionFailedError {
 		for (String responseCookieName : responseCookies.keySet()) {
 			String cookieValue = myService.getCookie(responseCookieName);
-			if (cookieValue == null || !cookieValue.equals(responseCookies.get(responseCookieName)))
+			if (cookieValue == null || !cookieValue.equals(responseCookies.get(responseCookieName))) {
 				throw new AssertionFailedError("Response cookie " + responseCookieName + " wasn't set");
+			}
 		}
 	}
 
@@ -143,15 +145,17 @@ public class RequestTestBuilder {
 			if (requestCookies.size() > 0) {
 				String[] httpCookies = httpHeaders.getFirst("Cookie").split(";");
 				for (String cookieName : requestCookies.keySet()) {
-					if (Arrays.binarySearch(httpCookies, cookieName + "=" + requestCookies.get(cookieName)) == -1)
+					if (Arrays.binarySearch(httpCookies, cookieName + "=" + requestCookies.get(cookieName)) == -1) {
 						throw new AssertionFailedError("The cookie " + cookieName + " is missing!");
+					}
 				}
 			}
 
 			// Check that headers set earlier are sent in the request
 			for (String headerName : requestHeaders.keySet()) {
-				if (!(httpHeaders.containsKey(headerName) && httpHeaders.getFirst(headerName).equals(requestHeaders.get(headerName))))
+				if (!(httpHeaders.containsKey(headerName) && httpHeaders.getFirst(headerName).equals(requestHeaders.get(headerName)))) {
 					throw new AssertionFailedError("The header " + headerName + " is missing!");
+				}
 			}
 
 			return true;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,8 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Should be used on android.app.Fragment or
- * link android.support.v4.app.Fragment classes to enable usage of
+ * Should be used on android.app.Fragment or link
+ * android.support.v4.app.Fragment classes to enable usage of
  * AndroidAnnotations.
  * </p>
  * <p>
@@ -44,6 +44,11 @@ import java.lang.annotation.Target;
  * content view will be set, and you should call the
  * <code>inflater.inflate()</code> method yourself, in
  * <code>onCreateView()</code>.
+ * </p>
+ * <p>
+ * We only set the layout if the <code>onCreateView()</code> method returns null
+ * from the annotated class. If you want to set the layout regardless of that
+ * return value, use the {@link #forceLayoutInjection()} annotation parameter.
  * </p>
  * <p>
  * The generated class will also contain a FragmentBuilder to build fragment
@@ -103,7 +108,27 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface EFragment {
+
+	/**
+	 * The R.layout.* field which refer to the layout.
+	 * 
+	 * @return the id of the layout
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name as a string which refer to the layout.
+	 * 
+	 * @return the resource name of the layout
+	 */
 	String resName() default "";
+
+	/**
+	 * We only set the layout if the <code>onCreateView()</code> method returns
+	 * null from the annotated class. If you want to set the layout regardless
+	 * of that return value, pass <b>true</b> to this annotation parameter.
+	 * 
+	 * @return <b>true</b>, if the layout must be set, <b>false</b> otherwise
+	 */
+	boolean forceLayoutInjection() default false;
 }

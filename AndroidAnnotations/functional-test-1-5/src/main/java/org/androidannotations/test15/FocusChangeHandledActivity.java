@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,10 @@ import android.view.View;
 @EActivity(R.layout.clickable_widgets)
 public class FocusChangeHandledActivity extends EventsHandledAbstractActivity {
 
+	View view;
+
+	boolean hasFocus;
+
 	@FocusChange
 	public void conventionButton(View evt, boolean hasFocus) {
 
@@ -30,12 +34,12 @@ public class FocusChangeHandledActivity extends EventsHandledAbstractActivity {
 
 	@FocusChange
 	public void snakeCaseButton(boolean hasFocus) {
-
+		snakeCaseButtonEventHandled = true;
 	}
 
 	@FocusChange
 	public void extendedConventionButton(View evt) {
-
+		view = evt;
 	}
 
 	@FocusChange(R.id.configurationOverConventionButton)
@@ -50,7 +54,7 @@ public class FocusChangeHandledActivity extends EventsHandledAbstractActivity {
 
 	@FocusChange({ R.id.button1, R.id.button2 })
 	public void multipleButtonWithViewArgument(View v, boolean hasFocus) {
-
+		this.hasFocus = hasFocus;
 	}
 
 }

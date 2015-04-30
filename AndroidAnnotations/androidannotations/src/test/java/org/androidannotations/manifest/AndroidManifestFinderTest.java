@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,40 +17,40 @@ package org.androidannotations.manifest;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteStreams;
 
 public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void fails_if_no_manifest() {
+	public void failsIfNoManifest() {
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
 		assertCompilationErrorCount(1, result);
 	}
 
 	@Test
-	public void finds_specified_manifest() {
+	public void findsSpecifiedManifest() {
 		addManifestProcessorParameter(AndroidManifestFinderTest.class);
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void fails_if_cannot_find_specified_manifest() {
+	public void failsIfCannotFindSpecifiedManifest() {
 		addProcessorParameter("androidManifestFile", "/some/random/path/AndroidManifest.xml");
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
@@ -58,7 +58,7 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void finds_manifest_in_generated_source_parent_folder() throws Exception {
+	public void findsManifestInGeneratedSourceParentFolder() throws Exception {
 		copyManifestToParentOfOutputDirectory();
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationSuccessful(result);
@@ -66,7 +66,7 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void fails_if_cannot_parse_manifest() {
+	public void failsIfCannotParseManifest() {
 		addManifestProcessorParameter(AndroidManifestFinderTest.class, "ParseErrorManifest.xml");
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
@@ -78,13 +78,12 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	private void copyManifestToParentOfOutputDirectory() throws FileNotFoundException, IOException {
-		InputSupplier<InputStream> from = new InputSupplier<InputStream>() {
-			@Override
-			public InputStream getInput() throws IOException {
-				return AndroidManifestFinderTest.class.getResourceAsStream("AndroidManifest.xml");
-			}
-		};
-		Files.copy(from, manifestFileInParentOfOutputDirectory());
+		final OutputStream out = new FileOutputStream(manifestFileInParentOfOutputDirectory());
+		try {
+			ByteStreams.copy(AndroidManifestFinderTest.class.getResourceAsStream("AndroidManifest.xml"), out);
+		} finally {
+			out.close();
+		}
 	}
 
 	private File manifestFileInParentOfOutputDirectory() {

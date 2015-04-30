@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,6 @@ import org.androidannotations.annotations.rest.Post;
 import org.androidannotations.annotations.rest.Put;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.api.rest.RestClientErrorHandling;
-import org.androidannotations.api.rest.RestErrorHandler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
@@ -52,7 +51,7 @@ public interface HttpMethodsService extends RestClientErrorHandling {
 
 	@Put("/put/")
 	void put();
-	
+
 	void setRestTemplate(RestTemplate restTemplate);
 
 }

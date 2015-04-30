@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,29 +31,32 @@ public class MyGenericSerializableBean<T extends Serializable> implements Serial
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((t == null) ? 0 : t.hashCode());
+		result = prime * result + (t == null ? 0 : t.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 
 		@SuppressWarnings("unchecked")
 		MyGenericSerializableBean<T> other = (MyGenericSerializableBean<T>) obj;
 		if (t == null) {
-			if (other.t != null)
+			if (other.t != null) {
 				return false;
-		} else if (!t.equals(other.t))
+			}
+		} else if (!t.equals(other.t)) {
 			return false;
+		}
 		return true;
 	}
 
-
-	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,7 @@ public class ActivityWithReceiverTest {
 	private ActivityWithReceiver_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(ActivityWithReceiver_.class).create().start().resume().get();
 	}
 
@@ -59,9 +59,7 @@ public class ActivityWithReceiverTest {
 		assertTrue(activity.localWifiChangeIntentReceived);
 	}
 
-	// @Test
-	// due to a bug in robolectric this test does not yet work
-	// see https://github.com/robolectric/robolectric/issues/1244
+	@Test
 	public void onDataShemeHttpTest() {
 		Intent intentFtp = new Intent("CUSTOM_HTTP_ACTION");
 		intentFtp.setData(Uri.parse("ftp://androidannotations.org"));

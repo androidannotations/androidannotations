@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,18 +23,18 @@ import org.junit.Test;
 public class EBeanTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(EBeanTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void activity_subclass_in_manifest_compiles() {
-        assertCompilationSuccessful(compileFiles(
-                SomeActivity.class,
-                SomeImplementation.class,
-                SomeGenericBean.class,
-                SomeGenericBeanExt.class));
-    }
+	public void activitySubclassInManifestCompiles() {
+		assertCompilationSuccessful(compileFiles(
+				SomeActivity.class,
+				SomeImplementation.class,
+				SomeGenericBean.class,
+				SomeGenericBeanExt.class));
+	}
 
 }

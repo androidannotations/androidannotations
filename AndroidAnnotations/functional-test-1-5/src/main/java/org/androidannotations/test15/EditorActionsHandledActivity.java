@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,24 @@
  */
 package org.androidannotations.test15;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EditorAction;
+import org.androidannotations.annotations.ViewById;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.TextView;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EditorAction;
-import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.textviews_injected)
 public class EditorActionsHandledActivity extends Activity {
 
 	boolean actionHandled = false;
+
+	int actionId;
+
+	KeyEvent keyEvent;
 
 	@ViewById
 	EditText editText1;
@@ -44,12 +49,12 @@ public class EditorActionsHandledActivity extends Activity {
 
 	@EditorAction(R.id.editText2)
 	void editorActionInversedParameters(KeyEvent event, int actionId) {
-
+		this.actionId = actionId;
 	}
 
 	@EditorAction(R.id.editText3)
 	void editorActionOtherInversedParameters(KeyEvent event, TextView textView) {
-
+		keyEvent = event;
 	}
 
 	@EditorAction(R.id.textView1)

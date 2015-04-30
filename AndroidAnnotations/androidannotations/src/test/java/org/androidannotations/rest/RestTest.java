@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,26 +25,26 @@ import org.junit.Test;
 public class RestTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(RestTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void class_client_does_not_compile() throws IOException {
+	public void classClientDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClassClient.class);
 		assertCompilationErrorOn(ClassClient.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_no_internet_permission_does_not_compile() throws IOException {
+	public void clientNoInternetPermissionDoesNotCompile() throws IOException {
 		addManifestProcessorParameter(RestTest.class, "NoInternetPermissionManifest.xml");
 		CompileResult result = compileFiles(ClientWithNoConverters.class);
 		assertCompilationErrorOn(ClientWithNoConverters.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_return_type() throws IOException {
+	public void clientWithReturnType() throws IOException {
 		CompileResult result = compileFiles(ClientWithResponseEntity.class);
 		assertCompilationErrorOn(ClientWithResponseEntity.class, "@Options", result);
 		assertCompilationErrorOn(ClientWithResponseEntity.class, "@Head", result);
@@ -52,7 +52,7 @@ public class RestTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void client_with_request_entity() throws IOException {
+	public void clientWithRequestEntity() throws IOException {
 		CompileResult result = compileFiles(ClientWithRequestEntity.class);
 		assertCompilationErrorOn(ClientWithRequestEntity.class, "@Get", result);
 		assertCompilationErrorOn(ClientWithRequestEntity.class, "@Head", result);
@@ -61,7 +61,7 @@ public class RestTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void client_with_primitive_return_types() throws IOException {
+	public void clientWithPrimitiveReturnTypes() throws IOException {
 		CompileResult result = compileFiles(ClientWithPrimitiveReturnType.class);
 		assertCompilationErrorOn(ClientWithPrimitiveReturnType.class, "@Delete", result);
 		assertCompilationErrorOn(ClientWithPrimitiveReturnType.class, "@Get", result);
@@ -73,13 +73,13 @@ public class RestTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void client_with_path_variables() throws IOException {
+	public void clientWithPathVariables() throws IOException {
 		CompileResult result = compileFiles(ClientWithPathVariable.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void client_with_wrong_enhanced_methods() throws IOException {
+	public void clientWithWrongEnhancedMethods() throws IOException {
 		CompileResult result = compileFiles(ClientWithWrongEnhancedMethod.class);
 		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "Object getRestTemplate();", result);
 		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "String getURL();", result);
@@ -90,13 +90,13 @@ public class RestTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void client_with_wrong_interface() throws IOException {
+	public void clientWithWrongInterface() throws IOException {
 		CompileResult result = compileFiles(ClientWithWrongInterface.class);
 		assertCompilationErrorCount(1, result);
 	}
 
 	@Test
-	public void client_with_all_interfaces() throws IOException {
+	public void clientWithAllInterfaces() throws IOException {
 		CompileResult result = compileFiles(ClientWithAllInterfaces.class);
 		assertCompilationSuccessful(result);
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,7 +26,7 @@ import org.robolectric.RobolectricTestRunner;
 public class CyclicSingletonTest {
 
 	@Test
-	public void cyclic_singleton() {
+	public void cyclicSingleton() {
 		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
 		SomeCyclicSingletonA_ singletonA = SomeCyclicSingletonA_.getInstance_(context);
 		SomeCyclicSingletonB_ singletonB = SomeCyclicSingletonB_.getInstance_(context);

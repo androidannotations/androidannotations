@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -79,12 +79,12 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 
 	private static final class DefaultPrefInfo<T> {
 		final Class<? extends Annotation> annotationClass;
-		final Class<? extends AbstractPrefField> prefFieldClass;
+		final Class<? extends AbstractPrefField<?>> prefFieldClass;
 		final IRClass.Res resType;
 		final T defaultValue;
 		final String fieldHelperMethodName;
 
-		DefaultPrefInfo(Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField> prefFieldClass, Res resType, T defaultValue, String fieldHelperMethodName) {
+		DefaultPrefInfo(Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass, Res resType, T defaultValue, String fieldHelperMethodName) {
 			this.annotationClass = annotationClass;
 			this.prefFieldClass = prefFieldClass;
 			this.resType = resType;
@@ -99,7 +99,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 			put("boolean", new DefaultPrefInfo<Boolean>(DefaultBoolean.class, BooleanPrefField.class, IRClass.Res.BOOL, false, "booleanField"));
 			put("float", new DefaultPrefInfo<Float>(DefaultFloat.class, FloatPrefField.class, IRClass.Res.INTEGER, 0f, "floatField"));
 			put("int", new DefaultPrefInfo<Integer>(DefaultInt.class, IntPrefField.class, IRClass.Res.INTEGER, 0, "intField"));
-			put("long", new DefaultPrefInfo<Long>(DefaultLong.class, LongPrefField.class, IRClass.Res.INTEGER, 0l, "longField"));
+			put("long", new DefaultPrefInfo<Long>(DefaultLong.class, LongPrefField.class, IRClass.Res.INTEGER, 0L, "longField"));
 			put(CanonicalNameConstants.STRING, new DefaultPrefInfo<String>(DefaultString.class, StringPrefField.class, IRClass.Res.STRING, "", "stringField"));
 			put(CanonicalNameConstants.STRING_SET, new DefaultPrefInfo<Set<String>>(DefaultStringSet.class, StringSetPrefField.class, null, null, "stringSetField"));
 		}
@@ -256,7 +256,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		return createFieldMethod(holder, method, info.annotationClass, info.prefFieldClass, info.defaultValue, info.resType, info.fieldHelperMethodName);
 	}
 
-	private JExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField> prefFieldClass, Object defaultValue, Res resType, String fieldHelperMethodName) {
+	private JExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass, Object defaultValue, Res resType, String fieldHelperMethodName) {
 		Annotation annotation = method.getAnnotation(annotationClass);
 		JExpression defaultValueExpr;
 
@@ -266,10 +266,10 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 			defaultValueExpr = extractResValue(holder, method, resType);
 			annotationClass = DefaultRes.class;
 		} else if (method.getAnnotation(DefaultStringSet.class) != null) {
-			defaultValueExpr = JExpr._null();
+			defaultValueExpr = newEmptyStringHashSet();
 			annotationClass = DefaultStringSet.class;
 		} else {
-			defaultValueExpr = defaultValue != null ? aptCodeModelHelper.litObject(defaultValue) : JExpr._null();
+			defaultValueExpr = defaultValue != null ? aptCodeModelHelper.litObject(defaultValue) : newEmptyStringHashSet();
 			annotationClass = null;
 		}
 
@@ -312,6 +312,10 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 			break;
 		}
 		return holder.getContextField().invoke("getResources").invoke(resourceGetMethodName).arg(idRef);
+	}
+
+	private JExpression newEmptyStringHashSet() {
+		return JExpr._new(classes().HASH_SET.narrow(classes().STRING)).arg(lit(0));
 	}
 
 }

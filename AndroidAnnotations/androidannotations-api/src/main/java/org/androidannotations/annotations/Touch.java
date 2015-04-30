@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.view.MotionEvent;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,8 +24,9 @@ import java.lang.annotation.Target;
  * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
- * {@link android.view.View.OnTouchListener#onTouch(android.view.View, MotionEvent)}
- * when the view has been touched by the user.
+ * {@link android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
+ * View.OnTouchListener#onTouch(View, MotionEvent)} when the view has been
+ * touched by the user.
  * </p>
  * <p>
  * The annotation value should be one or several of R.id.* fields. If not set,
@@ -42,7 +41,8 @@ import java.lang.annotation.Target;
  * The method MAY have one or two parameters:
  * </p>
  * <ul>
- * <li>A {@link android.view.View} parameter to know which view has been clicked</li>
+ * <li>A {@link android.view.View} parameter to know which view has been clicked
+ * </li>
  * <li>A {@link android.view.MotionEvent} parameter</li>
  * </ul>
  * <blockquote>
@@ -74,7 +74,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Touch {
+
+	/**
+	 * The R.id.* fields which refer to the Views.
+	 * 
+	 * @return the ids of the Views
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the Views.
+	 * 
+	 * @return the resource names of the Views
+	 */
 	String[] resName() default "";
 }

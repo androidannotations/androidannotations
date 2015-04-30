@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,9 +21,8 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class OnSeekBarChangeListenerHolder {
+public class OnSeekBarChangeListenerHolder extends GeneratedClassHolderDecorator<EComponentWithViewSupportHolder> {
 
-	private EComponentWithViewSupportHolder holder;
 	private JDefinedClass listenerClass;
 	private JBlock onProgressChangedBody;
 	private JVar onProgressChangedSeekBarParam;
@@ -35,8 +34,8 @@ public class OnSeekBarChangeListenerHolder {
 	private JVar onStopTrackingTouchSeekBarParam;
 
 	public OnSeekBarChangeListenerHolder(EComponentWithViewSupportHolder holder, JDefinedClass onSeekbarChangeListenerClass) {
-		this.holder = holder;
-		this.listenerClass = onSeekbarChangeListenerClass;
+		super(holder);
+		listenerClass = onSeekbarChangeListenerClass;
 		createOnProgressChanged();
 		createOnStartTrackingTouch();
 		createOnStopTrackingTouch();

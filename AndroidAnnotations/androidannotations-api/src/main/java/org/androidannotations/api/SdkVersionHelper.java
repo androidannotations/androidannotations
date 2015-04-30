@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,9 +20,13 @@ import android.os.Build.VERSION;
 
 public class SdkVersionHelper {
 
+	private SdkVersionHelper() {
+	}
+
 	public static int getSdkInt() {
-		if (Build.VERSION.RELEASE.startsWith("1.5"))
+		if (Build.VERSION.RELEASE.startsWith("1.5")) {
 			return 3;
+		}
 
 		return HelperInternal.getSdkIntInternal();
 	}

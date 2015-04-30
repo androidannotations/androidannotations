@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,12 @@
  */
 package org.androidannotations.test15.prefs;
 
-import android.content.SharedPreferences;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.androidannotations.api.sharedpreferences.SetXmlSerializer;
 import org.androidannotations.test15.R;
 import org.junit.Before;
@@ -24,11 +29,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import android.content.SharedPreferences;
 
 @RunWith(RobolectricTestRunner.class)
 public class PrefsActivityTest {
@@ -39,7 +40,7 @@ public class PrefsActivityTest {
 	private SomePrefs_ somePrefs;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(PrefsActivity_.class).create().get();
 		somePrefs = activity.somePrefs;
 		sharedPref = somePrefs.getSharedPreferences();
@@ -167,21 +168,21 @@ public class PrefsActivityTest {
 	@Test
 	public void getStringSetCompat() {
 		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
-		
+
 		sharedPref.edit().putString("types", SetXmlSerializer.serialize(values)).commit();
-		
+
 		assertThat(somePrefs.types().get()).isEqualTo(values);
 	}
 
 	@Test
 	public void getStringSet() {
 		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
-		
+
 		sharedPref.edit().putStringSet("types", values).commit();
-		
+
 		assertThat(somePrefs.types().get()).isEqualTo(values);
 	}
-	
+
 	@Test
 	public void defaultValue() {
 		assertThat(somePrefs.name().get()).isEqualTo("John");
@@ -221,6 +222,13 @@ public class PrefsActivityTest {
 	@Test
 	public void setStringInLongFieldAndGetLong() {
 		sharedPref.edit().putString("ageLong", "90211105578124").commit();
-		assertThat(somePrefs.ageLong().get()).isEqualTo(90211105578124l);
+		assertThat(somePrefs.ageLong().get()).isEqualTo(90211105578124L);
+	}
+
+	@Test
+	public void getStringSetEmptySetDefaultValue() {
+		sharedPref.edit().clear().commit();
+
+		assertThat(somePrefs.types().get()).isEmpty();
 	}
 }

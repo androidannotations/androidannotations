@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.widget.SeekBar;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,8 +24,9 @@ import java.lang.annotation.Target;
  * <p>
  * This annotation is intended to be used on methods to receive events defined
  * by
- * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStartTrackingTouch(SeekBar seekBar)}
- * when the user begins to move the cursor of the targeted SeekBar.
+ * {@link android.widget.SeekBar.OnSeekBarChangeListener#onStartTrackingTouch(android.widget.SeekBar)
+ * SeekBar.OnSeekBarChangeListener#onStartTrackingTouch(SeekBar)} when the user
+ * begins to move the cursor of the targeted SeekBar.
  * </p>
  * <p>
  * The annotation value should be one or several R.id.* fields that refers to an
@@ -38,8 +37,8 @@ import java.lang.annotation.Target;
  * The method MAY have one parameter :
  * </p>
  * <ul>
- * <li>A {@link android.widget.SeekBar} parameter to determine which view has
- * targeted this event</li>
+ * <li>A {@link android.widget.SeekBar SeekBar} parameter to determine which
+ * view has targeted this event</li>
  * </ul>
  *
  * <blockquote>
@@ -79,8 +78,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface SeekBarTouchStart {
 
+	/**
+	 * The R.id.* fields which refer to the SeekBars.
+	 * 
+	 * @return the ids of the SeekBars
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the SeekBars.
+	 * 
+	 * @return the resource names of the SeekBars
+	 */
 	String[] resName() default "";
 
 }

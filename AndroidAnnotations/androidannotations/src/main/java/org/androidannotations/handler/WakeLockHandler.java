@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -92,8 +92,8 @@ public class WakeLockHandler extends BaseAnnotationHandler<EComponentHolder> {
 		tryBlock.body().add(previousMethodBody);
 
 		JBlock finallyBlock = tryBlock._finally();
-		JConditional _if = finallyBlock._if(wakeLock.ne(JExpr._null()));
-		_if._then().add(wakeLock.invoke("release"));
+		JConditional ifStatement = finallyBlock._if(wakeLock.ne(JExpr._null()));
+		ifStatement._then().add(wakeLock.invoke("release"));
 	}
 
 	private String extractTag(Element element) {

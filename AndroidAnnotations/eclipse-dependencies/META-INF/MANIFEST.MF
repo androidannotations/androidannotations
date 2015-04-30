@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: androidannotations-dependencies
 Bundle-SymbolicName: androidannotations-dependencies
 Bundle-Version: 1.0.0
-Bundle-ClassPath: codemodel-2.4.1.jar,
+Bundle-ClassPath: codemodel-2.6.jar,
  android-1.6_r2.jar
 Export-Package: android,
  android.accessibilityservice,

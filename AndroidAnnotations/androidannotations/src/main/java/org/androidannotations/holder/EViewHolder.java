@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,30 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.process.ProcessHolder;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.*;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 
 public class EViewHolder extends EComponentWithViewSupportHolder {
 
@@ -35,15 +46,13 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			+ "The mAlreadyInflated_ hack is needed because of an Android bug\n" // +
 			+ "which leads to infinite calls of onFinishInflate()\n" //
 			+ "when inflating a layout with a parent and using\n" //
-			+ "the <merge /> tag." //
-	;
+			+ "the <merge /> tag.";
 
 	private static final String SUPPRESS_WARNING_COMMENT = "" //
 			+ "We use @SuppressWarning here because our java code\n" //
 			+ "generator doesn't know that there is no need\n" //
 			+ "to import OnXXXListeners from View as we already\n" //
-			+ "are in a View." //
-	;
+			+ "are in a View.";
 
 	protected JBlock initBody;
 	protected JMethod onFinishInflate;
@@ -56,8 +65,9 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	}
 
 	private void addSuppressWarning() {
-		generatedClass.annotate(SuppressWarnings.class).param("value", "unused");
 		generatedClass.javadoc().append(SUPPRESS_WARNING_COMMENT);
+
+		codeModelHelper.addSuppressWarnings(getGeneratedClass(), "unused");
 	}
 
 	private void createConstructorAndBuilder() {

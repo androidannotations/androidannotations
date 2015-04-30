@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.view.ViewGroup;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Should be used on {@link android.view.View} classes to enable usage of
+ * Should be used on {@link android.view.View View} classes to enable usage of
  * AndroidAnnotations.
  * </p>
  * <p>
@@ -62,7 +60,7 @@ import java.lang.annotation.Target;
  * 
  * @see AfterInject
  * @see AfterViews
- * @see ViewGroup
+ * @see android.view.ViewGroup
  * @see <a
  *      href="http://developer.android.com/guide/topics/ui/custom-components.html"
  *      >How to build a custom component.</a>

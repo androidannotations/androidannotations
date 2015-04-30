@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -73,7 +73,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface LongClick {
+
+	/**
+	 * The R.id.* fields which refer to the Views.
+	 * 
+	 * @return the ids of the Views
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refer to the Views.
+	 * 
+	 * @return the resource names of the Views
+	 */
 	String[] resName() default "";
 }

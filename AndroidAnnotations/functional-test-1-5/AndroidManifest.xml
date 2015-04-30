@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+    Copyright (C) 2010-2015 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -85,9 +85,10 @@
         <activity android:name="org.androidannotations.test15.SeekBarChangeListenedActivity_" />
         <activity android:name="org.androidannotations.test15.AwaitingResultActivity_" />
         <activity android:name=".HierarchyViewerActivity_" />
-        <activity android:name="org.androidannotations.test15.CustomTitleActivity_" />
+        <activity android:name="org.androidannotations.test15.CustomTitleActivity_" android:theme="@android:style/Theme" />
         <activity android:name=".ActivityWithGenerics_" />
         <activity android:name=".WakeLockActivity_" />
+        <activity android:name=".FragmentStartedActivity_" />
 
         <receiver android:name="org.androidannotations.test15.ereceiver.MyReceiver_" />
 

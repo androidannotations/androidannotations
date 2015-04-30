@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,13 +20,13 @@ import java.util.regex.Pattern;
 
 public class ManifestPackageExtractor {
 
-	private static final Pattern pattern = Pattern.compile("package\\s*=\\s*\"([^\"]+)\"");
+	private static final Pattern PATTERN = Pattern.compile("package\\s*=\\s*\"([^\"]+)\"");
 	private Matcher matcher;
 	private boolean matches;
 
 	public ManifestPackageExtractor(String manifestLine) {
 		if (manifestLine != null) {
-			matcher = pattern.matcher(manifestLine);
+			matcher = PATTERN.matcher(manifestLine);
 			matches = matcher.find();
 		} else {
 			matches = false;

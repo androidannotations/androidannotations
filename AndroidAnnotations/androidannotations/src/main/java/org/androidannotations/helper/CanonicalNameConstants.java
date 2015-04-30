@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -107,6 +107,16 @@ public final class CanonicalNameConstants {
 	public static final String LOOPER = "android.os.Looper";
 	public static final String POWER_MANAGER = "android.os.PowerManager";
 	public static final String WAKE_LOCK = "android.os.PowerManager.WakeLock";
+	public static final String BUILD_VERSION = "android.os.Build.VERSION";
+	public static final String BUILD_VERSION_CODES = "android.os.Build.VERSION_CODES";
+	public static final String PREFERENCE_ACTIVITY = "android.preference.PreferenceActivity";
+	public static final String PREFERENCE_FRAGMENT = "android.preference.PreferenceFragment";
+	public static final String ACTIVITY_COMPAT = "android.support.v4.app.ActivityCompat";
+	public static final String PREFERENCE = "android.preference.Preference";
+	public static final String PREFERENCE_CHANGE_LISTENER = "android.preference.Preference.OnPreferenceChangeListener";
+	public static final String PREFERENCE_CLICK_LISTENER = "android.preference.Preference.OnPreferenceClickListener";
+	public static final String PREFERENCE_ACTIVITY_HEADER = "android.preference.PreferenceActivity.Header";
+	public static final String APP_WIDGET_MANAGER = "android.appwidget.AppWidgetManager";
 
 	/*
 	 * Android permission
@@ -142,12 +152,13 @@ public final class CanonicalNameConstants {
 	 * RoboGuice
 	 */
 	public static final String ROBO_APPLICATION = "roboguice.application.RoboApplication";
+	public static final String ON_START_EVENT_OLD = "roboguice.activity.event.OnStartEvent";
 	public static final String ROBO_CONTEXT = "roboguice.util.RoboContext";
 	public static final String ROBO_INJECTOR = "roboguice.inject.RoboInjector";
 	public static final String KEY = "com.google.inject.Key";
 	public static final String CONTENT_VIEW_LISTENER = "roboguice.inject.ContentViewListener";
 	public static final String ON_RESTART_EVENT = "roboguice.activity.event.OnRestartEvent";
-	public static final String ON_START_EVENT = "roboguice.activity.event.OnStartEvent";
+	public static final String ON_START_EVENT = "roboguice.context.event.OnStartEvent";
 	public static final String ON_RESUME_EVENT = "roboguice.activity.event.OnResumeEvent";
 	public static final String ON_PAUSE_EVENT = "roboguice.activity.event.OnPauseEvent";
 	public static final String ON_NEW_INTENT_EVENT = "roboguice.activity.event.OnNewIntentEvent";
@@ -157,12 +168,12 @@ public final class CanonicalNameConstants {
 	public static final String ROBO_GUICE = "roboguice.RoboGuice";
 	public static final String INJECT = "com.google.inject.Inject";
 	public static final String ON_STOP_EVENT = "roboguice.activity.event.OnStopEvent";
-	public static final String ON_DESTROY_EVENT = "roboguice.activity.event.OnDestroyEvent";
-	public static final String ON_CONFIGURATION_CHANGED_EVENT = "roboguice.activity.event.OnConfigurationChangedEvent";
+	public static final String ON_DESTROY_EVENT = "roboguice.context.event.OnDestroyEvent";
+	public static final String ON_CONFIGURATION_CHANGED_EVENT = "roboguice.context.event.OnConfigurationChangedEvent";
 	public static final String ON_CONTENT_CHANGED_EVENT = "roboguice.activity.event.OnContentChangedEvent";
 	public static final String ON_ACTIVITY_RESULT_EVENT = "roboguice.activity.event.OnActivityResultEvent";
 	public static final String ON_CONTENT_VIEW_AVAILABLE_EVENT = "roboguice.activity.event.OnContentViewAvailableEvent";
-	public static final String ON_CREATE_EVENT = "roboguice.activity.event.OnCreateEvent";
+	public static final String ON_CREATE_EVENT = "roboguice.context.event.OnCreateEvent";
 
 	/*
 	 * ORMLite

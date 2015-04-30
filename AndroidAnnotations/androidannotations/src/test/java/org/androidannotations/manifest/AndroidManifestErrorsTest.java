@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,25 +25,25 @@ import org.junit.Test;
 public class AndroidManifestErrorsTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(AndroidManifestErrorsTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void activity_subclass_in_manifest_compiles() {
+	public void activitySubclassInManifestCompiles() {
 		CompileResult result = compileFiles(ActivitySubclassInManifest.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void activity_in_manifest_does_not_compile() throws IOException {
+	public void activityInManifestDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ActivityInManifest.class);
 		assertCompilationErrorOn(ActivityInManifest.class, "@EActivity", result);
 	}
 
 	@Test
-	public void activity_not_in_manifest_compiles_with_warning() throws IOException {
+	public void activityNotInManifestCompilesWithWarning() throws IOException {
 		CompileResult result = compileFiles(ActivityNotInManifest.class);
 		assertCompilationWarningOn(ActivityNotInManifest.class, "@EActivity", result);
 	}

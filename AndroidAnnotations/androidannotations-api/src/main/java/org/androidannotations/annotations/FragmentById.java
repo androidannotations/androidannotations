@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,9 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on android.app.Fragment or
- * android.support.v4.app.Fragment fields in activity classes to
- * retrieve and inject a fragment.
+ * Use it on android.app.Fragment or android.support.v4.app.Fragment fields in
+ * activity classes to retrieve and inject a fragment.
  * </p>
  * <p>
  * The annotation value should be one of R.id.* fields. If not set, the field
@@ -72,7 +71,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface FragmentById {
+
+	/**
+	 * The R.id.* field which is the id of the Fragment.
+	 * 
+	 * @return the id of the Fragment
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the id of the Fragment.
+	 * 
+	 * @return the resource name of the Fragment
+	 */
 	String resName() default "";
 }

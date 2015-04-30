@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,27 +15,21 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JAnnotatable;
-import com.sun.codemodel.JAnnotationUse;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFormatter;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JStatement;
-import com.sun.codemodel.JSuperWildcard;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.holder.EBeanHolder;
-import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.holder.GeneratedClassHolder;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.lit;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+
+import java.io.StringWriter;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -51,19 +45,31 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.holder.EBeanHolder;
+import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.holder.GeneratedClassHolder;
+
+import com.sun.codemodel.JAnnotatable;
+import com.sun.codemodel.JAnnotationArrayMember;
+import com.sun.codemodel.JAnnotationUse;
+import com.sun.codemodel.JAnnotationValue;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFormatter;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JSuperWildcard;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 
 public class APTCodeModelHelper {
 
@@ -224,6 +230,8 @@ public class APTCodeModelHelper {
 		JDefinedClass definedClass = holder.getGeneratedClass();
 		String methodName = executableElement.getSimpleName().toString();
 		List<? extends VariableElement> parameters = executableElement.getParameters();
+		// CHECKSTYLE:OFF
+		// TODO: refactor the nasty label jump
 		method: for (JMethod method : definedClass.methods()) {
 			if (method.name().equals(methodName) && method.params().size() == parameters.size()) {
 				int i = 0;
@@ -237,6 +245,7 @@ public class APTCodeModelHelper {
 				return method;
 			}
 		}
+		// CHECKSTYLE:ON
 		return null;
 	}
 
@@ -249,9 +258,11 @@ public class APTCodeModelHelper {
 
 	public void addNonAAAnotations(JAnnotatable annotatable, List<? extends AnnotationMirror> annotationMirrors, GeneratedClassHolder holder) {
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
-			JClass annotationClass = typeMirrorToJClass(annotationMirror.getAnnotationType(), holder);
-			if (!annotationClass.fullName().startsWith("org.androidannotations")) {
-				addAnnotation(annotatable, annotationMirror, holder);
+			if (annotationMirror.getAnnotationType().asElement().getAnnotation(Inherited.class) == null) {
+				JClass annotationClass = typeMirrorToJClass(annotationMirror.getAnnotationType(), holder);
+				if (!annotationClass.fullName().startsWith("org.androidannotations")) {
+					addAnnotation(annotatable, annotationMirror, holder);
+				}
 			}
 		}
 	}
@@ -402,7 +413,7 @@ public class APTCodeModelHelper {
 	/**
 	 * Gets all of the methods of the class and includes the methods of any
 	 * implemented interfaces.
-	 * 
+	 *
 	 * @param typeElement
 	 * @return full list of methods.
 	 */
@@ -508,7 +519,7 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	//TODO it would be nice to cache the result map for better performance
+	// TODO it would be nice to cache the result map for better performance
 	public TypeMirror getActualType(Element element, GeneratedClassHolder holder) {
 		Types types = holder.processingEnvironment().getTypeUtils();
 		DeclaredType typeMirror = (DeclaredType) element.getEnclosingElement().asType();
@@ -518,5 +529,29 @@ public class APTCodeModelHelper {
 
 		TypeMirror type = actualTypes.get(element.asType().toString());
 		return type == null ? element.asType() : type;
+	}
+
+	public void addSuppressWarnings(JAnnotatable generatedElement, String annotationValue) {
+		Collection<JAnnotationUse> annotations = generatedElement.annotations();
+		for (JAnnotationUse annotationUse : annotations) {
+			if (annotationUse.getAnnotationClass().fullName().equals(SuppressWarnings.class.getCanonicalName())) {
+				JAnnotationValue value = annotationUse.getAnnotationMembers().values().iterator().next();
+				StringWriter code = new StringWriter();
+				JFormatter formatter = new JFormatter(code);
+				formatter.g(value);
+				if (!code.toString().contains(annotationValue)) {
+					if (value instanceof JAnnotationArrayMember) {
+						((JAnnotationArrayMember) value).param(annotationValue);
+					} else {
+						String foundValue = code.toString().substring(1, code.toString().length() - 1);
+						JAnnotationArrayMember newParamArray = annotationUse.paramArray("value");
+						newParamArray.param(foundValue).param(annotationValue);
+					}
+				}
+				return;
+			}
+		}
+
+		generatedElement.annotate(SuppressWarnings.class).param("value", annotationValue);
 	}
 }

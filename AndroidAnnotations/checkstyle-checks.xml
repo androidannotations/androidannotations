@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2010-2015 eBusiness Information, Excilys Group
+
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed To in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations under
+    the License.
+
+-->
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+	<property name="severity" value="error" />
+	<module name="TreeWalker">
+		<property name="tabWidth" value="4" />
+		<module name="FileContentsHolder" />
+		<module name="SuppressWarningsHolder" />
+		<module name="AnnotationUseStyle" />
+		<module name="ClassTypeParameterName" />
+		<module name="ConstantName" />
+		<module name="LocalVariableName" />
+		<module name="MemberName" />
+		<module name="MethodName" />
+		<module name="MethodTypeParameterName" />
+		<module name="PackageName" />
+		<module name="ParameterName" />
+		<module name="StaticVariableName" />
+		<module name="TypeName" />
+		<module name="MissingDeprecated" />
+		<module name="MissingOverride" />
+		<module name="AvoidStarImport" />
+		<module name="IllegalImport" />
+		<!-- unfortunetaly could not synchronize with eclipse -->
+		<!-- <module name="ImportOrder"> <property name="separated" value="true"/> 
+			<property name="groups" value="java,javax,/com\..*/,/org\..*/,android"/> 
+			<property name="option" value="top"/> </module> -->
+		<module name="RedundantImport" />
+		<module name="UnusedImports" />
+
+		<module name="MethodLength" />
+		<module name="ParameterNumber" />
+		<module name="OuterTypeNumber" />
+		<module name="MethodCount" />
+		<module name="EmptyForInitializerPad" />
+		<module name="EmptyForIteratorPad" />
+		<module name="NoWhitespaceAfter">
+			<property name="tokens"
+				value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS" />
+		</module>
+		<module name="NoWhitespaceBefore" />
+		<module name="OperatorWrap" />
+		<module name="MethodParamPad" />
+		<module name="ParenPad" />
+		<module name="TypecastParenPad" />
+		<module name="WhitespaceAfter" />
+		<module name="WhitespaceAround">
+			<property name="tokens"
+				value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN, DO_WHILE, EQUAL, GE, GT, LAND, LCURLY, LE, LITERAL_ASSERT, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_RETURN, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS, MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, SL, SLIST, SL_ASSIGN, SR, SR_ASSIGN, STAR, STAR_ASSIGN, TYPE_EXTENSION_AND" />
+		</module>
+		<module name="RedundantModifier" />
+		<module name="AvoidNestedBlocks">
+			<property name="allowInSwitchCase" value="true" />
+		</module>
+		<module name="LeftCurly">
+			<property name="maxLineLength" value="130" />
+		</module>
+		<module name="NeedBraces" />
+		<module name="RightCurly" />
+		<module name="CovariantEquals" />
+		<module name="DefaultComesLast" />
+		<module name="EmptyStatement" />
+		<module name="EqualsHashCode" />
+		<module name="FallThrough" />
+		<module name="IllegalThrows" />
+		<module name="IllegalType">
+			<property name="illegalClassNames	"
+				value="java.util.GregorianCalendar, java.util.Hashtable, java.util.HashSet, java.util.HashMap, java.util.LinkedList, java.util.LinkedHashMap, java.util.LinkedHashSet, java.util.TreeSet, java.util.TreeMap, java.util.Vector" />
+		</module>
+		<module name="InnerAssignment" />
+		<module name="JUnitTestCase" />
+		<module name="ModifiedControlVariable" />
+		<module name="MultipleVariableDeclarations" />
+		<module name="NestedForDepth">
+			<property name="max" value="2" />
+		</module>
+		<module name="NestedIfDepth"> <!-- this is too high, we should refactor those parts -->
+			<property name="max" value="5" />
+		</module>
+		<module name="NestedTryDepth" />
+		<module name="NoClone" />
+		<module name="NoFinalizer" />
+		<module name="PackageDeclaration" />
+		<module name="SimplifyBooleanExpression" />
+		<module name="SimplifyBooleanReturn" />
+		<module name="StringLiteralEquality" />
+		<module name="ArrayTrailingComma" />
+		<module name="UnnecessaryParentheses" />
+		<module name="OneStatementPerLine" />
+		<module name="HideUtilityClassConstructor" />
+		<module name="InterfaceIsType" />
+		<module name="MutableException" />
+		<module name="ThrowsCount">
+			<property name="max" value="2" />
+		</module>
+		<!-- we should really enable the following -->
+		<!-- <module name="VisibilityModifier"> <property name="packageAllowed" 
+			value="true"/> <property name="protectedAllowed" value="true"/> </module> -->
+		<module name="ArrayTypeStyle" />
+		<module name="Indentation">
+			<property name="caseIndent" value="0" />
+		</module>
+
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="^\t* +\t*\S" />
+			<property name="message"
+				value="Line has leading space characters; indentation should be performed with tabs only." />
+			<property name="ignoreComments" value="true" />
+		</module>
+		<module name="UpperEll" />
+		<module name="OuterTypeFilename" />
+		<module name="OuterTypeNumber" />
+		<module name="JavadocType" />
+		<!-- sourceforge.net/p/checkstyle/bugs/543/ -->
+        <!-- <module name="JavadocMethod" /> -->
+		<module name="JavadocVariable" />
+		<module name="JavadocStyle" />
+	</module>
+	<module name="FileLength" />
+	<module name="SuppressionCommentFilter" />
+	<module name="SuppressWarningsFilter" />
+</module>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,5 +37,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface RequiresCookieInUrl {
-	public String[] value();
+
+	/**
+	 * The names of the cookies.
+	 * 
+	 * @return the cookie names
+	 */
+	String[] value();
 }

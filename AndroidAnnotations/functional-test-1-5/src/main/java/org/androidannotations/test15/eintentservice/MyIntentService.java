@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,13 +18,11 @@ package org.androidannotations.test15.eintentservice;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
+import org.androidannotations.api.support.app.AbstractIntentService;
 import org.androidannotations.test15.ebean.EnhancedClass;
 
-import android.app.IntentService;
-import android.content.Intent;
-
 @EIntentService
-public class MyIntentService extends IntentService {
+public class MyIntentService extends AbstractIntentService {
 
 	@Bean
 	EnhancedClass dependency;
@@ -46,11 +44,6 @@ public class MyIntentService extends IntentService {
 	@ServiceAction("myAction")
 	void actionThree(String valueString, long valueLong) {
 
-	}
-
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		// Do nothing here
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.app.Activity;
-import android.os.Parcelable;
-
-import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,8 +22,9 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use on any native, {@link Parcelable} or {@link Serializable} field in an
- * {@link EActivity} annotated class to bind it with Android's extra.
+ * Use on any native, {@link android.os.Parcelable Parcelable} or
+ * {@link java.io.Serializable Serializable} field in an {@link EActivity}
+ * annotated class to bind it with Android's extra.
  * </p>
  * <p>
  * The annotation value is the key used for extra. If not set, the field name
@@ -42,8 +39,8 @@ import java.lang.annotation.Target;
  * annotated method.
  * </p>
  * <p>
- * Calling {@link Activity#setIntent(android.content.Intent)} will automatically
- * update the annotated extras.
+ * Calling {@link android.app.Activity#setIntent(android.content.Intent)
+ * Activity#setIntent(Intent)} will automatically update the annotated extras.
  * </p>
  * <blockquote>
  * 
@@ -83,5 +80,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Extra {
 
+	/**
+	 * The key of the injected extra.
+	 * 
+	 * @return the key of the extra
+	 */
 	String value() default "";
 }

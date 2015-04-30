@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,22 +15,26 @@
  */
 package org.androidannotations.test15.menu;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.MenuItem;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.test15.R;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 @EActivity
 @OptionsMenu({ R.menu.my_menu, R.menu.my_menu2 })
 public class OptionsMenuActivity extends Activity {
 
+	// CHECKSTYLE:OFF
+
 	@OptionsMenuItem
 	MenuItem menu_refresh;
+
+	// CHECKSTYLE:ON
 
 	@OptionsMenuItem(R.id.menu_search)
 	MenuItem aMenuById;
@@ -39,8 +43,9 @@ public class OptionsMenuActivity extends Activity {
 	MenuItem aMenuByResName;
 
 	boolean menuRefreshSelected;
+	boolean menuRefreshSelectedFromAnnotatedClass;
 	boolean multipleMenuItems;
-	boolean menu_add;
+	boolean menuAdd;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,8 +64,18 @@ public class OptionsMenuActivity extends Activity {
 	}
 
 	@OptionsItem
+	// CHECKSTYLE:OFF
 	void menu_add(MenuItem item) {
-		menu_add = true;
+		// CHECKSTYLE:ON
+		menuAdd = true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_refresh) {
+			menuRefreshSelectedFromAnnotatedClass = true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

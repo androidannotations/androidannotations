@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -71,14 +71,15 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 		contextRef = getContextField();
 	}
 
+	@Override
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, processHolder.codeModel().VOID, "init_");
 	}
 
-    public void invokeInitInConstructor() {
-        JBlock constructorBody = constructor.body();
-        constructorBody.invoke(getInit());
-    }
+	public void invokeInitInConstructor() {
+		JBlock constructorBody = constructor.body();
+		constructorBody.invoke(getInit());
+	}
 
 	public void createFactoryMethod(boolean hasSingletonScope) {
 
@@ -100,7 +101,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 					._then();
 			JVar previousNotifier = viewNotifierHelper.replacePreviousNotifierWithNull(creationBlock);
 			creationBlock.assign(instanceField, _new(generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
-            creationBlock.invoke(instanceField, getInit());
+			creationBlock.invoke(instanceField, getInit());
 			viewNotifierHelper.resetPreviousNotifier(creationBlock, previousNotifier);
 
 			factoryMethodBody._return(instanceField);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.invoke;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -90,46 +92,41 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void listenerFields(Element element, EActivityHolder holder) {
-		List<String> listenerClasses = extractListenerClasses(element);
-		if (listenerClasses.size() > 0) {
-			int i = 1;
-			for (String listenerClassName : listenerClasses) {
-				JClass listenerClass = refClass(listenerClassName);
-				JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
-				listener.annotate(SuppressWarnings.class).param("value", "unused");
-				listener.annotate(classes().INJECT);
-				i++;
-			}
+		List<TypeMirror> listenerTypeMirrors = extractListenerTypeMirrors(element);
+		int i = 1;
+		for (TypeMirror listenterTypeMirror : listenerTypeMirrors) {
+			JClass listenerClass = codeModelHelper.typeMirrorToJClass(listenterTypeMirror, holder);
+			JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
+			codeModelHelper.addSuppressWarnings(listener, "unused");
+			listener.annotate(classes().INJECT);
+			i++;
 		}
 	}
 
-	private List<String> extractListenerClasses(Element activityElement) {
+	private List<TypeMirror> extractListenerTypeMirrors(Element activityElement) {
 
 		List<? extends AnnotationMirror> annotationMirrors = activityElement.getAnnotationMirrors();
 
 		String annotationName = RoboGuice.class.getName();
-		AnnotationValue action;
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
 			if (annotationName.equals(annotationMirror.getAnnotationType().toString())) {
 				for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
 					if ("value".equals(entry.getKey().getSimpleName().toString())) {
-						action = entry.getValue();
-
+						AnnotationValue action = entry.getValue();
 						@SuppressWarnings("unchecked")
-						List<Object> values = (List<Object>) action.getValue();
+						List<AnnotationValue> elements = (List<AnnotationValue>) action.getValue();
+						List<TypeMirror> listenerTypeMirrors = new ArrayList<TypeMirror>(elements.size());
 
-						List<String> listenerClasses = new ArrayList<String>();
-
-						for (Object value : values) {
-							listenerClasses.add(value.toString());
+						for (AnnotationValue annotationValue : elements) {
+							listenerTypeMirrors.add((TypeMirror) annotationValue.getValue());
 						}
-						return listenerClasses;
 
+						return listenerTypeMirrors;
 					}
 				}
 			}
 		}
-		return new ArrayList<String>(0);
+		return Collections.emptyList();
 	}
 
 	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scope, JFieldVar scopedObjects, JFieldVar eventManager) {
@@ -231,7 +228,13 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void fireEvent(JFieldVar eventManager, JBlock body, JClass eventClass, JExpression... eventArguments) {
-		JInvocation newEvent = _new(eventClass);
+		JClass actualEventClass = eventClass;
+		if (eventClass.fullName().startsWith("roboguice.context.event")) {
+			actualEventClass = eventClass.narrow(classes().ACTIVITY);
+		}
+
+		JInvocation newEvent = _new(actualEventClass);
+		newEvent.arg(_this());
 		for (JExpression eventArgument : eventArguments) {
 			newEvent.arg(eventArgument);
 		}

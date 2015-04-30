@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -57,22 +57,22 @@ import java.lang.annotation.Target;
  * void onEditorActionsOnHelloTextView(TextView hello, int actionId, KeyEvent keyEvent) {
  * 	// Something Here
  * }
- *
+ * 
  * &#064;EditorAction
  * void <b>helloTextView</b>EditorAction(TextView hello) {
  * 	// Something Here
  * }
- *
+ * 
  * &#064;EditorAction(<b>{R.id.editText, R.id.helloTextView}</b>)
  * void onEditorActionsOnSomeTextViews(TextView tv, int actionId) {
  * 	// Something Here
  * }
- *
+ * 
  * &#064;EditorAction(<b>R.id.helloTextView</b>)
  * void onEditorActionsOnHelloTextView() {
  * 	// Something Here
  * }
- *
+ * 
  * &#064;EditorAction(R.id.helloTextView)
  * <b>boolean</b> onEditorActionsOnHelloTextView() {
  * 	// Something Here
@@ -86,8 +86,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface EditorAction {
 
+	/**
+	 * The R.id.* fields which refer to the TextViews.
+	 * 
+	 * @return the ids of the TextViews
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as a strings which refer to the TextViews.
+	 * 
+	 * @return the resource names of the TextViews
+	 */
 	String[] resName() default "";
 
 }

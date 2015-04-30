@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,7 +33,7 @@ public class AfterExtrasActivityTest {
 	Intent intent;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activityController = ActivityController.of(AfterExtrasActivity_.class);
 		activity = activityController.get();
 
@@ -41,7 +41,7 @@ public class AfterExtrasActivityTest {
 	}
 
 	@Test
-	public void afterExtra_called_activity_after_setIntent() {
+	public void afterExtraCalledActivityAfterSetIntent() {
 		activityController.create();
 		assertThat(activity.extraDataSet).isFalse();
 		assertThat(activity.afterExtrasCalled).isFalse();
@@ -52,7 +52,7 @@ public class AfterExtrasActivityTest {
 	}
 
 	@Test
-	public void afterExtra_called_activity_in_onCreate() throws Exception {
+	public void afterExtraCalledActivityInOnCreate() throws Exception {
 		assertThat(activity.extraDataSet).isFalse();
 		assertThat(activity.afterExtrasCalled).isFalse();
 

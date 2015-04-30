@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,7 +41,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class ItemClickHandler extends AbstractListenerHandler {
+public class ItemClickHandler extends AbstractViewListenerHandler {
 
 	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
@@ -86,7 +86,7 @@ public class ItemClickHandler extends AbstractListenerHandler {
 				call.arg(cast(parameterClass, invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 
 				if (parameterClass.isParameterized()) {
-					listenerMethod.annotate(SuppressWarnings.class).param("value", "unchecked");
+					codeModelHelper.addSuppressWarnings(listenerMethod, "unchecked");
 				}
 			}
 		}
@@ -108,7 +108,7 @@ public class ItemClickHandler extends AbstractListenerHandler {
 	}
 
 	@Override
-	protected JClass getViewClass() {
+	protected JClass getListenerTargetClass() {
 		return classes().ADAPTER_VIEW.narrow(codeModel().wildcard());
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,25 @@
  */
 package org.androidannotations.api;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -23,19 +42,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
-
-import java.io.*;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * <p>
@@ -139,7 +145,7 @@ public class ViewServer implements Runnable {
 
 	private final List<WindowListener> mListeners = new CopyOnWriteArrayList<ViewServer.WindowListener>();
 
-	private final HashMap<View, String> mWindows = new HashMap<View, String>();
+	private final Map<View, String> mWindows = new HashMap<View, String>();
 	private final ReentrantReadWriteLock mWindowsLock = new ReentrantReadWriteLock();
 
 	private View mFocusedWindow;
@@ -209,8 +215,7 @@ public class ViewServer implements Runnable {
 	 *             If the server cannot be created.
 	 * 
 	 * @see #stop()
-	 * @see #isRunning()
-	 * see WindowManagerService#startViewServer(int)
+	 * @see #isRunning() see WindowManagerService#startViewServer(int)
 	 */
 	public boolean start() throws IOException {
 		if (mThread != null) {
@@ -231,8 +236,7 @@ public class ViewServer implements Runnable {
 	 *         the server wasn't started.
 	 * 
 	 * @see #start()
-	 * @see #isRunning()
-	 * see WindowManagerService#stopViewServer()
+	 * @see #isRunning() see WindowManagerService#stopViewServer()
 	 */
 	public boolean stop() {
 		if (mThread != null) {
@@ -280,8 +284,7 @@ public class ViewServer implements Runnable {
 	 * @return True if the server is running, false otherwise.
 	 * 
 	 * @see #start()
-	 * @see #stop()
-	 * see WindowManagerService#isViewServerRunning()
+	 * @see #stop() see WindowManagerService#isViewServerRunning()
 	 */
 	public boolean isRunning() {
 		return mThread != null && mThread.isAlive();
@@ -322,8 +325,10 @@ public class ViewServer implements Runnable {
 	/**
 	 * Invoke this method to register a new view hierarchy.
 	 * 
-	 * @param view A view that belongs to the view hierarchy/window to register
-	 * @param name The name of the view hierarchy/window to register
+	 * @param view
+	 *            A view that belongs to the view hierarchy/window to register
+	 * @param name
+	 *            The name of the view hierarchy/window to register
 	 * 
 	 * @see #removeWindow(View)
 	 */

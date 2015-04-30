@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,13 +16,11 @@
 package org.androidannotations.helper;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -140,7 +138,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return variableNames;
 	}
 
-	public JVar declareUrlVariables(ExecutableElement element, RestHolder holder, JBlock methodBody, TreeMap<String, JVar> methodParams) {
+	public JVar declareUrlVariables(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> methodParams) {
 		Set<String> urlVariables = extractUrlVariableNames(element);
 
 		// cookies in url?
@@ -295,15 +293,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return httpHeadersVar;
 	}
 
-    public JVar getEntitySentToServer(ExecutableElement element, TreeMap<String, JVar> params) {
-        Set<String> urlVariables = extractUrlVariableNames(element);
-        for (String paramName : params.keySet()) {
-            if (!urlVariables.contains(paramName)) {
-                return params.get(paramName);
-            }
-        }
-        return null;
-    }
+	public JVar getEntitySentToServer(ExecutableElement element, SortedMap<String, JVar> params) {
+		Set<String> urlVariables = extractUrlVariableNames(element);
+		for (String paramName : params.keySet()) {
+			if (!urlVariables.contains(paramName)) {
+				return params.get(paramName);
+			}
+		}
+		return null;
+	}
 
 	public JExpression declareHttpEntity(ProcessHolder holder, JBlock body, JVar entitySentToServer, JVar httpHeaders) {
 		JType entityType = holder.refClass(Object.class);
@@ -335,7 +333,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	public JExpression getResponseClass(Element element, RestHolder holder) {
 		ExecutableElement executableElement = (ExecutableElement) element;
-		JExpression responseClassExpr = JExpr._null();
+		JExpression responseClassExpr = nullCastedToNarrowedClass(holder);
 		TypeMirror returnType = executableElement.getReturnType();
 		if (returnType.getKind() != TypeKind.VOID) {
 			JClass responseClass = retrieveResponseClass(returnType, holder);
@@ -376,16 +374,16 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	 * <li>The type is a generics and enclosing type is an interface I&lt;T&gt;
 	 * : Looking the inheritance tree, then</li>
 	 * <ol>
-	 * <li>One of the parent is a {@link Map} : Generate a subclass of
-	 * {@link LinkedHashMap}&lt;T&gt; one and return it</li>
+	 * <li>One of the parent is a {@link java.util.Map Map} : Generate a
+	 * subclass of {@link LinkedHashMap}&lt;T&gt; one and return it</li>
 	 * <li>One of the parent is a {@link Set} : Generate a subclass of
 	 * {@link TreeSet}&lt;T&gt; one and return it</li>
-	 * <li>One of the parent is a {@link Collection} : Generate a subclass of
-	 * {@link ArrayList}&lt;T&gt; one and return it</li>
+	 * <li>One of the parent is a {@link java.util.Collection Collection} :
+	 * Generate a subclass of {@link ArrayList}&lt;T&gt; one and return it</li>
 	 * <li>Return {@link Object} definition</li>
 	 * </ol>
 	 * </ul>
-	 * 
+	 *
 	 */
 	private JClass resolveResponseClass(TypeMirror expectedType, RestHolder holder) {
 		// is a class or an interface
@@ -419,8 +417,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	/**
 	 * Recursive method used to find if one of the grand-parent of the
-	 * <code>enclosingJClass</code> is {@link Map}, {@link Set} or
-	 * {@link Collection}.
+	 * <code>enclosingJClass</code> is {@link java.util.Map Map}, {@link Set} or
+	 * {@link java.util.Collection Collection}.
 	 */
 	private JClass retrieveDecoratedResponseClass(DeclaredType declaredType, TypeElement typeElement, RestHolder holder) {
 		String classTypeBaseName = typeElement.toString();
@@ -448,15 +446,16 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			String decoratedClassNameSuffix = "";
 			JClass decoratedSuperClass = holder.refClass(decoratedClassName);
 			for (TypeMirror typeArgument : declaredType.getTypeArguments()) {
+				TypeMirror actualTypeArgument = typeArgument;
 				if (typeArgument instanceof WildcardType) {
 					WildcardType wildcardType = (WildcardType) typeArgument;
 					if (wildcardType.getExtendsBound() != null) {
-						typeArgument = wildcardType.getExtendsBound();
+						actualTypeArgument = wildcardType.getExtendsBound();
 					} else if (wildcardType.getSuperBound() != null) {
-						typeArgument = wildcardType.getSuperBound();
+						actualTypeArgument = wildcardType.getSuperBound();
 					}
 				}
-				JClass narrowJClass = codeModelHelper.typeMirrorToJClass(typeArgument, holder);
+				JClass narrowJClass = codeModelHelper.typeMirrorToJClass(actualTypeArgument, holder);
 				decoratedSuperClass = decoratedSuperClass.narrow(narrowJClass);
 				decoratedClassNameSuffix += plainName(narrowJClass);
 			}
@@ -493,5 +492,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 		return plainName;
+	}
+
+	public JExpression nullCastedToNarrowedClass(RestHolder holder) {
+		return JExpr.cast(holder.refClass(Class.class).narrow(holder.refClass(Void.class)), JExpr._null());
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -87,11 +87,11 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void uniqueId(Element element, AnnotationElements validatedElements, IsValid valid) {
+	public void uniqueResourceId(Element element, AnnotationElements validatedElements, Res resourceType, IsValid valid) {
 
 		if (valid.isValid()) {
 
-			List<String> annotationQualifiedIds = idAnnotationHelper.extractAnnotationResources(element, Res.ID, true);
+			List<String> annotationQualifiedIds = idAnnotationHelper.extractAnnotationResources(element, resourceType, true);
 
 			Element elementEnclosingElement = element.getEnclosingElement();
 			Set<? extends Element> annotatedElements = validatedElements.getRootAnnotatedElements(annotationHelper.getTarget());
@@ -101,7 +101,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 				if (elementEnclosingElement.equals(uniqueCheckEnclosingElement)) {
 
-					List<String> checkQualifiedIds = idAnnotationHelper.extractAnnotationResources(uniqueCheckElement, Res.ID, true);
+					List<String> checkQualifiedIds = idAnnotationHelper.extractAnnotationResources(uniqueCheckElement, resourceType, true);
 
 					for (String checkQualifiedId : checkQualifiedIds) {
 						for (String annotationQualifiedId : annotationQualifiedIds) {
@@ -109,7 +109,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 							if (annotationQualifiedId.equals(checkQualifiedId)) {
 								valid.invalidate();
 								String annotationSimpleId = annotationQualifiedId.substring(annotationQualifiedId.lastIndexOf('.') + 1);
-								annotationHelper.printAnnotationError(element, "The id " + annotationSimpleId + " is already used on the following " + annotationHelper.annotationName() + " method: " + uniqueCheckElement);
+								annotationHelper.printAnnotationError(element, "The resource id " + annotationSimpleId + " is already used on the following " + annotationHelper.annotationName() + " method: " + uniqueCheckElement);
 								return;
 							}
 						}
@@ -117,6 +117,10 @@ public class IdValidatorHelper extends ValidatorHelper {
 				}
 			}
 		}
+	}
+
+	public void uniqueId(Element element, AnnotationElements validatedElements, IsValid valid) {
+		uniqueResourceId(element, validatedElements, Res.ID, valid);
 	}
 
 	public void annotationValuePositiveAndInAShort(Element element, IsValid valid, int value) {

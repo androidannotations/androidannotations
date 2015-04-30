@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,20 +25,20 @@ import org.junit.Test;
 public class OnBackgroundApiDependenciesTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(OnBackgroundApiDependenciesTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 		ensureOutputDirectoryIsEmpty();
 	}
 
 	@Test
-	public void activity_with_background_annotated_method_generate_api_dependency() throws IOException {
+	public void activityWithBackgroundAnnotatedMethodGenerateApiDependency() throws IOException {
 		CompileResult result = compileFiles(ActivityWithBackgroundMethod.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void activity_without_background_annotated_method_generate_api_dependency() throws IOException {
+	public void activityWithoutBackgroundAnnotatedMethodGenerateApiDependency() throws IOException {
 		CompileResult result = compileFiles(ActivityWithOnBackPressedMethod.class);
 		assertCompilationSuccessful(result);
 	}

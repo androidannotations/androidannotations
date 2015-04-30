@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,48 @@
  * the License.
  */
 package org.androidannotations.helper;
+
+import static java.util.Arrays.asList;
+import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
+import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
+import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
+import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
+import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
@@ -49,46 +91,7 @@ import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import static java.util.Arrays.asList;
-import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
-import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
-import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
-import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
-import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
-import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
-import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
-import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
-
+@SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
 
 	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
@@ -112,6 +115,8 @@ public class ValidatorHelper {
 	private static final List<Receiver.RegisterAt> VALID_ACTIVITY_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop);
 	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy);
 	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
+
+	private static final List<String> VALID_PREFERENCE_CLASSES = asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -199,6 +204,13 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void enclosingElementIsNotAbstractIfNotAbstract(Element element, IsValid valid) {
+		if (!annotationHelper.isAbstract(element) && annotationHelper.isAbstract(element.getEnclosingElement())) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s cannot be used on a non-abstract inner element whose outer element is abstract");
+		}
+	}
+
 	public void enclosingElementHasEBeanAnnotation(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
 		hasClassAnnotation(element, enclosingElement, validatedElements, EBean.class, valid);
@@ -264,7 +276,7 @@ public class ValidatorHelper {
 	}
 
 	private void hasClassAnnotation(Element reportElement, Element element, AnnotationElements validatedElements, Class<? extends Annotation> validAnnotation, IsValid valid) {
-		ArrayList<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
+		List<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
 		validAnnotations.add(validAnnotation);
 		hasOneOfClassAnnotations(reportElement, element, validatedElements, validAnnotations, valid);
 	}
@@ -525,24 +537,46 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void extendsOrmLiteDao(Element element, IsValid valid) {
-		TypeMirror elementType = element.asType();
+	public void extendsOrmLiteDao(Element element, IsValid valid, OrmLiteHelper ormLiteHelper) {
+		if (!valid.isValid()) {
+			// we now that the element is invalid. early exit as the reason
+			// could be missing ormlite classes
+			return;
+		}
 
-		TypeElement daoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.DAO);
-		TypeElement runtimeExceptionDaoTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
+		TypeMirror elementTypeMirror = element.asType();
+		Types typeUtils = annotationHelper.getTypeUtils();
 
-		if (daoTypeElement != null) {
+		DeclaredType daoParametrizedType = ormLiteHelper.getDaoParametrizedType();
+		DeclaredType runtimeExceptionDaoParametrizedType = ormLiteHelper.getRuntimeExceptionDaoParametrizedType();
 
-			TypeMirror wildcardType = annotationHelper.getTypeUtils().getWildcardType(null, null);
-			DeclaredType daoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(daoTypeElement, wildcardType, wildcardType);
-			DeclaredType runtimeExceptionDaoParametrizedType = annotationHelper.getTypeUtils().getDeclaredType(runtimeExceptionDaoTypeElement, wildcardType, wildcardType);
+		// Checks that elementType extends Dao<?, ?> or
+		// RuntimeExceptionDao<?, ?>
+		if (!annotationHelper.isSubtype(elementTypeMirror, daoParametrizedType) && !annotationHelper.isSubtype(elementTypeMirror, runtimeExceptionDaoParametrizedType)) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParametrizedType.toString() //
+					+ " or " + runtimeExceptionDaoParametrizedType.toString());
+			return;
+		}
 
-			// Checks that elementType extends Dao<?, ?> or
-			// RuntimeExceptionDao<?, ?>
-			if (!annotationHelper.isSubtype(elementType, daoParametrizedType) && !annotationHelper.isSubtype(elementType, runtimeExceptionDaoParametrizedType)) {
+		if (annotationHelper.isSubtype(elementTypeMirror, runtimeExceptionDaoParametrizedType) //
+				&& !typeUtils.isAssignable(ormLiteHelper.getTypedRuntimeExceptionDao(element), elementTypeMirror)) {
+
+			boolean hasConstructor = false;
+			Element elementType = typeUtils.asElement(elementTypeMirror);
+			DeclaredType daoWithTypedParameters = ormLiteHelper.getTypedDao(element);
+			for (ExecutableElement constructor : ElementFilter.constructorsIn(elementType.getEnclosedElements())) {
+				List<? extends VariableElement> parameters = constructor.getParameters();
+				if (parameters.size() == 1) {
+					TypeMirror type = parameters.get(0).asType();
+					if (annotationHelper.isSubtype(type, daoWithTypedParameters)) {
+						hasConstructor = true;
+					}
+				}
+			}
+			if (!hasConstructor) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "%s can only be used on an element that extends " + daoParametrizedType.toString() //
-						+ " or " + runtimeExceptionDaoParametrizedType.toString());
+				annotationHelper.printAnnotationError(element, elementTypeMirror.toString() + " requires a constructor that takes only a " + daoWithTypedParameters.toString());
 			}
 		}
 	}
@@ -557,6 +591,10 @@ public class ValidatorHelper {
 			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "%s can only be used on a " + CanonicalNameConstants.LIST + " of elements extending " + CanonicalNameConstants.VIEW);
 		}
+	}
+
+	public void extendsPreference(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.PREFERENCE, valid);
 	}
 
 	public void hasASqlLiteOpenHelperParameterizedType(Element element, IsValid valid) {
@@ -583,7 +621,7 @@ public class ValidatorHelper {
 			String componentQualifiedName = typeElement.getQualifiedName().toString();
 			String generatedComponentQualifiedName = componentQualifiedName + ModelConstants.GENERATION_SUFFIX;
 
-			if (!applicationClassName.equals(generatedComponentQualifiedName)) {
+			if (!typeElement.getModifiers().contains(Modifier.ABSTRACT) && !applicationClassName.equals(generatedComponentQualifiedName)) {
 				if (applicationClassName.equals(componentQualifiedName)) {
 					valid.invalidate();
 					annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedComponentQualifiedName + " instead of " + componentQualifiedName);
@@ -691,7 +729,12 @@ public class ValidatorHelper {
 
 		if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_APPLICATION) != null) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 2.0!");
+			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 3.0!");
+		}
+
+		if (elementUtils.getTypeElement(CanonicalNameConstants.ON_START_EVENT_OLD) != null) {
+			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "It seems you are using an old version of RoboGuice. Be sure to use version 3.0!");
 		}
 	}
 
@@ -1050,7 +1093,7 @@ public class ValidatorHelper {
 	}
 
 	private boolean isKnownBundleCompatibleType(String type) {
-		return BundleHelper.methodSuffixNameByTypeName.containsKey(type);
+		return BundleHelper.METHOD_SUFFIX_BY_TYPE_NAME.containsKey(type);
 	}
 
 	public void componentRegistered(Element element, AndroidManifest androidManifest, IsValid valid) {
@@ -1092,8 +1135,9 @@ public class ValidatorHelper {
 		TypeMirror httpMessageConverterTypeErased = annotationHelper.getTypeUtils().erasure(httpMessageConverterType);
 		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "converters");
 
-		if (converters == null) {
+		if (converters == null || converters.isEmpty()) {
 			valid.invalidate();
+			annotationHelper.printAnnotationError(element, "At least one converter is required");
 			return;
 		}
 
@@ -1468,4 +1512,23 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void extendsPreferenceActivityOrPreferenceFragment(Element element, IsValid valid) {
+		extendsOneOfTypes(element, VALID_PREFERENCE_CLASSES, valid);
+	}
+
+	public void extendsPreferenceActivity(Element element, IsValid valid) {
+		extendsType(element, CanonicalNameConstants.PREFERENCE_ACTIVITY, valid);
+	}
+
+	public void enclosingElementExtendsPreferenceActivityOrPreferenceFragment(Element element, IsValid valid) {
+		extendsOneOfTypes(element.getEnclosingElement(), VALID_PREFERENCE_CLASSES, valid);
+	}
+
+	public void isPreferenceFragmentClassPresent(Element element, IsValid valid) {
+		TypeElement preferenceFragmentElement = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.PREFERENCE_FRAGMENT);
+
+		if (preferenceFragmentElement == null) {
+			annotationHelper.printAnnotationError(element, "The class " + CanonicalNameConstants.PREFERENCE_FRAGMENT + " cannot be found. You have to use at least API 11");
+		}
+	}
 }

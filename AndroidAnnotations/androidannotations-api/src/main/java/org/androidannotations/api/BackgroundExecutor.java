@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,23 +28,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.os.Looper;
 import android.util.Log;
-import org.androidannotations.annotations.SupposeBackground;
-import org.androidannotations.annotations.SupposeUiThread;
 
 public class BackgroundExecutor {
 
 	private static final String TAG = "BackgroundExecutor";
 
-	public static Executor DEFAULT_EXECUTOR = Executors.newScheduledThreadPool(2 * Runtime.getRuntime().availableProcessors());
+	public static final Executor DEFAULT_EXECUTOR = Executors.newScheduledThreadPool(2 * Runtime.getRuntime().availableProcessors());
 	private static Executor executor = DEFAULT_EXECUTOR;
 
 	/**
-	 * The default invocation handler for wrong thread execution.
-	 * It just throws {@link IllegalStateException} with explanation what is going wrong.
+	 * The default invocation handler for wrong thread execution. It just throws
+	 * {@link IllegalStateException} with explanation what is going wrong.
 	 *
 	 * @see #setWrongThreadListener(BackgroundExecutor.WrongThreadListener)
-	 * @see SupposeBackground
-	 * @see SupposeUiThread
+	 * @see org.androidannotations.annotations.SupposeBackground
+	 * @see org.androidannotations.annotations.SupposeUiThread
 	 */
 	public static final WrongThreadListener DEFAULT_WRONG_THREAD_LISTENER = new WrongThreadListener() {
 		@Override
@@ -71,8 +69,11 @@ public class BackgroundExecutor {
 
 	private static WrongThreadListener wrongThreadListener = DEFAULT_WRONG_THREAD_LISTENER;
 
-	private static final List<Task> tasks = new ArrayList<Task>();
-	private static final ThreadLocal<String> currentSerial = new ThreadLocal<String>();
+	private static final List<Task> TASKS = new ArrayList<Task>();
+	private static final ThreadLocal<String> CURRENT_SERIAL = new ThreadLocal<String>();
+
+	private BackgroundExecutor() {
+	}
 
 	/**
 	 * Execute a runnable after the given delay.
@@ -131,7 +132,7 @@ public class BackgroundExecutor {
 		if (task.id != null || task.serial != null) {
 			/* keep task */
 			task.future = future;
-			tasks.add(task);
+			TASKS.add(task);
 		}
 	}
 
@@ -224,10 +225,11 @@ public class BackgroundExecutor {
 	}
 
 	/**
-	 * Changes the default {@link WrongThreadListener}.
-	 * To restore the default one use {@link #DEFAULT_WRONG_THREAD_LISTENER}.
+	 * Changes the default {@link WrongThreadListener}. To restore the default
+	 * one use {@link #DEFAULT_WRONG_THREAD_LISTENER}.
 	 *
-	 * @param listener the new {@link WrongThreadListener}
+	 * @param listener
+	 *            the new {@link WrongThreadListener}
 	 */
 	public static void setWrongThreadListener(WrongThreadListener listener) {
 		wrongThreadListener = listener;
@@ -244,8 +246,8 @@ public class BackgroundExecutor {
 	 *            complete
 	 */
 	public static synchronized void cancelAll(String id, boolean mayInterruptIfRunning) {
-		for (int i = tasks.size() - 1; i >= 0; i--) {
-			Task task = tasks.get(i);
+		for (int i = TASKS.size() - 1; i >= 0; i--) {
+			Task task = TASKS.get(i);
 			if (id.equals(task.id)) {
 				if (task.future != null) {
 					task.future.cancel(mayInterruptIfRunning);
@@ -261,7 +263,7 @@ public class BackgroundExecutor {
 					Log.w(TAG, "A task with id " + task.id + " cannot be cancelled (the executor set does not support it)");
 				} else {
 					/* this task has not been submitted to the executor */
-					tasks.remove(i);
+					TASKS.remove(i);
 				}
 			}
 		}
@@ -269,7 +271,8 @@ public class BackgroundExecutor {
 
 	/**
 	 * Checks if the current thread is UI thread and notifies
-	 * {@link BackgroundExecutor.WrongThreadListener#onUiExpected()} if it doesn't.
+	 * {@link BackgroundExecutor.WrongThreadListener#onUiExpected()} if it
+	 * doesn't.
 	 */
 	public static void checkUiThread() {
 		if (Looper.getMainLooper().getThread() != Thread.currentThread()) {
@@ -278,17 +281,21 @@ public class BackgroundExecutor {
 	}
 
 	/**
-	 * Checks if the current thread is a background thread and, optionally, restricts it
-	 * with passed serials. If no serials passed and current thread is the UI thread, then
-	 * {@link WrongThreadListener#onBgExpected(String...)} will be called.
-	 * If the current thread is not UI and serials list is empty, then this method just returns.
-	 * Otherwise, if the method was called not during {@link Task} execution or the task has no
-	 * serial, then the {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be called
-	 * with null for the first parameter. If task has a serial but passed serials don't contain that,
-	 * then {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be called with
-	 * the task's serial for the first parameter.
+	 * Checks if the current thread is a background thread and, optionally,
+	 * restricts it with passed serials. If no serials passed and current thread
+	 * is the UI thread, then
+	 * {@link WrongThreadListener#onBgExpected(String...)} will be called. If
+	 * the current thread is not UI and serials list is empty, then this method
+	 * just returns. Otherwise, if the method was called not during {@link Task}
+	 * execution or the task has no serial, then the
+	 * {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be
+	 * called with null for the first parameter. If task has a serial but passed
+	 * serials don't contain that, then
+	 * {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be
+	 * called with the task's serial for the first parameter.
 	 *
-	 * @param serials (optional) list of allowed serials
+	 * @param serials
+	 *            (optional) list of allowed serials
 	 */
 	public static void checkBgThread(String... serials) {
 		if (serials.length == 0) {
@@ -297,7 +304,7 @@ public class BackgroundExecutor {
 			}
 			return;
 		}
-		String current = currentSerial.get();
+		String current = CURRENT_SERIAL.get();
 		if (current == null) {
 			wrongThreadListener.onWrongBgSerial(null, serials);
 			return;
@@ -314,12 +321,13 @@ public class BackgroundExecutor {
 	 * Indicates whether a task with the specified <code>serial</code> has been
 	 * submitted to the executor.
 	 *
-	 * @param serial the serial queue
+	 * @param serial
+	 *            the serial queue
 	 * @return <code>true</code> if such a task has been submitted,
-	 * <code>false</code> otherwise
+	 *         <code>false</code> otherwise
 	 */
 	private static boolean hasSerialRunning(String serial) {
-		for (Task task : tasks) {
+		for (Task task : TASKS) {
 			if (task.executionAsked && serial.equals(task.serial)) {
 				return true;
 			}
@@ -336,10 +344,10 @@ public class BackgroundExecutor {
 	 * @return task if found, <code>null</code> otherwise
 	 */
 	private static Task take(String serial) {
-		int len = tasks.size();
+		int len = TASKS.size();
 		for (int i = 0; i < len; i++) {
-			if (serial.equals(tasks.get(i).serial)) {
-				return tasks.remove(i);
+			if (serial.equals(TASKS.get(i).serial)) {
+				return TASKS.remove(i);
 			}
 		}
 		return null;
@@ -389,7 +397,7 @@ public class BackgroundExecutor {
 			}
 
 			try {
-				currentSerial.set(serial);
+				CURRENT_SERIAL.set(serial);
 				execute();
 			} finally {
 				/* handle next tasks */
@@ -404,10 +412,10 @@ public class BackgroundExecutor {
 				/* nothing to do */
 				return;
 			}
-			currentSerial.set(null);
+			CURRENT_SERIAL.set(null);
 			synchronized (BackgroundExecutor.class) {
 				/* execution complete */
-				tasks.remove(this);
+				TASKS.remove(this);
 
 				if (serial != null) {
 					Task next = take(serial);
@@ -426,45 +434,51 @@ public class BackgroundExecutor {
 	}
 
 	/**
-	 * A callback interface to be notified when a method invocation is expected from another thread.
+	 * A callback interface to be notified when a method invocation is expected
+	 * from another thread.
 	 *
 	 * @see #setWrongThreadListener(WrongThreadListener)
 	 * @see #checkUiThread()
 	 * @see #checkBgThread(String...)
-	 * @see SupposeUiThread
-	 * @see SupposeBackground
+	 * @see org.androidannotations.annotations.SupposeUiThread
+	 * @see org.androidannotations.annotations.SupposeBackground
 	 */
-	public static interface WrongThreadListener {
+	public interface WrongThreadListener {
 
 		/**
-		 * Will be called, if the method is supposed to be called from the UI-thread, but was called from a background
-		 * thread.
+		 * Will be called, if the method is supposed to be called from the
+		 * UI-thread, but was called from a background thread.
 		 *
-		 * @see SupposeUiThread
+		 * @see org.androidannotations.annotations.SupposeUiThread
 		 * @see #setWrongThreadListener(WrongThreadListener)
 		 * @see #DEFAULT_WRONG_THREAD_LISTENER
 		 */
 		void onUiExpected();
 
 		/**
-		 * Will be called, if the method is supposed to be called from a background thread, but was called from the
-		 * UI-thread.
+		 * Will be called, if the method is supposed to be called from a
+		 * background thread, but was called from the UI-thread.
 		 *
-		 * @param expectedSerials a list of allowed serials. If any background thread is allowed the list will be empty.
-		 * @see SupposeBackground
+		 * @param expectedSerials
+		 *            a list of allowed serials. If any background thread is
+		 *            allowed the list will be empty.
+		 * @see org.androidannotations.annotations.SupposeBackground
 		 * @see #setWrongThreadListener(WrongThreadListener)
 		 * @see #DEFAULT_WRONG_THREAD_LISTENER
 		 */
 		void onBgExpected(String... expectedSerials);
 
 		/**
-		 * Will be called, if the method is supposed to be called from a background thread with one of
-		 * {@code expectedSerials}, but was called from a {@code currentSerial}. {@code currentSerial} will be null,
-		 * if it is called from a background thread without a serial.
+		 * Will be called, if the method is supposed to be called from a
+		 * background thread with one of {@code expectedSerials}, but was called
+		 * from a {@code currentSerial}. {@code currentSerial} will be null, if
+		 * it is called from a background thread without a serial.
 		 *
-		 * @param currentSerial   the serial of caller thread or null if there is no serial
-		 * @param expectedSerials a list of allowed serials
-		 * @see SupposeBackground
+		 * @param currentSerial
+		 *            the serial of caller thread or null if there is no serial
+		 * @param expectedSerials
+		 *            a list of allowed serials
+		 * @see org.androidannotations.annotations.SupposeBackground
 		 * @see #setWrongThreadListener(WrongThreadListener)
 		 * @see #DEFAULT_WRONG_THREAD_LISTENER
 		 */

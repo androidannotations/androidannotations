@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,13 +31,13 @@ import android.content.Context;
 public class InheritanceTest {
 
 	@Test
-	public void after_inject_mother_calls_first() {
+	public void afterInjectMotherCallsFirst() {
 		Child child = Child_.getInstance_(mock(Context.class));
 		assertThat(child.motherInitWasCalled).isTrue();
 	}
-	
+
 	@Test
-	public void after_views_mother_calls_first() {
+	public void afterViewsMotherCallsFirst() {
 		OnViewChangedNotifier notifier = new OnViewChangedNotifier();
 		OnViewChangedNotifier.replaceNotifier(notifier);
 		Child_ child = Child_.getInstance_(mock(Activity.class));

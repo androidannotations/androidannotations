@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,14 +33,14 @@ import android.view.View;
 
 @RunWith(RobolectricTestRunner.class)
 public class SomeSingletonTest {
-	
+
 	@Before
-	public void setup() throws Exception {
+	public void setUp() throws Exception {
 		resetSingletonToNull();
 	}
 
 	@Test
-	public void getInstance_returns_same_instance() {
+	public void getInstanceReturnsSameInstance() {
 		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
 		SomeSingleton_ firstInstance = SomeSingleton_.getInstance_(context);
 		SomeSingleton_ secondInstance = SomeSingleton_.getInstance_(context);
@@ -48,7 +48,7 @@ public class SomeSingletonTest {
 	}
 
 	@Test
-	public void views_are_not_injected() throws Exception {
+	public void viewsAreNotInjected() throws Exception {
 		Context context = mock(Context.class);
 		OnViewChangedNotifier notifier = new OnViewChangedNotifier();
 		OnViewChangedNotifier.replaceNotifier(notifier);
@@ -65,8 +65,7 @@ public class SomeSingletonTest {
 		assertThat(singleton.beanWithView.myTextView).isNull();
 	}
 
-	private void resetSingletonToNull() throws IllegalAccessException,
-			NoSuchFieldException {
+	private void resetSingletonToNull() throws IllegalAccessException, NoSuchFieldException {
 		Field instanceField = SomeSingleton_.class.getDeclaredField("instance_");
 		instanceField.setAccessible(true);
 		instanceField.set(null, null);

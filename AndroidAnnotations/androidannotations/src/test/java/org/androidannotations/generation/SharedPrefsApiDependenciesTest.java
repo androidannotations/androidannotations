@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,34 +42,34 @@ import org.junit.Test;
 
 public class SharedPrefsApiDependenciesTest extends AAProcessorTestHelper {
 
-	private static final Class<?>[] SHARED_PREF_API_DEPENDENCIES = new Class<?>[] { AbstractPrefEditorField.class,//
-			AbstractPrefField.class,//
-			BooleanPrefEditorField.class,//
-			BooleanPrefField.class,//
-			EditorHelper.class,//
-			FloatPrefEditorField.class,//
-			FloatPrefField.class,//
-			IntPrefEditorField.class,//
-			IntPrefField.class,//
-			LongPrefEditorField.class,//
-			LongPrefField.class,//
-			SharedPreferencesCompat.class,//
-			SharedPreferencesHelper.class,//
-			StringPrefEditorField.class,//
-			StringPrefField.class, //
-			StringSetPrefEditorField.class,//
-			StringSetPrefField.class //
+	private static final Class<?>[] SHARED_PREF_API_DEPENDENCIES = new Class<?>[] { AbstractPrefEditorField.class, //
+		AbstractPrefField.class, //
+		BooleanPrefEditorField.class, //
+		BooleanPrefField.class, //
+		EditorHelper.class, //
+		FloatPrefEditorField.class, //
+		FloatPrefField.class, //
+		IntPrefEditorField.class, //
+		IntPrefField.class, //
+		LongPrefEditorField.class, //
+		LongPrefField.class, //
+		SharedPreferencesCompat.class, //
+		SharedPreferencesHelper.class, //
+		StringPrefEditorField.class, //
+		StringPrefField.class, //
+		StringSetPrefEditorField.class, //
+		StringSetPrefField.class, //
 	};
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(SharedPrefsApiDependenciesTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 		ensureOutputDirectoryIsEmpty();
 	}
 
 	@Test
-	public void class_with_prefs_do_not_generate_api_dependencies() throws IOException {
+	public void classWithPrefsDoesNotGenerateApiDependencies() throws IOException {
 		compileFiles(SharedPrefs.class);
 		for (Class<?> apiDependency : SHARED_PREF_API_DEPENDENCIES) {
 			assertClassSourcesNotGeneratedToOutput(apiDependency);
@@ -77,7 +77,7 @@ public class SharedPrefsApiDependenciesTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void class_without_prefs_do_not_generate_api_dependencies() throws IOException {
+	public void classWithoutPrefsDoesNotGenerateApiDependencies() throws IOException {
 		compileFiles(SomeClass.class);
 		for (Class<?> apiDependency : SHARED_PREF_API_DEPENDENCIES) {
 			assertClassSourcesNotGeneratedToOutput(apiDependency);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -86,16 +86,56 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Receiver {
 
+	/**
+	 * The strings indicating the actions which will spark the method.
+	 * 
+	 * @return the actions which will spark the method
+	 */
 	String[] actions();
 
+	/**
+	 * The strings indicating the data schemes which should be handled.
+	 * 
+	 * @return the data schemes which should be handled
+	 */
 	String[] dataSchemes() default {};
 
+	/**
+	 * The event pair when the receiver should be registered/unregistered.
+	 * 
+	 * @return the registration/unregistration point
+	 */
 	RegisterAt registerAt() default RegisterAt.OnCreateOnDestroy;
 
+	/**
+	 * Whether to use LocalBroadcastManager.
+	 * 
+	 * @return <b>true</b>, if LocalBroadcastManager should be used,
+	 *         <b>false</b> otherwise
+	 *
+	 */
 	boolean local() default false;
 
+	/**
+	 * Represents event pairs for BroadcastReceiver registration/unregistration.
+	 */
 	public enum RegisterAt {
-		OnCreateOnDestroy, OnStartOnStop, OnResumeOnPause, OnAttachOnDetach
+		/**
+		 * Register in the onCreate method, unregister in the onDestroy method.
+		 */
+		OnCreateOnDestroy, //
+		/**
+		 * Register in the onStart method, unregister in the onStop method.
+		 */
+		OnStartOnStop, //
+		/**
+		 * Register in the onResume method, unregister in the onPause method.
+		 */
+		OnResumeOnPause, //
+		/**
+		 * Register in the onAttach method, unregister in the onDetach method.
+		 */
+		OnAttachOnDetach
 	}
 
 	/**
@@ -113,10 +153,10 @@ public @interface Receiver {
 	public @interface Extra {
 
 		/**
-		 * Define the extra's name. If this parameter isn't set the annotated
+		 * Defines the extra's name. If this parameter isn't set the annotated
 		 * parameter name will be used.
-		 *
-		 * @return the extra's name
+		 * 
+		 * @return the name of the extra
 		 */
 		String value() default "";
 	}

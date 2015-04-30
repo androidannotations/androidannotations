@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,9 +20,11 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class RoboGuiceHolder {
+public class RoboGuiceHolder extends GeneratedClassHolderDecorator<EActivityHolder> {
 
-	private EActivityHolder holder;
+
+	// TODO access for these fields should be refactored
+
 	protected JFieldVar scopedObjects;
 	protected JFieldVar scope;
 	protected JFieldVar eventManager;
@@ -41,7 +43,7 @@ public class RoboGuiceHolder {
 	protected JBlock onContentChangedAfterSuperBlock;
 
 	public RoboGuiceHolder(EActivityHolder holder) {
-		this.holder = holder;
+		super(holder);
 	}
 
 	public JFieldVar getEventManagerField() {

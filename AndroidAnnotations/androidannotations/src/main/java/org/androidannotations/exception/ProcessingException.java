@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ public class ProcessingException extends Exception {
 
 	private static final long serialVersionUID = -1282996599471872615L;
 
-	private Element element;
+	private final Element element;
 
 	public ProcessingException(Throwable cause, Element element) {
 		super(cause);

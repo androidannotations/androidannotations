@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Set;
 
 /**
  * <p>
@@ -28,7 +27,7 @@ import java.util.Set;
  * </p>
  * <p>
  * This annotation as the same constraints as {@link Get} but it MUST return a
- * {@link Set} of {@link org.springframework.http.HttpMethod}
+ * {@link java.util.Set} of {@link org.springframework.http.HttpMethod}
  * </p>
  * <blockquote>
  * 
@@ -58,5 +57,11 @@ import java.util.Set;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Options {
+
+	/**
+	 * The URI or the full URL of the web service.
+	 * 
+	 * @return the address of the web service
+	 */
 	String value();
 }

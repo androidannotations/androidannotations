@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,5 +50,10 @@ import org.androidannotations.annotations.ResId;
 @Target(ElementType.METHOD)
 public @interface DefaultStringSet {
 
+	/**
+	 * The R.string.* field which refers to the key of the preference.
+	 * 
+	 * @return the resource name of the preference key
+	 */
 	int keyRes() default ResId.DEFAULT_VALUE;
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,12 +15,12 @@
  */
 package org.androidannotations.annotations;
 
-import android.util.Log;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import android.util.Log;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * Since <i>AndroidAnnotations 3.1</i> log messages contain the method parameter
- * and return values
+ * and return values.
  * </p>
  * <p>
  * All annotation values are optional :
@@ -72,10 +72,23 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Trace {
 
-	public static final String DEFAULT_TAG = "NO_TAG";
+	/**
+	 * The string indicating that no tag was given for the log message.
+	 */
+	String DEFAULT_TAG = "NO_TAG";
 
+	/**
+	 * The tag used for the log message.
+	 * 
+	 * @return the tag of the message
+	 */
 	String tag() default DEFAULT_TAG;
 
+	/**
+	 * The log level used for the log message.
+	 * 
+	 * @return the logging level of the message
+	 */
 	int level() default Log.INFO;
 
 }

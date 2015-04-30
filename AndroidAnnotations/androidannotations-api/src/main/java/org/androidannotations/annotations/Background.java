@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,8 +19,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * <p>
@@ -30,7 +28,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * The annotated method MUST return void and MAY contain parameters.
  * </p>
  * <p>
- * The generated code is based on {@link org.androidannotations.api.BackgroundExecutor} methods.
+ * The generated code is based on
+ * {@link org.androidannotations.api.BackgroundExecutor BackgroundExecutor}
+ * methods.
  * </p>
  * 
  * <h2>Cancellation</h2>
@@ -66,20 +66,25 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * <b>Note</b>: Cancellation may or may not be successful. If the task wasn't
  * executed yet, it will be removed from the pool. But it could fail if task has
  * already completed, has already been cancelled, or could not be cancelled for
- * some other reason. See {@link Future#cancel(boolean)} for more information.
+ * some other reason. See {@link java.util.concurrent.Future#cancel(boolean)
+ * Future#cancel(boolean)} for more information.
  * </p>
  * 
  * <h2>Execution flow</h2>
  * <p>
- * By default, all tasks will be put in a {@link ScheduledThreadPoolExecutor}
- * with a core pool size of <code>2 * numberOfCpu</code>. Which means that
- * background methods will be executed in <b>PARALLEL</b>. You can change this
- * by calling <code>BackgroundExecutor.setExecutor(...)</code>.
+ * By default, all tasks will be put in a
+ * {@link java.util.concurrent.ScheduledThreadPoolExecutor
+ * ScheduledThreadPoolExecutor} with a core pool size of
+ * <code>2 * numberOfCpu</code>. Which means that background methods will be
+ * executed in <b>PARALLEL</b>. You can change this by calling
+ * <code>BackgroundExecutor.setExecutor(...)</code>.
  * </p>
  * <p>
  * If you want execute ALL background methods SEQUENTIALLY, the best way is to
- * change the executor of {@link org.androidannotations.api.BackgroundExecutor} to a
- * {@link ScheduledThreadPoolExecutor} with a core pool size of <code>1</code>.
+ * change the executor of {@link org.androidannotations.api.BackgroundExecutor
+ * BackgroundExecutor} to a
+ * {@link java.util.concurrent.ScheduledThreadPoolExecutor
+ * ScheduledThreadPoolExecutor} with a core pool size of <code>1</code>.
  * </p>
  * <p>
  * If you want execute some background methods SEQUENTIALLY, you should simply
@@ -146,6 +151,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * <b>Example</b> :
  *
  * <blockquote>
+ * 
  * <pre>
  * &#064;EBean
  * public class MyBean {
@@ -175,15 +181,15 @@ public @interface Background {
 	 * boolean mayInterruptIfRunning = true;
 	 * BackgroundExecutor.cancelAll(&quot;my_background_id&quot;, mayInterruptIfRunning);
 	 * </pre>
-	 *
-	 * @return the identifier for task cancellation
+	 * 
+	 * @return the task id for cancellation
 	 **/
 	String id() default "";
 
 	/**
 	 * Minimum delay, in milliseconds, before the background task is executed.
 	 *
-	 * @return the minimum delay before execution
+	 * @return the delay of the execution
 	 */
 	int delay() default 0;
 

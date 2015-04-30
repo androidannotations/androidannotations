@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,18 +29,28 @@ public class MyFragmentActivityTest {
 	private MyFragmentActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(MyFragmentActivity_.class).create().get();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_default_id() {
+	public void canInjectNativeFragmentWithDefaultId() {
 		assertThat(activity.myFragment).isNotNull();
 	}
 
 	@Test
-	public void can_inject_native_fragment_with_id() {
+	public void canInjectNativeFragmentWithId() {
 		assertThat(activity.myFragment2).isNotNull();
+	}
+
+	@Test
+	public void canInjectNativeFragmentWithWithDefaultTag() {
+		assertThat(activity.myFragmentTag).isNotNull();
+	}
+
+	@Test
+	public void canInjectNativeFragmentWithWithTag() {
+		assertThat(activity.myFragmentTag2).isNotNull();
 	}
 
 }

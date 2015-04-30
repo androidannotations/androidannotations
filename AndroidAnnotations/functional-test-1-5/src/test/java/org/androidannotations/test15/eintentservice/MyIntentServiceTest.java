@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,14 +35,14 @@ public class MyIntentServiceTest {
 		// Simulate call to intent builder and retrieve the configured Intent
 		EmptyActivityWithoutLayout context = new EmptyActivityWithoutLayout_();
 		Intent intent = IntentServiceHandledAction_.intent(context) //
-				.MyActionOneParam("test") //
+				.myActionOneParam("test") //
 				.get();
 
 		// Simulate the creation of IntentService by Android
 		IntentServiceHandledAction intentServiceHandledAction = new IntentServiceHandledAction_();
 		intentServiceHandledAction.onHandleIntent(intent);
 
-		assertThat(IntentServiceHandledAction_.actionForTestHandled).isEqualTo("test");
+		assertThat(IntentServiceHandledAction.actionForTestHandled).isEqualTo("test");
 	}
 
 }

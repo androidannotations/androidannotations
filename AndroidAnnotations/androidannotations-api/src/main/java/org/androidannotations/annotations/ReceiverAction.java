@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,7 @@ import java.lang.annotation.Target;
  * 
  * <pre>
  * &#064;EReceiver
- * public class MyIntentService extends BroadcastReceiver {
+ * public class MyReceiver extends BroadcastReceiver {
  * 
  * 	&#064;ReceiverAction
  * 	void mySimpleAction(Intent intent) {
@@ -65,24 +65,41 @@ import java.lang.annotation.Target;
  * 	void anotherAction(@ReceiverAction.Extra(&quot;specialExtraName&quot;) String valueString, @ReceiverAction.Extra long valueLong) {
  * 		// ...
  * 	}
+ * 
+ * 	&#064;Override
+ * 	public void onReceive(Context context, Intent intent) {
+ * 		// empty, will be overridden in generated subclass
+ * 	}
  * }
  * </pre>
  * 
  * </blockquote>
  * 
+ * <p>
+ * Note: Since
+ * {@link android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+ * BroadcastReceiver#onReceive} is abstract, you have to add an empty
+ * implementation. For convenience, we provide the
+ * {@link org.androidannotations.api.support.content.AbstractBroadcastReceiver
+ * AbstractBroadcastReceiver} class, which implements that method, so you do not
+ * have to do in your actual class if you derive it.
+ * </p>
+ * 
  * @see EReceiver
+ * @see org.androidannotations.api.support.content.AbstractBroadcastReceiver
+ *      AbstractBroadcastReceiver
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface ReceiverAction {
 
 	/**
-	 * Define the action's name. If this field isn't set the annotated method
-	 * name will be used.
+	 * Define a set of actions this method should handle. If this field isn't
+	 * set the annotated method name will be used.
 	 *
-	 * @return the action's name
+	 * @return the actions
 	 */
-	String value() default "";
+	String[] value() default {};
 
 	/**
 	 * Define a set of data schemes to filter the Intent. If this field isn't

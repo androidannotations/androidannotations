@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -63,7 +63,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface ViewById {
+
+	/**
+	 * The R.id.* field which refers to the injected View.
+	 * 
+	 * @return the id of the View
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the injected View.
+	 * 
+	 * @return the resource name of the View
+	 */
 	String resName() default "";
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,15 @@
  */
 package org.androidannotations.process;
 
-import com.sun.codemodel.JCodeModel;
+import java.util.Set;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
+import javax.lang.model.element.TypeElement;
+
 import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
@@ -26,10 +34,7 @@ import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElements.AnnotatedAndRootElements;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.*;
-import java.util.Set;
-
+import com.sun.codemodel.JCodeModel;
 
 public class ModelProcessor {
 
@@ -69,10 +74,14 @@ public class ModelProcessor {
 		LOGGER.info("Processing root elements");
 
 		/*
-		 * We generate top classes then inner classes, then inner classes of inner classes, etc...
-		 * until there is no more classes to generate.
+		 * We generate top classes then inner classes, then inner classes of
+		 * inner classes, etc... until there is no more classes to generate.
 		 */
-		while (generateElements(validatedModel,processHolder));
+		while (generateElements(validatedModel, processHolder)) {
+			// CHECKSTYLE:OFF
+			;
+			// CHECKSTYLE:ON
+		}
 
 		LOGGER.info("Processing enclosed elements");
 
@@ -117,7 +126,14 @@ public class ModelProcessor {
 				 */
 				if (!isAbstractClass(enclosingElement)) {
 					GeneratedClassHolder holder = processHolder.getGeneratedClassHolder(enclosingElement);
-					processThrowing(annotationHandler, annotatedElement, holder);
+					
+					/*
+					 * The holder can be null if the annotated holder class is
+					 * already invalidated.
+					 */
+					if (holder != null) {
+						processThrowing(annotationHandler, annotatedElement, holder);
+					}
 				} else {
 					LOGGER.trace("Skip element {} because enclosing element {} is abstract", annotatedElement, enclosingElement);
 				}
@@ -179,7 +195,7 @@ public class ModelProcessor {
 							generatingAnnotationHandler.process(annotatedElement, generatedClassHolder);
 						}
 					}
-				}  else {
+				} else {
 					LOGGER.trace("Skip element {} because it's abstract", annotatedElement);
 				}
 			}

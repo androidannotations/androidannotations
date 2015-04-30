@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,37 +25,37 @@ import org.junit.Test;
 public class RestConverterTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(RestConverterTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void client_with_no_converters_compiles() {
+	public void clientWithNoConvertersDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithNoConverters.class);
-		assertCompilationSuccessful(result);
+		assertCompilationErrorOn(ClientWithNoConverters.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_valid_converter_compiles() {
+	public void clientWithValidConverterCompiles() {
 		CompileResult result = compileFiles(ClientWithValidConverter.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void client_with_abstract_converter_does_not_compile() throws IOException {
+	public void clientWithAbstractConverterDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithAbstractConverter.class);
 		assertCompilationErrorOn(ClientWithAbstractConverter.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_non_converter_does_not_compile() throws IOException {
+	public void clientWithNonConverterDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithNonConverter.class);
 		assertCompilationErrorOn(ClientWithNonConverter.class, "@Rest", result);
 	}
 
 	@Test
-	public void client_with_wrong_constructor_converter_does_not_compile() throws IOException {
+	public void clientWithWrongConstructorConverterDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithWrongConstructorConverter.class);
 		assertCompilationErrorOn(ClientWithWrongConstructorConverter.class, "@Rest", result);
 	}

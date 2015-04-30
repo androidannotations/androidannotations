@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,14 +15,20 @@
  */
 package org.androidannotations.test15;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.annotations.ItemLongClick;
+import org.androidannotations.annotations.ItemSelect;
+import org.androidannotations.annotations.ViewById;
+
 import android.app.Activity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import org.androidannotations.annotations.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @EActivity(R.layout.item_clicks_handled)
 public class ItemClicksHandledActivity extends Activity {
@@ -67,8 +73,7 @@ public class ItemClicksHandledActivity extends Activity {
 
 	@AfterViews
 	void initView() {
-		adapter = ArrayAdapter.createFromResource(this, R.array.planets_array,
-				R.layout.simple_spinner_item);
+		adapter = ArrayAdapter.createFromResource(this, R.array.planets_array, R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		parametrizedAdapter = new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_list_item_1, stringLists());
@@ -97,7 +102,7 @@ public class ItemClicksHandledActivity extends Activity {
 	public void listViewWithArgument(String selectedItem) {
 		listViewWithArgumentSelectedItem = selectedItem;
 	}
-	
+
 	@ItemClick(R.id.listViewWithArgumentWithParameterType)
 	protected void listViewWithArgumentWithParameterType(ArrayList<String> item) {
 		listViewParametrizedItemClicked = true;
@@ -133,10 +138,10 @@ public class ItemClicksHandledActivity extends Activity {
 	void listViewWithOneParamItemSelected(boolean selected) {
 		listViewWithOneParamItemSelected = selected;
 	}
-	
+
 	@ItemSelect(R.id.listView)
 	void onItemSelected(boolean selected, int position) {
-		
+
 	}
 
 	@ItemLongClick

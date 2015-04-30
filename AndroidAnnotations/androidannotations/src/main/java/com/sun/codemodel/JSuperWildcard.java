@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,6 +45,8 @@ public class JSuperWildcard extends JClass {
 		return "? super " + bound.fullName();
 	}
 
+	// CHECKSTYLE:OFF
+
 	@Override
 	public JPackage _package() {
 		return null;
@@ -52,7 +54,7 @@ public class JSuperWildcard extends JClass {
 
 	/**
 	 * Returns the class bound of this variable.
-	 * 
+	 *
 	 * <p>
 	 * If no bound is given, this method returns {@link Object}.
 	 */
@@ -72,6 +74,8 @@ public class JSuperWildcard extends JClass {
 	public Iterator<JClass> _implements() {
 		return bound._implements();
 	}
+
+	// CHECKSTYLE:ON
 
 	@Override
 	public boolean isInterface() {

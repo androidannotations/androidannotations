@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,21 +26,29 @@ import org.androidannotations.logger.Level;
 public class OptionsHelper {
 
 	enum Option {
-		TRACE("trace"), //
-		ANDROID_MANIFEST_FILE("androidManifestFile"), //
-		RESOURCE_PACKAGE_NAME("resourcePackageName"), //
-		LOG_FILE("logFile"), //
-		LOG_LEVEL("logLevel"), //
-		LOG_APPENDER_CONSOLE("logAppenderConsole");
+		TRACE("trace", "false"), //
+		THREAD_CONTROL("threadControl", "true"), //
+		ANDROID_MANIFEST_FILE("androidManifestFile", null), //
+		RESOURCE_PACKAGE_NAME("resourcePackageName", null), //
+		LOG_FILE("logFile", null), //
+		LOG_LEVEL("logLevel", "DEBUG"), //
+		LOG_APPENDER_CONSOLE("logAppenderConsole", "false"), //
+		LOG_APPENDER_FILE("logAppenderFile", "true");
 
 		private String key;
+		private String defaultValue;
 
-		private Option(String key) {
+		private Option(String key, String defaultValue) {
 			this.key = key;
+			this.defaultValue = defaultValue;
 		}
 
 		public String getKey() {
 			return key;
+		}
+
+		public String getDefaultValue() {
+			return defaultValue;
 		}
 	}
 
@@ -51,7 +59,7 @@ public class OptionsHelper {
 	}
 
 	public static Set<String> getOptionsConstants() {
-		TreeSet<String> set = new TreeSet<String>();
+		Set<String> set = new TreeSet<String>();
 		for (Option optionEnum : Option.values()) {
 			set.add(optionEnum.getKey());
 		}
@@ -60,6 +68,10 @@ public class OptionsHelper {
 
 	public boolean shouldLogTrace() {
 		return getBoolean(Option.TRACE);
+	}
+
+	public boolean shouldEnsureThreadControl() {
+		return getBoolean(Option.THREAD_CONTROL);
 	}
 
 	public String getAndroidManifestFile() {
@@ -78,7 +90,7 @@ public class OptionsHelper {
 		try {
 			return Level.parse(getString(Option.LOG_LEVEL));
 		} catch (Exception e) {
-			return Level.DEBUG;
+			return Level.parse(Option.LOG_LEVEL.getDefaultValue());
 		}
 	}
 
@@ -86,18 +98,21 @@ public class OptionsHelper {
 		return getBoolean(Option.LOG_APPENDER_CONSOLE);
 	}
 
+	public boolean shouldUseFileAppender() {
+		return getBoolean(Option.LOG_APPENDER_FILE);
+	}
+
 	private String getString(Option option) {
-		return options.get(option.getKey());
+		String key = option.getKey();
+		if (options.containsKey(key)) {
+			return options.get(key);
+		} else {
+			return option.getDefaultValue();
+		}
 	}
 
 	private boolean getBoolean(Option option) {
-		String key = option.getKey();
-		if (options.containsKey(key)) {
-			String trace = options.get(key);
-			return !"false".equals(trace);
-		} else {
-			return false;
-		}
+		return Boolean.valueOf(getString(option));
 	}
 
 }

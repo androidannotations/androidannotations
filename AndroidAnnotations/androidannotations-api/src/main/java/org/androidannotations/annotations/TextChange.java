@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -81,8 +81,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface TextChange {
 
+	/**
+	 * The R.id.* fields which refer to the TextViews.
+	 * 
+	 * @return the ids of the TextViews.
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as a strings which refer to the TextViews.
+	 * 
+	 * @return the resource names of the TextViews.
+	 */
 	String[] resName() default "";
 
 }

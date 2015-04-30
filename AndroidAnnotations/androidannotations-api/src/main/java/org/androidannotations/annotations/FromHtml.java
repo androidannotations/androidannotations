@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import org.androidannotations.annotations.res.HtmlRes;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,8 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use on a {@link android.widget.TextView} field or a
- * {@link android.widget.TextView} subclass field annotated with
+ * Use on a {@link android.widget.TextView TextView} field or a
+ * {@link android.widget.TextView TextView} subclass field annotated with
  * {@link ViewById} to inject text as HTML.
  * </p>
  * <p>
@@ -55,12 +53,23 @@ import java.lang.annotation.Target;
  * </blockquote>
  * 
  * @see ViewById
- * @see HtmlRes
+ * @see org.androidannotations.annotations.res.HtmlRes
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface FromHtml {
+
+	/**
+	 * The R.string.* field which refers to the html string resource.
+	 * 
+	 * @return the id of the resource
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the html string resource.
+	 * 
+	 * @return the resource name of the resource
+	 */
 	String resName() default "";
 }

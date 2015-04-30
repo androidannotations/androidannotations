@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,19 @@
  */
 package org.androidannotations.test15.eviewgroup;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.test15.R;
 
+import android.app.Activity;
+
 @EActivity(R.layout.main)
 public class CustomFrameLayoutActivity extends Activity {
-	
+
 	private CustomFrameLayout layout;
 
 	@AfterViews
-	public void afterViews(){
+	public void afterViews() {
 		layout = CustomFrameLayout_.build(this, 2);
 		layout.tv.setText("Plop");
 	}

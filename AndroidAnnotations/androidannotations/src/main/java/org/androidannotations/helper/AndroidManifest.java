@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,8 @@ public class AndroidManifest {
 		return "AndroidManifest [applicationPackage=" + applicationPackage + ", componentQualifiedNames=" + componentQualifiedNames + ", permissionQualifiedNames=" + permissionQualifiedNames + ", applicationClassName=" + applicationClassName + ", libraryProject=" + libraryProject + ", debugabble=" + debugabble + ", minSdkVersion=" + minSdkVersion + ", maxSdkVersion=" + maxSdkVersion + ", targetSdkVersion=" + targetSdkVersion + "]";
 	}
 
+	// CHECKSTYLE:OFF
+
 	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debugabble) {
 		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, debugabble);
 	}
@@ -54,6 +56,8 @@ public class AndroidManifest {
 		this.targetSdkVersion = targetSdkVersion;
 		debugabble = debuggable;
 	}
+
+	// CHECKSTYLE:ON
 
 	public String getApplicationPackage() {
 		return applicationPackage;

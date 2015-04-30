@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,20 +25,20 @@ import org.junit.Test;
 public class OnBackPressedApiDependenciesTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(OnBackPressedApiDependenciesTest.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 		ensureOutputDirectoryIsEmpty();
 	}
 
 	@Test
-	public void activity_with_on_back_pressed_generate_api_dependency() throws IOException {
+	public void activityWithOnBackPressedGeneratesApiDependency() throws IOException {
 		CompileResult result = compileFiles(ActivityWithOnBackPressedMethod.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void activity_without_on_back_pressed_do_not_generate_api_dependency() throws IOException {
+	public void activityWithoutOnBackPressedDoesNotGenerateApiDependency() throws IOException {
 		CompileResult result = compileFiles(ActivityWithBackgroundMethod.class);
 		assertCompilationSuccessful(result);
 	}

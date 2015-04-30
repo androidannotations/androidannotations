@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package org.androidannotations.utils;
+
+import static java.util.Collections.synchronizedList;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -30,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -60,7 +61,7 @@ public class ClassFinder {
 	 * @param fqcn
 	 *            Name of superclass/interface on which to search
 	 */
-	public final Vector<Class<?>> findClassesInPackage(String packageName) {
+	public final List<Class<?>> findClassesInPackage(String packageName) {
 		synchronized (classpathLocations) {
 			synchronized (results) {
 				errors = new ArrayList<Throwable>();
@@ -113,11 +114,7 @@ public class ClassFinder {
 	private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
 		@Override
 		public boolean accept(File f) {
-			if (f.exists() && f.isDirectory()) {
-				return true;
-			} else {
-				return false;
-			}
+			return f.exists() && f.isDirectory();
 		}
 	};
 
@@ -135,7 +132,7 @@ public class ClassFinder {
 		}
 	};
 
-	private final void include(String name, File file, Map<URL, String> map) {
+	private void include(String name, File file, Map<URL, String> map) {
 		if (!file.exists()) {
 			return;
 		}
@@ -229,10 +226,10 @@ public class ClassFinder {
 		return s.replace('/', '.');
 	}
 
-	private final Vector<Class<?>> findSubclasses(Map<URL, String> locations, String searchingPackageName) {
-		Vector<Class<?>> v = new Vector<Class<?>>();
+	private List<Class<?>> findSubclasses(Map<URL, String> locations, String searchingPackageName) {
+		List<Class<?>> v = synchronizedList(new ArrayList<Class<?>>());
 
-		Vector<Class<?>> w = null;
+		List<Class<?>> w = null;
 
 		Iterator<URL> it = locations.keySet().iterator();
 		while (it.hasNext()) {
@@ -251,14 +248,14 @@ public class ClassFinder {
 		return v;
 	}
 
-	private final Vector<Class<?>> findSubclasses(URL location, String packageName, String searchingPackageName) {
+	private List<Class<?>> findSubclasses(URL location, String packageName, String searchingPackageName) {
 
 		synchronized (results) {
 
 			// hash guarantees unique names...
 			Map<Class<?>, URL> thisResult = new TreeMap<Class<?>, URL>(CLASS_COMPARATOR);
-			Vector<Class<?>> v = new Vector<Class<?>>(); // ...but return a
-															// vector
+			List<Class<?>> v = synchronizedList(new ArrayList<Class<?>>());
+			// ...but return a list
 
 			List<URL> knownLocations = new ArrayList<URL>();
 			knownLocations.add(location);
@@ -363,7 +360,7 @@ public class ClassFinder {
 	public static void main(String[] args) {
 
 		ClassFinder finder = null;
-		Vector<Class<?>> v = null;
+		List<Class<?>> v = null;
 		List<Throwable> errors = null;
 
 		if (args.length == 1) {

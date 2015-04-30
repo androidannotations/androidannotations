@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.sun.codemodel.JClass;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.holder.EComponentHolder;
@@ -30,6 +29,7 @@ import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
@@ -58,10 +58,10 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 		String elementTypeName = fieldTypeMirror.toString();
 		int index = elementTypeName.lastIndexOf(".");
 		if (index != -1) {
-			elementTypeName = elementTypeName.substring(index+1);
+			elementTypeName = elementTypeName.substring(index + 1);
 		}
 
-		Set <? extends Element> sharedPrefElements = validatedModel.getRootAnnotatedElements(SharedPref.class.getName());
+		Set<? extends Element> sharedPrefElements = validatedModel.getRootAnnotatedElements(SharedPref.class.getName());
 		for (Element sharedPrefElement : sharedPrefElements) {
 			GeneratedClassHolder sharedPrefHolder = processHolder.getGeneratedClassHolder(sharedPrefElement);
 			String sharedPrefName = sharedPrefHolder.getGeneratedClass().name();

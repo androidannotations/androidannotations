@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,13 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr.FALSE;
+import static com.sun.codemodel.JExpr._null;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -28,12 +31,10 @@ import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr._null;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JVar;
 
 public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentHolder> {
 
@@ -74,9 +75,16 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 
 			JFieldVar contentView = holder.getContentView();
 
-			block._if(contentView.eq(_null())) //
-					._then() //
-					.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+			boolean forceInjection = element.getAnnotation(EFragment.class).forceLayoutInjection();
+
+			if (!forceInjection) {
+				block._if(contentView.eq(_null())) //
+						._then() //
+						.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+			} else {
+				block.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+			}
+
 		}
 
 	}

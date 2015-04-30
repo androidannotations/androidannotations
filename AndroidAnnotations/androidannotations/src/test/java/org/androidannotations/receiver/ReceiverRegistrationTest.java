@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,53 +15,53 @@
  */
 package org.androidannotations.receiver;
 
+import java.io.IOException;
+
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-
 public class ReceiverRegistrationTest extends AAProcessorTestHelper {
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addManifestProcessorParameter(ActivityWithValidReceiver.class);
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void activity_with_valid_receiver_annotation_compile() throws IOException {
+	public void activityWithValidReceiverAnnotationCompiles() throws IOException {
 		CompileResult result = compileFiles(ActivityWithValidReceiver.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void activity_with_invalid_registerAt_not_compile() throws IOException {
+	public void activityWithInvalidRegisterAtDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ActivityWithInvalidRegisterAt.class);
 		assertCompilationErrorOn(ActivityWithInvalidRegisterAt.class, "@Receiver", result);
 	}
 
 	@Test
-	public void activity_with_two_method_with_same_name_not_compile() throws IOException {
+	public void activityWithTwoMethodWithSameNameDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ActivityWithTwoSameNameMethod.class);
 		assertCompilationErrorOn(ActivityWithTwoSameNameMethod.class, "@Receiver", result);
 	}
 
 	@Test
-	public void fragment_with_valid_receiver_annotation_compile() throws IOException {
+	public void fragmentWithValidReceiverAnnotationCompiles() throws IOException {
 		CompileResult result = compileFiles(FragmentWithValidReceiver.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void service_with_valid_receiver_annotation_compile() throws IOException {
+	public void serviceWithValidReceiverAnnotationCompiles() throws IOException {
 		CompileResult result = compileFiles(ServiceWithValidReceiver.class);
 		assertCompilationSuccessful(result);
 	}
 
 	@Test
-	public void service_with_invalid_registerAt_not_compile() throws IOException {
+	public void serviceWithInvalidRegisterAtDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ServiceWithInvalidReceiver.class);
 		assertCompilationErrorOn(ServiceWithInvalidReceiver.class, "@Receiver", result);
 		assertCompilationErrorCount(3, result);

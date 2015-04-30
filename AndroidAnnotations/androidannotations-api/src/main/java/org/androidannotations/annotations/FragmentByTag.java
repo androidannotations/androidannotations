@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,9 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on android.app.Fragment or
- * android.support.v4.app.Fragment fields in activity classes to
- * retrieve and inject a fragment.
+ * Use it on android.app.Fragment or android.support.v4.app.Fragment fields in
+ * activity classes to retrieve and inject a fragment.
  * </p>
  * <p>
  * The annotation value should be one of fragment tag. If not set, the field
@@ -73,5 +72,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface FragmentByTag {
+
+	/**
+	 * The tag of the injected Fragment.
+	 * 
+	 * @return the tag of the Fragment
+	 */
 	String value() default "";
 }

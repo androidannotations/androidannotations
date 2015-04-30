@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,8 +35,8 @@ import org.androidannotations.process.IsValid;
 public class ValidatorParameterHelper {
 
 	private static final List<String> ANDROID_SHERLOCK_MENU_ITEM_QUALIFIED_NAMES = asList(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM);
-	private static final List<String> EDITOR_ACTION_ALLOWED_PARAMETER_TYPES = asList(CanonicalNameConstants.TEXT_VIEW,
-		CanonicalNameConstants.INTEGER, "int", CanonicalNameConstants.KEY_EVENT);
+	private static final List<String> EDITOR_ACTION_ALLOWED_PARAMETER_TYPES = asList(CanonicalNameConstants.TEXT_VIEW, CanonicalNameConstants.INTEGER, "int", CanonicalNameConstants.KEY_EVENT);
+	private static final List<String> PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM = asList(CanonicalNameConstants.OBJECT, CanonicalNameConstants.SET, CanonicalNameConstants.STRING, CanonicalNameConstants.BOOLEAN);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -98,6 +98,10 @@ public class ValidatorParameterHelper {
 		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.BUNDLE, valid);
 	}
 
+	public void zeroOrOnePreferenceParameter(ExecutableElement executableElement, IsValid valid) {
+		zeroOrOneSpecificParameter(executableElement, CanonicalNameConstants.PREFERENCE, valid);
+	}
+
 	public void hasOneOrTwoParametersAndFirstIsBoolean(ExecutableElement executableElement, IsValid valid) {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
@@ -132,13 +136,17 @@ public class ValidatorParameterHelper {
 		hasZeroOrOneParameterOfType(CanonicalNameConstants.VIEW, executableElement, valid);
 	}
 
+	public void hasZeroOrOnePreferenceParameter(ExecutableElement executableElement, IsValid valid) {
+		hasZeroOrOneParameterOfType(CanonicalNameConstants.PREFERENCE, executableElement, valid);
+	}
+
 	private void hasZeroOrOneParameterOfType(String typeCanonicalName, ExecutableElement executableElement, IsValid valid) {
 		boolean parameterOfTypeFound = false;
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterType = parameter.asType().toString();
 			if (parameterType.equals(typeCanonicalName)) {
 				if (parameterOfTypeFound) {
-					annotationHelper.printAnnotationError(executableElement, "You can declare only one parameter of type "+typeCanonicalName);
+					annotationHelper.printAnnotationError(executableElement, "You can declare only one parameter of type " + typeCanonicalName);
 					valid.invalidate();
 				}
 				parameterOfTypeFound = true;
@@ -151,7 +159,7 @@ public class ValidatorParameterHelper {
 		for (VariableElement parameter : executableElement.getParameters()) {
 			if (parameter.asType().getKind() == typeKind || parameter.asType().toString().equals(typeCanonicalName)) {
 				if (parameterOfTypeFound) {
-					annotationHelper.printAnnotationError(executableElement, "You can declare only one parameter of type "+typeKind.name()+" or "+typeCanonicalName);
+					annotationHelper.printAnnotationError(executableElement, "You can declare only one parameter of type " + typeKind.name() + " or " + typeCanonicalName);
 					valid.invalidate();
 				}
 				parameterOfTypeFound = true;
@@ -160,17 +168,24 @@ public class ValidatorParameterHelper {
 	}
 
 	public void hasNoOtherParameterThanCompoundButtonOrBoolean(ExecutableElement executableElement, IsValid valid) {
-		String[] types = new String[]{CanonicalNameConstants.COMPOUND_BUTTON, CanonicalNameConstants.BOOLEAN, "boolean"};
+		String[] types = new String[] { CanonicalNameConstants.COMPOUND_BUTTON, CanonicalNameConstants.BOOLEAN, "boolean" };
 		hasNotOtherParameterThanTypes(types, executableElement, valid);
 	}
 
 	public void hasNoOtherParameterThanMotionEventOrView(ExecutableElement executableElement, IsValid valid) {
-		String[] types = new String[]{CanonicalNameConstants.MOTION_EVENT, CanonicalNameConstants.VIEW};
+		String[] types = new String[] { CanonicalNameConstants.MOTION_EVENT, CanonicalNameConstants.VIEW };
 		hasNotOtherParameterThanTypes(types, executableElement, valid);
 	}
 
 	public void hasNoOtherParameterThanViewOrBoolean(ExecutableElement executableElement, IsValid valid) {
-		String[] types = new String[]{CanonicalNameConstants.VIEW, CanonicalNameConstants.BOOLEAN, "boolean"};
+		String[] types = new String[] { CanonicalNameConstants.VIEW, CanonicalNameConstants.BOOLEAN, "boolean" };
+		hasNotOtherParameterThanTypes(types, executableElement, valid);
+	}
+
+	public void hasNoOtherParameterThanPreferenceOrObjectOrSetOrStringOrBoolean(ExecutableElement executableElement, IsValid valid) {
+		String[] types = new String[PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM.size() + 1];
+		types = PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM.toArray(types);
+		types[types.length - 1] = CanonicalNameConstants.PREFERENCE;
 		hasNotOtherParameterThanTypes(types, executableElement, valid);
 	}
 
@@ -179,7 +194,7 @@ public class ValidatorParameterHelper {
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterType = parameter.asType().toString();
 			if (!types.contains(parameterType)) {
-				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type "+Arrays.toString(typesCanonicalNames));
+				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type " + Arrays.toString(typesCanonicalNames));
 				valid.invalidate();
 			}
 		}
@@ -191,12 +206,12 @@ public class ValidatorParameterHelper {
 	}
 
 	public void hasNoOtherParameterThanContextOrIntentOrReceiverActionExtraAnnotated(ExecutableElement executableElement, IsValid valid) {
-		String[] types = new String[] {CanonicalNameConstants.CONTEXT, CanonicalNameConstants.INTENT};
+		String[] types = new String[] { CanonicalNameConstants.CONTEXT, CanonicalNameConstants.INTENT };
 		hasNotOtherParameterThanTypesOrAnnotatedWith(types, ReceiverAction.Extra.class, executableElement, valid);
 	}
 
 	public void hasNoOtherParameterThanIntentOrIntOrOnActivityResultExtraAnnotated(ExecutableElement executableElement, IsValid valid) {
-		String[] types = new String[] {CanonicalNameConstants.INTENT, CanonicalNameConstants.INTEGER, "int"};
+		String[] types = new String[] { CanonicalNameConstants.INTENT, CanonicalNameConstants.INTEGER, "int" };
 		hasNotOtherParameterThanTypesOrAnnotatedWith(types, OnActivityResult.Extra.class, executableElement, valid);
 	}
 
@@ -205,7 +220,7 @@ public class ValidatorParameterHelper {
 		for (VariableElement parameter : executableElement.getParameters()) {
 			String parameterType = parameter.asType().toString();
 			if (!types.contains(parameterType) && parameter.getAnnotation(annotationClass) == null) {
-				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type "+Arrays.toString(typesCanonicalNames)+" or parameters annotated with @"+annotationClass.getCanonicalName());
+				annotationHelper.printAnnotationError(executableElement, "You can declare only parameters of type " + Arrays.toString(typesCanonicalNames) + " or parameters annotated with @" + annotationClass.getCanonicalName());
 				valid.invalidate();
 			}
 		}
@@ -249,6 +264,10 @@ public class ValidatorParameterHelper {
 
 	}
 
+	public void hasAtMostOneStringOrSetOrBooleanOrObjectParameter(ExecutableElement executableElement, IsValid valid) {
+		hasAtMostOneSpecificParameter(executableElement, PREFERENCE_CHANGE_ALLOWED_NEWVALUE_PARAM, valid);
+	}
+
 	public void hasAtMostOneSpecificParameter(ExecutableElement executableElement, String qualifiedName, IsValid valid) {
 		hasAtMostOneSpecificParameter(executableElement, Arrays.asList(qualifiedName), valid);
 	}
@@ -259,7 +278,7 @@ public class ValidatorParameterHelper {
 			if (qualifiedNames.contains(parameter.asType().toString())) {
 				if (hasOneMatchingParameter) {
 					valid.invalidate();
-					annotationHelper.printAnnotationError(executableElement, "%s can't have more than one parameter of type "+parameter.asType().toString());
+					annotationHelper.printAnnotationError(executableElement, "%s can't have more than one parameter of type " + parameter.asType().toString());
 				} else {
 					hasOneMatchingParameter = true;
 				}
@@ -276,4 +295,5 @@ public class ValidatorParameterHelper {
 			}
 		}
 	}
+
 }

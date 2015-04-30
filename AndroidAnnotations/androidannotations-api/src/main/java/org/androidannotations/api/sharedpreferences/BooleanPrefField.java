@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,24 +17,19 @@ package org.androidannotations.api.sharedpreferences;
 
 import android.content.SharedPreferences;
 
-public final class BooleanPrefField extends AbstractPrefField {
+public final class BooleanPrefField extends AbstractPrefField<Boolean> {
 
-	private final boolean defaultValue;
-
-	BooleanPrefField(SharedPreferences sharedPreferences, String key, boolean defaultValue) {
-		super(sharedPreferences, key);
-		this.defaultValue = defaultValue;
+	BooleanPrefField(SharedPreferences sharedPreferences, String key, Boolean defaultValue) {
+		super(sharedPreferences, key, defaultValue);
 	}
 
-	public boolean get() {
-		return getOr(defaultValue);
-	}
-
-	public boolean getOr(boolean defaultValue) {
+	@Override
+	public Boolean getOr(Boolean defaultValue) {
 		return sharedPreferences.getBoolean(key, defaultValue);
 	}
 
-	public void put(boolean value) {
+	@Override
+	protected void putInternal(Boolean value) {
 		apply(edit().putBoolean(key, value));
 	}
 

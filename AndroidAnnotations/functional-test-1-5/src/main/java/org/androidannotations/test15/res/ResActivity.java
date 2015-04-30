@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,18 +15,20 @@
  */
 package org.androidannotations.test15.res;
 
-import android.app.Activity;
-import android.content.res.XmlResourceParser;
-import android.text.Spanned;
-import android.view.animation.Animation;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.res.HtmlRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.test15.R;
 
+import android.app.Activity;
+import android.content.res.XmlResourceParser;
+import android.text.Spanned;
+import android.view.animation.Animation;
+
 @EActivity(R.layout.main)
 public class ResActivity extends Activity {
+
+	// CHECKSTYLE:OFF
 
 	// @AnimationRes
 	XmlResourceParser fade_in;
@@ -45,4 +47,6 @@ public class ResActivity extends Activity {
 
 	@HtmlRes(R.string.hello_html)
 	CharSequence htmlInjected;
+
+	// CHECKSTYLE:ON
 }

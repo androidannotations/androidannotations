@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,29 @@
  */
 package org.androidannotations.holder;
 
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._super;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JExpr.ref;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
+import static com.sun.codemodel.JMod.STATIC;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Receiver.RegisterAt;
+import org.androidannotations.helper.ActionBarSherlockHelper;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.OrmLiteHelper;
+import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
+import org.androidannotations.process.ProcessHolder;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -27,26 +50,8 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
-import org.androidannotations.helper.ActionBarSherlockHelper;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.process.ProcessHolder;
 
-import javax.lang.model.element.TypeElement;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.ref;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
-
-public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration {
+public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration, HasPreferences {
 
 	private JFieldVar contentView;
 	private JBlock setContentViewBlock;
@@ -60,13 +65,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar injectBundleArgs;
 	private InstanceStateHolder instanceStateHolder;
 	private OnActivityResultHolder onActivityResultHolder;
-	private ReceiverRegistrationHolder receiverRegistrationHolder;
+	private ReceiverRegistrationHolder<EFragmentHolder> receiverRegistrationHolder;
+	private PreferencesHolder preferencesHolder;
 	private JBlock onCreateOptionsMenuMethodBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
 	private JVar onCreateOptionsMenuMenuParam;
 	private JVar onOptionsItemSelectedItem;
 	private JVar onOptionsItemSelectedItemId;
-	private JBlock onOptionsItemSelectedIfElseBlock;
+	private JBlock onOptionsItemSelectedMiddleBlock;
 	private JBlock onCreateAfterSuperBlock;
 	private JBlock onDestroyBeforeSuperBlock;
 	private JBlock onStartAfterSuperBlock;
@@ -80,7 +86,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		super(processHolder, annotatedElement);
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder(this);
+		receiverRegistrationHolder = new ReceiverRegistrationHolder<EFragmentHolder>(this);
+		preferencesHolder = new PreferencesHolder(this);
 		setOnCreate();
 		setOnViewCreated();
 		setFragmentBuilder();
@@ -203,11 +210,10 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JBlock methodBody = method.body();
 		onOptionsItemSelectedItem = method.param(menuItemClass, "item");
-		JVar handled = methodBody.decl(codeModel().BOOLEAN, "handled", invoke(_super(), method).arg(onOptionsItemSelectedItem));
-		methodBody._if(handled)._then()._return(TRUE);
 		onOptionsItemSelectedItemId = methodBody.decl(codeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
-		onOptionsItemSelectedIfElseBlock = methodBody.block();
-		methodBody._return(FALSE);
+		onOptionsItemSelectedMiddleBlock = methodBody.block();
+
+		methodBody._return(invoke(_super(), method).arg(onOptionsItemSelectedItem));
 	}
 
 	private boolean usesActionBarSherlock() {
@@ -247,8 +253,13 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 		JVar savedInstanceState = onCreateView.param(classes().BUNDLE, "savedInstanceState");
 
+		boolean forceInjection = getAnnotatedElement().getAnnotation(EFragment.class).forceLayoutInjection();
+
 		JBlock body = onCreateView.body();
-		body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
+
+		if (!forceInjection) {
+			body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
+		}
 
 		setContentViewBlock = body.block();
 
@@ -440,11 +451,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JBlock getOnOptionsItemSelectedIfElseBlock() {
-		if (onOptionsItemSelectedIfElseBlock == null) {
+	public JBlock getOnOptionsItemSelectedMiddleBlock() {
+		if (onOptionsItemSelectedMiddleBlock == null) {
 			setOnOptionsItemSelected();
 		}
-		return onOptionsItemSelectedIfElseBlock;
+		return onOptionsItemSelectedMiddleBlock;
 	}
 
 	@Override
@@ -468,8 +479,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
-		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
+	public JFieldVar getIntentFilterField(IntentFilterData intentFilterData) {
+		return receiverRegistrationHolder.getIntentFilterField(intentFilterData);
 	}
 
 	@Override
@@ -534,5 +545,41 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 			setOnDetach();
 		}
 		return onDetachBeforeSuperBlock;
+	}
+
+	@Override
+	public JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData) {
+		if (RegisterAt.OnAttachOnDetach.equals(intentFilterData.getRegisterAt())) {
+			return getOnAttachAfterSuperBlock();
+		}
+		return getInitBody();
+	}
+
+	@Override
+	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
+		JFieldVar databaseHelperRef = super.setDatabaseHelperRef(databaseHelperTypeMirror);
+		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
+
+		return databaseHelperRef;
+	}
+
+	@Override
+	public JBlock getPreferenceScreenInitializationBlock() {
+		return getOnCreateAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getAddPreferencesFromResourceBlock() {
+		return preferencesHolder.getAddPreferencesFromResourceBlock();
+	}
+
+	@Override
+	public void assignFindPreferenceByKey(JFieldRef idRef, JClass preferenceClass, JFieldRef fieldRef) {
+		preferencesHolder.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
+	}
+
+	@Override
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass) {
+		return preferencesHolder.getFoundPreferenceHolder(idRef, preferenceClass);
 	}
 }

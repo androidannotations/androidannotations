@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,7 @@ public class FormatterTest {
 	}
 
 	@Test
-	public void testBuildFullMessage_string() throws Exception {
+	public void testBuildFullMessageString() throws Exception {
 		Assert.assertEquals("This is a test", formatter.buildFullMessage("{} is a test", "This"));
 		Assert.assertEquals("This is a test", formatter.buildFullMessage("This is a {}", "test"));
 		Assert.assertEquals("This is a test", formatter.buildFullMessage("This {} {} test", "is", "a"));
@@ -47,19 +47,19 @@ public class FormatterTest {
 	}
 
 	@Test
-	public void testBuildFullMessage_int_array() throws Exception {
+	public void testBuildFullMessageIntArray() throws Exception {
 		Integer[] values = new Integer[] { 1, 2 };
 		Assert.assertEquals("Values = [1, 2]", formatter.buildFullMessage("Values = {}", new Object[] { values }));
 	}
 
 	@Test
-	public void testBuildFullMessage_object_array() throws Exception {
+	public void testBuildFullMessageObjectArray() throws Exception {
 		SomeObject[] values = new SomeObject[] { new SomeObject("a"), new SomeObject("b") };
 		Assert.assertEquals("Objects = [a, b]", formatter.buildFullMessage("Objects = {}", new Object[] { values }));
 	}
 
 	@Test
-	public void testBuildFullMessage_list() throws Exception {
+	public void testBuildFullMessageList() throws Exception {
 		List<SomeObject> values = Arrays.asList(new SomeObject("a"), new SomeObject("b"));
 		Assert.assertEquals("Objects = [a, b]", formatter.buildFullMessage("Objects = {}", values));
 	}

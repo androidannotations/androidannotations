@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,9 +26,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-import android.content.res.Resources;
 import android.text.Html;
-import android.view.animation.AnimationUtils;
 
 @RunWith(RobolectricTestRunner.class)
 public class ResActivityTest {
@@ -36,23 +34,23 @@ public class ResActivityTest {
 	private ResActivity_ activity;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(ResActivity_.class).create().get();
 	}
 
 	@Test
-	public void string_snake_case_injected() {
+	public void stringSnakeCaseInjected() {
 		assertThat(activity.injected_string).isEqualTo("test");
 	}
 
 	@Test
-	public void string_camel_case_injected() {
+	public void stringCamelCaseInjected() {
 		assertThat(activity.injectedString).isEqualTo("test");
 	}
 
 	/**
 	 * Cannot be tested right now, because there is no Robolectric shadow class
-	 * for {@link AnimationUtils}.
+	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
 	 */
 	// @Test
 	public void animNotNull() {
@@ -61,7 +59,9 @@ public class ResActivityTest {
 
 	/**
 	 * Cannot be tested right now, because the Robolectric shadow class for
-	 * {@link Resources} doesn't implement {@link Resources#getAnimation(int)}
+	 * {@link android.content.res.Resources Resources} doesn't implement
+	 * {@link android.content.res.Resources#getAnimation(int)
+	 * Resources#getAnimation(int)}
 	 */
 	// @Test
 	public void xmlResAnimNotNull() {

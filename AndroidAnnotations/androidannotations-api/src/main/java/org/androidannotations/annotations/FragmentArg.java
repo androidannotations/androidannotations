@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.os.Parcelable;
-
-import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,8 +22,9 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use on any native, {@link Parcelable} or {@link Serializable} field in an
- * {@link EFragment} annotated class to bind it with Android's arguments.
+ * Use on any native, {@link android.os.Parcelable Parcelable} or
+ * {@link java.io.Serializable Serializable} field in an {@link EFragment}
+ * annotated class to bind it with Android's arguments.
  * </p>
  * <p>
  * The annotation value is the key used for argument. If not set, the field name
@@ -74,5 +72,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface FragmentArg {
 
+	/**
+	 * The key of the injected Fragment argument.
+	 * 
+	 * @return the key of the argument
+	 */
 	String value() default "";
 }

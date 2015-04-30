@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +23,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.test15.EmptyActivityWithoutLayout;
-import org.androidannotations.test15.ebean.BeanInjectedActivity;
-import org.androidannotations.test15.ebean.BeanInjectedActivity_;
 import org.androidannotations.test15.ebean.ThreadControlledBean;
 import org.androidannotations.test15.ebean.ThreadControlledBean_;
 import org.junit.Assert;

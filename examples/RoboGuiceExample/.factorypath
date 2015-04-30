@@ -1,5 +1,0 @@
-<factorypath>
-    <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/RoboGuiceExample/compile-libs/androidannotations-3.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/RoboGuiceExample/libs/androidannotations-api-3.1.jar" enabled="true" runInBatchMode="false"/>
-</factorypath>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +15,20 @@
  */
 package org.androidannotations.annotations;
 
+/**
+ * This class holds the default resource id.
+ */
 public abstract class ResId {
 
+	/**
+	 * This value is used when the client does not defines the resource id for a
+	 * resource.
+	 */
 	public static final int DEFAULT_VALUE = -1;
 
+	/**
+	 * Utility classes should not be instantiated.
+	 */
 	private ResId() {
 	}
 

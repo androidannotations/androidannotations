@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -65,12 +65,29 @@ import java.lang.annotation.Target;
  * 	void &lt;b&gt;myAction&lt;/b&gt;(String valueString, long valueLong) {
  * 		// ...
  * 	}
+ * 
+ * 	&#064;Override
+ * 	protected void onHandleIntent(Intent intent) {
+ * 	 	// empty, will be overridden in generated subclass 	
+ * 	}
  * }
  * </pre>
  * 
  * </blockquote>
  * 
+ * <p>
+ * Note: Since
+ * {@link android.app.IntentService#onHandleIntent(android.content.Intent)
+ * IntentService#onHandleIntent} is abstract, you have to add an empty
+ * implementation. For convenience, we provide the
+ * {@link org.androidannotations.api.support.app.AbstractIntentService
+ * AbstractIntentService} class, which implements that method, so you do not
+ * have to do in your actual class if you derive it.
+ * </p>
+ * 
  * @see EIntentService
+ * @see org.androidannotations.api.support.app.AbstractIntentService
+ *      AbstractIntentService
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
@@ -79,8 +96,8 @@ public @interface ServiceAction {
 	/**
 	 * Define the action's name. If this field isn't set the annotated method
 	 * name will be used.
-	 *
-	 * @return the action's name
+	 * 
+	 * @return the name of the action
 	 */
 	String value() default "";
 

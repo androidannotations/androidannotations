@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,38 +15,46 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IntentBuilder;
-import org.androidannotations.helper.ServiceIntentBuilder;
-import org.androidannotations.process.ProcessHolder;
-
-import javax.lang.model.element.TypeElement;
-
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.IntentBuilder;
+import org.androidannotations.helper.OrmLiteHelper;
+import org.androidannotations.helper.ServiceIntentBuilder;
+import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+
 public class EServiceHolder extends EComponentHolder implements HasIntentBuilder, HasReceiverRegistration {
 
-    private ServiceIntentBuilder intentBuilder;
+	private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
-	private ReceiverRegistrationHolder receiverRegistrationHolder;
+	private ReceiverRegistrationHolder<EServiceHolder> receiverRegistrationHolder;
 	private JBlock onDestroyBeforeSuperBlock;
 
 	public EServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
 		super(processHolder, annotatedElement);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder(this);
-        intentBuilder = new ServiceIntentBuilder(this, androidManifest);
-        intentBuilder.build();
+		receiverRegistrationHolder = new ReceiverRegistrationHolder<EServiceHolder>(this);
+		intentBuilder = new ServiceIntentBuilder(this, androidManifest);
+		intentBuilder.build();
 	}
 
-    @Override
-    public IntentBuilder getIntentBuilder() {
-        return intentBuilder;
-    }
+	@Override
+	public IntentBuilder getIntentBuilder() {
+		return intentBuilder;
+	}
 
-    @Override
+	@Override
 	protected void setContextRef() {
 		contextRef = _this();
 	}
@@ -84,8 +92,13 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	}
 
 	@Override
-	public JFieldVar getIntentFilterField(String[] actions, String[] dataSchemes) {
-		return receiverRegistrationHolder.getIntentFilterField(actions, dataSchemes);
+	public JFieldVar getIntentFilterField(IntentFilterData intentFilterData) {
+		return receiverRegistrationHolder.getIntentFilterField(intentFilterData);
+	}
+
+	@Override
+	public JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData) {
+		return getInitBody();
 	}
 
 	@Override
@@ -129,5 +142,13 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	@Override
 	public JBlock getOnDetachBeforeSuperBlock() {
 		return receiverRegistrationHolder.getOnDetachBeforeSuperBlock();
+	}
+
+	@Override
+	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
+		JFieldVar databaseHelperRef = super.setDatabaseHelperRef(databaseHelperTypeMirror);
+		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
+
+		return databaseHelperRef;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,27 +15,29 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
+import java.util.ArrayList;
+
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OnActivityResult;
-import java.util.ArrayList;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.Fragment;
 
 @EFragment(R.layout.views_injected)
 public class AwaitingResultFragment extends Fragment {
 
-	private static final int FIRST_REQUEST = 11;
+	static final int FIRST_REQUEST = 11;
 	private static final int SECOND_REQUEST = 22;
 	private static final int THIRD_REQUEST = 33;
 	private static final int FORTH_REQUEST = 44;
 
-	boolean	onResultCalled = false;
-	boolean	onResultWithDataCalled = false;
-	boolean	onActivityResultWithResultCodeAndDataCalled = false;
-	boolean	onActivityResultWithDataAndResultCodeCalled = false;
-	boolean	onResultWithIntResultCodeCalled = false;
-	boolean	onResultWithIntegerResultCodeCalled = false;
+	boolean onResultCalled = false;
+	boolean onResultWithDataCalled = false;
+	boolean onActivityResultWithResultCodeAndDataCalled = false;
+	boolean onActivityResultWithDataAndResultCodeCalled = false;
+	boolean onResultWithIntResultCodeCalled = false;
+	boolean onResultWithIntegerResultCodeCalled = false;
 
 	@OnActivityResult(FIRST_REQUEST)
 	void onResult() {
@@ -68,8 +70,6 @@ public class AwaitingResultFragment extends Fragment {
 	}
 
 	@OnActivityResult(FORTH_REQUEST)
-	void onResultWithResultExtra(int resultCode, @OnActivityResult.Extra("value") int i, @OnActivityResult.Extra String s,
-	                             @OnActivityResult.Extra Uri uri, @OnActivityResult.Extra ArrayList<Uri> uris,
-	                             @OnActivityResult.Extra String[] strings) {
+	void onResultWithResultExtra(int resultCode, @OnActivityResult.Extra("value") int i, @OnActivityResult.Extra String s, @OnActivityResult.Extra Uri uri, @OnActivityResult.Extra ArrayList<Uri> uris, @OnActivityResult.Extra String[] strings) {
 	}
 }

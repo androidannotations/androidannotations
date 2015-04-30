@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,14 @@
  */
 package org.androidannotations.test15.efragment;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.Executor;
+
+import org.androidannotations.api.BackgroundExecutor;
+import org.androidannotations.test15.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,30 +35,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ListView;
-import org.androidannotations.api.BackgroundExecutor;
-
-import java.util.concurrent.Executor;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class MyListFragmentTest {
 
 	private static final int TESTED_CLICKED_INDEX = 4;
 
-	MyListFragment_	myListFragment;
+	MyListFragment_ myListFragment;
 	FragmentManager fragmentManager;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		myListFragment = new MyListFragment_();
 		startFragment(myListFragment);
 	}
 
 	@Test
-	public void is_item_click_available_from_list_fragment() {
+	public void isItemClickAvailableFromListFragment() {
 		ListView listView = (ListView) myListFragment.findViewById(android.R.id.list);
 		long itemId = listView.getAdapter().getItemId(TESTED_CLICKED_INDEX);
 		View view = listView.getChildAt(TESTED_CLICKED_INDEX);
@@ -61,21 +62,21 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void not_ignored_method_is_called() {
+	public void notIgnoredMethodIsCalled() {
 		assertFalse(myListFragment.didExecute);
 		myListFragment.notIgnored();
 		assertTrue(myListFragment.didExecute);
 	}
 
 	@Test
-	public void uithread_method_is_called() {
+	public void uithreadMethodIsCalled() {
 		assertFalse(myListFragment.didExecute);
 		myListFragment.uiThread();
 		assertTrue(myListFragment.didExecute);
 	}
 
 	@Test
-	public void background_method_is_called() {
+	public void backgroundMethodIsCalled() {
 		assertFalse(myListFragment.didExecute);
 		runBackgroundsOnSameThread();
 		myListFragment.backgroundThread();
@@ -83,7 +84,7 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void ignored_when_detached_works_for_uithread_method() {
+	public void ignoredWhenDetachedWorksForUithreadMethod() {
 		popBackStack();
 
 		assertFalse(myListFragment.didExecute);
@@ -92,7 +93,7 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void ignored_when_detached_works_for_background_method() {
+	public void ignoredWhenDetachedWorksForBackgroundMethod() {
 		popBackStack();
 
 		assertFalse(myListFragment.didExecute);
@@ -102,7 +103,7 @@ public class MyListFragmentTest {
 	}
 
 	@Test
-	public void ignored_when_detached_works_for_ignored_method() {
+	public void ignoredWhenDetachedWorksForIgnoredMethod() {
 		popBackStack();
 
 		assertFalse(myListFragment.didExecute);
@@ -110,8 +111,16 @@ public class MyListFragmentTest {
 		assertFalse(myListFragment.didExecute);
 	}
 
+	@Test
+	public void layoutNotInjectedWithoutForce() {
+		View buttonInInjectedLayout = myListFragment.getView().findViewById(R.id.conventionButton);
+
+		assertThat(buttonInInjectedLayout).isNull();
+	}
+
 	private void runBackgroundsOnSameThread() {
-		//Simplify the threading by making a dummy executor that runs off the same thread
+		// Simplify the threading by making a dummy executor that runs off the
+		// same thread
 		BackgroundExecutor.setExecutor(new Executor() {
 			@Override
 			public void execute(Runnable command) {

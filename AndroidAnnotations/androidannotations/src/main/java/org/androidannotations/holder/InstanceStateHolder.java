@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,16 +33,15 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class InstanceStateHolder implements HasInstanceState {
+public class InstanceStateHolder extends GeneratedClassHolderDecorator<EComponentHolder> implements HasInstanceState {
 
-	private EComponentHolder holder;
 	private JBlock saveStateMethodBody;
 	private JVar saveStateBundleParam;
 	private JMethod restoreStateMethod;
 	private JVar restoreStateBundleParam;
 
 	public InstanceStateHolder(EComponentHolder holder) {
-		this.holder = holder;
+		super(holder);
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class InstanceStateHolder implements HasInstanceState {
 	private void setSaveStateMethod() {
 		JMethod method = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onSaveInstanceState");
 		method.annotate(Override.class);
-		saveStateBundleParam = method.param(classes().BUNDLE, "bundle");
+		saveStateBundleParam = method.param(classes().BUNDLE, "bundle_");
 
 		saveStateMethodBody = method.body();
 

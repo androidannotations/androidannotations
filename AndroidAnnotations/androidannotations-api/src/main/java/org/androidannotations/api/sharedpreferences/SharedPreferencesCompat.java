@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,13 +30,13 @@ public abstract class SharedPreferencesCompat {
 	private SharedPreferencesCompat() {
 	}
 
-	private static final Method sApplyMethod = findMethod(SharedPreferences.Editor.class, "apply");
-	private static final Method sGetStringSetMethod = findMethod(SharedPreferences.class, "getStringSet", String.class, Set.class);
-	private static final Method sPutStringSetMethod = findMethod(SharedPreferences.Editor.class, "putStringSet", String.class, Set.class);
+	private static final Method APPLY_METHOD = findMethod(SharedPreferences.Editor.class, "apply");
+	private static final Method GET_STRING_SET_METHOD = findMethod(SharedPreferences.class, "getStringSet", String.class, Set.class);
+	private static final Method PUT_STRING_SET_METHOD = findMethod(SharedPreferences.Editor.class, "putStringSet", String.class, Set.class);
 
 	public static void apply(SharedPreferences.Editor editor) {
 		try {
-			invoke(sApplyMethod, editor);
+			invoke(APPLY_METHOD, editor);
 			return;
 		} catch (NoSuchMethodException e) {
 			editor.commit();
@@ -45,16 +45,19 @@ public abstract class SharedPreferencesCompat {
 
 	public static Set<String> getStringSet(SharedPreferences preferences, String key, Set<String> defValues) {
 		try {
-			return invoke(sGetStringSetMethod, preferences, key, defValues);
+			return invoke(GET_STRING_SET_METHOD, preferences, key, defValues);
 		} catch (NoSuchMethodException e) {
 			String serializedSet = preferences.getString(key, null);
+			if (serializedSet == null) {
+				return defValues;
+			}
 			return SetXmlSerializer.deserialize(serializedSet);
 		}
 	}
 
 	public static void putStringSet(SharedPreferences.Editor editor, String key, Set<String> values) {
 		try {
-			invoke(sPutStringSetMethod, editor, key, values);
+			invoke(PUT_STRING_SET_METHOD, editor, key, values);
 		} catch (NoSuchMethodException e1) {
 			editor.putString(key, SetXmlSerializer.serialize(values));
 		}

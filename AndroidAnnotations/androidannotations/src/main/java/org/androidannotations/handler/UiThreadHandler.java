@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,17 +15,25 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.*;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.holder.EComponentHolder;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.lit;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.holder.EComponentHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JClassAlreadyExistsException;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JOp;
 
 public class UiThreadHandler extends AbstractRunnableHandler {
 

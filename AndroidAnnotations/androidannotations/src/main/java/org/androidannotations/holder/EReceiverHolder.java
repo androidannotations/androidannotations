@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,14 +24,12 @@ import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 public class EReceiverHolder extends EComponentHolder {
 
-	private JFieldVar contextField;
 	private JBlock onReceiveBody;
 	private JVar onReceiveIntentAction;
 	private JVar onReceiveIntentDataScheme;
@@ -45,13 +43,15 @@ public class EReceiverHolder extends EComponentHolder {
 
 	@Override
 	protected void setContextRef() {
-		contextField = generatedClass.field(PRIVATE, classes().CONTEXT, "context_");
-		contextRef = contextField;
+		if (init == null) {
+			setInit();
+		}
 	}
 
 	@Override
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, codeModel().VOID, "init_");
+		contextRef = init.param(classes().CONTEXT, "context");
 		if (onReceiveMethod == null) {
 			createOnReceive();
 		}
@@ -63,14 +63,18 @@ public class EReceiverHolder extends EComponentHolder {
 		onReceiveIntent = onReceiveMethod.param(classes().INTENT, "intent");
 		onReceiveMethod.annotate(Override.class);
 		onReceiveBody = onReceiveMethod.body();
-		onReceiveBody.assign(getContextField(), onReceiveContext);
-		onReceiveBody.invoke(getInit());
+		onReceiveBody.invoke(getInit()).arg(onReceiveContext);
 		onReceiveBody.invoke(JExpr._super(), onReceiveMethod).arg(onReceiveContext).arg(onReceiveIntent);
+	}
 
-		JInvocation getActionInvocation = JExpr.invoke(onReceiveIntent, "getAction");
-		JInvocation getDataSchemeInvocation = JExpr.invoke(onReceiveIntent, "getScheme");
-		onReceiveIntentAction = onReceiveBody.decl(classes().STRING, "action", getActionInvocation);
-		onReceiveIntentDataScheme = onReceiveBody.decl(classes().STRING, "dataScheme", getDataSchemeInvocation);
+	private void setOnReceiveIntentAction() {
+		JInvocation getActionInvocation = JExpr.invoke(getOnReceiveIntent(), "getAction");
+		onReceiveIntentAction = getOnReceiveBody().decl(classes().STRING, "action", getActionInvocation);
+	}
+
+	private void setOnReceiveIntentDataScheme() {
+		JInvocation getDataSchemeInvocation = JExpr.invoke(getOnReceiveIntent(), "getScheme");
+		onReceiveIntentDataScheme = getOnReceiveBody().decl(classes().STRING, "dataScheme", getDataSchemeInvocation);
 	}
 
 	public JMethod getOnReceiveMethod() {
@@ -103,22 +107,15 @@ public class EReceiverHolder extends EComponentHolder {
 
 	public JVar getOnReceiveIntentAction() {
 		if (onReceiveIntentAction == null) {
-			createOnReceive();
+			setOnReceiveIntentAction();
 		}
 		return onReceiveIntentAction;
 	}
 
 	public JVar getOnReceiveIntentDataScheme() {
 		if (onReceiveIntentDataScheme == null) {
-			createOnReceive();
+			setOnReceiveIntentDataScheme();
 		}
 		return onReceiveIntentDataScheme;
-	}
-
-	public JFieldVar getContextField() {
-		if (contextField == null) {
-			setContextRef();
-		}
-		return contextField;
 	}
 }

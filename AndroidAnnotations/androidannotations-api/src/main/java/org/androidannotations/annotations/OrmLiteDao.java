@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,6 +37,13 @@ import java.lang.annotation.Target;
  * <p>
  * <b>Note:</b> The minimum version required of ORMLite is 4.21
  * </p>
+ * <p>
+ * <b>Note:</b> For getting and releasing the helper, we use the <a href=
+ * "http://ormlite.com/javadoc/ormlite-android/com/j256/ormlite/android/apptools/OpenHelperManager.html"
+ * >OpenHelperManager</a> class, which cannot handle two different helpers at
+ * the same time. So if you are using multiple database helpers, be careful with
+ * {@link OrmLiteDao} annotations.
+ * </p>
  * <blockquote>
  * 
  * Example :
@@ -60,8 +67,22 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface OrmLiteDao {
 
+	/**
+	 * The class of the used database helper.
+	 * 
+	 * @return the helper class
+	 */
 	Class<?> helper();
 
+	/**
+	 * The class of the model what this DAO can manage.
+	 * 
+	 * @deprecated Since <b>3.1</b> the model class is inferred from the type of
+	 *             the annotated field. This parameter will be removed in a
+	 *             future version.
+	 * 
+	 * @return the model class
+	 */
 	@Deprecated
 	Class<?> model() default Void.class;
 

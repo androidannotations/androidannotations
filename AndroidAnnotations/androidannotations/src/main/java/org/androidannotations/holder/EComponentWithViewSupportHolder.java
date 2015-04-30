@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,34 +15,53 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.*;
-import org.androidannotations.api.view.HasViews;
-import org.androidannotations.api.view.OnViewChangedListener;
-import org.androidannotations.api.view.OnViewChangedNotifier;
-import org.androidannotations.helper.ViewNotifierHelper;
-import org.androidannotations.process.ProcessHolder;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr._this;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.invoke;
+import static com.sun.codemodel.JMod.FINAL;
+import static com.sun.codemodel.JMod.PRIVATE;
+import static com.sun.codemodel.JMod.PUBLIC;
 
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.sun.codemodel.JExpr.*;
-import static com.sun.codemodel.JMod.*;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.api.view.HasViews;
+import org.androidannotations.api.view.OnViewChangedListener;
+import org.androidannotations.api.view.OnViewChangedNotifier;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.ViewNotifierHelper;
+import org.androidannotations.process.ProcessHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
+	protected APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 	protected ViewNotifierHelper viewNotifierHelper;
+	private JMethod onViewChanged;
 	private JBlock onViewChangedBody;
 	private JBlock onViewChangedBodyBeforeFindViews;
 	private JVar onViewChangedHasViewsParam;
-	private Map<String, FoundViewHolder> foundViewsHolders = new HashMap<String, FoundViewHolder>();
+	protected Map<String, FoundHolder> foundHolders = new HashMap<String, FoundHolder>();
 	protected JMethod findNativeFragmentById;
 	protected JMethod findSupportFragmentById;
 	protected JMethod findNativeFragmentByTag;
 	protected JMethod findSupportFragmentByTag;
-	private HashMap<String, TextWatcherHolder> textWatcherHolders = new HashMap<String, TextWatcherHolder>();
-	private HashMap<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListenerHolders = new HashMap<String, OnSeekBarChangeListenerHolder>();
+	private Map<String, TextWatcherHolder> textWatcherHolders = new HashMap<String, TextWatcherHolder>();
+	private Map<String, OnSeekBarChangeListenerHolder> onSeekBarChangeListenerHolders = new HashMap<String, OnSeekBarChangeListenerHolder>();
 
 	public EComponentWithViewSupportHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -72,7 +91,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	protected void setOnViewChanged() {
 		getGeneratedClass()._implements(OnViewChangedListener.class);
-		JMethod onViewChanged = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onViewChanged");
+		onViewChanged = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onViewChanged");
 		onViewChanged.annotate(Override.class);
 		onViewChangedBody = onViewChanged.body();
 		onViewChangedBodyBeforeFindViews = onViewChangedBody.block();
@@ -89,19 +108,23 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	public void assignFindViewById(JFieldRef idRef, JClass viewClass, JFieldRef fieldRef) {
 		String idRefString = codeModelHelper.getIdStringFromIdFieldRef(idRef);
-		FoundViewHolder foundViewHolder = foundViewsHolders.get(idRefString);
+		FoundViewHolder foundViewHolder = (FoundViewHolder) foundHolders.get(idRefString);
 
 		JBlock block = getOnViewChangedBody();
 		JExpression assignExpression;
 
 		if (foundViewHolder != null) {
-			assignExpression = foundViewHolder.getView(viewClass);
+			assignExpression = foundViewHolder.getOrCastRef(viewClass);
 		} else {
 			assignExpression = findViewById(idRef);
 			if (viewClass != null && viewClass != classes().VIEW) {
 				assignExpression = cast(viewClass, assignExpression);
+
+				if (viewClass.isParameterized()) {
+					codeModelHelper.addSuppressWarnings(onViewChanged, "unchecked");
+				}
 			}
-			foundViewsHolders.put(idRefString, new FoundViewHolder(this, viewClass, fieldRef, block));
+			foundHolders.put(idRefString, new FoundViewHolder(this, viewClass, fieldRef, block));
 		}
 
 		block.assign(fieldRef, assignExpression);
@@ -109,10 +132,10 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	public FoundViewHolder getFoundViewHolder(JFieldRef idRef, JClass viewClass) {
 		String idRefString = codeModelHelper.getIdStringFromIdFieldRef(idRef);
-		FoundViewHolder foundViewHolder = foundViewsHolders.get(idRefString);
+		FoundViewHolder foundViewHolder = (FoundViewHolder) foundHolders.get(idRefString);
 		if (foundViewHolder == null) {
 			foundViewHolder = createFoundViewAndIfNotNullBlock(idRef, viewClass);
-			foundViewsHolders.put(idRefString, foundViewHolder);
+			foundHolders.put(idRefString, foundViewHolder);
 		}
 		return foundViewHolder;
 	}
@@ -257,4 +280,5 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 		return new OnSeekBarChangeListenerHolder(this, onSeekbarChangeListenerClass);
 	}
+
 }

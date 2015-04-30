@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,29 +28,31 @@ import org.androidannotations.process.ProcessHolder;
 
 public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceHolder> implements GeneratingAnnotationHandler<EIntentServiceHolder> {
 
-    public EIntentServiceHandler(ProcessingEnvironment processingEnvironment) {
-        super(EIntentService.class, processingEnvironment);
-    }
+	public EIntentServiceHandler(ProcessingEnvironment processingEnvironment) {
+		super(EIntentService.class, processingEnvironment);
+	}
 
-    @Override
-    public EIntentServiceHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-        return new EIntentServiceHolder(processHolder, annotatedElement, androidManifest);
-    }
+	@Override
+	public EIntentServiceHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
+		return new EIntentServiceHolder(processHolder, annotatedElement, androidManifest);
+	}
 
-    @Override
-    public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-        validatorHelper.extendsIntentService(element, valid);
+	@Override
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		validatorHelper.extendsIntentService(element, valid);
 
-        validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element, valid, ServiceAction.class);
+		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element, valid, ServiceAction.class);
 
-        validatorHelper.isNotFinal(element, valid);
+		validatorHelper.isNotFinal(element, valid);
 
-        validatorHelper.componentRegistered(element, androidManifest, valid);
-    }
+		validatorHelper.componentRegistered(element, androidManifest, valid);
 
-    @Override
-    public void process(Element element, EIntentServiceHolder holder) {
+		validatorHelper.isAbstractOrHasEmptyConstructor(element, valid);
+	}
+
+	@Override
+	public void process(Element element, EIntentServiceHolder holder) {
 		/* Do nothing */
-    }
+	}
 
 }

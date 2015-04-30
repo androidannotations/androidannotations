@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,14 +20,13 @@ import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.test15.ebean.EmptyDependency;
 import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.User;
 import org.androidannotations.test15.ormlite.UserDao;
 
 import android.app.Application;
 
 @EApplication
 public class SampleRoboApplication extends Application {
-	
+
 	@Bean
 	public EmptyDependency someDependency;
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,22 +26,23 @@ import android.app.Activity;
 @EActivity
 public class ActivityWithGenerics extends Activity {
 
-    //@UiThread
-    //<T, S extends Number & List<String>> void emptyUiMethod(T param, S param2) {
-    //}
+	// @UiThread
+	// <T, S extends Number & List<String>> void emptyUiMethod(T param, S
+	// param2) {
+	// }
 
-    @UiThread
-    <T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
-    }
+	@UiThread
+	<T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
+	}
 
 	@UiThread
 	<T, S extends Number> void emptyUiMethod(T param) {
 
 	}
-	
+
 	@Background
 	<T, S extends Number> void emptyBackgroundMethod(T param) {
-		
+
 	}
 
 	@Background

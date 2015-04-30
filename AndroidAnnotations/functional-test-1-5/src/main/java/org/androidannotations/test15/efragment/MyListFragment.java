@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,18 +31,18 @@ import android.widget.ListView;
 @EFragment(R.layout.list_fragment)
 public class MyListFragment extends ListFragment {
 
-	boolean	listItemClicked = false;
+	boolean listItemClicked = false;
 
-	@ViewById(value=android.R.id.list)
+	@ViewById(value = android.R.id.list)
 	ListView list;
 
 	boolean didExecute;
 
 	@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-        ArrayAdapter<CharSequence> adapter;
+		ArrayAdapter<CharSequence> adapter;
 
 		adapter = ArrayAdapter.createFromResource(getActivity(), R.array.planets_array, R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -83,7 +83,7 @@ public class MyListFragment extends ListFragment {
 
 	@ItemClick
 	void listItemClicked(String string) {
-		listItemClicked  = true;
+		listItemClicked = true;
 	}
 
 }

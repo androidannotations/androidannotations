@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +40,7 @@ import com.sun.codemodel.JDefinedClass;
 
 public class ProcessHolder {
 
+	// CHECKSTYLE:OFF
 	public class Classes {
 
 		/*
@@ -64,6 +64,7 @@ public class ProcessHolder {
 		public final JClass LIST = refClass(List.class);
 		public final JClass OBJECT = refClass(Object.class);
 		public final JClass ARRAYS = refClass(Arrays.class);
+		public final JClass HASH_SET = refClass(HashSet.class);
 
 		/*
 		 * Android
@@ -118,6 +119,15 @@ public class ProcessHolder {
 		public final JClass LOOPER = refClass(CanonicalNameConstants.LOOPER);
 		public final JClass POWER_MANAGER = refClass(CanonicalNameConstants.POWER_MANAGER);
 		public final JClass WAKE_LOCK = refClass(CanonicalNameConstants.WAKE_LOCK);
+		public final JClass BUILD_VERSION = refClass(CanonicalNameConstants.BUILD_VERSION);
+		public final JClass BUILD_VERSION_CODES = refClass(CanonicalNameConstants.BUILD_VERSION_CODES);
+		public final JClass ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ACTIVITY_COMPAT);
+		public final JClass APP_WIDGET_MANAGER = refClass(CanonicalNameConstants.APP_WIDGET_MANAGER);
+
+		public final JClass PREFERENCE = refClass(CanonicalNameConstants.PREFERENCE);
+		public final JClass PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.PREFERENCE_CHANGE_LISTENER);
+		public final JClass PREFERENCE_CLICK_LISTENER = refClass(CanonicalNameConstants.PREFERENCE_CLICK_LISTENER);
+		public final JClass PREFERENCE_ACTIVITY_HEADER = refClass(CanonicalNameConstants.PREFERENCE_ACTIVITY_HEADER);
 
 		/*
 		 * Sherlock
@@ -183,6 +193,8 @@ public class ProcessHolder {
 		public final JClass REST_CLIENT_EXCEPTION = refClass(CanonicalNameConstants.REST_CLIENT_EXCEPTION);
 		public final JClass NESTED_RUNTIME_EXCEPTION = refClass(CanonicalNameConstants.NESTED_RUNTIME_EXCEPTION);
 	}
+
+	// CHECKSTYLE:ON
 
 	private final Map<Element, GeneratedClassHolder> generatedClassHolders = new HashMap<Element, GeneratedClassHolder>();
 

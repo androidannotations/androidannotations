@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,13 +26,17 @@ import android.os.Bundle;
 public class SaveInstanceStateActivityTest {
 
 	@Test
-	public void can_create_with_empty_bundle() {
+	public void canCreateWithEmptyBundle() {
 		Robolectric.buildActivity(SaveInstanceStateActivity_.class).create(new Bundle());
 	}
 
 	@Test
-	public void can_create_without_saved_state() {
+	public void canCreateWithoutSavedState() {
 		Robolectric.buildActivity(SaveInstanceStateActivity_.class).create();
 	}
 
+	@Test
+	public void bundleFieldWithBundleNameDoesNotCauseStackoverflow() {
+		Robolectric.buildActivity(SaveInstanceStateActivity_.class).saveInstanceState(new Bundle());
+	}
 }

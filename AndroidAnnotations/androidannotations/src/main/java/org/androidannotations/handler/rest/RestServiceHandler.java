@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,9 +19,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.handler.BaseAnnotationHandler;
@@ -30,35 +27,38 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldRef;
 
 public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-    public RestServiceHandler(ProcessingEnvironment processingEnvironment) {
-        super(RestService.class, processingEnvironment);
-    }
+	public RestServiceHandler(ProcessingEnvironment processingEnvironment) {
+		super(RestService.class, processingEnvironment);
+	}
 
-    @Override
-    public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
-        validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
+	@Override
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validatedElements, valid);
 
-        validatorHelper.isNotPrivate(element, valid);
+		validatorHelper.isNotPrivate(element, valid);
 
-        validatorHelper.typeHasAnnotation(Rest.class, element, valid);
-    }
+		validatorHelper.typeHasAnnotation(Rest.class, element, valid);
+	}
 
-    @Override
-    public void process(Element element, EComponentHolder holder) {
-        String fieldName = element.getSimpleName().toString();
+	@Override
+	public void process(Element element, EComponentHolder holder) {
+		String fieldName = element.getSimpleName().toString();
 
-        TypeMirror fieldTypeMirror = element.asType();
-        String interfaceName = fieldTypeMirror.toString();
+		TypeMirror fieldTypeMirror = element.asType();
+		String interfaceName = fieldTypeMirror.toString();
 
-        String generatedClassName = interfaceName + ModelConstants.GENERATION_SUFFIX;
+		String generatedClassName = interfaceName + ModelConstants.GENERATION_SUFFIX;
 
-        JBlock methodBody = holder.getInitBody();
+		JBlock methodBody = holder.getInitBody();
 
-        JFieldRef field = JExpr.ref(fieldName);
+		JFieldRef field = JExpr.ref(fieldName);
 
-        methodBody.assign(field, JExpr._new(refClass(generatedClassName)).arg(holder.getContextRef()));
-    }
+		methodBody.assign(field, JExpr._new(refClass(generatedClassName)).arg(holder.getContextRef()));
+	}
 }

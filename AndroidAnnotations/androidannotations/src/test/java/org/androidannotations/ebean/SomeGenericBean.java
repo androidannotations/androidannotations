@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,29 +15,28 @@
  */
 package org.androidannotations.ebean;
 
+import java.util.List;
+
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.UiThread;
 
-import java.util.List;
-
 @EBean
 public class SomeGenericBean<T> {
 
-    @Background
-	void someMethod(List<? super T> list){
+	@Background
+	void someMethod(List<? super T> list) {
 	}
 
-    void someOtherMethod(List<? super T> list){
-    }
+	void someOtherMethod(List<? super T> list) {
+	}
 
-    @Background
-    <N extends T> void someParameterizedMethod(List<? super N> lst, List<? extends N> lst2) {
-    }
+	@Background
+	<N extends T> void someParameterizedMethod(List<? super N> lst, List<? extends N> lst2) {
+	}
 
-    @UiThread
-    <T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
-    }
-
+	@UiThread
+	<T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
+	}
 
 }

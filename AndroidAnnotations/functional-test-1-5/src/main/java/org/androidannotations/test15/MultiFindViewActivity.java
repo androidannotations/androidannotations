@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,11 +15,16 @@
  */
 package org.androidannotations.test15;
 
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.FocusChange;
+import org.androidannotations.annotations.LongClick;
+import org.androidannotations.annotations.ViewById;
+
 import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import org.androidannotations.annotations.*;
 
 @EActivity(R.layout.views_injected)
 public class MultiFindViewActivity extends Activity {
@@ -33,7 +38,7 @@ public class MultiFindViewActivity extends Activity {
 	@ViewById(R.id.myButton)
 	Button button;
 
-	@Click({ R.id.my_text_view, R.id.myButton})
+	@Click({ R.id.my_text_view, R.id.myButton })
 	void viewClicked() {
 
 	}

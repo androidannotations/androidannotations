@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,20 +27,20 @@ import android.app.Activity;
 
 @RunWith(RobolectricTestRunner.class)
 public class AfterInjectBeanTest {
-	
+
 	AfterInjectBean bean;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		Activity activity = Robolectric.buildActivity(Activity.class).create().get();
 		bean = AfterInjectBean_.getInstance_(activity);
 	}
-	
+
 	@Test
 	public void afterInjectIsCalled() {
 		assertThat(bean.afterInjectCalled).isTrue();
 	}
-	
+
 	@Test
 	public void injectionDoneWhenAfterInjectCalled() {
 		assertThat(bean.notificationManagerNullAfterInject).isFalse();

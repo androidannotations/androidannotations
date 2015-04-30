@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.mockito.Matchers;
 import org.robolectric.RobolectricTestRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,9 +31,9 @@ import org.springframework.web.client.RestTemplate;
 
 @RunWith(RobolectricTestRunner.class)
 public class HttpMethodServiceTest {
-	
+
 	@Test
-	public void use_delete_http_method() {
+	public void useDeleteHttpMethod() {
 		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
@@ -41,11 +41,11 @@ public class HttpMethodServiceTest {
 
 		service.delete();
 
-		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.DELETE), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.DELETE), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
 	}
 
 	@Test
-	public void use_get_http_method() {
+	public void useGetHttpMethod() {
 		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
@@ -53,45 +53,45 @@ public class HttpMethodServiceTest {
 
 		service.get();
 
-		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.GET), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.GET), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void use_head_http_method() {
+	public void useHeadHttpMethod() {
 		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
-		when(restTemplate.exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.HEAD), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any())).thenReturn(response);
+		when(restTemplate.exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.HEAD), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any())).thenReturn(response);
 
 		service.setRestTemplate(restTemplate);
 
 		service.head();
 
-		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.HEAD), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.HEAD), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void use_options_http_method() {
+	public void useOptionsHttpMethod() {
 		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
-		when(restTemplate.exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.OPTIONS), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any())).thenReturn(response);
+		when(restTemplate.exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.OPTIONS), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any())).thenReturn(response);
 		HttpHeaders headers = mock(HttpHeaders.class);
 		when(response.getHeaders()).thenReturn(headers);
-		
+
 		service.setRestTemplate(restTemplate);
 
 		service.options();
 
-		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.OPTIONS), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.OPTIONS), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
 	}
 
 	@Test
-	public void use_post_http_method() {
+	public void usePostHttpMethod() {
 		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
@@ -99,11 +99,11 @@ public class HttpMethodServiceTest {
 
 		service.post();
 
-		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.POST), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.POST), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
 	}
 
 	@Test
-	public void use_put_http_method() {
+	public void usePutHttpMethod() {
 		HttpMethodsService_ service = new HttpMethodsService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
@@ -111,7 +111,7 @@ public class HttpMethodServiceTest {
 
 		service.put();
 
-		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> eq(HttpMethod.PUT), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.PUT), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,7 +14,6 @@
  * the License.
  */
 package org.androidannotations.test15.trace;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +35,7 @@ import android.util.Log;
 
 @EActivity
 public class TracedActivity extends Activity {
-	
+
 	public boolean tracedMethodCalled = false;
 	public boolean voidTracedMethodCalled = false;
 	public boolean voidTracedMethodDebugCalled = false;
@@ -54,15 +53,13 @@ public class TracedActivity extends Activity {
 	}
 
 	@Trace
-	Object tracedMethod(List<Map<String, List<Set<Void>>>> param1, Void param2)
-			throws IOException {
+	Object tracedMethod(List<Map<String, List<Set<Void>>>> param1, Void param2) throws IOException {
 		tracedMethodCalled = true;
 		return null;
 	}
 
 	@Trace
-	void voidTracedMethod(List<Map<String, List<Set<Void>>>> param1, Void param2)
-			throws IOException {
+	void voidTracedMethod(List<Map<String, List<Set<Void>>>> param1, Void param2) throws IOException {
 		voidTracedMethodCalled = true;
 	}
 
@@ -126,8 +123,7 @@ public class TracedActivity extends Activity {
 	}
 
 	@Trace
-	void tracedUsingArrayParameters(MySerializableBean[] array,
-			MySerializableBean[][] multiDimArray) {
+	void tracedUsingArrayParameters(MySerializableBean[] array, MySerializableBean[][] multiDimArray) {
 	}
 
 	@Trace

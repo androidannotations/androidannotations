@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,14 +29,21 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 	private static final String INTENT_FRAGMENT_SUPPORT_SIGNATURE = ".*public static ActivityInManifest_\\.IntentBuilder_ intent\\((android\\.support\\.v4\\.app\\.)?Fragment supportFragment\\).*";
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		addProcessor(AndroidAnnotationProcessor.class);
 	}
 
 	@Test
-	public void activity_intentFragment_minSdkFroyo_compileWithFroyo() {
+	public void activityIntentFragmentMinSdkFroyoCompilesWithFroyo() {
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
-		CompileResult result = compileFiles(ActivityInManifest.class);
+		// we need android.os.Build in the classpath
+		CompileResult result = compileFiles(ActivityInManifest.class /*
+		 * ,toPath(
+		 * ActivityIntentFragmentTest
+		 * .class,
+		 * "Build.java"
+		 * )
+		 */);
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
@@ -44,7 +51,7 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void activity_intentFragment_minSdkFroyo_compileWithJB() {
+	public void activityIntentFragmentMinSdkFroyoCompilesWithJB() {
 		// To simulate compilation with SDK > 11, we add Fragment in classpath
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
 		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "Fragment.java"), ActivityInManifest.class);
@@ -55,7 +62,7 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void activity_intentFragment_minSdkJB_compileWithJB() {
+	public void activityIntentFragmentMinSdkJBCompileWithJB() {
 		// To simulate compilation with SDK > 11, we add Fragment in classpath
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinJB.xml");
 		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "Fragment.java"), ActivityInManifest.class);
@@ -66,11 +73,13 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void activity_intentFragment_compileWithSupport() {
+	public void activityIntentFragmentCompilesWithSupport() {
 		// To simulate android support v4 in classpath, we add
-		// android.support.v4.Fragment in classpath
+		// android.support.v4.Fragment and android.support.v4.app.ActivityCompat
+		// in classpath
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
-		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), ActivityInManifest.class);
+		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), //
+				toPath(ActivityIntentFragmentTest.class, "support/ActivityCompat.java"), ActivityInManifest.class);
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);
@@ -78,7 +87,21 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void activity_intentFragment_minSdkJB_compileWithJBAndSupport() {
+	public void activityIntentFragmentCompilesWithSupportContainingBundleOptions() {
+		// To simulate android support v4 in classpath, we add
+		// android.support.v4.Fragment and android.support.v4.app.ActivityCompat
+		// in classpath
+		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
+		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), //
+				toPath(ActivityIntentFragmentTest.class, "ActivityCompat.java"), ActivityInManifest.class);
+		File generatedFile = toGeneratedFile(ActivityInManifest.class);
+
+		assertCompilationSuccessful(result);
+		assertGeneratedClassMatches(generatedFile, INTENT_FRAGMENT_SUPPORT_SIGNATURE);
+	}
+
+	@Test
+	public void activityIntentFragmentMinSdkJBCompilesWithJBAndSupport() {
 		// To simulate compilation with SDK > 11, we add Fragment in classpath
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinJB.xml");
 		CompileResult result = compileFiles(toPath(ActivityIntentFragmentTest.class, "Fragment.java"), toPath(ActivityIntentFragmentTest.class, "support/Fragment.java"), ActivityInManifest.class);

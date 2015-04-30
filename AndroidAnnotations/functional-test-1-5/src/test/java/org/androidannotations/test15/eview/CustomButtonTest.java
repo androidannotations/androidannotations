@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,7 +29,7 @@ import android.content.Context;
 public class CustomButtonTest {
 
 	@Test
-	public void constructor_parameters_are_transmitted_from_factory_method() {
+	public void constructorParametersAreTransmittedFromFactoryMethod() {
 		Context context = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
 		int parameter = 42;
 		CustomButton button = CustomButton_.build(context, parameter);
@@ -37,7 +37,7 @@ public class CustomButtonTest {
 	}
 
 	@Test
-	public void factory_method_builds_inflated_instance() {
+	public void factoryMethodBuildsInflatedInstance() {
 		Context context = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
 		CustomButton button = CustomButton_.build(context);
 		assertThat(button.afterViewsCalled).isTrue();

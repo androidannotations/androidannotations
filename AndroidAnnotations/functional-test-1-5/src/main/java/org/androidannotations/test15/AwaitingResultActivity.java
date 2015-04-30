@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,14 @@
  */
 package org.androidannotations.test15;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
+import java.util.ArrayList;
+
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 
-import java.util.ArrayList;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 
 @EActivity(R.layout.views_injected)
 public class AwaitingResultActivity extends Activity {
@@ -68,10 +69,12 @@ public class AwaitingResultActivity extends Activity {
 		onResultWithIntegerResultCodeCalled = true;
 	}
 
+	// CHECKSTYLE:OFF
+
 	@OnActivityResult(FORTH_REQUEST)
-	void onResultWithResultExtra(int resultCode, @OnActivityResult.Extra("value") int i, @OnActivityResult.Extra String s,
-	                             @OnActivityResult.Extra Uri uri, @OnActivityResult.Extra ArrayList<Uri> uris,
-	                             @OnActivityResult.Extra String[] strings) {
+	void onResultWithResultExtra(int resultCode, @OnActivityResult.Extra("value") int i, @OnActivityResult.Extra String s, @OnActivityResult.Extra Uri uri, @OnActivityResult.Extra ArrayList<Uri> uris, @OnActivityResult.Extra String[] strings) {
 		onResultWithResultExtraCodeCalled = true;
 	}
+
+	// CHECKSTYLE:ON
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,61 +15,64 @@
  */
 package org.androidannotations.helper;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
+import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
+import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
+import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static org.androidannotations.helper.CanonicalNameConstants.BUNDLE;
-import static org.androidannotations.helper.CanonicalNameConstants.CHAR_SEQUENCE;
-import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+import org.androidannotations.holder.GeneratedClassHolder;
+
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JMethod;
 
 public class BundleHelper {
-	public static final Map<String, String> methodSuffixNameByTypeName = new HashMap<String, String>();
+	public static final Map<String, String> METHOD_SUFFIX_BY_TYPE_NAME = new HashMap<String, String>();
 
 	static {
 
-		methodSuffixNameByTypeName.put(BUNDLE, "Bundle");
+		METHOD_SUFFIX_BY_TYPE_NAME.put(BUNDLE, "Bundle");
 
-		methodSuffixNameByTypeName.put("boolean", "Boolean");
-		methodSuffixNameByTypeName.put("boolean[]", "BooleanArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("boolean", "Boolean");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("boolean[]", "BooleanArray");
 
-		methodSuffixNameByTypeName.put("byte", "Byte");
-		methodSuffixNameByTypeName.put("byte[]", "ByteArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("byte", "Byte");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("byte[]", "ByteArray");
 
-		methodSuffixNameByTypeName.put("char", "Char");
-		methodSuffixNameByTypeName.put("char[]", "CharArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("char", "Char");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("char[]", "CharArray");
 
-		methodSuffixNameByTypeName.put(CHAR_SEQUENCE, "CharSequence");
+		METHOD_SUFFIX_BY_TYPE_NAME.put(CHAR_SEQUENCE, "CharSequence");
 
-		methodSuffixNameByTypeName.put("double", "Double");
-		methodSuffixNameByTypeName.put("double[]", "DoubleArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("double", "Double");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("double[]", "DoubleArray");
 
-		methodSuffixNameByTypeName.put("float", "Float");
-		methodSuffixNameByTypeName.put("float[]", "FloatArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("float", "Float");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("float[]", "FloatArray");
 
-		methodSuffixNameByTypeName.put("int", "Int");
-		methodSuffixNameByTypeName.put("int[]", "IntArray");
-		methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.Integer>", "IntegerArrayList");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("int", "Int");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("int[]", "IntArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("java.util.ArrayList<java.lang.Integer>", "IntegerArrayList");
 
-		methodSuffixNameByTypeName.put("long", "Long");
-		methodSuffixNameByTypeName.put("long[]", "LongArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("long", "Long");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("long[]", "LongArray");
 
-		methodSuffixNameByTypeName.put("short", "Short");
-		methodSuffixNameByTypeName.put("short[]", "ShortArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("short", "Short");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("short[]", "ShortArray");
 
-		methodSuffixNameByTypeName.put(STRING, "String");
-		methodSuffixNameByTypeName.put("java.lang.String[]", "StringArray");
-		methodSuffixNameByTypeName.put("java.util.ArrayList<java.lang.String>", "StringArrayList");
+		METHOD_SUFFIX_BY_TYPE_NAME.put(STRING, "String");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("java.lang.String[]", "StringArray");
+		METHOD_SUFFIX_BY_TYPE_NAME.put("java.util.ArrayList<java.lang.String>", "StringArrayList");
 	}
 
 	private AnnotationHelper annotationHelper;
@@ -90,10 +93,10 @@ public class BundleHelper {
 		String typeString = element.toString();
 		TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
 
-		if (methodSuffixNameByTypeName.containsKey(typeString)) {
+		if (METHOD_SUFFIX_BY_TYPE_NAME.containsKey(typeString)) {
 
-			methodNameToSave = "put" + methodSuffixNameByTypeName.get(typeString);
-			methodNameToRestore = "get" + methodSuffixNameByTypeName.get(typeString);
+			methodNameToSave = "put" + METHOD_SUFFIX_BY_TYPE_NAME.get(typeString);
+			methodNameToRestore = "get" + METHOD_SUFFIX_BY_TYPE_NAME.get(typeString);
 
 		} else if (element.getKind() == TypeKind.ARRAY) {
 
@@ -113,7 +116,6 @@ public class BundleHelper {
 			if (isTypeParcelable(elementType)) {
 				methodNameToSave = "put" + "ParcelableArray";
 				methodNameToRestore = "get" + "ParcelableArray";
-				restoreCallNeedCastStatement = true;
 
 				if (hasTypeArguments) {
 					restoreCallNeedsSuppressWarning = true;
@@ -152,10 +154,7 @@ public class BundleHelper {
 				methodNameToSave = "put" + "Serializable";
 				methodNameToRestore = "get" + "Serializable";
 				restoreCallNeedCastStatement = true;
-
-				if (hasTypeArguments) {
-					restoreCallNeedsSuppressWarning = true;
-				}
+				restoreCallNeedsSuppressWarning = true;
 			}
 
 		} else {
@@ -183,46 +182,37 @@ public class BundleHelper {
 		}
 	}
 
-	public boolean restoreCallNeedCastStatement() {
-		return restoreCallNeedCastStatement;
-	}
-
-	public boolean restoreCallNeedsSuppressWarning() {
-		return restoreCallNeedsSuppressWarning;
-	}
-
 	public String getMethodNameToSave() {
 		return methodNameToSave;
 	}
 
-	public String getMethodNameToRestore() {
-		return methodNameToRestore;
-	}
-
 	private boolean isTypeParcelable(TypeElement elementType) {
-
 		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE);
-
 		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
 	}
 
-	public JExpression getExpressionToRestoreFromIntentOrBundle(JClass variableClass, JExpression intent, JExpression extras, JExpression extraKey, JMethod method) {
+	public JExpression getExpressionToRestoreFromIntentOrBundle(JClass variableClass, JExpression intent, JExpression extras, JExpression extraKey, JMethod method, GeneratedClassHolder holder) {
 		if ("byte[]".equals(element.toString())) {
 			return intent.invoke("getByteArrayExtra").arg(extraKey);
 		} else {
-			return getExpressionToRestoreFromBundle(variableClass, extras, extraKey, method);
+			return getExpressionToRestoreFromBundle(variableClass, extras, extraKey, method, holder);
 		}
 	}
 
-	public JExpression getExpressionToRestoreFromBundle(JClass variableClass, JExpression bundle, JExpression extraKey, JMethod method) {
-		JExpression expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
-		if (restoreCallNeedCastStatement()) {
+	public JExpression getExpressionToRestoreFromBundle(JClass variableClass, JExpression bundle, JExpression extraKey, JMethod method, GeneratedClassHolder holder) {
+		JExpression expressionToRestore;
+		if (methodNameToRestore.equals("getParcelableArray")) {
+			JClass erasure = variableClass.elementType().erasure().array();
+			expressionToRestore = holder.refClass(org.androidannotations.api.bundle.BundleHelper.class).staticInvoke("getParcelableArray").arg(bundle).arg(extraKey).arg(erasure.dotclass());
+		} else {
+			expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
+		}
+
+		if (restoreCallNeedCastStatement) {
 			expressionToRestore = JExpr.cast(variableClass, expressionToRestore);
 
-			if (restoreCallNeedsSuppressWarning()) {
-				if (!codeModelHelper.hasAnnotation(method, SuppressWarnings.class)) {
-					method.annotate(SuppressWarnings.class).param("value", "unchecked");
-				}
+			if (restoreCallNeedsSuppressWarning) {
+				codeModelHelper.addSuppressWarnings(method, "unchecked");
 			}
 		}
 		return expressionToRestore;

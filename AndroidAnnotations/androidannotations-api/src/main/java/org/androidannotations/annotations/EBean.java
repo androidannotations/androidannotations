@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,8 +41,8 @@ import java.lang.annotation.Target;
  * Most annotations are supported in {@link EBean} classes, except the ones
  * related to extras. Views related annotations will only work if the bean was
  * injected in an activity with a layout containing the views you're dealing
- * with. If your bean needs a {@link android.content.Context} you can inject on by
- * using an {@link RootContext} annotated field.
+ * with. If your bean needs a {@link android.content.Context} you can inject on
+ * by using an {@link RootContext} annotated field.
  * </p>
  * <p>
  * Beans have two possible scopes : default or singleton. Default scope should
@@ -91,10 +91,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface EBean {
 
+	/**
+	 * The scope of an enhanced bean.
+	 */
 	public enum Scope {
 
 		/**
-		 * A new instance of the bean is created each time it is needed
+		 * A new instance of the bean is created each time it is needed.
 		 */
 		Default, //
 
@@ -105,6 +108,11 @@ public @interface EBean {
 		Singleton, //
 	}
 
+	/**
+	 * The scope of the enhanced bean.
+	 * 
+	 * @return the scope of the bean.
+	 */
 	Scope scope() default Scope.Default;
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,23 +25,23 @@ import org.robolectric.util.ActivityController;
 
 @RunWith(RobolectricTestRunner.class)
 public class AfterInjectActivityTest {
-	
+
 	AfterInjectActivity_ activity;
 	ActivityController<AfterInjectActivity_> activityController;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activityController = ActivityController.of(AfterInjectActivity_.class);
 		activity = activityController.get();
 	}
-	
+
 	@Test
 	public void afterInjectIsCalledInOnCreate() {
 		assertThat(activity.afterInjectCalled).isFalse();
 		activityController.create();
 		assertThat(activity.afterInjectCalled).isTrue();
 	}
-	
+
 	@Test
 	public void injectionDoneWhenAfterInjectCalled() {
 		activityController.create();

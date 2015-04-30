@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package org.androidannotations.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
@@ -28,6 +29,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.processing.Processor;
@@ -75,6 +77,14 @@ public class ProcessorTestHelper {
 				fail("Value \"" + value + "\" shouldn't be in file " + output.getAbsolutePath());
 			}
 		}
+	}
+
+	public static void assertGeneratedClassContains(File output, String[] codeFragment) {
+		assertTrue("Code fragment \"" + join(codeFragment) + "\" should be in file " + output.getAbsolutePath(), Collections.indexOfSubList(Arrays.asList(getContents(output)), Arrays.asList(codeFragment)) != -1);
+	}
+
+	public static void assertGeneratedClassDoesNotContain(File output, String[] codeFragment) {
+		assertTrue("Code fragment \"" + join(codeFragment) + "\" should not be in file " + output.getAbsolutePath(), Collections.indexOfSubList(Arrays.asList(getContents(output)), Arrays.asList(codeFragment)) == -1);
 	}
 
 	public static void assertOutput(File expectedResult, File output) {
@@ -247,7 +257,7 @@ public class ProcessorTestHelper {
 	 * <p>
 	 * The compilation units and all their dependencies are expected to be on
 	 * the classpath.
-	 * 
+	 *
 	 * @param compilationUnits
 	 *            the classes to compile
 	 * @return the {@link Diagnostic diagnostics} returned by the compilation,
@@ -419,6 +429,10 @@ public class ProcessorTestHelper {
 
 	private boolean isWindows() {
 		return getOsName().startsWith("Windows");
+	}
+
+	private static String join(String[] array) {
+		return Arrays.toString(array).replaceAll(",", "\n");
 	}
 
 }

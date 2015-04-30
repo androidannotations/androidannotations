@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,27 +22,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.androidannotations.test15.CustomShadowBundle;
 import org.fest.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.ParameterizedRobolectricTestRunnerWorkaround;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
+import org.robolectric.ParameterizedRobolectricTestRunnerWorkaround;
 import org.robolectric.Robolectric;
+import org.robolectric.annotation.Config;
 
 import android.os.Bundle;
 
+@Config(shadows = CustomShadowBundle.class)
 @RunWith(ParameterizedRobolectricTestRunnerWorkaround.class)
 public class SaveInstanceStateActivityParameterizedTest {
-	
+
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> generateTestCases() throws Exception {
 		ArrayList<MyGenericParcelableBean<Integer>> myGenericParcelableBeanArrayList = new ArrayList<MyGenericParcelableBean<Integer>>();
-		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>((Integer) 1));
-		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>((Integer) 2));
-		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>((Integer) 3));
-		
+		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>(1));
+		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>(2));
+		myGenericParcelableBeanArrayList.add(new MyGenericParcelableBean<Integer>(3));
+
+		// CHECKSTYLE:OFF
 		Object[][] testCases = { //
-		//
+				//
 				{ "myBoolean", true }, //
 				{ "myBooleanArray", new boolean[] { true, false, true } }, //
 				{ "myBooleanObject", Boolean.TRUE }, //
@@ -83,15 +87,17 @@ public class SaveInstanceStateActivityParameterizedTest {
 				{ "mySerializableBeanArray", new MySerializableBean[] { new MySerializableBean(5), new MySerializableBean(6) } }, //
 				{ "myParcelableBean", new MyParcelableBean(9) }, //
 				{ "myParcelableBeanArray", new MyParcelableBean[] { new MyParcelableBean(3), new MyParcelableBean(9) } }, //
-				{ "myGenericSerializableBean", new MyGenericSerializableBean<Integer>((Integer)3)}, //
-				{ "myGenericSerializableBeanArray", new MyGenericSerializableBean[] {new MyGenericSerializableBean<Integer>((Integer)3), new MyGenericSerializableBean<Integer>((Integer)5)} }, //
-				{ "myGenericParcelableBean", new MyGenericParcelableBean<String>("Plop !")}, //
-				{ "myGenericParcelableBeanArray", new MyGenericParcelableBean[] {new MyGenericParcelableBean<Integer>((Integer)3), new MyGenericParcelableBean<Integer>((Integer)5)} }, //
+				{ "myGenericSerializableBean", new MyGenericSerializableBean<Integer>(3) }, //
+				{ "myGenericSerializableBeanArray", new MyGenericSerializableBean[] { new MyGenericSerializableBean<Integer>(3), new MyGenericSerializableBean<Integer>(5) } }, //
+				{ "myGenericParcelableBean", new MyGenericParcelableBean<String>("Plop !") }, //
+				{ "myGenericParcelableBeanArray", new MyGenericParcelableBean[] { new MyGenericParcelableBean<Integer>(3), new MyGenericParcelableBean<Integer>(5) } }, //
 				{ "myParcelableBeanArrayList", Lists.newArrayList(new MyParcelableBean(1), new MyParcelableBean(2), new MyParcelableBean(3)) }, //
 				{ "myGenericParcelableBeanArrayList", myGenericParcelableBeanArrayList }, //
 				{ "mySerializableBeanArrayList", Lists.newArrayList(new MySerializableBean(1), new MySerializableBean(2), new MySerializableBean(3)) }, //
 				{ "nullWrappedLong", null }, //
 		};
+		// CHECKSTYLE:ON
+
 		return Arrays.asList(testCases);
 	}
 
@@ -110,7 +116,7 @@ public class SaveInstanceStateActivityParameterizedTest {
 	}
 
 	@Test
-	public void can_save_field() throws Exception {
+	public void canSaveField() throws Exception {
 		SaveInstanceStateActivity_ savedActivity = Robolectric.buildActivity(SaveInstanceStateActivity_.class).create().get();
 
 		Bundle bundle = saveField(savedActivity);
@@ -119,7 +125,7 @@ public class SaveInstanceStateActivityParameterizedTest {
 	}
 
 	@Test
-	public void can_load_field() throws Exception {
+	public void canLoadField() throws Exception {
 		SaveInstanceStateActivity_ savedActivity = Robolectric.buildActivity(SaveInstanceStateActivity_.class).create().get();
 
 		Bundle bundle = saveField(savedActivity);

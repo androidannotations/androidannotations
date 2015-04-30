@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,18 +17,18 @@ package org.androidannotations.test15.instancestate;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.os.Bundle;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.test15.R;
+
+import android.app.Activity;
+import android.os.Bundle;
 
 @EActivity(R.layout.main)
 public class SaveInstanceStateActivity extends Activity {
 
 	@InstanceState
-	Long nullWrappedLong = 42l;
+	Long nullWrappedLong = 42L;
 
 	@InstanceState
 	boolean myBoolean;
@@ -167,14 +167,17 @@ public class SaveInstanceStateActivity extends Activity {
 
 	@InstanceState
 	MyGenericParcelableBean<Integer>[] myGenericParcelableBeanArray;
-	
+
 	@InstanceState
 	ArrayList<MyParcelableBean> myParcelableBeanArrayList;
-	
+
 	@InstanceState
 	ArrayList<MyGenericParcelableBean<Integer>> myGenericParcelableBeanArrayList;
-	
+
 	@InstanceState
 	ArrayList<MySerializableBean> mySerializableBeanArrayList;
+
+	@InstanceState
+	Bundle bundle;
 
 }

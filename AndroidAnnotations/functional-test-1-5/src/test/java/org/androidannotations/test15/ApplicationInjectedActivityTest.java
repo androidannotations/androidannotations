@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,24 +26,24 @@ import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class ApplicationInjectedActivityTest {
-	
+
 	@Test
-	public void should_have_application_after_create() {
+	public void shouldHaveApplicationAfterCreate() {
 		SampleRoboApplication_ application = new SampleRoboApplication_();
 		application.onCreate();
-		
+
 		ApplicationInjectedActivity_ activity = Robolectric.buildActivity(ApplicationInjectedActivity_.class).create().get();
 
 		assertThat(activity.customApplication).isNotNull();
 	}
 
 	@Test
-	public void application_can_be_replaced_for_tests() {
+	public void applicationCanBeReplacedForTests() {
 		SampleRoboApplication testApp = new SampleRoboApplication();
 
 		SampleRoboApplication_.setForTesting(testApp);
 
-		ApplicationInjectedActivity_ activity = Robolectric.buildActivity(ApplicationInjectedActivity_.class).create().get();;
+		ApplicationInjectedActivity_ activity = Robolectric.buildActivity(ApplicationInjectedActivity_.class).create().get();
 
 		assertThat(activity.customApplication).isSameAs(testApp);
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
  */
 package org.androidannotations.test15.rest;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.startsWith;
@@ -32,7 +32,7 @@ import org.apache.http.message.BasicHeader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
-import org.mockito.Mockito;
+import org.mockito.Matchers;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.springframework.http.HttpEntity;
@@ -60,7 +60,7 @@ public class MyServiceTest {
 	}
 
 	@Test
-	public void can_override_root_url() {
+	public void canOverrideRootUrl() {
 		MyService_ myService = new MyService_(null);
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
@@ -69,7 +69,7 @@ public class MyServiceTest {
 
 		myService.removeEvent(42);
 
-		verify(restTemplate).exchange(startsWith("http://newRootUrl"), Mockito.<HttpMethod> any(), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any(), Mockito.<Map<String, ?>> any());
+		verify(restTemplate).exchange(startsWith("http://newRootUrl"), Matchers.<HttpMethod> any(), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any(), Matchers.<Map<String, ?>> any());
 	}
 
 	@Test
@@ -192,7 +192,7 @@ public class MyServiceTest {
 		addPendingResponse("fancyHeaderToken");
 		myService.setHttpBasicAuth("fancyUser", "fancierPassword");
 		myService.ping();
-		verify(restTemplate).exchange(eq("http://company.com/client/ping"), Mockito.<HttpMethod> any(), Mockito.<HttpEntity<?>> any(), Mockito.<Class<Object>> any());
+		verify(restTemplate).exchange(eq("http://company.com/client/ping"), Matchers.<HttpMethod> any(), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
 	}
 
 	@Test
@@ -229,7 +229,7 @@ public class MyServiceTest {
 		urlVariables.put("location", locationValue);
 		urlVariables.put("year", yearValue);
 		urlVariables.put("xt", xtValue);
-		verify(restTemplate).exchange(Mockito.anyString(), Mockito.<HttpMethod> any(), argThat(matcher), Mockito.<Class<Object>> any(), eq(urlVariables));
+		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> any(), argThat(matcher), Matchers.<Class<Object>> any(), eq(urlVariables));
 	}
 
 	@Test

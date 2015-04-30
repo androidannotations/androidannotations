@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -27,8 +29,8 @@ import org.androidannotations.process.IsValid;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
 
 public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> implements AnnotationHandler<T> {
 
@@ -87,6 +89,10 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 
 	public JClass refClass(String fullyQualifiedClassName) {
 		return processHolder.refClass(fullyQualifiedClassName);
+	}
+
+	public JClass refClass(TypeMirror typeMirror) {
+		return processHolder.refClass(typeMirror.toString());
 	}
 
 	public JClass refClass(Class<?> clazz) {

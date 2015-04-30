@@ -1,16 +1,30 @@
+sudo: false
+
+cache:
+  directories:
+  - $HOME/.gradle
+  - $HOME/.m2
+
 language: android
+
 jdk:
   - oraclejdk8
   - oraclejdk7
+
 android:
   components:
-    - android-14
-    - build-tools-20.0.0
+    - android-22
+    - build-tools-22.0.1
   licenses:
     - android-sdk-license-5be876d5
+
 before_script:
   - export TERM=dumb
+
 script:
-  - mvn -f AndroidAnnotations/pom.xml install
-  - mvn -f examples/maveneclipse/pom.xml install -Dandroidannotations.version=3.2-SNAPSHOT
+  - mvn -f AndroidAnnotations/pom.xml install -P travis
+  - mvn -f examples/maveneclipse/pom.xml install -Dandroidannotations.version=3.3-SNAPSHOT
   - ./examples/gradle/gradlew build --build-file examples/gradle/build.gradle
+
+after_success:
+  - if [[ $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $JAVA_HOME == '/usr/lib/jvm/java-7-oracle' ]]; then mvn -f AndroidAnnotations/pom.xml -pl androidannotations-bundle -am -DskipTests -Dquiet -s settings.xml deploy ; fi

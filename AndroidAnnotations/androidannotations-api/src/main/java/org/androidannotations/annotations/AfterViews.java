@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations;
 
-import android.app.Activity;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,7 +23,8 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * Methods annotated with @{@link AfterViews} will be called after
- * {@link Activity#setContentView(int)} is called by the generated activity.
+ * {@link android.app.Activity#setContentView(int) setContentView(int)} is
+ * called by the generated activity.
  * </p>
  * <p>
  * This occurs AFTER <code>setContentView(View)</code> which is called at the

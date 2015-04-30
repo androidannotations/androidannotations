@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,7 +34,7 @@ public class TouchesHandledActivityTest {
 	private MotionEvent mockedEvent;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		activity = Robolectric.buildActivity(TouchesHandledActivity_.class).create().get();
 
 		mockedEvent = MotionEvent.obtain(0, 0, 0, 0f, 0f, 0);

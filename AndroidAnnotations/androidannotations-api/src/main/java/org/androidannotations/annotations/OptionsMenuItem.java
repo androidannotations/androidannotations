@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,9 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on android.app.Fragment or
- * android.support.v4.app.Fragment fields in activity classes to inject
- * a menu item.
+ * Use it on android.app.Fragment or android.support.v4.app.Fragment fields in
+ * activity classes to inject a menu item.
  * </p>
  * <p>
  * The field MUST be of type {@link android.view.MenuItem} or
@@ -58,8 +57,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface OptionsMenuItem {
 
+	/**
+	 * The R.id.* fields which refers to the menu items.
+	 * 
+	 * @return the ids of the menus
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names as strings which refers to the menu items.
+	 * 
+	 * @return the resource names of the menus
+	 */
 	String[] resName() default "";
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,9 +38,8 @@ public class TracedActivityTest {
 	private TracedActivity activity;
 
 	@Before
-	public void setup() {
-		activity = Robolectric.buildActivity(TracedActivity_.class).create()
-				.start().resume().get();
+	public void setUp() {
+		activity = Robolectric.buildActivity(TracedActivity_.class).create().start().resume().get();
 	}
 
 	@Test
@@ -117,8 +116,7 @@ public class TracedActivityTest {
 
 	@Test
 	public void noReturnIntentParam() {
-		activity.noReturnIntentParam(new Intent("TEST", 
-				Uri.parse("http://www.androidannotations.org")));
+		activity.noReturnIntentParam(new Intent("TEST", Uri.parse("http://www.androidannotations.org")));
 
 		assertTrue(logContains("Entering [void noReturnIntentParam(param = Intent{action=TEST, extras=Bundle[{}], data=http://www.androidannotations.org})]"));
 		assertTrue(logContains("Exiting [void noReturnIntentParam(Intent)], duration in ms: "));
@@ -148,8 +146,7 @@ public class TracedActivityTest {
 	}
 
 	public void intentReturnIntentParam() {
-		activity.intentReturnIntentParam(new Intent("TEST",
-				Uri.parse("http://www.androidannotations.org")));
+		activity.intentReturnIntentParam(new Intent("TEST", Uri.parse("http://www.androidannotations.org")));
 
 		assertTrue(logContains("Entering [java.lang.String intentReturnIntentParam(param = Intent{action=TEST, extras=Bundle[{}], data=http://www.androidannotations.org})]"));
 		assertTrue(logContains("Exiting [java.lang.String intentReturnIntentParam(Intent) returning: test], duration in ms: "));
@@ -157,7 +154,7 @@ public class TracedActivityTest {
 
 	/**
 	 * Check if a message has been logged
-	 * 
+	 *
 	 * @param msg
 	 * @return {@code true} if a log entry starting with {@code msg} exists
 	 */
@@ -165,8 +162,9 @@ public class TracedActivityTest {
 		List<LogItem> logs = ShadowLog.getLogs();
 		boolean found = false;
 		for (LogItem logItem : logs) {
-			if (logItem.msg.startsWith(msg))
+			if (logItem.msg.startsWith(msg)) {
 				found = true;
+			}
 		}
 		return found;
 	}

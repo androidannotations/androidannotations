@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,11 +24,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
 import android.app.Activity;
 import android.content.Context;
 
+@Config(shadows = CustomShadowBundle.class)
 @RunWith(RobolectricTestRunner.class)
 public class InjectExtraTest {
 
@@ -37,72 +39,57 @@ public class InjectExtraTest {
 	private ActivityController<ExtraInjectedActivity_> controller;
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		controller = ActivityController.of(ExtraInjectedActivity_.class);
 		activity = controller.get();
 	}
 
 	@Test
-	public void simple_string_extra_injected() {
-		controller.withIntent(ExtraInjectedActivity_.intent(context)
-				.stringExtra("Hello!").get())
-				.create();
+	public void simpleStringExtraInjected() {
+		controller.withIntent(ExtraInjectedActivity_.intent(context).stringExtra("Hello!").get()).create();
 		assertThat(activity.stringExtra).isEqualTo("Hello!");
 	}
 
 	@Test
-	public void array_extra_injected() {
+	public void arrayExtraInjected() {
 		CustomData[] customData = { new CustomData("42") };
-		controller.withIntent(ExtraInjectedActivity_.intent(context)
-				.arrayExtra(customData).get())
-				.create();
+		controller.withIntent(ExtraInjectedActivity_.intent(context).arrayExtra(customData).get()).create();
 		assertThat(activity.arrayExtra).isEqualTo(customData);
 	}
 
 	@Test
-	public void list_extra_injected() {
+	public void listExtraInjected() {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("Hello !");
-		controller.withIntent(ExtraInjectedActivity_.intent(context)
-				.listExtra(list).get())
-				.create();
+		controller.withIntent(ExtraInjectedActivity_.intent(context).listExtra(list).get()).create();
 		assertThat(activity.listExtra).isEqualTo(list);
 	}
 
 	@Test
-	public void int_extra_injected() {
-		controller.withIntent(ExtraInjectedActivity_.intent(context).intExtra(42)
-				.get())
-				.create();
+	public void intExtraInjected() {
+		controller.withIntent(ExtraInjectedActivity_.intent(context).intExtra(42).get()).create();
 		assertThat(activity.intExtra).isEqualTo(42);
 	}
 
 	@Test
-	public void int_array_extra_injected() {
+	public void intArrayExtraInjected() {
 		byte[] byteArray = { 0, 2 };
-		controller.withIntent(ExtraInjectedActivity_.intent(context)
-				.byteArrayExtra(byteArray).get())
-				.create();
+		controller.withIntent(ExtraInjectedActivity_.intent(context).byteArrayExtra(byteArray).get()).create();
 		assertThat(activity.byteArrayExtra).isEqualTo(byteArray);
 	}
 
 	@Test
-	public void setIntent_reinjects_extra() {
-		controller.withIntent(ExtraInjectedActivity_.intent(context)
-				.stringExtra("Hello!").get())
-				.create();
+	public void setIntentReinjectsExtra() {
+		controller.withIntent(ExtraInjectedActivity_.intent(context).stringExtra("Hello!").get()).create();
 
-		controller.newIntent(ExtraInjectedActivity_.intent(context)
-				.stringExtra("Hello Again!").get());
+		controller.newIntent(ExtraInjectedActivity_.intent(context).stringExtra("Hello Again!").get());
 
 		assertThat(activity.stringExtra).isEqualTo("Hello Again!");
 	}
 
 	@Test
 	public void extraWithoutValueInjected() {
-		controller.withIntent(ExtraInjectedActivity_.intent(context)
-				.extraWithoutValue("Hello!").get())
-				.create();
+		controller.withIntent(ExtraInjectedActivity_.intent(context).extraWithoutValue("Hello!").get()).create();
 		assertThat(activity.extraWithoutValue).isEqualTo("Hello!");
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package org.androidannotations.annotations.rest;
 
-import org.androidannotations.api.rest.MediaType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,7 +28,8 @@ import java.lang.annotation.Target;
  * <p>
  * The annotation {@link #value()} is mandatory and define the <a
  * href="https://en.wikipedia.org/wiki/Internet_media_type">media type</a> to
- * accept. We provide a {@link MediaType} class to help you.
+ * accept. We provide a {@link org.androidannotations.api.rest.MediaType
+ * MediaType} class to help you.
  * </p>
  * <blockquote>
  * 
@@ -63,5 +62,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface Accept {
+
+	/**
+	 * The accepted media type.
+	 * 
+	 * @see org.androidannotations.api.rest.MediaType
+	 * 
+	 * @return the media type
+	 */
 	String value();
 }

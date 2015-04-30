@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,6 @@ import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 
 public class OptionsHandler extends RestMethodHandler {
@@ -49,10 +48,10 @@ public class OptionsHandler extends RestMethodHandler {
 		return annotation.value();
 	}
 
-    @Override
-    protected JExpression getResponseClass(Element element, RestHolder holder) {
-        return JExpr._null();
-    }
+	@Override
+	protected JExpression getResponseClass(Element element, RestHolder holder) {
+		return restAnnotationHelper.nullCastedToNarrowedClass(holder);
+	}
 
 	@Override
 	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {

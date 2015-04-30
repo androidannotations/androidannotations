@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,9 +17,6 @@ package org.androidannotations.test15.roboguice;
 
 import java.util.Date;
 
-import roboguice.util.Ln;
-import android.util.Log;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
@@ -29,14 +26,5 @@ public class RobolectricSampleTestModule extends AbstractModule {
 	protected void configure() {
 		bind(Date.class).toProvider(FakeDateProvider.class);
 		bind(Counter.class).in(Scopes.SINGLETON);
-		bind(Ln.BaseConfig.class).toInstance(new RobolectricLoggerConfig());
-	}
-
-	static class RobolectricLoggerConfig extends Ln.BaseConfig {
-		public RobolectricLoggerConfig() {
-			packageName = "robo";
-			minimumLogLevel = Log.VERBOSE;
-			scope = "ROBO";
-		}
 	}
 }

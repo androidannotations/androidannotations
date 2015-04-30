@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2014 eBusiness Information, Excilys Group
+ * Copyright (C) 2010-2015 eBusiness Information, Excilys Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,25 +15,17 @@
  */
 package org.androidannotations.holder;
 
+import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 
-public interface HasReceiverRegistration extends GeneratedClassHolder {
+public interface HasReceiverRegistration extends HasLifecycleMethods {
 
 	JExpression getContextRef();
 
-	JFieldVar getIntentFilterField(String[] actions, String[] dataSchemas);
+	JFieldVar getIntentFilterField(IntentFilterData intentFilterData);
 
-	JBlock getOnCreateAfterSuperBlock();
-	JBlock getOnDestroyBeforeSuperBlock();
-
-	JBlock getOnStartAfterSuperBlock();
-	JBlock getOnStopBeforeSuperBlock();
-
-	JBlock getOnResumeAfterSuperBlock();
-	JBlock getOnPauseBeforeSuperBlock();
-
-	JBlock getOnAttachAfterSuperBlock();
-	JBlock getOnDetachBeforeSuperBlock();
+	JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData);
 }
