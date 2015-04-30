@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * The annotation value should be an array of R.string.* fields.
  * </p>
  * <p>
- * Your code related to injected views should go in an
+ * Your code related to injected preferences should go in an
  * {@link org.androidannotations.annotations.AfterPreferences AfterPreferences}
  * annotated method.
  * </p>
