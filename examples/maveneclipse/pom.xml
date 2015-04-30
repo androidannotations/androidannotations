@@ -49,9 +49,9 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<groupId>com.simpligility.maven.plugins</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.9.0-rc.3</version>
+				<version>4.2.0</version>
 				<configuration>
 					<sdk>
 						<platform>${android.platform}</platform>
