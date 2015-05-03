@@ -20,6 +20,7 @@ import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
 
@@ -47,7 +48,7 @@ public class EApplicationHolder extends EComponentHolder {
 	private void createSingleton() {
 		JClass annotatedComponent = generatedClass._extends();
 
-		staticInstanceField = generatedClass.field(PRIVATE | STATIC, annotatedComponent, "INSTANCE_");
+		staticInstanceField = generatedClass.field(PRIVATE | STATIC, annotatedComponent, "INSTANCE" + generationSuffix());
 		// Static singleton getter and setter
 		JMethod getInstance = generatedClass.method(PUBLIC | STATIC, annotatedComponent, GET_APPLICATION_INSTANCE);
 		getInstance.body()._return(staticInstanceField);
@@ -74,6 +75,6 @@ public class EApplicationHolder extends EComponentHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init_");
+		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
 	}
 }

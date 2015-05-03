@@ -19,6 +19,7 @@ import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
 
@@ -40,7 +41,7 @@ public class EProviderHolder extends EComponentHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init_");
+		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
 		createOnCreate();
 	}
 

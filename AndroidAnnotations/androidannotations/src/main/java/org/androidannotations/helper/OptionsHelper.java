@@ -33,7 +33,8 @@ public class OptionsHelper {
 		LOG_FILE("logFile", null), //
 		LOG_LEVEL("logLevel", "DEBUG"), //
 		LOG_APPENDER_CONSOLE("logAppenderConsole", "false"), //
-		LOG_APPENDER_FILE("logAppenderFile", "true");
+		LOG_APPENDER_FILE("logAppenderFile", "true"), //
+		CLASS_SUFFIX("classSuffix", "_");
 
 		private String key;
 		private String defaultValue;
@@ -80,6 +81,10 @@ public class OptionsHelper {
 
 	public String getResourcePackageName() {
 		return getString(Option.RESOURCE_PACKAGE_NAME);
+	}
+
+	public String getClassSuffix() {
+		return getString(Option.CLASS_SUFFIX);
 	}
 
 	public String getLogFile() {

@@ -23,7 +23,7 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +118,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init_");
+		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
 		JClass bundleClass = classes().BUNDLE;
 		initSavedInstanceParam = init.param(bundleClass, "savedInstanceState");
 		getOnCreate();
@@ -443,21 +443,21 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JClass keyWildCard = classes().KEY.narrow(codeModel().wildcard());
 		JClass scopedHashMap = classes().HASH_MAP.narrow(keyWildCard, classes().OBJECT);
 
-		getRoboGuiceHolder().scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + GENERATION_SUFFIX);
+		getRoboGuiceHolder().scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + generationSuffix());
 		getRoboGuiceHolder().scopedObjects.assign(JExpr._new(scopedHashMap));
 	}
 
 	protected void setEventManagerField() {
-		getRoboGuiceHolder().eventManager = generatedClass.field(JMod.PROTECTED, classes().EVENT_MANAGER, "eventManager" + GENERATION_SUFFIX);
+		getRoboGuiceHolder().eventManager = generatedClass.field(JMod.PROTECTED, classes().EVENT_MANAGER, "eventManager" + generationSuffix());
 	}
 
 	protected void setContentViewListenerField() {
-		getRoboGuiceHolder().contentViewListenerField = generatedClass.field(JMod.NONE, classes().CONTENT_VIEW_LISTENER, "ignored" + GENERATION_SUFFIX);
+		getRoboGuiceHolder().contentViewListenerField = generatedClass.field(JMod.NONE, classes().CONTENT_VIEW_LISTENER, "ignored" + generationSuffix());
 		getRoboGuiceHolder().contentViewListenerField.annotate(classes().INJECT);
 	}
 
 	protected void setScopeField() {
-		getRoboGuiceHolder().scope = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope_");
+		getRoboGuiceHolder().scope = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope" + generationSuffix());
 	}
 
 	// CHECKSTYLE:ON
@@ -487,7 +487,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setInjectExtras() {
-		injectExtrasMethod = generatedClass.method(PRIVATE, codeModel().VOID, "injectExtras_");
+		injectExtrasMethod = generatedClass.method(PRIVATE, codeModel().VOID, "injectExtras" + generationSuffix());
 		JBlock injectExtrasBody = injectExtrasMethod.body();
 		injectExtras = injectExtrasBody.decl(classes().BUNDLE, "extras_", invoke("getIntent").invoke("getExtras"));
 		injectExtrasBlock = injectExtrasBody._if(injectExtras.ne(_null()))._then();

@@ -37,6 +37,7 @@ import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.ErrorHelper;
+import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.helper.Option;
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.Level;
@@ -68,6 +69,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);
+
+		ModelConstants.init(processingEnv);
 
 		// Configure Logger
 		LoggerContext loggerContext = LoggerContext.getInstance();

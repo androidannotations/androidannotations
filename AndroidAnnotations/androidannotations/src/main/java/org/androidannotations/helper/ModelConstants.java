@@ -20,6 +20,9 @@ import static java.util.Arrays.asList;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.SourceVersion;
+
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
@@ -35,7 +38,8 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 public abstract class ModelConstants {
 
-	public static final String GENERATION_SUFFIX = "_";
+	private static String generationSuffix = "_";
+	private static String classSuffix;
 
 	@SuppressWarnings("unchecked")
 	public static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
@@ -49,4 +53,24 @@ public abstract class ModelConstants {
 	private ModelConstants() {
 	}
 
+	public static void init(ProcessingEnvironment processingEnv) {
+		OptionsHelper optionsHelper = new OptionsHelper(processingEnv);
+		classSuffix = optionsHelper.getClassSuffix().trim();
+
+		if (classSuffix.isEmpty()) {
+			throw new IllegalArgumentException("'" + classSuffix + "' may not be an emtpy string.");
+		}
+
+		if (!SourceVersion.isName(classSuffix) || classSuffix.contains(".")) {
+			throw new IllegalArgumentException("'" + classSuffix + "' is not a valid Java identifier.");
+		}
+	}
+
+	public static String classSuffix() {
+		return classSuffix;
+	}
+
+	public static String generationSuffix() {
+		return generationSuffix;
+	}
 }

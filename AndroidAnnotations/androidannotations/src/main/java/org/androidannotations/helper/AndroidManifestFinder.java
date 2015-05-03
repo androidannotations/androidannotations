@@ -15,6 +15,8 @@
  */
 package org.androidannotations.helper;
 
+import static org.androidannotations.helper.ModelConstants.classSuffix;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -282,8 +284,8 @@ public class AndroidManifestFinder {
 	private boolean classOrModelClassExists(String className) {
 		Elements elementUtils = processingEnv.getElementUtils();
 
-		if (className.endsWith("_")) {
-			className = className.substring(0, className.length() - 1);
+		if (className.endsWith(classSuffix())) {
+			className = className.substring(0, className.length() - classSuffix().length());
 		}
 		return elementUtils.getTypeElement(className) != null;
 	}

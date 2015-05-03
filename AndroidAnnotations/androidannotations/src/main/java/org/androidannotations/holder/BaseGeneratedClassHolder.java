@@ -18,7 +18,7 @@ package org.androidannotations.holder;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -55,10 +55,10 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 		if (annotatedElement.getNestingKind().isNested()) {
 			Element enclosingElement = annotatedElement.getEnclosingElement();
 			GeneratedClassHolder enclosingHolder = processHolder.getGeneratedClassHolder(enclosingElement);
-			String generatedBeanSimpleName = annotatedElement.getSimpleName().toString() + GENERATION_SUFFIX;
+			String generatedBeanSimpleName = annotatedElement.getSimpleName().toString() + classSuffix();
 			generatedClass = enclosingHolder.getGeneratedClass()._class(PUBLIC | FINAL | STATIC, generatedBeanSimpleName, ClassType.CLASS);
 		} else {
-			String generatedClassQualifiedName = annotatedComponentQualifiedName + GENERATION_SUFFIX;
+			String generatedClassQualifiedName = annotatedComponentQualifiedName + classSuffix();
 			generatedClass = codeModel()._class(PUBLIC | FINAL, generatedClassQualifiedName, ClassType.CLASS);
 		}
 		for (TypeParameterElement typeParam : annotatedElement.getTypeParameters()) {
@@ -68,7 +68,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 		setExtends();
 		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors(), this);
 	}
-	
+
 	public JClass getAnnotatedClass() {
 		return annotatedClass;
 	}

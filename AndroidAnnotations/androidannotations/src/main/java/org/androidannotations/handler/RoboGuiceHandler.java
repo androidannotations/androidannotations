@@ -19,6 +19,7 @@ import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._super;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.invoke;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +97,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		int i = 1;
 		for (TypeMirror listenterTypeMirror : listenerTypeMirrors) {
 			JClass listenerClass = codeModelHelper.typeMirrorToJClass(listenterTypeMirror, holder);
-			JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + "_");
+			JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + generationSuffix());
 			codeModelHelper.addSuppressWarnings(listener, "unused");
 			listener.annotate(classes().INJECT);
 			i++;

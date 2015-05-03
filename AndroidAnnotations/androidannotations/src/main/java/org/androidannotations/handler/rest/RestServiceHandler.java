@@ -15,6 +15,8 @@
  */
 package org.androidannotations.handler.rest;
 
+import static org.androidannotations.helper.ModelConstants.classSuffix;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -22,7 +24,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -53,7 +54,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 		TypeMirror fieldTypeMirror = element.asType();
 		String interfaceName = fieldTypeMirror.toString();
 
-		String generatedClassName = interfaceName + ModelConstants.GENERATION_SUFFIX;
+		String generatedClassName = interfaceName + classSuffix();
 
 		JBlock methodBody = holder.getInitBody();
 

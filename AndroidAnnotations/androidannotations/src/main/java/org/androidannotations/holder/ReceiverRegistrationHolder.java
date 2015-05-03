@@ -18,6 +18,7 @@ package org.androidannotations.holder;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PRIVATE;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.androidannotations.annotations.Receiver.RegisterAt;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -53,7 +53,7 @@ public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiver
 	}
 
 	private JFieldVar createIntentFilterField(IntentFilterData intentFilterData) {
-		String intentFilterName = "intentFilter" + (intentFilterFields.size() + 1) + ModelConstants.GENERATION_SUFFIX;
+		String intentFilterName = "intentFilter" + (intentFilterFields.size() + 1) + generationSuffix();
 		JExpression newIntentFilterExpr = _new(classes().INTENT_FILTER);
 		JFieldVar intentFilterField = getGeneratedClass().field(PRIVATE | FINAL, classes().INTENT_FILTER, intentFilterName, newIntentFilterExpr);
 

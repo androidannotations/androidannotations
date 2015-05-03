@@ -17,7 +17,7 @@ package org.androidannotations.helper;
 
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.lit;
-import static org.androidannotations.helper.ModelConstants.GENERATION_SUFFIX;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
@@ -498,7 +498,7 @@ public class APTCodeModelHelper {
 	public JInvocation newBeanOrEBean(GeneratedClassHolder holder, DeclaredType beanType, JVar contextVar) {
 		if (beanType.asElement().getAnnotation(EBean.class) != null) {
 			String typeQualifiedName = beanType.toString();
-			JClass injectedClass = holder.refClass(typeQualifiedName + GENERATION_SUFFIX);
+			JClass injectedClass = holder.refClass(typeQualifiedName + classSuffix());
 			return injectedClass.staticInvoke(EBeanHolder.GET_INSTANCE_METHOD_NAME).arg(contextVar);
 		} else {
 			return _new(holder.refClass(beanType.toString()));

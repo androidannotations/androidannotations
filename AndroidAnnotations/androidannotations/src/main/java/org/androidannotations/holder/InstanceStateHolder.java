@@ -19,6 +19,7 @@ import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.ref;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static com.sun.codemodel.JMod.PUBLIC;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
@@ -63,7 +64,7 @@ public class InstanceStateHolder extends GeneratedClassHolderDecorator<EComponen
 	private void setSaveStateMethod() {
 		JMethod method = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onSaveInstanceState");
 		method.annotate(Override.class);
-		saveStateBundleParam = method.param(classes().BUNDLE, "bundle_");
+		saveStateBundleParam = method.param(classes().BUNDLE, "bundle" + generationSuffix());
 
 		saveStateMethodBody = method.body();
 
@@ -87,7 +88,7 @@ public class InstanceStateHolder extends GeneratedClassHolderDecorator<EComponen
 	}
 
 	private void setRestoreStateMethod() {
-		restoreStateMethod = getGeneratedClass().method(PRIVATE, codeModel().VOID, "restoreSavedInstanceState_");
+		restoreStateMethod = getGeneratedClass().method(PRIVATE, codeModel().VOID, "restoreSavedInstanceState" + generationSuffix());
 		restoreStateBundleParam = restoreStateMethod.param(classes().BUNDLE, "savedInstanceState");
 		getInit().body().invoke(restoreStateMethod).arg(restoreStateBundleParam);
 

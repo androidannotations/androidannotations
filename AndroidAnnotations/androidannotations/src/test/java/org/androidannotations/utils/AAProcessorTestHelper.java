@@ -15,9 +15,9 @@
  */
 package org.androidannotations.utils;
 
-import java.io.File;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
 
-import org.androidannotations.helper.ModelConstants;
+import java.io.File;
 
 public class AAProcessorTestHelper extends ProcessorTestHelper {
 
@@ -31,7 +31,7 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 	}
 
 	public File toGeneratedFile(Class<?> compiledClass) {
-		File output = new File(OUTPUT_DIRECTORY, toPath(compiledClass.getPackage()) + "/" + compiledClass.getSimpleName() + ModelConstants.GENERATION_SUFFIX + SOURCE_FILE_SUFFIX);
+		File output = new File(OUTPUT_DIRECTORY, toPath(compiledClass.getPackage()) + "/" + compiledClass.getSimpleName() + classSuffix() + SOURCE_FILE_SUFFIX);
 		return output;
 	}
 

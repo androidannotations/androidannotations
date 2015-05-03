@@ -18,6 +18,8 @@ package org.androidannotations.holder;
 import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +36,6 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -95,7 +96,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
 	private void createEditorClass() throws JClassAlreadyExistsException {
 		String interfaceSimpleName = annotatedElement.getSimpleName().toString();
-		editorClass = generatedClass._class(PUBLIC | STATIC | FINAL, interfaceSimpleName + "Editor" + ModelConstants.GENERATION_SUFFIX);
+		editorClass = generatedClass._class(PUBLIC | STATIC | FINAL, interfaceSimpleName + "Editor" + classSuffix());
 		editorClass._extends(processHolder.refClass(EditorHelper.class).narrow(editorClass));
 
 		createEditorConstructor();
@@ -164,7 +165,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	}
 
 	protected void setContextField() {
-		contextField = generatedClass.field(JMod.PRIVATE, classes().CONTEXT, "context_");
+		contextField = generatedClass.field(JMod.PRIVATE, classes().CONTEXT, "context" + generationSuffix());
 		getConstructor().body().assign(JExpr._this().ref(contextField), getConstructorContextParam());
 	}
 
@@ -176,7 +177,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	}
 
 	protected void setEditorContextField() {
-		editorContextField = editorClass.field(JMod.PRIVATE, classes().CONTEXT, "context_");
+		editorContextField = editorClass.field(JMod.PRIVATE, classes().CONTEXT, "context" + generationSuffix());
 		JVar contextParam = editorConstructor.param(classes().CONTEXT, "context");
 		editorConstructor.body().assign(JExpr._this().ref(editorContextField), contextParam);
 		editMethodEditorInvocation.arg(getContextField());
