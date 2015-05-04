@@ -42,7 +42,7 @@ public class AfterInjectHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 		validatorHelper.doesntThrowException(executableElement, valid);
 
-		validatorHelper.param.zeroParameter(executableElement, valid);
+		validatorHelper.param.noParam().validate(executableElement, valid);
 	}
 
 	@Override

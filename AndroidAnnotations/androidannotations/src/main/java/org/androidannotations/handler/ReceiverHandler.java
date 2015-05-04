@@ -31,6 +31,7 @@ import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasReceiverRegistration;
 import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
 import org.androidannotations.model.AnnotationElements;
@@ -69,7 +70,11 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, valid);
 
-		validatorHelper.param.hasNoOtherParameterThanContextOrIntentOrReceiverExtraAnnotated((ExecutableElement) element, valid);
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.CONTEXT).optional() //
+				.type(CanonicalNameConstants.INTENT).optional() //
+				.annotatedWith(Receiver.Extra.class).multiple().optional() //
+				.validate((ExecutableElement) element, valid);
 
 		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element.getEnclosingElement(), valid, Receiver.class);
 

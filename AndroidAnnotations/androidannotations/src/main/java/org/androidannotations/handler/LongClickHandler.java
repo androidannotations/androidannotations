@@ -25,6 +25,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.LongClick;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -52,7 +53,7 @@ public class LongClickHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.zeroOrOneViewParameter(executableElement, valid);
+		validatorHelper.param.type(CanonicalNameConstants.VIEW).optional().validate(executableElement, valid);
 	}
 
 	@Override

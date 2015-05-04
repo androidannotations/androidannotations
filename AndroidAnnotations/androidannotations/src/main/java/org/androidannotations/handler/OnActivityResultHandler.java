@@ -68,7 +68,12 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.hasNoOtherParameterThanIntentOrIntOrOnActivityResultExtraAnnotated(executableElement, valid);
+
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.INTENT).optional() //
+				.primitiveOrWrapper(TypeKind.INT).optional() //
+				.annotatedWith(OnActivityResult.Extra.class).multiple().optional() //
+				.validate((ExecutableElement) element, valid); //
 	}
 
 	@Override

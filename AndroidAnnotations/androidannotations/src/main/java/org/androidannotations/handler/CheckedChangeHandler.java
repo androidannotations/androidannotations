@@ -51,11 +51,10 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.hasZeroOrOneCompoundButtonParameter(executableElement, valid);
-
-		validatorHelper.param.hasZeroOrOneBooleanParameter(executableElement, valid);
-
-		validatorHelper.param.hasNoOtherParameterThanCompoundButtonOrBoolean(executableElement, valid);
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.COMPOUND_BUTTON).optional() //
+				.primitiveOrWrapper(TypeKind.BOOLEAN).optional() //
+				.validate(executableElement, valid);
 	}
 
 	@Override

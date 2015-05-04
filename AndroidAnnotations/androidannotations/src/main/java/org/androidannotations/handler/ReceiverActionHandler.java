@@ -31,6 +31,7 @@ import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.ReceiverAction;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EReceiverHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -68,7 +69,11 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 
 		validatorHelper.isNotPrivate(element, valid);
 
-		validatorHelper.param.hasNoOtherParameterThanContextOrIntentOrReceiverActionExtraAnnotated((ExecutableElement) element, valid);
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.CONTEXT).optional() //
+				.type(CanonicalNameConstants.INTENT).optional() //
+				.annotatedWith(ReceiverAction.Extra.class).multiple().optional() //
+				.validate((ExecutableElement) element, valid);
 	}
 
 	@Override

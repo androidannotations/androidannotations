@@ -21,6 +21,7 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -55,7 +56,10 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 
 		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.param.hasOneOrTwoParametersAndFirstIsDb(executableElement, valid);
+		validatorHelper.param.inOrder() //
+				.type(CanonicalNameConstants.SQLITE_DATABASE) //
+				.anyType().multiple().optional() //
+				.validate(executableElement, valid);
 	}
 
 	@Override
