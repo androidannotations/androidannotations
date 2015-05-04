@@ -136,6 +136,40 @@ import java.lang.annotation.Target;
  *
  * </p>
  * 
+ * <h1>RequestFactory</h1>
+ * <p>
+ * You can use your own request factory if you want to customize how requests
+ * are created. The {@link #requestFactory()} parameter lets you define the
+ * {@link org.springframework.http.client.ClientHttpRequestFactory
+ * ClientHttpRequestFactory}.
+ * </p>
+ * 
+ * <p>
+ * You can inject {@link org.androidannotations.annotations.EBean EBean} request
+ * factories just like as interceptors.
+ * </p>
+ * <blockquote>
+ * 
+ * <b>Example :</b>
+ * 
+ * <pre>
+ * &#064;Rest(converters = MappingJacksonHttpMessageConverter.class, <b>requestFactory</b> = MyRequestFactory.class)
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Get(&quot;/events&quot;)
+ * 	EventList getEvents();
+ * }
+ * 
+ * public class MyRequestFactory implements ClientHttpRequestFactory {
+ * 
+ * 	&#064;Override
+ * 	public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
+ * 		// create and return the request
+ * 	}
+ * }
+ * </pre>
+ * 
+ * </blockquote>
  * 
  * <h1>Magic methods</h1>
  * <p>
@@ -235,9 +269,9 @@ public @interface Rest {
 	Class<?>[] interceptors() default {};
 
 	/**
-	 * TODO .
+	 * The request factory class which is used to create the HTTP requests.
 	 * 
-	 * @return TODO
+	 * @return the request factory class
 	 */
 	Class<?> requestFactory() default Void.class;
 }
