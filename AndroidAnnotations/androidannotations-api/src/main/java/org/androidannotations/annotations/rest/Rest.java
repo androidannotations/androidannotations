@@ -128,6 +128,14 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
+ * <p>
+ * You can also inject {@link org.androidannotations.annotations.EBean EBean}
+ * interceptors. Just add the annotated class (not the generated one) to the
+ * {@link Rest#interceptors() interceptors()} parameter, and the interceptor
+ * will be added with all of its dependencies.
+ *
+ * </p>
+ * 
  * 
  * <h1>Magic methods</h1>
  * <p>
