@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class UiThreadExecutor {
 
-	static final Handler HANDLER = new Handler(Looper.getMainLooper()) {
+	private static final Handler HANDLER = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
 			Runnable callback = msg.getCallback();
@@ -42,7 +42,7 @@ public class UiThreadExecutor {
 		}
 	};
 
-	static final Map<String, Token> TOKENS = new HashMap<String, Token>();
+	private static final Map<String, Token> TOKENS = new HashMap<String, Token>();
 
 	private UiThreadExecutor() {
 		// should not be instantiated
