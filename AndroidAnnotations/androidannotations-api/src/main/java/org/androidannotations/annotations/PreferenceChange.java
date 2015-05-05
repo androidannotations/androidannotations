@@ -41,9 +41,9 @@ import java.lang.annotation.Target;
  * <ul>
  * <li>A {@link android.preference.Preference Preference} parameter to know
  * which preference was targeted by this event</li>
- * <li>An {@link Object} or {@link java.util.Set Set of strings} or
- * {@link Boolean} or {@link String} to obtain the new value of the
- * {@link android.preference.Preference Preference}</li>
+ * <li>An {@link Object}, {@link String}, {@link java.util.Set Set of strings}
+ * and also a {@link Boolean} or <code>boolean</code> to obtain the new value of
+ * the {@link android.preference.Preference Preference}</li>
  * </ul>
  * <blockquote>
  * 
