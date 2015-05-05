@@ -24,6 +24,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.Click;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -50,7 +51,7 @@ public class ClickHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.zeroOrOneViewParameter(executableElement, valid);
+		validatorHelper.param.extendsType(CanonicalNameConstants.VIEW).optional().validate(executableElement, valid);
 	}
 
 	@Override

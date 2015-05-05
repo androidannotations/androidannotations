@@ -52,11 +52,10 @@ public class FocusChangeHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.hasZeroOrOneViewParameter(executableElement, valid);
-
-		validatorHelper.param.hasZeroOrOneBooleanParameter(executableElement, valid);
-
-		validatorHelper.param.hasNoOtherParameterThanViewOrBoolean(executableElement, valid);
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.VIEW).optional() //
+				.primitiveOrWrapper(TypeKind.BOOLEAN).optional() //
+				.validate(executableElement, valid);
 	}
 
 	@Override

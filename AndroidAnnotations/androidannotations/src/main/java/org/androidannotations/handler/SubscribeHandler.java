@@ -58,7 +58,7 @@ public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		validatorHelper.isNotFinal(element, valid);
 
-		validatorHelper.param.hasExactlyOneParameter(executableElement, valid);
+		validatorHelper.param.anyType().validate(executableElement, valid);
 	}
 
 	@Override

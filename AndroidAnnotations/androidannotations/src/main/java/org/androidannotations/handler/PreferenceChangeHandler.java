@@ -57,9 +57,10 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.hasNoOtherParameterThanPreferenceOrObjectOrSetOrStringOrBoolean(executableElement, valid);
-		validatorHelper.param.hasZeroOrOnePreferenceParameter(executableElement, valid);
-		validatorHelper.param.hasAtMostOneStringOrSetOrBooleanOrObjectParameter(executableElement, valid);
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.PREFERENCE).optional() //
+				.anyOfTypes(CanonicalNameConstants.STRING, CanonicalNameConstants.BOOLEAN, boolean.class.getName(), CanonicalNameConstants.OBJECT, CanonicalNameConstants.SET).optional() //
+				.validate(executableElement, valid);
 	}
 
 	@Override

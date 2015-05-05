@@ -53,11 +53,10 @@ public class TouchHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.hasZeroOrOneMotionEventParameter(executableElement, valid);
-
-		validatorHelper.param.hasZeroOrOneViewParameter(executableElement, valid);
-
-		validatorHelper.param.hasNoOtherParameterThanMotionEventOrView(executableElement, valid);
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.MOTION_EVENT).optional() //
+				.type(CanonicalNameConstants.VIEW).optional() //
+				.validate(executableElement, valid);
 	}
 
 	@Override

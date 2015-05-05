@@ -42,7 +42,7 @@ public class AfterViewsHandler extends BaseAnnotationHandler<EComponentWithViewS
 
 		validatorHelper.doesntThrowException(executableElement, valid);
 
-		validatorHelper.param.zeroParameter(executableElement, valid);
+		validatorHelper.param.noParam().validate(executableElement, valid);
 	}
 
 	@Override

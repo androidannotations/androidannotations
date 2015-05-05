@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
@@ -72,7 +73,7 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.zeroOrOneMenuItemParameter(executableElement, valid);
+		validatorHelper.param.anyOfTypes(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM).optional().validate(executableElement, valid);
 	}
 
 	@Override

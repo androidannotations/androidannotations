@@ -57,7 +57,7 @@ public class ItemClickHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
-		validatorHelper.param.zeroOrOneParameter(executableElement, valid);
+		validatorHelper.param.anyType().optional().validate(executableElement, valid);
 	}
 
 	@Override

@@ -53,13 +53,11 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.hasAtMostOneTextViewParameter(executableElement, valid);
-
-		validatorHelper.param.hasAtMostOneIntegerParameter(executableElement, valid);
-
-		validatorHelper.param.hasAtMostOneKeyEventParameter(executableElement, valid);
-
-		validatorHelper.param.hasNoOtherParameterFromATextViewAnIntegerAndAKeyEvent(executableElement, valid);
+		validatorHelper.param.anyOrder() //
+				.type(CanonicalNameConstants.TEXT_VIEW).optional() //
+				.primitiveOrWrapper(TypeKind.INT).optional() //
+				.type(CanonicalNameConstants.KEY_EVENT).optional() //
+				.validate(executableElement, valid);
 	}
 
 	@Override
