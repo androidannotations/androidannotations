@@ -42,8 +42,13 @@ import java.lang.annotation.Target;
  * <li>A {@link android.preference.Preference Preference} parameter to know
  * which preference was targeted by this event</li>
  * <li>An {@link Object}, {@link String}, {@link java.util.Set Set of strings}
- * and also a {@link Boolean} or <code>boolean</code> to obtain the new value of
- * the {@link android.preference.Preference Preference}</li>
+ * and also a {@link Boolean}, {@link Float}, {@link Integer}, {@link Long} or
+ * their corresponding primitive types to obtain the new value of the
+ * {@link android.preference.Preference Preference}. Please note with number
+ * types, we assume that the <code>newValue</code> parameter coming from the
+ * {@link android.preference.Preference Preference} is a {@link String}, so we
+ * parse it to a number object (Android {@link android.preference.Preference
+ * Preference} classes use {@link String}s instead of number objects).</li>
  * </ul>
  * <blockquote>
  * 
