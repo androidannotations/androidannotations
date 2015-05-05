@@ -38,6 +38,8 @@ public class MyListFragment extends ListFragment {
 
 	boolean didExecute;
 
+	boolean uiThreadWithIdDidExecute;
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -59,6 +61,11 @@ public class MyListFragment extends ListFragment {
 	@IgnoredWhenDetached
 	void uiThreadIgnored() {
 		didExecute = true;
+	}
+
+	@UiThread(id = "id")
+	void uiThreadWithId() {
+		uiThreadWithIdDidExecute = true;
 	}
 
 	@Background
