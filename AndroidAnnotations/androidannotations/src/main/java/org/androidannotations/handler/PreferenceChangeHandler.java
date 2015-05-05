@@ -94,6 +94,10 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 			} else {
 				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType(), holder);
 				call.arg(JExpr.cast(userParamClass, newValueParam));
+
+				if (type.equals(CanonicalNameConstants.STRING_SET)) {
+					codeModelHelper.addSuppressWarnings(listenerMethod, "unchecked");
+				}
 			}
 		}
 	}
