@@ -23,8 +23,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.UiThread;
+import org.androidannotations.api.UiThreadExecutor;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -40,11 +43,19 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	private static final String METHOD_CUR_THREAD = "currentThread";
 	private static final String METHOD_MAIN_LOOPER = "getMainLooper";
 	private static final String METHOD_GET_THREAD = "getThread";
+	private static final String METHOD_RUN_TASK = "runTask";
 
 	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public UiThreadHandler(ProcessingEnvironment processingEnvironment) {
 		super(UiThread.class, processingEnvironment);
+	}
+
+	@Override
+	public void validate(Element element, AnnotationElements validatedElements, IsValid valid) {
+		super.validate(element, validatedElements, valid);
+
+		validatorHelper.usesEnqueueIfHasId(element, valid);
 	}
 
 	@Override
@@ -58,16 +69,14 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 		long delay = annotation.delay();
 		UiThread.Propagation propagation = annotation.propagation();
 
-		if (delay == 0) {
-			if (propagation == UiThread.Propagation.REUSE) {
-				// Put in the check for the UI thread.
-				addUIThreadCheck(delegatingMethod, previousBody, holder);
-			}
-
-			delegatingMethod.body().invoke(holder.getHandler(), "post").arg(_new(anonymousRunnableClass));
-		} else {
-			delegatingMethod.body().invoke(holder.getHandler(), "postDelayed").arg(_new(anonymousRunnableClass)).arg(lit(delay));
+		if (delay == 0 && propagation == UiThread.Propagation.REUSE) {
+			// Put in the check for the UI thread.
+			addUIThreadCheck(delegatingMethod, previousBody, holder);
 		}
+		delegatingMethod.body().add(refClass(UiThreadExecutor.class).staticInvoke(METHOD_RUN_TASK) //
+				.arg(annotation.id()) //
+				.arg(_new(anonymousRunnableClass)) //
+				.arg(lit(delay)));
 	}
 
 	/**
@@ -91,4 +100,5 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 		JBlock thenBlock = con._then().add(previousBody);
 		thenBlock._return();
 	}
+
 }
