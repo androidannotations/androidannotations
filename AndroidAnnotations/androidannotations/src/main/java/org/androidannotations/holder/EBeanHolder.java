@@ -31,6 +31,7 @@ import javax.lang.model.util.ElementFilter;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
@@ -83,7 +84,11 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	public void createFactoryMethod(boolean hasSingletonScope) {
 
-		JMethod factoryMethod = generatedClass.method(PUBLIC | STATIC, generatedClass, GET_INSTANCE_METHOD_NAME);
+		JClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType(), this);
+
+		JMethod factoryMethod = generatedClass.method(PUBLIC | STATIC, narrowedGeneratedClass, GET_INSTANCE_METHOD_NAME);
+
+		codeModelHelper.generifyStaticHelper(this, factoryMethod, annotatedElement);
 
 		JVar factoryMethodContextParam = factoryMethod.param(classes().CONTEXT, "context");
 
@@ -100,13 +105,13 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 					._if(instanceField.eq(_null())) //
 					._then();
 			JVar previousNotifier = viewNotifierHelper.replacePreviousNotifierWithNull(creationBlock);
-			creationBlock.assign(instanceField, _new(generatedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
+			creationBlock.assign(instanceField, _new(narrowedGeneratedClass).arg(factoryMethodContextParam.invoke("getApplicationContext")));
 			creationBlock.invoke(instanceField, getInit());
 			viewNotifierHelper.resetPreviousNotifier(creationBlock, previousNotifier);
 
 			factoryMethodBody._return(instanceField);
 		} else {
-			factoryMethodBody._return(_new(generatedClass).arg(factoryMethodContextParam));
+			factoryMethodBody._return(_new(narrowedGeneratedClass).arg(factoryMethodContextParam));
 		}
 	}
 
