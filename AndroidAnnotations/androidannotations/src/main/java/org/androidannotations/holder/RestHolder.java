@@ -62,7 +62,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	protected void setExtends() {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
 		JClass annotatedComponent = codeModel().directClass(annotatedComponentQualifiedName);
-		generatedClass._implements(annotatedComponent);
+		generatedClass._implements(narrow(annotatedComponent));
 	}
 
 	private void implementMethods() {
@@ -286,7 +286,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	public JFieldVar getRestErrorHandlerField() {
-		// restErrorHandlerField is created only if the method setRestErrorHandler is implemented
+		// restErrorHandlerField is created only if the method
+		// setRestErrorHandler is implemented
 		return restErrorHandlerField;
 	}
 

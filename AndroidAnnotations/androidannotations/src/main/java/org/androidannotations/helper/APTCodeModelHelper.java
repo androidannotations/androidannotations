@@ -226,6 +226,16 @@ public class APTCodeModelHelper {
 		}
 	}
 
+	public JClass narrowGeneratedClass(JClass generatedClass, TypeMirror fromTypeArguments, GeneratedClassHolder holder) {
+		DeclaredType type = (DeclaredType) fromTypeArguments;
+
+		for (TypeMirror param : type.getTypeArguments()) {
+			JClass paramClass = typeMirrorToJClass(param, holder);
+			generatedClass = generatedClass.narrow(paramClass);
+		}
+		return generatedClass;
+	}
+
 	private JMethod findAlreadyGeneratedMethod(ExecutableElement executableElement, GeneratedClassHolder holder) {
 		JDefinedClass definedClass = holder.getGeneratedClass();
 		String methodName = executableElement.getSimpleName().toString();
