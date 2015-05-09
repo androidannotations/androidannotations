@@ -23,7 +23,7 @@ before_script:
 
 script:
   - mvn -f AndroidAnnotations/pom.xml install -P travis
-  - mvn -f examples/maveneclipse/pom.xml install -Dandroidannotations.version=3.4-SNAPSHOT
+  - mvn -f examples/maveneclipse/pom.xml install -Dandroidannotations.version=4.0-SNAPSHOT
   - ./examples/gradle/gradlew build --build-file examples/gradle/build.gradle
 
 after_success:
