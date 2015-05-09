@@ -86,4 +86,16 @@ public class SeekBarChangeListenedActivityTest {
 		assertThat(activity.fromUser).isTrue();
 	}
 
+	@Test
+	public void testSeekBarTouchStopNamingConvention() {
+		assertThat(activity.handled).isFalse();
+
+		SeekBar seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
+		ShadowSeekBar shadowSeekBar = shadowOf_(seekBar);
+
+		shadowSeekBar.getOnSeekBarChangeListener().onStopTrackingTouch(seekBar);
+
+		assertThat(activity.handled).isTrue();
+	}
+
 }

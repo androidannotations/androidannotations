@@ -77,6 +77,11 @@ public class SeekBarChangeListenedActivity extends Activity {
 	void m10() {
 	}
 
+	@SeekBarTouchStop
+	void seekBar1SeekBarTouchStopped() {
+		handled = true;
+	}
+
 	@SeekBarTouchStart(R.id.seekBar1)
 	void m11(SeekBar seekBar) {
 	}
