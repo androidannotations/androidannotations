@@ -28,9 +28,6 @@ import java.lang.annotation.Target;
  * The annotation value should be one or several of {@link android.view.Window}
  * constants.
  * </p>
- * <p>
- * <b>Note:</b> This should replace {@link NoTitle} annotation.
- * </p>
  * <blockquote>
  * 
  * Example :
