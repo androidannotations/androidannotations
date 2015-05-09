@@ -16,21 +16,9 @@
     the License.
 
 -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.androidannotations.preference"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-    <PreferenceCategory >
-        <ListPreference
-            android:key="@string/listPreferenceKey"/>
-
-        <EditTextPreference
-            android:key="@string/conventionKey" />
-        
-        <EditTextPreference
-            android:key="@string/editTextPrefKey" />
-        
-        <CheckBoxPreference android:key="@string/checkBoxPrefKey"/>
-        
-        <SwitchPreference android:key="@string/switchPrefKey"/>
-    </PreferenceCategory>
-
-</PreferenceScreen>
+</manifest>
