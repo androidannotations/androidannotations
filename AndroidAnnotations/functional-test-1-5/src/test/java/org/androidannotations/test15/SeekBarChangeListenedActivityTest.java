@@ -31,18 +31,19 @@ import android.widget.SeekBar;
 public class SeekBarChangeListenedActivityTest {
 
 	private SeekBarChangeListenedActivity_ activity;
+	private SeekBar seekBar;
+	private ShadowSeekBar shadowSeekBar;
 
 	@Before
 	public void setUp() {
 		activity = setupActivity(SeekBarChangeListenedActivity_.class);
+		seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
+		shadowSeekBar = shadowOf_(seekBar);
 	}
 
 	@Test
 	public void testActionHandled() {
 		assertThat(activity.handled).isFalse();
-
-		SeekBar seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
-		ShadowSeekBar shadowSeekBar = shadowOf_(seekBar);
 
 		shadowSeekBar.getOnSeekBarChangeListener().onProgressChanged(seekBar, 0, false);
 
@@ -53,9 +54,6 @@ public class SeekBarChangeListenedActivityTest {
 	public void testSeekBarPassed() {
 		assertThat(activity.seekBar).isNull();
 
-		SeekBar seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
-		ShadowSeekBar shadowSeekBar = shadowOf_(seekBar);
-
 		shadowSeekBar.getOnSeekBarChangeListener().onProgressChanged(seekBar, 0, false);
 
 		assertThat(activity.seekBar).isEqualTo(seekBar);
@@ -65,8 +63,6 @@ public class SeekBarChangeListenedActivityTest {
 	public void testProgressPassed() {
 		assertThat(activity.progress).isZero();
 
-		SeekBar seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
-		ShadowSeekBar shadowSeekBar = shadowOf_(seekBar);
 		int progress = 45;
 
 		shadowSeekBar.getOnSeekBarChangeListener().onProgressChanged(seekBar, progress, false);
@@ -78,9 +74,6 @@ public class SeekBarChangeListenedActivityTest {
 	public void testFromUserPassed() {
 		assertThat(activity.fromUser).isFalse();
 
-		SeekBar seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
-		ShadowSeekBar shadowSeekBar = shadowOf_(seekBar);
-
 		shadowSeekBar.getOnSeekBarChangeListener().onProgressChanged(seekBar, 0, true);
 
 		assertThat(activity.fromUser).isTrue();
@@ -89,9 +82,6 @@ public class SeekBarChangeListenedActivityTest {
 	@Test
 	public void testSeekBarTouchStopNamingConvention() {
 		assertThat(activity.handled).isFalse();
-
-		SeekBar seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
-		ShadowSeekBar shadowSeekBar = shadowOf_(seekBar);
 
 		shadowSeekBar.getOnSeekBarChangeListener().onStopTrackingTouch(seekBar);
 
