@@ -778,7 +778,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	@Override
 	public JBlock getPreferenceScreenInitializationBlock() {
-		return getInitBody();
+		return getOnCreate().body();
 	}
 
 	@Override
