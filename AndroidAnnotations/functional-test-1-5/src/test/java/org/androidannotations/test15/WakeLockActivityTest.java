@@ -31,7 +31,7 @@ import org.robolectric.shadows.ShadowPowerManager;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
-@Config(manifest = "../functional-test-1-5/AndroidManifest.xml", shadows = CustomShadowPowerManager.class)
+@Config(shadows = CustomShadowPowerManager.class)
 @RunWith(RobolectricTestRunner.class)
 public class WakeLockActivityTest {
 
