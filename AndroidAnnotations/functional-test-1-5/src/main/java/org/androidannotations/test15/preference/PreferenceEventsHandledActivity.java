@@ -28,8 +28,10 @@ import android.preference.PreferenceActivity;
 public class PreferenceEventsHandledActivity extends PreferenceActivity {
 
 	boolean conventionPrefChanged;
+	int preferenceChangedParsedValue;
 	boolean preferenceWithKeyChanged;
 	Preference preference;
+	Preference editTextPreference;
 	Boolean newValue;
 	boolean conventionPrefClicked;
 	boolean preferenceWithKeyClicked;
@@ -50,6 +52,12 @@ public class PreferenceEventsHandledActivity extends PreferenceActivity {
 	@PreferenceChange(R.string.listPreferenceKey)
 	void listPreferenceChanged() {
 		preferenceWithKeyChanged = true;
+	}
+
+	@PreferenceChange(R.string.editTextPrefKey)
+	void editTextPreferenceChanged(Preference preference, int a) {
+		preferenceChangedParsedValue = a;
+		editTextPreference = preference;
 	}
 
 	@PreferenceChange(R.string.checkBoxPrefKey)

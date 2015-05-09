@@ -25,6 +25,9 @@
         <EditTextPreference
             android:key="@string/conventionKey" />
         
+        <EditTextPreference
+            android:key="@string/editTextPrefKey" />
+        
         <CheckBoxPreference android:key="@string/checkBoxPrefKey"/>
         
         <SwitchPreference android:key="@string/switchPrefKey"/>

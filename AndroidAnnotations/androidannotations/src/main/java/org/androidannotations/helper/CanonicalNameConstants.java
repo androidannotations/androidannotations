@@ -44,6 +44,8 @@ public final class CanonicalNameConstants {
 	public static final String SQL_EXCEPTION = SQLException.class.getCanonicalName();
 	public static final String INTEGER = Integer.class.getCanonicalName();
 	public static final String BOOLEAN = Boolean.class.getCanonicalName();
+	public static final String FLOAT = Float.class.getCanonicalName();
+	public static final String LONG = Long.class.getCanonicalName();
 	public static final String ARRAYLIST = ArrayList.class.getCanonicalName();
 	public static final String SERIALIZABLE = Serializable.class.getCanonicalName();
 
