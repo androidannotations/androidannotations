@@ -113,6 +113,8 @@ public final class CanonicalNameConstants {
 	public static final String BUILD_VERSION_CODES = "android.os.Build.VERSION_CODES";
 	public static final String PREFERENCE_ACTIVITY = "android.preference.PreferenceActivity";
 	public static final String PREFERENCE_FRAGMENT = "android.preference.PreferenceFragment";
+	public static final String SUPPORT_V4_PREFERENCE_FRAGMENT = "android.support.v4.preference.PreferenceFragment";
+	public static final String MACHINARIUS_V4_PREFERENCE_FRAGMENT = "com.github.machinarius.preferencefragment.PreferenceFragment";
 	public static final String ACTIVITY_COMPAT = "android.support.v4.app.ActivityCompat";
 	public static final String PREFERENCE = "android.preference.Preference";
 	public static final String PREFERENCE_CHANGE_LISTENER = "android.preference.Preference.OnPreferenceChangeListener";

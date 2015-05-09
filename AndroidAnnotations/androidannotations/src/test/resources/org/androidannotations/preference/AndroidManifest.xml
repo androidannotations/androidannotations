@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 
     Copyright (C) 2010-2015 eBusiness Information, Excilys Group
@@ -16,12 +16,9 @@
     the License.
 
 -->
-<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN"
-    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.androidannotations.preference"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-<suppressions>
-    <suppress files="org[\\/]androidannotations[\\/](?:[^\\/]+$|(?!annotations)[^\\/]+[\\/])" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
-	<suppress files="org[\\/]robolectric[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
-    <suppress files="(com|android)[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
-    <suppress files="R.java" checks=".*" />
-</suppressions>
+</manifest>
