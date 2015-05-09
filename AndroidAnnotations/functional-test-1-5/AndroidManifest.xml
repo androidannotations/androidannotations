@@ -77,7 +77,6 @@
         <activity android:name="org.androidannotations.test15.instancestate.SaveInstanceStateActivity_" />
         <activity android:name="org.androidannotations.test15.afterinject.AfterInjectActivity_" />
         <activity android:name="org.androidannotations.test15.nonconfiguration.NonConfigurationActivity_" />
-        <activity android:name="org.androidannotations.test15.sherlock.MySherlockActivity_" />
         <activity android:name="org.androidannotations.test15.efragment.MyFragmentActivity_" />
         <activity android:name="org.androidannotations.test15.efragment.MySupportFragmentActivity_" />
         <activity android:name="org.androidannotations.test15.afterviews.AfterViewsActivity_" />

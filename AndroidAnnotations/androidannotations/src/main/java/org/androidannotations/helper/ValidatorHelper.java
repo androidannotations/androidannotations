@@ -124,12 +124,9 @@ public class ValidatorHelper {
 
 	public final ValidatorParameterHelper param;
 
-	private final ActionBarSherlockHelper thirdPartyLibHelper;
-
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
 		annotationHelper = targetAnnotationHelper;
 		param = new ValidatorParameterHelper(annotationHelper);
-		thirdPartyLibHelper = new ActionBarSherlockHelper(annotationHelper);
 	}
 
 	public void isNotFinal(Element element, IsValid valid) {
@@ -531,11 +528,7 @@ public class ValidatorHelper {
 		TypeElement enclosingTypeElement = annotationHelper.typeElementFromQualifiedName(enclosingQualifiedName);
 
 		if (enclosingTypeElement != null) {
-			if (thirdPartyLibHelper.usesActionBarSherlock(enclosingTypeElement)) {
-				extendsType(element, CanonicalNameConstants.SHERLOCK_MENU_ITEM, valid);
-			} else {
-				extendsType(element, CanonicalNameConstants.MENU_ITEM, valid);
-			}
+			extendsType(element, CanonicalNameConstants.MENU_ITEM, valid);
 		}
 	}
 
@@ -1533,6 +1526,7 @@ public class ValidatorHelper {
 			annotationHelper.printAnnotationError(element, "The class " + CanonicalNameConstants.PREFERENCE_FRAGMENT + " cannot be found. You have to use at least API 11");
 		}
 	}
+
 	public void usesEnqueueIfHasId(Element element, IsValid valid) {
 		UiThread annotation = element.getAnnotation(UiThread.class);
 

@@ -26,8 +26,7 @@ import java.lang.annotation.Target;
  * activity classes to inject a menu item.
  * </p>
  * <p>
- * The field MUST be of type {@link android.view.MenuItem} or
- * com.actionbarsherlock.view.MenuItem.
+ * The field MUST be of type {@link android.view.MenuItem}
  * </p>
  * <p>
  * The annotation value should be one or several of R.id.* fields. If not set,

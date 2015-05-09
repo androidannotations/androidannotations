@@ -33,8 +33,6 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver.RegisterAt;
-import org.androidannotations.helper.ActionBarSherlockHelper;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
 import org.androidannotations.process.ProcessHolder;
@@ -183,18 +181,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setOnCreateOptionsMenu() {
-		JClass menuClass = classes().MENU;
-		JClass menuInflaterClass = classes().MENU_INFLATER;
-		if (usesActionBarSherlock()) {
-			menuClass = classes().SHERLOCK_MENU;
-			menuInflaterClass = classes().SHERLOCK_MENU_INFLATER;
-		}
-
 		JMethod method = generatedClass.method(PUBLIC, codeModel().VOID, "onCreateOptionsMenu");
 		method.annotate(Override.class);
 		JBlock methodBody = method.body();
-		onCreateOptionsMenuMenuParam = method.param(menuClass, "menu");
-		onCreateOptionsMenuMenuInflaterVar = method.param(menuInflaterClass, "inflater");
+		onCreateOptionsMenuMenuParam = method.param(classes().MENU, "menu");
+		onCreateOptionsMenuMenuInflaterVar = method.param(classes().MENU_INFLATER, "inflater");
 		onCreateOptionsMenuMethodBody = methodBody.block();
 		methodBody.invoke(_super(), method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar);
 
@@ -202,23 +193,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setOnOptionsItemSelected() {
-		JClass menuItemClass = classes().MENU_ITEM;
-		if (usesActionBarSherlock()) {
-			menuItemClass = classes().SHERLOCK_MENU_ITEM;
-		}
-
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onOptionsItemSelected");
 		method.annotate(Override.class);
 		JBlock methodBody = method.body();
-		onOptionsItemSelectedItem = method.param(menuItemClass, "item");
+		onOptionsItemSelectedItem = method.param(classes().MENU_ITEM, "item");
 		onOptionsItemSelectedItemId = methodBody.decl(codeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
 		onOptionsItemSelectedMiddleBlock = methodBody.block();
 
 		methodBody._return(invoke(_super(), method).arg(onOptionsItemSelectedItem));
-	}
-
-	private boolean usesActionBarSherlock() {
-		return new ActionBarSherlockHelper(new AnnotationHelper(processingEnvironment())).usesActionBarSherlock(this);
 	}
 
 	@Override
