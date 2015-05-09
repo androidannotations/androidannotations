@@ -70,6 +70,15 @@ public class PreferenceEventsHandledActivityTest {
 	}
 
 	@Test
+	public void testPreferenceChangeParsedParameterPassed() {
+		Preference preference = activity.findPreference(activity.getString(R.string.editTextPrefKey));
+		preference.getOnPreferenceChangeListener().onPreferenceChange(preference, "2");
+
+		assertThat(activity.editTextPreference).isSameAs(preference);
+		assertThat(activity.preferenceChangedParsedValue).isEqualTo(2);
+	}
+
+	@Test
 	public void testPreferenceChangeDefaultReturnValue() {
 		Preference preference = activity.findPreference(activity.getString(R.string.listPreferenceKey));
 		boolean result = preference.getOnPreferenceChangeListener().onPreferenceChange(preference, new Object());

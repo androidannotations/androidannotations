@@ -38,6 +38,7 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
@@ -59,7 +60,11 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 		validatorHelper.param.anyOrder() //
 				.type(CanonicalNameConstants.PREFERENCE).optional() //
-				.anyOfTypes(CanonicalNameConstants.STRING, CanonicalNameConstants.BOOLEAN, boolean.class.getName(), CanonicalNameConstants.OBJECT, CanonicalNameConstants.SET).optional() //
+				.anyOfTypes(CanonicalNameConstants.OBJECT, CanonicalNameConstants.STRING_SET, CanonicalNameConstants.STRING, //
+						CanonicalNameConstants.BOOLEAN, boolean.class.getName(), //
+						CanonicalNameConstants.INTEGER, int.class.getName(), //
+						CanonicalNameConstants.LONG, long.class.getName(), //
+						CanonicalNameConstants.FLOAT, float.class.getName()).optional() //
 				.validate(executableElement, valid);
 	}
 
@@ -80,13 +85,24 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 		JVar newValueParam = listenerMethod.param(classes().OBJECT, "newValue");
 
 		for (VariableElement variableElement : userParameters) {
-			if (variableElement.asType().toString().equals(CanonicalNameConstants.PREFERENCE)) {
+			String type = variableElement.asType().toString();
+
+			if (type.equals(CanonicalNameConstants.PREFERENCE)) {
 				call.arg(preferenceParam);
-			} else if (variableElement.asType().toString().equals(CanonicalNameConstants.OBJECT)) {
+			} else if (type.equals(CanonicalNameConstants.OBJECT)) {
 				call.arg(newValueParam);
+			} else if (type.equals(CanonicalNameConstants.INTEGER) || type.equals(int.class.getName()) || //
+					type.equals(CanonicalNameConstants.FLOAT) || type.equals(float.class.getName()) || //
+					type.equals(CanonicalNameConstants.LONG) || type.equals(long.class.getName())) {
+				JClass wrapperClass = type.startsWith("java") ? holder.refClass(type) : JType.parse(holder.codeModel(), type.replace(".class", "")).boxify();
+				call.arg(wrapperClass.staticInvoke("valueOf").arg(JExpr.cast(holder.classes().STRING, newValueParam)));
 			} else {
 				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType(), holder);
 				call.arg(JExpr.cast(userParamClass, newValueParam));
+
+				if (type.equals(CanonicalNameConstants.STRING_SET)) {
+					codeModelHelper.addSuppressWarnings(listenerMethod, "unchecked");
+				}
 			}
 		}
 	}
@@ -105,5 +121,4 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 	protected JClass getListenerClass() {
 		return classes().PREFERENCE_CHANGE_LISTENER;
 	}
-
 }

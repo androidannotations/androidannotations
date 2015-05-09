@@ -22,6 +22,6 @@
 <suppressions>
     <suppress files="org[\\/]androidannotations[\\/](?:[^\\/]+$|(?!annotations)[^\\/]+[\\/])" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
 	<suppress files="org[\\/]robolectric[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
-    <suppress files="com[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
+    <suppress files="(com|android)[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
     <suppress files="R.java" checks=".*" />
 </suppressions>
