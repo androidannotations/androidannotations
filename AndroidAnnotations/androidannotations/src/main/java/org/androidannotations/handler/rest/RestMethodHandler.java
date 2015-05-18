@@ -101,7 +101,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			methodBody._return(addResultCallMethod(response, methodReturnClass));
 		}
 		methodBody = surroundWithRestTryCatch(holder, methodBody, methodReturnVoid);
-		method.body().add(methodBody);
+		codeModelHelper.copy(methodBody, method.body());
 	}
 
 	protected JClass getMethodReturnClass(Element element, RestHolder holder) {
