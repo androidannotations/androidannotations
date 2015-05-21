@@ -122,6 +122,7 @@ public class ProcessHolder {
 		public final JClass BUILD_VERSION = refClass(CanonicalNameConstants.BUILD_VERSION);
 		public final JClass BUILD_VERSION_CODES = refClass(CanonicalNameConstants.BUILD_VERSION_CODES);
 		public final JClass ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ACTIVITY_COMPAT);
+		public final JClass CONTEXT_COMPAT = refClass(CanonicalNameConstants.CONTEXT_COMPAT);
 		public final JClass APP_WIDGET_MANAGER = refClass(CanonicalNameConstants.APP_WIDGET_MANAGER);
 
 		public final JClass PREFERENCE = refClass(CanonicalNameConstants.PREFERENCE);
