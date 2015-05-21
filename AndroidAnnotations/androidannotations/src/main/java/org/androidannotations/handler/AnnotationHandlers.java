@@ -79,7 +79,15 @@ public class AnnotationHandlers {
 		add(new ItemLongClickHandler(processingEnvironment));
 		add(new EditorActionHandler(processingEnvironment));
 		for (AndroidRes androidRes : AndroidRes.values()) {
-			add(new ResHandler(androidRes, processingEnvironment));
+			if (androidRes == AndroidRes.ANIMATION) {
+				add(new AnimationResHandler(processingEnvironment));
+			} else if (androidRes == AndroidRes.DRAWABLE) {
+				add(new DrawableResHandler(processingEnvironment));
+			} else if (androidRes == AndroidRes.HTML) {
+				add(new HtmlResHandler(processingEnvironment));
+			} else {
+				add(new DefaultResHandler(androidRes, processingEnvironment));
+			}
 		}
 		add(new TransactionalHandler(processingEnvironment));
 		add(new FragmentArgHandler(processingEnvironment));
