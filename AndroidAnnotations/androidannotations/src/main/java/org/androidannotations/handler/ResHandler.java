@@ -22,6 +22,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.annotations.res.DrawableRes;
 import org.androidannotations.annotations.res.HtmlRes;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
@@ -88,9 +89,15 @@ public class ResHandler extends BaseAnnotationHandler<EComponentHolder> {
 			// Special case for @HtmlRes
 			if (element.getAnnotation(HtmlRes.class) != null) {
 				methodBody.assign(ref(fieldName), classes().HTML.staticInvoke("fromHtml").arg(invoke(holder.getResourcesRef(), resourceMethodName).arg(idRef)));
+			} else if (element.getAnnotation(DrawableRes.class) != null && hasContextCompatInClasspath()) {
+				methodBody.assign(ref(fieldName), classes().CONTEXT_COMPAT.staticInvoke("getDrawable").arg(holder.getContextRef()).arg(idRef));
 			} else {
 				methodBody.assign(ref(fieldName), invoke(holder.getResourcesRef(), resourceMethodName).arg(idRef));
 			}
 		}
+	}
+
+	protected boolean hasContextCompatInClasspath() {
+		return processingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT) != null;
 	}
 }
