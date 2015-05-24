@@ -38,7 +38,6 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
- * @see NoTitle
  * @see WindowFeature
  */
 @Retention(RetentionPolicy.CLASS)
