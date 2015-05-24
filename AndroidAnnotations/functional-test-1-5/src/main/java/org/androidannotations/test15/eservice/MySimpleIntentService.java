@@ -30,7 +30,6 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.test15.ebean.EnhancedClass;
 import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.User;
 import org.androidannotations.test15.ormlite.UserDao;
 
 @EService
@@ -42,7 +41,7 @@ public class MySimpleIntentService extends IntentService {
 	@Bean
 	EnhancedClass dependency;
 
-	@OrmLiteDao(helper = DatabaseHelper.class, model = User.class)
+	@OrmLiteDao(helper = DatabaseHelper.class)
 	UserDao userDao;
 
 	public MySimpleIntentService() {
