@@ -42,6 +42,7 @@ import javax.lang.model.util.Types;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
+import org.androidannotations.annotations.SeekBarTouchStop;
 import org.androidannotations.logger.Level;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
@@ -365,6 +366,9 @@ public class AnnotationHelper {
 		}
 		if (OnActivityResult.class.getName().equals(annotationName)) {
 			return "Result";
+		}
+		if (SeekBarTouchStop.class.getName().equals(annotationName)) {
+			return "SeekBarTouchStopped";
 		}
 		String annotationSimpleName = annotationName.substring(annotationName.lastIndexOf('.') + 1);
 		if (annotationSimpleName.endsWith("e")) {
