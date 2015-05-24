@@ -23,8 +23,7 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * Should be used on a method that must respond to a specific action in an
- * {@link EReceiver} annotated class. The method name will be used as action
- * name unless the {@link #value()} field is set.
+ * {@link EReceiver} annotated class.
  * </p>
  * <p>
  * The class MAY contain several {@link ReceiverAction} annotated methods.
@@ -94,12 +93,11 @@ import java.lang.annotation.Target;
 public @interface ReceiverAction {
 
 	/**
-	 * Define a set of actions this method should handle. If this field isn't
-	 * set the annotated method name will be used.
-	 *
+	 * Define a set of actions this method should handle.
+	 * 
 	 * @return the actions
 	 */
-	String[] value() default {};
+	String[] actions();
 
 	/**
 	 * Define a set of data schemes to filter the Intent. If this field isn't
