@@ -73,7 +73,7 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.anyOfTypes(CanonicalNameConstants.MENU_ITEM, CanonicalNameConstants.SHERLOCK_MENU_ITEM).optional().validate(executableElement, valid);
+		validatorHelper.param.type(CanonicalNameConstants.MENU_ITEM).optional().validate(executableElement, valid);
 	}
 
 	@Override

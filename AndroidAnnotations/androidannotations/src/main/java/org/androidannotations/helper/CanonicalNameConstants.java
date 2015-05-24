@@ -130,13 +130,6 @@ public final class CanonicalNameConstants {
 	public static final String WAKELOCK_PERMISSION = "android.permission.WAKE_LOCK";
 
 	/*
-	 * Sherlock
-	 */
-	public static final String SHERLOCK_MENU = "com.actionbarsherlock.view.Menu";
-	public static final String SHERLOCK_MENU_ITEM = "com.actionbarsherlock.view.MenuItem";
-	public static final String SHERLOCK_MENU_INFLATER = "com.actionbarsherlock.view.MenuInflater";
-
-	/*
 	 * SpringFramework
 	 */
 	public static final String RESPONSE_ENTITY = "org.springframework.http.ResponseEntity";
