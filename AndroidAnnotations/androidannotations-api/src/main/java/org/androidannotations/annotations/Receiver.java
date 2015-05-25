@@ -29,10 +29,14 @@ import java.lang.annotation.Target;
  * method.
  * </p>
  * <p>
- * The annotated method MUST return void and MAY have one parameter:
+ * The annotated method MUST return void and MAY have several parameters:
  * </p>
  * <ul>
  * <li>An {@link android.content.Intent}</li>
+ * <li>Any native, {@link android.os.Parcelable} or {@link java.io.Serializable}
+ * parameters annotated with {@link Receiver.Extra} which will be the extra put
+ * in the intent. The key of this extra is the value of the annotation
+ * {@link Receiver.Extra} if set or the name of the parameter.</li>
  * </ul>
  * <p>
  * The annotation has four parameters:
@@ -69,6 +73,9 @@ import java.lang.annotation.Target;
  * 
  *      &#064;Receiver(actions = {@link android.net.wifi.WifiManager#WIFI_STATE_CHANGED_ACTION}, registerAt = RegisterAt.OnResumeOnPause)
  *      public void onWifiStateChangedWithoutIntent();
+ *      
+ *      &#064;Receiver(actions = {@link android.net.wifi.WifiManager#WIFI_STATE_CHANGED_ACTION})
+ *      public void onWifiStateChangedWithInjectedExtra(@Receiver.Extra({@link android.net.wifi.WifiManager#EXTRA_WIFI_STATE}) int wifiState);
  *      
  *      &#064;Receiver(actions = {@link android.content.Intent#ACTION_VIEW}, dataSchemes = "http")
  *      public void onHttpUrlOpened(Intent intent);
