@@ -24,11 +24,10 @@ import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.List;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.holder.HasIntentBuilder;
 
@@ -235,16 +234,13 @@ public class ActivityIntentBuilder extends IntentBuilder {
 			return false;
 		}
 
-		for (Element element : type.getEnclosedElements()) {
-			if (element.getKind() == ElementKind.METHOD) {
-				ExecutableElement executableElement = (ExecutableElement) element;
-				if (executableElement.getSimpleName().contentEquals("startActivity")) {
-					List<? extends VariableElement> parameters = executableElement.getParameters();
-					if (parameters.size() == optionsParamPosition + 1) {
-						VariableElement parameter = parameters.get(optionsParamPosition);
-						if (parameter.asType().toString().equals(CanonicalNameConstants.BUNDLE)) {
-							return true;
-						}
+		for (ExecutableElement element : ElementFilter.methodsIn(elementUtils.getAllMembers(type))) {
+			if (element.getSimpleName().contentEquals("startActivity")) {
+				List<? extends VariableElement> parameters = element.getParameters();
+				if (parameters.size() == optionsParamPosition + 1) {
+					VariableElement parameter = parameters.get(optionsParamPosition);
+					if (parameter.asType().toString().equals(CanonicalNameConstants.BUNDLE)) {
+						return true;
 					}
 				}
 			}
