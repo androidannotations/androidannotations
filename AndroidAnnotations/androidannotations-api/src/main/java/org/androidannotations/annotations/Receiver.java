@@ -32,6 +32,8 @@ import java.lang.annotation.Target;
  * The annotated method MUST return void and MAY have several parameters:
  * </p>
  * <ul>
+ * <li>A {@link android.content.Context} which will be the context given in
+ * {@code void onReceive(Context context, Intent intent)}</li>
  * <li>An {@link android.content.Intent}</li>
  * <li>Any native, {@link android.os.Parcelable} or {@link java.io.Serializable}
  * parameters annotated with {@link Receiver.Extra} which will be the extra put
