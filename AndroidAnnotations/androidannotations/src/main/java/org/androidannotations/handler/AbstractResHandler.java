@@ -15,17 +15,11 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.ref;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.annotations.res.DrawableRes;
-import org.androidannotations.annotations.res.HtmlRes;
 import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentHolder;
@@ -38,12 +32,12 @@ import org.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JFieldRef;
 
-public class ResHandler extends BaseAnnotationHandler<EComponentHolder> {
+public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	private AndroidRes androidRes;
+	protected AndroidRes androidRes;
 	private IdAnnotationHelper annotationHelper;
 
-	public ResHandler(AndroidRes androidRes, ProcessingEnvironment processingEnvironment) {
+	public AbstractResHandler(AndroidRes androidRes, ProcessingEnvironment processingEnvironment) {
 		super(androidRes.getAnnotationClass(), processingEnvironment);
 		this.androidRes = androidRes;
 	}
@@ -77,27 +71,8 @@ public class ResHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JBlock methodBody = holder.getInitBody();
 
-		TypeMirror fieldTypeMirror = element.asType();
-		String fieldType = fieldTypeMirror.toString();
-
-		// Special case for loading animations
-		if (CanonicalNameConstants.ANIMATION.equals(fieldType)) {
-			methodBody.assign(ref(fieldName), classes().ANIMATION_UTILS.staticInvoke("loadAnimation").arg(holder.getContextRef()).arg(idRef));
-		} else {
-			String resourceMethodName = androidRes.getResourceMethodName();
-
-			// Special case for @HtmlRes
-			if (element.getAnnotation(HtmlRes.class) != null) {
-				methodBody.assign(ref(fieldName), classes().HTML.staticInvoke("fromHtml").arg(invoke(holder.getResourcesRef(), resourceMethodName).arg(idRef)));
-			} else if (element.getAnnotation(DrawableRes.class) != null && hasContextCompatInClasspath()) {
-				methodBody.assign(ref(fieldName), classes().CONTEXT_COMPAT.staticInvoke("getDrawable").arg(holder.getContextRef()).arg(idRef));
-			} else {
-				methodBody.assign(ref(fieldName), invoke(holder.getResourcesRef(), resourceMethodName).arg(idRef));
-			}
-		}
+		makeCall(fieldName, holder, methodBody, idRef);
 	}
-
-	protected boolean hasContextCompatInClasspath() {
-		return processingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT) != null;
-	}
+	
+	protected abstract void makeCall(String fieldName, EComponentHolder holder, JBlock methodBody, JFieldRef idRef);
 }

@@ -26,15 +26,24 @@ public class ContextCompatDrawableTest extends AAProcessorTestHelper {
 
 	private static final String DRAWABLE_SIGNATURE = ".*myDrawable = resources_\\.getDrawable\\(drawable\\.myDrawable\\);.*";
 	private static final String DRAWABLE_VIA_SUPPORT_SIGNATURE = ".*myDrawable = ContextCompat\\.getDrawable\\(this, drawable\\.myDrawable\\);.*";
+	private static final String DRAWABLE_VIA_CONTEXT_ON_LOLLIPOP = ".*myDrawable = this\\.getDrawable\\(drawable\\.myDrawable\\);.*";
+	private static final String[] DRAWABLE_CONDITIONAL_WITHOUT_CONTEXT_COMPAT =  new String[] {
+		"        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {",
+		"            myDrawable = this.getDrawable(drawable.myDrawable);",
+		"        } else {",
+		"            myDrawable = resources_.getDrawable(drawable.myDrawable);",
+		"        }",
+	};
 
 	@Before
 	public void setUp() {
 		addProcessor(AndroidAnnotationProcessor.class);
-		addManifestProcessorParameter(ContextCompatDrawableTest.class, "AndroidManifestForDrawable.xml");
 	}
 
 	@Test
 	public void activityCompilesWithRegularDrawable() {
+		addManifestProcessorParameter(ContextCompatDrawableTest.class, "AndroidManifestForDrawable.xml");
+
 		CompileResult result = compileFiles(ActivityWithDrawable.class);
 		File generatedFile = toGeneratedFile(ActivityWithDrawable.class);
 
@@ -47,10 +56,36 @@ public class ContextCompatDrawableTest extends AAProcessorTestHelper {
 		// To simulate android support v4 in classpath, we add
 		// android.support.v4.content.ContextCompat
 		// in classpath
+		addManifestProcessorParameter(ContextCompatDrawableTest.class, "AndroidManifestForDrawable.xml");
 		CompileResult result = compileFiles(toPath(ContextCompatDrawableTest.class, "ContextCompat.java"), ActivityWithDrawable.class);
 		File generatedFile = toGeneratedFile(ActivityWithDrawable.class);
 
 		assertCompilationSuccessful(result);
 		assertGeneratedClassMatches(generatedFile, DRAWABLE_VIA_SUPPORT_SIGNATURE);
 	}
+	
+	@Test
+	public void activityCompilesOnMinSdk21WithoutContextCompat() throws Exception {
+		addManifestProcessorParameter(ContextCompatDrawableTest.class, "AndroidManifestForDrawableMinSdk21.xml");
+
+		CompileResult result = compileFiles(ActivityWithGetDrawableMethod.class);
+		File generatedFile = toGeneratedFile(ActivityWithGetDrawableMethod.class);
+		
+		assertCompilationSuccessful(result);
+		assertGeneratedClassMatches(generatedFile, DRAWABLE_VIA_CONTEXT_ON_LOLLIPOP);
+	}
+	
+	@Test
+	public void activityCompilesOnMinSdkLower21CompileSdkHigher21WithoutContextCompat() throws Exception {
+		addManifestProcessorParameter(ContextCompatDrawableTest.class, "AndroidManifestForDrawableMinSdk20.xml");
+
+		CompileResult result = compileFiles(toPath(ContextCompatDrawableTest.class, "Context.java"),
+				toPath(ContextCompatDrawableTest.class, "Build.java"), 
+				ActivityWithGetDrawableMethod.class);
+		File generatedFile = toGeneratedFile(ActivityWithGetDrawableMethod.class);
+		
+		assertCompilationSuccessful(result);
+		assertGeneratedClassContains(generatedFile, DRAWABLE_CONDITIONAL_WITHOUT_CONTEXT_COMPAT);
+	}
+	
 }
