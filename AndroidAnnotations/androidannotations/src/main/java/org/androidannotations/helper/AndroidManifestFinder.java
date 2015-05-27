@@ -133,7 +133,7 @@ public class AndroidManifestFinder {
 		}
 
 		if (!androidManifestFile.exists()) {
-			LOGGER.error("Could not find the AndroidManifest.xml file, going up from path [{}] found using dummy file [] (max atempts: {})", projectRootHolder.sourcesGenerationFolder.getAbsolutePath(), projectRootHolder.dummySourceFilePath, MAX_PARENTS_FROM_SOURCE_FOLDER);
+			LOGGER.error("Could not find the AndroidManifest.xml file, going up from path [{}] found using dummy file [] (max attempts: {})", projectRootHolder.sourcesGenerationFolder.getAbsolutePath(), projectRootHolder.dummySourceFilePath, MAX_PARENTS_FROM_SOURCE_FOLDER);
 			return Option.absent();
 		} else {
 			LOGGER.debug("AndroidManifest.xml file found in parent folder {}: {}", projectRoot.getAbsolutePath(), androidManifestFile.toString());
