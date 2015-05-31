@@ -30,6 +30,11 @@ public interface AnnotationElements {
 			this.annotatedElement = annotatedElement;
 			this.rootTypeElement = rootTypeElement;
 		}
+
+		@Override
+		public String toString() {
+			return annotatedElement.toString();
+		}
 	}
 
 	Set<? extends Element> getAllElements();
