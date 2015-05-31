@@ -1523,6 +1523,7 @@ public class ValidatorHelper {
 		TypeElement preferenceFragmentElement = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.PREFERENCE_FRAGMENT);
 
 		if (preferenceFragmentElement == null) {
+			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "The class " + CanonicalNameConstants.PREFERENCE_FRAGMENT + " cannot be found. You have to use at least API 11");
 		}
 	}
@@ -1531,6 +1532,7 @@ public class ValidatorHelper {
 		UiThread annotation = element.getAnnotation(UiThread.class);
 
 		if (!"".equals(annotation.id()) && annotation.propagation() == Propagation.REUSE) {
+			valid.invalidate();
 			annotationHelper.printAnnotationError(element, "An id only can be used with Propagation.ENQUEUE");
 		}
 	}
