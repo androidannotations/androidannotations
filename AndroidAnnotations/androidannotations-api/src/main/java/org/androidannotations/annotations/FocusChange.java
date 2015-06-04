@@ -36,8 +36,8 @@ import java.lang.annotation.Target;
  * The method MAY have multiple parameter:
  * </p>
  * <ul>
- * <li>A {@link android.view.View} parameter to know which view has targeted
- * this event</li>
+ * <li>A {@link android.view.View} (or a subclass) parameter to know which view
+ * has targeted this event</li>
  * <li>An {@link boolean} to know the view has focus.</li>
  * </ul>
  *
@@ -53,6 +53,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;FocusChange
  * void <b>myButton</b>FocusChanged(View button) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;FocusChange
+ * void <b>myText</b>FocusChanged(EditText button) {
  * 	// Something Here
  * }
  * 
