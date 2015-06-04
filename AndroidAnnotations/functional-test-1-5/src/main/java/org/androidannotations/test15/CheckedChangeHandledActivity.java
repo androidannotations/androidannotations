@@ -18,6 +18,7 @@ package org.androidannotations.test15;
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.EActivity;
 
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 @EActivity(R.layout.checkable_widgets)
@@ -31,6 +32,11 @@ public class CheckedChangeHandledActivity extends EventsHandledAbstractActivity 
 		conventionButtonEventHandled = true;
 		button = evt;
 		this.checked = checked;
+	}
+
+	@CheckedChange
+	public void checkBox(CheckBox evt, boolean checked) {
+		button = evt;
 	}
 
 	@CheckedChange
@@ -57,5 +63,4 @@ public class CheckedChangeHandledActivity extends EventsHandledAbstractActivity 
 	public void multipleButtonWithViewArgument(CompoundButton v, boolean checked) {
 
 	}
-
 }
