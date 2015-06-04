@@ -41,8 +41,8 @@ import java.lang.annotation.Target;
  * The method MAY have one or two parameters:
  * </p>
  * <ul>
- * <li>A {@link android.view.View} parameter to know which view has been clicked
- * </li>
+ * <li>A {@link android.view.View} (or a subclass) parameter to know which view
+ * has been clicked</li>
  * <li>A {@link android.view.MotionEvent} parameter</li>
  * </ul>
  * <blockquote>
@@ -57,6 +57,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;Touch
  * void <b>myButton</b>Touched(View view) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;Touch
+ * void <b>myText</b>Touched(TextView view) {
  * 	// Something Here
  * }
  * 
