@@ -54,7 +54,7 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
 		validatorHelper.param.anyOrder() //
-				.type(CanonicalNameConstants.TEXT_VIEW).optional() //
+				.extendsType(CanonicalNameConstants.TEXT_VIEW).optional() //
 				.primitiveOrWrapper(TypeKind.INT).optional() //
 				.type(CanonicalNameConstants.KEY_EVENT).optional() //
 				.validate(executableElement, valid);
@@ -80,8 +80,8 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 
 		for (VariableElement param : userParameters) {
 			String paramClassQualifiedName = param.asType().toString();
-			if (paramClassQualifiedName.equals(CanonicalNameConstants.TEXT_VIEW)) {
-				call.arg(textView);
+			if (isTypeOrSubclass(CanonicalNameConstants.TEXT_VIEW, param)) {
+				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.TEXT_VIEW, textView, param));
 			} else if (paramClassQualifiedName.equals(CanonicalNameConstants.INTEGER) || paramClassQualifiedName.equals(codeModel().INT.fullName())) {
 				call.arg(actionId);
 			} else if (paramClassQualifiedName.equals(CanonicalNameConstants.KEY_EVENT)) {
