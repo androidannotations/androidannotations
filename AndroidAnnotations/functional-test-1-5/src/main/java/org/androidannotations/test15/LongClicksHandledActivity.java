@@ -19,6 +19,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.LongClick;
 
 import android.view.View;
+import android.widget.Button;
 
 @EActivity(R.layout.clickable_widgets)
 public class LongClicksHandledActivity extends EventsHandledAbstractActivity {
@@ -31,6 +32,11 @@ public class LongClicksHandledActivity extends EventsHandledAbstractActivity {
 	@LongClick
 	public void conventionButton() {
 		conventionButtonEventHandled = true;
+	}
+
+	@LongClick
+	public void buttonWithButtonArgument(Button button) {
+		viewArgument = button;
 	}
 
 	@LongClick

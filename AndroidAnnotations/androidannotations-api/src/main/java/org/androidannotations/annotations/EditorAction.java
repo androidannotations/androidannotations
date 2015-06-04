@@ -36,8 +36,8 @@ import java.lang.annotation.Target;
  * The method MAY have multiple parameter :
  * </p>
  * <ul>
- * <li>A {@link android.widget.TextView} parameter to know which view has
- * targeted this event</li>
+ * <li>A {@link android.widget.TextView} (or a subclass) parameter to know which
+ * view has targeted this event</li>
  * <li>An int parameter to get the actionId</li>
  * <li>A {@link android.view.KeyEvent} parameter</li>
  * </ul>
@@ -60,6 +60,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;EditorAction
  * void <b>helloTextView</b>EditorAction(TextView hello) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;EditorAction
+ * void <b>helloEditText</b>EditorAction(EditText hello) {
  * 	// Something Here
  * }
  * 

@@ -19,6 +19,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FocusChange;
 
 import android.view.View;
+import android.widget.Button;
 
 @EActivity(R.layout.clickable_widgets)
 public class FocusChangeHandledActivity extends EventsHandledAbstractActivity {
@@ -30,6 +31,11 @@ public class FocusChangeHandledActivity extends EventsHandledAbstractActivity {
 	@FocusChange
 	public void conventionButton(View evt, boolean hasFocus) {
 
+	}
+
+	@FocusChange
+	public void buttonWithButtonArgument(Button evt, boolean hasFocus) {
+		view = evt;
 	}
 
 	@FocusChange

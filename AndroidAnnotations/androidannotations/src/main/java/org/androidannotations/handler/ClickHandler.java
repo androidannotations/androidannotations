@@ -66,7 +66,7 @@ public class ClickHandler extends AbstractViewListenerHandler {
 		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
 
 		if (hasItemParameter) {
-			call.arg(viewParam);
+			call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.VIEW, viewParam, parameters.get(0)));
 		}
 	}
 

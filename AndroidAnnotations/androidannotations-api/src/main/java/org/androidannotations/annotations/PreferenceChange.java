@@ -39,8 +39,8 @@ import java.lang.annotation.Target;
  * The method MAY have multiple parameter:
  * </p>
  * <ul>
- * <li>A {@link android.preference.Preference Preference} parameter to know
- * which preference was targeted by this event</li>
+ * <li>A {@link android.preference.Preference Preference} (or a sublcass)
+ * parameter to know which preference was targeted by this event</li>
  * <li>An {@link Object}, {@link String}, {@link java.util.Set Set of strings}
  * and also a {@link Boolean}, {@link Float}, {@link Integer}, {@link Long} or
  * their corresponding primitive types to obtain the new value of the
@@ -62,6 +62,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;PreferenceChange
  * void <b>myPref</b>PreferenceChanged(Preference preference) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;PreferenceChange
+ * void <b>myPref</b>PreferenceChanged(ListPreference preference) {
  * 	// Something Here
  * }
  * 

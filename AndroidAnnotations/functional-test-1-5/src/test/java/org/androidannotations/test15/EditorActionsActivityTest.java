@@ -52,6 +52,18 @@ public class EditorActionsActivityTest {
 	}
 
 	@Test
+	public void testEditTextPassed() {
+		assertThat(activity.passedEditText).isNull();
+
+		EditText editText = (EditText) activity.findViewById(R.id.editText4);
+		OnEditorActionListener listener = getOnEditorActionListener(editText);
+
+		listener.onEditorAction(editText, 0, null);
+
+		assertThat(activity.passedEditText).isSameAs(editText);
+	}
+
+	@Test
 	public void testActionIdPassed() {
 		assertThat(activity.actionId).isZero();
 

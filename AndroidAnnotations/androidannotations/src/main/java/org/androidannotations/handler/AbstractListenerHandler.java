@@ -22,9 +22,11 @@ import java.util.List;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -37,13 +39,16 @@ import org.androidannotations.rclass.IRClass;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JVar;
 
 public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> {
 
+	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 	private IdAnnotationHelper helper;
 	private T holder;
 	private String methodName;
@@ -98,6 +103,22 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 		processParameters(holder, listenerMethod, call, parameters);
 
 		assignListeners(holder, idsRefs, listenerAnonymousClass);
+	}
+
+	protected final JExpression castArgumentIfNecessary(T holder, String baseType, JVar param, Element element) {
+		JExpression argument = param;
+		TypeMirror typeMirror = element.asType();
+		if (!baseType.equals(typeMirror.toString())) {
+			JClass typeMirrorToJClass = codeModelHelper.typeMirrorToJClass(typeMirror, holder);
+			argument = JExpr.cast(typeMirrorToJClass, param);
+		}
+		return argument;
+	}
+
+	protected final boolean isTypeOrSubclass(String baseType, Element element) {
+		TypeMirror typeMirror = element.asType();
+		TypeElement typeElement = helper.typeElementFromQualifiedName(baseType);
+		return helper.isSubtype(typeMirror, typeElement.asType());
 	}
 
 	protected abstract void assignListeners(T holder, List<JFieldRef> idsRefs, JDefinedClass listenerAnonymousClass);

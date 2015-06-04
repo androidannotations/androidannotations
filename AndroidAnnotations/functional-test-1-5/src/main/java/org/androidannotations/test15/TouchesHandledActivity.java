@@ -20,6 +20,7 @@ import org.androidannotations.annotations.Touch;
 
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 @EActivity(R.layout.clickable_widgets)
 public class TouchesHandledActivity extends EventsHandledAbstractActivity {
@@ -51,6 +52,11 @@ public class TouchesHandledActivity extends EventsHandledAbstractActivity {
 	@Touch
 	public void buttonWithViewArgument(MotionEvent evt, View viewArgument) {
 		this.viewArgument = viewArgument;
+	}
+
+	@Touch
+	public void buttonWithButtonArgument(MotionEvent evt, Button button) {
+		viewArgument = button;
 	}
 
 	@Touch

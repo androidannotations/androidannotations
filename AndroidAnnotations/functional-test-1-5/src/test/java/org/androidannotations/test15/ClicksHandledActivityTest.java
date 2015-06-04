@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-
+import android.widget.Button;
 
 @RunWith(RobolectricTestRunner.class)
 public class ClicksHandledActivityTest {
@@ -96,6 +96,16 @@ public class ClicksHandledActivityTest {
 		activity.findViewById(R.id.buttonWithViewArgument).performClick();
 
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
+	}
+
+	@Test
+	public void buttonArgumentIsGiven() {
+		assertThat(activity.viewArgument).isNull();
+
+		Button button = (Button) activity.findViewById(R.id.buttonWithButtonArgument);
+		button.performClick();
+
+		assertThat(activity.viewArgument).isSameAs(button);
 	}
 
 	@Test

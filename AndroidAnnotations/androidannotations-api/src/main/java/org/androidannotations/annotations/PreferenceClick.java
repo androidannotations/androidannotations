@@ -37,8 +37,8 @@ import java.lang.annotation.Target;
  * The method MAY have one parameter:
  * </p>
  * <ul>
- * <li>A {@link android.preference.Preference Preference} parameter to know
- * which preference has been clicked</li>
+ * <li>A {@link android.preference.Preference Preference} (or a subclass)
+ * parameter to know which preference has been clicked</li>
  * </ul>
  * <blockquote>
  * 
@@ -52,6 +52,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;PreferenceClick
  * void <b>myPref</b>PreferenceClicked(Preference preference) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;PreferenceClick
+ * void <b>myPref</b>PreferenceClicked(ListPreference preference) {
  * 	// Something Here
  * }
  * </pre>

@@ -70,6 +70,14 @@ public class PreferenceEventsHandledActivityTest {
 	}
 
 	@Test
+	public void testPreferenceChangeCastedParameterPassed() {
+		Preference preference = activity.findPreference(activity.getString(R.string.checkBoxWithCastPrefKey));
+		preference.getOnPreferenceChangeListener().onPreferenceChange(preference, true);
+
+		assertThat(activity.preference).isSameAs(preference);
+	}
+
+	@Test
 	public void testPreferenceChangeParsedParameterPassed() {
 		Preference preference = activity.findPreference(activity.getString(R.string.editTextPrefKey));
 		preference.getOnPreferenceChangeListener().onPreferenceChange(preference, "2");
@@ -117,6 +125,14 @@ public class PreferenceEventsHandledActivityTest {
 	@Test
 	public void testPreferenceClickParameterPassed() {
 		Preference preference = activity.findPreference(activity.getString(R.string.checkBoxPrefKey));
+		preference.getOnPreferenceClickListener().onPreferenceClick(preference);
+
+		assertThat(activity.preference).isSameAs(preference);
+	}
+
+	@Test
+	public void testPreferenceClickCastedParameterPassed() {
+		Preference preference = activity.findPreference(activity.getString(R.string.checkBoxWithCastPrefKey));
 		preference.getOnPreferenceClickListener().onPreferenceClick(preference);
 
 		assertThat(activity.preference).isSameAs(preference);

@@ -30,6 +30,8 @@
         
         <CheckBoxPreference android:key="@string/checkBoxPrefKey"/>
         
+        <CheckBoxPreference android:key="@string/checkBoxWithCastPrefKey"/>
+        
         <SwitchPreference android:key="@string/switchPrefKey"/>
     </PreferenceCategory>
 

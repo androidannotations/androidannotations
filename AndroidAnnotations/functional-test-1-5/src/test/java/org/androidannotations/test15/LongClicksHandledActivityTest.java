@@ -24,6 +24,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import android.widget.Button;
+
 @RunWith(RobolectricTestRunner.class)
 public class LongClicksHandledActivityTest {
 
@@ -94,6 +96,16 @@ public class LongClicksHandledActivityTest {
 		activity.findViewById(R.id.buttonWithViewArgument).performLongClick();
 
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
+	}
+
+	@Test
+	public void buttonArgumentIsGiven() {
+		assertThat(activity.viewArgument).isNull();
+
+		Button button = (Button) activity.findViewById(R.id.buttonWithButtonArgument);
+		button.performLongClick();
+
+		assertThat(activity.viewArgument).isSameAs(button);
 	}
 
 	@Test

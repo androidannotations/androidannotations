@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
 
@@ -47,6 +48,16 @@ public class CheckedChangeHandledActivityTest {
 	}
 
 	@Test
+	public void testHandlingWithCheckBox() {
+		assertThat(activity.button).isNull();
+
+		CheckBox button = (CheckBox) activity.findViewById(R.id.checkBox);
+		button.setChecked(true);
+
+		assertThat(activity.button).isSameAs(button);
+	}
+
+	@Test
 	public void testCompoundButtonPassedToAnnotatedMethod() {
 		assertThat(activity.button).isNull();
 
@@ -65,5 +76,4 @@ public class CheckedChangeHandledActivityTest {
 
 		assertThat(activity.checked).isTrue();
 	}
-
 }

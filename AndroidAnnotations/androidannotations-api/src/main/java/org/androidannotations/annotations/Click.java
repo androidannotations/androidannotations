@@ -34,8 +34,8 @@ import java.lang.annotation.Target;
  * The method MAY have one parameter:
  * </p>
  * <ul>
- * <li>A {@link android.view.View} parameter to know which view has been clicked
- * </li>
+ * <li>A {@link android.view.View} (or a subclass) parameter to know which view
+ * has been clicked</li>
  * </ul>
  * <blockquote>
  * 
@@ -49,6 +49,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;Click
  * void <b>myButton</b>Clicked(View view) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;Click
+ * void <b>myButton</b>Clicked(Button view) {
  * 	// Something Here
  * }
  * </pre>
