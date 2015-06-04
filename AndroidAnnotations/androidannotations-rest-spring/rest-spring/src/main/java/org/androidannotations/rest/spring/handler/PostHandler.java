@@ -67,7 +67,7 @@ public class PostHandler extends RestMethodHandler implements HasParameterHandle
 
 		@Override
 		protected void validate(Element element, ElementValidation validation) {
-			validatorHelper.enclosingMethodHasAnnotation(Post.class, element, validation);
+			validatorHelper.enclosingElementHasAnnotation(Post.class, element, validation);
 		}
 
 		@Override
