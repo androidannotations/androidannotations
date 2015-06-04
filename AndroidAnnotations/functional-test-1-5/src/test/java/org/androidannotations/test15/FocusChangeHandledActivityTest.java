@@ -55,6 +55,16 @@ public class FocusChangeHandledActivityTest {
 	}
 
 	@Test
+	public void testButtonPassed() {
+		assertThat(activity.view).isNull();
+
+		View view = activity.findViewById(R.id.buttonWithButtonArgument);
+		view.getOnFocusChangeListener().onFocusChange(view, false);
+
+		assertThat(activity.view).isSameAs(view);
+	}
+
+	@Test
 	public void testHasFocusPassed() {
 		assertThat(activity.hasFocus).isFalse();
 
