@@ -22,7 +22,6 @@ import javax.lang.model.element.ExecutableElement;
 import org.androidannotations.annotations.WakeLock;
 import org.androidannotations.annotations.WakeLock.Flag;
 import org.androidannotations.annotations.WakeLock.Level;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -37,8 +36,6 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class WakeLockHandler extends BaseAnnotationHandler<EComponentHolder> {
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public WakeLockHandler(ProcessingEnvironment processingEnvironment) {
 		super(WakeLock.class, processingEnvironment);

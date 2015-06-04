@@ -26,7 +26,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -48,7 +47,6 @@ import com.sun.codemodel.JVar;
 
 public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> {
 
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 	private IdAnnotationHelper helper;
 	private T holder;
 	private String methodName;

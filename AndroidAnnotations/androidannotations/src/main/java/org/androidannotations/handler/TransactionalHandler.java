@@ -20,7 +20,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Transactional;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -37,8 +36,6 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder> {
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public TransactionalHandler(ProcessingEnvironment processingEnvironment) {
 		super(Transactional.class, processingEnvironment);

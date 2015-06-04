@@ -30,7 +30,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.Receiver;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasReceiverRegistration;
 import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
@@ -49,7 +48,6 @@ import com.sun.codemodel.JVar;
 
 public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistration> {
 
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 	private ExtraHandler extraHandler;
 
 	public ReceiverHandler(ProcessingEnvironment processingEnvironment) {

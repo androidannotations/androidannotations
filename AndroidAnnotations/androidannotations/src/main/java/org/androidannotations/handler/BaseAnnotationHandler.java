@@ -19,6 +19,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -42,6 +43,7 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 	protected AndroidManifest androidManifest;
 	protected AnnotationElements validatedModel;
 	protected ProcessHolder processHolder;
+	protected APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public BaseAnnotationHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
 		this(targetClass.getCanonicalName(), processingEnvironment);

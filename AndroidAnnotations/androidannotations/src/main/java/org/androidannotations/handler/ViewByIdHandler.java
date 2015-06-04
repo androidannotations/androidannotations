@@ -38,7 +38,6 @@ import com.sun.codemodel.JFieldRef;
 public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper annotationHelper;
-	private APTCodeModelHelper codeModelHelper;
 
 	public ViewByIdHandler(ProcessingEnvironment processingEnvironment) {
 		super(ViewById.class, processingEnvironment);

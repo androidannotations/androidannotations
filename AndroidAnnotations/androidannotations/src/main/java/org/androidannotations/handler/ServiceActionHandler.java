@@ -29,7 +29,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.annotations.ServiceAction;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
@@ -48,7 +47,6 @@ import com.sun.codemodel.JVar;
 
 public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHolder> {
 
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 	private AnnotationHelper annotationHelper;
 
 	public ServiceActionHandler(ProcessingEnvironment processingEnvironment) {

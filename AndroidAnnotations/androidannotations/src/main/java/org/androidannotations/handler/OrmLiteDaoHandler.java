@@ -44,7 +44,6 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	private final OrmLiteHelper ormLiteHelper;
 	private final TargetAnnotationHelper helper;
-	private final APTCodeModelHelper codeModelHelper;
 
 	public OrmLiteDaoHandler(ProcessingEnvironment processingEnvironment) {
 		super(OrmLiteDao.class, processingEnvironment);

@@ -26,7 +26,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
@@ -45,7 +44,6 @@ import com.sun.codemodel.JVar;
 public abstract class ExtraParameterHandler extends BaseAnnotationHandler<GeneratedClassHolder> {
 
 	private Class<? extends Annotation> methodAnnotationClass;
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 	private AnnotationHelper annotationHelper;
 
 	public ExtraParameterHandler(Class<? extends Annotation> targetClass, Class<? extends Annotation> methodAnnotationClass, ProcessingEnvironment processingEnvironment) {

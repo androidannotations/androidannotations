@@ -24,7 +24,6 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 
 import com.sun.codemodel.JBlock;
@@ -39,8 +38,6 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class BackgroundHandler extends AbstractRunnableHandler {
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public BackgroundHandler(ProcessingEnvironment processingEnvironment) {
 		super(Background.class, processingEnvironment);

@@ -34,7 +34,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.RoboGuice;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.holder.RoboGuiceHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -52,8 +51,6 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 
 public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
-
-	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public RoboGuiceHandler(ProcessingEnvironment processingEnvironment) {
 		super(RoboGuice.class, processingEnvironment);

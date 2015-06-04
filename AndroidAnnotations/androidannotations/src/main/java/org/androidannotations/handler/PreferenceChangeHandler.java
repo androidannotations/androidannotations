@@ -25,7 +25,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.PreferenceChange;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
@@ -42,8 +41,6 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public PreferenceChangeHandler(ProcessingEnvironment processingEnvironment) {
 		super(PreferenceChange.class, processingEnvironment);

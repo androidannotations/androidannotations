@@ -30,7 +30,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.Trace;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -48,8 +47,6 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public TraceHandler(ProcessingEnvironment processingEnvironment) {
 		super(Trace.class, processingEnvironment);

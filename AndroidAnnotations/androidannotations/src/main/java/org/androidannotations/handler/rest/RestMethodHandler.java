@@ -53,7 +53,6 @@ import com.sun.codemodel.JVar;
 public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder> {
 
 	protected final RestAnnotationHelper restAnnotationHelper;
-	protected final APTCodeModelHelper codeModelHelper;
 
 	public RestMethodHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
 		super(targetClass, processingEnvironment);

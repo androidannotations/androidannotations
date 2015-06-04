@@ -21,7 +21,6 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.SupposeUiThread;
 import org.androidannotations.api.BackgroundExecutor;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 
 import com.sun.codemodel.JBlock;
@@ -32,8 +31,6 @@ public class SupposeUiThreadHandler extends SupposeThreadHandler {
 
 	private static final String METHOD_CHECK_UI_THREAD = "checkUiThread";
 
-	private final APTCodeModelHelper helper = new APTCodeModelHelper();
-
 	public SupposeUiThreadHandler(ProcessingEnvironment processingEnvironment) {
 		super(SupposeUiThread.class, processingEnvironment);
 	}
@@ -42,7 +39,7 @@ public class SupposeUiThreadHandler extends SupposeThreadHandler {
 	public void process(Element element, EComponentHolder holder) throws Exception {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
+		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock body = delegatingMethod.body();
 
 		JClass bgExecutor = refClass(BackgroundExecutor.class);

@@ -27,7 +27,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.ViewsById;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
@@ -45,7 +44,6 @@ import com.sun.codemodel.JFieldRef;
 public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	private IdAnnotationHelper helper;
-	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public ViewsByIdHandler(ProcessingEnvironment processingEnvironment) {
 		super(ViewsById.class, processingEnvironment);
