@@ -25,6 +25,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import android.view.MotionEvent;
+import android.widget.Button;
 
 @RunWith(RobolectricTestRunner.class)
 public class TouchesHandledActivityTest {
@@ -96,6 +97,16 @@ public class TouchesHandledActivityTest {
 				mockedEvent);
 
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
+	}
+
+	@Test
+	public void buttonArgumentIsGiven() {
+		assertThat(activity.viewArgument).isNull();
+
+		Button button = (Button) activity.findViewById(R.id.buttonWithButtonArgument);
+		button.dispatchTouchEvent(mockedEvent);
+
+		assertThat(activity.viewArgument).isSameAs(button);
 	}
 
 	@Test
