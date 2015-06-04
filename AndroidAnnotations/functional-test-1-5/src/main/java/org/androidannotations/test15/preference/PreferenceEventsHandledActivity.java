@@ -21,6 +21,7 @@ import org.androidannotations.annotations.PreferenceClick;
 import org.androidannotations.test15.R;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
@@ -66,6 +67,11 @@ public class PreferenceEventsHandledActivity extends PreferenceActivity {
 		this.newValue = newValue;
 	}
 
+	@PreferenceChange(R.string.checkBoxWithCastPrefKey)
+	void checkBoxWithCastPreferenceChanged(CheckBoxPreference preference) {
+		this.preference = preference;
+	}
+
 	@PreferenceChange(R.string.switchPrefKey)
 	boolean switchPreferenceChanged() {
 		return false;
@@ -83,6 +89,11 @@ public class PreferenceEventsHandledActivity extends PreferenceActivity {
 
 	@PreferenceClick(R.string.checkBoxPrefKey)
 	void checkBoxPreferenceClicked(Preference preference) {
+		this.preference = preference;
+	}
+
+	@PreferenceClick(R.string.checkBoxWithCastPrefKey)
+	void checkBoxWithCastPreferenceClicked(CheckBoxPreference preference) {
 		this.preference = preference;
 	}
 

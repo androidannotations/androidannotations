@@ -29,6 +29,7 @@
     <string name="editTextPrefKey">editTextPrefKey</string>
     <string name="listPreferenceKey">listPreferenceKey</string>
     <string name="checkBoxPrefKey">checkBoxPrefKey</string>
+    <string name="checkBoxWithCastPrefKey">checkBoxWithCastPrefKey</string>
     <string name="switchPrefKey">switchPrefKey</string>
     
 </resources>
