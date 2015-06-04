@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 
 import org.androidannotations.holder.GeneratedClassHolder;
 
@@ -86,12 +86,14 @@ public class BundleHelper {
 	private String methodNameToSave;
 	private String methodNameToRestore;
 
+	private TypeMirror upperBound;
+
 	public BundleHelper(AnnotationHelper helper, TypeMirror element) {
 		annotationHelper = helper;
 		this.element = element;
 
 		String typeString = element.toString();
-		TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
+		TypeMirror type = element;
 
 		if (METHOD_SUFFIX_BY_TYPE_NAME.containsKey(typeString)) {
 
@@ -105,15 +107,18 @@ public class BundleHelper {
 			boolean hasTypeArguments = false;
 			if (arrayType.getComponentType() instanceof DeclaredType) {
 				DeclaredType declaredType = (DeclaredType) arrayType.getComponentType();
-				typeString = declaredType.asElement().toString();
+				type = declaredType;
 				hasTypeArguments = declaredType.getTypeArguments().size() > 0;
+			} else if (arrayType.getComponentType().getKind() == TypeKind.TYPEVAR) {
+				type = arrayType.getComponentType();
+				upperBound = getUpperBound(type);
+				restoreCallNeedCastStatement = true;
+				restoreCallNeedsSuppressWarning = true;
 			} else {
-				typeString = arrayType.getComponentType().toString();
+				type = arrayType.getComponentType();
 			}
 
-			elementType = annotationHelper.typeElementFromQualifiedName(typeString);
-
-			if (isTypeParcelable(elementType)) {
+			if (isTypeParcelable(type)) {
 				methodNameToSave = "put" + "ParcelableArray";
 				methodNameToRestore = "get" + "ParcelableArray";
 
@@ -135,11 +140,10 @@ public class BundleHelper {
 					TypeMirror typeArgument = typeArguments.get(0);
 					if (typeArgument instanceof DeclaredType) {
 						declaredType = (DeclaredType) typeArgument;
-						typeString = declaredType.asElement().toString();
-						elementType = annotationHelper.typeElementFromQualifiedName(typeString);
+						type = declaredType;
 						hasTypeArguments = declaredType.getTypeArguments().size() > 0;
 					}
-					if (isTypeParcelable(elementType)) {
+					if (isTypeParcelable(type)) {
 						methodNameToSave = "put" + "ParcelableArrayList";
 						methodNameToRestore = "get" + "ParcelableArrayList";
 
@@ -159,15 +163,10 @@ public class BundleHelper {
 
 		} else {
 
-			boolean hasTypeArguments = false;
-			if (element instanceof DeclaredType) {
-				DeclaredType declaredType = (DeclaredType) element;
-				typeString = declaredType.asElement().toString();
-				elementType = annotationHelper.typeElementFromQualifiedName(typeString);
-				hasTypeArguments = declaredType.getTypeArguments().size() > 0;
-			}
+			boolean hasTypeArguments = element.getKind() == TypeKind.DECLARED && hasTypeArguments(element) || //
+					element.getKind() == TypeKind.TYPEVAR && hasTypeArguments(getUpperBound(element));
 
-			if (isTypeParcelable(elementType)) {
+			if (isTypeParcelable(type)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
 			} else {
@@ -186,9 +185,19 @@ public class BundleHelper {
 		return methodNameToSave;
 	}
 
-	private boolean isTypeParcelable(TypeElement elementType) {
-		TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE);
-		return elementType != null && annotationHelper.isSubtype(elementType, parcelableType);
+	private boolean isTypeParcelable(TypeMirror typeMirror) {
+		TypeMirror parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE).asType();
+		return annotationHelper.isSubtype(typeMirror, parcelableType);
+	}
+
+	private TypeMirror getUpperBound(TypeMirror type) {
+		TypeVariable typeVariable = (TypeVariable) type;
+		return typeVariable.getUpperBound();
+	}
+
+	private boolean hasTypeArguments(TypeMirror type) {
+		DeclaredType declaredType = (DeclaredType) type;
+		return declaredType.getTypeArguments().size() > 0;
 	}
 
 	public JExpression getExpressionToRestoreFromIntentOrBundle(JClass variableClass, JExpression intent, JExpression extras, JExpression extraKey, JMethod method, GeneratedClassHolder holder) {
@@ -202,7 +211,12 @@ public class BundleHelper {
 	public JExpression getExpressionToRestoreFromBundle(JClass variableClass, JExpression bundle, JExpression extraKey, JMethod method, GeneratedClassHolder holder) {
 		JExpression expressionToRestore;
 		if (methodNameToRestore.equals("getParcelableArray")) {
-			JClass erasure = variableClass.elementType().erasure().array();
+			JClass erasure;
+			if (upperBound != null) {
+				erasure = codeModelHelper.typeMirrorToJClass(upperBound, holder).erasure().array();
+			} else {
+				erasure = variableClass.elementType().erasure().array();
+			}
 			expressionToRestore = holder.refClass(org.androidannotations.api.bundle.BundleHelper.class).staticInvoke("getParcelableArray").arg(bundle).arg(extraKey).arg(erasure.dotclass());
 		} else {
 			expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
