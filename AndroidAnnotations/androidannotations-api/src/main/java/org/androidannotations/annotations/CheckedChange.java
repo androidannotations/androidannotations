@@ -37,8 +37,8 @@ import java.lang.annotation.Target;
  * The method MAY have multiple parameter:
  * </p>
  * <ul>
- * <li>A {@link android.widget.CompoundButton} parameter to know which view has
- * targeted this event</li>
+ * <li>A {@link android.widget.CompoundButton} (or a subclass) parameter to know
+ * which view has targeted this event</li>
  * <li>An {@link boolean} to know the new state of the view.</li>
  * </ul>
  * <blockquote>
@@ -53,6 +53,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;CheckedChange
  * void <b>myButton</b>CheckedChanged(CompoundButton button) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;CheckedChange
+ * void <b>myButton</b>CheckedChanged(CheckBox button) {
  * 	// Something Here
  * }
  * 

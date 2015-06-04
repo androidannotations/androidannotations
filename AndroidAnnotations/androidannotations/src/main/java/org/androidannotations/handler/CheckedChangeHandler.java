@@ -52,7 +52,7 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 		validatorHelper.returnTypeIsVoid(executableElement, valid);
 
 		validatorHelper.param.anyOrder() //
-				.type(CanonicalNameConstants.COMPOUND_BUTTON).optional() //
+				.extendsType(CanonicalNameConstants.COMPOUND_BUTTON).optional() //
 				.primitiveOrWrapper(TypeKind.BOOLEAN).optional() //
 				.validate(executableElement, valid);
 	}
@@ -69,8 +69,8 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 
 		for (VariableElement parameter : parameters) {
 			String parameterType = parameter.asType().toString();
-			if (parameterType.equals(CanonicalNameConstants.COMPOUND_BUTTON)) {
-				call.arg(btnParam);
+			if (isTypeOrSubclass(CanonicalNameConstants.COMPOUND_BUTTON, parameter)) {
+				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.COMPOUND_BUTTON, btnParam, parameter));
 			} else if (parameterType.equals(CanonicalNameConstants.BOOLEAN) || parameter.asType().getKind() == TypeKind.BOOLEAN) {
 				call.arg(isCheckedParam);
 			}
