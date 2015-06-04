@@ -19,6 +19,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 
 import android.view.View;
+import android.widget.Button;
 
 @EActivity(R.layout.clickable_widgets)
 public class ClicksHandledActivity extends EventsHandledAbstractActivity {
@@ -59,6 +60,11 @@ public class ClicksHandledActivity extends EventsHandledAbstractActivity {
 
 	@Click
 	public void buttonWithViewArgument(View viewArgument) {
+		this.viewArgument = viewArgument;
+	}
+
+	@Click
+	public void buttonWithButtonArgument(Button viewArgument) {
 		this.viewArgument = viewArgument;
 	}
 
