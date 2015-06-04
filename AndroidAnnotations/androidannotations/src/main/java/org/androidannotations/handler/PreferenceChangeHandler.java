@@ -59,7 +59,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
 		validatorHelper.param.anyOrder() //
-				.type(CanonicalNameConstants.PREFERENCE).optional() //
+				.extendsType(CanonicalNameConstants.PREFERENCE).optional() //
 				.anyOfTypes(CanonicalNameConstants.OBJECT, CanonicalNameConstants.STRING_SET, CanonicalNameConstants.STRING, //
 						CanonicalNameConstants.BOOLEAN, boolean.class.getName(), //
 						CanonicalNameConstants.INTEGER, int.class.getName(), //
@@ -86,9 +86,8 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 		for (VariableElement variableElement : userParameters) {
 			String type = variableElement.asType().toString();
-
-			if (type.equals(CanonicalNameConstants.PREFERENCE)) {
-				call.arg(preferenceParam);
+			if (isTypeOrSubclass(CanonicalNameConstants.PREFERENCE, variableElement)) {
+				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.PREFERENCE, preferenceParam, variableElement));
 			} else if (type.equals(CanonicalNameConstants.OBJECT)) {
 				call.arg(newValueParam);
 			} else if (type.equals(CanonicalNameConstants.INTEGER) || type.equals(int.class.getName()) || //
