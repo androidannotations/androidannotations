@@ -53,7 +53,7 @@ public class LongClickHandler extends AbstractViewListenerHandler {
 
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
-		validatorHelper.param.type(CanonicalNameConstants.VIEW).optional().validate(executableElement, valid);
+		validatorHelper.param.extendsType(CanonicalNameConstants.VIEW).optional().validate(executableElement, valid);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class LongClickHandler extends AbstractViewListenerHandler {
 		boolean hasViewParameter = parameters.size() == 1;
 		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
 		if (hasViewParameter) {
-			call.arg(viewParam);
+			call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.VIEW, viewParam, parameters.get(0)));
 		}
 	}
 

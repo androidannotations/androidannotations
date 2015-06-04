@@ -40,8 +40,8 @@ import java.lang.annotation.Target;
  * The method MAY have one parameter:
  * </p>
  * <ul>
- * <li>A {@link android.view.View} parameter to know which view has been long
- * clicked</li>
+ * <li>A {@link android.view.View} (or a subclass) parameter to know which view
+ * has been long clicked</li>
  * </ul>
  *
  * <blockquote>
@@ -56,6 +56,11 @@ import java.lang.annotation.Target;
  * 
  * &#064;LongClick
  * void <b>myButton</b>LongClicked(View view) {
+ * 	// Something Here
+ * }
+ * 
+ * &#064;LongClick
+ * void <b>myButton</b>LongClicked(Button view) {
  * 	// Something Here
  * }
  * 
