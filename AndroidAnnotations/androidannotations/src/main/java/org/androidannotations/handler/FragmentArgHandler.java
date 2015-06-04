@@ -109,7 +109,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		TypeMirror type = codeModelHelper.getActualType(element, holder);
 		JClass paramClass = codeModelHelper.typeMirrorToJClass(type, holder);
 
-		JMethod method = builderClass.method(PUBLIC, builderClass, fieldName);
+		JMethod method = builderClass.method(PUBLIC, holder.narrow(builderClass), fieldName);
 		JVar arg = method.param(paramClass, fieldName);
 		method.body().invoke(builderArgsField, bundleHelper.getMethodNameToSave()).arg(argKeyStaticField).arg(arg);
 		method.body()._return(_this());
