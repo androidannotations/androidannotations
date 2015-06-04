@@ -37,6 +37,8 @@ public class EditorActionsHandledActivity extends Activity {
 	@ViewById
 	EditText editText1;
 
+	EditText passedEditText;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,6 +47,11 @@ public class EditorActionsHandledActivity extends Activity {
 	@EditorAction(R.id.editText1)
 	void editorActionWithFullParameters(TextView tv, int actionId, KeyEvent event) {
 		actionHandled = true;
+	}
+
+	@EditorAction(R.id.editText4)
+	void editorActionWithEditTextParameter(EditText et) {
+		passedEditText = et;
 	}
 
 	@EditorAction(R.id.editText2)
