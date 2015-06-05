@@ -15,7 +15,7 @@
  */
 package org.androidannotations.handler;
 
-import static com.sun.codemodel.JExpr.ref;
+import static com.sun.codemodel.JExpr._this;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -68,6 +68,6 @@ public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu
 		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
 
 		JFieldRef idsRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.ID, true);
-		body.assign(ref(fieldName), menuParam.invoke("findItem").arg(idsRef));
+		body.assign(_this().ref(fieldName), menuParam.invoke("findItem").arg(idsRef));
 	}
 }
