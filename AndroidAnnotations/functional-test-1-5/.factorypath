@@ -1,0 +1,4 @@
+<factorypath>
+    <factorypathentry kind="PLUGIN" id="org.androidannotations" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/sun/codemodel/codemodel/2.6/codemodel-2.6.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>
