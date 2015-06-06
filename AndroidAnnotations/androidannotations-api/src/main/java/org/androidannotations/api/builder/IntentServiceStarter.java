@@ -16,25 +16,30 @@
 package org.androidannotations.api.builder;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 
-public abstract class ServiceIntentBuilder<I extends ServiceIntentBuilder<I>> extends IntentBuilder<I> implements IntentServiceStarter {
+/**
+ * Provides methods to start {@link android.app.IntentService IntentService}s.
+ */
+public interface IntentServiceStarter {
 
-	public ServiceIntentBuilder(Context context, Class<?> clazz) {
-		super(context, clazz);
-	}
+	/**
+	 * Starts the {@link android.app.IntentService IntentService} by calling
+	 * {@link android.content.Context#startService(android.content.Intent)
+	 * startService} on the previously given {@link android.content.Context
+	 * Context}.
+	 * 
+	 * @return the result of
+	 *         {@link android.content.Context#startService(android.content.Intent)
+	 *         startService}
+	 */
+	ComponentName start();
 
-	public ServiceIntentBuilder(Context context, Intent intent) {
-		super(context, intent);
-	}
+	/**
+	 * Accessor for the built {@link Intent}.
+	 * 
+	 * @return the created {@link Intent}.
+	 */
+	Intent get();
 
-	@Override
-	public ComponentName start() {
-		return context.startService(intent);
-	}
-
-	public boolean stop() {
-		return context.stopService(intent);
-	}
 }
