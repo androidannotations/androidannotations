@@ -19,7 +19,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.holder.EComponentHolder;
@@ -29,7 +28,6 @@ import org.androidannotations.process.IsValid;
 public class SubscribeHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	private final TargetAnnotationHelper annotationHelper;
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public SubscribeHandler(ProcessingEnvironment processingEnvironment) {
 		super(CanonicalNameConstants.SUBSCRIBE, processingEnvironment);

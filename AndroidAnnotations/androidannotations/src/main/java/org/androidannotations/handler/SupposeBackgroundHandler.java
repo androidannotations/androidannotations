@@ -23,7 +23,6 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.SupposeBackground;
 import org.androidannotations.api.BackgroundExecutor;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 
 import com.sun.codemodel.JBlock;
@@ -35,8 +34,6 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
 
 	private static final String METHOD_CHECK_BG_THREAD = "checkBgThread";
 
-	private final APTCodeModelHelper helper = new APTCodeModelHelper();
-
 	public SupposeBackgroundHandler(ProcessingEnvironment processingEnvironment) {
 		super(SupposeBackground.class, processingEnvironment);
 	}
@@ -45,7 +42,7 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
 	public void process(Element element, EComponentHolder holder) throws Exception {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		JMethod delegatingMethod = helper.overrideAnnotatedMethod(executableElement, holder);
+		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 
 		JClass bgExecutor = refClass(BackgroundExecutor.class);
 

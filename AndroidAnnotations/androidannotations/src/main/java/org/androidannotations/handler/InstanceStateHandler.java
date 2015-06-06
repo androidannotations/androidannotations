@@ -22,7 +22,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.InstanceState;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.holder.HasInstanceState;
@@ -39,7 +38,6 @@ import com.sun.codemodel.JVar;
 
 public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState> {
 
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 	private AnnotationHelper annotationHelper;
 
 	public InstanceStateHandler(ProcessingEnvironment processingEnvironment) {

@@ -24,7 +24,6 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.api.UiThreadExecutor;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -44,8 +43,6 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	private static final String METHOD_MAIN_LOOPER = "getMainLooper";
 	private static final String METHOD_GET_THREAD = "getThread";
 	private static final String METHOD_RUN_TASK = "runTask";
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public UiThreadHandler(ProcessingEnvironment processingEnvironment) {
 		super(UiThread.class, processingEnvironment);

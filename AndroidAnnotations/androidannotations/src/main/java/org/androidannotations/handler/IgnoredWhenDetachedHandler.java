@@ -23,7 +23,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.annotations.IgnoredWhenDetached;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
@@ -32,8 +31,6 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JMethod;
 
 public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentHolder> {
-
-	private final APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public IgnoredWhenDetachedHandler(ProcessingEnvironment processingEnvironment) {
 		super(IgnoredWhenDetached.class, processingEnvironment);
