@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
  *     android:layout_height="match_parent" &gt;
  * 
  *     &lt;fragment
- *         android:id="@+id/myFragment"
+ *         android:id="@+id/<b>myFragment</b>"
  *         android:name="mypackage.MyFragment_"
  *         android:layout_width="match_parent"
  *         android:layout_height="match_parent" /&gt;
@@ -55,9 +55,9 @@ import java.lang.annotation.Target;
  * // all injected fragment will be the same
  * 
  * 	&#064;FragmentById
- * 	public MyFragment myFragment;
+ * 	public MyFragment <b>myFragment</b>;
  * 	
- * 	&#064;FragmentById(R.id.myFragment)
+ * 	&#064;FragmentById(R.id.<b>myFragment</b>)
  * 	public MyFragment myFragment2;
  * }
  * </pre>
