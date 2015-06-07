@@ -29,7 +29,7 @@ import com.sun.codemodel.JMethod;
 public class FragmentByTagHandler extends AbstractFragmentByHandler {
 
 	public FragmentByTagHandler(AndroidAnnotationsEnvironment environment) {
-		super(FragmentByTag.class, environment);
+		super(FragmentByTag.class, environment, "findFragmentByTag");
 	}
 
 	@Override

@@ -35,6 +35,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
 import org.androidannotations.ElementValidation;
@@ -406,5 +407,60 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 
 	public void enclosingElementExtendsKeyEventCallback(Element element, ElementValidation validation) {
 		extendsKeyEventCallback(element.getEnclosingElement(), validation);
+	}
+
+	public void childFragmentUsedOnlyIfEnclosingClassIsFragment(Element element, ElementValidation validation) {
+		boolean childFragment = annotationHelper.extractAnnotationParameter(element, "childFragment");
+
+		if (childFragment) {
+			TypeElement fragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.FRAGMENT);
+			TypeElement supportFragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+
+			boolean enclosingElementIsFragment = false;
+
+			TypeElement enclosingElement = (TypeElement) element.getEnclosingElement();
+
+			if (fragment != null && annotationHelper.isSubtype(enclosingElement, fragment)) {
+				enclosingElementIsFragment = true;
+			} else if (supportFragment != null && annotationHelper.isSubtype(enclosingElement, supportFragment)) {
+				enclosingElementIsFragment = true;
+			}
+
+			if (!enclosingElementIsFragment) {
+				validation.addError(element, "The 'childFragmentManager' parameter only can be used if the class containing the annotated field is either subclass of "
+						+ CanonicalNameConstants.FRAGMENT + " or " + CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+			}
+		}
+	}
+
+	public void getChildFragmentManagerMethodIsAvailable(Element element, ElementValidation validation) {
+		boolean childFragment = annotationHelper.extractAnnotationParameter(element, "childFragment");
+
+		if (childFragment) {
+			TypeElement enclosingElement = (TypeElement) element.getEnclosingElement();
+
+			TypeElement fragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.FRAGMENT);
+			TypeElement supportFragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+
+			if (supportFragment != null && annotationHelper.isSubtype(enclosingElement, supportFragment)) {
+				if (!methodIsAvailableIn(supportFragment, "getChildFragmentManager")) {
+					validation.addError(element, "The 'childFragmentManager' parameter only can be used if the getChildFragmentManager() method is available in "
+							+ CanonicalNameConstants.SUPPORT_V4_FRAGMENT + ", update your support library version.");
+				}
+			} else if (fragment != null && annotationHelper.isSubtype(enclosingElement, fragment) && environment().getAndroidManifest().getMinSdkVersion() < 17) {
+				validation.addError(element, "The 'childFragmentManager' parameter only can be used if the getChildFragmentManager() method is available in "
+						+ CanonicalNameConstants.FRAGMENT + " (from API 17). Increment 'minSdkVersion' or use " + CanonicalNameConstants.SUPPORT_V4_FRAGMENT + ".");
+			}
+
+		}
+	}
+
+	private boolean methodIsAvailableIn(TypeElement element, String methodName) {
+		for (Element method : ElementFilter.methodsIn(element.getEnclosedElements())) {
+			if (method.getSimpleName().contentEquals(methodName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
