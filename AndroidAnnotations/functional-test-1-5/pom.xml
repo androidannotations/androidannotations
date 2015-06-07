@@ -155,9 +155,9 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<groupId>com.simpligility.maven.plugins</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.9.0-rc.3</version>
+				<version>4.2.1</version>
 				<configuration>
 					<sdk>
 						<platform>16</platform>
@@ -181,6 +181,7 @@
 						<arg>-Atrace=true</arg>
 						<arg>-AlogLevel=ERROR</arg>
 						<arg>-AlogFile=${project.build.directory}/functional-test.log</arg>
+						<arg>-AandroidManifestFile=${project.basedir}/src/main/AndroidManifest.xml</arg>
 					</compilerArgs>
 				</configuration>
 			</plugin>
@@ -205,17 +206,11 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>
-											com.jayway.maven.plugins.android.generation2
-										</groupId>
-										<artifactId>
-											android-maven-plugin
-										</artifactId>
-										<versionRange>
-											[3.8.2,)
-										</versionRange>
+										<groupId>com.simpligility.maven.plugins</groupId>
+										<artifactId>android-maven-plugin</artifactId>
+										<versionRange>[4.2.1,)</versionRange>
 										<goals>
-											<goal>consume-aar</goal>
+											<goal>emma</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
