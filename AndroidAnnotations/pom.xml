@@ -267,6 +267,11 @@
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>2.15</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -319,7 +324,6 @@
 						<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
 						<suppressionsLocation>${main.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
 						<consoleOutput>true</consoleOutput>
-						<linkXRef>false</linkXRef>
 						<includeTestSourceDirectory>true</includeTestSourceDirectory>
 					</configuration>
 					<dependencies>
@@ -397,18 +401,4 @@
 			</build>
 		</profile>
 	</profiles>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.12.1</version>
-				<configuration>
-					<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
-
 </project>
