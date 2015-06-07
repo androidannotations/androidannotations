@@ -13,14 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package android.app;
+package android.support.v4.app;
 
+import android.app.Activity;
 import android.content.Intent;
 
-/**
- * We have to put this on resources folder because we want to add it to
- * classpath only on some unit tests methods
- */
 public class Fragment {
 
 	public void onCreate(android.os.Bundle savedInstanceState) {
@@ -49,21 +46,6 @@ public class Fragment {
 
 	public void startActivityForResult(Intent intent, int flag) {
 
-	}
-	
-	public FragmentManager getFragmentManager() {
-		return null;
-	}
-	
-	public FragmentManager getChildFragmentManager() {
-		return null;
-	}
-
-	public abstract class FragmentManager {
-		
-		public abstract Fragment findFragmentById(int id);
-		
-		public abstract Fragment findFragmentByTag(String tag);
 	}
 
 }
