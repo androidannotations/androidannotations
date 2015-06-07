@@ -5,3 +5,4 @@ target
 *.iws
 *.idea
 .checkstyle
+.settings
