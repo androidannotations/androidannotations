@@ -1,7 +1,5 @@
 # Fast Android Development. Easy maintenance.
 
-### Note: we presented AndroidAnnotations at [Devoxx 2012](http://devoxx.com/display/DV12/Android+DDD+%28Diet+Driven+Development%29%21), video available on [Parleys.com](http://www.parleys.com/#st=5&id=3550)!
-
 [![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/Home) 
 
 **AndroidAnnotations** is an Open Source framework that **speeds up** Android development.
