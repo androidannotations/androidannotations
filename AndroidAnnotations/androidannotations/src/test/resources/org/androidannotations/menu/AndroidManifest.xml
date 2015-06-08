@@ -23,6 +23,7 @@
 
     <application>
         <activity android:name="org.androidannotations.menu.OptionsMenuItemActivity_" />
+        <activity android:name="org.androidannotations.menu.InjectMenuActivity_" />
     </application>
 
 </manifest>
