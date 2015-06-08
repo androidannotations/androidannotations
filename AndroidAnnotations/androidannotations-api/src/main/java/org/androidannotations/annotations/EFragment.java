@@ -22,9 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Should be used on android.app.Fragment or link
- * android.support.v4.app.Fragment classes to enable usage of
- * AndroidAnnotations.
+ * Should be used on android.app.Fragment or android.support.v4.app.Fragment
+ * classes to enable usage of AndroidAnnotations.
  * </p>
  * <p>
  * Your code related to injected beans should go in an {@link AfterInject}
