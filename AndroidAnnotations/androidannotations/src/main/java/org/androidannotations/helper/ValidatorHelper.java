@@ -532,6 +532,16 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void extendsMenu(Element element, IsValid valid) {
+		Element enclosingElement = element.getEnclosingElement();
+		String enclosingQualifiedName = enclosingElement.asType().toString();
+		TypeElement enclosingTypeElement = annotationHelper.typeElementFromQualifiedName(enclosingQualifiedName);
+
+		if (enclosingTypeElement != null) {
+			extendsType(element, CanonicalNameConstants.MENU, valid);
+		}
+	}
+
 	public void extendsOrmLiteDao(Element element, IsValid valid, OrmLiteHelper ormLiteHelper) {
 		if (!valid.isValid()) {
 			// we now that the element is invalid. early exit as the reason

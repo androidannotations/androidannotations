@@ -101,6 +101,7 @@ public class AnnotationHandlers {
 		add(new OptionsHandler(processingEnvironment));
 		add(new AppHandler(processingEnvironment));
 		add(new BeanHandler(processingEnvironment));
+		add(new InjectMenuHandler(processingEnvironment));
 		add(new OptionsMenuHandler(processingEnvironment));
 		add(new OptionsMenuItemHandler(processingEnvironment));
 		add(new OptionsItemHandler(processingEnvironment));
