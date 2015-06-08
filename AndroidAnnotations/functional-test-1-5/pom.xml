@@ -167,6 +167,7 @@
 							<jvmArgument>-Xmx512m</jvmArgument>
 						</jvmArguments>
 					</dex>
+					<disableConflictingDependenciesWarning>true</disableConflictingDependenciesWarning>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
