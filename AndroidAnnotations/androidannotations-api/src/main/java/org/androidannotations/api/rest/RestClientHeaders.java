@@ -20,6 +20,11 @@ import org.springframework.http.HttpAuthentication;
 /**
  * A @Rest interface implementing this interface will automatically have the
  * implementations of these methods generated.
+ * 
+ * @see org.androidannotations.annotations.rest.Rest
+ * @see org.androidannotations.annotations.rest.RequiresCookie
+ * @see org.androidannotations.annotations.rest.RequiresHeader
+ * @see org.androidannotations.annotations.rest.RequiresAuthentication
  */
 public interface RestClientHeaders {
 
@@ -29,6 +34,8 @@ public interface RestClientHeaders {
 	 * @param name
 	 *            Name of the cookie
 	 * @return the cookie value.
+	 * 
+	 * @see org.androidannotations.annotations.rest.RequiresCookie
 	 */
 	String getCookie(String name);
 
@@ -39,6 +46,8 @@ public interface RestClientHeaders {
 	 *            Name of the cookie
 	 * @param value
 	 *            Value of the cookie
+	 * 
+	 * @see org.androidannotations.annotations.rest.RequiresCookie
 	 */
 	void setCookie(String name, String value);
 
@@ -48,6 +57,8 @@ public interface RestClientHeaders {
 	 * @param name
 	 *            Name of the header
 	 * @return the header value.
+	 * 
+	 * @see org.androidannotations.annotations.rest.RequiresHeader
 	 */
 	String getHeader(String name);
 
@@ -58,6 +69,8 @@ public interface RestClientHeaders {
 	 *            Name of the header
 	 * @param value
 	 *            Value of the header
+	 * 
+	 * @see org.androidannotations.annotations.rest.RequiresHeader
 	 */
 	void setHeader(String name, String value);
 
@@ -66,6 +79,8 @@ public interface RestClientHeaders {
 	 * 
 	 * @param auth
 	 *            Authentication data
+	 * 
+	 * @see org.androidannotations.annotations.rest.RequiresAuthentication
 	 */
 	void setAuthentication(HttpAuthentication auth);
 
@@ -76,6 +91,8 @@ public interface RestClientHeaders {
 	 *            Name of the user
 	 * @param password
 	 *            Password of the user
+	 * 
+	 * @see org.androidannotations.annotations.rest.RequiresAuthentication
 	 */
 	void setHttpBasicAuth(String user, String password);
 
@@ -84,6 +101,8 @@ public interface RestClientHeaders {
 	 *
 	 * @param token
 	 *            Token used for authentication
+	 * 
+	 * @see org.androidannotations.annotations.rest.RequiresAuthentication
 	 */
 	void setBearerAuth(String token);
 }
