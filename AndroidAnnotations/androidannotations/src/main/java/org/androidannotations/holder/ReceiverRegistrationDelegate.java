@@ -27,19 +27,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.androidannotations.annotations.Receiver.RegisterAt;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 
-public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiverRegistration> extends GeneratedClassHolderDecorator<T> {
+public class ReceiverRegistrationDelegate<T extends EComponentHolder & HasReceiverRegistration> extends GeneratedClassHolderDelegate<T> {
 
 	private Map<IntentFilterData, JFieldVar> intentFilterFields = new HashMap<>();
 	private IllegalStateException illegalStateException = new IllegalStateException("This shouldn't happen unless the validation is bad");
 
-	public ReceiverRegistrationHolder(T holder) {
+	public ReceiverRegistrationDelegate(T holder) {
 		super(holder);
 	}
 
@@ -86,14 +84,6 @@ public class ReceiverRegistrationHolder<T extends EComponentHolder & HasReceiver
 
 	public JBlock getOnDetachBeforeSuperBlock() {
 		throw illegalStateException;
-	}
-
-	public JDefinedClass getGeneratedClass() {
-		return holder.getGeneratedClass();
-	}
-
-	public ProcessHolder.Classes classes() {
-		return holder.classes();
 	}
 
 	public static class IntentFilterData {

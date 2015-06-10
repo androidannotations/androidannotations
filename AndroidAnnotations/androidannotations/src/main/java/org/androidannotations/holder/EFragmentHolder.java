@@ -34,7 +34,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.helper.OrmLiteHelper;
-import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
+import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
@@ -62,10 +62,10 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
 	private JVar injectBundleArgs;
-	private InstanceStateHolder instanceStateHolder;
-	private OnActivityResultHolder onActivityResultHolder;
-	private ReceiverRegistrationHolder<EFragmentHolder> receiverRegistrationHolder;
-	private PreferencesHolder preferencesHolder;
+	private InstanceStateDelegate instanceStateDelegate;
+	private OnActivityResultDelegate onActivityResultDelegate;
+	private ReceiverRegistrationDelegate<EFragmentHolder> receiverRegistrationDelegate;
+	private PreferencesDelegate preferencesDelegate;
 	private JBlock onCreateOptionsMenuMethodBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
 	private JVar onCreateOptionsMenuMenuParam;
@@ -83,10 +83,10 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
-		instanceStateHolder = new InstanceStateHolder(this);
-		onActivityResultHolder = new OnActivityResultHolder(this);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder<>(this);
-		preferencesHolder = new PreferencesHolder(this);
+		instanceStateDelegate = new InstanceStateDelegate(this);
+		onActivityResultDelegate = new OnActivityResultDelegate(this);
+		receiverRegistrationDelegate = new ReceiverRegistrationDelegate<>(this);
+		preferencesDelegate = new PreferencesDelegate(this);
 		setOnCreate();
 		setOnViewCreated();
 		setFragmentBuilder();
@@ -375,22 +375,22 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	@Override
 	public JBlock getSaveStateMethodBody() {
-		return instanceStateHolder.getSaveStateMethodBody();
+		return instanceStateDelegate.getSaveStateMethodBody();
 	}
 
 	@Override
 	public JVar getSaveStateBundleParam() {
-		return instanceStateHolder.getSaveStateBundleParam();
+		return instanceStateDelegate.getSaveStateBundleParam();
 	}
 
 	@Override
 	public JMethod getRestoreStateMethod() {
-		return instanceStateHolder.getRestoreStateMethod();
+		return instanceStateDelegate.getRestoreStateMethod();
 	}
 
 	@Override
 	public JVar getRestoreStateBundleParam() {
-		return instanceStateHolder.getRestoreStateBundleParam();
+		return instanceStateDelegate.getRestoreStateBundleParam();
 	}
 
 	@Override
@@ -443,27 +443,27 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	@Override
 	public JBlock getOnActivityResultCaseBlock(int requestCode) {
-		return onActivityResultHolder.getCaseBlock(requestCode);
+		return onActivityResultDelegate.getCaseBlock(requestCode);
 	}
 
 	@Override
 	public JVar getOnActivityResultDataParam() {
-		return onActivityResultHolder.getDataParam();
+		return onActivityResultDelegate.getDataParam();
 	}
 
 	@Override
 	public JVar getOnActivityResultResultCodeParam() {
-		return onActivityResultHolder.getResultCodeParam();
+		return onActivityResultDelegate.getResultCodeParam();
 	}
 
 	@Override
 	public JMethod getOnActivityResultMethod() {
-		return onActivityResultHolder.getMethod();
+		return onActivityResultDelegate.getMethod();
 	}
 
 	@Override
 	public JFieldVar getIntentFilterField(IntentFilterData intentFilterData) {
-		return receiverRegistrationHolder.getIntentFilterField(intentFilterData);
+		return receiverRegistrationDelegate.getIntentFilterField(intentFilterData);
 	}
 
 	@Override
@@ -553,16 +553,16 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	@Override
 	public JBlock getAddPreferencesFromResourceBlock() {
-		return preferencesHolder.getAddPreferencesFromResourceBlock();
+		return preferencesDelegate.getAddPreferencesFromResourceBlock();
 	}
 
 	@Override
 	public void assignFindPreferenceByKey(JFieldRef idRef, JClass preferenceClass, JFieldRef fieldRef) {
-		preferencesHolder.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
+		preferencesDelegate.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
 	}
 
 	@Override
 	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass) {
-		return preferencesHolder.getFoundPreferenceHolder(idRef, preferenceClass);
+		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass);
 	}
 }

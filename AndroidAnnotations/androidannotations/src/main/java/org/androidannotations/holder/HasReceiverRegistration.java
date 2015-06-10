@@ -15,7 +15,7 @@
  */
 package org.androidannotations.holder;
 
-import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
+import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpression;

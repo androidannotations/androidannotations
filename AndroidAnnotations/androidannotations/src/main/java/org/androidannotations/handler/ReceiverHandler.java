@@ -32,7 +32,7 @@ import javax.lang.model.element.VariableElement;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasReceiverRegistration;
-import org.androidannotations.holder.ReceiverRegistrationHolder.IntentFilterData;
+import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 

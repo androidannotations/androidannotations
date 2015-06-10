@@ -27,7 +27,7 @@ public class FoundViewHolder extends FoundHolder {
 
 	@Override
 	protected JClass getBaseType() {
-		return holder.classes().VIEW;
+		return getGeneratedClassHolder().classes().VIEW;
 	}
 
 }
