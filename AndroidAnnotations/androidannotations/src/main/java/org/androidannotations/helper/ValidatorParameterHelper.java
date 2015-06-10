@@ -105,12 +105,12 @@ public class ValidatorParameterHelper {
 
 	private abstract class BaseParamValidator<V extends BaseParamValidator<?>> implements Validator {
 
-		private List<ParameterRequirement> parameterRequirements = new ArrayList<ParameterRequirement>();
+		private List<ParameterRequirement> parameterRequirements = new ArrayList<>();
 		private List<ParameterRequirement> originalparameterRequirements;
 
 		@Override
 		public void validate(ExecutableElement executableElement, IsValid valid) {
-			originalparameterRequirements = new ArrayList<ParameterRequirement>(parameterRequirements);
+			originalparameterRequirements = new ArrayList<>(parameterRequirements);
 		}
 
 		public V type(String qualifiedName) {
@@ -191,7 +191,7 @@ public class ValidatorParameterHelper {
 
 		private int index = -1;
 		private ParameterRequirement currentParameterRequirement;
-		private List<ParameterRequirement> satisfiedParameterRequirements = new ArrayList<ParameterRequirement>();
+		private List<ParameterRequirement> satisfiedParameterRequirements = new ArrayList<>();
 
 		private void nextParameterRequirement() {
 			index++;
@@ -249,7 +249,7 @@ public class ValidatorParameterHelper {
 
 	public class AnyOrderParamValidator extends BaseParamValidator<AnyOrderParamValidator> {
 
-		private List<ParameterRequirement> satisfiedParameterRequirements = new ArrayList<ParameterRequirement>();
+		private List<ParameterRequirement> satisfiedParameterRequirements = new ArrayList<>();
 
 		@Override
 		public void validate(ExecutableElement executableElement, IsValid valid) {

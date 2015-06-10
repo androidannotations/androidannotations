@@ -209,7 +209,7 @@ public class AndroidManifestFinder {
 		NodeList providerNodes = documentElement.getElementsByTagName("provider");
 		List<String> providerQualifiedNames = extractComponentNames(applicationPackage, providerNodes);
 
-		List<String> componentQualifiedNames = new ArrayList<String>();
+		List<String> componentQualifiedNames = new ArrayList<>();
 		componentQualifiedNames.addAll(activityQualifiedNames);
 		componentQualifiedNames.addAll(serviceQualifiedNames);
 		componentQualifiedNames.addAll(receiverQualifiedNames);
@@ -218,7 +218,7 @@ public class AndroidManifestFinder {
 		NodeList usesPermissionNodes = documentElement.getElementsByTagName("uses-permission");
 		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(usesPermissionNodes);
 
-		List<String> permissionQualifiedNames = new ArrayList<String>();
+		List<String> permissionQualifiedNames = new ArrayList<>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
 
 		return Option.of(AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, applicationDebuggableMode));
@@ -239,7 +239,7 @@ public class AndroidManifestFinder {
 	}
 
 	private List<String> extractComponentNames(String applicationPackage, NodeList componentNodes) {
-		List<String> componentQualifiedNames = new ArrayList<String>();
+		List<String> componentQualifiedNames = new ArrayList<>();
 
 		for (int i = 0; i < componentNodes.getLength(); i++) {
 			Node activityNode = componentNodes.item(i);
@@ -299,7 +299,7 @@ public class AndroidManifestFinder {
 	}
 
 	private List<String> extractUsesPermissionNames(NodeList usesPermissionNodes) {
-		List<String> usesPermissionQualifiedNames = new ArrayList<String>();
+		List<String> usesPermissionQualifiedNames = new ArrayList<>();
 
 		for (int i = 0; i < usesPermissionNodes.getLength(); i++) {
 			Node usesPermissionNode = usesPermissionNodes.item(i);

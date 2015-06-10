@@ -27,15 +27,15 @@ import java.io.IOException;
 import java.util.List;
 
 @EBean
-public class EBeanConverter implements HttpMessageConverter {
+public class EBeanConverter implements HttpMessageConverter<Object> {
 
 	@Override
-	public boolean canRead(Class aClass, MediaType mediaType) {
+	public boolean canRead(Class<?> aClass, MediaType mediaType) {
 		return false;
 	}
 
 	@Override
-	public boolean canWrite(Class aClass, MediaType mediaType) {
+	public boolean canWrite(Class<?> aClass, MediaType mediaType) {
 		return false;
 	}
 
@@ -45,7 +45,7 @@ public class EBeanConverter implements HttpMessageConverter {
 	}
 
 	@Override
-	public Object read(Class aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+	public Object read(Class<?> aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
 		return null;
 	}
 

@@ -21,10 +21,10 @@ package org.androidannotations.helper;
  */
 public class Option<T> {
 
-	private static final Option<?> ABSENT = new Option<Object>(null, false);
+	private static final Option<?> ABSENT = new Option<>(null, false);
 
 	public static <T> Option<T> of(T value) {
-		return new Option<T>(value, true);
+		return new Option<>(value, true);
 	}
 
 	@SuppressWarnings("unchecked")

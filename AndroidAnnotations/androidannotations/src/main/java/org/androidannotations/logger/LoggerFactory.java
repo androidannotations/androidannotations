@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class LoggerFactory {
 
-	private static final Map<String, Logger> LOGGER_CACHE = new HashMap<String, Logger>();
+	private static final Map<String, Logger> LOGGER_CACHE = new HashMap<>();
 
 	private LoggerFactory() {
 	}

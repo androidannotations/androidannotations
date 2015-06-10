@@ -26,8 +26,8 @@ import javax.lang.model.element.TypeElement;
 
 public class AnnotationElementsHolder implements AnnotationElements {
 
-	private final Map<String, Set<? extends Element>> rootAnnotatedElementsByAnnotation = new HashMap<String, Set<? extends Element>>();
-	private final Map<String, Set<AnnotatedAndRootElements>> ancestorAnnotatedElementsByAnnotation = new HashMap<String, Set<AnnotatedAndRootElements>>();
+	private final Map<String, Set<? extends Element>> rootAnnotatedElementsByAnnotation = new HashMap<>();
+	private final Map<String, Set<AnnotatedAndRootElements>> ancestorAnnotatedElementsByAnnotation = new HashMap<>();
 
 	public void putRootAnnotatedElements(String annotationName, Set<? extends Element> annotatedElements) {
 		rootAnnotatedElementsByAnnotation.put(annotationName, annotatedElements);
@@ -36,7 +36,7 @@ public class AnnotationElementsHolder implements AnnotationElements {
 	public void putAncestorAnnotatedElement(String annotationName, Element annotatedElement, TypeElement rootTypeElement) {
 		Set<AnnotatedAndRootElements> set = ancestorAnnotatedElementsByAnnotation.get(annotationName);
 		if (set == null) {
-			set = new HashSet<AnnotationElements.AnnotatedAndRootElements>();
+			set = new HashSet<>();
 			ancestorAnnotatedElementsByAnnotation.put(annotationName, set);
 		}
 		set.add(new AnnotatedAndRootElements(annotatedElement, rootTypeElement));
@@ -64,7 +64,7 @@ public class AnnotationElementsHolder implements AnnotationElements {
 
 	@Override
 	public Set<Element> getAllElements() {
-		Set<Element> allElements = new HashSet<Element>();
+		Set<Element> allElements = new HashSet<>();
 
 		for (Set<? extends Element> annotatedElements : rootAnnotatedElementsByAnnotation.values()) {
 			allElements.addAll(annotatedElements);

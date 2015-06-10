@@ -40,27 +40,27 @@ public abstract class EditorHelper<T extends EditorHelper<T>> {
 	}
 
 	protected IntPrefEditorField<T> intField(String key) {
-		return new IntPrefEditorField<T>(cast(), key);
+		return new IntPrefEditorField<>(cast(), key);
 	}
 
 	protected StringPrefEditorField<T> stringField(String key) {
-		return new StringPrefEditorField<T>(cast(), key);
+		return new StringPrefEditorField<>(cast(), key);
 	}
 
 	protected StringSetPrefEditorField<T> stringSetField(String key) {
-		return new StringSetPrefEditorField<T>(cast(), key);
+		return new StringSetPrefEditorField<>(cast(), key);
 	}
 
 	protected BooleanPrefEditorField<T> booleanField(String key) {
-		return new BooleanPrefEditorField<T>(cast(), key);
+		return new BooleanPrefEditorField<>(cast(), key);
 	}
 
 	protected FloatPrefEditorField<T> floatField(String key) {
-		return new FloatPrefEditorField<T>(cast(), key);
+		return new FloatPrefEditorField<>(cast(), key);
 	}
 
 	protected LongPrefEditorField<T> longField(String key) {
-		return new LongPrefEditorField<T>(cast(), key);
+		return new LongPrefEditorField<>(cast(), key);
 	}
 
 	@SuppressWarnings("unchecked")

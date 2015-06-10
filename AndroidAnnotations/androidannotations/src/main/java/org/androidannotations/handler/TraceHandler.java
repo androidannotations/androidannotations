@@ -166,7 +166,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JClass arraysClass = refClass(Arrays.class);
 		StringBuilder paramStr = new StringBuilder();
-		List<JExpression> paramExpressions = new ArrayList<JExpression>();
+		List<JExpression> paramExpressions = new ArrayList<>();
 		for (int i = 0; i < params.size(); i++) {
 			if (i > 0) {
 				paramStr.append(", ");

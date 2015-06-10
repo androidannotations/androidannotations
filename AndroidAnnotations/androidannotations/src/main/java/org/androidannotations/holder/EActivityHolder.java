@@ -102,7 +102,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		super(processHolder, annotatedElement);
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder<EActivityHolder>(this);
+		receiverRegistrationHolder = new ReceiverRegistrationHolder<>(this);
 		preferencesHolder = new PreferenceActivityHolder(this);
 		setSetContentView();
 		intentBuilder = new ActivityIntentBuilder(this, androidManifest);
@@ -323,7 +323,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "setContentView");
 		method.annotate(Override.class);
 
-		List<JVar> params = new ArrayList<JVar>();
+		List<JVar> params = new ArrayList<>();
 		for (int i = 0; i < paramTypes.length; i++) {
 			JVar param = method.param(paramTypes[i], paramNames[i]);
 			params.add(param);

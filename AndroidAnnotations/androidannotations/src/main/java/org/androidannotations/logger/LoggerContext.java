@@ -34,7 +34,7 @@ public class LoggerContext {
 	private static final Level DEFAULT_LEVEL = Level.DEBUG;
 
 	private Level currentLevel = DEFAULT_LEVEL;
-	private List<Appender> appenders = new ArrayList<Appender>();
+	private List<Appender> appenders = new ArrayList<>();
 
 	private LoggerContext() {
 		

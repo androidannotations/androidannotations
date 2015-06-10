@@ -110,7 +110,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 	protected SortedMap<String, JVar> addMethodParams(ExecutableElement executableElement, RestHolder restHolder, JMethod method) {
 		List<? extends VariableElement> params = executableElement.getParameters();
-		SortedMap<String, JVar> methodParams = new TreeMap<String, JVar>();
+		SortedMap<String, JVar> methodParams = new TreeMap<>();
 		for (VariableElement parameter : params) {
 			String paramName = parameter.getSimpleName().toString();
 			String paramType = parameter.asType().toString();

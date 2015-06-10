@@ -24,12 +24,12 @@ import javax.lang.model.element.Element;
 
 public class OriginatingElements {
 
-	private final Map<String, List<Element>> originatingElementsByClassName = new HashMap<String, List<Element>>();
+	private final Map<String, List<Element>> originatingElementsByClassName = new HashMap<>();
 
 	public void add(String qualifiedName, Element element) {
 		List<Element> originatingElements = originatingElementsByClassName.get(qualifiedName);
 		if (originatingElements == null) {
-			originatingElements = new ArrayList<Element>();
+			originatingElements = new ArrayList<>();
 			originatingElementsByClassName.put(qualifiedName, originatingElements);
 		}
 		originatingElements.add(element);

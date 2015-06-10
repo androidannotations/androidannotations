@@ -60,11 +60,7 @@ public final class SetXmlSerializer {
 			serializer.endTag(NAMESPACE, SET_TAG) //
 					.endDocument();
 
-		} catch (IllegalArgumentException e) {
-
-		} catch (IllegalStateException e) {
-
-		} catch (IOException e) {
+		} catch (IllegalArgumentException | IOException | IllegalStateException e) {
 
 		}
 
@@ -72,7 +68,7 @@ public final class SetXmlSerializer {
 	}
 
 	public static Set<String> deserialize(String data) {
-		Set<String> stringSet = new TreeSet<String>();
+		Set<String> stringSet = new TreeSet<>();
 		XmlPullParser parser = Xml.newPullParser();
 
 		try {

@@ -15,18 +15,14 @@
  */
 package org.androidannotations.manifest;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.utils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.io.ByteStreams;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 
@@ -77,13 +73,8 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 		manifestFileInParentOfOutputDirectory().delete();
 	}
 
-	private void copyManifestToParentOfOutputDirectory() throws FileNotFoundException, IOException {
-		final OutputStream out = new FileOutputStream(manifestFileInParentOfOutputDirectory());
-		try {
-			ByteStreams.copy(AndroidManifestFinderTest.class.getResourceAsStream("AndroidManifest.xml"), out);
-		} finally {
-			out.close();
-		}
+	private void copyManifestToParentOfOutputDirectory() throws IOException {
+		Files.copy(AndroidManifestFinderTest.class.getResourceAsStream("AndroidManifest.xml"), manifestFileInParentOfOutputDirectory().toPath());
 	}
 
 	private File manifestFileInParentOfOutputDirectory() {

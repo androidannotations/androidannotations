@@ -54,7 +54,7 @@ public class ModelValidator {
 
 			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(annotationName);
 
-			Set<Element> validatedAnnotatedElements = new HashSet<Element>();
+			Set<Element> validatedAnnotatedElements = new HashSet<>();
 
 			validatedElements.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 

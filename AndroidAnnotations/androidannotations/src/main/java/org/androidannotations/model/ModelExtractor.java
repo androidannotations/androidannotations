@@ -55,7 +55,7 @@ public class ModelExtractor {
 	 * and methods).
 	 */
 	private Set<TypeElement> findRootTypeElements(Set<? extends Element> rootElements) {
-		Set<TypeElement> rootTypeElements = new HashSet<TypeElement>();
+		Set<TypeElement> rootTypeElements = new HashSet<>();
 		for (Element element : rootElements) {
 			if (element instanceof TypeElement) {
 				rootTypeElements.add((TypeElement) element);
@@ -71,7 +71,7 @@ public class ModelExtractor {
 
 	private void extractAncestorsAnnotations(AnnotationElementsHolder extractedModel, Set<String> annotationTypesToCheck, Set<TypeElement> rootTypeElements) {
 		for (TypeElement rootTypeElement : rootTypeElements) {
-			Set<TypeElement> ancestors = new HashSet<TypeElement>();
+			Set<TypeElement> ancestors = new HashSet<>();
 			addAncestorsElements(ancestors, rootTypeElement);
 			if (!ancestors.isEmpty()) {
 
@@ -98,10 +98,10 @@ public class ModelExtractor {
 
 				/*
 				 * rootTypeElement is one of the types that are being compiled
-				 * 
+				 *
 				 * ancestorEnclosedElement is the annotated element in an
 				 * ancestor of rootTypeElement
-				 * 
+				 *
 				 * annotation is a type representing the annotation on
 				 * ancestorEnclosedElement
 				 */

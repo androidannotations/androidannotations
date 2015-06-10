@@ -72,7 +72,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	}
 
 	private void createConstructorAndBuilder() {
-		List<ExecutableElement> constructors = new ArrayList<ExecutableElement>();
+		List<ExecutableElement> constructors = new ArrayList<>();
 		for (Element e : annotatedElement.getEnclosedElements()) {
 			if (e.getKind() == CONSTRUCTOR) {
 				constructors.add((ExecutableElement) e);

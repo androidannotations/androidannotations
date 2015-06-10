@@ -68,7 +68,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		List<? extends VariableElement> parameters = element.getParameters();
 
-		List<String> parametersName = new ArrayList<String>();
+		List<String> parametersName = new ArrayList<>();
 		for (VariableElement parameter : parameters) {
 			parametersName.add(parameter.getSimpleName().toString());
 		}
@@ -124,7 +124,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	public Set<String> extractUrlVariableNames(ExecutableElement element) {
 
-		Set<String> variableNames = new HashSet<String>();
+		Set<String> variableNames = new HashSet<>();
 		String uriTemplate = extractAnnotationValueParameter(element);
 
 		boolean hasValueInAnnotation = uriTemplate != null;

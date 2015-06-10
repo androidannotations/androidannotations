@@ -36,7 +36,7 @@ public class SomeGenericBean<T> {
 	}
 
 	@UiThread
-	<T, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
+	<U, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
 	}
 
 }

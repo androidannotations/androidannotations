@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -40,9 +39,9 @@ import java.util.jar.JarFile;
  */
 public class ClassFinder {
 
-	private Map<URL, String> classpathLocations = new HashMap<URL, String>();
-	private Map<Class<?>, URL> results = new HashMap<Class<?>, URL>();
-	private List<Throwable> errors = new ArrayList<Throwable>();
+	private Map<URL, String> classpathLocations = new HashMap<>();
+	private Map<Class<?>, URL> results = new HashMap<>();
+	private List<Throwable> errors = new ArrayList<>();
 
 	public ClassFinder() {
 		refreshLocations();
@@ -64,15 +63,15 @@ public class ClassFinder {
 	public final List<Class<?>> findClassesInPackage(String packageName) {
 		synchronized (classpathLocations) {
 			synchronized (results) {
-				errors = new ArrayList<Throwable>();
-				results = new TreeMap<Class<?>, URL>(CLASS_COMPARATOR);
+				errors = new ArrayList<>();
+				results = new TreeMap<>(CLASS_COMPARATOR);
 				return findSubclasses(classpathLocations, packageName);
 			}
 		}
 	}
 
 	public final List<Throwable> getErrors() {
-		return new ArrayList<Throwable>(errors);
+		return new ArrayList<>(errors);
 	}
 
 	/**
@@ -95,7 +94,7 @@ public class ClassFinder {
 	 * associated package name.
 	 */
 	public final Map<URL, String> getClasspathLocations() {
-		Map<URL, String> map = new TreeMap<URL, String>(URL_COMPARATOR);
+		Map<URL, String> map = new TreeMap<>(URL_COMPARATOR);
 		File file = null;
 
 		String pathSep = System.getProperty("path.separator");
@@ -231,10 +230,7 @@ public class ClassFinder {
 
 		List<Class<?>> w = null;
 
-		Iterator<URL> it = locations.keySet().iterator();
-		while (it.hasNext()) {
-			URL url = it.next();
-
+		for (URL url : locations.keySet()) {
 			// search just required packages
 			String packageName = locations.get(url);
 			if (packageName.startsWith(searchingPackageName)) {
@@ -253,18 +249,16 @@ public class ClassFinder {
 		synchronized (results) {
 
 			// hash guarantees unique names...
-			Map<Class<?>, URL> thisResult = new TreeMap<Class<?>, URL>(CLASS_COMPARATOR);
+			Map<Class<?>, URL> thisResult = new TreeMap<>(CLASS_COMPARATOR);
 			List<Class<?>> v = synchronizedList(new ArrayList<Class<?>>());
 			// ...but return a list
 
-			List<URL> knownLocations = new ArrayList<URL>();
+			List<URL> knownLocations = new ArrayList<>();
 			knownLocations.add(location);
 			// TODO: add getResourceLocations() to this list
 
 			// iterate matching package locations...
-			for (int loc = 0; loc < knownLocations.size(); loc++) {
-				URL url = knownLocations.get(loc);
-
+			for (URL url : knownLocations) {
 				// Get a File object for the package
 				File directory = new File(url.getFile());
 
@@ -282,8 +276,6 @@ public class ClassFinder {
 								if (packageName.startsWith(searchingPackageName)) {
 									thisResult.put(c, url);
 								}
-							} catch (ClassNotFoundException cnfex) {
-								errors.add(cnfex);
 							} catch (Exception ex) {
 								errors.add(ex);
 							}
@@ -348,9 +340,8 @@ public class ClassFinder {
 
 			results.putAll(thisResult);
 
-			Iterator<Class<?>> it = thisResult.keySet().iterator();
-			while (it.hasNext()) {
-				v.add(it.next());
+			for (Class<?> aClass : thisResult.keySet()) {
+				v.add(aClass);
 			}
 			return v;
 

@@ -26,7 +26,7 @@ import com.sun.codemodel.JFieldRef;
 
 public class AndroidSystemServices {
 
-	private Map<String, String> registeredServices = new HashMap<String, String>();
+	private Map<String, String> registeredServices = new HashMap<>();
 
 	public AndroidSystemServices() {
 		// in alphabetical order

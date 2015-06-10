@@ -34,7 +34,7 @@ public class OnViewChangedNotifier {
 		}
 	}
 
-	private final Set<OnViewChangedListener> listeners = new LinkedHashSet<OnViewChangedListener>();
+	private final Set<OnViewChangedListener> listeners = new LinkedHashSet<>();
 
 	public void notifyViewChanged(HasViews hasViews) {
 		for (OnViewChangedListener listener : listeners) {

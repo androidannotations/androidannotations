@@ -29,7 +29,7 @@ public class CaseHelper {
 
 	public static String camelCaseToSnakeCase(String camelCase) {
 
-		List<String> tokens = new ArrayList<String>();
+		List<String> tokens = new ArrayList<>();
 		Matcher matcher = PATTERN.matcher(camelCase);
 		String acronym = "";
 		while (matcher.find()) {

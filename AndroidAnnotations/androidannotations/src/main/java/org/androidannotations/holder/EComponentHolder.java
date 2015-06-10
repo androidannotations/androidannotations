@@ -42,7 +42,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	protected JMethod init;
 	private JVar resourcesRef;
 	private JFieldVar powerManagerRef;
-	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<TypeMirror, JFieldVar>();
+	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<>();
 
 	public EComponentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);

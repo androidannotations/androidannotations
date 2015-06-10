@@ -85,7 +85,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		super(processHolder, annotatedElement);
 		instanceStateHolder = new InstanceStateHolder(this);
 		onActivityResultHolder = new OnActivityResultHolder(this);
-		receiverRegistrationHolder = new ReceiverRegistrationHolder<EFragmentHolder>(this);
+		receiverRegistrationHolder = new ReceiverRegistrationHolder<>(this);
 		preferencesHolder = new PreferencesHolder(this);
 		setOnCreate();
 		setOnViewCreated();
@@ -127,7 +127,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JFieldVar contentView = getContentView();
 
 		body._if(contentView.eq(_null())) //
-				._then()._return(_null());
+			._then()._return(_null());
 
 		body._return(contentView.invoke(findViewById).arg(idParam));
 	}
@@ -147,7 +147,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private JClass narrow(JClass toNarrow) {
-		List<JClass> classes = new ArrayList<JClass>();
+		List<JClass> classes = new ArrayList<>();
 		for (JTypeVar type : generatedClass.typeParams()) {
 			classes.add(codeModel().directClass(type.name()));
 		}

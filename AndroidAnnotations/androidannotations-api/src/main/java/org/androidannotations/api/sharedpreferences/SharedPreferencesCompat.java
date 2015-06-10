@@ -80,11 +80,7 @@ public abstract class SharedPreferencesCompat {
 
 		try {
 			return (T) method.invoke(obj, args);
-		} catch (IllegalAccessException e) {
-			// fall through
-		} catch (IllegalArgumentException e) {
-			// fall through
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
 			// fall through
 		}
 

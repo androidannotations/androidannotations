@@ -222,14 +222,12 @@ public class ValidatorHelper {
 
 	public void enclosingElementHasEActivityOrEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
-		@SuppressWarnings("unchecked")
 		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class);
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
 
 	public void enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(Element element, AnnotationElements validatedElements, IsValid valid) {
 		Element enclosingElement = element.getEnclosingElement();
-		@SuppressWarnings("unchecked")
 		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class, EIntentService.class);
 		hasOneOfClassAnnotations(element, enclosingElement, validatedElements, validAnnotations, valid);
 	}
@@ -254,7 +252,6 @@ public class ValidatorHelper {
 	}
 
 	public void hasEActivityOrEFragment(Element element, AnnotationElements validatedElements, IsValid valid) {
-		@SuppressWarnings("unchecked")
 		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class);
 		hasOneOfClassAnnotations(element, element, validatedElements, validAnnotations, valid);
 	}
@@ -275,7 +272,7 @@ public class ValidatorHelper {
 	}
 
 	private void hasClassAnnotation(Element reportElement, Element element, AnnotationElements validatedElements, Class<? extends Annotation> validAnnotation, IsValid valid) {
-		List<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
+		List<Class<? extends Annotation>> validAnnotations = new ArrayList<>();
 		validAnnotations.add(validAnnotation);
 		hasOneOfClassAnnotations(reportElement, element, validatedElements, validAnnotations, valid);
 	}
@@ -844,7 +841,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private static final List<Class<? extends Annotation>> REST_ANNOTATION_CLASSES = Arrays.asList(Get.class, Head.class, Options.class, Post.class, Put.class, Delete.class);
 
 	public void unannotatedMethodReturnsRestTemplate(TypeElement typeElement, IsValid valid) {
@@ -1468,7 +1464,7 @@ public class ValidatorHelper {
 	}
 
 	public void hasNotMultipleAnnotatedMethodWithSameName(Element element, IsValid valid, Class<? extends Annotation> annotation) {
-		Set<String> actionNames = new TreeSet<String>();
+		Set<String> actionNames = new TreeSet<>();
 
 		List<? extends Element> enclosedElements = element.getEnclosedElements();
 		for (Element enclosedElement : enclosedElements) {
@@ -1490,7 +1486,7 @@ public class ValidatorHelper {
 		Element enclosingElement = element.getEnclosingElement();
 		Receiver.RegisterAt registerAt = element.getAnnotation(Receiver.class).registerAt();
 
-		Map<String, List<Receiver.RegisterAt>> validRegisterAts = new HashMap<String, List<Receiver.RegisterAt>>();
+		Map<String, List<Receiver.RegisterAt>> validRegisterAts = new HashMap<>();
 		validRegisterAts.put(CanonicalNameConstants.ACTIVITY, VALID_ACTIVITY_REGISTER_AT);
 		validRegisterAts.put(CanonicalNameConstants.SERVICE, VALID_SERVICE_REGISTER_AT);
 		validRegisterAts.put(CanonicalNameConstants.FRAGMENT, VALID_FRAGMENT_REGISTER_AT);

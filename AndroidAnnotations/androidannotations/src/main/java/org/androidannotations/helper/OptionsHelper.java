@@ -60,7 +60,7 @@ public class OptionsHelper {
 	}
 
 	public static Set<String> getOptionsConstants() {
-		Set<String> set = new TreeSet<String>();
+		Set<String> set = new TreeSet<>();
 		for (Option optionEnum : Option.values()) {
 			set.add(optionEnum.getKey());
 		}

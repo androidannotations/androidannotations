@@ -37,7 +37,7 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 
 public class BundleHelper {
-	public static final Map<String, String> METHOD_SUFFIX_BY_TYPE_NAME = new HashMap<String, String>();
+	public static final Map<String, String> METHOD_SUFFIX_BY_TYPE_NAME = new HashMap<>();
 
 	static {
 
