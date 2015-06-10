@@ -80,6 +80,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JBlock onPauseBeforeSuperBlock;
 	private JBlock onAttachAfterSuperBlock;
 	private JBlock onDetachBeforeSuperBlock;
+	private JBlock onDestroyViewAfterSuperBlock;
 
 	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		super(processHolder, annotatedElement);
@@ -216,11 +217,15 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	public JFieldVar getContentView() {
 		if (contentView == null) {
-			setContentView();
-			setOnCreateView();
-			setOnDestroyView();
+			setContentViewRelatedMethods();
 		}
 		return contentView;
+	}
+
+	private void setContentViewRelatedMethods() {
+		setContentView();
+		setOnCreateView();
+		setOnDestroyView();
 	}
 
 	private void setContentView() {
@@ -253,8 +258,27 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod onDestroyView = generatedClass.method(PUBLIC, codeModel().VOID, "onDestroyView");
 		onDestroyView.annotate(Override.class);
 		JBlock body = onDestroyView.body();
-		body.assign(contentView, _null());
 		body.invoke(_super(), onDestroyView);
+		body.assign(contentView, _null());
+		onDestroyViewAfterSuperBlock = body.block();
+	}
+
+	private JBlock getOnDestroyViewAfterSuperBlock() {
+		if (onDestroyViewAfterSuperBlock == null) {
+			setContentViewRelatedMethods();
+		}
+		return onDestroyViewAfterSuperBlock;
+	}
+
+	@Override
+	public void processViewById(JFieldRef idRef, JClass viewClass, JFieldRef fieldRef) {
+		super.processViewById(idRef, viewClass, fieldRef);
+		clearInjectedView(fieldRef);
+	}
+
+	private void clearInjectedView(JFieldRef fieldRef) {
+		JBlock block = getOnDestroyViewAfterSuperBlock();
+		block.assign(fieldRef, _null());
 	}
 
 	private void setOnStart() {
