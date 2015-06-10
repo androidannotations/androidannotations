@@ -22,18 +22,24 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
 
-public abstract class FoundHolder extends GeneratedClassHolderWrapper<GeneratedClassHolder> {
+public abstract class FoundHolder {
 
+	private GeneratedClassHolder holder;
 	private JClass type;
 	private JExpression ref;
 	private JBlock ifNotNullBlock;
+
 	private boolean ifNotNullCreated = false;
 
 	public FoundHolder(GeneratedClassHolder holder, JClass type, JExpression ref, JBlock block) {
-		super(holder);
+		this.holder = holder;
 		this.type = type;
 		this.ref = ref;
 		ifNotNullBlock = block;
+	}
+
+	public GeneratedClassHolder getGeneratedClassHolder() {
+		return holder;
 	}
 
 	public JExpression getRef() {

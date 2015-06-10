@@ -9,10 +9,12 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 
-public class GeneratedClassHolderDecorator<T extends GeneratedClassHolder> extends GeneratedClassHolderWrapper<T> implements GeneratedClassHolder {
+public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolder> implements GeneratedClassHolder {
 
-	public GeneratedClassHolderDecorator(T holder) {
-		super(holder);
+	protected T holder;
+
+	public GeneratedClassHolderDelegate(T holder) {
+		this.holder = holder;
 	}
 
 	@Override
@@ -54,5 +56,4 @@ public class GeneratedClassHolderDecorator<T extends GeneratedClassHolder> exten
 	public final JDefinedClass definedClass(String fullyQualifiedClassName) {
 		return holder.definedClass(fullyQualifiedClassName);
 	}
-
 }

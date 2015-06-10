@@ -21,8 +21,9 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
 
-public class OnSeekBarChangeListenerHolder extends GeneratedClassHolderWrapper<EComponentWithViewSupportHolder> {
+public class OnSeekBarChangeListenerHolder  {
 
+	private EComponentWithViewSupportHolder holder;
 	private JDefinedClass listenerClass;
 	private JBlock onProgressChangedBody;
 	private JVar onProgressChangedSeekBarParam;
@@ -34,7 +35,7 @@ public class OnSeekBarChangeListenerHolder extends GeneratedClassHolderWrapper<E
 	private JVar onStopTrackingTouchSeekBarParam;
 
 	public OnSeekBarChangeListenerHolder(EComponentWithViewSupportHolder holder, JDefinedClass onSeekbarChangeListenerClass) {
-		super(holder);
+		this.holder = holder;
 		listenerClass = onSeekbarChangeListenerClass;
 		createOnProgressChanged();
 		createOnStartTrackingTouch();

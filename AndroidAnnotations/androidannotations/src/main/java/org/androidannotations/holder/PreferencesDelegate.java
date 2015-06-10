@@ -31,13 +31,13 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class PreferencesHolder extends GeneratedClassHolderDecorator<EComponentWithViewSupportHolder> implements HasPreferences {
+public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponentWithViewSupportHolder> implements HasPreferences {
 
 	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	protected JBlock addPreferencesFromResourceBlock;
 
-	public PreferencesHolder(EComponentWithViewSupportHolder holder) {
+	public PreferencesDelegate(EComponentWithViewSupportHolder holder) {
 		super(holder);
 	}
 

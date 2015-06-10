@@ -21,13 +21,13 @@ import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class PreferenceActivityHolder extends PreferencesHolder implements HasPreferenceHeaders {
+public class PreferenceActivityDelegate extends PreferencesDelegate implements HasPreferenceHeaders {
 
 	private JBlock onBuildHeadersBlock;
 
 	private JVar onBuildHeadersTargetParam;
 
-	public PreferenceActivityHolder(EComponentWithViewSupportHolder holder) {
+	public PreferenceActivityDelegate(EComponentWithViewSupportHolder holder) {
 		super(holder);
 	}
 

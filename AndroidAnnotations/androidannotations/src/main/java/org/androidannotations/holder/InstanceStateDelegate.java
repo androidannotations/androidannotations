@@ -26,14 +26,14 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class InstanceStateHolder extends GeneratedClassHolderDecorator<EComponentHolder> implements HasInstanceState {
+public class InstanceStateDelegate extends GeneratedClassHolderDelegate<EComponentHolder> implements HasInstanceState {
 
 	private JBlock saveStateMethodBody;
 	private JVar saveStateBundleParam;
 	private JMethod restoreStateMethod;
 	private JVar restoreStateBundleParam;
 
-	public InstanceStateHolder(EComponentHolder holder) {
+	public InstanceStateDelegate(EComponentHolder holder) {
 		super(holder);
 	}
 
