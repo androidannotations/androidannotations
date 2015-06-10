@@ -20,6 +20,9 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -32,6 +35,7 @@ import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JTypeVar;
 
 public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
@@ -116,5 +120,16 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	@Override
 	public JDefinedClass definedClass(String fullyQualifiedClassName) {
 		return processHolder.definedClass(fullyQualifiedClassName);
+	}
+
+	public JClass narrow(JClass toNarrow) {
+		List<JClass> classes = new ArrayList<JClass>();
+		for (JTypeVar type : generatedClass.typeParams()) {
+			classes.add(codeModel().directClass(type.name()));
+		}
+		if (classes.isEmpty()) {
+			return toNarrow;
+		}
+		return toNarrow.narrow(classes);
 	}
 }

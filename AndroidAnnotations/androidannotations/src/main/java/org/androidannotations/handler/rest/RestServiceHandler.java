@@ -24,15 +24,19 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.IsValid;
 
 import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
 public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
+
+	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public RestServiceHandler(ProcessingEnvironment processingEnvironment) {
 		super(RestService.class, processingEnvironment);
@@ -52,14 +56,17 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror fieldTypeMirror = element.asType();
-		String interfaceName = fieldTypeMirror.toString();
+		TypeMirror erasedFieldTypeMirror = processingEnv.getTypeUtils().erasure(fieldTypeMirror);
+		String interfaceName = erasedFieldTypeMirror.toString();
 
 		String generatedClassName = interfaceName + classSuffix();
+
+		JClass clazz = codeModelHelper.narrowGeneratedClass(refClass(generatedClassName), fieldTypeMirror, holder);
 
 		JBlock methodBody = holder.getInitBody();
 
 		JFieldRef field = JExpr.ref(fieldName);
 
-		methodBody.assign(field, JExpr._new(refClass(generatedClassName)).arg(holder.getContextRef()));
+		methodBody.assign(field, JExpr._new(clazz).arg(holder.getContextRef()));
 	}
 }

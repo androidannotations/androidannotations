@@ -25,9 +25,6 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -145,17 +142,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		fragmentArgumentsBuilderField = ref("args");
 		setFragmentBuilderBuild();
 		setFragmentBuilderCreate();
-	}
-
-	private JClass narrow(JClass toNarrow) {
-		List<JClass> classes = new ArrayList<>();
-		for (JTypeVar type : generatedClass.typeParams()) {
-			classes.add(codeModel().directClass(type.name()));
-		}
-		if (classes.isEmpty()) {
-			return toNarrow;
-		}
-		return toNarrow.narrow(classes);
 	}
 
 	private void setFragmentBuilderBuild() {
