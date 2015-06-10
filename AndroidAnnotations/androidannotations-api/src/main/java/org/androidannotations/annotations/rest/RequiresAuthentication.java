@@ -34,10 +34,12 @@ import java.lang.annotation.Target;
  * .
  * </p>
  * <p>
- * You can also add this specific method for <a
+ * You can also add a specific method for <a
  * href="https://en.wikipedia.org/wiki/Basic_access_authentication">Basic
  * Authentication</a> :
- * <code>setHttpBasicAuth(String username, String password)</code>.
+ * <code>setHttpBasicAuth(String username, String password)</code> or <a
+ * href="https://tools.ietf.org/html/rfc6750" >Bearer (OAuth) authentication</a>
+ * : <code>setBearerAuth(String token)</code>.
  * </p>
  * <blockquote>
  * 

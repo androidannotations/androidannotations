@@ -18,6 +18,8 @@ package org.androidannotations.api.rest;
 /**
  * A @Rest interface implementing this interface will automatically have the
  * implementations of this method generated.
+ * 
+ * @see org.androidannotations.annotations.rest.Rest
  */
 public interface RestClientErrorHandling {
 	/**
