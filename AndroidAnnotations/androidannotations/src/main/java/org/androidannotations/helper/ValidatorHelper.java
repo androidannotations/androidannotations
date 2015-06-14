@@ -1040,47 +1040,20 @@ public class ValidatorHelper {
 	}
 
 	public void canBePutInABundle(Element element, IsValid isValid) {
+		TypeMirror typeMirror = element.asType();
 		String typeString = element.asType().toString();
 
 		if (!isKnownBundleCompatibleType(typeString)) {
 
-			if (element.asType() instanceof DeclaredType) {
-
-				DeclaredType declaredType = (DeclaredType) element.asType();
-				typeString = declaredType.asElement().toString();
-
-			} else if (element.asType() instanceof ArrayType) {
+			if (typeMirror instanceof ArrayType) {
 				ArrayType arrayType = (ArrayType) element.asType();
-				TypeMirror componentType = arrayType.getComponentType();
-
-				if (componentType instanceof DeclaredType) {
-
-					DeclaredType declaredType = (DeclaredType) componentType;
-					typeString = declaredType.asElement().toString();
-
-				} else {
-					typeString = componentType.toString();
-				}
-
-			} else {
-				typeString = element.asType().toString();
+				typeMirror = arrayType.getComponentType();
 			}
 
-			TypeElement elementType = annotationHelper.typeElementFromQualifiedName(typeString);
-
-			if (elementType == null) {
-				elementType = getArrayEnclosingType(typeString);
-
-				if (elementType == null) {
-					annotationHelper.printAnnotationError(element, "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
-					isValid.invalidate();
-				}
-			}
-
-			if (elementType != null) {
-				TypeElement parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE);
-				TypeElement serializableType = annotationHelper.typeElementFromQualifiedName("java.io.Serializable");
-				if (!annotationHelper.isSubtype(elementType, parcelableType) && !annotationHelper.isSubtype(elementType, serializableType)) {
+			if (typeMirror.getKind() != TypeKind.NONE) {
+				TypeMirror parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE).asType();
+				TypeMirror serializableType = annotationHelper.typeElementFromQualifiedName("java.io.Serializable").asType();
+				if (!annotationHelper.isSubtype(typeMirror, parcelableType) && !annotationHelper.isSubtype(typeMirror, serializableType)) {
 					annotationHelper.printAnnotationError(element, "Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable");
 					isValid.invalidate();
 				}
