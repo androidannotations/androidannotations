@@ -117,6 +117,14 @@
 				<role>Committer</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>yDelouis</id>
+			<name>Yoann Delouis</name>
+			<email>ydelouis@gmail.com</email>
+			<roles>
+				<role>Committer</role>
+			</roles>
+		</developer>
 	</developers>
 
 	<properties>
