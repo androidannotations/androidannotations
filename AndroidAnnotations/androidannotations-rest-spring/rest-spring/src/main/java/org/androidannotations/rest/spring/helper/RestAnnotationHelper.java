@@ -287,12 +287,24 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		JExpression responseClassExpr = nullCastedToNarrowedClass(holder);
 		TypeMirror returnType = executableElement.getReturnType();
 		if (returnType.getKind() != TypeKind.VOID) {
+			if (getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null //
+					&& returnType.getKind() == TypeKind.DECLARED && !((DeclaredType) returnType).getTypeArguments().isEmpty() //
+					&& !returnType.toString().startsWith(RestSpringClasses.RESPONSE_ENTITY)) {
+				return createParameterizedTypeReferenceAnonymousSubclassInstance(returnType, holder);
+			}
+
 			JClass responseClass = retrieveResponseClass(returnType, holder);
 			if (responseClass != null) {
 				responseClassExpr = responseClass.dotclass();
 			}
 		}
 		return responseClassExpr;
+	}
+
+	public JExpression createParameterizedTypeReferenceAnonymousSubclassInstance(TypeMirror returnType, RestHolder holder) {
+		JClass narrowedTypeReference = holder.getEnvironment().getJClass(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE).narrow(codeModelHelper.typeMirrorToJClass(returnType));
+		JDefinedClass anonymousClass = holder.getEnvironment().getCodeModel().anonymousClass(narrowedTypeReference);
+		return JExpr._new(anonymousClass);
 	}
 
 	public JClass retrieveResponseClass(TypeMirror returnType, RestHolder holder) {
@@ -303,12 +315,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		if (returnTypeString.startsWith(RESPONSE_ENTITY)) {
 			DeclaredType declaredReturnType = (DeclaredType) returnType;
 			if (declaredReturnType.getTypeArguments().size() > 0) {
-				responseClass = resolveResponseClass(declaredReturnType.getTypeArguments().get(0), holder);
+				responseClass = resolveResponseClass(declaredReturnType.getTypeArguments().get(0), holder, false);
 			} else {
 				responseClass = getEnvironment().getJClass(RESPONSE_ENTITY);
 			}
 		} else {
-			responseClass = resolveResponseClass(returnType, holder);
+			responseClass = resolveResponseClass(returnType, holder, true);
 		}
 
 		return responseClass;
@@ -336,7 +348,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	 * </ul>
 	 *
 	 */
-	private JClass resolveResponseClass(TypeMirror expectedType, RestHolder holder) {
+	private JClass resolveResponseClass(TypeMirror expectedType, RestHolder holder, boolean useTypeReference) {
 		// is a class or an interface
 		if (expectedType.getKind() == TypeKind.DECLARED) {
 			DeclaredType declaredType = (DeclaredType) expectedType;
@@ -351,6 +363,10 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			// is a generics, must generate a new super class
 			TypeElement declaredElement = (TypeElement) declaredType.asElement();
 
+			if (useTypeReference && getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null) {
+				return codeModelHelper.typeMirrorToJClass(declaredType);
+			}
+
 			JClass baseClass = codeModelHelper.typeMirrorToJClass(declaredType).erasure();
 			JClass decoratedExpectedClass = retrieveDecoratedResponseClass(declaredType, declaredElement, holder);
 			if (decoratedExpectedClass == null) {
@@ -359,7 +375,18 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			return decoratedExpectedClass;
 		} else if (expectedType.getKind() == TypeKind.ARRAY) {
 			ArrayType arrayType = (ArrayType) expectedType;
-			return resolveResponseClass(arrayType.getComponentType(), holder).array();
+
+			TypeMirror componentType = arrayType.getComponentType();
+
+			if (componentType.getKind() == TypeKind.DECLARED) {
+				DeclaredType declaredType = (DeclaredType) componentType;
+
+				if (useTypeReference && getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null) {
+					return codeModelHelper.typeMirrorToJClass(expectedType);
+				}
+			}
+
+			return resolveResponseClass(componentType, holder, false).array();
 		}
 
 		// is not a class nor an interface, return directly
