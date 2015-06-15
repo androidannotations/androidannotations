@@ -109,6 +109,14 @@
 				<role>Committer</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>WonderCsabo</id>
+			<name>Csaba Kozák</name>
+			<email>kozakcsabi@gmail.com</email>
+			<roles>
+				<role>Committer</role>
+			</roles>
+		</developer>
 	</developers>
 
 	<properties>
