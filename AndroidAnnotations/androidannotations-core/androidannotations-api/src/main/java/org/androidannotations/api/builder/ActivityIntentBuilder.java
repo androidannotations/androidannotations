@@ -62,12 +62,13 @@ public abstract class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> 
 	}
 
 	@Override
-	public final void start() {
+	public final PostActivityStarter start() {
 		startForResult(-1);
+		return new PostActivityStarter(context);
 	}
 
 	@Override
-	public abstract void startForResult(int requestCode);
+	public abstract PostActivityStarter startForResult(int requestCode);
 
 	/**
 	 * Adds additional options {@link Bundle} to the start method.
