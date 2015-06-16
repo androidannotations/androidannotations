@@ -214,7 +214,7 @@ public class ValidatorHelper {
 		hasOneOfAnnotations(element, element.getEnclosingElement(), validAnnotations, validation);
 	}
 
-	private void hasOneOfAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, ElementValidation validation) {
+	public void hasOneOfAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, ElementValidation validation) {
 		checkAnnotations(reportElement, element, validAnnotations, true, validation);
 	}
 
