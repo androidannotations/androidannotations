@@ -25,12 +25,9 @@ import javax.xml.ws.soap.AddressingFeature.Responses;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.Trace;
-import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
 
 import dalvik.annotation.TestTargetClass;
 
-@RunWith(Runner.class)
 @EBean
 @XmlType
 @TestTargetClass(String.class)
