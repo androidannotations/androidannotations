@@ -28,6 +28,10 @@
     <artifactId>androidannotations</artifactId>
     <name>AndroidAnnotations Annotation Processor</name>
     <description>The Annotation Processor jar that generates code</description>
+    
+    <properties>
+		<main.basedir>${project.parent.basedir}</main.basedir>
+	</properties>
 
     <dependencies>
         <dependency>

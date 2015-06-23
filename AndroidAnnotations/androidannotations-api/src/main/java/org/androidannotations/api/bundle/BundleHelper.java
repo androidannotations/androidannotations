@@ -23,7 +23,7 @@ import android.os.Parcelable;
 /**
  * Utility class for working with {@link Bundle} objects.
  */
-public class BundleHelper {
+public final class BundleHelper {
 
 	private BundleHelper() {
 

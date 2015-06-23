@@ -61,7 +61,7 @@ public final class SetXmlSerializer {
 					.endDocument();
 
 		} catch (IllegalArgumentException | IOException | IllegalStateException e) {
-
+			// should never happen
 		}
 
 		return writer.toString();

@@ -64,6 +64,7 @@ public class ThreadActivity extends Activity {
 				sem.release();
 			}
 		} catch (InterruptedException e) {
+			// should never happen
 		}
 	}
 
@@ -73,14 +74,12 @@ public class ThreadActivity extends Activity {
 	}
 
 	@Background(serial = "test")
-	void addSerializedBackground(List<Integer> list, int i, int delay,
-			Semaphore sem) {
+	void addSerializedBackground(List<Integer> list, int i, int delay, Semaphore sem) {
 		add(list, i, delay, sem);
 	}
 
 	@Background(id = "to_cancel")
-	void addCancellableBackground(List<Integer> list, int i,
-			int interruptibleDelay) {
+	void addCancellableBackground(List<Integer> list, int i, int interruptibleDelay) {
 		add(list, i, interruptibleDelay, null);
 	}
 
@@ -105,14 +104,12 @@ public class ThreadActivity extends Activity {
 	}
 
 	@Background
-	void genericBackgroundMethod(
-			List<Map<String, List<Set<MySerializableBean[]>>>> param) {
+	void genericBackgroundMethod(List<Map<String, List<Set<MySerializableBean[]>>>> param) {
 
 	}
 
 	@Background
-	void genericBackgroundMethod(
-			Set<? extends GenericBean<? extends SomeBean>> param) {
+	void genericBackgroundMethod(Set<? extends GenericBean<? extends SomeBean>> param) {
 
 	}
 

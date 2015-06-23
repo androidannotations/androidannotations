@@ -96,7 +96,8 @@ import org.androidannotations.process.IsValid;
 @SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
 
-	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
+	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(),
+			RestClientSupport.class.getName());
 
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
 
@@ -114,11 +115,14 @@ public class ValidatorHelper {
 
 	private static final Collection<Integer> VALID_LOG_LEVELS = Arrays.asList(LOG_VERBOSE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR);
 
-	private static final List<Receiver.RegisterAt> VALID_ACTIVITY_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop);
+	private static final List<Receiver.RegisterAt> VALID_ACTIVITY_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause,
+			Receiver.RegisterAt.OnStartOnStop);
 	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy);
-	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause, Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
+	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause,
+			Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
 
-	private static final List<String> VALID_PREFERENCE_CLASSES = asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT, CanonicalNameConstants.SUPPORT_V4_PREFERENCE_FRAGMENT, CanonicalNameConstants.MACHINARIUS_V4_PREFERENCE_FRAGMENT);
+	private static final List<String> VALID_PREFERENCE_CLASSES = asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT,
+			CanonicalNameConstants.SUPPORT_V4_PREFERENCE_FRAGMENT, CanonicalNameConstants.MACHINARIUS_V4_PREFERENCE_FRAGMENT);
 
 	protected final TargetAnnotationHelper annotationHelper;
 
@@ -139,7 +143,8 @@ public class ValidatorHelper {
 	public void isNotSynchronized(Element element, IsValid valid) {
 		if (annotationHelper.isSynchronized(element)) {
 			valid.invalidate();
-			annotationHelper.printAnnotationError(element, "%s cannot be used on a synchronized element. If you think you shall need to use the synchronized keyword for a specific use case, please post on the mailing list.");
+			annotationHelper.printAnnotationError(element,
+					"%s cannot be used on a synchronized element. If you think you shall need to use the synchronized keyword for a specific use case, please post on the mailing list.");
 		}
 	}
 
@@ -626,7 +631,8 @@ public class ValidatorHelper {
 			if (!typeElement.getModifiers().contains(Modifier.ABSTRACT) && !applicationClassName.equals(generatedComponentQualifiedName)) {
 				if (applicationClassName.equals(componentQualifiedName)) {
 					valid.invalidate();
-					annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedComponentQualifiedName + " instead of " + componentQualifiedName);
+					annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register "
+							+ generatedComponentQualifiedName + " instead of " + componentQualifiedName);
 				} else {
 					annotationHelper.printAnnotationWarning(element, "The component " + generatedComponentQualifiedName + " is not registered in the AndroidManifest.xml file.");
 				}
@@ -835,7 +841,8 @@ public class ValidatorHelper {
 		T defaultAnnotation = method.getAnnotation(annotationClass);
 		if (defaultAnnotation != null) {
 			if (!condition.correctReturnType(method.getReturnType())) {
-				annotationHelper.printAnnotationError(method, annotationClass.getName(), TargetAnnotationHelper.annotationName(annotationClass) + " can only be used on a method that returns a " + expectedReturnType);
+				annotationHelper.printAnnotationError(method, annotationClass.getName(), TargetAnnotationHelper.annotationName(annotationClass) + " can only be used on a method that returns a "
+						+ expectedReturnType);
 				valid.invalidate();
 			}
 		}
@@ -877,11 +884,13 @@ public class ValidatorHelper {
 					if (returnType.toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
 						if (executableElement.getParameters().size() > 0) {
 							valid.invalidate();
-							annotationHelper.printError(enclosedElement, "The method returning a RestTemplate should not declare any parameter in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+							annotationHelper.printError(enclosedElement,
+									"The method returning a RestTemplate should not declare any parameter in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 						} else {
 							if (foundGetRestTemplateMethod) {
 								valid.invalidate();
-								annotationHelper.printError(enclosedElement, "Only one method should declare returning a RestTemplate in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+								annotationHelper.printError(enclosedElement, "Only one method should declare returning a RestTemplate in a " + TargetAnnotationHelper.annotationName(Rest.class)
+										+ " annotated interface");
 							} else {
 								foundGetRestTemplateMethod = true;
 							}
@@ -894,7 +903,8 @@ public class ValidatorHelper {
 
 						if (executableElement.getParameters().size() != 0) {
 							valid.invalidate();
-							annotationHelper.printError(enclosedElement, "The method getRootUrl cannot have parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+							annotationHelper.printError(enclosedElement, "The method getRootUrl cannot have parameters on a " + TargetAnnotationHelper.annotationName(Rest.class)
+									+ " annotated interface");
 						}
 
 						if (!foundGetRootUrlMethod) {
@@ -912,7 +922,8 @@ public class ValidatorHelper {
 									foundSetRestTemplateMethod = true;
 								} else {
 									valid.invalidate();
-									annotationHelper.printError(enclosedElement, "You can only have oneRestTemplate setter method on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+									annotationHelper.printError(enclosedElement, "You can only have oneRestTemplate setter method on a " + TargetAnnotationHelper.annotationName(Rest.class)
+											+ " annotated interface");
 
 								}
 							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_ROOT_URL) && !foundSetRootUrlMethod) {
@@ -923,7 +934,9 @@ public class ValidatorHelper {
 								foundSetBearerAuthMethod = true;
 							} else {
 								valid.invalidate();
-								annotationHelper.printError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+								annotationHelper.printError(enclosedElement,
+										"The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class)
+												+ " annotated interface");
 
 							}
 						} else if (parameters.size() == 2) {
@@ -931,11 +944,14 @@ public class ValidatorHelper {
 							VariableElement secondParameter = parameters.get(1);
 							if (!(firstParameter.asType().toString().equals(CanonicalNameConstants.STRING) && secondParameter.asType().toString().equals(CanonicalNameConstants.STRING))) {
 								valid.invalidate();
-								annotationHelper.printError(enclosedElement, "The method to set headers, cookies, or HTTP Basic Auth should have only String parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+								annotationHelper.printError(enclosedElement,
+										"The method to set headers, cookies, or HTTP Basic Auth should have only String parameters on a " + TargetAnnotationHelper.annotationName(Rest.class)
+												+ " annotated interface");
 							}
 						} else {
 							valid.invalidate();
-							annotationHelper.printError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+							annotationHelper.printError(enclosedElement,
+									"The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 						}
 					} else if (returnType.toString().equals(CanonicalNameConstants.STRING)) {
 						List<? extends VariableElement> parameters = executableElement.getParameters();
@@ -948,20 +964,25 @@ public class ValidatorHelper {
 									foundGetHeaderMethod = true;
 								} else {
 									valid.invalidate();
-									annotationHelper.printError(enclosedElement, "Only one getCookie(String) and one getHeader(String) method are allowed on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+									annotationHelper.printError(enclosedElement,
+											"Only one getCookie(String) and one getHeader(String) method are allowed on a " + TargetAnnotationHelper.annotationName(Rest.class)
+													+ " annotated interface");
 								}
 							} else {
 								valid.invalidate();
-								annotationHelper.printError(enclosedElement, "Only getCookie(String) and getHeader(String) can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
+								annotationHelper.printError(enclosedElement,
+										"Only getCookie(String) and getHeader(String) can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 							}
 
 						} else {
 							valid.invalidate();
-							annotationHelper.printError(enclosedElement, "The only methods that can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface are getCookie(String) and getHeader(String)");
+							annotationHelper.printError(enclosedElement, "The only methods that can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class)
+									+ " annotated interface are getCookie(String) and getHeader(String)");
 						}
 					} else {
 						valid.invalidate();
-						annotationHelper.printError(enclosedElement, "All methods should be annotated in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface, except the ones that returns or set a RestTemplate");
+						annotationHelper.printError(enclosedElement, "All methods should be annotated in a " + TargetAnnotationHelper.annotationName(Rest.class)
+								+ " annotated interface, except the ones that returns or set a RestTemplate");
 					}
 				}
 			}
@@ -1094,7 +1115,8 @@ public class ValidatorHelper {
 			String generatedSimpleName = simpleName + classSuffix();
 			if (componentQualifiedNames.contains(componentQualifiedName)) {
 				valid.invalidate();
-				annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedSimpleName + " instead of " + simpleName);
+				annotationHelper.printAnnotationError(element, "The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register "
+						+ generatedSimpleName + " instead of " + simpleName);
 			} else {
 				if (printWarning) {
 					annotationHelper.printAnnotationWarning(element, "The component " + generatedSimpleName + " is not registered in the AndroidManifest.xml file.");
@@ -1278,11 +1300,13 @@ public class ValidatorHelper {
 				if ("start".equals(parameterName) || "count".equals(parameterName) || "after".equals(parameterName)) {
 					continue;
 				}
-				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. You can only have start, before, or count parameter name. Try to pick a parameter from android.text.TextWatcher.beforeTextChanged() method.");
+				annotationHelper.printAnnotationError(executableElement,
+						"Unrecognized parameter name. You can only have start, before, or count parameter name. Try to pick a parameter from android.text.TextWatcher.beforeTextChanged() method.");
 				valid.invalidate();
 				continue;
 			}
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter (" + parameter.toString() + "). %s can only have a android.widget.TextView parameter and/or parameters from android.text.TextWatcher.beforeTextChanged() method.");
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter (" + parameter.toString()
+					+ "). %s can only have a android.widget.TextView parameter and/or parameters from android.text.TextWatcher.beforeTextChanged() method.");
 			valid.invalidate();
 		}
 	}
@@ -1314,11 +1338,13 @@ public class ValidatorHelper {
 				if ("start".equals(parameterName) || "before".equals(parameterName) || "count".equals(parameterName)) {
 					continue;
 				}
-				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter name. You can only have start, before, or count parameter name. Try to pick a prameter from the android.text.TextWatcher.onTextChanged() method.");
+				annotationHelper.printAnnotationError(executableElement,
+						"Unrecognized parameter name. You can only have start, before, or count parameter name. Try to pick a prameter from the android.text.TextWatcher.onTextChanged() method.");
 				valid.invalidate();
 				continue;
 			}
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter (" + parameter.toString() + "). %s can only have a android.widget.TextView parameter and/or parameters from android.text.TextWatcher.onTextChanged() method.");
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter (" + parameter.toString()
+					+ "). %s can only have a android.widget.TextView parameter and/or parameters from android.text.TextWatcher.onTextChanged() method.");
 			valid.invalidate();
 		}
 	}
@@ -1346,7 +1372,8 @@ public class ValidatorHelper {
 				continue;
 			}
 			valid.invalidate();
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter type. %s can only have a android.widget.TextView parameter and/or an android.text.Editable parameter. See android.text.TextWatcher.afterTextChanged() for more informations.");
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter type. %s can only have a android.widget.TextView parameter and/or an android.text.Editable parameter."
+					+ " See android.text.TextWatcher.afterTextChanged() for more informations.");
 		}
 	}
 
@@ -1381,7 +1408,8 @@ public class ValidatorHelper {
 				fromUserParameterFound = true;
 				continue;
 			}
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "("
+					+ CanonicalNameConstants.SEEKBAR + " seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
 			valid.invalidate();
 		}
 	}
@@ -1390,7 +1418,8 @@ public class ValidatorHelper {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
 		if (parameters.size() > 1) {
-			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
+			annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR
+					+ ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
 			valid.invalidate();
 			return;
 		}
@@ -1398,7 +1427,8 @@ public class ValidatorHelper {
 		if (parameters.size() == 1) {
 			String parameterType = parameters.get(0).asType().toString();
 			if (!parameterType.equals(CanonicalNameConstants.SEEKBAR)) {
-				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
+				annotationHelper.printAnnotationError(executableElement, "Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR
+						+ ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
 				valid.invalidate();
 			}
 		}
@@ -1448,7 +1478,8 @@ public class ValidatorHelper {
 			String enclosedElementName = enclosedElement.getSimpleName().toString();
 			if (actionNames.contains(enclosedElementName)) {
 				valid.invalidate();
-				annotationHelper.printError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(annotation) + " annotated method must have unique name even if the signature is not the same");
+				annotationHelper.printError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(annotation)
+						+ " annotated method must have unique name even if the signature is not the same");
 			} else {
 				actionNames.add(enclosedElementName);
 			}

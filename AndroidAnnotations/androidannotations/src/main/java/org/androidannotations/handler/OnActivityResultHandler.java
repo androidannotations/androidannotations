@@ -96,7 +96,8 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 			TypeMirror parameterType = parameter.asType();
 			if (parameter.getAnnotation(OnActivityResult.Extra.class) != null) {
 				if (extras == null) {
-					extras = onResultBlock.decl(classes().BUNDLE, "extras_", JOp.cond(intent.ne(_null()).cand(intent.invoke("getExtras").ne(_null())), intent.invoke("getExtras"), _new(classes().BUNDLE)));
+					extras = onResultBlock.decl(classes().BUNDLE, "extras_",
+							JOp.cond(intent.ne(_null()).cand(intent.invoke("getExtras").ne(_null())), intent.invoke("getExtras"), _new(classes().BUNDLE)));
 				}
 				JExpression extraParameter = extraHandler.getExtraValue(parameter, extras, onResultBlock, holder);
 				onResultInvocation.arg(extraParameter);

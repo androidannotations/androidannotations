@@ -83,8 +83,11 @@ public class ParameterizedRobolectricTestRunnerWorkaround extends Suite {
 		public ClassLoaderCreatorRobolectricTestRunner(Class<?> testClass) throws Exception {
 			super(testClass);
 
-			Map<Class<? extends RobolectricTestRunner>, EnvHolder> envHoldersByTestRunner = field("envHoldersByTestRunner").ofType(new TypeRef<Map<Class<? extends RobolectricTestRunner>, EnvHolder>>() {
-			}).in(this).get();
+			Map<Class<? extends RobolectricTestRunner>, EnvHolder> envHoldersByTestRunner = field("envHoldersByTestRunner") //
+					.ofType(new TypeRef<Map<Class<? extends RobolectricTestRunner>, EnvHolder>>() {
+					})//
+					.in(this)//
+					.get();
 
 			EnvHolder envHolder = envHoldersByTestRunner.get(RobolectricTestRunner.class);
 

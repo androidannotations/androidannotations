@@ -25,7 +25,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
-public class FileHelper {
+public final class FileHelper {
 
 	private FileHelper() {
 	}
