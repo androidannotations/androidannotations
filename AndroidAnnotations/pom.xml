@@ -288,16 +288,20 @@
 					<artifactId>maven-jxr-plugin</artifactId>
 					<version>2.5</version>
 				</plugin>
+				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<!-- Checks for license headers. Use "mvn license:format" to update files. -->
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>2.6</version>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<header>src/etc/header.txt</header>
+					<header>${main.basedir}/src/etc/header.txt</header>
 					<excludes>
 						<exclude>.idea/**</exclude>
 						<exclude>src/etc/HOW-TO.txt</exclude>
@@ -309,6 +313,8 @@
 						<exclude>**/project.properties</exclude>
 						<exclude>**/rebel.xml</exclude>
 						<exclude>**/.checkstyle</exclude>
+						<exclude>**/.bks</exclude>
+						<exclude>**/org.robolectric.Config.properties</exclude>
 					</excludes>
 					<strictCheck>true</strictCheck>
 				</configuration>
@@ -412,6 +418,18 @@
 						<configuration>
 							<configLocation>${main.basedir}/checkstyle-checks-ci.xml</configLocation>
 						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
