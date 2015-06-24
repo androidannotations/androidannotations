@@ -38,7 +38,7 @@ public class HasOtherAnnotations {
 	@Addressing(responses = Responses.ALL)
 	@Action(input = "someString")
 	@SuppressWarnings(value = { "", "hi" })
-	public void onEvent(Event event) {
+	public void onEvent(@Deprecated Event event) {
 
 	}
 
