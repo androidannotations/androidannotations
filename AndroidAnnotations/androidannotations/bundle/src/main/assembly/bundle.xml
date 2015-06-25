@@ -24,38 +24,38 @@
 		<format>zip</format>
 	</formats>
 	<dependencySets>
-	    <dependencySet>
-	    	<useProjectArtifact>false</useProjectArtifact>
-	        <includes>
-	            <include>org.androidannotations:androidannotations-api</include>
-	        </includes>
-	        <excludes>
-	        	<exclude>org.androidannotations:androidannotations-api:*:javadoc</exclude>
-	        	<exclude>org.androidannotations:androidannotations-api:*:sources</exclude>
-	        </excludes>
-	    </dependencySet>
-	    <dependencySet>
-	    	<useProjectArtifact>false</useProjectArtifact>
-	        <includes>
-	            <include>org.androidannotations:androidannotations-with-codemodel</include>
-	        </includes>
-	        <outputFileNameMapping>androidannotations-${artifact.version}.jar</outputFileNameMapping>
-	    </dependencySet>
+		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
+			<includes>
+				<include>org.androidannotations:androidannotations-api</include>
+			</includes>
+			<excludes>
+				<exclude>org.androidannotations:androidannotations-api:*:javadoc</exclude>
+				<exclude>org.androidannotations:androidannotations-api:*:sources</exclude>
+			</excludes>
+		</dependencySet>
+		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
+			<includes>
+				<include>org.androidannotations:androidannotations-fat-jar</include>
+			</includes>
+			<outputFileNameMapping>androidannotations-${artifact.version}.jar</outputFileNameMapping>
+		</dependencySet>
 		<dependencySet>
 			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory>javadoc</outputDirectory>
-	        <includes>
-	            <include>org.androidannotations:androidannotations-api:*:javadoc</include>
-	            <include>org.androidannotations:androidannotations:*:javadoc</include>
-	        </includes>
+			<includes>
+				<include>org.androidannotations:androidannotations:*:javadoc</include>
+				<include>org.androidannotations:androidannotations-api:*:javadoc</include>
+			</includes>
 		</dependencySet>
 		<dependencySet>
 			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory>sources</outputDirectory>
-	        <includes>
-	            <include>org.androidannotations:androidannotations-api:*:sources</include>
-	            <include>org.androidannotations:androidannotations:*:sources</include>
-	        </includes>
+			<includes>
+				<include>org.androidannotations:androidannotations:*:sources</include>
+				<include>org.androidannotations:androidannotations-api:*:sources</include>
+			</includes>
 		</dependencySet>
 	</dependencySets>
 	<fileSets>

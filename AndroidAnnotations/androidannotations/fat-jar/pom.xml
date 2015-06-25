@@ -20,19 +20,19 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>androidannotations-parent</artifactId>
 		<groupId>org.androidannotations</groupId>
+		<artifactId>androidannotations-root</artifactId>
 		<version>4.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>androidannotations-with-codemodel</artifactId>
-	<description>Project generating the annotation processing jar with CodeModel dependency included</description>
-	<name>AndroidAnnotations With CodeModel</name>
+	<artifactId>androidannotations-fat-jar</artifactId>
+	<description>Project generating the annotation processing jar with dependencies included</description>
+	<name>AndroidAnnotations Fat jar</name>
 	<packaging>pom</packaging>
 
-    <properties>
-        <main.basedir>${project.parent.basedir}</main.basedir>
-    </properties>
+	<properties>
+		<main.basedir>${project.parent.parent.basedir}</main.basedir>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -47,8 +47,8 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptors>
-						<descriptor>src/main/assembly/jar-with-codemodel.xml</descriptor>
-					</descriptors>	
+						<descriptor>src/main/assembly/fat-jar.xml</descriptor>
+					</descriptors>
 					<finalName>${project.build.finalName}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>

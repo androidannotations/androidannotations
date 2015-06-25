@@ -20,8 +20,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>androidannotations-parent</artifactId>
 		<groupId>org.androidannotations</groupId>
+		<artifactId>androidannotations-root</artifactId>
 		<version>4.0-SNAPSHOT</version>
 	</parent>
 
@@ -30,33 +30,33 @@
 	<name>AndroidAnnotations Bundle</name>
 	<packaging>pom</packaging>
 
-    <properties>
-        <main.basedir>${project.parent.basedir}</main.basedir>
-    </properties>
+	<properties>
+		<main.basedir>${project.parent.parent.basedir}</main.basedir>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.androidannotations</groupId>
-			<artifactId>androidannotations-with-codemodel</artifactId>
+			<artifactId>androidannotations-fat-jar</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.androidannotations</groupId>
-			<artifactId>androidannotations-api</artifactId>
+			<artifactId>androidannotations</artifactId>
 			<classifier>javadoc</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.androidannotations</groupId>
-			<artifactId>androidannotations-api</artifactId>
+			<artifactId>androidannotations</artifactId>
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.androidannotations</groupId>
-			<artifactId>androidannotations</artifactId>
+			<artifactId>androidannotations-api</artifactId>
 			<classifier>javadoc</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.androidannotations</groupId>
-			<artifactId>androidannotations</artifactId>
+			<artifactId>androidannotations-api</artifactId>
 			<classifier>sources</classifier>
 		</dependency>
 	</dependencies>
@@ -68,7 +68,7 @@
 				<configuration>
 					<descriptors>
 						<descriptor>src/main/assembly/bundle.xml</descriptor>
-					</descriptors>	
+					</descriptors>
 					<finalName>${project.build.finalName}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
