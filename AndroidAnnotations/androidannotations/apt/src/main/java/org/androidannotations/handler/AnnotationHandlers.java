@@ -108,7 +108,6 @@ public class AnnotationHandlers {
 		add(new CustomTitleHandler(processingEnvironment));
 		add(new FullscreenHandler(processingEnvironment));
 		add(new RestServiceHandler(processingEnvironment));
-		add(new OrmLiteDaoHandler(processingEnvironment));
 		add(new RootContextHandler(processingEnvironment));
 		add(new NonConfigurationInstanceHandler(processingEnvironment));
 		add(new ExtraHandler(processingEnvironment));

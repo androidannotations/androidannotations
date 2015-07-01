@@ -64,7 +64,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -507,48 +506,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void extendsOrmLiteDao(Element element, ElementValidation valid, OrmLiteHelper ormLiteHelper) {
-		if (!valid.isValid()) {
-			// we now that the element is invalid. early exit as the reason
-			// could be missing ormlite classes
-			return;
-		}
-
-		TypeMirror elementTypeMirror = element.asType();
-		Types typeUtils = annotationHelper.getTypeUtils();
-
-		DeclaredType daoParametrizedType = ormLiteHelper.getDaoParametrizedType();
-		DeclaredType runtimeExceptionDaoParametrizedType = ormLiteHelper.getRuntimeExceptionDaoParametrizedType();
-
-		// Checks that elementType extends Dao<?, ?> or
-		// RuntimeExceptionDao<?, ?>
-		if (!annotationHelper.isSubtype(elementTypeMirror, daoParametrizedType) && !annotationHelper.isSubtype(elementTypeMirror, runtimeExceptionDaoParametrizedType)) {
-			valid.addError("%s can only be used on an element that extends " + daoParametrizedType.toString() //
-					+ " or " + runtimeExceptionDaoParametrizedType.toString());
-			return;
-		}
-
-		if (annotationHelper.isSubtype(elementTypeMirror, runtimeExceptionDaoParametrizedType) //
-				&& !typeUtils.isAssignable(ormLiteHelper.getTypedRuntimeExceptionDao(element), elementTypeMirror)) {
-
-			boolean hasConstructor = false;
-			Element elementType = typeUtils.asElement(elementTypeMirror);
-			DeclaredType daoWithTypedParameters = ormLiteHelper.getTypedDao(element);
-			for (ExecutableElement constructor : ElementFilter.constructorsIn(elementType.getEnclosedElements())) {
-				List<? extends VariableElement> parameters = constructor.getParameters();
-				if (parameters.size() == 1) {
-					TypeMirror type = parameters.get(0).asType();
-					if (annotationHelper.isSubtype(type, daoWithTypedParameters)) {
-						hasConstructor = true;
-					}
-				}
-			}
-			if (!hasConstructor) {
-				valid.addError(elementTypeMirror.toString() + " requires a constructor that takes only a " + daoWithTypedParameters.toString());
-			}
-		}
-	}
-
 	public void extendsListOfView(Element element, ElementValidation valid) {
 		DeclaredType elementType = (DeclaredType) element.asType();
 		List<? extends TypeMirror> elementTypeArguments = elementType.getTypeArguments();
@@ -563,15 +520,6 @@ public class ValidatorHelper {
 
 	public void extendsPreference(Element element, ElementValidation validation) {
 		extendsType(element, CanonicalNameConstants.PREFERENCE, validation);
-	}
-
-	public void hasASolLiteOpenHelperParametrizedType(Element element, ElementValidation valid) {
-		TypeMirror helperType = annotationHelper.extractAnnotationParameter(element, "helper");
-
-		TypeMirror openHelperType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.SQLLITE_OPEN_HELPER).asType();
-		if (!annotationHelper.isSubtype(helperType, openHelperType)) {
-			valid.addError("%s helper() parameter must extend " + CanonicalNameConstants.SQLLITE_OPEN_HELPER);
-		}
 	}
 
 	public void applicationRegistered(Element element, AndroidManifest manifest, ElementValidation valid) {

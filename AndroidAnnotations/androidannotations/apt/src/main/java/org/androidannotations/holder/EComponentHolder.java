@@ -25,11 +25,9 @@ import java.util.Map;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JFieldVar;
@@ -96,26 +94,4 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		powerManagerRef = getGeneratedClass().field(PRIVATE, classes().POWER_MANAGER, "powerManager" + generationSuffix());
 		methodBody.assign(powerManagerRef, cast(classes().POWER_MANAGER, getContextRef().invoke("getSystemService").arg(serviceRef)));
 	}
-
-	public JFieldVar getDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
-		JFieldVar databaseHelperRef = databaseHelperRefs.get(databaseHelperTypeMirror);
-		if (databaseHelperRef == null) {
-			databaseHelperRef = setDatabaseHelperRef(databaseHelperTypeMirror);
-		}
-		return databaseHelperRef;
-	}
-
-	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
-		JClass databaseHelperClass = refClass(databaseHelperTypeMirror.toString());
-		String fieldName = CaseHelper.lowerCaseFirst(databaseHelperClass.name()) + generationSuffix();
-		JFieldVar databaseHelperRef = generatedClass.field(PRIVATE, databaseHelperClass, fieldName);
-		databaseHelperRefs.put(databaseHelperTypeMirror, databaseHelperRef);
-
-		JExpression dbHelperClass = databaseHelperClass.dotclass();
-		getInitBody().assign(databaseHelperRef, //
-				classes().OPEN_HELPER_MANAGER.staticInvoke("getHelper").arg(getContextRef()).arg(dbHelperClass));
-
-		return databaseHelperRef;
-	}
-
 }

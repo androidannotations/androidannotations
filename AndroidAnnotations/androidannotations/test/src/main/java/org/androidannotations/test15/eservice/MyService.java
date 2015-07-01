@@ -18,13 +18,10 @@ package org.androidannotations.test15.eservice;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.test15.ebean.EnhancedClass;
-import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.UserDao;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -40,9 +37,6 @@ public class MyService extends IntentService {
 
 	@Bean
 	EnhancedClass dependency;
-
-	@OrmLiteDao(helper = DatabaseHelper.class)
-	UserDao userDao;
 
 	public MyService() {
 		super(MyService.class.getSimpleName());

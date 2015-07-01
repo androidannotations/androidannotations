@@ -26,11 +26,9 @@ import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver.RegisterAt;
-import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 import org.androidannotations.process.ProcessHolder;
 
@@ -546,14 +544,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 			return getOnAttachAfterSuperBlock();
 		}
 		return getInitBody();
-	}
-
-	@Override
-	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
-		JFieldVar databaseHelperRef = super.setDatabaseHelperRef(databaseHelperTypeMirror);
-		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
-
-		return databaseHelperRef;
 	}
 
 	@Override

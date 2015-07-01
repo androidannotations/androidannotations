@@ -17,10 +17,7 @@ package org.androidannotations.test15.roboguice;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
-import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.test15.ebean.EmptyDependency;
-import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.UserDao;
 
 import android.app.Application;
 
@@ -29,8 +26,5 @@ public class SampleRoboApplication extends Application {
 
 	@Bean
 	public EmptyDependency someDependency;
-
-	@OrmLiteDao(helper = DatabaseHelper.class)
-	UserDao userDao;
 
 }

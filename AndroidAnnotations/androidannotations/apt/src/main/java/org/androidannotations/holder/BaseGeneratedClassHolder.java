@@ -21,7 +21,9 @@ import static com.sun.codemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -44,6 +46,8 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	protected JClass annotatedClass;
 	protected final TypeElement annotatedElement;
 	protected final APTCodeModelHelper codeModelHelper;
+
+	private Map<Class<?>, Object> pluginHolders = new HashMap<>();
 
 	public BaseGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
 		this.processHolder = processHolder;
@@ -131,5 +135,15 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 			return toNarrow;
 		}
 		return toNarrow.narrow(classes);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getPluginHolder(T pluginHolder) {
+		T currentPluginHolder = (T) pluginHolders.get(pluginHolder.getClass());
+		if (currentPluginHolder == null) {
+			currentPluginHolder = pluginHolder;
+			pluginHolders.put(pluginHolder.getClass(), pluginHolder);
+		}
+		return currentPluginHolder;
 	}
 }

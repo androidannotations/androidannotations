@@ -54,7 +54,6 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
- * @see OrmLiteDao
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

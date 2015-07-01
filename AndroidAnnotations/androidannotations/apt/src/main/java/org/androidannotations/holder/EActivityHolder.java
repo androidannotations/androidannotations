@@ -29,14 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.helper.ActivityIntentBuilder;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IntentBuilder;
-import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 import org.androidannotations.process.ProcessHolder;
 
@@ -685,14 +683,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	public JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData) {
 		return getInitBody();
-	}
-
-	@Override
-	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
-		JFieldVar databaseHelperRef = super.setDatabaseHelperRef(databaseHelperTypeMirror);
-		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
-
-		return databaseHelperRef;
 	}
 
 	@Override

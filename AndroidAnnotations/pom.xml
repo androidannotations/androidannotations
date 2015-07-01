@@ -139,10 +139,28 @@
 
 	<modules>
 		<module>androidannotations</module>
+		<module>ormlite</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>javadoc</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>sources</classifier>
+			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
@@ -151,23 +169,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>javadoc</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<classifier>javadoc</classifier>
@@ -177,6 +178,11 @@
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-test</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
@@ -185,8 +191,38 @@
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
-				<artifactId>functional-test-1-5</artifactId>
+				<artifactId>ormlite-api</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>ormlite-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>javadoc</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>ormlite-api</artifactId>
+				<version>${project.version}</version>
+				<classifier>sources</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>ormlite</artifactId>
+				<version>${project.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>ormlite</artifactId>
+				<version>${project.version}</version>
+				<classifier>javadoc</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>ormlite</artifactId>
+				<version>${project.version}</version>
+				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.codemodel</groupId>
@@ -197,6 +233,12 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.11</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>18.0</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

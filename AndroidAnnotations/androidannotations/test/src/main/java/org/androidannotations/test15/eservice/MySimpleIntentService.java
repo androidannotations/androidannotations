@@ -24,13 +24,10 @@ import android.widget.Toast;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.test15.ebean.EnhancedClass;
-import org.androidannotations.test15.ormlite.DatabaseHelper;
-import org.androidannotations.test15.ormlite.UserDao;
 
 @EService
 public class MySimpleIntentService extends IntentService {
@@ -40,9 +37,6 @@ public class MySimpleIntentService extends IntentService {
 
 	@Bean
 	EnhancedClass dependency;
-
-	@OrmLiteDao(helper = DatabaseHelper.class)
-	UserDao userDao;
 
 	public MySimpleIntentService() {
 		super(MySimpleIntentService.class.getSimpleName());

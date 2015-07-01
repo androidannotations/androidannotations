@@ -18,7 +18,9 @@ package org.androidannotations;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -49,6 +51,7 @@ import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
 import org.androidannotations.model.ModelExtractor;
+import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.process.ModelProcessor;
 import org.androidannotations.process.ModelValidator;
 import org.androidannotations.process.TimeStats;
@@ -87,6 +90,15 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		LOGGER.info("Initialize AndroidAnnotations {} with options {}", getAAProcessorVersion(), processingEnv.getOptions());
 
 		annotationHandlers = new AnnotationHandlers(processingEnv);
+		loadPlugins(processingEnv);
+	}
+
+	private void loadPlugins(ProcessingEnvironment processingEnv) {
+		List<AndroidAnnotationsPlugin> plugins = AndroidAnnotationsPlugin.load();
+		LOGGER.info("Plugins loaded: {}", Arrays.toString(plugins.toArray()));
+		for (AndroidAnnotationsPlugin plugin : plugins) {
+			plugin.addHandlers(annotationHandlers, processingEnv);
+		}
 	}
 
 	private void checkApiAndCoreVersions() throws VersionMismatchException {

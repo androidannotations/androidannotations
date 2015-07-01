@@ -21,11 +21,9 @@ import static com.sun.codemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IntentBuilder;
-import org.androidannotations.helper.OrmLiteHelper;
 import org.androidannotations.helper.ServiceIntentBuilder;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 import org.androidannotations.process.ProcessHolder;
@@ -143,13 +141,5 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	@Override
 	public JBlock getOnDetachBeforeSuperBlock() {
 		return receiverRegistrationDelegate.getOnDetachBeforeSuperBlock();
-	}
-
-	@Override
-	protected JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
-		JFieldVar databaseHelperRef = super.setDatabaseHelperRef(databaseHelperTypeMirror);
-		OrmLiteHelper.injectReleaseInDestroy(databaseHelperRef, this, classes());
-
-		return databaseHelperRef;
 	}
 }
