@@ -117,7 +117,7 @@ public class ModelExtractor {
 	private void addAncestorsElements(Set<TypeElement> elements, TypeElement typeElement) {
 		TypeMirror ancestorTypeMirror = typeElement.getSuperclass();
 
-		if (!isRootObjectClass(ancestorTypeMirror) && ancestorTypeMirror instanceof DeclaredType) {
+		if (!isRootObjectClass(ancestorTypeMirror) && !isAndroidClass(ancestorTypeMirror) && ancestorTypeMirror instanceof DeclaredType) {
 			DeclaredType ancestorDeclaredType = (DeclaredType) ancestorTypeMirror;
 			Element ancestorElement = ancestorDeclaredType.asElement();
 			if (ancestorElement instanceof TypeElement) {
@@ -129,6 +129,10 @@ public class ModelExtractor {
 
 	private boolean isRootObjectClass(TypeMirror typeMirror) {
 		return typeMirror.getKind() == TypeKind.NONE;
+	}
+
+	private boolean isAndroidClass(TypeMirror typeMirror) {
+		return typeMirror.toString().startsWith("android.");
 	}
 
 	private void extractRootElementsAnnotations(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv, AnnotationElementsHolder extractedModel) {
