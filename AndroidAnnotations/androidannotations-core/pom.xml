@@ -38,8 +38,6 @@
 		<module>androidannotations</module>
 		<module>androidannotations-api</module>
 		<module>androidannotations-test</module>
-		<module>androidannotations-fat-jar</module>
-		<module>androidannotations-bundle</module>
 	</modules>
 
 </project>

@@ -151,33 +151,9 @@
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>javadoc</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
 				<version>${project.version}</version>
 				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations</artifactId>
-				<version>${project.version}</version>
-				<classifier>javadoc</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations</artifactId>
-				<version>${project.version}</version>
-				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
@@ -186,43 +162,14 @@
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-fat-jar</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
 				<artifactId>ormlite-api</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>ormlite-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>javadoc</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>ormlite-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
 				<artifactId>ormlite</artifactId>
 				<version>${project.version}</version>
 				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>ormlite</artifactId>
-				<version>${project.version}</version>
-				<classifier>javadoc</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>ormlite</artifactId>
-				<version>${project.version}</version>
-				<classifier>sources</classifier>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.codemodel</groupId>
@@ -262,11 +209,6 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>jarjar-maven-plugin</artifactId>
-					<version>1.9</version>
-				</plugin>
-				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
@@ -286,10 +228,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.5</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.5</version>
 				</plugin>
 				<plugin>
