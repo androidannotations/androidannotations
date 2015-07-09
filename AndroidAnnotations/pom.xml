@@ -156,22 +156,6 @@
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-test</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>ormlite-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>ormlite</artifactId>
-				<version>${project.version}</version>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
 				<groupId>com.sun.codemodel</groupId>
 				<artifactId>codemodel</artifactId>
 				<version>2.6</version>
@@ -180,12 +164,6 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.11</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>18.0</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

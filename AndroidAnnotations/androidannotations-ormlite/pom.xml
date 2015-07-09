@@ -40,4 +40,21 @@
 		<module>ormlite-test</module>
 	</modules>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>ormlite-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>ormlite</artifactId>
+				<version>${project.version}</version>
+				<scope>compile</scope>
+			</dependency>
+		</dependencies>
+
+	</dependencyManagement>
+
 </project>

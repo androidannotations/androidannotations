@@ -57,12 +57,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<version>4.1.1.4</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.roboguice</groupId>
 			<artifactId>roboguice</artifactId>
 			<version>3.0</version>
@@ -159,11 +153,6 @@
 					<sdk>
 						<platform>16</platform>
 					</sdk>
-					<dex>
-						<jvmArguments>
-							<jvmArgument>-Xmx512m</jvmArgument>
-						</jvmArguments>
-					</dex>
 					<disableConflictingDependenciesWarning>true</disableConflictingDependenciesWarning>
 				</configuration>
 				<extensions>true</extensions>
