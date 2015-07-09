@@ -139,7 +139,7 @@
 
 	<modules>
 		<module>androidannotations</module>
-		<module>ormlite</module>
+		<module>androidannotations-ormlite</module>
 	</modules>
 
 	<dependencyManagement>

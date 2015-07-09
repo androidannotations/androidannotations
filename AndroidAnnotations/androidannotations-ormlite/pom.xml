@@ -25,9 +25,9 @@
 		<version>4.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>ormlite-root</artifactId>
+	<artifactId>androidannotations-ormlite</artifactId>
 	<description>The folder containing OrmLite plugin for AndroidAnnotations</description>
-	<name>OrmLite plugin Root</name>
+	<name>OrmLite plugin parent</name>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -35,9 +35,9 @@
 	</properties>
 
 	<modules>
-		<module>apt</module>
-		<module>api</module>
-		<module>test</module>
+		<module>ormlite</module>
+		<module>ormlite-api</module>
+		<module>ormlite-test</module>
 	</modules>
 
 </project>

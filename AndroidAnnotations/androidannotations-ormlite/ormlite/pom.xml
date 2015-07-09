@@ -21,12 +21,12 @@
 
 	<parent>
 		<groupId>org.androidannotations</groupId>
-		<artifactId>ormlite-root</artifactId>
+		<artifactId>androidannotations-ormlite</artifactId>
 		<version>4.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>ormlite</artifactId>
-	<name>OrmLite plugin APT</name>
+	<name>OrmLite Annotation Processor</name>
 	<description>AndroidAnnotations plugin for OrmLite</description>
 
 	<properties>
