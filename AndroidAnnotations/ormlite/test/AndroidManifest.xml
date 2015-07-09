@@ -38,6 +38,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".OrmLiteOnDestroyActivity_" />
+
         <receiver android:name=".MyReceiver_" />
 
         <provider

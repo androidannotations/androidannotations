@@ -31,6 +31,7 @@
 
 	<properties>
 		<main.basedir>${project.parent.parent.basedir}</main.basedir>
+		<checkstyle.excludes>**/R.java,**/BuildConfig.java,</checkstyle.excludes>
 	</properties>
 
 	<dependencies>
@@ -60,29 +61,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.roboguice</groupId>
-			<artifactId>roboguice</artifactId>
-			<version>2.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-android</artifactId>
 			<version>4.48</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>1.3.9</version>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup</groupId>
-			<artifactId>otto</artifactId>
-			<version>1.3.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>support-v4</artifactId>
-			<version>r7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.robolectric</groupId>
@@ -121,30 +102,25 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk16</artifactId>
-			<version>140</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<groupId>com.simpligility.maven.plugins</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.8.2</version>
+				<version>4.2.1</version>
 				<configuration>
+					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<sdk>
-						<platform>14</platform>
+						<platform>16</platform>
 					</sdk>
 					<dex>
 						<jvmArguments>
 							<jvmArgument>-Xmx512m</jvmArgument>
 						</jvmArguments>
 					</dex>
+					<disableConflictingDependenciesWarning>true</disableConflictingDependenciesWarning>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
@@ -152,6 +128,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
 					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
@@ -176,21 +154,15 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>
-											com.jayway.maven.plugins.android.generation2
-										</groupId>
-										<artifactId>
-											android-maven-plugin
-										</artifactId>
-										<versionRange>
-											[3.8.2,)
-										</versionRange>
+										<groupId>com.simpligility.maven.plugins</groupId>
+										<artifactId>android-maven-plugin</artifactId>
+										<versionRange>[4.2.1,)</versionRange>
 										<goals>
-											<goal>consume-aar</goal>
+											<goal>emma</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
