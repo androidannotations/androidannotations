@@ -58,7 +58,7 @@ public final class AndroidManifest {
 		this.minSdkVersion = minSdkVersion;
 		this.maxSdkVersion = maxSdkVersion;
 		this.targetSdkVersion = targetSdkVersion;
-		debugabble = debuggable;
+		this.debugabble = debuggable;
 	}
 
 	// CHECKSTYLE:ON
