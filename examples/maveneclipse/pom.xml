@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>4.1.1.4</android.version>
 		<android.platform>16</android.platform>
-		<androidannotations.version>3.3.1</androidannotations.version>
+		<androidannotations.version>3.3.2</androidannotations.version>
 		<java.version>1.6</java.version>
 	</properties>
 
@@ -51,12 +51,13 @@
 			<plugin>
 				<groupId>com.simpligility.maven.plugins</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>4.2.0</version>
+				<version>4.3.0</version>
 				<configuration>
 					<sdk>
 						<platform>${android.platform}</platform>
 					</sdk>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+					<disableConflictingDependenciesWarning>true</disableConflictingDependenciesWarning>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
