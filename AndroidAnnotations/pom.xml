@@ -138,7 +138,7 @@
 	</prerequisites>
 
 	<modules>
-		<module>androidannotations</module>
+		<module>androidannotations-core</module>
 		<module>androidannotations-ormlite</module>
 	</modules>
 
