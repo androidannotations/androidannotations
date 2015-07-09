@@ -27,7 +27,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>3.3.2-SNAPSHOT</version>
+	<version>3.3.2</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -324,7 +324,7 @@
 		<connection>scm:git:git@github.com:excilys/androidannotations.git</connection>
 		<developerConnection>scm:git:git@github.com:excilys/androidannotations.git</developerConnection>
 		<url>https://github.com/excilys/androidannotations</url>
-	  <tag>androidannotations-3.3</tag>
+	  <tag>androidannotations-3.3.2</tag>
   </scm>
 
 	<profiles>
