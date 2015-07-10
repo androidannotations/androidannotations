@@ -13,23 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test.otto;
+package org.androidannotations.otto.test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.androidannotations.annotations.EActivity;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
+import android.app.Activity;
+import android.os.Bundle;
 
-@RunWith(RobolectricTestRunner.class)
-public class OttoActivityTest {
+import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
 
-	@Test
-	public void testOttoMethodsCalled() {
-		OttoActivity activity = Robolectric.setupActivity(OttoActivity_.class);
+@EActivity
+public class OttoActivity extends Activity {
+
+	Event lastEvent;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		
-		assertThat(activity.lastEvent).isNotNull();
+		Bus bus = new Bus();
+		bus.register(this);
 	}
 	
+	@Subscribe
+	public void onEvent(Event event) {
+		lastEvent = event;
+	}
+	
+	@Produce
+	public Event produceEvent() {
+		return new Event();
+	}
 }

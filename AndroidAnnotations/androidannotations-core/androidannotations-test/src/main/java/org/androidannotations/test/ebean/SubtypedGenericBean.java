@@ -15,8 +15,6 @@
  */
 package org.androidannotations.test.ebean;
 
-import com.squareup.otto.Produce;
-
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.UiThread;
@@ -31,7 +29,6 @@ public class SubtypedGenericBean<S extends List<T>, T extends Number> {
 
 	}
 
-	@Produce
 	public T genericMethod() {
 		return null;
 	}

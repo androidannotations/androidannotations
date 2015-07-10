@@ -140,6 +140,7 @@
 	<modules>
 		<module>androidannotations-core</module>
 		<module>androidannotations-ormlite</module>
+		<module>androidannotations-otto</module>
 	</modules>
 
 	<dependencyManagement>

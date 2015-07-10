@@ -13,8 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test.otto;
+package org.androidannotations.otto.test;
 
-public class Event {
+import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+
+@RunWith(RobolectricTestRunner.class)
+public class OttoActivityTest {
+
+	@Test
+	public void testOttoMethodsCalled() {
+		OttoActivity activity = Robolectric.setupActivity(OttoActivity_.class);
+
+		assertThat(activity.lastEvent).isNotNull();
+	}
 
 }
