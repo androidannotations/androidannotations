@@ -52,7 +52,6 @@
         <activity android:name=".ItemClicksHandledActivity_" />
         <activity android:name=".ActivityWithServices_" />
         <activity android:name=".ExtraInjectedActivity_" />
-        <activity android:name=".BackpressedActivity_" />
         <activity android:name=".TransactionalActivity_" />
         <activity android:name=".FromHtmlActivity_" />
         <activity android:name=".roboguice.MapActivityWithRoboGuice_" />
@@ -65,12 +64,10 @@
         <activity android:name=".TextWatchedActivity_" />
 		<activity android:name=".innerclasses.ActivityWithInnerEnhancedClasses_" />
         <activity android:name=".MultiFindViewActivity_" />
-        <activity android:name=".ormlite.OrmLiteActivity_" />
         <activity android:name=".receiver.ActivityWithReceiver_" />
         <activity android:name=".menu.OptionsMenuActivity_" />
         <activity android:name=".menu.OptionsMenuSubActivity_" />
         <activity android:name=".menu.InjectMenuActivity_" />
-        <activity android:name=".NoTitleFullscreenActivity_" />
         <activity android:name=".WindowFeatureActivity_" />
         <activity android:name=".ExtendingActivity_" />
         <activity android:name=".ebean.BeanInjectedActivity_" />
