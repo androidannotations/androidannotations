@@ -40,6 +40,8 @@ public class EProviderHandler extends BaseGeneratingAnnotationHandler<EProviderH
 	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
 		super.validate(element, validatedElements, validation);
 
+		validatorHelper.extendsProvider(element, validation);
+
 		validatorHelper.componentRegistered(element, androidManifest, validation);
 	}
 

@@ -21,7 +21,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
@@ -68,6 +67,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +114,7 @@ public class ValidatorHelper {
 
 	private static final List<Receiver.RegisterAt> VALID_ACTIVITY_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause,
 			Receiver.RegisterAt.OnStartOnStop);
-	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy);
+	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Collections.singletonList(Receiver.RegisterAt.OnCreateOnDestroy);
 	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause,
 			Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
 
@@ -263,7 +263,7 @@ public class ValidatorHelper {
 	}
 
 	private void hasClassAnnotation(Element reportElement, Element element, Class<? extends Annotation> validAnnotation, ElementValidation valid) {
-		ArrayList<Class<? extends Annotation>> validAnnotations = new ArrayList<Class<? extends Annotation>>();
+		ArrayList<Class<? extends Annotation>> validAnnotations = new ArrayList<>();
 		validAnnotations.add(validAnnotation);
 		hasOneOfClassAnnotations(reportElement, element, validAnnotations, valid);
 	}
@@ -651,13 +651,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void hasOrmLiteJars(ElementValidation valid) {
-		Elements elementUtils = annotationHelper.getElementUtils();
-		if (elementUtils.getTypeElement(CanonicalNameConstants.DAO) == null) {
-			valid.addError("Could not find the OrmLite framework in the classpath, the following class is missing: " + CanonicalNameConstants.DAO);
-		}
-	}
-
 	public void androidService(AndroidSystemServices androidSystemServices, Element element, ElementValidation valid) {
 		TypeMirror serviceType = element.asType();
 		if (!androidSystemServices.contains(serviceType)) {
@@ -946,11 +939,6 @@ public class ValidatorHelper {
 				}
 			}
 		}
-	}
-
-	private TypeElement getArrayEnclosingType(String typeString) {
-		typeString = typeString.replace("[]", "");
-		return annotationHelper.typeElementFromQualifiedName(typeString);
 	}
 
 	private boolean isKnownBundleCompatibleType(String type) {
@@ -1266,34 +1254,6 @@ public class ValidatorHelper {
 			}
 		}
 
-	}
-
-	public void hasOnResultMethodParameters(ExecutableElement executableElement, ElementValidation valid) {
-		List<? extends VariableElement> parameters = executableElement.getParameters();
-		boolean resultCodeParameterFound = false;
-		boolean intentParameterFound = false;
-		for (VariableElement parameter : parameters) {
-			TypeMirror parameterType = parameter.asType();
-			if (parameter.getAnnotation(OnActivityResult.Extra.class) != null) {
-				continue;
-			}
-			if (parameterType.toString().equals(CanonicalNameConstants.INTEGER) //
-					|| parameterType.getKind().equals(TypeKind.INT)) {
-				if (resultCodeParameterFound) {
-					valid.addError("Unrecognized parameter declaration. you can declare only one parameter of type int or java.lang.Integer");
-				}
-				resultCodeParameterFound = true;
-				continue;
-			}
-			if (parameterType.toString().equals(CanonicalNameConstants.INTENT)) {
-				if (intentParameterFound) {
-					valid.addError("Unrecognized parameter declaration. you can declare only one parameter of type android.content.Intent");
-				}
-				intentParameterFound = true;
-				continue;
-			}
-			valid.addError("Unrecognized parameter type. %s can only have a android.content.Intent parameter and/or an Integer parameter");
-		}
 	}
 
 	public void hasNotMultipleAnnotatedMethodWithSameName(Element element, ElementValidation valid, Class<? extends Annotation> annotation) {
