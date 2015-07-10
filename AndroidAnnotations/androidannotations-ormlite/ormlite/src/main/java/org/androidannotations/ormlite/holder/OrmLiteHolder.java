@@ -35,7 +35,7 @@ import static com.sun.codemodel.JMod.PRIVATE;
 
 public class OrmLiteHolder extends PluginClassHolder<EComponentHolder> {
 
-	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<TypeMirror, JFieldVar>();
+	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<>();
 
 	public OrmLiteHolder(EComponentHolder holder) {
 		super(holder);

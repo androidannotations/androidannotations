@@ -42,7 +42,7 @@ public class ModelValidator {
 	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ValidationException {
 
 		LOGGER.info("Validating elements");
-		List<ElementValidation> failedValidations = new ArrayList<ElementValidation>();
+		List<ElementValidation> failedValidations = new ArrayList<>();
 
 		/*
 		 * We currently do not validate the elements on the ancestors, assuming

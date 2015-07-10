@@ -26,8 +26,8 @@ public class ElementValidation {
 	private String annotationName;
 	private Element element;
 	private boolean isValid = true;
-	private List<Error> errors = new ArrayList<Error>();
-	private List<String> warnings = new ArrayList<String>();
+	private List<Error> errors = new ArrayList<>();
+	private List<String> warnings = new ArrayList<>();
 
 	public ElementValidation(String annotationName, Element element) {
 		this.annotationName = annotationName;

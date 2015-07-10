@@ -127,7 +127,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	}
 
 	public JClass narrow(JClass toNarrow) {
-		List<JClass> classes = new ArrayList<JClass>();
+		List<JClass> classes = new ArrayList<>();
 		for (JTypeVar type : generatedClass.typeParams()) {
 			classes.add(codeModel().directClass(type.name()));
 		}
