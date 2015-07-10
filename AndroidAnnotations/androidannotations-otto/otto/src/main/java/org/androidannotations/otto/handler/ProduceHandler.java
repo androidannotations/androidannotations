@@ -15,55 +15,26 @@
  */
 package org.androidannotations.otto.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.TargetAnnotationHelper;
-import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.process.ElementValidation;
 
-public class ProduceHandler extends BaseAnnotationHandler<EComponentHolder> {
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.ExecutableElement;
 
-	private final TargetAnnotationHelper annotationHelper;
+public class ProduceHandler extends AbstractOttoHandler {
 
 	public ProduceHandler(ProcessingEnvironment processingEnvironment) {
 		super(CanonicalNameConstants.PRODUCE, processingEnvironment);
-		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		if (!annotationHelper.enclosingElementHasEnhancedComponentAnnotation(element)) {
-			valid.invalidate();
-			return;
-		}
-
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		/*
-		 * We check that twice to skip invalid annotated elements
-		 */
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(executableElement, valid);
-
-		validatorHelper.returnTypeIsNotVoid(executableElement, valid);
-
-		validatorHelper.isPublic(element, valid);
-
-		validatorHelper.doesntThrowException(executableElement, valid);
-
-		validatorHelper.isNotFinal(element, valid);
-
-		validatorHelper.param.noParam().validate(executableElement, valid);
+	protected ValidatorParameterHelper.Validator getParamValidator() {
+		return validatorHelper.param.noParam();
 	}
 
 	@Override
-	public void process(Element element, EComponentHolder holder) throws Exception {
-		ExecutableElement executableElement = (ExecutableElement) element;
-
-		codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
+	protected void validateReturnType(ExecutableElement executableElement, ElementValidation validation) {
+		validatorHelper.returnTypeIsNotVoid(executableElement, validation);
 	}
 }
