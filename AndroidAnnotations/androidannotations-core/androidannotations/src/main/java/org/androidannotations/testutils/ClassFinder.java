@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.utils;
+package org.androidannotations.testutils;
 
 import static java.util.Collections.synchronizedList;
 

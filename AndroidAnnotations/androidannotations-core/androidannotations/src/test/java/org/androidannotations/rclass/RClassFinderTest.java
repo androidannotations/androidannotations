@@ -17,7 +17,7 @@ package org.androidannotations.rclass;
 
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.manifest.SomeClass;
-import org.androidannotations.utils.AAProcessorTestHelper;
+import org.androidannotations.testutils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 

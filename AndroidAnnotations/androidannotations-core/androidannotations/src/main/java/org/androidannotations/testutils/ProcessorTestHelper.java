@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.utils;
+package org.androidannotations.testutils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -259,7 +259,6 @@ public class ProcessorTestHelper {
 	 *            the classes to compile
 	 * @return the {@link Diagnostic diagnostics} returned by the compilation,
 	 *         as demonstrated in the documentation for {@link JavaCompiler}
-	 * @see #compileFiles(String...)
 	 */
 	public CompileResult compileFiles(Type... compilationUnits) {
 		assert compilationUnits != null;
