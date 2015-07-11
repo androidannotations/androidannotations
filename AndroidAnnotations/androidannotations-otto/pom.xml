@@ -27,7 +27,7 @@
 
 	<artifactId>androidannotations-otto</artifactId>
 	<description>The folder containing Otto plugin for AndroidAnnotations</description>
-	<name>OrmLite plugin parent</name>
+	<name>Otto plugin parent</name>
 	<packaging>pom</packaging>
 
 	<properties>
