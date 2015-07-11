@@ -57,8 +57,12 @@ public class ClassFinder {
 	}
 
 	/**
-	 * @param fqcn
+	 * Finds all classes in a package.
+	 *
+	 * @param packageName
 	 *            Name of superclass/interface on which to search
+	 *
+	 * @return the classes which can be found in the package of the superclass/interface
 	 */
 	public final List<Class<?>> findClassesInPackage(String packageName) {
 		synchronized (classpathLocations) {
@@ -80,6 +84,10 @@ public class ClassFinder {
 	 * query the cache for the location at which the given class was found.
 	 * <code>null</code> will be returned if the given class was not found
 	 * during the last search, or if the result cache has been cleared.
+	 *
+	 * @param cls the class whose location is queried
+	 *
+	 * @return the location where the class is found
 	 */
 	public final URL getLocationOf(Class<?> cls) {
 		if (results != null) {
@@ -92,6 +100,8 @@ public class ClassFinder {
 	/**
 	 * Determine every URL location defined by the current classpath, and it's
 	 * associated package name.
+	 *
+	 * @return the locations of the given classpath
 	 */
 	public final Map<URL, String> getClasspathLocations() {
 		Map<URL, String> map = new TreeMap<>(URL_COMPARATOR);
