@@ -19,13 +19,13 @@ package org.androidannotations.rest.spring.api;
  * A @Rest interface implementing this interface will automatically have the
  * implementations of this method generated.
  * 
- * @see org.androidannotations.annotations.rest.Rest
+ * @see org.androidannotations.rest.spring.annotations.Rest
  */
 public interface RestClientErrorHandling {
 	/**
 	 * Sets the error handler called when a rest error occurs.
 	 * 
-	 * @param handler {@link org.androidannotations.api.rest.RestErrorHandler}
+	 * @param handler {@link RestErrorHandler}
 	 *      which handle exception from rest service
 	 */
 	void setRestErrorHandler(RestErrorHandler handler);

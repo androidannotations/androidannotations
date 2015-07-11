@@ -19,7 +19,7 @@ package org.androidannotations.rest.spring.api;
  * A @Rest interface implementing this interface will automatically have the
  * implementations of these methods generated.
  * 
- * @see org.androidannotations.annotations.rest.Rest
+ * @see org.androidannotations.rest.spring.annotations.Rest
  */
 public interface RestClientRootUrl {
 	/**
