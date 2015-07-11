@@ -141,6 +141,7 @@
 		<module>androidannotations-core</module>
 		<module>androidannotations-ormlite</module>
 		<module>androidannotations-otto</module>
+		<module>androidannotations-rest-spring</module>
 	</modules>
 
 	<dependencyManagement>
@@ -166,12 +167,6 @@
 				<artifactId>junit</artifactId>
 				<version>4.11</version>
 				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.android</groupId>
-				<artifactId>spring-android-rest-template</artifactId>
-				<version>1.0.1.RELEASE</version>
-				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

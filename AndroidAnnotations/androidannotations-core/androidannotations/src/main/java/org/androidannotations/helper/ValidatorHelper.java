@@ -27,23 +27,12 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.WakeLock;
 import org.androidannotations.annotations.WakeLock.Level;
-import org.androidannotations.annotations.rest.Delete;
-import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.annotations.rest.Head;
-import org.androidannotations.annotations.rest.Options;
-import org.androidannotations.annotations.rest.Post;
-import org.androidannotations.annotations.rest.Put;
-import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
-import org.androidannotations.api.rest.RestClientErrorHandling;
-import org.androidannotations.api.rest.RestClientHeaders;
-import org.androidannotations.api.rest.RestClientRootUrl;
-import org.androidannotations.api.rest.RestClientSupport;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
@@ -83,9 +72,6 @@ import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
 import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
-import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
 import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
 import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
@@ -93,18 +79,7 @@ import static org.androidannotations.helper.ModelConstants.classSuffix;
 @SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
 
-	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(),
-			RestClientSupport.class.getName());
-
 	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
-
-	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
-	private static final String METHOD_NAME_SET_AUTHENTICATION = "setAuthentication";
-	private static final String METHOD_NAME_SET_BEARER_AUTH = "setBearerAuth";
-	private static final String METHOD_NAME_GET_COOKIE = "getCookie";
-	private static final String METHOD_NAME_GET_HEADER = "getHeader";
-
-	private static final String METHOD_NAME_GET_ROOT_URL = "getRootUrl";
 
 	private static final List<String> VALID_PREF_RETURN_TYPES = Arrays.asList("int", "boolean", "float", "long", CanonicalNameConstants.STRING, CanonicalNameConstants.STRING_SET);
 
@@ -151,23 +126,6 @@ public class ValidatorHelper {
 	public void isTopLevel(TypeElement element, ElementValidation valid) {
 		if (!annotationHelper.isTopLevel(element)) {
 			valid.addError("%s can only be used on a top level type");
-		}
-	}
-
-	public void doesNotExtendInvalidInterfaces(TypeElement element, ElementValidation valid) {
-		if (element.getInterfaces().size() > 0) {
-			boolean isValid = true;
-
-			for (TypeMirror iface : element.getInterfaces()) {
-				if (!VALID_REST_INTERFACES.contains(iface.toString())) {
-					isValid = false;
-					break;
-				}
-			}
-
-			if (!isValid) {
-				valid.addError("%s interfaces can only extend the following interfaces: " + VALID_REST_INTERFACES);
-			}
 		}
 	}
 
@@ -268,7 +226,7 @@ public class ValidatorHelper {
 		hasOneOfClassAnnotations(reportElement, element, validAnnotations, valid);
 	}
 
-	private void hasOneOfClassAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, ElementValidation valid) {
+	public void hasOneOfClassAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, ElementValidation valid) {
 		boolean foundAnnotation = false;
 		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
 			if (element.getAnnotation(validAnnotation) != null) {
@@ -300,11 +258,6 @@ public class ValidatorHelper {
 		elementHasAnnotation(ViewById.class, element, validatedElements, valid, error);
 	}
 
-	public void enclosingElementHasRestAnnotation(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		String error = "can only be used in an interface annotated with";
-		enclosingElementHasAnnotation(Rest.class, element, validatedElements, valid, error);
-	}
-
 	public void enclosingMethodHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		String error = "can only be used with a method annotated with";
 		enclosingElementHasAnnotation(annotation, element, validatedElements, valid, error);
@@ -328,14 +281,6 @@ public class ValidatorHelper {
 		return layoutAnnotatedElements.contains(element);
 	}
 
-	public void throwsOnlyRestClientException(ExecutableElement element, ElementValidation valid) {
-		List<? extends TypeMirror> thrownTypes = element.getThrownTypes();
-		if (thrownTypes.size() > 0) {
-			if (thrownTypes.size() > 1 || !thrownTypes.get(0).toString().equals("org.springframework.web.client.RestClientException")) {
-				valid.addError("%s annotated methods can only declare throwing a RestClientException");
-			}
-		}
-	}
 
 	public void typeHasAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid) {
 		TypeMirror elementType = element.asType();
@@ -732,132 +677,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	private static final List<Class<? extends Annotation>> REST_ANNOTATION_CLASSES = Arrays.asList(Get.class, Head.class, Options.class, Post.class, Put.class, Delete.class);
-
-	public void unannotatedMethodReturnsRestTemplate(TypeElement typeElement, ElementValidation valid) {
-		List<? extends Element> enclosedElements = typeElement.getEnclosedElements();
-		boolean foundGetRestTemplateMethod = false;
-		boolean foundSetRestTemplateMethod = false;
-		boolean foundSetAuthenticationMethod = false;
-		boolean foundSetBearerAuthMethod = false;
-		boolean foundSetRootUrlMethod = false;
-		boolean foundGetCookieMethod = false;
-		boolean foundGetHeaderMethod = false;
-		boolean foundGetRootUrlMethod = false;
-
-		for (Element enclosedElement : enclosedElements) {
-			if (enclosedElement.getKind() != ElementKind.METHOD) {
-				valid.addError(enclosedElement, "Only methods are allowed in a %s annotated interface");
-			} else {
-
-				boolean hasRestAnnotation = false;
-				for (Class<? extends Annotation> annotationClass : REST_ANNOTATION_CLASSES) {
-					if (enclosedElement.getAnnotation(annotationClass) != null) {
-						hasRestAnnotation = true;
-						break;
-					}
-				}
-
-				if (!hasRestAnnotation) {
-
-					ExecutableElement executableElement = (ExecutableElement) enclosedElement;
-					TypeMirror returnType = executableElement.getReturnType();
-					String simpleName = executableElement.getSimpleName().toString();
-
-					if (returnType.toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
-						if (executableElement.getParameters().size() > 0) {
-							valid.addError(enclosedElement,
-									"The method returning a RestTemplate should not declare any parameter in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
-						} else {
-							if (foundGetRestTemplateMethod) {
-								valid.addError(enclosedElement, "Only one method should declare returning a RestTemplate in a " + TargetAnnotationHelper.annotationName(Rest.class)
-										+ " annotated interface");
-							} else {
-								foundGetRestTemplateMethod = true;
-							}
-						}
-					} else if (simpleName.equals(METHOD_NAME_GET_ROOT_URL)) {
-						if (!returnType.toString().equals(CanonicalNameConstants.STRING)) {
-							valid.addError(enclosedElement, "The method getRootUrl must return String on a %s annotated interface");
-						}
-
-						if (executableElement.getParameters().size() != 0) {
-							valid.addError(enclosedElement, "The method getRootUrl cannot have parameters on a " + TargetAnnotationHelper.annotationName(Rest.class)
-									+ " annotated interface");
-						}
-
-						if (!foundGetRootUrlMethod) {
-							foundGetRootUrlMethod = true;
-						} else {
-							valid.addError(enclosedElement, "The can be only one getRootUrl method on a %s annotated interface");
-						}
-					} else if (returnType.getKind() == TypeKind.VOID) {
-						List<? extends VariableElement> parameters = executableElement.getParameters();
-						if (parameters.size() == 1) {
-							VariableElement firstParameter = parameters.get(0);
-							if (firstParameter.asType().toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
-								if (!foundSetRestTemplateMethod) {
-									foundSetRestTemplateMethod = true;
-								} else {
-									valid.addError(enclosedElement, "You can only have oneRestTemplate setter method on a " + TargetAnnotationHelper.annotationName(Rest.class)
-											+ " annotated interface");
-								}
-							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_ROOT_URL) && !foundSetRootUrlMethod) {
-								foundSetRootUrlMethod = true;
-							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_AUTHENTICATION) && !foundSetAuthenticationMethod) {
-								foundSetAuthenticationMethod = true;
-							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_BEARER_AUTH) && !foundSetBearerAuthMethod) {
-								foundSetBearerAuthMethod = true;
-							} else {
-								valid.addError(enclosedElement,
-										"The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class)
-												+ " annotated interface");
-
-							}
-						} else if (parameters.size() == 2) {
-							VariableElement firstParameter = parameters.get(0);
-							VariableElement secondParameter = parameters.get(1);
-							if (!(firstParameter.asType().toString().equals(CanonicalNameConstants.STRING) && secondParameter.asType().toString().equals(CanonicalNameConstants.STRING))) {
-								valid.addError(enclosedElement,
-										"The method to set headers, cookies, or HTTP Basic Auth should have only String parameters on a " + TargetAnnotationHelper.annotationName(Rest.class)
-												+ " annotated interface");
-							}
-						} else {
-							valid.addError(enclosedElement,
-									"The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
-						}
-					} else if (returnType.toString().equals(CanonicalNameConstants.STRING)) {
-						List<? extends VariableElement> parameters = executableElement.getParameters();
-						if (parameters.size() == 1) {
-							VariableElement firstParameter = parameters.get(0);
-							if (firstParameter.asType().toString().equals(CanonicalNameConstants.STRING)) {
-								if (executableElement.getSimpleName().toString().equals(METHOD_NAME_GET_COOKIE) && !foundGetCookieMethod) {
-									foundGetCookieMethod = true;
-								} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_GET_HEADER) && !foundGetHeaderMethod) {
-									foundGetHeaderMethod = true;
-								} else {
-									valid.addError(enclosedElement,
-											"Only one getCookie(String) and one getHeader(String) method are allowed on a " + TargetAnnotationHelper.annotationName(Rest.class)
-													+ " annotated interface");
-								}
-							} else {
-								valid.addError(enclosedElement,
-										"Only getCookie(String) and getHeader(String) can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
-							}
-
-						} else {
-							valid.addError(enclosedElement, "The only methods that can return a String on a " + TargetAnnotationHelper.annotationName(Rest.class)
-									+ " annotated interface are getCookie(String) and getHeader(String)");
-						}
-					} else {
-						valid.addError(enclosedElement, "All methods should be annotated in a " + TargetAnnotationHelper.annotationName(Rest.class)
-								+ " annotated interface, except the ones that returns or set a RestTemplate");
-					}
-				}
-			}
-		}
-	}
-
 	public void notAlreadyValidated(Element element, AnnotationElements validatedElements, ElementValidation valid) {
 		if (validatedElements.getAllElements().contains(element)) {
 			valid.addError("%s annotated element cannot be used with the other annotations used on this element.");
@@ -979,83 +798,6 @@ public class ValidatorHelper {
 
 	}
 
-	public void validateConverters(Element element, ElementValidation valid) {
-		TypeMirror httpMessageConverterType = annotationHelper.typeElementFromQualifiedName(HTTP_MESSAGE_CONVERTER).asType();
-		TypeMirror httpMessageConverterTypeErased = annotationHelper.getTypeUtils().erasure(httpMessageConverterType);
-		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "converters");
-
-		if (converters == null || converters.isEmpty()) {
-			valid.addError(element, "At least one converter is required");
-			return;
-		}
-
-		for (DeclaredType converterType : converters) {
-			TypeMirror erasedConverterType = annotationHelper.getTypeUtils().erasure(converterType);
-			if (annotationHelper.isSubtype(erasedConverterType, httpMessageConverterTypeErased)) {
-				Element converterElement = converterType.asElement();
-				if (converterElement.getKind().isClass()) {
-					if (!annotationHelper.isAbstract(converterElement)) {
-						if (converterElement.getAnnotation(EBean.class) == null) {
-							List<ExecutableElement> constructors = ElementFilter.constructorsIn(converterElement.getEnclosedElements());
-							boolean hasPublicWithNoArgumentConstructor = false;
-							for (ExecutableElement constructor : constructors) {
-								if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
-									hasPublicWithNoArgumentConstructor = true;
-								}
-							}
-							if (!hasPublicWithNoArgumentConstructor) {
-								valid.addError("The converter class must have a public no argument constructor");
-							}
-						}
-					} else {
-						valid.addError("The converter class must not be abstract");
-					}
-				} else {
-					valid.addError("The converter class must be a class");
-				}
-			} else {
-				valid.addError("The converter class must be a subtype of " + HTTP_MESSAGE_CONVERTER);
-			}
-		}
-	}
-
-	public void validateInterceptors(Element element, ElementValidation valid) {
-		TypeMirror clientHttpRequestInterceptorType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_INTERCEPTOR).asType();
-		TypeMirror clientHttpRequestInterceptorTypeErased = annotationHelper.getTypeUtils().erasure(clientHttpRequestInterceptorType);
-		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, annotationHelper.getTarget(), "interceptors");
-		if (interceptors == null) {
-			return;
-		}
-		for (DeclaredType interceptorType : interceptors) {
-			TypeMirror erasedInterceptorType = annotationHelper.getTypeUtils().erasure(interceptorType);
-			if (annotationHelper.isSubtype(erasedInterceptorType, clientHttpRequestInterceptorTypeErased)) {
-				Element interceptorElement = interceptorType.asElement();
-				if (interceptorElement.getKind().isClass()) {
-					if (!annotationHelper.isAbstract(interceptorElement)) {
-						if (interceptorElement.getAnnotation(EBean.class) == null) {
-							List<ExecutableElement> constructors = ElementFilter.constructorsIn(interceptorElement.getEnclosedElements());
-							boolean hasPublicWithNoArgumentConstructor = false;
-							for (ExecutableElement constructor : constructors) {
-								if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
-									hasPublicWithNoArgumentConstructor = true;
-								}
-							}
-							if (!hasPublicWithNoArgumentConstructor) {
-								valid.addError("The interceptor class must have a public no argument constructor or be annotated with @EBean");
-							}
-						}
-					} else {
-						valid.addError("The interceptor class must not be abstract");
-					}
-				} else {
-					valid.addError("The interceptor class must be a class");
-				}
-			} else {
-				valid.addError("The interceptor class must be a subtype of " + CLIENT_HTTP_REQUEST_INTERCEPTOR);
-			}
-		}
-	}
-
 	public void isDebuggable(AndroidManifest androidManifest, ElementValidation valid) {
 		if (!androidManifest.isDebuggable()) {
 			valid.addError("The application must be in debuggable mode. Please set android:debuggable to true in your AndroidManifest.xml file.");
@@ -1077,36 +819,6 @@ public class ValidatorHelper {
 				valid.addWarning("Your library should require the " + permissionQualifiedName + " permission.");
 			} else {
 				valid.addError("Your application must require the " + permissionQualifiedName + " permission.");
-			}
-		}
-	}
-
-	public void validateRequestFactory(Element element, ElementValidation valid) {
-		TypeMirror clientHttpRequestFactoryType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_FACTORY).asType();
-		DeclaredType requestFactory = annotationHelper.extractAnnotationClassParameter(element, annotationHelper.getTarget(), "requestFactory");
-		if (requestFactory != null) {
-			if (annotationHelper.isSubtype(requestFactory, clientHttpRequestFactoryType)) {
-				Element requestFactoryElement = requestFactory.asElement();
-				if (requestFactoryElement.getKind().isClass()) {
-					if (!annotationHelper.isAbstract(requestFactoryElement)) {
-						if (requestFactoryElement.getAnnotation(EBean.class) != null) {
-							return;
-						}
-						List<ExecutableElement> constructors = ElementFilter.constructorsIn(requestFactoryElement.getEnclosedElements());
-						for (ExecutableElement constructor : constructors) {
-							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
-								return;
-							}
-						}
-						valid.addError("The requestFactory class must have a public no argument constructor or must be annotated with @EBean");
-					} else {
-						valid.addError("The requestFactory class must not be abstract");
-					}
-				} else {
-					valid.addError("The requestFactory class must be a class");
-				}
-			} else {
-				valid.addError("The requestFactory class must be a subtype of " + CLIENT_HTTP_REQUEST_FACTORY);
 			}
 		}
 	}

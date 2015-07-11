@@ -23,14 +23,6 @@ import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
-import org.androidannotations.handler.rest.DeleteHandler;
-import org.androidannotations.handler.rest.GetHandler;
-import org.androidannotations.handler.rest.HeadHandler;
-import org.androidannotations.handler.rest.OptionsHandler;
-import org.androidannotations.handler.rest.PostHandler;
-import org.androidannotations.handler.rest.PutHandler;
-import org.androidannotations.handler.rest.RestHandler;
-import org.androidannotations.handler.rest.RestServiceHandler;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -92,13 +84,7 @@ public class AnnotationHandlers {
 		add(new TransactionalHandler(processingEnvironment));
 		add(new FragmentArgHandler(processingEnvironment));
 		add(new SystemServiceHandler(processingEnvironment));
-		add(new RestHandler(processingEnvironment));
-		add(new GetHandler(processingEnvironment));
-		add(new PostHandler(processingEnvironment));
-		add(new PutHandler(processingEnvironment));
-		add(new DeleteHandler(processingEnvironment));
-		add(new HeadHandler(processingEnvironment));
-		add(new OptionsHandler(processingEnvironment));
+
 		add(new AppHandler(processingEnvironment));
 		add(new BeanHandler(processingEnvironment));
 		add(new InjectMenuHandler(processingEnvironment));
@@ -107,7 +93,6 @@ public class AnnotationHandlers {
 		add(new OptionsItemHandler(processingEnvironment));
 		add(new CustomTitleHandler(processingEnvironment));
 		add(new FullscreenHandler(processingEnvironment));
-		add(new RestServiceHandler(processingEnvironment));
 		add(new RootContextHandler(processingEnvironment));
 		add(new NonConfigurationInstanceHandler(processingEnvironment));
 		add(new ExtraHandler(processingEnvironment));
