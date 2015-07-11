@@ -61,6 +61,10 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.androidannotations</groupId>
+			<artifactId>androidannotations-testutils</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

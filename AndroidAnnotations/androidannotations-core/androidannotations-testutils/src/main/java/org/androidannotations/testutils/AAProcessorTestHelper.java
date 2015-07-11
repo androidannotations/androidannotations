@@ -15,9 +15,8 @@
  */
 package org.androidannotations.testutils;
 
-import static org.androidannotations.helper.ModelConstants.classSuffix;
-
 import java.io.File;
+import java.lang.reflect.Method;
 
 public class AAProcessorTestHelper extends ProcessorTestHelper {
 
@@ -31,7 +30,7 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 	}
 
 	public File toGeneratedFile(Class<?> compiledClass) {
-		File output = new File(OUTPUT_DIRECTORY, toPath(compiledClass.getPackage()) + "/" + compiledClass.getSimpleName() + classSuffix() + SOURCE_FILE_SUFFIX);
+		File output = new File(OUTPUT_DIRECTORY, toPath(compiledClass.getPackage()) + "/" + compiledClass.getSimpleName() + getAndroidAnnotationsClassSuffix() + SOURCE_FILE_SUFFIX);
 		return output;
 	}
 
@@ -39,4 +38,20 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 		return classOfPackagingContainingFile.getResource(filename).getPath();
 	}
 
+	/**
+	 * This module cannot depend on androidannotations module, because that would introduce a cycle in the dependency graph.
+	 * That is why we cannot directly reference the <code>classSuffix</code> method.
+	 * We still have to use this method, so we call it reflectively.
+	 *
+	 * @return the result of <code>org.androidannotations.helper.ModelConstants.classSuffix()</code>
+	 */
+	private static String getAndroidAnnotationsClassSuffix() {
+		try {
+			Class<?> modelConstantsClazz = Class.forName("org.androidannotations.helper.ModelConstants");
+			Method classSuffixMethod = modelConstantsClazz.getMethod("classSuffix");
+			return (String) classSuffixMethod.invoke(null);
+		} catch (ReflectiveOperationException e) {
+			return "_";
+		}
+	}
 }

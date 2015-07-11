@@ -25,9 +25,9 @@
         <version>4.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>androidannotations</artifactId>
-    <name>AndroidAnnotations Annotation Processor</name>
-    <description>The Annotation Processor jar that generates code</description>
+    <artifactId>androidannotations-testutils</artifactId>
+    <name>AndroidAnnotations Common Test Utilities</name>
+    <description>Common test utilities for testing processors</description>
     
     <properties>
         <main.basedir>${project.parent.parent.basedir}</main.basedir>
@@ -35,38 +35,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.androidannotations</groupId>
-            <artifactId>androidannotations-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.codemodel</groupId>
-            <artifactId>codemodel</artifactId>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.androidannotations</groupId>
-            <artifactId>androidannotations-testutils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <version>4.1.1.4</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <compilerArgument>-proc:none</compilerArgument>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <executions>
@@ -94,22 +70,6 @@
                 <artifactId>maven-resources-plugin</artifactId>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>rebel.xml</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
 
 </project>

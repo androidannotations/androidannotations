@@ -38,6 +38,7 @@
 		<module>androidannotations</module>
 		<module>androidannotations-api</module>
 		<module>androidannotations-test</module>
+		<module>androidannotations-testutils</module>
 	</modules>
 
 </project>
