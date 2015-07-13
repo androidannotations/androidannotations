@@ -57,7 +57,7 @@ import org.androidannotations.process.ModelProcessor;
 import org.androidannotations.process.ModelValidator;
 import org.androidannotations.process.TimeStats;
 import org.androidannotations.rclass.AndroidRClassFinder;
-import org.androidannotations.rclass.CoumpoundRClass;
+import org.androidannotations.rclass.CompoundRClass;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.ProjectRClassFinder;
 
@@ -245,11 +245,11 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			return Option.absent();
 		}
 
-		IRClass coumpoundRClass = new CoumpoundRClass(rClass.get(), androidRClass.get());
+		IRClass compoundRClass = new CompoundRClass(rClass.get(), androidRClass.get());
 
 		timeStats.stop("Find R Classes");
 
-		return Option.of(coumpoundRClass);
+		return Option.of(compoundRClass);
 	}
 
 	private AnnotationElements validateAnnotations(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) throws ValidationException {

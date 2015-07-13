@@ -19,12 +19,12 @@ import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JFieldRef;
 
-public class CoumpoundInnerClass implements IRInnerClass {
+public class CompoundInnerClass implements IRInnerClass {
 
 	private final IRInnerClass rInnerClass;
 	private final IRInnerClass androidRInnerClass;
 
-	public CoumpoundInnerClass(IRInnerClass rInnerClass, IRInnerClass androidRInnerClass) {
+	public CompoundInnerClass(IRInnerClass rInnerClass, IRInnerClass androidRInnerClass) {
 		this.rInnerClass = rInnerClass;
 		this.androidRInnerClass = androidRInnerClass;
 	}

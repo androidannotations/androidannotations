@@ -18,16 +18,16 @@ package org.androidannotations.rclass;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CoumpoundRClass implements IRClass {
+public class CompoundRClass implements IRClass {
 
 	private final Map<String, IRInnerClass> rInnerClasses = new HashMap<>();
 
-	public CoumpoundRClass(IRClass rClass, IRClass androidRclass) {
+	public CompoundRClass(IRClass rClass, IRClass androidRclass) {
 		for (Res res : Res.values()) {
 			IRInnerClass rInnerClass = rClass.get(res);
 			IRInnerClass androidRInnerClass = androidRclass.get(res);
-			IRInnerClass coumpoundInnerClass = new CoumpoundInnerClass(rInnerClass, androidRInnerClass);
-			rInnerClasses.put(res.rName(), coumpoundInnerClass);
+			IRInnerClass compoundInnerClass = new CompoundInnerClass(rInnerClass, androidRInnerClass);
+			rInnerClasses.put(res.rName(), compoundInnerClass);
 		}
 	}
 
