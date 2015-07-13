@@ -25,7 +25,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EFragmentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -46,8 +45,8 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, validation);
 

@@ -31,7 +31,6 @@ import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -47,7 +46,7 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
@@ -56,7 +55,7 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
 		validatorHelper.doesntThrowException(element, validation);
 
-		validatorHelper.uniqueId(element, validatedElements, validation);
+		validatorHelper.uniqueId(element, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

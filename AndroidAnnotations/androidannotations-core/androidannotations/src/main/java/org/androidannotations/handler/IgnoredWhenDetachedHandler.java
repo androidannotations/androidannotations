@@ -24,7 +24,6 @@ import javax.lang.model.element.ExecutableElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.IgnoredWhenDetached;
 import org.androidannotations.holder.EFragmentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -37,7 +36,7 @@ public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	public void validate(Element element, ElementValidation valid) {
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.isNotFinal(element, valid);

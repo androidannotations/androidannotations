@@ -16,7 +16,6 @@
 package org.androidannotations.helper;
 
 import org.androidannotations.annotations.ResId;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass.Res;
 
@@ -81,13 +80,13 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void uniqueResourceId(Element element, AnnotationElements validatedElements, Res resourceType, ElementValidation valid) {
+	public void uniqueResourceId(Element element, Res resourceType, ElementValidation valid) {
 		if (valid.isValid()) {
 
 			List<String> annotationQualifiedIds = idAnnotationHelper.extractAnnotationResources(element, resourceType, true);
 
 			Element elementEnclosingElement = element.getEnclosingElement();
-			Set<? extends Element> annotatedElements = validatedElements.getRootAnnotatedElements(annotationHelper.getTarget());
+			Set<? extends Element> annotatedElements = validatedModel().getRootAnnotatedElements(annotationHelper.getTarget());
 
 			for (Element uniqueCheckElement : annotatedElements) {
 				Element uniqueCheckEnclosingElement = uniqueCheckElement.getEnclosingElement();
@@ -112,8 +111,8 @@ public class IdValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void uniqueId(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		uniqueResourceId(element, validatedElements, Res.ID, valid);
+	public void uniqueId(Element element, ElementValidation valid) {
+		uniqueResourceId(element, Res.ID, valid);
 	}
 
 	public void annotationValuePositiveAndInAShort(int value, ElementValidation valid) {

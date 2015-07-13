@@ -42,7 +42,6 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
@@ -72,7 +71,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 
 		//TODO: Refactor this to be able to call super.validate().
 		validatorHelper.isNotFinal(element, validation);
@@ -91,7 +90,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 		TypeElement typeElement = (TypeElement) element;
 
-		validatorHelper.notAlreadyValidated(element, validatedElements, validation);
+		validatorHelper.notAlreadyValidated(element, validation);
 
 		validatorHelper.hasSpringAndroidJars(validation);
 

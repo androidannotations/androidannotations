@@ -39,7 +39,7 @@ public class ModelValidator {
 		this.environment = environment;
 	}
 
-	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ValidationException {
+	public AnnotationElements validate(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) throws ValidationException {
 
 		LOGGER.info("Validating elements");
 		List<ElementValidation> failedValidations = new ArrayList<>();
@@ -49,7 +49,6 @@ public class ModelValidator {
 		 * they've already been validated. This also means some checks such as
 		 * unique ids might not be check all situations.
 		 */
-		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
 		for (AnnotationHandler<?> annotationHandler : environment.getHandlers()) {
 			String validatorSimpleName = annotationHandler.getClass().getSimpleName();
@@ -59,14 +58,14 @@ public class ModelValidator {
 
 			Set<Element> validatedAnnotatedElements = new HashSet<>();
 
-			validatedElements.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
+			validatingHolder.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 
 			if (!annotatedElements.isEmpty()) {
 				LOGGER.debug("Validating with {}: {}", validatorSimpleName, annotatedElements);
 			}
 
 			for (Element annotatedElement : annotatedElements) {
-				ElementValidation elementValidation = annotationHandler.validate(annotatedElement, validatedElements);
+				ElementValidation elementValidation = annotationHandler.validate(annotatedElement);
 
 				AnnotationMirror annotationMirror = elementValidation.getAnnotationMirror();
 				for (ElementValidation.Error error : elementValidation.getErrors()) {
@@ -90,6 +89,6 @@ public class ModelValidator {
 			throw new ValidationException(failedValidations);
 		}
 
-		return validatedElements;
+		return validatingHolder;
 	}
 }

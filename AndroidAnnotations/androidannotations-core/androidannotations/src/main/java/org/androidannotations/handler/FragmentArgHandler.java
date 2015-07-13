@@ -29,7 +29,6 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EFragmentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -49,7 +48,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEFragment(element,  validation);
 
 		validatorHelper.isNotPrivate(element, validation);

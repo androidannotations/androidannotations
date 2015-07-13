@@ -25,7 +25,6 @@ import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.holder.EApplicationHolder;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JClass;
@@ -37,7 +36,7 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		validatorHelper.typeHasAnnotation(EApplication.class, element, validation);

@@ -32,7 +32,6 @@ import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EIntentServiceHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -51,7 +50,7 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	protected void validate(Element element, ElementValidation validation) {
 
 		validatorHelper.enclosingElementHasEIntentService(element, validation);
 

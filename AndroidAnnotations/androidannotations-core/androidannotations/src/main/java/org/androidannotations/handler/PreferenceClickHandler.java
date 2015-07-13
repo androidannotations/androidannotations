@@ -27,7 +27,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.PreferenceClick;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasPreferences;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -46,8 +45,8 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, ElementValidation valid) {
+		super.validate(element, valid);
 		validatorHelper.enclosingElementExtendsPreferenceActivityOrPreferenceFragment(element, valid);
 
 		ExecutableElement executableElement = (ExecutableElement) element;

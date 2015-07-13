@@ -29,7 +29,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -48,8 +47,8 @@ public class ItemLongClickHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;
 

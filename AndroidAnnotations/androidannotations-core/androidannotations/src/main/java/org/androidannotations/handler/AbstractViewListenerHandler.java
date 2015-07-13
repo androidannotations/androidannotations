@@ -24,7 +24,6 @@ import javax.lang.model.element.Element;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.FoundViewHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass.Res;
 
@@ -43,8 +42,8 @@ public abstract class AbstractViewListenerHandler extends AbstractListenerHandle
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, ElementValidation valid) {
+		super.validate(element, valid);
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, valid);
 	}
 

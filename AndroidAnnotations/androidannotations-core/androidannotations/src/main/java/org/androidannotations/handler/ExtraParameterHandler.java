@@ -29,7 +29,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -50,8 +49,8 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		validatorHelper.enclosingMethodHasAnnotation(methodAnnotationClass, element, validatedElements, valid);
+	protected void validate(Element element, ElementValidation valid) {
+		validatorHelper.enclosingMethodHasAnnotation(methodAnnotationClass, element, valid);
 
 		validatorHelper.canBePutInABundle(element, valid);
 	}

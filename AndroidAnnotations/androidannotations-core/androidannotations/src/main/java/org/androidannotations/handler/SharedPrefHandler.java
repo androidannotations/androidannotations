@@ -54,7 +54,6 @@ import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import org.androidannotations.holder.SharedPrefHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
@@ -108,8 +107,8 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		TypeElement typeElement = (TypeElement) element;
 

@@ -31,7 +31,6 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.FoundViewHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -45,7 +44,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
 
 		validatorHelper.isDeclaredType(element, validation);

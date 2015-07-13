@@ -21,7 +21,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.CustomTitle;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EActivityHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -35,7 +34,7 @@ public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.hasEActivity(element, validation);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, validation);

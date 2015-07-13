@@ -22,7 +22,6 @@ import javax.lang.model.element.Element;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.HierarchyViewerSupport;
 import org.androidannotations.holder.EActivityHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JInvocation;
@@ -34,7 +33,7 @@ public class HierarchyViewerSupportHandler extends BaseAnnotationHandler<EActivi
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.hasEActivity(element, validation);
 
 		validatorHelper.isDebuggable(getEnvironment().getAndroidManifest(), validation);

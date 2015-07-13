@@ -19,7 +19,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import javax.lang.model.element.Element;
@@ -32,7 +31,7 @@ public abstract class AbstractOttoHandler extends BaseAnnotationHandler<ECompone
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	public void validate(Element element, ElementValidation valid) {
 		if (!annotationHelper.enclosingElementHasEnhancedComponentAnnotation(element)) {
 			valid.invalidate();
 			return;

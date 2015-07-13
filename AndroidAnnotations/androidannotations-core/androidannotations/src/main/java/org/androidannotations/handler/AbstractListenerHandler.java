@@ -28,7 +28,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -56,7 +55,7 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
 
 		validatorHelper.resIdsExist(element, getResourceType(), IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
@@ -65,7 +64,7 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 		validatorHelper.doesntThrowException(element, validation);
 
-		validatorHelper.uniqueResourceId(element, validatedElements, getResourceType(), validation);
+		validatorHelper.uniqueResourceId(element, getResourceType(), validation);
 	}
 
 	@Override

@@ -21,7 +21,6 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EProvider;
 import org.androidannotations.holder.EProviderHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public class EProviderHandler extends BaseGeneratingAnnotationHandler<EProviderHolder> {
@@ -36,8 +35,8 @@ public class EProviderHandler extends BaseGeneratingAnnotationHandler<EProviderH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		validatorHelper.extendsProvider(element, validation);
 

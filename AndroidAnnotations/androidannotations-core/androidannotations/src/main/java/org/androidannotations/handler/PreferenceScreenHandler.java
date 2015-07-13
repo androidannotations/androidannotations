@@ -21,7 +21,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.PreferenceScreen;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -34,7 +33,7 @@ public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreference
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	protected void validate(Element element, ElementValidation valid) {
 		validatorHelper.extendsPreferenceActivityOrPreferenceFragment(element, valid);
 		validatorHelper.hasEActivityOrEFragment(element, valid);
 		validatorHelper.resIdsExist(element, IRClass.Res.XML, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, valid);

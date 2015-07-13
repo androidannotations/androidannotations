@@ -21,7 +21,6 @@ import javax.lang.model.element.ExecutableElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public class AfterViewsHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
@@ -31,7 +30,7 @@ public class AfterViewsHandler extends BaseAnnotationHandler<EComponentWithViewS
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;

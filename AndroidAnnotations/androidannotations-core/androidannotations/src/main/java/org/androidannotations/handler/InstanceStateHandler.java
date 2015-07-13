@@ -24,7 +24,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.holder.HasInstanceState;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -42,7 +41,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);

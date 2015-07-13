@@ -22,7 +22,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AndroidRes;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -39,7 +38,7 @@ public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponen
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		TypeMirror fieldTypeMirror = element.asType();

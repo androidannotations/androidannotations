@@ -22,7 +22,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EViewGroupHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -41,8 +40,8 @@ public class EViewGroupHandler extends BaseGeneratingAnnotationHandler<EViewGrou
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		validatorHelper.extendsViewGroup(element, validation);
 

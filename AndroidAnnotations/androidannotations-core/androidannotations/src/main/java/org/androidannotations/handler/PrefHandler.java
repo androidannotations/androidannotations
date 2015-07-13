@@ -25,7 +25,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -40,12 +39,12 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.isSharedPreference(element, validatedElements, validation);
+		validatorHelper.isSharedPreference(element, validation);
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 			elementTypeName = elementTypeName.substring(index + 1);
 		}
 
-		Set<? extends Element> sharedPrefElements = getEnvironment().getValidatedModel().getRootAnnotatedElements(SharedPref.class.getName());
+		Set<? extends Element> sharedPrefElements = getEnvironment().getValidatedElements().getRootAnnotatedElements(SharedPref.class.getName());
 		for (Element sharedPrefElement : sharedPrefElements) {
 			GeneratedClassHolder sharedPrefHolder = processHolder().getGeneratedClassHolder(sharedPrefElement);
 			String sharedPrefName = sharedPrefHolder.getGeneratedClass().name();

@@ -42,7 +42,6 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Delete;
 import org.androidannotations.rest.spring.annotations.Get;
@@ -94,9 +93,9 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void enclosingElementHasRestAnnotation(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	public void enclosingElementHasRestAnnotation(Element element, ElementValidation valid) {
 		String error = "can only be used in an interface annotated with";
-		enclosingElementHasAnnotation(Rest.class, element, validatedElements, valid, error);
+		enclosingElementHasAnnotation(Rest.class, element, valid, error);
 	}
 
 	public void unannotatedMethodReturnsRestTemplate(TypeElement typeElement, ElementValidation valid) {

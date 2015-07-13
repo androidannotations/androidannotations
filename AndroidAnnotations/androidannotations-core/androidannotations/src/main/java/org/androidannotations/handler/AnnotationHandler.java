@@ -18,14 +18,13 @@ package org.androidannotations.handler;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public interface AnnotationHandler<T extends GeneratedClassHolder> {
 
 	String getTarget();
 
-	ElementValidation validate(Element element, AnnotationElements validatedElements);
+	ElementValidation validate(Element element);
 
 	void process(Element element, T holder) throws Exception;
 }

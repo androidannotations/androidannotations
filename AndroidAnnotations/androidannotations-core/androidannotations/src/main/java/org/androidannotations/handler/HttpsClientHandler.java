@@ -28,7 +28,6 @@ import javax.lang.model.element.Element;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.HttpsClient;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
@@ -52,7 +51,7 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		validatorHelper.annotationParameterIsOptionalValidResId(element, IRClass.Res.RAW, "keyStore", validation);

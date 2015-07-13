@@ -43,7 +43,7 @@ public class AndroidAnnotationsEnvironment {
 	private AndroidSystemServices androidSystemServices;
 	private AndroidManifest androidManifest;
 
-	private AnnotationElements validatedModel;
+	private AnnotationElements validatedElements;
 
 	private ProcessHolder processHolder;
 
@@ -66,8 +66,8 @@ public class AndroidAnnotationsEnvironment {
 		this.androidManifest = androidManifest;
 	}
 
-	public void setValidatedModel(AnnotationElements validatedModel) {
-		this.validatedModel = validatedModel;
+	public void setValidatedElements(AnnotationElements validatedElements) {
+		this.validatedElements = validatedElements;
 	}
 
 	public void setProcessHolder(ProcessHolder processHolder) {
@@ -110,11 +110,8 @@ public class AndroidAnnotationsEnvironment {
 		return androidManifest;
 	}
 
-	public AnnotationElements getValidatedModel() {
-		if (validatedModel == null) {
-			throw new IllegalStateException("ValidatedModel is only available after validation");
-		}
-		return validatedModel;
+	public AnnotationElements getValidatedElements() {
+		return validatedElements;
 	}
 
 	public ProcessHolder getProcessHolder() {

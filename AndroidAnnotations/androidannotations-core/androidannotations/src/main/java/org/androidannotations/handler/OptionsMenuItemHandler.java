@@ -23,7 +23,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
@@ -38,7 +37,7 @@ public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
 		validatorHelper.isDeclaredType(element, validation);

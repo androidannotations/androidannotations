@@ -35,7 +35,6 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.holder.HasReceiverRegistration;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -64,7 +63,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	protected void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);

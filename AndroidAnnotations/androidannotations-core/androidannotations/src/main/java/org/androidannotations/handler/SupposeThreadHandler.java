@@ -19,7 +19,6 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public abstract class SupposeThreadHandler extends BaseAnnotationHandler<EComponentHolder> {
@@ -29,7 +28,7 @@ public abstract class SupposeThreadHandler extends BaseAnnotationHandler<ECompon
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	protected void validate(Element element, ElementValidation valid) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, valid);
 		validatorHelper.isNotPrivate(element, valid);
 		validatorHelper.isNotFinal(element, valid);

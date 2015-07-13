@@ -92,17 +92,17 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		LOGGER.info("Initialize AndroidAnnotations {} with options {}", getAAProcessorVersion(), processingEnv.getOptions());
 
 		List<AndroidAnnotationsPlugin> plugins = loadPlugins();
-		LOGGER.info("Plugins loaded: {}", Arrays.toString(plugins.toArray()));
 		androidAnnotationsEnv.setPlugins(plugins);
 	}
 
 	private List<AndroidAnnotationsPlugin> loadPlugins() {
 		ServiceLoader<AndroidAnnotationsPlugin> serviceLoader = ServiceLoader.load(AndroidAnnotationsPlugin.class, AndroidAnnotationsPlugin.class.getClassLoader());
 		List<AndroidAnnotationsPlugin> plugins = new ArrayList<>();
-		plugins.add(new CorePlugin());
 		for (AndroidAnnotationsPlugin plugin : serviceLoader) {
 			plugins.add(plugin);
 		}
+		LOGGER.info("Plugins loaded: {}", Arrays.toString(plugins.toArray()));
+		plugins.add(0, new CorePlugin());
 		return plugins;
 	}
 
@@ -183,6 +183,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
+		AnnotationElementsHolder validatingHolder = extractedModel.validatingHolder();
+		androidAnnotationsEnv.setValidatedElements(validatingHolder);
 
 		Option<AndroidManifest> androidManifestOption = extractAndroidManifest();
 		if (androidManifestOption.isAbsent()) {
@@ -202,8 +204,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		androidAnnotationsEnv.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
 
-		AnnotationElements validatedModel = validateAnnotations(extractedModel);
-		androidAnnotationsEnv.setValidatedModel(validatedModel);
+		AnnotationElements validatedModel = validateAnnotations(extractedModel, validatingHolder);
 
 		ModelProcessor.ProcessResult processResult = processAnnotations(validatedModel);
 
@@ -251,10 +252,10 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return Option.of(coumpoundRClass);
 	}
 
-	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel) throws ValidationException {
+	private AnnotationElements validateAnnotations(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) throws ValidationException {
 		timeStats.start("Validate Annotations");
 		ModelValidator modelValidator = new ModelValidator(androidAnnotationsEnv);
-		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);
+		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel, validatingHolder);
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;
 	}

@@ -20,7 +20,6 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> implements GeneratingAnnotationHandler<T> {
@@ -34,7 +33,7 @@ public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHo
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	protected void validate(Element element, ElementValidation valid) {
 		validatorHelper.isNotFinal(element, valid);
 
 		if (isInnerClass(element)) {

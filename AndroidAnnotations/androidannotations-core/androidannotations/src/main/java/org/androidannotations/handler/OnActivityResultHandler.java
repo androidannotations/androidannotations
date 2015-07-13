@@ -32,7 +32,6 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.holder.HasOnActivityResult;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -57,7 +56,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);

@@ -15,6 +15,46 @@
  */
 package org.androidannotations.helper;
 
+import static java.util.Arrays.asList;
+import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
+import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
+import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
+import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
+import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
+import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
+import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
+import static org.androidannotations.helper.ModelConstants.classSuffix;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
@@ -37,44 +77,6 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import static java.util.Arrays.asList;
-import static org.androidannotations.helper.AndroidConstants.LOG_DEBUG;
-import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
-import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
-import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
-import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
-import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
-import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
-import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 @SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
@@ -103,6 +105,14 @@ public class ValidatorHelper {
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
 		annotationHelper = targetAnnotationHelper;
 		param = new ValidatorParameterHelper(annotationHelper);
+	}
+
+	protected AndroidAnnotationsEnvironment environment() {
+		return annotationHelper.getEnvironment();
+	}
+
+	protected AnnotationElements validatedModel() {
+		return environment().getValidatedElements();
 	}
 
 	public void isNotFinal(Element element, ElementValidation valid) {
@@ -253,31 +263,31 @@ public class ValidatorHelper {
 		return sb.toString();
 	}
 
-	public void hasViewByIdAnnotation(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	public void hasViewByIdAnnotation(Element element, ElementValidation valid) {
 		String error = "can only be used with annotation";
-		elementHasAnnotation(ViewById.class, element, validatedElements, valid, error);
+		elementHasAnnotation(ViewById.class, element, valid, error);
 	}
 
-	public void enclosingMethodHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	public void enclosingMethodHasAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid) {
 		String error = "can only be used with a method annotated with";
-		enclosingElementHasAnnotation(annotation, element, validatedElements, valid, error);
+		enclosingElementHasAnnotation(annotation, element, valid, error);
 	}
 
-	public void enclosingElementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, ElementValidation valid, String error) {
+	public void enclosingElementHasAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid, String error) {
 		Element enclosingElement = element.getEnclosingElement();
-		elementHasAnnotation(annotation, enclosingElement, validatedElements, valid, error);
+		elementHasAnnotation(annotation, enclosingElement, valid, error);
 	}
 
-	public void elementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements, ElementValidation valid, String error) {
-		if (!elementHasAnnotation(annotation, element, validatedElements)) {
+	public void elementHasAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid, String error) {
+		if (!elementHasAnnotation(annotation, element)) {
 			if (element.getAnnotation(annotation) == null) {
 				valid.addError("%s " + error + " @" + annotation.getName());
 			}
 		}
 	}
 
-	public boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element, AnnotationElements validatedElements) {
-		Set<? extends Element> layoutAnnotatedElements = validatedElements.getRootAnnotatedElements(annotation.getName());
+	public boolean elementHasAnnotation(Class<? extends Annotation> annotation, Element element) {
+		Set<? extends Element> layoutAnnotatedElements = validatedModel().getRootAnnotatedElements(annotation.getName());
 		return layoutAnnotatedElements.contains(element);
 	}
 
@@ -366,14 +376,14 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void doesNotHaveTraceAnnotationAndReturnValue(ExecutableElement executableElement, AnnotationElements validatedElements, ElementValidation valid) {
+	public void doesNotHaveTraceAnnotationAndReturnValue(ExecutableElement executableElement, ElementValidation valid) {
 		TypeMirror returnType = executableElement.getReturnType();
-		if (elementHasAnnotation(Trace.class, executableElement, validatedElements) && returnType.getKind() != TypeKind.VOID) {
+		if (elementHasAnnotation(Trace.class, executableElement) && returnType.getKind() != TypeKind.VOID) {
 			valid.addError(executableElement, "@WakeLock annotated methods with a return value are not supported by @Trace");
 		}
 	}
 
-	public void doesNotUseFlagsWithPartialWakeLock(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	public void doesNotUseFlagsWithPartialWakeLock(Element element, ElementValidation valid) {
 		WakeLock annotation = element.getAnnotation(WakeLock.class);
 		if (annotation.level().equals(Level.PARTIAL_WAKE_LOCK) && annotation.flags().length > 0) {
 			valid.addWarning("Flags have no effect when combined with a PARTIAL_WAKE_LOCK");
@@ -495,7 +505,7 @@ public class ValidatorHelper {
 
 	}
 
-	public void isSharedPreference(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	public void isSharedPreference(Element element, ElementValidation valid) {
 
 		TypeMirror type = element.asType();
 
@@ -510,7 +520,7 @@ public class ValidatorHelper {
 				String prefTypeName = elementTypeName.substring(0, elementTypeName.length() - classSuffix().length());
 				prefTypeName = prefTypeName.replace(classSuffix() + ".", ".");
 
-				Set<? extends Element> sharedPrefElements = validatedElements.getRootAnnotatedElements(SharedPref.class.getName());
+				Set<? extends Element> sharedPrefElements = validatedModel().getRootAnnotatedElements(SharedPref.class.getName());
 
 				for (Element sharedPrefElement : sharedPrefElements) {
 					TypeElement sharedPrefTypeElement = (TypeElement) sharedPrefElement;
@@ -677,8 +687,8 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void notAlreadyValidated(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		if (validatedElements.getAllElements().contains(element)) {
+	public void notAlreadyValidated(Element element, ElementValidation valid) {
+		if (validatedModel().getAllElements().contains(element)) {
 			valid.addError("%s annotated element cannot be used with the other annotations used on this element.");
 		}
 	}

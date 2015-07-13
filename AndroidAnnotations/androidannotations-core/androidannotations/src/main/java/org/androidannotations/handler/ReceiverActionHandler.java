@@ -35,7 +35,6 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EReceiverHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -61,7 +60,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 	}
 
 	@Override
-	protected void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
+	protected void validate(Element element, ElementValidation valid) {
 
 		validatorHelper.enclosingElementHasEReceiver(element, valid);
 

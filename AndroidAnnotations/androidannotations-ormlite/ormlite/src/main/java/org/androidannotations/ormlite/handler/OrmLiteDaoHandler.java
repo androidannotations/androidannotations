@@ -27,7 +27,6 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
 import org.androidannotations.ormlite.helper.OrmLiteHelper;
 import org.androidannotations.ormlite.helper.OrmLiteValidatorHelper;
@@ -54,7 +53,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);

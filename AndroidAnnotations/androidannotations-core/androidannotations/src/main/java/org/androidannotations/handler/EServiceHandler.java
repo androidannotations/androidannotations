@@ -21,7 +21,6 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.holder.EServiceHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public class EServiceHandler extends BaseGeneratingAnnotationHandler<EServiceHolder> {
@@ -36,8 +35,8 @@ public class EServiceHandler extends BaseGeneratingAnnotationHandler<EServiceHol
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		validatorHelper.extendsService(element, validation);
 

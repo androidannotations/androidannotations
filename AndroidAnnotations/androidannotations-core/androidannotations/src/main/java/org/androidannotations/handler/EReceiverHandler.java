@@ -21,7 +21,6 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.holder.EReceiverHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public class EReceiverHandler extends BaseGeneratingAnnotationHandler<EReceiverHolder> {
@@ -36,8 +35,8 @@ public class EReceiverHandler extends BaseGeneratingAnnotationHandler<EReceiverH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		validatorHelper.extendsReceiver(element, validation);
 

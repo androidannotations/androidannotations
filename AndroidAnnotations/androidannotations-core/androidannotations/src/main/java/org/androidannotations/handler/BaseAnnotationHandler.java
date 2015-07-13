@@ -24,7 +24,6 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
 
@@ -89,11 +88,11 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 	}
 
 	@Override
-	public ElementValidation validate(Element element, AnnotationElements validatedElements) {
+	public ElementValidation validate(Element element) {
 		ElementValidation validation = new ElementValidation(target, element);
-		validate(element, validatedElements, validation);
+		validate(element, validation);
 		return validation;
 	}
 
-	protected abstract void validate(Element element, AnnotationElements validatedElements, ElementValidation validation);
+	protected abstract void validate(Element element, ElementValidation validation);
 }

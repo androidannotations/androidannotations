@@ -28,7 +28,6 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.holder.NonConfigurationHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -44,7 +43,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEActivity(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);

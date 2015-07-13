@@ -25,7 +25,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.api.UiThreadExecutor;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -49,8 +48,8 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation valid) {
-		super.validate(element, validatedElements, valid);
+	public void validate(Element element, ElementValidation valid) {
+		super.validate(element, valid);
 
 		validatorHelper.usesEnqueueIfHasId(element, valid);
 	}

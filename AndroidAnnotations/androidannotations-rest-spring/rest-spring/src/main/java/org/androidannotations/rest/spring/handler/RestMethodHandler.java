@@ -28,7 +28,6 @@ import javax.lang.model.type.TypeKind;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.helper.RestAnnotationHelper;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
@@ -62,10 +61,10 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		validatorHelper.notAlreadyValidated(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		validatorHelper.notAlreadyValidated(element, validation);
 
-		restSpringValidatorHelper.enclosingElementHasRestAnnotation(element, validatedElements, validation);
+		restSpringValidatorHelper.enclosingElementHasRestAnnotation(element, validation);
 
 		restSpringValidatorHelper.throwsOnlyRestClientException((ExecutableElement) element, validation);
 	}

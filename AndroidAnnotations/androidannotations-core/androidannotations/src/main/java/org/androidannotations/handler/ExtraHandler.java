@@ -30,7 +30,6 @@ import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.HasExtras;
 import org.androidannotations.holder.HasIntentBuilder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -49,7 +48,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		/*
 		 * TODO since we override setIntent(), we should check that the
 		 * setIntent() method can be overridden

@@ -21,7 +21,6 @@ import javax.lang.model.element.ExecutableElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public class AfterInjectHandler extends BaseAnnotationHandler<EComponentHolder> {
@@ -31,7 +30,7 @@ public class AfterInjectHandler extends BaseAnnotationHandler<EComponentHolder> 
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		ExecutableElement executableElement = (ExecutableElement) element;

@@ -19,7 +19,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Delete;
 
@@ -30,8 +29,8 @@ public class DeleteHandler extends RestMethodHandler {
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
-		super.validate(element, validatedElements, validation);
+	public void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
 
 		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
 

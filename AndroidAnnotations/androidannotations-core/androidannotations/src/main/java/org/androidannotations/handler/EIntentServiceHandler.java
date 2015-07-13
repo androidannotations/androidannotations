@@ -22,7 +22,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.holder.EIntentServiceHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceHolder> implements GeneratingAnnotationHandler<EIntentServiceHolder> {
@@ -37,7 +36,7 @@ public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceH
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.extendsIntentService(element, validation);
 
 		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element, validation, ServiceAction.class);

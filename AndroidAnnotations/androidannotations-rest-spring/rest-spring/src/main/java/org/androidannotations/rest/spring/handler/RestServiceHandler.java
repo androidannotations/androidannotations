@@ -24,7 +24,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.androidannotations.rest.spring.annotations.RestService;
@@ -43,7 +42,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);

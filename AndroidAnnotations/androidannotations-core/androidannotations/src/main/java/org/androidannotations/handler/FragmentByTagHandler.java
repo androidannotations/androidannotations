@@ -27,7 +27,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
@@ -40,7 +39,7 @@ public class FragmentByTagHandler extends BaseAnnotationHandler<EComponentWithVi
 	}
 
 	@Override
-	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
+	public void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element,  validation);
 
 		validatorHelper.extendsFragment(element, validation);
