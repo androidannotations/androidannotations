@@ -15,18 +15,18 @@
  */
 package org.androidannotations.rest.spring.handler;
 
-import org.androidannotations.rest.spring.annotations.Get;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
-
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Get;
+
 public class GetHandler extends RestMethodHandler {
 
-	public GetHandler(ProcessingEnvironment processingEnvironment) {
-		super(Get.class, processingEnvironment);
+	public GetHandler(AndroidAnnotationsEnvironment environment) {
+		super(Get.class, environment);
 	}
 
 	@Override

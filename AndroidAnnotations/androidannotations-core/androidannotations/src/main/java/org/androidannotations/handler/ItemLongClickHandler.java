@@ -20,12 +20,17 @@ import static com.sun.codemodel.JExpr.invoke;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.annotations.ItemLongClick;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -35,15 +40,11 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.ItemLongClick;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
 
 public class ItemLongClickHandler extends AbstractViewListenerHandler {
 
-	public ItemLongClickHandler(ProcessingEnvironment processingEnvironment) {
-		super(ItemLongClick.class, processingEnvironment);
+	public ItemLongClickHandler(AndroidAnnotationsEnvironment environment) {
+		super(ItemLongClick.class, environment);
 	}
 
 	@Override

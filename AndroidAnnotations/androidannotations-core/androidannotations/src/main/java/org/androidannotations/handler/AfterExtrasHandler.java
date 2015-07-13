@@ -15,19 +15,19 @@
  */
 package org.androidannotations.handler;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.AfterExtras;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
 public class AfterExtrasHandler extends BaseAnnotationHandler<EActivityHolder> {
 
-	public AfterExtrasHandler(ProcessingEnvironment processingEnvironment) {
-		super(AfterExtras.class, processingEnvironment);
+	public AfterExtrasHandler(AndroidAnnotationsEnvironment environment) {
+		super(AfterExtras.class, environment);
 	}
 
 	@Override

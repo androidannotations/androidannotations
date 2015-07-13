@@ -18,8 +18,7 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
-
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AndroidRes;
 
@@ -28,8 +27,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class DefaultResHandler extends AbstractResHandler {
 
-	public DefaultResHandler(AndroidRes androidRes, ProcessingEnvironment processingEnvironment) {
-		super(androidRes, processingEnvironment);
+	public DefaultResHandler(AndroidRes androidRes, AndroidAnnotationsEnvironment environment) {
+		super(androidRes, environment);
 	}
 
 	@Override

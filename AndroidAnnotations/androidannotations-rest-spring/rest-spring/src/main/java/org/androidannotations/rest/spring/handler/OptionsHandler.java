@@ -15,22 +15,22 @@
  */
 package org.androidannotations.rest.spring.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.rest.spring.annotations.Options;
-import org.androidannotations.rest.spring.holder.RestHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Options;
+import org.androidannotations.rest.spring.holder.RestHolder;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
 
 public class OptionsHandler extends RestMethodHandler {
 
-	public OptionsHandler(ProcessingEnvironment processingEnvironment) {
-		super(Options.class, processingEnvironment);
+	public OptionsHandler(AndroidAnnotationsEnvironment environment) {
+		super(Options.class, environment);
 	}
 
 	@Override

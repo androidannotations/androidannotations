@@ -15,24 +15,20 @@
  */
 package org.androidannotations.otto.handler;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 public abstract class AbstractOttoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	protected final TargetAnnotationHelper annotationHelper;
-
-	public AbstractOttoHandler(String target, ProcessingEnvironment processingEnvironment) {
-		super(target, processingEnvironment);
-		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+	public AbstractOttoHandler(String target, AndroidAnnotationsEnvironment environment) {
+		super(target, environment);
 	}
 
 	@Override

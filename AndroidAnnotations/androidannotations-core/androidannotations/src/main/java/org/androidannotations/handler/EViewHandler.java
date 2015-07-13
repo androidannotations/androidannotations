@@ -15,25 +15,24 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.holder.EViewHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 
 public class EViewHandler extends BaseGeneratingAnnotationHandler<EViewHolder> {
 
-	public EViewHandler(ProcessingEnvironment processingEnvironment) {
-		super(EView.class, processingEnvironment);
+	public EViewHandler(AndroidAnnotationsEnvironment environment) {
+		super(EView.class, environment);
 	}
 
 	@Override
-	public EViewHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EViewHolder(processHolder, annotatedElement);
+	public EViewHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EViewHolder(environment, annotatedElement);
 	}
 
 	@Override

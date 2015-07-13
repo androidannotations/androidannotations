@@ -17,17 +17,13 @@ package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
@@ -37,17 +33,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public ViewByIdHandler(ProcessingEnvironment processingEnvironment) {
-		super(ViewById.class, processingEnvironment);
-		codeModelHelper = new APTCodeModelHelper();
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public ViewByIdHandler(AndroidAnnotationsEnvironment environment) {
+		super(ViewById.class, environment);
 	}
 
 	@Override
@@ -69,7 +56,7 @@ public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSup
 
 		TypeMirror uiFieldTypeMirror = element.asType();
 
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.ID, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
 		JClass viewClass = codeModelHelper.typeMirrorToJClass(uiFieldTypeMirror, holder);
 		JFieldRef fieldRef = ref(fieldName);
 

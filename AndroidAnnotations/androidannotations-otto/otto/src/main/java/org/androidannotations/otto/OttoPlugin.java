@@ -15,12 +15,11 @@
  */
 package org.androidannotations.otto;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.otto.handler.ProduceHandler;
 import org.androidannotations.otto.handler.SubscribeHandler;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.handler.AnnotationHandlers;
-
-import javax.annotation.processing.ProcessingEnvironment;
 
 public class OttoPlugin extends AndroidAnnotationsPlugin {
 
@@ -32,8 +31,8 @@ public class OttoPlugin extends AndroidAnnotationsPlugin {
 	}
 
 	@Override
-	public void addHandlers(AnnotationHandlers annotationHandlers, ProcessingEnvironment processingEnv) {
-		annotationHandlers.add(new SubscribeHandler(processingEnv));
-		annotationHandlers.add(new ProduceHandler(processingEnv));
+	public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
+		annotationHandlers.add(new SubscribeHandler(androidAnnotationEnv));
+		annotationHandlers.add(new ProduceHandler(androidAnnotationEnv));
 	}
 }

@@ -15,14 +15,14 @@
  */
 package org.androidannotations.rest.spring.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.rest.spring.annotations.Head;
-import org.androidannotations.rest.spring.holder.RestHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Head;
+import org.androidannotations.rest.spring.holder.RestHolder;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
@@ -30,8 +30,8 @@ import com.sun.codemodel.JExpression;
 
 public class HeadHandler extends RestMethodHandler {
 
-	public HeadHandler(ProcessingEnvironment processingEnvironment) {
-		super(Head.class, processingEnvironment);
+	public HeadHandler(AndroidAnnotationsEnvironment environment) {
+		super(Head.class, environment);
 	}
 
 	@Override

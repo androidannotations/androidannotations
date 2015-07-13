@@ -19,9 +19,9 @@ import static com.sun.codemodel.JExpr._new;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.FoundViewHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -34,12 +34,12 @@ import com.sun.codemodel.JFieldRef;
 
 public abstract class AbstractViewListenerHandler extends AbstractListenerHandler<EComponentWithViewSupportHolder> {
 
-	public AbstractViewListenerHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
+	public AbstractViewListenerHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
 	}
 
-	public AbstractViewListenerHandler(String target, ProcessingEnvironment processingEnvironment) {
-		super(target, processingEnvironment);
+	public AbstractViewListenerHandler(String target, AndroidAnnotationsEnvironment environment) {
+		super(target, environment);
 	}
 
 	@Override

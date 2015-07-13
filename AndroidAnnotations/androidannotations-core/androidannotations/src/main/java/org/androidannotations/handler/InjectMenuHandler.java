@@ -15,22 +15,22 @@
  */
 package org.androidannotations.handler;
 
+import javax.lang.model.element.Element;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JVar;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.InjectMenu;
 import org.androidannotations.holder.HasOptionsMenu;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JVar;
 
 public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
-	public InjectMenuHandler(ProcessingEnvironment processingEnvironment) {
-		super(InjectMenu.class, processingEnvironment);
+	public InjectMenuHandler(AndroidAnnotationsEnvironment environment) {
+		super(InjectMenu.class, environment);
 	}
 
 	@Override

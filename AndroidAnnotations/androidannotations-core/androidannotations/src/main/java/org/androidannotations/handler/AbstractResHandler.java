@@ -15,36 +15,27 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AndroidRes;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
 
 public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	protected AndroidRes androidRes;
-	private IdAnnotationHelper annotationHelper;
 
-	public AbstractResHandler(AndroidRes androidRes, ProcessingEnvironment processingEnvironment) {
-		super(androidRes.getAnnotationClass(), processingEnvironment);
+	public AbstractResHandler(AndroidRes androidRes, AndroidAnnotationsEnvironment environment) {
+		super(androidRes.getAnnotationClass(), environment);
 		this.androidRes = androidRes;
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
 	}
 
 	@Override
@@ -66,7 +57,7 @@ public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponen
 
 		IRClass.Res resInnerClass = androidRes.getRInnerClass();
 
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, resInnerClass, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, resInnerClass, true);
 
 		JBlock methodBody = holder.getInitBody();
 

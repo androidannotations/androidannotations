@@ -27,10 +27,10 @@ import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -77,8 +77,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JBlock onDetachBeforeSuperBlock;
 	private JBlock onDestroyViewAfterSuperBlock;
 
-	public EFragmentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public EFragmentHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 		instanceStateDelegate = new InstanceStateDelegate(this);
 		onActivityResultDelegate = new OnActivityResultDelegate(this);
 		receiverRegistrationDelegate = new ReceiverRegistrationDelegate<>(this);

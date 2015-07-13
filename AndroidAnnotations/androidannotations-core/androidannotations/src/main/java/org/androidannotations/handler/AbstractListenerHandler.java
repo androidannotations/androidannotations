@@ -15,6 +15,22 @@
  */
 package org.androidannotations.handler;
 
+import static com.sun.codemodel.JExpr.invoke;
+
+import java.util.List;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -25,43 +41,18 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
-import org.androidannotations.rclass.IRClass;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import java.util.List;
-
-import static com.sun.codemodel.JExpr.invoke;
 
 public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> {
 
-	private IdAnnotationHelper helper;
 	private T holder;
 	private String methodName;
 
-	public AbstractListenerHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
+	public AbstractListenerHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
 	}
 
-	public AbstractListenerHandler(String target, ProcessingEnvironment processingEnvironment) {
-		super(target, processingEnvironment);
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public AbstractListenerHandler(String target, AndroidAnnotationsEnvironment environment) {
+		super(target, environment);
 	}
 
 	@Override
@@ -86,7 +77,7 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 		TypeMirror returnType = executableElement.getReturnType();
 
-		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(processHolder, element, getResourceType(), true);
+		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(element, getResourceType(), true);
 
 		JDefinedClass listenerAnonymousClass = codeModel().anonymousClass(getListenerClass());
 		JMethod listenerMethod = createListenerMethod(listenerAnonymousClass);
@@ -116,8 +107,8 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 	protected final boolean isTypeOrSubclass(String baseType, Element element) {
 		TypeMirror typeMirror = element.asType();
-		TypeElement typeElement = helper.typeElementFromQualifiedName(baseType);
-		return helper.isSubtype(typeMirror, typeElement.asType());
+		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(baseType);
+		return annotationHelper.isSubtype(typeMirror, typeElement.asType());
 	}
 
 	protected abstract void assignListeners(T holder, List<JFieldRef> idsRefs, JDefinedClass listenerAnonymousClass);

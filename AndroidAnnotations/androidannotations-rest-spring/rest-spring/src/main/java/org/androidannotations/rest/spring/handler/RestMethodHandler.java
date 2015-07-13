@@ -20,20 +20,19 @@ import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.helper.RestAnnotationHelper;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
 import org.androidannotations.rest.spring.holder.RestHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JArray;
 import com.sun.codemodel.JBlock;
@@ -56,11 +55,10 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	protected final RestAnnotationHelper restAnnotationHelper;
 	protected final RestSpringValidatorHelper restSpringValidatorHelper;
 
-	public RestMethodHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
-		restAnnotationHelper = new RestAnnotationHelper(processingEnv, getTarget());
-		codeModelHelper = new APTCodeModelHelper();
-		restSpringValidatorHelper = new RestSpringValidatorHelper(processingEnvironment, getTarget());
+	public RestMethodHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
+		restAnnotationHelper = new RestAnnotationHelper(environment, getTarget());
+		restSpringValidatorHelper = new RestSpringValidatorHelper(environment, getTarget());
 	}
 
 	@Override
@@ -151,7 +149,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	protected JExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> params) {
 		JVar httpHeaders = restAnnotationHelper.declareHttpHeaders(element, holder, methodBody);
 		JVar entitySentToServer = restAnnotationHelper.getEntitySentToServer(element, params);
-		return restAnnotationHelper.declareHttpEntity(processHolder, methodBody, entitySentToServer, httpHeaders);
+		return restAnnotationHelper.declareHttpEntity(methodBody, entitySentToServer, httpHeaders);
 	}
 
 	protected JExpression getResponseClass(Element element, RestHolder holder) {

@@ -15,8 +15,7 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.SeekBarTouchStart;
 import org.androidannotations.holder.OnSeekBarChangeListenerHolder;
 
@@ -25,8 +24,8 @@ import com.sun.codemodel.JVar;
 
 public class SeekBarTouchStartHandler extends AbstractSeekBarTouchHandler {
 
-	public SeekBarTouchStartHandler(ProcessingEnvironment processingEnvironment) {
-		super(SeekBarTouchStart.class, processingEnvironment);
+	public SeekBarTouchStartHandler(AndroidAnnotationsEnvironment environment) {
+		super(SeekBarTouchStart.class, environment);
 	}
 
 	@Override

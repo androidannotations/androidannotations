@@ -15,29 +15,30 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.lit;
+import static com.sun.codemodel.JExpr.ref;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JExpr.ref;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JConditional;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
 
 public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
 
-	public RootContextHandler(ProcessingEnvironment processingEnvironment) {
-		super(RootContext.class, processingEnvironment);
+	public RootContextHandler(AndroidAnnotationsEnvironment environment) {
+		super(RootContext.class, environment);
 	}
 
 	@Override

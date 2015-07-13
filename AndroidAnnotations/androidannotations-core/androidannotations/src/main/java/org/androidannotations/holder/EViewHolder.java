@@ -30,7 +30,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -59,8 +59,8 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
-	public EViewHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 		addSuppressWarning();
 		createConstructorAndBuilder();
 	}

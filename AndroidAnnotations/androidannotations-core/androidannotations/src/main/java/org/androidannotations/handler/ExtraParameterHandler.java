@@ -22,15 +22,15 @@ import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 
-import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -39,18 +39,14 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.process.ElementValidation;
-
 
 public abstract class ExtraParameterHandler extends BaseAnnotationHandler<GeneratedClassHolder> {
 
 	private Class<? extends Annotation> methodAnnotationClass;
-	private AnnotationHelper annotationHelper;
 
-	public ExtraParameterHandler(Class<? extends Annotation> targetClass, Class<? extends Annotation> methodAnnotationClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
+	public ExtraParameterHandler(Class<? extends Annotation> targetClass, Class<? extends Annotation> methodAnnotationClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
 		this.methodAnnotationClass = methodAnnotationClass;
-		annotationHelper = new AnnotationHelper(processingEnv);
 	}
 
 	@Override

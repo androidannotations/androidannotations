@@ -19,13 +19,9 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JMod.PRIVATE;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpression;
@@ -40,10 +36,9 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	protected JMethod init;
 	private JVar resourcesRef;
 	private JFieldVar powerManagerRef;
-	private Map<TypeMirror, JFieldVar> databaseHelperRefs = new HashMap<>();
 
-	public EComponentHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public EComponentHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 	}
 
 	public JExpression getContextRef() {

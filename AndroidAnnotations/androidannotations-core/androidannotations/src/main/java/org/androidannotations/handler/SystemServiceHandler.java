@@ -19,11 +19,11 @@ import static com.sun.codemodel.JExpr.assign;
 import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
@@ -39,15 +39,15 @@ import com.sun.codemodel.JStatement;
 
 public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public SystemServiceHandler(ProcessingEnvironment processingEnvironment) {
-		super(SystemService.class, processingEnvironment);
+	public SystemServiceHandler(AndroidAnnotationsEnvironment environment) {
+		super(SystemService.class, environment);
 	}
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
-		validatorHelper.androidService(androidSystemServices, element, validation);
+		validatorHelper.androidService(getEnvironment().getAndroidSystemServices(), element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
 	}
@@ -59,7 +59,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 		TypeMirror serviceType = element.asType();
 		String fieldTypeQualifiedName = serviceType.toString();
 
-		JFieldRef serviceRef = androidSystemServices.getServiceConstant(serviceType, holder);
+		JFieldRef serviceRef = getEnvironment().getAndroidSystemServices().getServiceConstant(serviceType, holder);
 
 		JBlock methodBody = holder.getInitBody();
 
@@ -73,7 +73,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 	@SuppressWarnings("checkstyle:parameternumber")
 	private void createSpecialInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody, int apiLevel, String apiLevelName,
 			JClass serviceClass, String injectionMethodName, boolean contextNeeded) {
-		if (androidManifest.getMinSdkVersion() >= apiLevel) {
+		if (getEnvironment().getAndroidManifest().getMinSdkVersion() >= apiLevel) {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		} else {
 			JInvocation injectionMethodInvokation = serviceClass.staticInvoke(injectionMethodName);

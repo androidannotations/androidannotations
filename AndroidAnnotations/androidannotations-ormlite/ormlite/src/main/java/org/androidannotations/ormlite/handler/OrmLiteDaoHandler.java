@@ -22,10 +22,10 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
@@ -34,7 +34,6 @@ import org.androidannotations.ormlite.helper.OrmLiteValidatorHelper;
 import org.androidannotations.ormlite.holder.OrmLiteHolder;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
@@ -45,15 +44,13 @@ import static com.sun.codemodel.JExpr.ref;
 public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	private final OrmLiteHelper ormLiteHelper;
-	private final TargetAnnotationHelper helper;
 	private final OrmLiteValidatorHelper ormLiteValidatorHelper;
 
-	public OrmLiteDaoHandler(ProcessingEnvironment processingEnvironment) {
-		super(OrmLiteDao.class, processingEnvironment);
-		helper = new TargetAnnotationHelper(processingEnv, getTarget());
-		ormLiteHelper = new OrmLiteHelper(helper);
+	public OrmLiteDaoHandler(AndroidAnnotationsEnvironment environment) {
+		super(OrmLiteDao.class, environment);
+		ormLiteHelper = new OrmLiteHelper(annotationHelper);
 		codeModelHelper = new APTCodeModelHelper();
-		ormLiteValidatorHelper = new OrmLiteValidatorHelper(processingEnvironment);
+		ormLiteValidatorHelper = new OrmLiteValidatorHelper(environment);
 	}
 
 	@Override
@@ -81,7 +78,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JClass daoClass = refClass(CanonicalNameConstants.DAO).narrow(modelClass, idClass);
 
-		TypeMirror databaseHelperTypeMirror = helper.extractAnnotationParameter(element, "helper");
+		TypeMirror databaseHelperTypeMirror = annotationHelper.extractAnnotationParameter(element, "helper");
 		JFieldVar databaseHelperRef = ormLiteHolder.getDatabaseHelperRef(databaseHelperTypeMirror);
 
 		JBlock initBody = holder.getInitBody();
@@ -107,6 +104,6 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	private boolean elementExtendsRuntimeExceptionDao(Element element) {
 		TypeMirror elementType = element.asType();
-		return helper.isSubtype(elementType, ormLiteHelper.getRuntimeExceptionDaoParametrizedType());
+		return annotationHelper.isSubtype(elementType, ormLiteHelper.getRuntimeExceptionDaoParametrizedType());
 	}
 }

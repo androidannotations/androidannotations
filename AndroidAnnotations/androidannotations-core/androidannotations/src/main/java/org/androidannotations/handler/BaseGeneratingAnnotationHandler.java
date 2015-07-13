@@ -15,22 +15,22 @@
  */
 package org.androidannotations.handler;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-
 public abstract class BaseGeneratingAnnotationHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> implements GeneratingAnnotationHandler<T> {
 
-	public BaseGeneratingAnnotationHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
+	public BaseGeneratingAnnotationHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
 	}
 
-	public BaseGeneratingAnnotationHandler(String target, ProcessingEnvironment processingEnvironment) {
-		super(target, processingEnvironment);
+	public BaseGeneratingAnnotationHandler(String target, AndroidAnnotationsEnvironment environment) {
+		super(target, environment);
 	}
 
 	@Override

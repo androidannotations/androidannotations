@@ -15,11 +15,10 @@
  */
 package org.androidannotations.ormlite;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.ormlite.handler.OrmLiteDaoHandler;
-
-import javax.annotation.processing.ProcessingEnvironment;
 
 public class OrmLitePlugin extends AndroidAnnotationsPlugin {
 
@@ -30,8 +29,7 @@ public class OrmLitePlugin extends AndroidAnnotationsPlugin {
 		return NAME;
 	}
 
-	@Override
-	public void addHandlers(AnnotationHandlers annotationHandlers, ProcessingEnvironment processingEnv) {
-		annotationHandlers.add(new OrmLiteDaoHandler(processingEnv));
+	@Override public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
+		annotationHandlers.add(new OrmLiteDaoHandler(androidAnnotationEnv));
 	}
 }

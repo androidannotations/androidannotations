@@ -18,10 +18,10 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.lit;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.api.UiThreadExecutor;
 import org.androidannotations.holder.EComponentHolder;
@@ -44,8 +44,8 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	private static final String METHOD_GET_THREAD = "getThread";
 	private static final String METHOD_RUN_TASK = "runTask";
 
-	public UiThreadHandler(ProcessingEnvironment processingEnvironment) {
-		super(UiThread.class, processingEnvironment);
+	public UiThreadHandler(AndroidAnnotationsEnvironment environment) {
+		super(UiThread.class, environment);
 	}
 
 	@Override

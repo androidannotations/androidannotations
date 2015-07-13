@@ -30,13 +30,13 @@ import java.util.List;
 
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.ActivityIntentBuilder;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -92,8 +92,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JBlock onStopBeforeSuperBlock;
 	private JBlock onPauseBeforeSuperBlock;
 
-	public EActivityHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
-		super(processHolder, annotatedElement);
+	public EActivityHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
+		super(environment, annotatedElement);
 		instanceStateDelegate = new InstanceStateDelegate(this);
 		onActivityResultDelegate = new OnActivityResultDelegate(this);
 		receiverRegistrationDelegate = new ReceiverRegistrationDelegate<>(this);
@@ -528,7 +528,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setGetLastNonConfigurationInstance() throws JClassAlreadyExistsException {
-		AnnotationHelper annotationHelper = new AnnotationHelper(processingEnvironment());
+		AnnotationHelper annotationHelper = new AnnotationHelper(getEnvironment());
 		TypeElement fragmentActivityTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(generatedClass._extends().fullName());
 		String getLastNonConfigurationInstanceName = "getLastNonConfigurationInstance";
@@ -563,7 +563,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setOnRetainNonConfigurationInstance() throws JClassAlreadyExistsException {
-		AnnotationHelper annotationHelper = new AnnotationHelper(processingEnvironment());
+		AnnotationHelper annotationHelper = new AnnotationHelper(getEnvironment());
 		TypeElement fragmentActivityTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(generatedClass._extends().fullName());
 

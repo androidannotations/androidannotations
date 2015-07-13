@@ -21,12 +21,11 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.HasExtras;
@@ -45,11 +44,8 @@ import com.sun.codemodel.JVar;
 
 public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 
-	private final AnnotationHelper annotationHelper;
-
-	public ExtraHandler(ProcessingEnvironment processingEnvironment) {
-		super(Extra.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnv);
+	public ExtraHandler(AndroidAnnotationsEnvironment environment) {
+		super(Extra.class, environment);
 	}
 
 	@Override

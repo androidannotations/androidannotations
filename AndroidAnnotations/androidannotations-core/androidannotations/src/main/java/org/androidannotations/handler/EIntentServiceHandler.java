@@ -15,26 +15,25 @@
  */
 package org.androidannotations.handler;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.holder.EIntentServiceHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceHolder> implements GeneratingAnnotationHandler<EIntentServiceHolder> {
 
-	public EIntentServiceHandler(ProcessingEnvironment processingEnvironment) {
-		super(EIntentService.class, processingEnvironment);
+	public EIntentServiceHandler(AndroidAnnotationsEnvironment environment) {
+		super(EIntentService.class, environment);
 	}
 
 	@Override
-	public EIntentServiceHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EIntentServiceHolder(processHolder, annotatedElement, androidManifest);
+	public EIntentServiceHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EIntentServiceHolder(environment, annotatedElement, getEnvironment().getAndroidManifest());
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class EIntentServiceHandler extends BaseAnnotationHandler<EIntentServiceH
 
 		validatorHelper.isNotFinal(element, validation);
 
-		validatorHelper.componentRegistered(element, androidManifest, validation);
+		validatorHelper.componentRegistered(element, getEnvironment().getAndroidManifest(), validation);
 
 		validatorHelper.isAbstractOrHasEmptyConstructor(element, validation);
 	}

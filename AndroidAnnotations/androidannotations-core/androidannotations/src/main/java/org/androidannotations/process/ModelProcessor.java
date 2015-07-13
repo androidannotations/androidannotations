@@ -17,16 +17,15 @@ package org.androidannotations.process;
 
 import java.util.Set;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.handler.AnnotationHandler;
-import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.logger.Logger;
@@ -52,19 +51,17 @@ public class ModelProcessor {
 		}
 	}
 
-	private final ProcessingEnvironment processingEnv;
-	private final AnnotationHandlers annotationHandlers;
+	private final AndroidAnnotationsEnvironment environment;
 
-	public ModelProcessor(ProcessingEnvironment processingEnv, AnnotationHandlers annotationHandlers) {
-		this.processingEnv = processingEnv;
-		this.annotationHandlers = annotationHandlers;
+	public ModelProcessor(AndroidAnnotationsEnvironment environment) {
+		this.environment = environment;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ProcessResult process(AnnotationElements validatedModel) throws ProcessingException, Exception {
-		ProcessHolder processHolder = new ProcessHolder(processingEnv);
+	public ProcessResult process(AnnotationElements validatedModel) throws Exception {
+		ProcessHolder processHolder = new ProcessHolder(environment.getProcessingEnvironment());
 
-		annotationHandlers.setProcessHolder(processHolder);
+		environment.setProcessHolder(processHolder);
 
 		LOGGER.info("Processing root elements");
 
@@ -80,7 +77,7 @@ public class ModelProcessor {
 
 		LOGGER.info("Processing enclosed elements");
 
-		for (AnnotationHandler annotationHandler : annotationHandlers.getDecorating()) {
+		for (AnnotationHandler annotationHandler : environment.getDecoratingHandlers()) {
 			String annotationName = annotationHandler.getTarget();
 
 			/*
@@ -162,7 +159,7 @@ public class ModelProcessor {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private boolean generateElements(AnnotationElements validatedModel, ProcessHolder processHolder) throws Exception {
 		boolean isElementRemaining = false;
-		for (GeneratingAnnotationHandler generatingAnnotationHandler : annotationHandlers.getGenerating()) {
+		for (GeneratingAnnotationHandler generatingAnnotationHandler : environment.getGeneratingHandlers()) {
 			String annotationName = generatingAnnotationHandler.getTarget();
 			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
 
@@ -184,7 +181,7 @@ public class ModelProcessor {
 						if (typeElement.getNestingKind() == NestingKind.MEMBER && processHolder.getGeneratedClassHolder(enclosingElement) == null) {
 							isElementRemaining = true;
 						} else {
-							GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(processHolder, typeElement);
+							GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(environment, typeElement);
 							processHolder.put(annotatedElement, generatedClassHolder);
 							generatingAnnotationHandler.process(annotatedElement, generatedClassHolder);
 						}

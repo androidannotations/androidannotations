@@ -20,35 +20,23 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.FragmentByTag;
-import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JMethod;
 
 public class FragmentByTagHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public FragmentByTagHandler(ProcessingEnvironment processingEnvironment) {
-		super(FragmentByTag.class, processingEnvironment);
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public FragmentByTagHandler(AndroidAnnotationsEnvironment environment) {
+		super(FragmentByTag.class, environment);
 	}
 
 	@Override

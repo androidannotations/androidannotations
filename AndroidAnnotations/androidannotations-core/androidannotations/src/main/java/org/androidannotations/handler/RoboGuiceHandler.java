@@ -26,17 +26,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.RoboGuice;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.holder.RoboGuiceDelegate;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -48,12 +49,11 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
-import org.androidannotations.process.ElementValidation;
 
 public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
-	public RoboGuiceHandler(ProcessingEnvironment processingEnvironment) {
-		super(RoboGuice.class, processingEnvironment);
+	public RoboGuiceHandler(AndroidAnnotationsEnvironment environment) {
+		super(RoboGuice.class, environment);
 	}
 
 	@Override

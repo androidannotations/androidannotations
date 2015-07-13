@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -48,8 +48,8 @@ import com.sun.codemodel.JVar;
 
 public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public TraceHandler(ProcessingEnvironment processingEnvironment) {
-		super(Trace.class, processingEnvironment);
+	public TraceHandler(AndroidAnnotationsEnvironment environment) {
+		super(Trace.class, environment);
 	}
 
 	@Override

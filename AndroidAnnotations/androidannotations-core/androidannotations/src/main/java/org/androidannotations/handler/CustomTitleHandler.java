@@ -15,11 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.CustomTitle;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -31,11 +30,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 
-	private final AnnotationHelper annotationHelper;
-
-	public CustomTitleHandler(ProcessingEnvironment processingEnvironment) {
-		super(CustomTitle.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnv);
+	public CustomTitleHandler(AndroidAnnotationsEnvironment environment) {
+		super(CustomTitle.class, environment);
 	}
 
 	@Override
@@ -49,7 +45,7 @@ public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 	public void process(Element element, EActivityHolder holder) {
 		JBlock onViewChangedBody = holder.getOnViewChangedBody();
 
-		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(processHolder, element, getTarget(), rClass.get(IRClass.Res.LAYOUT), false).get(0);
+		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(element, getTarget(), getEnvironment().getRClass().get(IRClass.Res.LAYOUT), false).get(0);
 
 		JFieldRef customTitleFeature = classes().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
 		holder.getInitBody().invoke("requestWindowFeature").arg(customTitleFeature);

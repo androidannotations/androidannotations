@@ -15,19 +15,15 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EViewGroupHolder;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JExpr;
@@ -35,21 +31,13 @@ import com.sun.codemodel.JFieldRef;
 
 public class EViewGroupHandler extends BaseGeneratingAnnotationHandler<EViewGroupHolder> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public EViewGroupHandler(ProcessingEnvironment processingEnvironment) {
-		super(EViewGroup.class, processingEnvironment);
+	public EViewGroupHandler(AndroidAnnotationsEnvironment environment) {
+		super(EViewGroup.class, environment);
 	}
 
 	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-	}
-
-	@Override
-	public EViewGroupHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EViewGroupHolder(processHolder, annotatedElement);
+	public EViewGroupHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EViewGroupHolder(environment, annotatedElement);
 	}
 
 	@Override
@@ -63,7 +51,7 @@ public class EViewGroupHandler extends BaseGeneratingAnnotationHandler<EViewGrou
 
 	@Override
 	public void process(Element element, EViewGroupHolder holder) {
-		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.LAYOUT, false);
+		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.LAYOUT, false);
 		if (contentViewId != null) {
 			holder.getSetContentViewBlock().invoke("inflate").arg(holder.getContextRef()).arg(contentViewId).arg(JExpr._this());
 		}

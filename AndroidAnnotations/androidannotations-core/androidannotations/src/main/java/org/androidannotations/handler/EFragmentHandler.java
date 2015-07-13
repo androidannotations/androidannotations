@@ -18,17 +18,15 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr.FALSE;
 import static com.sun.codemodel.JExpr._null;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
@@ -38,13 +36,13 @@ import com.sun.codemodel.JVar;
 
 public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentHolder> {
 
-	public EFragmentHandler(ProcessingEnvironment processingEnvironment) {
-		super(EFragment.class, processingEnvironment);
+	public EFragmentHandler(AndroidAnnotationsEnvironment environment) {
+		super(EFragment.class, environment);
 	}
 
 	@Override
-	public EFragmentHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EFragmentHolder(processHolder, annotatedElement);
+	public EFragmentHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EFragmentHolder(environment, annotatedElement);
 	}
 
 	@Override
@@ -63,9 +61,7 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 	@Override
 	public void process(Element element, EFragmentHolder holder) {
 
-		IdAnnotationHelper idAnnotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-
-		JFieldRef contentViewId = idAnnotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.LAYOUT, false);
+		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.LAYOUT, false);
 
 		if (contentViewId != null) {
 

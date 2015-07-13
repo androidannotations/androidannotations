@@ -17,10 +17,10 @@ package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr.lit;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.SupposeBackground;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.holder.EComponentHolder;
@@ -34,8 +34,8 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
 
 	private static final String METHOD_CHECK_BG_THREAD = "checkBgThread";
 
-	public SupposeBackgroundHandler(ProcessingEnvironment processingEnvironment) {
-		super(SupposeBackground.class, processingEnvironment);
+	public SupposeBackgroundHandler(AndroidAnnotationsEnvironment environment) {
+		super(SupposeBackground.class, environment);
 	}
 
 	@Override

@@ -15,25 +15,24 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.holder.EServiceHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 
 public class EServiceHandler extends BaseGeneratingAnnotationHandler<EServiceHolder> {
 
-	public EServiceHandler(ProcessingEnvironment processingEnvironment) {
-		super(EService.class, processingEnvironment);
+	public EServiceHandler(AndroidAnnotationsEnvironment environment) {
+		super(EService.class, environment);
 	}
 
 	@Override
-	public EServiceHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EServiceHolder(processHolder, annotatedElement, androidManifest);
+	public EServiceHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EServiceHolder(environment, annotatedElement, getEnvironment().getAndroidManifest());
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class EServiceHandler extends BaseGeneratingAnnotationHandler<EServiceHol
 
 		validatorHelper.extendsService(element, validation);
 
-		validatorHelper.componentRegistered(element, androidManifest, validation);
+		validatorHelper.componentRegistered(element, getEnvironment().getAndroidManifest(), validation);
 	}
 
 	@Override

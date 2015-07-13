@@ -15,18 +15,18 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
 public abstract class AbstractRunnableHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public AbstractRunnableHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
+	public AbstractRunnableHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
 	}
 
 	@Override

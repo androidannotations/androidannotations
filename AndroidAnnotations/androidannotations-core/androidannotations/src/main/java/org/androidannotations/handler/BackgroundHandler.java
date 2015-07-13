@@ -18,10 +18,10 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.lit;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.holder.EComponentHolder;
@@ -39,8 +39,8 @@ import com.sun.codemodel.JVar;
 
 public class BackgroundHandler extends AbstractRunnableHandler {
 
-	public BackgroundHandler(ProcessingEnvironment processingEnvironment) {
-		super(Background.class, processingEnvironment);
+	public BackgroundHandler(AndroidAnnotationsEnvironment environment) {
+		super(Background.class, environment);
 	}
 
 	@Override

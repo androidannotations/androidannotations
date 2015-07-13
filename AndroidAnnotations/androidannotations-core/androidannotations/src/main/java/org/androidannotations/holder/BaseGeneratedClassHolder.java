@@ -30,6 +30,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.process.ProcessHolder;
 
@@ -41,7 +42,7 @@ import com.sun.codemodel.JTypeVar;
 
 public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
-	protected final ProcessHolder processHolder;
+	protected final AndroidAnnotationsEnvironment environment;
 	protected JDefinedClass generatedClass;
 	protected JClass annotatedClass;
 	protected final TypeElement annotatedElement;
@@ -49,8 +50,8 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
 	private Map<Class<?>, Object> pluginHolders = new HashMap<>();
 
-	public BaseGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		this.processHolder = processHolder;
+	public BaseGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		this.environment = environment;
 		this.annotatedElement = annotatedElement;
 		codeModelHelper = new APTCodeModelHelper();
 		setGeneratedClass();
@@ -62,7 +63,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 
 		if (annotatedElement.getNestingKind().isNested()) {
 			Element enclosingElement = annotatedElement.getEnclosingElement();
-			GeneratedClassHolder enclosingHolder = processHolder.getGeneratedClassHolder(enclosingElement);
+			GeneratedClassHolder enclosingHolder = processHolder().getGeneratedClassHolder(enclosingElement);
 			String generatedBeanSimpleName = annotatedElement.getSimpleName().toString() + classSuffix();
 			generatedClass = enclosingHolder.getGeneratedClass()._class(PUBLIC | FINAL | STATIC, generatedBeanSimpleName, ClassType.CLASS);
 		} else {
@@ -96,34 +97,42 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 		return annotatedElement;
 	}
 
+	public AndroidAnnotationsEnvironment getEnvironment() {
+		return environment;
+	}
+
 	@Override
 	public ProcessingEnvironment processingEnvironment() {
-		return processHolder.processingEnvironment();
+		return environment.getProcessingEnvironment();
+	}
+
+	public ProcessHolder processHolder() {
+		return environment.getProcessHolder();
 	}
 
 	@Override
 	public ProcessHolder.Classes classes() {
-		return processHolder.classes();
+		return processHolder().classes();
 	}
 
 	@Override
 	public JCodeModel codeModel() {
-		return processHolder.codeModel();
+		return processHolder().codeModel();
 	}
 
 	@Override
 	public JClass refClass(String fullyQualifiedClassName) {
-		return processHolder.refClass(fullyQualifiedClassName);
+		return processHolder().refClass(fullyQualifiedClassName);
 	}
 
 	@Override
 	public JClass refClass(Class<?> clazz) {
-		return processHolder.refClass(clazz);
+		return processHolder().refClass(clazz);
 	}
 
 	@Override
 	public JDefinedClass definedClass(String fullyQualifiedClassName) {
-		return processHolder.definedClass(fullyQualifiedClassName);
+		return processHolder().definedClass(fullyQualifiedClassName);
 	}
 
 	public JClass narrow(JClass toNarrow) {

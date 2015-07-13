@@ -25,11 +25,11 @@ import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_R
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
@@ -42,13 +42,11 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
 import org.androidannotations.rest.spring.holder.RestHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -60,19 +58,17 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 	public static final List<Class<? extends Annotation>> VALID_ANDROID_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class,
 			EReceiver.class, EProvider.class, EFragment.class, SharedPref.class, Rest.class);
 
-	private final AnnotationHelper annotationHelper;
 	private final RestSpringValidatorHelper restSpringValidatorHelper;
 
-	public RestHandler(ProcessingEnvironment processingEnvironment) {
-		super(Rest.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnv);
+	public RestHandler(AndroidAnnotationsEnvironment environment) {
+		super(Rest.class, environment);
 		codeModelHelper = new APTCodeModelHelper();
-		restSpringValidatorHelper = new RestSpringValidatorHelper(processingEnvironment, getTarget());
+		restSpringValidatorHelper = new RestSpringValidatorHelper(environment, getTarget());
 	}
 
 	@Override
-	public RestHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new RestHolder(processHolder, annotatedElement);
+	public RestHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new RestHolder(environment, annotatedElement);
 	}
 
 	@Override
@@ -103,7 +99,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 		validatorHelper.isTopLevel(typeElement, validation);
 
-		validatorHelper.hasInternetPermission(androidManifest, validation);
+		validatorHelper.hasInternetPermission(getEnvironment().getAndroidManifest(), validation);
 
 		restSpringValidatorHelper.doesNotExtendInvalidInterfaces(typeElement, validation);
 

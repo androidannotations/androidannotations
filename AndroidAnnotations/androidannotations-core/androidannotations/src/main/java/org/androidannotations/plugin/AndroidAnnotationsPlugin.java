@@ -15,24 +15,10 @@
  */
 package org.androidannotations.plugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ServiceLoader;
-
-import javax.annotation.processing.ProcessingEnvironment;
-
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.AnnotationHandlers;
 
 public abstract class AndroidAnnotationsPlugin {
-
-	public static List<AndroidAnnotationsPlugin> load() {
-		ServiceLoader<AndroidAnnotationsPlugin> serviceLoader = ServiceLoader.load(AndroidAnnotationsPlugin.class, AndroidAnnotationsPlugin.class.getClassLoader());
-		List<AndroidAnnotationsPlugin> plugins = new ArrayList<>();
-		for (AndroidAnnotationsPlugin plugin : serviceLoader) {
-			plugins.add(plugin);
-		}
-		return plugins;
-	}
 
 	@Override
 	public String toString() {
@@ -40,5 +26,5 @@ public abstract class AndroidAnnotationsPlugin {
 	}
 
 	public abstract String getName();
-	public abstract void addHandlers(AnnotationHandlers annotationHandlers, ProcessingEnvironment processingEnv);
+	public abstract void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv);
 }

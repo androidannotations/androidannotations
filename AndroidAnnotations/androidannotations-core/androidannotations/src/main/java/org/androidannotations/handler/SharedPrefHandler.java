@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.ResId;
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
@@ -49,17 +49,13 @@ import org.androidannotations.api.sharedpreferences.IntPrefField;
 import org.androidannotations.api.sharedpreferences.LongPrefField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
 import org.androidannotations.api.sharedpreferences.StringSetPrefField;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.IdValidatorHelper.FallbackStrategy;
 import org.androidannotations.holder.SharedPrefHolder;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 import org.androidannotations.rclass.IRInnerClass;
@@ -73,9 +69,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
 public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPrefHolder> {
-
-	private IdAnnotationHelper annotationHelper;
-	private APTCodeModelHelper aptCodeModelHelper;
 
 	private static final class DefaultPrefInfo<T> {
 		final Class<? extends Annotation> annotationClass;
@@ -105,20 +98,13 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		}
 	};
 
-	public SharedPrefHandler(ProcessingEnvironment processingEnvironment) {
-		super(SharedPref.class, processingEnvironment);
-		aptCodeModelHelper = new APTCodeModelHelper();
+	public SharedPrefHandler(AndroidAnnotationsEnvironment environment) {
+		super(SharedPref.class, environment);
 	}
 
 	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-	}
-
-	@Override
-	public SharedPrefHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new SharedPrefHolder(processHolder, annotatedElement);
+	public SharedPrefHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new SharedPrefHolder(environment, annotatedElement);
 	}
 
 	@Override
@@ -129,7 +115,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 
 		validatorHelper.isInterface(typeElement, validation);
 
-		List<? extends Element> inheritedMembers = processingEnv.getElementUtils().getAllMembers(typeElement);
+		List<? extends Element> inheritedMembers = processingEnvironment().getElementUtils().getAllMembers(typeElement);
 
 		for (Element memberElement : inheritedMembers) {
 			if (!memberElement.getEnclosingElement().asType().toString().equals("java.lang.Object")) {
@@ -143,10 +129,10 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 					validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement, validation);
 
 					if (validation.isValid() && memberElement.getAnnotation(DefaultRes.class) != null) {
-						defaultAnnotationValidatorHelper = new IdValidatorHelper(new IdAnnotationHelper(processingEnv, DefaultRes.class.getName(), rClass));
+						defaultAnnotationValidatorHelper = new IdValidatorHelper(new IdAnnotationHelper(getEnvironment(), DefaultRes.class.getName()));
 						defaultAnnotationValidatorHelper.resIdsExist(memberElement, info.resType, FallbackStrategy.USE_ELEMENT_NAME, validation);
 					} else if (validation.isValid() && memberElement.getAnnotation(info.annotationClass) != null) {
-						defaultAnnotationValidatorHelper = new IdValidatorHelper(new IdAnnotationHelper(processingEnv, info.annotationClass.getName(), rClass));
+						defaultAnnotationValidatorHelper = new IdValidatorHelper(new IdAnnotationHelper(getEnvironment(), info.annotationClass.getName()));
 					}
 
 					if (validation.isValid() && defaultAnnotationValidatorHelper != null) {
@@ -262,7 +248,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		JExpression defaultValueExpr;
 
 		if (annotation != null && method.getAnnotation(DefaultStringSet.class) == null) {
-			defaultValueExpr = aptCodeModelHelper.litObject(annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "value"));
+			defaultValueExpr = codeModelHelper.litObject(annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "value"));
 		} else if (method.getAnnotation(DefaultRes.class) != null) {
 			defaultValueExpr = extractResValue(holder, method, resType);
 			annotationClass = DefaultRes.class;
@@ -270,7 +256,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 			defaultValueExpr = newEmptyStringHashSet();
 			annotationClass = DefaultStringSet.class;
 		} else {
-			defaultValueExpr = defaultValue != null ? aptCodeModelHelper.litObject(defaultValue) : newEmptyStringHashSet();
+			defaultValueExpr = defaultValue != null ? codeModelHelper.litObject(defaultValue) : newEmptyStringHashSet();
 			annotationClass = null;
 		}
 
@@ -286,8 +272,8 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 		if (keyResId == ResId.DEFAULT_VALUE) {
 			keyExpression = lit(fieldName);
 		} else {
-			IRInnerClass idClass = rClass.get(IRClass.Res.STRING);
-			JFieldRef idRef = idClass.getIdStaticRef(keyResId, processHolder);
+			IRInnerClass idClass = getEnvironment().getRClass().get(IRClass.Res.STRING);
+			JFieldRef idRef = idClass.getIdStaticRef(keyResId, processHolder());
 			keyExpression = holder.getEditorContextField().invoke("getString").arg(idRef);
 		}
 
@@ -296,7 +282,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 	}
 
 	private JExpression extractResValue(SharedPrefHolder holder, Element method, IRClass.Res res) {
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, method, DefaultRes.class.getCanonicalName(), res, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(method, DefaultRes.class.getCanonicalName(), res, true);
 
 		String resourceGetMethodName = null;
 		switch (res) {

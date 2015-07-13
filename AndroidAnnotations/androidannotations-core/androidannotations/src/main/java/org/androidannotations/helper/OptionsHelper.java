@@ -39,7 +39,7 @@ public class OptionsHelper {
 		private String key;
 		private String defaultValue;
 
-		private Option(String key, String defaultValue) {
+		Option(String key, String defaultValue) {
 			this.key = key;
 			this.defaultValue = defaultValue;
 		}

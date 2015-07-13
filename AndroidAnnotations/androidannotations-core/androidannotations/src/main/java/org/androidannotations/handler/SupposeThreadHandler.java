@@ -15,17 +15,17 @@
  */
 package org.androidannotations.handler;
 
+import javax.lang.model.element.Element;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
 public abstract class SupposeThreadHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public SupposeThreadHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
+	public SupposeThreadHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
 	}
 
 	@Override

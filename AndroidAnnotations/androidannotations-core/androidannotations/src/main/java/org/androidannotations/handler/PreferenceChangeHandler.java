@@ -17,17 +17,18 @@ package org.androidannotations.handler;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.PreferenceChange;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -38,12 +39,11 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
-import org.androidannotations.process.ElementValidation;
 
 public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
-	public PreferenceChangeHandler(ProcessingEnvironment processingEnvironment) {
-		super(PreferenceChange.class, processingEnvironment);
+	public PreferenceChangeHandler(AndroidAnnotationsEnvironment environment) {
+		super(PreferenceChange.class, environment);
 	}
 
 	@Override

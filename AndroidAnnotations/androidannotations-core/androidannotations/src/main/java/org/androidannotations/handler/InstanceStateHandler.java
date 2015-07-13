@@ -17,12 +17,11 @@ package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.InstanceState;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.holder.HasInstanceState;
 import org.androidannotations.model.AnnotationElements;
@@ -38,11 +37,8 @@ import com.sun.codemodel.JVar;
 
 public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState> {
 
-	private AnnotationHelper annotationHelper;
-
-	public InstanceStateHandler(ProcessingEnvironment processingEnvironment) {
-		super(InstanceState.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnv);
+	public InstanceStateHandler(AndroidAnnotationsEnvironment environment) {
+		super(InstanceState.class, environment);
 	}
 
 	@Override

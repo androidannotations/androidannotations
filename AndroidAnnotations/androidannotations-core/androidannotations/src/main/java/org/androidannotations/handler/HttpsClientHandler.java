@@ -23,14 +23,11 @@ import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.HttpsClient;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
@@ -50,10 +47,8 @@ import com.sun.codemodel.JVar;
 
 public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public HttpsClientHandler(ProcessingEnvironment processingEnvironment) {
-		super(HttpsClient.class, processingEnvironment);
+	public HttpsClientHandler(AndroidAnnotationsEnvironment environment) {
+		super(HttpsClient.class, environment);
 	}
 
 	@Override
@@ -67,17 +62,11 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 	}
 
 	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
-	}
-
-	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
-		IRInnerClass rInnerClass = rClass.get(IRClass.Res.RAW);
+		IRInnerClass rInnerClass = getEnvironment().getRClass().get(IRClass.Res.RAW);
 		HttpsClient annotation = element.getAnnotation(HttpsClient.class);
-		JFieldRef trustStoreRawIdRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, getTarget(), rInnerClass, false, "trustStore", "trustStoreResName");
-		JFieldRef keyStoreRawIdRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, getTarget(), rInnerClass, false, "keyStore", "keyStoreResName");
+		JFieldRef trustStoreRawIdRef = annotationHelper.extractOneAnnotationFieldRef(element, getTarget(), rInnerClass, false, "trustStore", "trustStoreResName");
+		JFieldRef keyStoreRawIdRef = annotationHelper.extractOneAnnotationFieldRef(element, getTarget(), rInnerClass, false, "keyStore", "keyStoreResName");
 		String trustStorePwd = annotation.trustStorePwd();
 		String keyStorePwd = annotation.keyStorePwd();
 

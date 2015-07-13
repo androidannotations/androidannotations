@@ -15,25 +15,24 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.holder.EReceiverHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 
 public class EReceiverHandler extends BaseGeneratingAnnotationHandler<EReceiverHolder> {
 
-	public EReceiverHandler(ProcessingEnvironment processingEnvironment) {
-		super(EReceiver.class, processingEnvironment);
+	public EReceiverHandler(AndroidAnnotationsEnvironment environment) {
+		super(EReceiver.class, environment);
 	}
 
 	@Override
-	public EReceiverHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EReceiverHolder(processHolder, annotatedElement);
+	public EReceiverHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EReceiverHolder(environment, annotatedElement);
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class EReceiverHandler extends BaseGeneratingAnnotationHandler<EReceiverH
 		validatorHelper.extendsReceiver(element, validation);
 
 		final boolean NO_WARNING = false;
-		validatorHelper.componentRegistered(element, androidManifest, NO_WARNING, validation);
+		validatorHelper.componentRegistered(element, getEnvironment().getAndroidManifest(), NO_WARNING, validation);
 	}
 
 	@Override

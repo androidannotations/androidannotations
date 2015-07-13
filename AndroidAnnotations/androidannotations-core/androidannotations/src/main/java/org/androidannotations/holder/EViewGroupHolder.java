@@ -19,7 +19,7 @@ import static com.sun.codemodel.JMod.PUBLIC;
 
 import javax.lang.model.element.TypeElement;
 
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpr;
@@ -28,8 +28,8 @@ public class EViewGroupHolder extends EViewHolder {
 
 	private JBlock setContentViewBlock;
 
-	public EViewGroupHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public EViewGroupHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 	}
 
 	protected void setOnFinishInflate() {

@@ -15,11 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.PreferenceHeaders;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferenceHeaders;
 import org.androidannotations.model.AnnotationElements;
@@ -33,11 +32,8 @@ import com.sun.codemodel.JVar;
 
 public class PreferenceHeadersHandler extends BaseAnnotationHandler<HasPreferenceHeaders> {
 
-	private final AnnotationHelper annotationHelper;
-
-	public PreferenceHeadersHandler(ProcessingEnvironment processingEnvironment) {
-		super(PreferenceHeaders.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnvironment);
+	public PreferenceHeadersHandler(AndroidAnnotationsEnvironment environment) {
+		super(PreferenceHeaders.class, environment);
 	}
 
 	@Override
@@ -50,7 +46,7 @@ public class PreferenceHeadersHandler extends BaseAnnotationHandler<HasPreferenc
 
 	@Override
 	public void process(Element element, HasPreferenceHeaders holder) throws Exception {
-		JFieldRef headerId = annotationHelper.extractAnnotationFieldRefs(processHolder, element, getTarget(), rClass.get(IRClass.Res.XML), false).get(0);
+		JFieldRef headerId = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.XML, false).get(0);
 
 		JBlock block = holder.getOnBuildHeadersBlock();
 		JVar targetParam = holder.getOnBuildHeadersTargetParam();

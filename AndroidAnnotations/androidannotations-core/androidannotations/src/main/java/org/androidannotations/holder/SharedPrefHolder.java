@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.api.sharedpreferences.BooleanPrefEditorField;
 import org.androidannotations.api.sharedpreferences.EditorHelper;
 import org.androidannotations.api.sharedpreferences.FloatPrefEditorField;
@@ -36,7 +37,6 @@ import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
 import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -83,8 +83,8 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	private JMethod editorConstructor;
 	private JInvocation editMethodEditorInvocation;
 
-	public SharedPrefHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public SharedPrefHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 		createEditorClass();
 		createEditMethod();
 	}
@@ -97,14 +97,14 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	private void createEditorClass() throws JClassAlreadyExistsException {
 		String interfaceSimpleName = annotatedElement.getSimpleName().toString();
 		editorClass = generatedClass._class(PUBLIC | STATIC | FINAL, interfaceSimpleName + "Editor" + classSuffix());
-		editorClass._extends(processHolder.refClass(EditorHelper.class).narrow(editorClass));
+		editorClass._extends(refClass(EditorHelper.class).narrow(editorClass));
 
 		createEditorConstructor();
 	}
 
 	private void createEditorConstructor() {
 		editorConstructor = editorClass.constructor(JMod.NONE);
-		JClass sharedPreferencesClass = processHolder.refClass("android.content.SharedPreferences");
+		JClass sharedPreferencesClass = refClass("android.content.SharedPreferences");
 		JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
 		editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
 	}
@@ -123,7 +123,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	public void createEditorFieldMethods(ExecutableElement method, JExpression keyExpression) {
 		String returnType = method.getReturnType().toString();
 		EditorFieldHolder editorFieldHolder = EDITOR_FIELD_BY_TYPE.get(returnType);
-		JClass editorFieldClass = processHolder.refClass(editorFieldHolder.fieldClass);
+		JClass editorFieldClass = refClass(editorFieldHolder.fieldClass);
 		String fieldName = method.getSimpleName().toString();
 		JMethod editorFieldMethod = editorClass.method(PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
 		editorFieldMethod.body()._return(JExpr.invoke(editorFieldHolder.fieldMethodName).arg(keyExpression));

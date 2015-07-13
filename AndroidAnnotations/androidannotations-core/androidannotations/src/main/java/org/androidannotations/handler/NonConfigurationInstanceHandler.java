@@ -20,33 +20,27 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.ref;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.NonConfigurationInstance;
+import org.androidannotations.holder.EActivityHolder;
+import org.androidannotations.holder.NonConfigurationHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.NonConfigurationInstance;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.holder.EActivityHolder;
-import org.androidannotations.holder.NonConfigurationHolder;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
-
 
 public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
-	private final AnnotationHelper annotationHelper;
-
-	public NonConfigurationInstanceHandler(ProcessingEnvironment processingEnvironment) {
-		super(NonConfigurationInstance.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnv);
-		codeModelHelper = new APTCodeModelHelper();
+	public NonConfigurationInstanceHandler(AndroidAnnotationsEnvironment environment) {
+		super(NonConfigurationInstance.class, environment);
 	}
 
 	@Override

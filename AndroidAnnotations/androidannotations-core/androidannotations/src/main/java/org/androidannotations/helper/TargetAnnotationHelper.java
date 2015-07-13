@@ -15,7 +15,8 @@
  */
 package org.androidannotations.helper;
 
-import javax.annotation.processing.ProcessingEnvironment;
+import org.androidannotations.AndroidAnnotationsEnvironment;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
 import java.lang.annotation.Annotation;
@@ -24,8 +25,8 @@ public class TargetAnnotationHelper extends AnnotationHelper {
 
 	private String annotationName;
 
-	public TargetAnnotationHelper(ProcessingEnvironment processingEnv, String annotationName) {
-		super(processingEnv);
+	public TargetAnnotationHelper(AndroidAnnotationsEnvironment environment, String annotationName) {
+		super(environment);
 		this.annotationName = annotationName;
 	}
 

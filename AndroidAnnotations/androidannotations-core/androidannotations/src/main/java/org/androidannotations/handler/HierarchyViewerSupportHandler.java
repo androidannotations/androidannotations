@@ -15,30 +15,31 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JInvocation;
+import static com.sun.codemodel.JExpr._this;
+
+import javax.lang.model.element.Element;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.HierarchyViewerSupport;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-
-import static com.sun.codemodel.JExpr._this;
+import com.sun.codemodel.JInvocation;
 
 public class HierarchyViewerSupportHandler extends BaseAnnotationHandler<EActivityHolder> {
 
-	public HierarchyViewerSupportHandler(ProcessingEnvironment processingEnvironment) {
-		super(HierarchyViewerSupport.class, processingEnvironment);
+	public HierarchyViewerSupportHandler(AndroidAnnotationsEnvironment environment) {
+		super(HierarchyViewerSupport.class, environment);
 	}
 
 	@Override
 	public void validate(Element element, AnnotationElements validatedElements, ElementValidation validation) {
 		validatorHelper.hasEActivity(element, validation);
 
-		validatorHelper.isDebuggable(androidManifest, validation);
+		validatorHelper.isDebuggable(getEnvironment().getAndroidManifest(), validation);
 
-		validatorHelper.hasInternetPermission(androidManifest, validation);
+		validatorHelper.hasInternetPermission(getEnvironment().getAndroidManifest(), validation);
 	}
 
 	@Override

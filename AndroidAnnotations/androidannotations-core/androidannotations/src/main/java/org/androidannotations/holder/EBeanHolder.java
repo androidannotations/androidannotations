@@ -28,7 +28,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -43,8 +43,8 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 	private JFieldVar contextField;
 	private JMethod constructor;
 
-	public EBeanHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public EBeanHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 		setConstructor();
 	}
 
@@ -74,7 +74,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, processHolder.codeModel().VOID, "init" + generationSuffix());
+		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
 	}
 
 	public void invokeInitInConstructor() {

@@ -15,19 +15,19 @@
  */
 package org.androidannotations.handler;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
 public class AfterInjectHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public AfterInjectHandler(ProcessingEnvironment processingEnvironment) {
-		super(AfterInject.class, processingEnvironment);
+	public AfterInjectHandler(AndroidAnnotationsEnvironment environment) {
+		super(AfterInject.class, environment);
 	}
 
 	@Override

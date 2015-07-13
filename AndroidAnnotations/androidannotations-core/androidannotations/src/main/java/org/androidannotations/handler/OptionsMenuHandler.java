@@ -15,35 +15,26 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JVar;
+import java.util.List;
+
+import javax.lang.model.element.Element;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.OptionsMenu;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import java.util.List;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JVar;
 
 public class OptionsMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public OptionsMenuHandler(ProcessingEnvironment processingEnvironment) {
-		super(OptionsMenu.class, processingEnvironment);
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public OptionsMenuHandler(AndroidAnnotationsEnvironment environment) {
+		super(OptionsMenu.class, environment);
 	}
 
 	@Override
@@ -59,10 +50,9 @@ public class OptionsMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 		JVar menuInflater = holder.getOnCreateOptionsMenuMenuInflaterVar();
 		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
 
-		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.MENU, false);
+		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.MENU, false);
 		for (JFieldRef optionsMenuRefId : fieldRefs) {
 			body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam);
 		}
-
 	}
 }

@@ -20,13 +20,13 @@ import static com.sun.codemodel.JExpr.invoke;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -42,8 +42,8 @@ import com.sun.codemodel.JVar;
 
 public class ItemClickHandler extends AbstractViewListenerHandler {
 
-	public ItemClickHandler(ProcessingEnvironment processingEnvironment) {
-		super(ItemClick.class, processingEnvironment);
+	public ItemClickHandler(AndroidAnnotationsEnvironment environment) {
+		super(ItemClick.class, environment);
 	}
 
 	@Override

@@ -15,9 +15,9 @@
  */
 package org.androidannotations.process;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.exception.ValidationException;
 import org.androidannotations.handler.AnnotationHandler;
-import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
@@ -33,10 +33,10 @@ import java.util.Set;
 public class ModelValidator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModelValidator.class);
-	private AnnotationHandlers annotationHandlers;
+	private AndroidAnnotationsEnvironment environment;
 
-	public ModelValidator(AnnotationHandlers annotationHandlers) {
-		this.annotationHandlers = annotationHandlers;
+	public ModelValidator(AndroidAnnotationsEnvironment environment) {
+		this.environment = environment;
 	}
 
 	public AnnotationElements validate(AnnotationElementsHolder extractedModel) throws ValidationException {
@@ -51,7 +51,7 @@ public class ModelValidator {
 		 */
 		AnnotationElementsHolder validatedElements = extractedModel.validatingHolder();
 
-		for (AnnotationHandler<?> annotationHandler : annotationHandlers.get()) {
+		for (AnnotationHandler<?> annotationHandler : environment.getHandlers()) {
 			String validatorSimpleName = annotationHandler.getClass().getSimpleName();
 			String annotationName = annotationHandler.getTarget();
 

@@ -20,20 +20,17 @@ import static com.sun.codemodel.JExpr.ref;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.ViewsById;
-import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.FoundViewHolder;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
@@ -43,16 +40,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
-	private IdAnnotationHelper helper;
-
-	public ViewsByIdHandler(ProcessingEnvironment processingEnvironment) {
-		super(ViewsById.class, processingEnvironment);
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		helper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public ViewsByIdHandler(AndroidAnnotationsEnvironment environment) {
+		super(ViewsById.class, environment);
 	}
 
 	@Override
@@ -78,7 +67,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 		instantiateArrayList(elementRef, viewType, holder);
 		clearList(elementRef, holder);
 
-		List<JFieldRef> idsRefs = helper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.ID, true);
 		for (JFieldRef idRef : idsRefs) {
 			addViewToListIfNotNull(elementRef, viewClass, idRef, holder);
 
@@ -86,8 +75,8 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 	}
 
 	private void instantiateArrayList(JFieldRef elementRef, TypeMirror viewType, EComponentWithViewSupportHolder holder) {
-		TypeElement arrayListTypeElement = helper.typeElementFromQualifiedName(CanonicalNameConstants.ARRAYLIST);
-		DeclaredType arrayListType = helper.getTypeUtils().getDeclaredType(arrayListTypeElement, viewType);
+		TypeElement arrayListTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ARRAYLIST);
+		DeclaredType arrayListType = processingEnvironment().getTypeUtils().getDeclaredType(arrayListTypeElement, viewType);
 		JClass arrayListClass = codeModelHelper.typeMirrorToJClass(arrayListType, holder);
 
 		holder.getInitBody().assign(elementRef, _new(arrayListClass));
@@ -97,7 +86,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 		DeclaredType elementType = (DeclaredType) element.asType();
 		List<? extends TypeMirror> elementTypeArguments = elementType.getTypeArguments();
 
-		TypeMirror viewType = helper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW).asType();
+		TypeMirror viewType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW).asType();
 		if (!elementTypeArguments.isEmpty()) {
 			viewType = elementTypeArguments.get(0);
 		}

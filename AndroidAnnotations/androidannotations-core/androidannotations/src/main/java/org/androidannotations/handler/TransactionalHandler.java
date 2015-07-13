@@ -15,10 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
@@ -37,8 +37,8 @@ import com.sun.codemodel.JVar;
 
 public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public TransactionalHandler(ProcessingEnvironment processingEnvironment) {
-		super(Transactional.class, processingEnvironment);
+	public TransactionalHandler(AndroidAnnotationsEnvironment environment) {
+		super(Transactional.class, environment);
 	}
 
 	@Override

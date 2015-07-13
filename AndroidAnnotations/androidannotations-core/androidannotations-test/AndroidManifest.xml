@@ -71,7 +71,6 @@
         <activity android:name=".WindowFeatureActivity_" />
         <activity android:name=".ExtendingActivity_" />
         <activity android:name=".ebean.BeanInjectedActivity_" />
-        <activity android:name=".rest.MyServiceActivity_" />
         <activity android:name=".instancestate.SaveInstanceStateActivity_" />
         <activity android:name=".afterinject.AfterInjectActivity_" />
         <activity android:name=".nonconfiguration.NonConfigurationActivity_" />

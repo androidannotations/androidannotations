@@ -17,17 +17,17 @@ package org.androidannotations.rest.spring.handler;
 
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.rest.spring.annotations.Rest;
-import org.androidannotations.rest.spring.annotations.RestService;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Rest;
+import org.androidannotations.rest.spring.annotations.RestService;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -38,8 +38,8 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-	public RestServiceHandler(ProcessingEnvironment processingEnvironment) {
-		super(RestService.class, processingEnvironment);
+	public RestServiceHandler(AndroidAnnotationsEnvironment environment) {
+		super(RestService.class, environment);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror fieldTypeMirror = element.asType();
-		TypeMirror erasedFieldTypeMirror = processingEnv.getTypeUtils().erasure(fieldTypeMirror);
+		TypeMirror erasedFieldTypeMirror = processingEnvironment().getTypeUtils().erasure(fieldTypeMirror);
 		String interfaceName = erasedFieldTypeMirror.toString();
 
 		String generatedClassName = interfaceName + classSuffix();

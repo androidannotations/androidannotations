@@ -18,10 +18,12 @@ package org.androidannotations;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -36,7 +38,6 @@ import org.androidannotations.exception.ProcessingException;
 import org.androidannotations.exception.ValidationException;
 import org.androidannotations.exception.VersionMismatchException;
 import org.androidannotations.generation.CodeModelGenerator;
-import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.ErrorHelper;
@@ -68,11 +69,12 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 	private final Properties propertiesApi = new Properties();
 	private final TimeStats timeStats = new TimeStats();
 	private final ErrorHelper errorHelper = new ErrorHelper();
-	private AnnotationHandlers annotationHandlers;
+	private AndroidAnnotationsEnvironment androidAnnotationsEnv;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);
+		androidAnnotationsEnv = new AndroidAnnotationsEnvironment(processingEnv);
 
 		ModelConstants.init(processingEnv);
 
@@ -89,25 +91,40 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		LOGGER.info("Initialize AndroidAnnotations {} with options {}", getAAProcessorVersion(), processingEnv.getOptions());
 
-		annotationHandlers = new AnnotationHandlers(processingEnv);
-		loadPlugins(processingEnv);
+		List<AndroidAnnotationsPlugin> plugins = loadPlugins();
+		LOGGER.info("Plugins loaded: {}", Arrays.toString(plugins.toArray()));
+		androidAnnotationsEnv.setPlugins(plugins);
 	}
 
-	private void loadPlugins(ProcessingEnvironment processingEnv) {
-		List<AndroidAnnotationsPlugin> plugins = AndroidAnnotationsPlugin.load();
-		LOGGER.info("Plugins loaded: {}", Arrays.toString(plugins.toArray()));
-		for (AndroidAnnotationsPlugin plugin : plugins) {
-			plugin.addHandlers(annotationHandlers, processingEnv);
+	private List<AndroidAnnotationsPlugin> loadPlugins() {
+		ServiceLoader<AndroidAnnotationsPlugin> serviceLoader = ServiceLoader.load(AndroidAnnotationsPlugin.class, AndroidAnnotationsPlugin.class.getClassLoader());
+		List<AndroidAnnotationsPlugin> plugins = new ArrayList<>();
+		plugins.add(new CorePlugin());
+		for (AndroidAnnotationsPlugin plugin : serviceLoader) {
+			plugins.add(plugin);
+		}
+		return plugins;
+	}
+
+	private void loadPropertyFile() throws FileNotFoundException {
+		String filename = "androidannotations.properties";
+		try {
+			URL url = getClass().getClassLoader().getResource(filename);
+			properties.load(url.openStream());
+		} catch (Exception e) {
+			LOGGER.error("Core property file {} couldn't be parsed");
+			throw new FileNotFoundException("Core property file " + filename + " couldn't be parsed.");
 		}
 	}
 
-	private void checkApiAndCoreVersions() throws VersionMismatchException {
-		String apiVersion = getAAApiVersion();
-		String coreVersion = getAAProcessorVersion();
-
-		if (!apiVersion.equals(coreVersion)) {
-			LOGGER.error("AndroidAnnotations version for API ({}) and core ({}) doesn't match. Please check your classpath", apiVersion, coreVersion);
-			throw new VersionMismatchException("AndroidAnnotations version for API (" + apiVersion + ") and core (" + coreVersion + ") doesn't match. Please check your classpath");
+	private void loadApiPropertyFile() throws FileNotFoundException {
+		String filename = "androidannotations-api.properties";
+		try {
+			URL url = EActivity.class.getClassLoader().getResource(filename);
+			propertiesApi.load(url.openStream());
+		} catch (Exception e) {
+			LOGGER.error("API property file {} couldn't be parsed");
+			throw new FileNotFoundException("API property file " + filename + " couldn't be parsed. Please check your classpath and verify that AA-API's version is at least 3.0");
 		}
 	}
 
@@ -142,25 +159,13 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return true;
 	}
 
-	private void loadPropertyFile() throws FileNotFoundException {
-		String filename = "androidannotations.properties";
-		try {
-			URL url = getClass().getClassLoader().getResource(filename);
-			properties.load(url.openStream());
-		} catch (Exception e) {
-			LOGGER.error("Core property file {} couldn't be parsed");
-			throw new FileNotFoundException("Core property file " + filename + " couldn't be parsed.");
-		}
-	}
+	private void checkApiAndCoreVersions() throws VersionMismatchException {
+		String apiVersion = getAAApiVersion();
+		String coreVersion = getAAProcessorVersion();
 
-	private void loadApiPropertyFile() throws FileNotFoundException {
-		String filename = "androidannotations-api.properties";
-		try {
-			URL url = EActivity.class.getClassLoader().getResource(filename);
-			propertiesApi.load(url.openStream());
-		} catch (Exception e) {
-			LOGGER.error("API property file {} couldn't be parsed");
-			throw new FileNotFoundException("API property file " + filename + " couldn't be parsed. Please check your classpath and verify that AA-API's version is at least 3.0");
+		if (!apiVersion.equals(coreVersion)) {
+			LOGGER.error("AndroidAnnotations version for API ({}) and core ({}) doesn't match. Please check your classpath", apiVersion, coreVersion);
+			throw new VersionMismatchException("AndroidAnnotations version for API (" + apiVersion + ") and core (" + coreVersion + ") doesn't match. Please check your classpath");
 		}
 	}
 
@@ -195,9 +200,10 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
 
-		annotationHandlers.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
+		androidAnnotationsEnv.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel);
+		androidAnnotationsEnv.setValidatedModel(validatedModel);
 
 		ModelProcessor.ProcessResult processResult = processAnnotations(validatedModel);
 
@@ -247,7 +253,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private AnnotationElements validateAnnotations(AnnotationElementsHolder extractedModel) throws ValidationException {
 		timeStats.start("Validate Annotations");
-		ModelValidator modelValidator = new ModelValidator(annotationHandlers);
+		ModelValidator modelValidator = new ModelValidator(androidAnnotationsEnv);
 		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel);
 		timeStats.stop("Validate Annotations");
 		return validatedAnnotations;
@@ -255,8 +261,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private ModelProcessor.ProcessResult processAnnotations(AnnotationElements validatedModel) throws Exception {
 		timeStats.start("Process Annotations");
-		annotationHandlers.setValidatedModel(validatedModel);
-		ModelProcessor modelProcessor = new ModelProcessor(processingEnv, annotationHandlers);
+		ModelProcessor modelProcessor = new ModelProcessor(androidAnnotationsEnv);
 		ModelProcessor.ProcessResult processResult = modelProcessor.process(validatedModel);
 		timeStats.stop("Process Annotations");
 		return processResult;
@@ -290,7 +295,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	@Override
 	public Set<String> getSupportedAnnotationTypes() {
-		return annotationHandlers.getSupportedAnnotationTypes();
+		return androidAnnotationsEnv.getSupportedAnnotationTypes();
 	}
 
 	@Override

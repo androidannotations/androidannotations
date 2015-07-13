@@ -18,14 +18,13 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.NonConfigurationInstance;
-import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AnnotationElements;
@@ -38,11 +37,8 @@ import com.sun.codemodel.JInvocation;
 
 public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	private final TargetAnnotationHelper annotationHelper;
-
-	public BeanHandler(ProcessingEnvironment processingEnvironment) {
-		super(Bean.class, processingEnvironment);
-		annotationHelper = new TargetAnnotationHelper(processingEnv, getTarget());
+	public BeanHandler(AndroidAnnotationsEnvironment environment) {
+		super(Bean.class, environment);
 	}
 
 	@Override

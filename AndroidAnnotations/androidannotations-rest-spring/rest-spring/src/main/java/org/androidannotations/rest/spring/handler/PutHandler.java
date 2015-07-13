@@ -15,18 +15,18 @@
  */
 package org.androidannotations.rest.spring.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.rest.spring.annotations.Put;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Put;
 
 public class PutHandler extends RestMethodHandler {
 
-	public PutHandler(ProcessingEnvironment processingEnvironment) {
-		super(Put.class, processingEnvironment);
+	public PutHandler(AndroidAnnotationsEnvironment environment) {
+		super(Put.class, environment);
 	}
 
 	@Override

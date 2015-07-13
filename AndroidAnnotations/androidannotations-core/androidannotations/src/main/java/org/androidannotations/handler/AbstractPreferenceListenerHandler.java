@@ -19,9 +19,9 @@ import static com.sun.codemodel.JExpr._new;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.FoundPreferenceHolder;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
@@ -34,12 +34,12 @@ import com.sun.codemodel.JFieldRef;
 
 public abstract class AbstractPreferenceListenerHandler extends AbstractListenerHandler<HasPreferences> {
 
-	public AbstractPreferenceListenerHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		super(targetClass, processingEnvironment);
+	public AbstractPreferenceListenerHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		super(targetClass, environment);
 	}
 
-	public AbstractPreferenceListenerHandler(String target, ProcessingEnvironment processingEnvironment) {
-		super(target, processingEnvironment);
+	public AbstractPreferenceListenerHandler(String target, AndroidAnnotationsEnvironment environment) {
+		super(target, environment);
 	}
 
 	@Override

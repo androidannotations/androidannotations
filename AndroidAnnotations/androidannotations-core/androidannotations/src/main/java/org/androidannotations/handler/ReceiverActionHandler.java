@@ -22,17 +22,19 @@ import static com.sun.codemodel.JMod.FINAL;
 import static com.sun.codemodel.JMod.PUBLIC;
 import static com.sun.codemodel.JMod.STATIC;
 
+import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.ReceiverAction;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EReceiverHolder;
+import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
@@ -44,19 +46,18 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JOp;
 import com.sun.codemodel.JVar;
 
-
-public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder> {
+public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder> implements HasParameterHandlers<EReceiverHolder> {
 
 	private ExtraHandler extraHandler;
 
-	public ReceiverActionHandler(ProcessingEnvironment processingEnvironment) {
-		super(ReceiverAction.class, processingEnvironment);
-		extraHandler = new ExtraHandler(processingEnvironment);
+	public ReceiverActionHandler(AndroidAnnotationsEnvironment environment) {
+		super(ReceiverAction.class, environment);
+		extraHandler = new ExtraHandler(environment);
 	}
 
-	public void register(AnnotationHandlers annotationHandlers) {
-		annotationHandlers.add(this);
-		annotationHandlers.add(extraHandler);
+	@Override
+	public Iterable<AnnotationHandler<? extends GeneratedClassHolder>> getParameterHandlers() {
+		return Collections.<AnnotationHandler<? extends GeneratedClassHolder>> singleton(extraHandler);
 	}
 
 	@Override
@@ -153,8 +154,8 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 
 	private static class ExtraHandler extends ExtraParameterHandler {
 
-		public ExtraHandler(ProcessingEnvironment processingEnvironment) {
-			super(ReceiverAction.Extra.class, ReceiverAction.class, processingEnvironment);
+		public ExtraHandler(AndroidAnnotationsEnvironment environment) {
+			super(ReceiverAction.Extra.class, ReceiverAction.class, environment);
 		}
 
 		@Override

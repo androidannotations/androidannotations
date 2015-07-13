@@ -15,36 +15,6 @@
  */
 package org.androidannotations.rest.spring.helper;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
-import org.androidannotations.rest.spring.annotations.Accept;
-import org.androidannotations.rest.spring.annotations.RequiresAuthentication;
-import org.androidannotations.rest.spring.annotations.RequiresCookie;
-import org.androidannotations.rest.spring.annotations.RequiresCookieInUrl;
-import org.androidannotations.rest.spring.annotations.RequiresHeader;
-import org.androidannotations.rest.spring.annotations.SetsCookie;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.TargetAnnotationHelper;
-import org.androidannotations.rest.spring.holder.RestHolder;
-import org.androidannotations.process.ProcessHolder;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.WildcardType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -55,12 +25,43 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.TargetAnnotationHelper;
+import org.androidannotations.rest.spring.annotations.Accept;
+import org.androidannotations.rest.spring.annotations.RequiresAuthentication;
+import org.androidannotations.rest.spring.annotations.RequiresCookie;
+import org.androidannotations.rest.spring.annotations.RequiresCookieInUrl;
+import org.androidannotations.rest.spring.annotations.RequiresHeader;
+import org.androidannotations.rest.spring.annotations.SetsCookie;
+import org.androidannotations.rest.spring.holder.RestHolder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
+
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-	public RestAnnotationHelper(ProcessingEnvironment processingEnv, String annotationName) {
-		super(processingEnv, annotationName);
+	public RestAnnotationHelper(AndroidAnnotationsEnvironment environment, String annotationName) {
+		super(environment, annotationName);
 	}
 
 	/** Captures URI template variable names. */
@@ -247,8 +248,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return null;
 	}
 
-	public JExpression declareHttpEntity(ProcessHolder holder, JBlock body, JVar entitySentToServer, JVar httpHeaders) {
-		JType entityType = holder.refClass(Object.class);
+	public JExpression declareHttpEntity(JBlock body, JVar entitySentToServer, JVar httpHeaders) {
+		JType entityType = getProcessHolder().refClass(Object.class);
 
 		if (entitySentToServer != null) {
 			entityType = entitySentToServer.type();
@@ -258,7 +259,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 
-		JClass httpEntity = holder.classes().HTTP_ENTITY;
+		JClass httpEntity = getProcessHolder().classes().HTTP_ENTITY;
 		JClass narrowedHttpEntity = httpEntity.narrow(entityType);
 		JInvocation newHttpEntityVarCall = JExpr._new(narrowedHttpEntity);
 

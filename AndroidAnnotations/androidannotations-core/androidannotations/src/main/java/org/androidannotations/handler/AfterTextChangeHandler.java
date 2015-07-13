@@ -15,42 +15,33 @@
  */
 package org.androidannotations.handler;
 
+import java.util.List;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.annotations.AfterTextChange;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.holder.TextWatcherHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rclass.IRClass;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.AfterTextChange;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.holder.TextWatcherHolder;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
-import org.androidannotations.rclass.IRClass;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import java.util.List;
 
 public class AfterTextChangeHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
-	private IdAnnotationHelper idAnnotationHelper;
-
-	public AfterTextChangeHandler(ProcessingEnvironment processingEnvironment) {
-		super(AfterTextChange.class, processingEnvironment);
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		idAnnotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public AfterTextChangeHandler(AndroidAnnotationsEnvironment environment) {
+		super(AfterTextChange.class, environment);
 	}
 
 	@Override
@@ -88,15 +79,15 @@ public class AfterTextChangeHandler extends BaseAnnotationHandler<EComponentWith
 			if (CanonicalNameConstants.EDITABLE.equals(parameterType.toString())) {
 				editableParameterPosition = i;
 			} else {
-				TypeMirror textViewType = idAnnotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.TEXT_VIEW).asType();
-				if (idAnnotationHelper.isSubtype(parameterType, textViewType)) {
+				TypeMirror textViewType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.TEXT_VIEW).asType();
+				if (annotationHelper.isSubtype(parameterType, textViewType)) {
 					viewParameterPosition = i;
 					viewParameterType = parameterType;
 				}
 			}
 		}
 
-		List<JFieldRef> idsRefs = idAnnotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
 			TextWatcherHolder textWatcherHolder = holder.getTextWatcherHolder(idRef, viewParameterType);

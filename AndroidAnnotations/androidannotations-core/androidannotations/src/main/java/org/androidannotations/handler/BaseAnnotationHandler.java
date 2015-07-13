@@ -19,16 +19,14 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.process.ProcessHolder;
-import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -36,74 +34,58 @@ import com.sun.codemodel.JCodeModel;
 public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> implements AnnotationHandler<T> {
 
 	private final String target;
-	protected ProcessingEnvironment processingEnv;
+	private AndroidAnnotationsEnvironment environment;
+
+	protected IdAnnotationHelper annotationHelper;
 	protected IdValidatorHelper validatorHelper;
-	protected IRClass rClass;
-	protected AndroidSystemServices androidSystemServices;
-	protected AndroidManifest androidManifest;
-	protected AnnotationElements validatedModel;
-	protected ProcessHolder processHolder;
 	protected APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
-	public BaseAnnotationHandler(Class<?> targetClass, ProcessingEnvironment processingEnvironment) {
-		this(targetClass.getCanonicalName(), processingEnvironment);
+	public BaseAnnotationHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+		this(targetClass.getCanonicalName(), environment);
 	}
 
-	public BaseAnnotationHandler(String target, ProcessingEnvironment processingEnvironment) {
+	public BaseAnnotationHandler(String target, AndroidAnnotationsEnvironment environment) {
 		this.target = target;
-		this.processingEnv = processingEnvironment;
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		this.rClass = rClass;
-		this.androidSystemServices = androidSystemServices;
-		this.androidManifest = androidManifest;
-		initValidatorHelper();
-	}
-
-	private void initValidatorHelper() {
-		IdAnnotationHelper annotationHelper = new IdAnnotationHelper(processingEnv, target, rClass);
+		this.environment = environment;
+		annotationHelper = new IdAnnotationHelper(environment, target);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
 	}
 
-	@Override
-	public void setValidatedModel(AnnotationElements validatedModel) {
-		this.validatedModel = validatedModel;
-	}
-
-	@Override
-	public void setProcessHolder(ProcessHolder processHolder) {
-		this.processHolder = processHolder;
-	}
-
 	public ProcessingEnvironment processingEnvironment() {
-		return processHolder.processingEnvironment();
+		return environment.getProcessingEnvironment();
+	}
+
+	public ProcessHolder processHolder() {
+		return environment.getProcessHolder();
 	}
 
 	public ProcessHolder.Classes classes() {
-		return processHolder.classes();
+		return processHolder().classes();
 	}
 
 	public JCodeModel codeModel() {
-		return processHolder.codeModel();
+		return processHolder().codeModel();
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {
-		return processHolder.refClass(fullyQualifiedClassName);
+		return processHolder().refClass(fullyQualifiedClassName);
 	}
 
 	public JClass refClass(TypeMirror typeMirror) {
-		return processHolder.refClass(typeMirror.toString());
+		return processHolder().refClass(typeMirror.toString());
 	}
 
 	public JClass refClass(Class<?> clazz) {
-		return processHolder.refClass(clazz);
+		return processHolder().refClass(clazz);
 	}
 
 	@Override
 	public String getTarget() {
 		return target;
+	}
+
+	public AndroidAnnotationsEnvironment getEnvironment() {
+		return environment;
 	}
 
 	@Override

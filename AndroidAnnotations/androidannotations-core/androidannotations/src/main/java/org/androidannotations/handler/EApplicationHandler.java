@@ -15,25 +15,24 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.holder.EApplicationHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 
 public class EApplicationHandler extends BaseGeneratingAnnotationHandler<EApplicationHolder> {
 
-	public EApplicationHandler(ProcessingEnvironment processingEnvironment) {
-		super(EApplication.class, processingEnvironment);
+	public EApplicationHandler(AndroidAnnotationsEnvironment environment) {
+		super(EApplication.class, environment);
 	}
 
 	@Override
-	public EApplicationHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EApplicationHolder(processHolder, annotatedElement);
+	public EApplicationHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EApplicationHolder(environment, annotatedElement);
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class EApplicationHandler extends BaseGeneratingAnnotationHandler<EApplic
 
 		validatorHelper.extendsApplication(element, valid);
 
-		validatorHelper.applicationRegistered(element, androidManifest, valid);
+		validatorHelper.applicationRegistered(element, getEnvironment().getAndroidManifest(), valid);
 	}
 
 	@Override

@@ -23,13 +23,12 @@ import static com.sun.codemodel.JMod.STATIC;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.ServiceAction;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EIntentServiceHolder;
@@ -47,11 +46,8 @@ import com.sun.codemodel.JVar;
 
 public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHolder> {
 
-	private AnnotationHelper annotationHelper;
-
-	public ServiceActionHandler(ProcessingEnvironment processingEnvironment) {
-		super(ServiceAction.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnvironment);
+	public ServiceActionHandler(AndroidAnnotationsEnvironment environment) {
+		super(ServiceAction.class, environment);
 	}
 
 	@Override

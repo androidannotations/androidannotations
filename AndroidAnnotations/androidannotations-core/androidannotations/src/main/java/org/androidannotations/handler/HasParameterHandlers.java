@@ -15,12 +15,9 @@
  */
 package org.androidannotations.handler;
 
-import javax.lang.model.element.TypeElement;
-
-import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.GeneratedClassHolder;
 
-public interface GeneratingAnnotationHandler<T extends GeneratedClassHolder> extends AnnotationHandler<T> {
+public interface HasParameterHandlers<T extends GeneratedClassHolder> extends AnnotationHandler<T> {
 
-	T createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception;
+	Iterable<AnnotationHandler<? extends GeneratedClassHolder>> getParameterHandlers();
 }

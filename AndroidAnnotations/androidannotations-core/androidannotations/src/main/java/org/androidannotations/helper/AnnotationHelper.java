@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.sun.codemodel.JFieldRef;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
@@ -57,18 +58,25 @@ public class AnnotationHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationHelper.class);
 
-	private final ProcessingEnvironment processingEnv;
+	private final AndroidAnnotationsEnvironment environment;
 
-	public AnnotationHelper(ProcessingEnvironment processingEnv) {
-		this.processingEnv = processingEnv;
+	public AnnotationHelper(AndroidAnnotationsEnvironment environment) {
+		this.environment = environment;
 	}
 
+	public AndroidAnnotationsEnvironment getEnvironment() {
+		return environment;
+	}
+
+	public ProcessingEnvironment getProcessingEnvironment() {
+		return environment.getProcessingEnvironment();
+	}
 	/**
 	 * Tests whether one type is a subtype of another. Any type is considered to
 	 * be a subtype of itself.
 	 */
 	public boolean isSubtype(TypeMirror potentialSubtype, TypeMirror potentialSupertype) {
-		return processingEnv.getTypeUtils().isSubtype(potentialSubtype, potentialSupertype);
+		return getTypeUtils().isSubtype(potentialSubtype, potentialSupertype);
 	}
 
 	public boolean isSubtype(TypeElement t1, TypeElement t2) {
@@ -76,7 +84,7 @@ public class AnnotationHelper {
 	}
 
 	public List<? extends TypeMirror> directSupertypes(TypeMirror typeMirror) {
-		return processingEnv.getTypeUtils().directSupertypes(typeMirror);
+		return getTypeUtils().directSupertypes(typeMirror);
 	}
 
 	/**
@@ -84,7 +92,7 @@ public class AnnotationHelper {
 	 * the processor classpath
 	 */
 	public TypeElement typeElementFromQualifiedName(String qualifiedName) {
-		return processingEnv.getElementUtils().getTypeElement(qualifiedName);
+		return getElementUtils().getTypeElement(qualifiedName);
 	}
 
 	public String generatedClassQualifiedNameFromQualifiedName(String qualifiedName) {
@@ -146,11 +154,15 @@ public class AnnotationHelper {
 	}
 
 	public Elements getElementUtils() {
-		return processingEnv.getElementUtils();
+		return getProcessingEnvironment().getElementUtils();
 	}
 
 	public Types getTypeUtils() {
-		return processingEnv.getTypeUtils();
+		return getProcessingEnvironment().getTypeUtils();
+	}
+
+	public ProcessHolder getProcessHolder() {
+		return getEnvironment().getProcessHolder();
 	}
 
 	/**
@@ -159,16 +171,16 @@ public class AnnotationHelper {
 	 *
 	 * @see #extractAnnotationResources(Element, String, IRInnerClass, boolean)
 	 */
-	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
-		return extractAnnotationFieldRefs(holder, element, annotationName, rInnerClass, useElementName, DEFAULT_FIELD_NAME_VALUE, DEFAULT_FIELD_NAME_RESNAME);
+	public List<JFieldRef> extractAnnotationFieldRefs(Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName) {
+		return extractAnnotationFieldRefs(element, annotationName, rInnerClass, useElementName, DEFAULT_FIELD_NAME_VALUE, DEFAULT_FIELD_NAME_RESNAME);
 	}
 
-	public List<JFieldRef> extractAnnotationFieldRefs(ProcessHolder holder, Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName, String idFieldName,
+	public List<JFieldRef> extractAnnotationFieldRefs(Element element, String annotationName, IRInnerClass rInnerClass, boolean useElementName, String idFieldName,
 			String resFieldName) {
 		List<JFieldRef> fieldRefs = new ArrayList<>();
 
 		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName, idFieldName, resFieldName)) {
-			fieldRefs.add(RInnerClass.extractIdStaticRef(holder, refQualifiedName));
+			fieldRefs.add(RInnerClass.extractIdStaticRef(getProcessHolder(), refQualifiedName));
 		}
 
 		return fieldRefs;

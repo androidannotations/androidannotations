@@ -15,43 +15,34 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JVar;
-import org.androidannotations.annotations.SeekBarProgressChange;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.IdAnnotationHelper;
-import org.androidannotations.helper.IdValidatorHelper;
-import org.androidannotations.holder.EComponentWithViewSupportHolder;
-import org.androidannotations.holder.OnSeekBarChangeListenerHolder;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
-import org.androidannotations.rclass.IRClass;
+import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.List;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.annotations.SeekBarProgressChange;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.holder.EComponentWithViewSupportHolder;
+import org.androidannotations.holder.OnSeekBarChangeListenerHolder;
+import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rclass.IRClass;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JVar;
 
 public class SeekBarProgressChangeHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public SeekBarProgressChangeHandler(ProcessingEnvironment processingEnvironment) {
-		super(SeekBarProgressChange.class, processingEnvironment);
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public SeekBarProgressChangeHandler(AndroidAnnotationsEnvironment environment) {
+		super(SeekBarProgressChange.class, environment);
 	}
 
 	@Override
@@ -93,7 +84,7 @@ public class SeekBarProgressChangeHandler extends BaseAnnotationHandler<ECompone
 			}
 		}
 
-		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, IRClass.Res.ID, true);
+		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.ID, true);
 
 		for (JFieldRef idRef : idsRefs) {
 			OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = holder.getOnSeekBarChangeListenerHolder(idRef);

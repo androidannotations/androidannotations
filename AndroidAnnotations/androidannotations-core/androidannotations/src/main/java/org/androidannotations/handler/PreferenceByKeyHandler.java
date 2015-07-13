@@ -17,16 +17,13 @@ package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.PreferenceByKey;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
@@ -36,17 +33,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public PreferenceByKeyHandler(ProcessingEnvironment processingEnvironment) {
-		super(PreferenceByKey.class, processingEnvironment);
-
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public PreferenceByKeyHandler(AndroidAnnotationsEnvironment environment) {
+		super(PreferenceByKey.class, environment);
 	}
 
 	@Override
@@ -71,7 +59,7 @@ public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences
 		TypeMirror prefFieldTypeMirror = element.asType();
 		String typeQualifiedName = prefFieldTypeMirror.toString();
 
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.STRING, true);
+		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.STRING, true);
 		JClass preferenceClass = refClass(typeQualifiedName);
 		JFieldRef fieldRef = ref(fieldName);
 

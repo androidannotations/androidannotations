@@ -17,8 +17,7 @@ package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr.ref;
 
-import javax.annotation.processing.ProcessingEnvironment;
-
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AndroidRes;
 
@@ -27,8 +26,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class HtmlResHandler extends AbstractResHandler {
 
-	public HtmlResHandler(ProcessingEnvironment processingEnvironment) {
-		super(AndroidRes.HTML, processingEnvironment);
+	public HtmlResHandler(AndroidAnnotationsEnvironment environment) {
+		super(AndroidRes.HTML, environment);
 	}
 
 	@Override

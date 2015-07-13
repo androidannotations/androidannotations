@@ -15,18 +15,18 @@
  */
 package org.androidannotations.rest.spring.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.rest.spring.annotations.Delete;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Delete;
 
 public class DeleteHandler extends RestMethodHandler {
 
-	public DeleteHandler(ProcessingEnvironment processingEnvironment) {
-		super(Delete.class, processingEnvironment);
+	public DeleteHandler(AndroidAnnotationsEnvironment environment) {
+		super(Delete.class, environment);
 	}
 
 	@Override

@@ -18,17 +18,22 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._null;
 
-import javax.annotation.processing.ProcessingEnvironment;
+import java.util.Collections;
+import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.holder.HasOnActivityResult;
 import org.androidannotations.model.AnnotationElements;
+import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JExpr;
@@ -36,22 +41,19 @@ import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JOp;
 import com.sun.codemodel.JVar;
-import org.androidannotations.process.ElementValidation;
 
-import java.util.List;
-
-public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivityResult> {
+public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivityResult> implements HasParameterHandlers<HasOnActivityResult> {
 
 	private ExtraHandler extraHandler;
 
-	public OnActivityResultHandler(ProcessingEnvironment processingEnvironment) {
-		super(OnActivityResult.class, processingEnvironment);
-		extraHandler = new ExtraHandler(processingEnvironment);
+	public OnActivityResultHandler(AndroidAnnotationsEnvironment environment) {
+		super(OnActivityResult.class, environment);
+		extraHandler = new ExtraHandler(environment);
 	}
 
-	public void register(AnnotationHandlers annotationHandlers) {
-		annotationHandlers.add(this);
-		annotationHandlers.add(extraHandler);
+	@Override
+	public Iterable<AnnotationHandler<? extends GeneratedClassHolder>> getParameterHandlers() {
+		return Collections.<AnnotationHandler<? extends GeneratedClassHolder>> singleton(extraHandler);
 	}
 
 	@Override
@@ -112,8 +114,8 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 
 	private static class ExtraHandler extends ExtraParameterHandler {
 
-		public ExtraHandler(ProcessingEnvironment processingEnvironment) {
-			super(OnActivityResult.Extra.class, OnActivityResult.class, processingEnvironment);
+		public ExtraHandler(AndroidAnnotationsEnvironment environment) {
+			super(OnActivityResult.Extra.class, OnActivityResult.class, environment);
 		}
 
 		@Override

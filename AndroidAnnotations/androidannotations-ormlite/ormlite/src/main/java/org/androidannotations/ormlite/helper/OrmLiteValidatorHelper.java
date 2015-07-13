@@ -15,12 +15,12 @@
  */
 package org.androidannotations.ormlite.helper;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -35,8 +35,8 @@ public class OrmLiteValidatorHelper {
 
 	public AnnotationHelper annotationHelper;
 
-	public OrmLiteValidatorHelper(ProcessingEnvironment processingEnvironment) {
-		annotationHelper = new AnnotationHelper(processingEnvironment);
+	public OrmLiteValidatorHelper(AndroidAnnotationsEnvironment environment) {
+		annotationHelper = new AnnotationHelper(environment);
 	}
 
 	public void hasOrmLiteJars(ElementValidation valid) {

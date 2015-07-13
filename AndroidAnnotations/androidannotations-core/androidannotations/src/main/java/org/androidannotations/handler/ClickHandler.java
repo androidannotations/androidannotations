@@ -17,12 +17,12 @@ package org.androidannotations.handler;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
@@ -39,8 +39,8 @@ import com.sun.codemodel.JVar;
 
 public class ClickHandler extends AbstractViewListenerHandler {
 
-	public ClickHandler(ProcessingEnvironment processingEnvironment) {
-		super(Click.class, processingEnvironment);
+	public ClickHandler(AndroidAnnotationsEnvironment environment) {
+		super(Click.class, environment);
 	}
 
 	@Override

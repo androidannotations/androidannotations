@@ -15,6 +15,7 @@
  */
 package org.androidannotations.rest.spring;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.rest.spring.handler.DeleteHandler;
@@ -26,8 +27,6 @@ import org.androidannotations.rest.spring.handler.PutHandler;
 import org.androidannotations.rest.spring.handler.RestHandler;
 import org.androidannotations.rest.spring.handler.RestServiceHandler;
 
-import javax.annotation.processing.ProcessingEnvironment;
-
 public class RestSpringPlugin extends AndroidAnnotationsPlugin {
 
 	private static final String NAME = "REST-Spring";
@@ -38,14 +37,14 @@ public class RestSpringPlugin extends AndroidAnnotationsPlugin {
 	}
 
 	@Override
-	public void addHandlers(AnnotationHandlers annotationHandlers, ProcessingEnvironment processingEnvironment) {
-		annotationHandlers.add(new RestHandler(processingEnvironment));
-		annotationHandlers.add(new GetHandler(processingEnvironment));
-		annotationHandlers.add(new PostHandler(processingEnvironment));
-		annotationHandlers.add(new PutHandler(processingEnvironment));
-		annotationHandlers.add(new DeleteHandler(processingEnvironment));
-		annotationHandlers.add(new HeadHandler(processingEnvironment));
-		annotationHandlers.add(new OptionsHandler(processingEnvironment));
-		annotationHandlers.add(new RestServiceHandler(processingEnvironment));
+	public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
+		annotationHandlers.add(new RestHandler(androidAnnotationEnv));
+		annotationHandlers.add(new GetHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PostHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PutHandler(androidAnnotationEnv));
+		annotationHandlers.add(new DeleteHandler(androidAnnotationEnv));
+		annotationHandlers.add(new HeadHandler(androidAnnotationEnv));
+		annotationHandlers.add(new OptionsHandler(androidAnnotationEnv));
+		annotationHandlers.add(new RestServiceHandler(androidAnnotationEnv));
 	}
 }

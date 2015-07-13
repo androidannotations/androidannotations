@@ -15,25 +15,24 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EProvider;
 import org.androidannotations.holder.EProviderHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 
 public class EProviderHandler extends BaseGeneratingAnnotationHandler<EProviderHolder> {
 
-	public EProviderHandler(ProcessingEnvironment processingEnvironment) {
-		super(EProvider.class, processingEnvironment);
+	public EProviderHandler(AndroidAnnotationsEnvironment environment) {
+		super(EProvider.class, environment);
 	}
 
 	@Override
-	public EProviderHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EProviderHolder(processHolder, annotatedElement);
+	public EProviderHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EProviderHolder(environment, annotatedElement);
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class EProviderHandler extends BaseGeneratingAnnotationHandler<EProviderH
 
 		validatorHelper.extendsProvider(element, validation);
 
-		validatorHelper.componentRegistered(element, androidManifest, validation);
+		validatorHelper.componentRegistered(element, getEnvironment().getAndroidManifest(), validation);
 	}
 
 	@Override

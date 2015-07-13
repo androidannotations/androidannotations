@@ -22,11 +22,11 @@ import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.helper.ServiceIntentBuilder;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JDefinedClass;
@@ -41,8 +41,8 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	private ReceiverRegistrationDelegate<EServiceHolder> receiverRegistrationDelegate;
 	private JBlock onDestroyBeforeSuperBlock;
 
-	public EServiceHolder(ProcessHolder processHolder, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
-		super(processHolder, annotatedElement);
+	public EServiceHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
+		super(environment, annotatedElement);
 		receiverRegistrationDelegate = new ReceiverRegistrationDelegate<>(this);
 		intentBuilder = new ServiceIntentBuilder(this, androidManifest);
 		intentBuilder.build();

@@ -15,10 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.AfterPreferences;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
@@ -26,8 +26,8 @@ import org.androidannotations.process.ElementValidation;
 
 public class AfterPreferencesHandler extends BaseAnnotationHandler<HasPreferences> {
 
-	public AfterPreferencesHandler(ProcessingEnvironment processingEnvironment) {
-		super(AfterPreferences.class, processingEnvironment);
+	public AfterPreferencesHandler(AndroidAnnotationsEnvironment environment) {
+		super(AfterPreferences.class, environment);
 	}
 
 	@Override

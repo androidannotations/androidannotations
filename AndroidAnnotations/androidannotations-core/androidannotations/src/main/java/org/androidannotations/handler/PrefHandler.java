@@ -17,10 +17,10 @@ package org.androidannotations.handler;
 
 import java.util.Set;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.holder.EComponentHolder;
@@ -35,8 +35,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public PrefHandler(ProcessingEnvironment processingEnvironment) {
-		super(Pref.class, processingEnvironment);
+	public PrefHandler(AndroidAnnotationsEnvironment environment) {
+		super(Pref.class, environment);
 	}
 
 	@Override
@@ -61,9 +61,9 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 			elementTypeName = elementTypeName.substring(index + 1);
 		}
 
-		Set<? extends Element> sharedPrefElements = validatedModel.getRootAnnotatedElements(SharedPref.class.getName());
+		Set<? extends Element> sharedPrefElements = getEnvironment().getValidatedModel().getRootAnnotatedElements(SharedPref.class.getName());
 		for (Element sharedPrefElement : sharedPrefElements) {
-			GeneratedClassHolder sharedPrefHolder = processHolder.getGeneratedClassHolder(sharedPrefElement);
+			GeneratedClassHolder sharedPrefHolder = processHolder().getGeneratedClassHolder(sharedPrefElement);
 			String sharedPrefName = sharedPrefHolder.getGeneratedClass().name();
 
 			if (elementTypeName.equals(sharedPrefName)) {

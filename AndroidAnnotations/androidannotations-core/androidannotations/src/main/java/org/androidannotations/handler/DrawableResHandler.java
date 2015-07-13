@@ -20,12 +20,12 @@ import static com.sun.codemodel.JExpr.ref;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.model.AndroidRes;
@@ -39,8 +39,8 @@ public class DrawableResHandler extends AbstractResHandler {
 
 	private static final int MIN_SDK_WITH_CONTEXT_GET_DRAWABLE = 21;
 
-	public DrawableResHandler(ProcessingEnvironment processingEnvironment) {
-		super(AndroidRes.DRAWABLE, processingEnvironment);
+	public DrawableResHandler(AndroidAnnotationsEnvironment environment) {
+		super(AndroidRes.DRAWABLE, environment);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class DrawableResHandler extends AbstractResHandler {
 	}
 
 	private boolean shouldUseContextGetDrawableMethod() {
-		return androidManifest.getMinSdkVersion() >= MIN_SDK_WITH_CONTEXT_GET_DRAWABLE;
+		return getEnvironment().getAndroidManifest().getMinSdkVersion() >= MIN_SDK_WITH_CONTEXT_GET_DRAWABLE;
 	}
 
 	private boolean hasGetDrawableInContext() {

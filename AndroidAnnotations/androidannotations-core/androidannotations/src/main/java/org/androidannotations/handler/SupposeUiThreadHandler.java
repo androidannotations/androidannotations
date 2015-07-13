@@ -15,10 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.SupposeUiThread;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.holder.EComponentHolder;
@@ -31,8 +31,8 @@ public class SupposeUiThreadHandler extends SupposeThreadHandler {
 
 	private static final String METHOD_CHECK_UI_THREAD = "checkUiThread";
 
-	public SupposeUiThreadHandler(ProcessingEnvironment processingEnvironment) {
-		super(SupposeUiThread.class, processingEnvironment);
+	public SupposeUiThreadHandler(AndroidAnnotationsEnvironment environment) {
+		super(SupposeUiThread.class, environment);
 	}
 
 	@Override

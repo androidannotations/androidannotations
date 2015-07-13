@@ -15,24 +15,25 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JMethod;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JExpr.invoke;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.IgnoredWhenDetached;
 import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.invoke;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JMethod;
 
 public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
-	public IgnoredWhenDetachedHandler(ProcessingEnvironment processingEnvironment) {
-		super(IgnoredWhenDetached.class, processingEnvironment);
+	public IgnoredWhenDetachedHandler(AndroidAnnotationsEnvironment environment) {
+		super(IgnoredWhenDetached.class, environment);
 	}
 
 	@Override

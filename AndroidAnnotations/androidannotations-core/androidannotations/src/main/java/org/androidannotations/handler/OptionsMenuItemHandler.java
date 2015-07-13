@@ -17,35 +17,24 @@ package org.androidannotations.handler;
 
 import static com.sun.codemodel.JExpr._this;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JVar;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.OptionsMenuItem;
-import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass;
 
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JVar;
 
 public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
-	private IdAnnotationHelper annotationHelper;
-
-	public OptionsMenuItemHandler(ProcessingEnvironment processingEnvironment) {
-		super(OptionsMenuItem.class, processingEnvironment);
-	}
-
-	@Override
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
-		super.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
-		annotationHelper = new IdAnnotationHelper(processingEnv, getTarget(), rClass);
+	public OptionsMenuItemHandler(AndroidAnnotationsEnvironment environment) {
+		super(OptionsMenuItem.class, environment);
 	}
 
 	@Override
@@ -67,7 +56,7 @@ public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu
 		JBlock body = holder.getOnCreateOptionsMenuMethodBody();
 		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
 
-		JFieldRef idsRef = annotationHelper.extractOneAnnotationFieldRef(processHolder, element, IRClass.Res.ID, true);
+		JFieldRef idsRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
 		body.assign(_this().ref(fieldName), menuParam.invoke("findItem").arg(idsRef));
 	}
 }

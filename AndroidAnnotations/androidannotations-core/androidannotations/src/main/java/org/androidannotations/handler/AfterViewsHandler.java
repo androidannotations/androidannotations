@@ -15,19 +15,19 @@
  */
 package org.androidannotations.handler;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-
 public class AfterViewsHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
-	public AfterViewsHandler(ProcessingEnvironment processingEnvironment) {
-		super(AfterViews.class, processingEnvironment);
+	public AfterViewsHandler(AndroidAnnotationsEnvironment environment) {
+		super(AfterViews.class, environment);
 	}
 
 	@Override

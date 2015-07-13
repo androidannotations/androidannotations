@@ -24,7 +24,7 @@ import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
 
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -39,8 +39,8 @@ public class EApplicationHolder extends EComponentHolder {
 
 	private JFieldVar staticInstanceField;
 
-	public EApplicationHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public EApplicationHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 		createSingleton();
 		createOnCreate();
 	}

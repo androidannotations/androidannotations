@@ -15,10 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.WakeLock;
 import org.androidannotations.annotations.WakeLock.Flag;
 import org.androidannotations.annotations.WakeLock.Level;
@@ -37,8 +37,8 @@ import com.sun.codemodel.JVar;
 
 public class WakeLockHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public WakeLockHandler(ProcessingEnvironment processingEnvironment) {
-		super(WakeLock.class, processingEnvironment);
+	public WakeLockHandler(AndroidAnnotationsEnvironment environment) {
+		super(WakeLock.class, environment);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class WakeLockHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		validatorHelper.doesNotUseFlagsWithPartialWakeLock(element, validatedElements, valid);
 
-		validatorHelper.hasWakeLockPermission(androidManifest, valid);
+		validatorHelper.hasWakeLockPermission(getEnvironment().getAndroidManifest(), valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 

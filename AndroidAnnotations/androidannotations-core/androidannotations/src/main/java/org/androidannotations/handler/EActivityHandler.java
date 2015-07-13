@@ -17,17 +17,15 @@ package org.androidannotations.handler;
 
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 
 import com.sun.codemodel.JBlock;
@@ -36,16 +34,13 @@ import com.sun.codemodel.JMethod;
 
 public class EActivityHandler extends BaseGeneratingAnnotationHandler<EActivityHolder> {
 
-	private AnnotationHelper annotationHelper;
-
-	public EActivityHandler(ProcessingEnvironment processingEnvironment) {
-		super(EActivity.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnv);
+	public EActivityHandler(AndroidAnnotationsEnvironment environment) {
+		super(EActivity.class, environment);
 	}
 
 	@Override
-	public EActivityHolder createGeneratedClassHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		return new EActivityHolder(processHolder, annotatedElement, androidManifest);
+	public EActivityHolder createGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		return new EActivityHolder(environment, annotatedElement, getEnvironment().getAndroidManifest());
 	}
 
 	@Override
@@ -56,13 +51,13 @@ public class EActivityHandler extends BaseGeneratingAnnotationHandler<EActivityH
 
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
-		validatorHelper.componentRegistered(element, androidManifest, valid);
+		validatorHelper.componentRegistered(element, getEnvironment().getAndroidManifest(), valid);
 	}
 
 	@Override
 	public void process(Element element, EActivityHolder holder) {
 
-		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(processHolder, element, getTarget(), rClass.get(IRClass.Res.LAYOUT), false);
+		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.LAYOUT, false);
 
 		JFieldRef contentViewId = null;
 		if (fieldRefs.size() == 1) {

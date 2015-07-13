@@ -15,11 +15,10 @@
  */
 package org.androidannotations.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.PreferenceScreen;
-import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.model.AnnotationElements;
@@ -30,11 +29,8 @@ import com.sun.codemodel.JFieldRef;
 
 public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreferences> {
 
-	private final AnnotationHelper annotationHelper;
-
-	public PreferenceScreenHandler(ProcessingEnvironment processingEnvironment) {
-		super(PreferenceScreen.class, processingEnvironment);
-		annotationHelper = new AnnotationHelper(processingEnvironment);
+	public PreferenceScreenHandler(AndroidAnnotationsEnvironment environment) {
+		super(PreferenceScreen.class, environment);
 	}
 
 	@Override
@@ -46,7 +42,7 @@ public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreference
 
 	@Override
 	public void process(Element element, HasPreferences holder) throws Exception {
-		JFieldRef preferenceId = annotationHelper.extractAnnotationFieldRefs(processHolder, element, getTarget(), rClass.get(IRClass.Res.XML), false).get(0);
+		JFieldRef preferenceId = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.XML, false).get(0);
 
 		holder.getPreferenceScreenInitializationBlock().invoke("addPreferencesFromResource").arg(preferenceId);
 	}

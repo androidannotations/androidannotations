@@ -15,19 +15,20 @@
  */
 package org.androidannotations.handler;
 
-import com.sun.codemodel.JExpr;
+import javax.lang.model.element.Element;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.WindowFeature;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
+import com.sun.codemodel.JExpr;
 
 public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder> {
 
-	public WindowFeatureHandler(ProcessingEnvironment processingEnvironment) {
-		super(WindowFeature.class, processingEnvironment);
+	public WindowFeatureHandler(AndroidAnnotationsEnvironment environment) {
+		super(WindowFeature.class, environment);
 	}
 
 	@Override

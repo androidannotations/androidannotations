@@ -15,18 +15,18 @@
  */
 package org.androidannotations.rest.spring.handler;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
-import org.androidannotations.rest.spring.annotations.Post;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.process.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Post;
 
 public class PostHandler extends RestMethodHandler {
 
-	public PostHandler(ProcessingEnvironment processingEnvironment) {
-		super(Post.class, processingEnvironment);
+	public PostHandler(AndroidAnnotationsEnvironment environment) {
+		super(Post.class, environment);
 	}
 
 	@Override

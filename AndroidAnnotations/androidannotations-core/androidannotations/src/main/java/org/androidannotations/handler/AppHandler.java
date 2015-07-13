@@ -18,9 +18,9 @@ package org.androidannotations.handler;
 import static com.sun.codemodel.JExpr.ref;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.holder.EApplicationHolder;
@@ -32,8 +32,8 @@ import com.sun.codemodel.JClass;
 
 public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public AppHandler(ProcessingEnvironment processingEnvironment) {
-		super(App.class, processingEnvironment);
+	public AppHandler(AndroidAnnotationsEnvironment environment) {
+		super(App.class, environment);
 	}
 
 	@Override

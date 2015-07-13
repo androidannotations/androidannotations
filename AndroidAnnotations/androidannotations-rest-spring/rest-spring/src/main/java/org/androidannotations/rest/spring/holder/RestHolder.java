@@ -27,9 +27,10 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.BaseGeneratedClassHolder;
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.rest.spring.api.RestErrorHandler;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -41,7 +42,6 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.rest.spring.api.RestErrorHandler;
 
 public class RestHolder extends BaseGeneratedClassHolder {
 
@@ -54,8 +54,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	private JFieldVar authenticationField;
 	private JFieldVar restErrorHandlerField;
 
-	public RestHolder(ProcessHolder processHolder, TypeElement annotatedElement) throws Exception {
-		super(processHolder, annotatedElement);
+	public RestHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
+		super(environment, annotatedElement);
 		implementMethods();
 	}
 
