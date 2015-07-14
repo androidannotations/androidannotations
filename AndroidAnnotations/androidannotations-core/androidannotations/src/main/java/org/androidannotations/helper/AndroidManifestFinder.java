@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.util.Elements;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.FileHelper.FileHolder;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
@@ -40,15 +40,15 @@ import org.w3c.dom.NodeList;
 
 public class AndroidManifestFinder {
 
+	public static final org.androidannotations.process.Option OPTION_MANIFEST = new org.androidannotations.process.Option("androidManifestFile", null);
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidManifestFinder.class);
 	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
 
-	private final ProcessingEnvironment processingEnv;
-	private final OptionsHelper optionsHelper;
+	private final AndroidAnnotationsEnvironment environment;
 
-	public AndroidManifestFinder(ProcessingEnvironment processingEnv) {
-		this.processingEnv = processingEnv;
-		optionsHelper = new OptionsHelper(processingEnv);
+	public AndroidManifestFinder(AndroidAnnotationsEnvironment environment) {
+		this.environment = environment;
 	}
 
 	public Option<AndroidManifest> extractAndroidManifest() {
@@ -84,7 +84,7 @@ public class AndroidManifestFinder {
 	}
 
 	private Option<File> findManifestFile() {
-		String androidManifestFile = optionsHelper.getAndroidManifestFile();
+		String androidManifestFile = environment.getOptionValue(OPTION_MANIFEST);
 		if (androidManifestFile != null) {
 			return findManifestInSpecifiedPath(androidManifestFile);
 		} else {
@@ -111,7 +111,7 @@ public class AndroidManifestFinder {
 	 * appreciated.
 	 */
 	private Option<File> findManifestInParentsDirectories() {
-		Option<FileHolder> projectRootHolderOption = FileHelper.findRootProjectHolder(processingEnv);
+		Option<FileHolder> projectRootHolderOption = FileHelper.findRootProjectHolder(environment.getProcessingEnvironment());
 		if (projectRootHolderOption.isAbsent()) {
 			return Option.absent();
 		}
@@ -286,7 +286,7 @@ public class AndroidManifestFinder {
 	}
 
 	private boolean classOrModelClassExists(String className) {
-		Elements elementUtils = processingEnv.getElementUtils();
+		Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 
 		if (className.endsWith(classSuffix())) {
 			className = className.substring(0, className.length() - classSuffix().length());

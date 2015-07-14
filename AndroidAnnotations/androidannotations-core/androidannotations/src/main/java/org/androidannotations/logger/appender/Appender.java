@@ -19,7 +19,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
-import org.androidannotations.helper.OptionsHelper;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.logger.Level;
 import org.androidannotations.logger.formatter.Formatter;
 
@@ -27,7 +27,6 @@ public abstract class Appender {
 
 	protected final Formatter formatter;
 	protected ProcessingEnvironment processingEnv;
-	protected OptionsHelper optionsHelper;
 
 	public Appender(Formatter formatter) {
 		this.formatter = formatter;
@@ -37,9 +36,8 @@ public abstract class Appender {
 		return formatter;
 	}
 
-	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
-		this.processingEnv = processingEnv;
-		optionsHelper = new OptionsHelper(processingEnv);
+	public void setEnvironment(AndroidAnnotationsEnvironment environment) {
+		this.processingEnv = environment.getProcessingEnvironment();
 	}
 
 	public abstract void open();

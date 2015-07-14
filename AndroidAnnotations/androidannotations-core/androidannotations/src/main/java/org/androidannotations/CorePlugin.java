@@ -15,6 +15,9 @@
  */
 package org.androidannotations;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.androidannotations.handler.AfterExtrasHandler;
 import org.androidannotations.handler.AfterInjectHandler;
 import org.androidannotations.handler.AfterPreferencesHandler;
@@ -93,14 +96,22 @@ import org.androidannotations.handler.WakeLockHandler;
 import org.androidannotations.handler.WindowFeatureHandler;
 import org.androidannotations.model.AndroidRes;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
+import org.androidannotations.process.Option;
 
 public class CorePlugin extends AndroidAnnotationsPlugin {
 
 	private static final String NAME = "AndroidAnnotations";
 
+	private static final Option OPTION_TRACE = new Option("trace", "false");
+	private static final Option OPTION_THREAD_CONTROL = new Option("threadControl", "true");
+
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override public List<Option> getSupportedOptions() {
+		return Arrays.asList(OPTION_TRACE, OPTION_THREAD_CONTROL);
 	}
 
 	@Override
@@ -189,7 +200,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		/* After preference injection methods must be after preference injections */
 		annotationHandlers.add(new AfterPreferencesHandler(androidAnnotationEnv));
 
-		if (androidAnnotationEnv.getOptions().shouldLogTrace()) {
+		if (androidAnnotationEnv.getOptionBooleanValue(OPTION_TRACE)) {
 			annotationHandlers.add(new TraceHandler(androidAnnotationEnv));
 		}
 
@@ -210,7 +221,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		 * SupposeUiThreadHandler and SupposeBackgroundHandler must be after all
 		 * handlers that modifies generated method body
 		 */
-		if (androidAnnotationEnv.getOptions().shouldEnsureThreadControl()) {
+		if (androidAnnotationEnv.getOptionBooleanValue(OPTION_THREAD_CONTROL)) {
 			annotationHandlers.add(new SupposeUiThreadHandler(androidAnnotationEnv));
 			annotationHandlers.add(new SupposeBackgroundHandler(androidAnnotationEnv));
 		}

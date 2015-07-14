@@ -15,26 +15,28 @@
  */
 package org.androidannotations;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.processing.ProcessingEnvironment;
+
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
+import org.androidannotations.process.Option;
+import org.androidannotations.process.Options;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import java.util.List;
-import java.util.Set;
 
 public class AndroidAnnotationsEnvironment {
 
 	private final ProcessingEnvironment processingEnvironment;
-	private final OptionsHelper options;
+	private final Options options;
 	private final AnnotationHandlers annotationHandlers;
 
 	private List<AndroidAnnotationsPlugin> plugins;
@@ -49,13 +51,14 @@ public class AndroidAnnotationsEnvironment {
 
 	AndroidAnnotationsEnvironment(ProcessingEnvironment processingEnvironment) {
 		this.processingEnvironment = processingEnvironment;
-		options = new OptionsHelper(processingEnvironment);
+		options = new Options(processingEnvironment);
 		annotationHandlers = new AnnotationHandlers();
 	}
 
 	public void setPlugins(List<AndroidAnnotationsPlugin> plugins) {
 		this.plugins = plugins;
 		for (AndroidAnnotationsPlugin plugin : plugins) {
+			options.addAllSupportedOptions(plugin.getSupportedOptions());
 			plugin.addHandlers(annotationHandlers, this);
 		}
 	}
@@ -78,8 +81,24 @@ public class AndroidAnnotationsEnvironment {
 		return processingEnvironment;
 	}
 
-	public OptionsHelper getOptions() {
-		return options;
+	public Set<String> getSupportedOptions() {
+		return options.getSupportedOptions();
+	}
+
+	public String getOptionValue(Option option) {
+		return options.get(option);
+	}
+
+	public String getOptionValue(String optionKey) {
+		return options.get(optionKey);
+	}
+
+	public boolean getOptionBooleanValue(Option option) {
+		return options.getBoolean(option);
+	}
+
+	public boolean getOptionBooleanValue(String optionKey) {
+		return options.getBoolean(optionKey);
 	}
 
 	public Set<String> getSupportedAnnotationTypes() {

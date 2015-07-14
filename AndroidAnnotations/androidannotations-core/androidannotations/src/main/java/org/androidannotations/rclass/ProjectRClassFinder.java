@@ -15,30 +15,29 @@
  */
 package org.androidannotations.rclass;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.Option;
-import org.androidannotations.helper.OptionsHelper;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 
 public class ProjectRClassFinder {
 
+	public static final org.androidannotations.process.Option OPTION_RESOURCE_PACKAGE_NAME = new org.androidannotations.process.Option("resourcePackageName", null);
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectRClassFinder.class);
 
-	private ProcessingEnvironment processingEnv;
-	private OptionsHelper optionsHelper;
+	private AndroidAnnotationsEnvironment environment;
 
-	public ProjectRClassFinder(ProcessingEnvironment processingEnv) {
-		this.processingEnv = processingEnv;
-		optionsHelper = new OptionsHelper(processingEnv);
+	public ProjectRClassFinder(AndroidAnnotationsEnvironment environment) {
+		this.environment = environment;
 	}
 
 	public Option<IRClass> find(AndroidManifest manifest) {
-		Elements elementUtils = processingEnv.getElementUtils();
+		Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 		String rClass = getRClassPackageName(manifest) + ".R";
 		TypeElement rType = elementUtils.getTypeElement(rClass);
 
@@ -53,7 +52,7 @@ public class ProjectRClassFinder {
 	}
 
 	public String getRClassPackageName(AndroidManifest manifest) {
-		String resourcePackageName = optionsHelper.getResourcePackageName();
+		String resourcePackageName = environment.getOptionValue(OPTION_RESOURCE_PACKAGE_NAME);
 		if (resourcePackageName != null) {
 			return resourcePackageName;
 		} else {

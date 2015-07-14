@@ -13,26 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.plugin;
+package org.androidannotations.process;
 
-import java.util.Collections;
-import java.util.List;
+public class Option {
 
-import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.handler.AnnotationHandlers;
-import org.androidannotations.process.Option;
+	private final String name;
+	private final String defaultValue;
 
-public abstract class AndroidAnnotationsPlugin {
-
-	public abstract String getName();
-	public abstract void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv);
-
-	@Override
-	public String toString() {
-		return getName();
+	public Option(String name, String defaultValue) {
+		this.name = name;
+		this.defaultValue = defaultValue;
 	}
 
-	public List<Option> getSupportedOptions() {
-		return Collections.emptyList();
+	public String getName() {
+		return name;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
 	}
 }

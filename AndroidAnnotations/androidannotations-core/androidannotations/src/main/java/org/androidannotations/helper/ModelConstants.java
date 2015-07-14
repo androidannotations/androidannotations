@@ -20,9 +20,9 @@ import static java.util.Arrays.asList;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.SourceVersion;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
@@ -34,8 +34,11 @@ import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.process.Option;
 
 public abstract class ModelConstants {
+
+	public static final Option OPTION_CLASS_SUFFIX = new Option("classSuffix", "_");
 
 	private static String generationSuffix = "_";
 	private static String classSuffix;
@@ -51,9 +54,8 @@ public abstract class ModelConstants {
 	private ModelConstants() {
 	}
 
-	public static void init(ProcessingEnvironment processingEnv) {
-		OptionsHelper optionsHelper = new OptionsHelper(processingEnv);
-		classSuffix = optionsHelper.getClassSuffix().trim();
+	public static void init(AndroidAnnotationsEnvironment environment) {
+		classSuffix = environment.getOptionValue(OPTION_CLASS_SUFFIX).trim();
 
 		if (classSuffix.isEmpty()) {
 			throw new IllegalArgumentException("'" + classSuffix + "' may not be an emtpy string.");

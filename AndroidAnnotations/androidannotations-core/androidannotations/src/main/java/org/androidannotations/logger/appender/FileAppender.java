@@ -21,17 +21,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.FileHelper;
 import org.androidannotations.logger.Level;
 import org.androidannotations.logger.LoggerContext;
 import org.androidannotations.logger.formatter.FormatterFull;
+import org.androidannotations.process.Option;
 
 public class FileAppender extends Appender {
+
+	public static final Option OPTION_LOG_FILE = new Option("logFile", null);
 
 	private static final String DEFAULT_FILENAME = "androidannotations.log";
 
@@ -79,13 +82,13 @@ public class FileAppender extends Appender {
 	}
 
 	@Override
-	public void setProcessingEnv(ProcessingEnvironment processingEnv) {
-		super.setProcessingEnv(processingEnv);
-		resolveLogFile();
+	public void setEnvironment(AndroidAnnotationsEnvironment environment) {
+		super.setEnvironment(environment);
+		resolveLogFile(environment);
 	}
 
-	private void resolveLogFile() {
-		String logFile = optionsHelper.getLogFile();
+	private void resolveLogFile(AndroidAnnotationsEnvironment environment) {
+		String logFile = environment.getOptionValue(OPTION_LOG_FILE);
 		if (logFile != null) {
 			file = resolveLogFileInSpecifiedPath(logFile);
 		} else {
