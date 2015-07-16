@@ -55,6 +55,7 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 
 	@Test
 	public void findsManifestInGeneratedSourceParentFolder() throws Exception {
+		deleteManifestFromParentOfOutputDirectory();
 		copyManifestToParentOfOutputDirectory();
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationSuccessful(result);
