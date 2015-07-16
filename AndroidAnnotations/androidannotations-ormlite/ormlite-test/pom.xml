@@ -96,6 +96,9 @@
 					<source>1.6</source>
 					<target>1.6</target>
 					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>-AandroidManifestFile=${project.basedir}/src/main/AndroidManifest.xml</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 

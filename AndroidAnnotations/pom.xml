@@ -297,7 +297,6 @@
 					<artifactId>android-maven-plugin</artifactId>
 					<version>4.2.1</version>
 					<configuration>
-						<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 						<sdk>
 							<platform>16</platform>
 						</sdk>
