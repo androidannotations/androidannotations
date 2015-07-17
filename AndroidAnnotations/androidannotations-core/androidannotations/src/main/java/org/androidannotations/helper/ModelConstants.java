@@ -33,7 +33,6 @@ import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.process.Option;
 
 public abstract class ModelConstants {
@@ -47,9 +46,6 @@ public abstract class ModelConstants {
 
 	public static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class,
 			EService.class, EIntentService.class, EReceiver.class, EProvider.class, EFragment.class);
-
-	public static final List<Class<? extends Annotation>> VALID_ANDROID_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class,
-			EReceiver.class, EProvider.class, EFragment.class, SharedPref.class);
 
 	private ModelConstants() {
 	}

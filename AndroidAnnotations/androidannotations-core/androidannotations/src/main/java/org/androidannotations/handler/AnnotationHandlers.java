@@ -15,6 +15,7 @@
  */
 package org.androidannotations.handler;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -75,5 +76,18 @@ public class AnnotationHandlers {
 			supportedAnnotationNames = Collections.unmodifiableSet(annotationNames);
 		}
 		return supportedAnnotationNames;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Class<? extends Annotation>> getGeneratingAnnotations() {
+		List<Class<? extends Annotation>> generatingAnnotations = new ArrayList<>();
+		for (GeneratingAnnotationHandler<? extends GeneratedClassHolder> generatingAnnotationHandler : getGenerating()) {
+			try {
+				generatingAnnotations.add((Class<? extends Annotation>) Class.forName(generatingAnnotationHandler.getTarget()));
+			} catch (ClassNotFoundException | ClassCastException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return generatingAnnotations;
 	}
 }

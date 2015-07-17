@@ -18,11 +18,9 @@ package org.androidannotations.rest.spring.handler;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
-import static java.util.Arrays.asList;
 import static org.androidannotations.helper.CanonicalNameConstants.ARRAYLIST;
 import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
@@ -30,16 +28,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EApplication;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.EProvider;
-import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.EView;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.process.ElementValidation;
@@ -53,9 +41,6 @@ import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JInvocation;
 
 public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
-
-	public static final List<Class<? extends Annotation>> VALID_ANDROID_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class,
-			EReceiver.class, EProvider.class, EFragment.class, SharedPref.class, Rest.class);
 
 	private final RestSpringValidatorHelper restSpringValidatorHelper;
 
@@ -72,21 +57,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-
-		//TODO: Refactor this to be able to call super.validate().
-		validatorHelper.isNotFinal(element, validation);
-
-		if (isInnerClass(element)) {
-
-			validatorHelper.isNotPrivate(element, validation);
-
-			validatorHelper.isStatic(element, validation);
-
-			// TODO: Re-make this method private.
-			validatorHelper.hasOneOfClassAnnotations(element, element.getEnclosingElement(), VALID_ANDROID_ANNOTATIONS, validation);
-
-			validatorHelper.enclosingElementIsNotAbstractIfNotAbstract(element, validation);
-		}
+		super.validate(element, validation);
 
 		TypeElement typeElement = (TypeElement) element;
 
@@ -109,11 +80,6 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 		restSpringValidatorHelper.validateInterceptors(element, validation);
 
 		restSpringValidatorHelper.validateRequestFactory(element, validation);
-	}
-
-	private boolean isInnerClass(Element element) {
-		TypeElement typeElement = (TypeElement) element;
-		return typeElement.getNestingKind().isNested();
 	}
 
 	@Override

@@ -15,6 +15,7 @@
  */
 package org.androidannotations;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
@@ -135,5 +136,9 @@ public class AndroidAnnotationsEnvironment {
 
 	public ProcessHolder getProcessHolder() {
 		return processHolder;
+	}
+
+	public List<Class<? extends Annotation>> getGeneratingAnnotations() {
+		return annotationHandlers.getGeneratingAnnotations();
 	}
 }

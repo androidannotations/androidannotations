@@ -23,7 +23,6 @@ import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
 import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
 import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.VALID_ANDROID_ANNOTATIONS;
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
@@ -227,7 +226,7 @@ public class ValidatorHelper {
 
 	public void enclosingElementHasAndroidAnnotation(Element element, ElementValidation valid) {
 		Element enclosingElement = element.getEnclosingElement();
-		hasOneOfClassAnnotations(element, enclosingElement, VALID_ANDROID_ANNOTATIONS, valid);
+		hasOneOfClassAnnotations(element, enclosingElement, environment().getGeneratingAnnotations(), valid);
 	}
 
 	private void hasClassAnnotation(Element reportElement, Element element, Class<? extends Annotation> validAnnotation, ElementValidation valid) {
