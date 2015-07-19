@@ -33,12 +33,13 @@ import com.sun.codemodel.JVar;
 
 public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponentWithViewSupportHolder> implements HasPreferences {
 
-	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+	private APTCodeModelHelper codeModelHelper;
 
 	protected JBlock addPreferencesFromResourceBlock;
 
 	public PreferencesDelegate(EComponentWithViewSupportHolder holder) {
 		super(holder);
+		codeModelHelper = new APTCodeModelHelper(holder.environment());
 	}
 
 	@Override

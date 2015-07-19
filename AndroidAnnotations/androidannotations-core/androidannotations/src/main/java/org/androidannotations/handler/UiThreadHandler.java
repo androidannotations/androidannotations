@@ -59,7 +59,7 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock previousBody = codeModelHelper.removeBody(delegatingMethod);
-		JDefinedClass anonymousRunnableClass = codeModelHelper.createDelegatingAnonymousRunnableClass(holder, previousBody);
+		JDefinedClass anonymousRunnableClass = codeModelHelper.createDelegatingAnonymousRunnableClass(previousBody);
 
 		UiThread annotation = element.getAnnotation(UiThread.class);
 		long delay = annotation.delay();

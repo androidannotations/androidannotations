@@ -56,7 +56,7 @@ public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSup
 		TypeMirror uiFieldTypeMirror = element.asType();
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
-		JClass viewClass = codeModelHelper.typeMirrorToJClass(uiFieldTypeMirror, holder);
+		JClass viewClass = codeModelHelper.typeMirrorToJClass(uiFieldTypeMirror);
 		JFieldRef fieldRef = ref(fieldName);
 
 		holder.processViewById(idRef, viewClass, fieldRef);

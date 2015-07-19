@@ -53,7 +53,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	public BaseGeneratedClassHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		this.environment = environment;
 		this.annotatedElement = annotatedElement;
-		codeModelHelper = new APTCodeModelHelper();
+		codeModelHelper = new APTCodeModelHelper(environment);
 		setGeneratedClass();
 	}
 
@@ -71,11 +71,11 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 			generatedClass = codeModel()._class(PUBLIC | FINAL, generatedClassQualifiedName, ClassType.CLASS);
 		}
 		for (TypeParameterElement typeParam : annotatedElement.getTypeParameters()) {
-			JClass bound = codeModelHelper.typeBoundsToJClass(this, typeParam.getBounds());
+			JClass bound = codeModelHelper.typeBoundsToJClass(typeParam.getBounds());
 			generatedClass.generify(typeParam.getSimpleName().toString(), bound);
 		}
 		setExtends();
-		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors(), this);
+		codeModelHelper.addNonAAAnotations(generatedClass, annotatedElement.getAnnotationMirrors());
 	}
 
 	public JClass getAnnotatedClass() {
@@ -133,6 +133,11 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	@Override
 	public JDefinedClass definedClass(String fullyQualifiedClassName) {
 		return processHolder().definedClass(fullyQualifiedClassName);
+	}
+
+	@Override
+	public AndroidAnnotationsEnvironment environment() {
+		return environment;
 	}
 
 	public JClass narrow(JClass toNarrow) {

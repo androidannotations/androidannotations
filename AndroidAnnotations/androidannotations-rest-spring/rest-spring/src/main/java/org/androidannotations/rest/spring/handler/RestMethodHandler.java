@@ -105,7 +105,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 	protected JClass getMethodReturnClass(Element element, RestHolder holder) {
 		ExecutableElement executableElement = (ExecutableElement) element;
-		return codeModelHelper.typeMirrorToJClass(executableElement.getReturnType(), holder);
+		return codeModelHelper.typeMirrorToJClass(executableElement.getReturnType());
 	}
 
 	protected SortedMap<String, JVar> addMethodParams(ExecutableElement executableElement, RestHolder restHolder, JMethod method) {
@@ -119,7 +119,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			if (parameter.asType().getKind().isPrimitive()) {
 				param = method.param(JType.parse(codeModel(), paramType), paramName);
 			} else {
-				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType(), restHolder);
+				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType());
 				param = method.param(parameterClass, paramName);
 			}
 			methodParams.put(paramName, param);

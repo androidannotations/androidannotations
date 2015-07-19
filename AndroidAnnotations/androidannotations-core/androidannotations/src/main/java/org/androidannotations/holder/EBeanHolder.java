@@ -84,11 +84,11 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	public void createFactoryMethod(boolean hasSingletonScope) {
 
-		JClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType(), this);
+		JClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType());
 
 		JMethod factoryMethod = generatedClass.method(PUBLIC | STATIC, narrowedGeneratedClass, GET_INSTANCE_METHOD_NAME);
 
-		codeModelHelper.generifyStaticHelper(this, factoryMethod, annotatedElement);
+		codeModelHelper.generifyStaticHelper(factoryMethod, annotatedElement);
 
 		JVar factoryMethodContextParam = factoryMethod.param(classes().CONTEXT, "context");
 

@@ -22,7 +22,6 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Rest;
@@ -34,8 +33,6 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
 public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
-
-	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
 
 	public RestServiceHandler(AndroidAnnotationsEnvironment environment) {
 		super(RestService.class, environment);
@@ -60,7 +57,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 		String generatedClassName = interfaceName + classSuffix();
 
-		JClass clazz = codeModelHelper.narrowGeneratedClass(refClass(generatedClassName), fieldTypeMirror, holder);
+		JClass clazz = codeModelHelper.narrowGeneratedClass(refClass(generatedClassName), fieldTypeMirror);
 
 		JBlock methodBody = holder.getInitBody();
 

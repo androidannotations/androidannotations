@@ -58,10 +58,11 @@ import com.sun.codemodel.JVar;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
-	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+	private APTCodeModelHelper codeModelHelper;
 
 	public RestAnnotationHelper(AndroidAnnotationsEnvironment environment, String annotationName) {
 		super(environment, annotationName);
+		codeModelHelper = new APTCodeModelHelper(environment);
 	}
 
 	/** Captures URI template variable names. */
@@ -339,13 +340,13 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 			// is NOT a generics, return directly
 			if (typeArguments.isEmpty()) {
-				return codeModelHelper.typeMirrorToJClass(declaredType, holder);
+				return codeModelHelper.typeMirrorToJClass(declaredType);
 			}
 
 			// is a generics, must generate a new super class
 			TypeElement declaredElement = (TypeElement) declaredType.asElement();
 
-			JClass baseClass = codeModelHelper.typeMirrorToJClass(declaredType, holder).erasure();
+			JClass baseClass = codeModelHelper.typeMirrorToJClass(declaredType).erasure();
 			JClass decoratedExpectedClass = retrieveDecoratedResponseClass(declaredType, declaredElement, holder);
 			if (decoratedExpectedClass == null) {
 				decoratedExpectedClass = baseClass;
@@ -357,7 +358,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		}
 
 		// is not a class nor an interface, return directly
-		return codeModelHelper.typeMirrorToJClass(expectedType, holder);
+		return codeModelHelper.typeMirrorToJClass(expectedType);
 	}
 
 	/**
@@ -400,7 +401,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 						actualTypeArgument = wildcardType.getSuperBound();
 					}
 				}
-				JClass narrowJClass = codeModelHelper.typeMirrorToJClass(actualTypeArgument, holder);
+				JClass narrowJClass = codeModelHelper.typeMirrorToJClass(actualTypeArgument);
 				decoratedSuperClass = decoratedSuperClass.narrow(narrowJClass);
 				decoratedClassNameSuffix += plainName(narrowJClass);
 			}

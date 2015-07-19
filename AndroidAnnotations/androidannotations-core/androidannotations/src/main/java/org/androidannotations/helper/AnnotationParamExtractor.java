@@ -27,8 +27,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 
-import org.androidannotations.holder.GeneratedClassHolder;
-
 import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JAnnotationValue;
@@ -39,12 +37,10 @@ import com.sun.codemodel.JExpression;
 public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void, String> {
 
 	private JAnnotationUse use;
-	private GeneratedClassHolder holder;
 	private APTCodeModelHelper helper;
 
-	public AnnotationParamExtractor(JAnnotationUse use, GeneratedClassHolder holder, APTCodeModelHelper helper) {
+	public AnnotationParamExtractor(JAnnotationUse use, APTCodeModelHelper helper) {
 		this.use = use;
-		this.holder = holder;
 		this.helper = helper;
 	}
 
@@ -53,7 +49,7 @@ public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void
 		JAnnotationArrayMember paramArray = use.paramArray(p);
 
 		for (AnnotationValue annotationValue : vals) {
-			annotationValue.accept(new AnnotationArrayParamExtractor(holder, helper), paramArray);
+			annotationValue.accept(new AnnotationArrayParamExtractor(helper), paramArray);
 		}
 
 		return null;
@@ -115,7 +111,7 @@ public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void
 
 	@Override
 	public Void visitEnumConstant(VariableElement c, String p) {
-		JClass annotationClass = helper.typeMirrorToJClass(c.asType(), holder);
+		JClass annotationClass = helper.typeMirrorToJClass(c.asType());
 		JExpression expression = JExpr.direct(annotationClass.fullName() + "." + c.getSimpleName());
 		use.param(p, expression);
 		return null;
@@ -123,7 +119,7 @@ public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void
 
 	@Override
 	public Void visitType(TypeMirror t, String p) {
-		JClass annotationClass = helper.typeMirrorToJClass(t, holder);
+		JClass annotationClass = helper.typeMirrorToJClass(t);
 		JExpression dotclass = JExpr.dotclass(annotationClass);
 		use.param(p, dotclass);
 		return null;
@@ -132,13 +128,13 @@ public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void
 	@Override
 	public Void visitAnnotation(AnnotationMirror a, String p) {
 		try {
-			JClass annotationJClass = helper.typeMirrorToJClass(a.getAnnotationType(), holder);
+			JClass annotationJClass = helper.typeMirrorToJClass(a.getAnnotationType());
 			Constructor<JAnnotationUse> constructor = JAnnotationUse.class.getDeclaredConstructor(JClass.class);
 			constructor.setAccessible(true);
 			JAnnotationUse paramAnnotation = constructor.newInstance(annotationJClass);
 			Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = a.getElementValues();
 			for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
-				param.getValue().accept(new AnnotationParamExtractor(paramAnnotation, holder, helper), param.getKey().getSimpleName().toString());
+				param.getValue().accept(new AnnotationParamExtractor(paramAnnotation, helper), param.getKey().getSimpleName().toString());
 			}
 
 			Method addValueMethod = use.getClass().getDeclaredMethod("addValue", String.class, JAnnotationValue.class);

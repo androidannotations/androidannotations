@@ -93,7 +93,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		JBlock injectExtrasBlock = hasExtras.getInjectExtrasBlock();
 
 		TypeMirror type = codeModelHelper.getActualType(element, hasExtras);
-		JClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType(), hasExtras);
+		JClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType());
 		BundleHelper bundleHelper = new BundleHelper(annotationHelper, type);
 
 		JFieldRef extraField = JExpr.ref(fieldName);

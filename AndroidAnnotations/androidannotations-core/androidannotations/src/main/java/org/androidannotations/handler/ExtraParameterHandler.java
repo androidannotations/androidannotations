@@ -66,7 +66,7 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 
 	public JExpression getExtraValue(VariableElement parameter, JVar intent, JVar extras, JBlock block, JMethod annotatedMethod, JDefinedClass generatedClass, GeneratedClassHolder holder) {
 		String parameterName = parameter.getSimpleName().toString();
-		JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType(), holder);
+		JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType());
 
 		String extraKey = getAnnotationValue(parameter);
 		if (extraKey == null || extraKey.isEmpty()) {

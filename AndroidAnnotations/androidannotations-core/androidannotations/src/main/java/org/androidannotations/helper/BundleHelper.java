@@ -76,7 +76,7 @@ public class BundleHelper {
 	}
 
 	private AnnotationHelper annotationHelper;
-	private APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+	private APTCodeModelHelper codeModelHelper;
 
 	private TypeMirror element;
 
@@ -90,6 +90,7 @@ public class BundleHelper {
 
 	public BundleHelper(AnnotationHelper helper, TypeMirror element) {
 		annotationHelper = helper;
+		codeModelHelper = new APTCodeModelHelper(helper.getEnvironment());
 		this.element = element;
 
 		String typeString = element.toString();
@@ -213,7 +214,7 @@ public class BundleHelper {
 		if (methodNameToRestore.equals("getParcelableArray")) {
 			JClass erasure;
 			if (upperBound != null) {
-				erasure = codeModelHelper.typeMirrorToJClass(upperBound, holder).erasure().array();
+				erasure = codeModelHelper.typeMirrorToJClass(upperBound).erasure().array();
 			} else {
 				erasure = variableClass.elementType().erasure().array();
 			}

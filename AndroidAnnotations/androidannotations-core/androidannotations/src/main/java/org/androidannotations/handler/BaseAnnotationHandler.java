@@ -37,7 +37,7 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 
 	protected IdAnnotationHelper annotationHelper;
 	protected IdValidatorHelper validatorHelper;
-	protected APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+	protected APTCodeModelHelper codeModelHelper;
 
 	public BaseAnnotationHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
 		this(targetClass.getCanonicalName(), environment);
@@ -48,6 +48,7 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		this.environment = environment;
 		annotationHelper = new IdAnnotationHelper(environment, target);
 		validatorHelper = new IdValidatorHelper(annotationHelper);
+		codeModelHelper = new APTCodeModelHelper(environment);
 	}
 
 	public ProcessingEnvironment processingEnvironment() {

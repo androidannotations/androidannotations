@@ -85,7 +85,7 @@ public class ItemLongClickHandler extends AbstractViewListenerHandler {
 			if (parameterType.getKind() == TypeKind.INT) {
 				call.arg(onItemClickPositionParam);
 			} else {
-				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameterType, getHolder());
+				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameterType);
 				call.arg(cast(parameterClass, invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 
 				if (parameterClass.isParameterized()) {

@@ -98,7 +98,7 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 		JExpression argument = param;
 		TypeMirror typeMirror = element.asType();
 		if (!baseType.equals(typeMirror.toString())) {
-			JClass typeMirrorToJClass = codeModelHelper.typeMirrorToJClass(typeMirror, holder);
+			JClass typeMirrorToJClass = codeModelHelper.typeMirrorToJClass(typeMirror);
 			argument = JExpr.cast(typeMirrorToJClass, param);
 		}
 		return argument;

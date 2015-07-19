@@ -104,7 +104,7 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 				String paramName = param.getSimpleName().toString();
 				String extraParamName = paramName + "Extra";
 				JFieldVar paramVar = getStaticExtraField(holder, paramName);
-				JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
+				JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType());
 
 				BundleHelper bundleHelper = new BundleHelper(annotationHelper, param.asType());
 				JExpression getExtraExpression = bundleHelper.getExpressionToRestoreFromIntentOrBundle(extraParamClass, intent, extras, paramVar, onHandleIntentMethod, holder);
@@ -126,7 +126,7 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 
 		for (VariableElement param : executableElement.getParameters()) {
 			String paramName = param.getSimpleName().toString();
-			JClass parameterClass = codeModelHelper.typeMirrorToJClass(param.asType(), holder);
+			JClass parameterClass = codeModelHelper.typeMirrorToJClass(param.asType());
 
 			JFieldVar paramVar = getStaticExtraField(holder, paramName);
 			JVar methodParam = method.param(parameterClass, paramName);

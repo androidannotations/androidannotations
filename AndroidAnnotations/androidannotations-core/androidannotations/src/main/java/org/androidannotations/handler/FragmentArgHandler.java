@@ -86,7 +86,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
 	private void injectArgInComponent(Element element, EFragmentHolder holder, BundleHelper bundleHelper, JFieldVar extraKeyStaticField, String fieldName) {
 		TypeMirror elementType = codeModelHelper.getActualType(element, holder);
-		JClass elementClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
+		JClass elementClass = codeModelHelper.typeMirrorToJClass(elementType);
 
 		JVar bundle = holder.getInjectBundleArgs();
 		JBlock injectExtrasBlock = holder.getInjectArgsBlock();
@@ -102,7 +102,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JDefinedClass builderClass = holder.getBuilderClass();
 		JFieldRef builderArgsField = holder.getBuilderArgsField();
 		TypeMirror type = codeModelHelper.getActualType(element, holder);
-		JClass paramClass = codeModelHelper.typeMirrorToJClass(type, holder);
+		JClass paramClass = codeModelHelper.typeMirrorToJClass(type);
 
 		JMethod method = builderClass.method(PUBLIC, holder.narrow(builderClass), fieldName);
 		JVar arg = method.param(paramClass, fieldName);

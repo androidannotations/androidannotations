@@ -92,7 +92,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		List<TypeMirror> listenerTypeMirrors = extractListenerTypeMirrors(element);
 		int i = 1;
 		for (TypeMirror listenterTypeMirror : listenerTypeMirrors) {
-			JClass listenerClass = codeModelHelper.typeMirrorToJClass(listenterTypeMirror, holder);
+			JClass listenerClass = codeModelHelper.typeMirrorToJClass(listenterTypeMirror);
 			JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + generationSuffix());
 			codeModelHelper.addSuppressWarnings(listener, "unused");
 			listener.annotate(classes().INJECT);

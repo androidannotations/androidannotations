@@ -29,7 +29,6 @@ import javax.lang.model.type.DeclaredType;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
@@ -46,7 +45,6 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 	public RestHandler(AndroidAnnotationsEnvironment environment) {
 		super(Rest.class, environment);
-		codeModelHelper = new APTCodeModelHelper();
 		restSpringValidatorHelper = new RestSpringValidatorHelper(environment, getTarget());
 	}
 
@@ -102,7 +100,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 		JBlock init = holder.getInit().body();
 		init.add(invoke(restTemplateField, "getMessageConverters").invoke("clear"));
 		for (DeclaredType converterType : converters) {
-			JInvocation newConverter = codeModelHelper.newBeanOrEBean(holder, converterType, holder.getInitContextParam());
+			JInvocation newConverter = codeModelHelper.newBeanOrEBean(converterType, holder.getInitContextParam());
 			init.add(invoke(restTemplateField, "getMessageConverters").invoke("add").arg(newConverter));
 		}
 	}
@@ -117,7 +115,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 			JBlock init = holder.getInit().body();
 			init.add(invoke(restTemplateField, "setInterceptors").arg(_new(listClass)));
 			for (DeclaredType interceptorType : interceptors) {
-				JInvocation newInterceptor = codeModelHelper.newBeanOrEBean(holder, interceptorType, holder.getInitContextParam());
+				JInvocation newInterceptor = codeModelHelper.newBeanOrEBean(interceptorType, holder.getInitContextParam());
 				init.add(invoke(restTemplateField, "getInterceptors").invoke("add").arg(newInterceptor));
 			}
 		}
@@ -126,7 +124,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 	private void setRequestFactory(Element element, RestHolder holder) {
 		DeclaredType requestFactoryType = annotationHelper.extractAnnotationClassParameter(element, getTarget(), "requestFactory");
 		if (requestFactoryType != null) {
-			JInvocation requestFactory = codeModelHelper.newBeanOrEBean(holder, requestFactoryType, holder.getInitContextParam());
+			JInvocation requestFactory = codeModelHelper.newBeanOrEBean(requestFactoryType, holder.getInitContextParam());
 			holder.getInit().body().add(invoke(holder.getRestTemplateField(), "setRequestFactory").arg(requestFactory));
 		}
 	}

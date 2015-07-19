@@ -21,6 +21,8 @@ import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
@@ -138,7 +140,23 @@ public class AndroidAnnotationsEnvironment {
 		return processHolder;
 	}
 
+	public JCodeModel getCodeModel() {
+		return processHolder.codeModel();
+	}
+
+	public JClass getJClass(String fullyQualifiedName) {
+		return processHolder.refClass(fullyQualifiedName);
+	}
+
+	public ProcessHolder.Classes getClasses() {
+		return processHolder.classes();
+	}
+
 	public List<Class<? extends Annotation>> getGeneratingAnnotations() {
 		return annotationHandlers.getGeneratingAnnotations();
+	}
+
+	public boolean isAndroidAnnotation(String annotationQualifiedName) {
+		return getSupportedAnnotationTypes().contains(annotationQualifiedName);
 	}
 }

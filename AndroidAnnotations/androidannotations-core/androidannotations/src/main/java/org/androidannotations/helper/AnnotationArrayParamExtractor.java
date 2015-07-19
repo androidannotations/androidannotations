@@ -20,8 +20,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 
-import org.androidannotations.holder.GeneratedClassHolder;
-
 import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
@@ -29,11 +27,9 @@ import com.sun.codemodel.JExpression;
 
 public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6<Void, JAnnotationArrayMember> {
 
-	private GeneratedClassHolder holder;
 	private APTCodeModelHelper helper;
 
-	public AnnotationArrayParamExtractor(GeneratedClassHolder holder, APTCodeModelHelper helper) {
-		this.holder = holder;
+	public AnnotationArrayParamExtractor(APTCodeModelHelper helper) {
 		this.helper = helper;
 	}
 
@@ -93,7 +89,7 @@ public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6
 
 	@Override
 	public Void visitType(TypeMirror t, JAnnotationArrayMember p) {
-		JClass annotationClass = helper.typeMirrorToJClass(t, holder);
+		JClass annotationClass = helper.typeMirrorToJClass(t);
 		JExpression dotclass = JExpr.dotclass(annotationClass);
 		p.param(dotclass);
 		return null;
@@ -101,7 +97,7 @@ public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6
 
 	@Override
 	public Void visitEnumConstant(VariableElement c, JAnnotationArrayMember p) {
-		JClass annotationClass = helper.typeMirrorToJClass(c.asType(), holder);
+		JClass annotationClass = helper.typeMirrorToJClass(c.asType());
 		JExpression expression = JExpr.direct(annotationClass.fullName() + "." + c.getSimpleName());
 		p.param(expression);
 		return null;
@@ -109,7 +105,7 @@ public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6
 
 	@Override
 	public Void visitAnnotation(AnnotationMirror a, JAnnotationArrayMember p) {
-		helper.addAnnotation(p, a, holder);
+		helper.addAnnotation(p, a);
 		return null;
 	}
 }

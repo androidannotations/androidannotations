@@ -93,7 +93,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 				JClass wrapperClass = type.startsWith("java") ? holder.refClass(type) : JType.parse(holder.codeModel(), type.replace(".class", "")).boxify();
 				call.arg(wrapperClass.staticInvoke("valueOf").arg(JExpr.cast(holder.classes().STRING, newValueParam)));
 			} else {
-				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType(), holder);
+				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType());
 				call.arg(JExpr.cast(userParamClass, newValueParam));
 
 				if (type.equals(CanonicalNameConstants.STRING_SET)) {

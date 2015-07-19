@@ -61,11 +61,12 @@ public abstract class IntentBuilder {
 
 	protected Elements elementUtils;
 	protected Types typeUtils;
-	protected APTCodeModelHelper codeModelHelper = new APTCodeModelHelper();
+	protected APTCodeModelHelper codeModelHelper;
 
 	public IntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
 		this.holder = holder;
 		this.androidManifest = androidManifest;
+		codeModelHelper = new APTCodeModelHelper(holder.environment());
 		elementUtils = holder.processingEnvironment().getElementUtils();
 		typeUtils = holder.processingEnvironment().getTypeUtils();
 		contextClass = holder.classes().CONTEXT;
@@ -111,7 +112,7 @@ public abstract class IntentBuilder {
 
 	private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
 		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
-		JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType, holder);
+		JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType);
 		JVar extraParameterVar = method.param(parameterClass, parameterName);
 		JInvocation superCall = getSuperPutExtraInvocation(elementType, extraParameterVar, extraKeyField);
 		method.body()._return(superCall);

@@ -51,7 +51,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 
 	@Override
 	public void process(Element element, HasInstanceState holder) {
-		JClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType(), holder);
+		JClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType());
 		String fieldName = element.getSimpleName().toString();
 
 		JBlock saveStateBody = holder.getSaveStateMethodBody();

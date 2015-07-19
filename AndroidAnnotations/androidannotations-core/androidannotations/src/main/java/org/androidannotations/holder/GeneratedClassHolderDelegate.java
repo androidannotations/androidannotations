@@ -18,6 +18,7 @@ package org.androidannotations.holder;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.process.ProcessHolder.Classes;
 
 import com.sun.codemodel.JClass;
@@ -70,5 +71,9 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 	@Override
 	public final JDefinedClass definedClass(String fullyQualifiedClassName) {
 		return holder.definedClass(fullyQualifiedClassName);
+	}
+
+	@Override public AndroidAnnotationsEnvironment environment() {
+		return holder.environment();
 	}
 }

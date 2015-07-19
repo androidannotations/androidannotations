@@ -24,7 +24,6 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
@@ -48,7 +47,6 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 	public OrmLiteDaoHandler(AndroidAnnotationsEnvironment environment) {
 		super(OrmLiteDao.class, environment);
 		ormLiteHelper = new OrmLiteHelper(annotationHelper);
-		codeModelHelper = new APTCodeModelHelper();
 		ormLiteValidatorHelper = new OrmLiteValidatorHelper(environment);
 	}
 
@@ -84,7 +82,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JExpression injectExpr = databaseHelperRef.invoke("getDao").arg(modelClassDotClass);
 		if (elementExtendsRuntimeExceptionDao(element)) {
-			JClass daoImplClass = codeModelHelper.typeMirrorToJClass(element.asType(), holder);
+			JClass daoImplClass = codeModelHelper.typeMirrorToJClass(element.asType());
 			injectExpr = _new(daoImplClass).arg(cast(daoClass, injectExpr));
 		}
 
