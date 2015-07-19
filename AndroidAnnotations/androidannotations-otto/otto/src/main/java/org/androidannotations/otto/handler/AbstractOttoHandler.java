@@ -15,12 +15,14 @@
  */
 package org.androidannotations.otto.handler;
 
+import com.sun.codemodel.JMethod;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.process.ElementValidation;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
@@ -63,7 +65,18 @@ public abstract class AbstractOttoHandler extends BaseAnnotationHandler<ECompone
 	public void process(Element element, EComponentHolder holder) throws Exception {
 		ExecutableElement executableElement = (ExecutableElement) element;
 
-		codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
+		JMethod method = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
+
+		addOttoAnnotation(executableElement, method);
+	}
+
+	private void addOttoAnnotation(ExecutableElement element, JMethod method) {
+		for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+			if (annotationMirror.getAnnotationType().toString().equals(getTarget())) {
+				codeModelHelper.addAnnotation(method, annotationMirror);
+				break;
+			}
+		}
 	}
 
 }
