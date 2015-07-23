@@ -89,10 +89,14 @@ public class FileAppender extends Appender {
 
 	private void resolveLogFile(AndroidAnnotationsEnvironment environment) {
 		String logFile = environment.getOptionValue(OPTION_LOG_FILE);
-		if (logFile != null) {
-			file = resolveLogFileInSpecifiedPath(logFile);
-		} else {
-			file = resolveLogFileInParentsDirectories();
+		try {
+			if (logFile != null) {
+				file = resolveLogFileInSpecifiedPath(logFile);
+			} else {
+				file = resolveLogFileInParentsDirectories();
+			}
+		} catch (FileNotFoundException exception) {
+			file = null;
 		}
 
 		Level logLevel = LoggerContext.getInstance().getCurrentLevel();
@@ -106,13 +110,13 @@ public class FileAppender extends Appender {
 		}
 	}
 
-	private File resolveLogFileInSpecifiedPath(String logFile) {
+	private File resolveLogFileInSpecifiedPath(String logFile) throws FileNotFoundException {
 		File outputDirectory = FileHelper.resolveOutputDirectory(processingEnv);
 		logFile = logFile.replace("{outputFolder}", outputDirectory.getAbsolutePath());
 		return new File(logFile);
 	}
 
-	private File resolveLogFileInParentsDirectories() {
+	private File resolveLogFileInParentsDirectories() throws FileNotFoundException {
 		File outputDirectory = FileHelper.resolveOutputDirectory(processingEnv);
 		return new File(outputDirectory, DEFAULT_FILENAME);
 	}

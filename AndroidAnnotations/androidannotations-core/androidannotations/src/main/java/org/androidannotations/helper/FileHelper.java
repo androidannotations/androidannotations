@@ -16,6 +16,7 @@
 package org.androidannotations.helper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,13 +31,9 @@ public final class FileHelper {
 	private FileHelper() {
 	}
 
-	public static Option<File> findRootProject(ProcessingEnvironment processingEnv) {
-		Option<FileHolder> rootProjectHolder = findRootProjectHolder(processingEnv);
-		if (rootProjectHolder.isAbsent()) {
-			return Option.absent();
-		}
-
-		return Option.of(rootProjectHolder.get().projectRoot);
+	public static File findRootProject(ProcessingEnvironment processingEnv) throws FileNotFoundException {
+		FileHolder rootProjectHolder = findRootProjectHolder(processingEnv);
+		return rootProjectHolder.projectRoot;
 	}
 
 	/**
@@ -46,14 +43,14 @@ public final class FileHelper {
 	 * find the AndroidManifest.xml file. Any better solution will be
 	 * appreciated.
 	 */
-	public static Option<FileHolder> findRootProjectHolder(ProcessingEnvironment processingEnv) {
+	public static FileHolder findRootProjectHolder(ProcessingEnvironment processingEnv) throws FileNotFoundException {
 		Filer filer = processingEnv.getFiler();
 
 		FileObject dummySourceFile;
 		try {
 			dummySourceFile = filer.createResource(StandardLocation.SOURCE_OUTPUT, "", "dummy" + System.currentTimeMillis());
 		} catch (IOException ignored) {
-			return Option.absent();
+			throw new FileNotFoundException();
 		}
 		String dummySourceFilePath = dummySourceFile.toUri().toString();
 
@@ -69,24 +66,18 @@ public final class FileHelper {
 		try {
 			cleanURI = new URI(dummySourceFilePath);
 		} catch (URISyntaxException e) {
-			return Option.absent();
+			throw new FileNotFoundException();
 		}
 
 		File dummyFile = new File(cleanURI);
 		File sourcesGenerationFolder = dummyFile.getParentFile();
 		File projectRoot = sourcesGenerationFolder.getParentFile();
 
-		return Option.of(new FileHolder(dummySourceFilePath, sourcesGenerationFolder, projectRoot));
+		return new FileHolder(dummySourceFilePath, sourcesGenerationFolder, projectRoot);
 	}
 
-	public static File resolveOutputDirectory(ProcessingEnvironment processingEnv) {
-		Option<File> rootProjectOption = FileHelper.findRootProject(processingEnv);
-		if (rootProjectOption.isAbsent()) {
-			// Execution root folder
-			return null;
-		}
-
-		File rootProject = rootProjectOption.get();
+	public static File resolveOutputDirectory(ProcessingEnvironment processingEnv) throws FileNotFoundException {
+		File rootProject = FileHelper.findRootProject(processingEnv);
 
 		// Target folder - Maven
 		File targetFolder = new File(rootProject, "target");

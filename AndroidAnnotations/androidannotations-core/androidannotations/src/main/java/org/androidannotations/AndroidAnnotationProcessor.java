@@ -34,7 +34,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.exception.AndroidManifestNotFoundException;
 import org.androidannotations.exception.ProcessingException;
+import org.androidannotations.exception.RClassNotFoundException;
 import org.androidannotations.exception.ValidationException;
 import org.androidannotations.exception.VersionMismatchException;
 import org.androidannotations.generation.CodeModelGenerator;
@@ -42,7 +44,6 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AndroidManifestFinder;
 import org.androidannotations.helper.ErrorHelper;
 import org.androidannotations.helper.ModelConstants;
-import org.androidannotations.helper.Option;
 import org.androidannotations.logger.Level;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerContext;
@@ -185,23 +186,19 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		AnnotationElementsHolder validatingHolder = extractedModel.validatingHolder();
 		androidAnnotationsEnv.setValidatedElements(validatingHolder);
 
-		Option<AndroidManifest> androidManifestOption = extractAndroidManifest();
-		if (androidManifestOption.isAbsent()) {
+		try {
+			AndroidManifest androidManifest = extractAndroidManifest();
+			LOGGER.info("AndroidManifest.xml found: {}", androidManifest);
+
+			IRClass rClass = findRClasses(androidManifest);
+
+			AndroidSystemServices androidSystemServices = new AndroidSystemServices();
+
+			androidAnnotationsEnv.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
+
+		} catch (Exception e) {
 			return;
 		}
-		AndroidManifest androidManifest = androidManifestOption.get();
-
-		LOGGER.info("AndroidManifest.xml found: {}", androidManifest);
-
-		Option<IRClass> rClassOption = findRClasses(androidManifest);
-		if (rClassOption.isAbsent()) {
-			return;
-		}
-		IRClass rClass = rClassOption.get();
-
-		AndroidSystemServices androidSystemServices = new AndroidSystemServices();
-
-		androidAnnotationsEnv.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
 
 		AnnotationElements validatedModel = validateAnnotations(extractedModel, validatingHolder);
 
@@ -222,33 +219,24 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		return extractedModel;
 	}
 
-	private Option<AndroidManifest> extractAndroidManifest() {
-		timeStats.start("Extract Manifest");
-		AndroidManifestFinder finder = new AndroidManifestFinder(androidAnnotationsEnv);
-		Option<AndroidManifest> manifest = finder.extractAndroidManifest();
-		timeStats.stop("Extract Manifest");
-		return manifest;
+	private AndroidManifest extractAndroidManifest() throws AndroidManifestNotFoundException {
+		try {
+			timeStats.start("Extract Manifest");
+			return new AndroidManifestFinder(androidAnnotationsEnv).extractAndroidManifest();
+		} finally {
+			timeStats.stop("Extract Manifest");
+		}
 	}
 
-	private Option<IRClass> findRClasses(AndroidManifest androidManifest) throws IOException {
-		timeStats.start("Find R Classes");
-		ProjectRClassFinder rClassFinder = new ProjectRClassFinder(androidAnnotationsEnv);
-
-		Option<IRClass> rClass = rClassFinder.find(androidManifest);
-
-		AndroidRClassFinder androidRClassFinder = new AndroidRClassFinder(processingEnv);
-
-		Option<IRClass> androidRClass = androidRClassFinder.find();
-
-		if (rClass.isAbsent() || androidRClass.isAbsent()) {
-			return Option.absent();
+	private IRClass findRClasses(AndroidManifest androidManifest) throws RClassNotFoundException {
+		try {
+			timeStats.start("Find R Classes");
+			IRClass rClass = new ProjectRClassFinder(androidAnnotationsEnv).find(androidManifest);
+			IRClass androidRClass = new AndroidRClassFinder(processingEnv).find();
+			return new CompoundRClass(rClass, androidRClass);
+		} finally {
+			timeStats.stop("Find R Classes");
 		}
-
-		IRClass compoundRClass = new CompoundRClass(rClass.get(), androidRClass.get());
-
-		timeStats.stop("Find R Classes");
-
-		return Option.of(compoundRClass);
 	}
 
 	private AnnotationElements validateAnnotations(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) throws ValidationException {

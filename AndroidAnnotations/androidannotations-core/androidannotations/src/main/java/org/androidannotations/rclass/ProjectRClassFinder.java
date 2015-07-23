@@ -19,14 +19,15 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.exception.RClassNotFoundException;
 import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.Option;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
+import org.androidannotations.process.Option;
 
 public class ProjectRClassFinder {
 
-	public static final org.androidannotations.process.Option OPTION_RESOURCE_PACKAGE_NAME = new org.androidannotations.process.Option("resourcePackageName", null);
+	public static final Option OPTION_RESOURCE_PACKAGE_NAME = new Option("resourcePackageName", null);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectRClassFinder.class);
 
@@ -36,19 +37,18 @@ public class ProjectRClassFinder {
 		this.environment = environment;
 	}
 
-	public Option<IRClass> find(AndroidManifest manifest) {
+	public IRClass find(AndroidManifest manifest) throws RClassNotFoundException {
 		Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 		String rClass = getRClassPackageName(manifest) + ".R";
 		TypeElement rType = elementUtils.getTypeElement(rClass);
 
 		if (rType == null) {
 			LOGGER.error("The generated {} class cannot be found", rClass);
-			return Option.absent();
+			throw new RClassNotFoundException("The generated " + rClass + " class cannot be found");
 		}
 
 		LOGGER.info("Found project R class: {}", rType.toString());
-
-		return Option.<IRClass> of(new RClass(rType));
+		return new RClass(rType);
 	}
 
 	public String getRClassPackageName(AndroidManifest manifest) {

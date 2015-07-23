@@ -19,7 +19,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
-import org.androidannotations.helper.Option;
+import org.androidannotations.exception.RClassNotFoundException;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 
@@ -33,16 +33,15 @@ public class AndroidRClassFinder {
 		this.processingEnv = processingEnv;
 	}
 
-	public Option<IRClass> find() {
+	public IRClass find() throws RClassNotFoundException {
 		Elements elementUtils = processingEnv.getElementUtils();
 		TypeElement androidRType = elementUtils.getTypeElement("android.R");
 		if (androidRType == null) {
 			LOGGER.error("The android.R class cannot be found");
-			return Option.absent();
+			throw new RClassNotFoundException("The android.R class cannot be found");
 		}
 
 		LOGGER.info("Found Android class: {}", androidRType.toString());
-
-		return Option.<IRClass> of(new RClass(androidRType));
+		return new RClass(androidRType);
 	}
 }
