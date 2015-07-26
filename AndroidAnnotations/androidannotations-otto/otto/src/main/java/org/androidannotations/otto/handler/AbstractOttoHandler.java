@@ -73,7 +73,7 @@ public abstract class AbstractOttoHandler extends BaseAnnotationHandler<ECompone
 	private void addOttoAnnotation(ExecutableElement element, JMethod method) {
 		for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
 			if (annotationMirror.getAnnotationType().toString().equals(getTarget())) {
-				codeModelHelper.addAnnotation(method, annotationMirror);
+				codeModelHelper.copyAnnotation(method, annotationMirror);
 				break;
 			}
 		}

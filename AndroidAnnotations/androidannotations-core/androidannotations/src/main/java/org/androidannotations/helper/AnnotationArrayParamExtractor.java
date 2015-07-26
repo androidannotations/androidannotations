@@ -105,7 +105,7 @@ public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6
 
 	@Override
 	public Void visitAnnotation(AnnotationMirror a, JAnnotationArrayMember p) {
-		helper.addAnnotation(p, a);
+		helper.copyAnnotation(p, a);
 		return null;
 	}
 }
