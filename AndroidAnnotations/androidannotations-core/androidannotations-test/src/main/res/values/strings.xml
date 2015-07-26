@@ -23,7 +23,6 @@
     </string>
     <string name="app_name">android-functional-test-1-5</string>
     <string name="someView">TextView Text</string>
-    <string name="injected_activity_caption">Roboguice Activity tested with Robolectric</string>
     <string name="injected_string">test</string>
 
     <string-array name="planets_array">

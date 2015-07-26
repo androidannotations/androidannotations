@@ -17,7 +17,6 @@ package org.androidannotations.test.efragment;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.SystemService;
@@ -26,7 +25,6 @@ import org.androidannotations.annotations.Transactional;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.test.R;
-import org.androidannotations.test.roboguice.SampleRoboApplication;
 
 import android.app.ActivityManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,9 +35,6 @@ public class MyFragment extends AbstractFragment {
 
 	@ViewById
 	TextView myTextView;
-
-	@App
-	SampleRoboApplication customApplication;
 
 	@SystemService
 	ActivityManager activityManager;

@@ -79,10 +79,6 @@ public class APTCodeModelHelper {
 		this.environment = environment;
 	}
 
-	public APTCodeModelHelper() {
-
-	}
-
 	public JClass typeMirrorToJClass(TypeMirror type) {
 		return typeMirrorToJClass(type, Collections.<String, TypeMirror> emptyMap());
 	}
@@ -168,7 +164,7 @@ public class APTCodeModelHelper {
 	}
 
 	public JClass typeBoundsToJClass(List<? extends TypeMirror> bounds) {
-		return typeBoundsToJClass(bounds, Collections.<String, TypeMirror> emptyMap());
+		return typeBoundsToJClass(bounds, Collections.<String, TypeMirror>emptyMap());
 	}
 
 	private JClass typeBoundsToJClass(List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
@@ -370,6 +366,19 @@ public class APTCodeModelHelper {
 			} else {
 				newBody.add((JStatement) statement);
 			}
+		}
+	}
+
+	public void removeBraces(JBlock block) {
+		try {
+			Field bracesRequiredField = JBlock.class.getDeclaredField("bracesRequired");
+			bracesRequiredField.setAccessible(true);
+			bracesRequiredField.set(block, false);
+			Field indentRequiredField = JBlock.class.getDeclaredField("indentRequired");
+			indentRequiredField.setAccessible(true);
+			indentRequiredField.set(block, false);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 

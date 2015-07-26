@@ -142,6 +142,7 @@
 		<module>androidannotations-ormlite</module>
 		<module>androidannotations-otto</module>
 		<module>androidannotations-rest-spring</module>
+		<module>androidannotations-roboguice</module>
 	</modules>
 
 	<dependencyManagement>

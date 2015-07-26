@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
@@ -33,7 +32,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.test.R;
 import org.androidannotations.test.ebean.SomeBean;
-import org.androidannotations.test.roboguice.SampleRoboApplication;
 
 @EFragment(R.layout.injected)
 public class MySupportFragment extends Fragment {
@@ -43,9 +41,6 @@ public class MySupportFragment extends Fragment {
 
 	@ViewById
 	TextView myTextView;
-
-	@App
-	SampleRoboApplication customApplication;
 
 	@SystemService
 	ActivityManager activityManager;

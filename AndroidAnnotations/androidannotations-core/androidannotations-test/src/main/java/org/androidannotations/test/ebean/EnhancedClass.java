@@ -23,7 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
@@ -36,7 +35,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.test.ThreadActivity;
-import org.androidannotations.test.roboguice.SampleRoboApplication;
 
 /**
  * This class doesn't have any test, currently it's just there to show that
@@ -63,9 +61,6 @@ public class EnhancedClass {
 
 	@ViewById
 	TextView myTextView;
-
-	@App
-	SampleRoboApplication customApplication;
 
 	@StringRes
 	String hello;

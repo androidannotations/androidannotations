@@ -130,30 +130,6 @@ public class ProcessHolder {
 		public final JClass PREFERENCE_ACTIVITY_HEADER = refClass(CanonicalNameConstants.PREFERENCE_ACTIVITY_HEADER);
 
 		/*
-		 * RoboGuice
-		 */
-		public final JClass ROBO_CONTEXT = refClass(CanonicalNameConstants.ROBO_CONTEXT);
-		public final JClass ROBO_INJECTOR = refClass(CanonicalNameConstants.ROBO_INJECTOR);
-		public final JClass CONTENT_VIEW_LISTENER = refClass(CanonicalNameConstants.CONTENT_VIEW_LISTENER);
-		public final JClass KEY = refClass(CanonicalNameConstants.KEY);
-		public final JClass ON_RESTART_EVENT = refClass(CanonicalNameConstants.ON_RESTART_EVENT);
-		public final JClass ON_START_EVENT = refClass(CanonicalNameConstants.ON_START_EVENT);
-		public final JClass ON_RESUME_EVENT = refClass(CanonicalNameConstants.ON_RESUME_EVENT);
-		public final JClass ON_PAUSE_EVENT = refClass(CanonicalNameConstants.ON_PAUSE_EVENT);
-		public final JClass ON_NEW_INTENT_EVENT = refClass(CanonicalNameConstants.ON_NEW_INTENT_EVENT);
-		public final JClass EVENT_MANAGER = refClass(CanonicalNameConstants.EVENT_MANAGER);
-		public final JClass CONTEXT_SCOPE = refClass(CanonicalNameConstants.CONTEXT_SCOPE);
-		public final JClass VIEW_MEMBERS_INJECTOR = refClass(CanonicalNameConstants.VIEW_MEMBERS_INJECTOR);
-		public final JClass ROBO_GUICE = refClass(CanonicalNameConstants.ROBO_GUICE);
-		public final JClass INJECT = refClass(CanonicalNameConstants.INJECT);
-		public final JClass ON_STOP_EVENT = refClass(CanonicalNameConstants.ON_STOP_EVENT);
-		public final JClass ON_DESTROY_EVENT = refClass(CanonicalNameConstants.ON_DESTROY_EVENT);
-		public final JClass ON_CONFIGURATION_CHANGED_EVENT = refClass(CanonicalNameConstants.ON_CONFIGURATION_CHANGED_EVENT);
-		public final JClass ON_CONTENT_CHANGED_EVENT = refClass(CanonicalNameConstants.ON_CONTENT_CHANGED_EVENT);
-		public final JClass ON_ACTIVITY_RESULT_EVENT = refClass(CanonicalNameConstants.ON_ACTIVITY_RESULT_EVENT);
-		public final JClass ON_CREATE_EVENT = refClass(CanonicalNameConstants.ON_CREATE_EVENT);
-
-		/*
 		 * OrmLite
 		 */
 		public final JClass CONNECTION_SOURCE = refClass(CanonicalNameConstants.CONNECTION_SOURCE);

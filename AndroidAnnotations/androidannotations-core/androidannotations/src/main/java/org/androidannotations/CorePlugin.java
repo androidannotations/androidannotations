@@ -75,7 +75,6 @@ import org.androidannotations.handler.PreferenceHeadersHandler;
 import org.androidannotations.handler.PreferenceScreenHandler;
 import org.androidannotations.handler.ReceiverActionHandler;
 import org.androidannotations.handler.ReceiverHandler;
-import org.androidannotations.handler.RoboGuiceHandler;
 import org.androidannotations.handler.RootContextHandler;
 import org.androidannotations.handler.SeekBarProgressChangeHandler;
 import org.androidannotations.handler.SeekBarTouchStartHandler;
@@ -128,7 +127,6 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new EViewHandler(androidAnnotationEnv));
 		annotationHandlers.add(new SharedPrefHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PrefHandler(androidAnnotationEnv));
-		annotationHandlers.add(new RoboGuiceHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ViewByIdHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ViewsByIdHandler(androidAnnotationEnv));
 		annotationHandlers.add(new FragmentByIdHandler(androidAnnotationEnv));

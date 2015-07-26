@@ -55,20 +55,15 @@ import com.sun.codemodel.JVar;
 public class EActivityHolder extends EComponentWithViewSupportHolder implements HasIntentBuilder, HasExtras, HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration,
 		HasPreferenceHeaders {
 
-	private static final String ON_CONTENT_CHANGED_JAVADOC = "We cannot simply copy the " + "code from RoboActivity, because that can cause classpath issues. "
-			+ "For further details see issue #1116.";
-
 	private ActivityIntentBuilder intentBuilder;
 	private JMethod onCreate;
 	private JMethod setIntent;
-	private JMethod onNewIntentMethod;
 	private JMethod setContentViewLayout;
 	private JVar initSavedInstanceParam;
 	private JDefinedClass intentBuilderClass;
 	private InstanceStateDelegate instanceStateDelegate;
 	private OnActivityResultDelegate onActivityResultDelegate;
 	private ReceiverRegistrationDelegate<EActivityHolder> receiverRegistrationDelegate;
-	private RoboGuiceDelegate roboGuiceDelegate;
 	private PreferenceActivityDelegate preferencesHolder;
 	private JMethod injectExtrasMethod;
 	private JBlock injectExtrasBlock;
@@ -85,12 +80,26 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private JMethod getLastNonConfigurationInstance;
 	private JBlock onRetainNonConfigurationInstanceBindBlock;
 	private JVar onRetainNonConfigurationInstance;
+	private JBlock onStartBeforeSuperBlock;
+	private JBlock onStartAfterSuperBlock;
+	private JBlock onRestartBeforeSuperBlock;
+	private JBlock onRestartAfterSuperBlock;
+	private JBlock onResumeBeforeSuperBlock;
+	private JBlock onResumeAfterSuperBlock;
+	private JBlock onPauseBeforeSuperBlock;
+	private JBlock onPauseAfterSuperBlock;
+	private JMethod onStopMethod;
+	private JBlock onStopBeforeSuperBlock;
+	private JMethod onDestroyMethod;
 	private JBlock onDestroyBeforeSuperBlock;
 	private JBlock onDestroyAfterSuperBlock;
-	private JBlock onResumeAfterSuperBlock;
-	private JBlock onStartAfterSuperBlock;
-	private JBlock onStopBeforeSuperBlock;
-	private JBlock onPauseBeforeSuperBlock;
+	private JMethod onNewIntentMethod;
+	private JBlock onNewIntentAfterSuperBlock;
+	private JBlock onConfigurationChangedBeforeSuperBlock;
+	private JBlock onConfigurationChangedAfterSuperBlock;
+	private JVar onConfigurationChangedNewConfigParam;
+	private JMethod onContentChanged;
+	private JBlock onContentChangedAfterSuperBlock;
 
 	public EActivityHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
 		super(environment, annotatedElement);
@@ -130,7 +139,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return setIntent;
 	}
 
-	protected void setOnCreate() {
+	private void setOnCreate() {
 		onCreate = generatedClass.method(PUBLIC, codeModel().VOID, "onCreate");
 		onCreate.annotate(Override.class);
 		JClass bundleClass = classes().BUNDLE;
@@ -144,50 +153,57 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	// CHECKSTYLE:OFF
 
-	protected void setOnStart() {
+	private void setOnStart() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		getRoboGuiceDelegate().onStartBeforeSuperBlock = body.block();
+		onStartBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
 		onStartAfterSuperBlock = body.block();
 	}
 
-	protected void setOnRestart() {
+	public JBlock getOnRestartAfterSuperBlock() {
+		if (onRestartAfterSuperBlock == null) {
+			setOnRestart();
+		}
+		return onRestartAfterSuperBlock;
+	}
+
+	private void setOnRestart() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onRestart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		getRoboGuiceDelegate().onRestartBeforeSuperBlock = body.block();
+		onRestartBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
-		getRoboGuiceDelegate().onRestartAfterSuperBlock = body.block();
+		onRestartAfterSuperBlock = body.block();
 	}
 
-	protected void setOnResume() {
+	private void setOnResume() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onResume");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		getRoboGuiceDelegate().onResumeBeforeSuperBlock = body.block();
+		onResumeBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
 		onResumeAfterSuperBlock = body.block();
 	}
 
-	protected void setOnPause() {
+	private void setOnPause() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onPause");
 		method.annotate(Override.class);
 		JBlock body = method.body();
 		onPauseBeforeSuperBlock = body.block();
 		body.invoke(_super(), method);
-		getRoboGuiceDelegate().onPauseAfterSuperBlock = body.block();
+		onPauseAfterSuperBlock = body.block();
 	}
 
-	protected void setOnNewIntent() {
+	private void setOnNewIntent() {
 		onNewIntentMethod = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onNewIntent");
 		onNewIntentMethod.annotate(Override.class);
 		JVar intent = onNewIntentMethod.param(classes().INTENT, "intent");
 		JBlock body = onNewIntentMethod.body();
 		body.invoke(_super(), onNewIntentMethod).arg(intent);
 		body.invoke(getSetIntent()).arg(intent);
-		getRoboGuiceDelegate().onNewIntentAfterSuperBlock = body.block();
+		onNewIntentAfterSuperBlock = body.block();
 	}
 
 	private void setSetIntent() {
@@ -198,44 +214,89 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		setIntentBody.invoke(_super(), setIntent).arg(methodParam);
 	}
 
-	protected void setOnStop() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStop");
-		method.annotate(Override.class);
-		JBlock body = method.body();
-		onStopBeforeSuperBlock = body.block();
-		body.invoke(_super(), method);
-		getRoboGuiceDelegate().onStop = method;
+	public JMethod getOnStop() {
+		if (onStopMethod == null) {
+			setOnStop();
+		}
+		return onStopMethod;
 	}
 
-	protected void setOnDestroy() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onDestroy");
-		method.annotate(Override.class);
-		JBlock body = method.body();
-		getRoboGuiceDelegate().onDestroy = method;
+	private void setOnStop() {
+		onStopMethod = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onStop");
+		onStopMethod.annotate(Override.class);
+		JBlock body = onStopMethod.body();
+		onStopBeforeSuperBlock = body.block();
+		body.invoke(_super(), onStopMethod);
+	}
+
+	public JMethod getOnDestroy() {
+		if (onDestroyMethod == null) {
+			setOnDestroy();
+		}
+		return onDestroyMethod;
+	}
+
+	private void setOnDestroy() {
+		onDestroyMethod = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onDestroy");
+		onDestroyMethod.annotate(Override.class);
+		JBlock body = onDestroyMethod.body();
 		onDestroyBeforeSuperBlock = body.block();
-		body.invoke(_super(), method);
+		body.invoke(_super(), onDestroyMethod);
 		onDestroyAfterSuperBlock = body.block();
 	}
 
-	protected void setOnConfigurationChanged() {
+	public JBlock getOnConfigurationChangedBeforeSuperBlock() {
+		if (onConfigurationChangedBeforeSuperBlock == null) {
+			setOnConfigurationChanged();
+		}
+		return onConfigurationChangedBeforeSuperBlock;
+	}
+
+	public JBlock getOnConfigurationChangedAfterSuperBlock() {
+		if (onConfigurationChangedAfterSuperBlock == null) {
+			setOnConfigurationChanged();
+		}
+		return onConfigurationChangedAfterSuperBlock;
+	}
+
+	public JVar getOnConfigurationChangedNewConfigParam() {
+		if (onConfigurationChangedNewConfigParam == null) {
+			setOnConfigurationChanged();
+		}
+		return onConfigurationChangedNewConfigParam;
+	}
+
+	private void setOnConfigurationChanged() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onConfigurationChanged");
 		method.annotate(Override.class);
 		JClass configurationClass = classes().CONFIGURATION;
-		JVar newConfig = method.param(configurationClass, "newConfig");
-		getRoboGuiceDelegate().newConfig = newConfig;
+		onConfigurationChangedNewConfigParam = method.param(configurationClass, "newConfig");
 		JBlock body = method.body();
-		getRoboGuiceDelegate().currentConfig = body.decl(configurationClass, "currentConfig", JExpr.invoke("getResources").invoke("getConfiguration"));
-		body.invoke(_super(), method).arg(newConfig);
-		getRoboGuiceDelegate().onConfigurationChangedAfterSuperBlock = body.block();
+		onConfigurationChangedBeforeSuperBlock = body.block();
+		body.invoke(_super(), method).arg(onConfigurationChangedNewConfigParam);
+		onConfigurationChangedAfterSuperBlock = body.block();
 	}
 
-	protected void setOnContentChanged() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onContentChanged");
-		method.annotate(Override.class);
-		method.javadoc().append(ON_CONTENT_CHANGED_JAVADOC);
-		JBlock body = method.body();
-		body.invoke(_super(), method);
-		getRoboGuiceDelegate().onContentChangedAfterSuperBlock = body.block();
+	public JMethod getOnContentChanged() {
+		if (onContentChanged == null) {
+			setOnContentChanged();
+		}
+		return onContentChanged;
+	}
+
+	public JBlock getOnContentChangedAfterSuperBlock() {
+		if (onContentChangedAfterSuperBlock == null) {
+			setOnContentChanged();
+		}
+		return onContentChangedAfterSuperBlock;
+	}
+
+	private void setOnContentChanged() {
+		onContentChanged = generatedClass.method(JMod.PUBLIC, codeModel().VOID, "onContentChanged");
+		onContentChanged.annotate(Override.class);
+		JBlock body = onContentChanged.body();
+		body.invoke(_super(), onContentChanged);
+		onContentChangedAfterSuperBlock = body.block();
 	}
 
 	private void setOnCreateOptionsMenu() {
@@ -349,34 +410,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return intentBuilderClass;
 	}
 
-	public RoboGuiceDelegate getRoboGuiceDelegate() {
-		if (roboGuiceDelegate == null) {
-			roboGuiceDelegate = new RoboGuiceDelegate(this);
-		}
-		return roboGuiceDelegate;
-	}
-
-	protected void setScopedObjectsField() {
-		JClass keyWildCard = classes().KEY.narrow(codeModel().wildcard());
-		JClass scopedHashMap = classes().HASH_MAP.narrow(keyWildCard, classes().OBJECT);
-
-		getRoboGuiceDelegate().scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + generationSuffix());
-		getRoboGuiceDelegate().scopedObjects.assign(JExpr._new(scopedHashMap));
-	}
-
-	protected void setEventManagerField() {
-		getRoboGuiceDelegate().eventManager = generatedClass.field(JMod.PROTECTED, classes().EVENT_MANAGER, "eventManager" + generationSuffix());
-	}
-
-	protected void setContentViewListenerField() {
-		getRoboGuiceDelegate().contentViewListenerField = generatedClass.field(JMod.NONE, classes().CONTENT_VIEW_LISTENER, "ignored" + generationSuffix());
-		getRoboGuiceDelegate().contentViewListenerField.annotate(classes().INJECT);
-	}
-
-	protected void setScopeField() {
-		getRoboGuiceDelegate().scope = getGeneratedClass().field(JMod.PRIVATE, classes().CONTEXT_SCOPE, "scope" + generationSuffix());
-	}
-
 	// CHECKSTYLE:ON
 
 	@Override
@@ -418,6 +451,13 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 			setOnNewIntent();
 		}
 		return onNewIntentMethod;
+	}
+
+	public JBlock getOnNewIntentAfterSuperBlock() {
+		if (onNewIntentAfterSuperBlock == null) {
+			setOnNewIntent();
+		}
+		return onNewIntentAfterSuperBlock;
 	}
 
 	@Override
@@ -664,6 +704,14 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		}
 		return onPauseBeforeSuperBlock;
 	}
+
+	public JBlock getOnPauseAfterSuperBlock() {
+		if (onPauseAfterSuperBlock == null) {
+			setOnPause();
+		}
+		return onPauseAfterSuperBlock;
+	}
+
 
 	@Override
 	public JBlock getOnAttachAfterSuperBlock() {

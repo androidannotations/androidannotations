@@ -582,22 +582,6 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void hasRoboGuiceJars(ElementValidation valid) {
-		Elements elementUtils = annotationHelper.getElementUtils();
-
-		if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_CONTEXT) == null) {
-			valid.addError("Could not find the RoboGuice framework in the classpath, the following class is missing: " + CanonicalNameConstants.ROBO_CONTEXT);
-		}
-
-		if (elementUtils.getTypeElement(CanonicalNameConstants.ROBO_APPLICATION) != null) {
-			valid.addError("It seems you are using an old version of RoboGuice. Be sure to use version 3.0!");
-		}
-
-		if (elementUtils.getTypeElement(CanonicalNameConstants.ON_START_EVENT_OLD) != null) {
-			valid.addError("It seems you are using an old version of RoboGuice. Be sure to use version 3.0!");
-		}
-	}
-
 	public void hasSpringAndroidJars(ElementValidation valid) {
 		Elements elementUtils = annotationHelper.getElementUtils();
 		if (elementUtils.getTypeElement(CanonicalNameConstants.REST_TEMPLATE) == null) {

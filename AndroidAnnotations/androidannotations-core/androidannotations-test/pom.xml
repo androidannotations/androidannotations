@@ -52,11 +52,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.roboguice</groupId>
-			<artifactId>roboguice</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>support-v4</artifactId>
 			<version>r7</version>
