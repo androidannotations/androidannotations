@@ -32,9 +32,9 @@
 	<properties>
 		<main.basedir>${project.parent.parent.basedir}</main.basedir>
 		<android-rome-version>1.0.0-r2</android-rome-version>
-		<checkstyle.excludes>**/R.java,**/BuildConfig.java,</checkstyle.excludes> 
+		<checkstyle.excludes>**/R.java,**/BuildConfig.java,</checkstyle.excludes>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.androidannotations</groupId>

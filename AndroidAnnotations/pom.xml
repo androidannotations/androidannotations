@@ -131,8 +131,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.basedir>${project.basedir}</main.basedir>
 	</properties>
-	
-	
+
+
 	<prerequisites>
 		<maven>3.0.5</maven>
 	</prerequisites>
@@ -237,8 +237,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 					<configuration>
-					   <source>1.7</source>
-					   <target>1.7</target>
+						<source>1.7</source>
+						<target>1.7</target>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -353,36 +353,36 @@
 				</executions>
 			</plugin>
 			<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<configuration>
-						<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
-						<suppressionsLocation>${main.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
-						<consoleOutput>true</consoleOutput>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>com.puppycrawl.tools</groupId>
-							<artifactId>checkstyle</artifactId>
-							<version>6.7</version>
-							<exclusions>
-								<exclusion>
-									<groupId>com.sun</groupId>
-									<artifactId>tools</artifactId>
-								</exclusion>
-							</exclusions>
-					   </dependency>
-					</dependencies>
-					<executions>
-						<execution>
-							<phase>process-sources</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
+					<suppressionsLocation>${main.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+					<consoleOutput>true</consoleOutput>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>6.7</version>
+						<exclusions>
+							<exclusion>
+								<groupId>com.sun</groupId>
+								<artifactId>tools</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 		<resources>
@@ -406,8 +406,8 @@
 		<connection>scm:git:git@github.com:excilys/androidannotations.git</connection>
 		<developerConnection>scm:git:git@github.com:excilys/androidannotations.git</developerConnection>
 		<url>https://github.com/excilys/androidannotations</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<profiles>
 		<profile>

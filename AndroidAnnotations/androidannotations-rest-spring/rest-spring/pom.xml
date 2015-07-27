@@ -79,7 +79,7 @@
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<executions>
-					<execution> 
+					<execution>
 						<id>attach-javadocs</id>
 						<goals>
 							<goal>jar</goal>
