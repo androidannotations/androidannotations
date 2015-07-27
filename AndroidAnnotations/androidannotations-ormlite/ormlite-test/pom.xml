@@ -97,6 +97,7 @@
 					<target>1.6</target>
 					<showWarnings>true</showWarnings>
 					<compilerArgs>
+						<arg>-AlogLevel=WARNING</arg>
 						<arg>-AandroidManifestFile=${project.basedir}/src/main/AndroidManifest.xml</arg>
 					</compilerArgs>
 				</configuration>

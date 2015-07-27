@@ -98,7 +98,7 @@
 					<showWarnings>true</showWarnings>
 					<compilerArgs>
 						<arg>-Atrace=true</arg>
-						<arg>-AlogLevel=ERROR</arg>
+						<arg>-AlogLevel=WARNING</arg>
 						<arg>-AlogFile=${project.build.directory}/functional-test.log</arg>
 						<arg>-AandroidManifestFile=${project.basedir}/src/main/AndroidManifest.xml</arg>
 					</compilerArgs>
