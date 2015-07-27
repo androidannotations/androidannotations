@@ -130,15 +130,6 @@ public final class CanonicalNameConstants {
 	public static final String WAKELOCK_PERMISSION = "android.permission.WAKE_LOCK";
 
 	/*
-	 * ORMLite
-	 */
-	public static final String DAO = "com.j256.ormlite.dao.Dao";
-	public static final String DAO_MANAGER = "com.j256.ormlite.dao.DaoManager";
-	public static final String CONNECTION_SOURCE = "com.j256.ormlite.support.ConnectionSource";
-	public static final String OPEN_HELPER_MANAGER = "com.j256.ormlite.android.apptools.OpenHelperManager";
-	public static final String RUNTIME_EXCEPTION_DAO = "com.j256.ormlite.dao.RuntimeExceptionDao";
-
-	/*
 	 * HttpClient
 	 */
 	public static final String CLIENT_CONNECTION_MANAGER = "org.apache.http.conn.ClientConnectionManager";

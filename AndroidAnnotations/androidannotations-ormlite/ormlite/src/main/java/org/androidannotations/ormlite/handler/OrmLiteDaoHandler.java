@@ -24,9 +24,9 @@ import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
+import org.androidannotations.ormlite.helper.OrmLiteClasses;
 import org.androidannotations.ormlite.helper.OrmLiteHelper;
 import org.androidannotations.ormlite.helper.OrmLiteValidatorHelper;
 import org.androidannotations.ormlite.holder.OrmLiteHolder;
@@ -73,7 +73,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 		JClass idClass = refClass(ormLiteHelper.getEntityIdType(element));
 		JExpression modelClassDotClass = modelClass.dotclass();
 
-		JClass daoClass = refClass(CanonicalNameConstants.DAO).narrow(modelClass, idClass);
+		JClass daoClass = refClass(OrmLiteClasses.DAO).narrow(modelClass, idClass);
 
 		TypeMirror databaseHelperTypeMirror = annotationHelper.extractAnnotationParameter(element, "helper");
 		JFieldVar databaseHelperRef = ormLiteHolder.getDatabaseHelperRef(databaseHelperTypeMirror);

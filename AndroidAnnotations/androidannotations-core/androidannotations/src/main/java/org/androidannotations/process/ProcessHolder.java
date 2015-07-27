@@ -130,14 +130,6 @@ public class ProcessHolder {
 		public final JClass PREFERENCE_ACTIVITY_HEADER = refClass(CanonicalNameConstants.PREFERENCE_ACTIVITY_HEADER);
 
 		/*
-		 * OrmLite
-		 */
-		public final JClass CONNECTION_SOURCE = refClass(CanonicalNameConstants.CONNECTION_SOURCE);
-		public final JClass OPEN_HELPER_MANAGER = refClass(CanonicalNameConstants.OPEN_HELPER_MANAGER);
-		public final JClass RUNTIME_EXCEPTION_DAO = refClass(CanonicalNameConstants.RUNTIME_EXCEPTION_DAO);
-		public final JClass DAO_MANAGER = refClass(CanonicalNameConstants.DAO_MANAGER);
-
-		/*
 		 * HttpClient
 		 */
 		public final JClass CLIENT_CONNECTION_MANAGER = refClass(CanonicalNameConstants.CLIENT_CONNECTION_MANAGER);
