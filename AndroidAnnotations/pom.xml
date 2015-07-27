@@ -259,6 +259,7 @@
 					<version>2.10.1</version>
 					<configuration>
 						<locale>en_US</locale>
+						<quiet>true</quiet>
 					</configuration>
 					<executions>
 						<execution>
