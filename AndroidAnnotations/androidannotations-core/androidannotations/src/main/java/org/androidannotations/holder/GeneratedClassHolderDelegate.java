@@ -73,7 +73,8 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 		return holder.definedClass(fullyQualifiedClassName);
 	}
 
-	@Override public AndroidAnnotationsEnvironment environment() {
+	@Override
+	public AndroidAnnotationsEnvironment environment() {
 		return holder.environment();
 	}
 }

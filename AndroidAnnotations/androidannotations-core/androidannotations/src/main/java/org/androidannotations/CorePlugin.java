@@ -109,7 +109,8 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		return NAME;
 	}
 
-	@Override public List<Option> getSupportedOptions() {
+	@Override
+	public List<Option> getSupportedOptions() {
 		return Arrays.asList(OPTION_TRACE, OPTION_THREAD_CONTROL);
 	}
 

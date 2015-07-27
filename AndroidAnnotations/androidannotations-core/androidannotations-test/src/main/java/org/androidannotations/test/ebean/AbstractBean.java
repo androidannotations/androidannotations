@@ -24,7 +24,8 @@ import android.content.Context;
 @EBean
 public abstract class AbstractBean {
 	
-	@RootContext Context context;
+	@RootContext
+	Context context;
 
 	public AbstractBean(String param) {
 

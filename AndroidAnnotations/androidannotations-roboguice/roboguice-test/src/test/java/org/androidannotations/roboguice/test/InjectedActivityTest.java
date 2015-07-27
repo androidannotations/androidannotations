@@ -41,8 +41,10 @@ public class InjectedActivityTest {
 
 	ActivityWithRoboGuice_ injectedActivity;
 
-	@Inject Counter fieldCounter;
-	@Inject FakeDateProvider fakeDateProvider;
+	@Inject
+	Counter fieldCounter;
+	@Inject
+	FakeDateProvider fakeDateProvider;
 
 	@Before
 	public void setUp() {

@@ -30,7 +30,9 @@
         <module name="IllegalInstantiation" />
         <module name="OneTopLevelClass" />
 		<module name="AnnotationUseStyle" />
-		<module name="AnnotationLocation" />
+		<module name="AnnotationLocation" >
+			<property name="allowSamelineSingleParameterlessAnnotation" value="false" />
+		</module>
 		<module name="ClassTypeParameterName" />
 		<module name="ConstantName" />
 		<module name="LocalVariableName" />

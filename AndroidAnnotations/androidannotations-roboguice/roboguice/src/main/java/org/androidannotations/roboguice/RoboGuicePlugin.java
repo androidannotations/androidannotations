@@ -29,7 +29,8 @@ public class RoboGuicePlugin extends AndroidAnnotationsPlugin {
 		return NAME;
 	}
 
-	@Override public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
+	@Override
+	public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
 		annotationHandlers.add(new RoboGuiceHandler(androidAnnotationEnv));
 	}
 }

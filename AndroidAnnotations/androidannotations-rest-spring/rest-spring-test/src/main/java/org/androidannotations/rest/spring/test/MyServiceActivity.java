@@ -23,6 +23,7 @@ import org.androidannotations.rest.spring.annotations.RestService;
 @EActivity
 public class MyServiceActivity extends Activity {
 
-	@RestService MyService myService;
+	@RestService
+	MyService myService;
 	
 }
