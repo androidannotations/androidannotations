@@ -31,6 +31,11 @@ public class OttoPlugin extends AndroidAnnotationsPlugin {
 	}
 
 	@Override
+	public boolean shouldCheckApiAndProcessorVersions() {
+		return false;
+	}
+
+	@Override
 	public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
 		annotationHandlers.add(new SubscribeHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ProduceHandler(androidAnnotationEnv));

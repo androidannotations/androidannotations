@@ -15,14 +15,25 @@
  */
 package org.androidannotations.plugin;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.exception.VersionNotFoundException;
 import org.androidannotations.handler.AnnotationHandlers;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.process.Option;
 
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
 public abstract class AndroidAnnotationsPlugin {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	private String version;
+	private String apiVersion;
 
 	public abstract String getName();
 	public abstract void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv);
@@ -34,5 +45,44 @@ public abstract class AndroidAnnotationsPlugin {
 
 	public List<Option> getSupportedOptions() {
 		return Collections.emptyList();
+	}
+
+	public boolean shouldCheckApiAndProcessorVersions() {
+		return true;
+	}
+
+	public final void loadVersion() throws FileNotFoundException, VersionNotFoundException {
+		version = getVersionFromPropertyFile(getName().toLowerCase());
+		apiVersion = getVersionFromPropertyFile(getName().toLowerCase() + "-api");
+	}
+
+	private String getVersionFromPropertyFile(String name) throws FileNotFoundException, VersionNotFoundException {
+		String filename = name + ".properties";
+		Properties properties;
+		try {
+			URL url = getClass().getClassLoader().getResource(filename);
+			properties = new Properties();
+			properties.load(url.openStream());
+		} catch (Exception e) {
+			logger.error("Property file {} couldn't be parsed", filename);
+			throw new FileNotFoundException("Property file " + filename + " couldn't be parsed.");
+		}
+
+		String version = properties.getProperty("version");
+
+		if (version == null) {
+			logger.error("{} plugin is missing 'version' property!", getName());
+			throw new VersionNotFoundException(this);
+		}
+
+		return version;
+	}
+
+	public String getApiVersion() {
+		return apiVersion;
+	}
+
+	public String getVersion() {
+		return version;
 	}
 }

@@ -159,4 +159,8 @@ public class AndroidAnnotationsEnvironment {
 	public boolean isAndroidAnnotation(String annotationQualifiedName) {
 		return getSupportedAnnotationTypes().contains(annotationQualifiedName);
 	}
+
+	public List<AndroidAnnotationsPlugin> getPlugins() {
+		return plugins;
+	}
 }
