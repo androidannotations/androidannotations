@@ -18,8 +18,10 @@ package org.androidannotations.rest.spring.holder;
 import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr._this;
 import static com.sun.codemodel.JExpr.lit;
-import static org.androidannotations.helper.CanonicalNameConstants.REST_TEMPLATE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_AUTHENTICATION;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_BASIC_AUTHENTICATION;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_TEMPLATE;
 
 import java.util.List;
 
@@ -28,7 +30,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.BaseGeneratedClassHolder;
 import org.androidannotations.rest.spring.api.RestErrorHandler;
 
@@ -128,7 +129,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setHttpBasicAuth", TypeKind.VOID.toString(), STRING, STRING);
 
 		if (setAuthMethod != null) {
-			JClass basicAuthClass = classes().HTTP_BASIC_AUTHENTICATION;
+			JClass basicAuthClass = refClass(HTTP_BASIC_AUTHENTICATION);
 			JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(setAuthMethod.params().get(0)).arg(setAuthMethod.params().get(1));
 			setAuthMethod.body().assign(_this().ref(getAuthenticationField()), basicAuthentication);
 		}
@@ -141,7 +142,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 			JVar tokenParamVar = setBearerMethod.params().get(0);
 			JExpression tokenExpr = lit("Bearer ").plus(tokenParamVar);
 
-			JClass authClass = classes().HTTP_AUTHENTICATION;
+			JClass authClass = refClass(HTTP_AUTHENTICATION);
 			JDefinedClass anonymousHttpAuthClass = codeModel().anonymousClass(authClass);
 
 			JMethod getHeaderValueMethod = anonymousHttpAuthClass.method(JMod.PUBLIC, String.class, "getHeaderValue");
@@ -155,7 +156,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void implementSetAuthentication(List<ExecutableElement> methods) {
-		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setAuthentication", TypeKind.VOID.toString(), CanonicalNameConstants.HTTP_AUTHENTICATION);
+		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setAuthentication", TypeKind.VOID.toString(), HTTP_AUTHENTICATION);
 
 		if (setAuthMethod != null) {
 			setAuthMethod.body().assign(_this().ref(getAuthenticationField()), setAuthMethod.params().get(0));
@@ -243,8 +244,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setRestTemplateField() {
-		restTemplateField = getGeneratedClass().field(JMod.PRIVATE, classes().REST_TEMPLATE, "restTemplate");
-		getInit().body().assign(restTemplateField, _new(classes().REST_TEMPLATE));
+		restTemplateField = getGeneratedClass().field(JMod.PRIVATE, refClass(REST_TEMPLATE), "restTemplate");
+		getInit().body().assign(restTemplateField, _new(refClass(REST_TEMPLATE)));
 	}
 
 	public JFieldVar getAvailableHeadersField() {
@@ -283,7 +284,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setAuthenticationField() {
-		authenticationField = getGeneratedClass().field(JMod.PRIVATE, classes().HTTP_AUTHENTICATION, "authentication");
+		authenticationField = getGeneratedClass().field(JMod.PRIVATE, refClass(HTTP_AUTHENTICATION), "authentication");
 	}
 
 	public JFieldVar getRestErrorHandlerField() {

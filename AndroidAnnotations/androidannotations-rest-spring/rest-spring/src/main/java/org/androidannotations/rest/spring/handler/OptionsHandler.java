@@ -36,7 +36,7 @@ public class OptionsHandler extends RestMethodHandler {
 	public void validate(Element element, ElementValidation validation) {
 		super.validate(element, validation);
 
-		validatorHelper.hasSetOfHttpMethodReturnType((ExecutableElement) element, validation);
+		restSpringValidatorHelper.hasSetOfHttpMethodReturnType((ExecutableElement) element, validation);
 
 		restSpringValidatorHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, validation);
 	}

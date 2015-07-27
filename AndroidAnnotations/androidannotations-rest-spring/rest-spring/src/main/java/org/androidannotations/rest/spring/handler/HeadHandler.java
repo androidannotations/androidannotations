@@ -37,7 +37,7 @@ public class HeadHandler extends RestMethodHandler {
 	public void validate(Element element, ElementValidation validation) {
 		super.validate(element, validation);
 
-		validatorHelper.hasHttpHeadersReturnType((ExecutableElement) element, validation);
+		restSpringValidatorHelper.hasHttpHeadersReturnType((ExecutableElement) element, validation);
 
 		restSpringValidatorHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, validation);
 	}

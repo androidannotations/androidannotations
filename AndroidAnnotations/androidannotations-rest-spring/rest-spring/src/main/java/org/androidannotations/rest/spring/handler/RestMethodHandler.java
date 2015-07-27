@@ -15,6 +15,10 @@
  */
 package org.androidannotations.rest.spring.handler;
 
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_METHOD;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.NESTED_RUNTIME_EXCEPTION;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.RESPONSE_ENTITY;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.SortedMap;
@@ -27,7 +31,6 @@ import javax.lang.model.type.TypeKind;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.helper.RestAnnotationHelper;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
@@ -139,7 +142,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	protected abstract String getUrlSuffix(Element element);
 
 	protected JExpression getHttpMethod() {
-		JClass httpMethod = classes().HTTP_METHOD;
+		JClass httpMethod = refClass(HTTP_METHOD);
 		String simpleName = getTarget().substring(getTarget().lastIndexOf('.') + 1);
 		String restMethodInCapitalLetters = simpleName.toUpperCase(Locale.ENGLISH);
 		return httpMethod.staticRef(restMethodInCapitalLetters);
@@ -160,7 +163,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	}
 
 	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
-		if (methodReturnClass != null && !methodReturnClass.fullName().startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+		if (methodReturnClass != null && !methodReturnClass.fullName().startsWith(RESPONSE_ENTITY)) {
 			return JExpr.invoke(exchangeCall, "getBody");
 		}
 		return exchangeCall;
@@ -173,7 +176,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			JClass exchangeResponseClass = restAnnotationHelper.retrieveResponseClass(executableElement.getReturnType(), restHolder);
 			JType narrowType = exchangeResponseClass == null || methodReturnVoid ? codeModel().VOID : exchangeResponseClass;
-			JClass responseEntityClass = classes().RESPONSE_ENTITY.narrow(narrowType);
+			JClass responseEntityClass = refClass(RESPONSE_ENTITY).narrow(narrowType);
 			JVar responseEntity = methodBody.decl(responseEntityClass, "response", exchangeCall);
 
 			// set cookies
@@ -230,7 +233,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			JTryBlock tryBlock = newBlock._try();
 			codeModelHelper.copy(block, tryBlock.body());
 
-			JCatchBlock jCatch = tryBlock._catch(classes().NESTED_RUNTIME_EXCEPTION);
+			JCatchBlock jCatch = tryBlock._catch(refClass(NESTED_RUNTIME_EXCEPTION));
 
 			JBlock catchBlock = jCatch.body();
 			JConditional conditional = catchBlock._if(JOp.ne(holder.getRestErrorHandlerField(), JExpr._null()));

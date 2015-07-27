@@ -16,9 +16,12 @@
 package org.androidannotations.rest.spring.helper;
 
 import static java.util.Arrays.asList;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_FACTORY;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
-import static org.androidannotations.helper.CanonicalNameConstants.HTTP_MESSAGE_CONVERTER;
+
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_FACTORY;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_MESSAGE_CONVERTER;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_TEMPLATE;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_CLIENT_EXCEPTION;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EBean;
@@ -128,7 +132,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 					TypeMirror returnType = executableElement.getReturnType();
 					String simpleName = executableElement.getSimpleName().toString();
 
-					if (returnType.toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
+					if (returnType.toString().equals(REST_TEMPLATE)) {
 						if (executableElement.getParameters().size() > 0) {
 							valid.addError(enclosedElement,
 									"The method returning a RestTemplate should not declare any parameter in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
@@ -159,7 +163,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 						List<? extends VariableElement> parameters = executableElement.getParameters();
 						if (parameters.size() == 1) {
 							VariableElement firstParameter = parameters.get(0);
-							if (firstParameter.asType().toString().equals(CanonicalNameConstants.REST_TEMPLATE)) {
+							if (firstParameter.asType().toString().equals(REST_TEMPLATE)) {
 								if (!foundSetRestTemplateMethod) {
 									foundSetRestTemplateMethod = true;
 								} else {
@@ -332,7 +336,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 	public void throwsOnlyRestClientException(ExecutableElement element, ElementValidation valid) {
 		List<? extends TypeMirror> thrownTypes = element.getThrownTypes();
 		if (thrownTypes.size() > 0) {
-			if (thrownTypes.size() > 1 || !thrownTypes.get(0).toString().equals(CanonicalNameConstants.REST_CLIENT_EXCEPTION)) {
+			if (thrownTypes.size() > 1 || !thrownTypes.get(0).toString().equals(REST_CLIENT_EXCEPTION)) {
 				valid.addError("%s annotated methods can only declare throwing a RestClientException");
 			}
 		}
@@ -383,6 +387,39 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 				if (parameters.size() > variableNames.size() + 1) {
 					valid.addError("%s annotated method has more than one entity parameter");
+				}
+			}
+		}
+	}
+
+	public void hasSpringAndroidJars(ElementValidation valid) {
+		Elements elementUtils = annotationHelper.getElementUtils();
+		if (elementUtils.getTypeElement(REST_TEMPLATE) == null) {
+			valid.addError("Could not find the SpringAndroid framework in the classpath, the following class is missing: " + REST_TEMPLATE);
+		}
+	}
+
+	public void hasHttpHeadersReturnType(ExecutableElement element, ElementValidation valid) {
+		String returnType = element.getReturnType().toString();
+		if (!returnType.equals("org.springframework.http.HttpHeaders")) {
+			valid.addError("%s annotated methods can only return a HttpHeaders, not " + returnType);
+		}
+	}
+
+	public void hasSetOfHttpMethodReturnType(ExecutableElement element, ElementValidation valid) {
+		TypeMirror returnType = element.getReturnType();
+		String returnTypeString = returnType.toString();
+		if (!returnTypeString.equals("java.util.Set<org.springframework.http.HttpMethod>")) {
+			valid.addError("%s annotated methods can only return a Set of HttpMethod, not " + returnTypeString);
+		} else {
+			DeclaredType declaredType = (DeclaredType) returnType;
+			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+			if (typeArguments.size() != 1) {
+				valid.addError("%s annotated methods can only return a parameterized Set (with HttpMethod)");
+			} else {
+				TypeMirror typeArgument = typeArguments.get(0);
+				if (!typeArgument.toString().equals("org.springframework.http.HttpMethod")) {
+					valid.addError("%s annotated methods can only return a parameterized Set of HttpMethod, not " + typeArgument.toString());
 				}
 			}
 		}

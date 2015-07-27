@@ -19,7 +19,7 @@ import static com.sun.codemodel.JExpr._new;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
 import static org.androidannotations.helper.CanonicalNameConstants.ARRAYLIST;
-import static org.androidannotations.helper.CanonicalNameConstants.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_INTERCEPTOR;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
 		validatorHelper.notAlreadyValidated(element, validation);
 
-		validatorHelper.hasSpringAndroidJars(validation);
+		restSpringValidatorHelper.hasSpringAndroidJars(validation);
 
 		validatorHelper.isInterface(typeElement, validation);
 

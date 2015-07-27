@@ -327,32 +327,6 @@ public class ValidatorHelper {
 		return false;
 	}
 
-	public void hasHttpHeadersReturnType(ExecutableElement element, ElementValidation valid) {
-		String returnType = element.getReturnType().toString();
-		if (!returnType.equals("org.springframework.http.HttpHeaders")) {
-			valid.addError("%s annotated methods can only return a HttpHeaders, not " + returnType);
-		}
-	}
-
-	public void hasSetOfHttpMethodReturnType(ExecutableElement element, ElementValidation valid) {
-		TypeMirror returnType = element.getReturnType();
-		String returnTypeString = returnType.toString();
-		if (!returnTypeString.equals("java.util.Set<org.springframework.http.HttpMethod>")) {
-			valid.addError("%s annotated methods can only return a Set of HttpMethod, not " + returnTypeString);
-		} else {
-			DeclaredType declaredType = (DeclaredType) returnType;
-			List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
-			if (typeArguments.size() != 1) {
-				valid.addError("%s annotated methods can only return a parameterized Set (with HttpMethod)");
-			} else {
-				TypeMirror typeArgument = typeArguments.get(0);
-				if (!typeArgument.toString().equals("org.springframework.http.HttpMethod")) {
-					valid.addError("%s annotated methods can only return a parameterized Set of HttpMethod, not " + typeArgument.toString());
-				}
-			}
-		}
-	}
-
 	public void doesntThrowException(Element element, ElementValidation valid) {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		if (executableElement.getThrownTypes().size() > 0) {
@@ -579,13 +553,6 @@ public class ValidatorHelper {
 		String qualifiedName = fieldTypeMirror.toString();
 		if (!allowedTypes.contains(qualifiedName)) {
 			valid.addError("%s can only be used on a field which is a " + allowedTypes.toString() + ", not " + qualifiedName);
-		}
-	}
-
-	public void hasSpringAndroidJars(ElementValidation valid) {
-		Elements elementUtils = annotationHelper.getElementUtils();
-		if (elementUtils.getTypeElement(CanonicalNameConstants.REST_TEMPLATE) == null) {
-			valid.addError("Could not find the SpringAndroid framework in the classpath, the following class is missing: " + CanonicalNameConstants.REST_TEMPLATE);
 		}
 	}
 

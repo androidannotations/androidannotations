@@ -15,6 +15,11 @@
  */
 package org.androidannotations.rest.spring.helper;
 
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_ENTITY;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_HEADERS;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.MEDIA_TYPE;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.RESPONSE_ENTITY;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -198,12 +203,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
 			// we need the headers
-			httpHeadersVar = body.decl(holder.classes().HTTP_HEADERS, "httpHeaders", JExpr._new(holder.classes().HTTP_HEADERS));
+			httpHeadersVar = body.decl(holder.refClass(HTTP_HEADERS), "httpHeaders", JExpr._new(holder.refClass(HTTP_HEADERS)));
 		}
 
 		if (hasMediaTypeDefined) {
 			JClass collectionsClass = holder.refClass(CanonicalNameConstants.COLLECTIONS);
-			JClass mediaTypeClass = holder.refClass(CanonicalNameConstants.MEDIA_TYPE);
+			JClass mediaTypeClass = holder.refClass(MEDIA_TYPE);
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
@@ -260,7 +265,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 
-		JClass httpEntity = getProcessHolder().classes().HTTP_ENTITY;
+		JClass httpEntity = getProcessHolder().refClass(HTTP_ENTITY);
 		JClass narrowedHttpEntity = httpEntity.narrow(entityType);
 		JInvocation newHttpEntityVarCall = JExpr._new(narrowedHttpEntity);
 
@@ -295,12 +300,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		JClass responseClass;
 
-		if (returnTypeString.startsWith(CanonicalNameConstants.RESPONSE_ENTITY)) {
+		if (returnTypeString.startsWith(RESPONSE_ENTITY)) {
 			DeclaredType declaredReturnType = (DeclaredType) returnType;
 			if (declaredReturnType.getTypeArguments().size() > 0) {
 				responseClass = resolveResponseClass(declaredReturnType.getTypeArguments().get(0), holder);
 			} else {
-				responseClass = holder.classes().RESPONSE_ENTITY;
+				responseClass = holder.refClass(RESPONSE_ENTITY);
 			}
 		} else {
 			responseClass = resolveResponseClass(returnType, holder);
