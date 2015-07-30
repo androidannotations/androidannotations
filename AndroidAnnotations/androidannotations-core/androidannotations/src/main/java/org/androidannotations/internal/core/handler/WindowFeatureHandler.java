@@ -16,11 +16,13 @@
 package org.androidannotations.internal.core.handler;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.WindowFeature;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EActivityHolder;
 
 import com.sun.codemodel.JExpr;
@@ -41,8 +43,18 @@ public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder>
 		WindowFeature annotation = element.getAnnotation(WindowFeature.class);
 		int[] features = annotation.value();
 
+		TypeElement appCompatActivity = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.APPCOMPAT_ACTIVITY);
+		TypeElement actionBarActivity = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ACTIONBAR_ACTIVITY);
+		TypeElement type = (TypeElement) element;
+
+		String methodName;
+		if ((appCompatActivity != null && annotationHelper.isSubtype(type, appCompatActivity)) || (actionBarActivity != null && annotationHelper.isSubtype(type, actionBarActivity))) {
+			methodName = "supportRequestWindowFeature";
+		} else {
+			methodName = "requestWindowFeature";
+		}
 		for (int feature : features) {
-			holder.getInitBody().invoke("requestWindowFeature").arg(JExpr.lit(feature));
+			holder.getInitBody().invoke(methodName).arg(JExpr.lit(feature));
 		}
 	}
 }
