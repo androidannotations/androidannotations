@@ -255,7 +255,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public JExpression declareHttpEntity(JBlock body, JVar entitySentToServer, JVar httpHeaders) {
-		JType entityType = getProcessHolder().refClass(Object.class);
+		JType entityType = getEnvironment().getJClass(Object.class);
 
 		if (entitySentToServer != null) {
 			entityType = entitySentToServer.type();
@@ -265,7 +265,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 
-		JClass httpEntity = getProcessHolder().refClass(HTTP_ENTITY);
+		JClass httpEntity = getEnvironment().getJClass(HTTP_ENTITY);
 		JClass narrowedHttpEntity = httpEntity.narrow(entityType);
 		JInvocation newHttpEntityVarCall = JExpr._new(narrowedHttpEntity);
 

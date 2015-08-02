@@ -31,7 +31,6 @@ import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRInnerClass;
 import org.androidannotations.rclass.RInnerClass;
 
@@ -159,10 +158,6 @@ public class AnnotationHelper {
 
 	public Types getTypeUtils() {
 		return getProcessingEnvironment().getTypeUtils();
-	}
-
-	public ProcessHolder getProcessHolder() {
-		return getEnvironment().getProcessHolder();
 	}
 
 	/**
