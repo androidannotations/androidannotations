@@ -49,7 +49,7 @@ public abstract class AbstractPreferenceListenerHandler extends AbstractListener
 
 	@Override
 	protected final JClass getListenerTargetClass() {
-		return classes().PREFERENCE;
+		return getClasses().PREFERENCE;
 	}
 
 	@Override

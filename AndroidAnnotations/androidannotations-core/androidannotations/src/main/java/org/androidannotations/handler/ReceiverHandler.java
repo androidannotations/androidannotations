@@ -101,10 +101,10 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 	}
 
 	private JFieldVar createReceiverField(HasReceiverRegistration holder, String receiverName, String methodName, ExecutableElement executableElement) {
-		JDefinedClass anonymousReceiverClass = codeModel().anonymousClass(classes().BROADCAST_RECEIVER);
+		JDefinedClass anonymousReceiverClass = codeModel().anonymousClass(getClasses().BROADCAST_RECEIVER);
 		JMethod onReceiveMethod = anonymousReceiverClass.method(PUBLIC, codeModel().VOID, "onReceive");
-		JVar contextVar = onReceiveMethod.param(classes().CONTEXT, "context");
-		JVar intentVar = onReceiveMethod.param(classes().INTENT, "intent");
+		JVar contextVar = onReceiveMethod.param(getClasses().CONTEXT, "context");
+		JVar intentVar = onReceiveMethod.param(getClasses().INTENT, "intent");
 
 		JBlock body = onReceiveMethod.body();
 
@@ -116,13 +116,13 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 		for (VariableElement param : methodParameters) {
 			JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType());
 
-			if (extraParamClass.equals(classes().CONTEXT)) {
+			if (extraParamClass.equals(getClasses().CONTEXT)) {
 				methodCall.arg(contextVar);
-			} else if (extraParamClass.equals(classes().INTENT)) {
+			} else if (extraParamClass.equals(getClasses().INTENT)) {
 				methodCall.arg(intentVar);
 			} else if (param.getAnnotation(Receiver.Extra.class) != null) {
 				if (extras == null) {
-					extras = body.decl(classes().BUNDLE, "extras_", JOp.cond(intentVar.invoke("getExtras").ne(_null()), intentVar.invoke("getExtras"), _new(classes().BUNDLE)));
+					extras = body.decl(getClasses().BUNDLE, "extras_", JOp.cond(intentVar.invoke("getExtras").ne(_null()), intentVar.invoke("getExtras"), _new(getClasses().BUNDLE)));
 				}
 				methodCall.arg(extraHandler.getExtraValue(param, intentVar, extras, body, onReceiveMethod, anonymousReceiverClass, holder));
 			}
@@ -130,7 +130,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 		body.add(methodCall);
 		JExpression receiverInit = _new(anonymousReceiverClass);
-		return holder.getGeneratedClass().field(PRIVATE | FINAL, classes().BROADCAST_RECEIVER, receiverName, receiverInit);
+		return holder.getGeneratedClass().field(PRIVATE | FINAL, getClasses().BROADCAST_RECEIVER, receiverName, receiverInit);
 	}
 
 	private void registerAndUnregisterReceiver(HasReceiverRegistration holder, Receiver.RegisterAt registerAt, JFieldVar intentFilterField, JFieldVar receiverField, boolean local) {
@@ -156,7 +156,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 		JExpression broadcastManager;
 		if (local) {
-			broadcastManager = classes().LOCAL_BROADCAST_MANAGER.staticInvoke("getInstance").arg(holder.getContextRef());
+			broadcastManager = getClasses().LOCAL_BROADCAST_MANAGER.staticInvoke("getInstance").arg(holder.getContextRef());
 		} else {
 			broadcastManager = holder.getContextRef();
 		}

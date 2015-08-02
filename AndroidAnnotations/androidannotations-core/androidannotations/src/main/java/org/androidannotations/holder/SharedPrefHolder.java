@@ -152,7 +152,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
 	private void setConstructor() {
 		constructor = generatedClass.constructor(PUBLIC);
-		constructorContextParam = constructor.param(classes().CONTEXT, "context");
+		constructorContextParam = constructor.param(getClasses().CONTEXT, "context");
 		JBlock constructorBody = constructor.body();
 		constructorSuperBlock = constructorBody.block();
 	}
@@ -165,7 +165,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	}
 
 	protected void setContextField() {
-		contextField = generatedClass.field(JMod.PRIVATE, classes().CONTEXT, "context" + generationSuffix());
+		contextField = generatedClass.field(JMod.PRIVATE, getClasses().CONTEXT, "context" + generationSuffix());
 		getConstructor().body().assign(JExpr._this().ref(contextField), getConstructorContextParam());
 	}
 
@@ -177,8 +177,8 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 	}
 
 	protected void setEditorContextField() {
-		editorContextField = editorClass.field(JMod.PRIVATE, classes().CONTEXT, "context" + generationSuffix());
-		JVar contextParam = editorConstructor.param(classes().CONTEXT, "context");
+		editorContextField = editorClass.field(JMod.PRIVATE, getClasses().CONTEXT, "context" + generationSuffix());
+		JVar contextParam = editorConstructor.param(getClasses().CONTEXT, "context");
 		editorConstructor.body().assign(JExpr._this().ref(editorContextField), contextParam);
 		editMethodEditorInvocation.arg(getContextField());
 	}

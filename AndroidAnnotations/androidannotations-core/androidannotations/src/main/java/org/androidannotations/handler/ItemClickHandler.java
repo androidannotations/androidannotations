@@ -65,9 +65,9 @@ public class ItemClickHandler extends AbstractViewListenerHandler {
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		boolean hasItemParameter = parameters.size() == 1;
 
-		JClass narrowAdapterViewClass = classes().ADAPTER_VIEW.narrow(codeModel().wildcard());
+		JClass narrowAdapterViewClass = getClasses().ADAPTER_VIEW.narrow(codeModel().wildcard());
 		JVar onItemClickParentParam = listenerMethod.param(narrowAdapterViewClass, "parent");
-		listenerMethod.param(classes().VIEW, "view");
+		listenerMethod.param(getClasses().VIEW, "view");
 		JVar onItemClickPositionParam = listenerMethod.param(codeModel().INT, "position");
 		listenerMethod.param(codeModel().LONG, "id");
 
@@ -100,11 +100,11 @@ public class ItemClickHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().ON_ITEM_CLICK_LISTENER;
+		return getClasses().ON_ITEM_CLICK_LISTENER;
 	}
 
 	@Override
 	protected JClass getListenerTargetClass() {
-		return classes().ADAPTER_VIEW.narrow(codeModel().wildcard());
+		return getClasses().ADAPTER_VIEW.narrow(codeModel().wildcard());
 	}
 }

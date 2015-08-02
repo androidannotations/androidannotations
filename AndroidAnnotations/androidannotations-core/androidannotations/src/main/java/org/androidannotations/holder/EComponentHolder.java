@@ -71,7 +71,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setResourcesRef() {
-		resourcesRef = getInitBody().decl(classes().RESOURCES, "resources" + generationSuffix(), getContextRef().invoke("getResources"));
+		resourcesRef = getInitBody().decl(getClasses().RESOURCES, "resources" + generationSuffix(), getContextRef().invoke("getResources"));
 	}
 
 	public JFieldVar getPowerManagerRef() {
@@ -85,8 +85,8 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	private void setPowerManagerRef() {
 		JBlock methodBody = getInitBody();
 
-		JFieldRef serviceRef = classes().CONTEXT.staticRef("POWER_SERVICE");
-		powerManagerRef = getGeneratedClass().field(PRIVATE, classes().POWER_MANAGER, "powerManager" + generationSuffix());
-		methodBody.assign(powerManagerRef, cast(classes().POWER_MANAGER, getContextRef().invoke("getSystemService").arg(serviceRef)));
+		JFieldRef serviceRef = getClasses().CONTEXT.staticRef("POWER_SERVICE");
+		powerManagerRef = getGeneratedClass().field(PRIVATE, getClasses().POWER_MANAGER, "powerManager" + generationSuffix());
+		methodBody.assign(powerManagerRef, cast(getClasses().POWER_MANAGER, getContextRef().invoke("getSystemService").arg(serviceRef)));
 	}
 }

@@ -78,8 +78,8 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected void processParameters(HasPreferences holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
-		JVar preferenceParam = listenerMethod.param(classes().PREFERENCE, "preference");
-		JVar newValueParam = listenerMethod.param(classes().OBJECT, "newValue");
+		JVar preferenceParam = listenerMethod.param(getClasses().PREFERENCE, "preference");
+		JVar newValueParam = listenerMethod.param(getClasses().OBJECT, "newValue");
 
 		for (VariableElement variableElement : userParameters) {
 			String type = variableElement.asType().toString();
@@ -91,7 +91,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 					type.equals(CanonicalNameConstants.FLOAT) || type.equals(float.class.getName()) || //
 					type.equals(CanonicalNameConstants.LONG) || type.equals(long.class.getName())) {
 				JClass wrapperClass = type.startsWith("java") ? holder.refClass(type) : JType.parse(holder.codeModel(), type.replace(".class", "")).boxify();
-				call.arg(wrapperClass.staticInvoke("valueOf").arg(JExpr.cast(holder.classes().STRING, newValueParam)));
+				call.arg(wrapperClass.staticInvoke("valueOf").arg(JExpr.cast(getClasses().STRING, newValueParam)));
 			} else {
 				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType());
 				call.arg(JExpr.cast(userParamClass, newValueParam));
@@ -115,6 +115,6 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().PREFERENCE_CHANGE_LISTENER;
+		return getClasses().PREFERENCE_CHANGE_LISTENER;
 	}
 }

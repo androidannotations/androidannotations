@@ -72,8 +72,8 @@ public class TouchHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
-		JVar viewParam = listenerMethod.param(classes().VIEW, "view");
-		JVar eventParam = listenerMethod.param(classes().MOTION_EVENT, "event");
+		JVar viewParam = listenerMethod.param(getClasses().VIEW, "view");
+		JVar eventParam = listenerMethod.param(getClasses().MOTION_EVENT, "event");
 
 		for (VariableElement parameter : parameters) {
 			String parameterType = parameter.asType().toString();
@@ -98,6 +98,6 @@ public class TouchHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().VIEW_ON_TOUCH_LISTENER;
+		return getClasses().VIEW_ON_TOUCH_LISTENER;
 	}
 }

@@ -91,7 +91,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private void setOnCreate() {
 		JMethod onCreate = generatedClass.method(PUBLIC, codeModel().VOID, "onCreate");
 		onCreate.annotate(Override.class);
-		JVar onCreateSavedInstanceState = onCreate.param(classes().BUNDLE, "savedInstanceState");
+		JVar onCreateSavedInstanceState = onCreate.param(getClasses().BUNDLE, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
 
 		JVar previousNotifier = viewNotifierHelper.replacePreviousNotifier(onCreateBody);
@@ -105,15 +105,15 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private void setOnViewCreated() {
 		JMethod onViewCreated = generatedClass.method(PUBLIC, codeModel().VOID, "onViewCreated");
 		onViewCreated.annotate(Override.class);
-		JVar view = onViewCreated.param(classes().VIEW, "view");
-		JVar savedInstanceState = onViewCreated.param(classes().BUNDLE, "savedInstanceState");
+		JVar view = onViewCreated.param(getClasses().VIEW, "view");
+		JVar savedInstanceState = onViewCreated.param(getClasses().BUNDLE, "savedInstanceState");
 		JBlock onViewCreatedBody = onViewCreated.body();
 		onViewCreatedBody.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
 		viewNotifierHelper.invokeViewChanged(onViewCreatedBody);
 	}
 
 	private void setFindViewById() {
-		JMethod findViewById = generatedClass.method(PUBLIC, classes().VIEW, "findViewById");
+		JMethod findViewById = generatedClass.method(PUBLIC, getClasses().VIEW, "findViewById");
 		findViewById.annotate(Override.class);
 
 		JVar idParam = findViewById.param(codeModel().INT, "id");
@@ -169,8 +169,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(PUBLIC, codeModel().VOID, "onCreateOptionsMenu");
 		method.annotate(Override.class);
 		JBlock methodBody = method.body();
-		onCreateOptionsMenuMenuParam = method.param(classes().MENU, "menu");
-		onCreateOptionsMenuMenuInflaterVar = method.param(classes().MENU_INFLATER, "inflater");
+		onCreateOptionsMenuMenuParam = method.param(getClasses().MENU, "menu");
+		onCreateOptionsMenuMenuInflaterVar = method.param(getClasses().MENU_INFLATER, "inflater");
 		onCreateOptionsMenuMethodBody = methodBody.block();
 		methodBody.invoke(_super(), method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar);
 
@@ -181,7 +181,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onOptionsItemSelected");
 		method.annotate(Override.class);
 		JBlock methodBody = method.body();
-		onOptionsItemSelectedItem = method.param(classes().MENU_ITEM, "item");
+		onOptionsItemSelectedItem = method.param(getClasses().MENU_ITEM, "item");
 		onOptionsItemSelectedItemId = methodBody.decl(codeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
 		onOptionsItemSelectedMiddleBlock = methodBody.block();
 
@@ -196,7 +196,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
-		init.param(classes().BUNDLE, "savedInstanceState");
+		init.param(getClasses().BUNDLE, "savedInstanceState");
 	}
 
 	public JFieldVar getContentView() {
@@ -213,17 +213,17 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setContentView() {
-		contentView = generatedClass.field(PRIVATE, classes().VIEW, "contentView" + generationSuffix());
+		contentView = generatedClass.field(PRIVATE, getClasses().VIEW, "contentView" + generationSuffix());
 	}
 
 	private void setOnCreateView() {
-		JMethod onCreateView = generatedClass.method(PUBLIC, classes().VIEW, "onCreateView");
+		JMethod onCreateView = generatedClass.method(PUBLIC, getClasses().VIEW, "onCreateView");
 		onCreateView.annotate(Override.class);
 
-		inflater = onCreateView.param(classes().LAYOUT_INFLATER, "inflater");
-		container = onCreateView.param(classes().VIEW_GROUP, "container");
+		inflater = onCreateView.param(getClasses().LAYOUT_INFLATER, "inflater");
+		container = onCreateView.param(getClasses().VIEW_GROUP, "container");
 
-		JVar savedInstanceState = onCreateView.param(classes().BUNDLE, "savedInstanceState");
+		JVar savedInstanceState = onCreateView.param(getClasses().BUNDLE, "savedInstanceState");
 
 		boolean forceInjection = getAnnotatedElement().getAnnotation(EFragment.class).forceLayoutInjection();
 
@@ -276,7 +276,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private void setOnAttach() {
 		JMethod onAttach = generatedClass.method(PUBLIC, codeModel().VOID, "onAttach");
 		onAttach.annotate(Override.class);
-		JVar activityParam = onAttach.param(classes().ACTIVITY, "activity");
+		JVar activityParam = onAttach.param(getClasses().ACTIVITY, "activity");
 		JBlock onAttachBody = onAttach.body();
 		onAttachBody.invoke(_super(), onAttach).arg(activityParam);
 		onAttachAfterSuperBlock = onAttachBody.block();
@@ -375,7 +375,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private void setInjectArgs() {
 		injectArgsMethod = generatedClass.method(PRIVATE, codeModel().VOID, "injectFragmentArguments" + generationSuffix());
 		JBlock injectExtrasBody = injectArgsMethod.body();
-		injectBundleArgs = injectExtrasBody.decl(classes().BUNDLE, "args_", invoke("getArguments"));
+		injectBundleArgs = injectExtrasBody.decl(getClasses().BUNDLE, "args_", invoke("getArguments"));
 		injectArgsBlock = injectExtrasBody._if(injectBundleArgs.ne(_null()))._then();
 
 		getInitBody().invoke(injectArgsMethod);

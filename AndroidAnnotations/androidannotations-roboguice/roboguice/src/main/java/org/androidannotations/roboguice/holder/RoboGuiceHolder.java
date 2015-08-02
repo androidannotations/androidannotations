@@ -54,7 +54,7 @@ public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 	public JFieldVar getScopedObjectsField() {
 		if (scopedObjects == null) {
 			JClass keyWildCard = refClass(RoboGuiceClasses.KEY).narrow(codeModel().wildcard());
-			JClass scopedHashMap = classes().HASH_MAP.narrow(keyWildCard, classes().OBJECT);
+			JClass scopedHashMap = environment().getClasses().HASH_MAP.narrow(keyWildCard, environment().getClasses().OBJECT);
 			scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + generationSuffix());
 			scopedObjects.assign(JExpr._new(scopedHashMap));
 		}
@@ -86,7 +86,7 @@ public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 
 	public JVar getCurrentConfig() {
 		if (currentConfig == null) {
-			JClass configurationClass = classes().CONFIGURATION;
+			JClass configurationClass = environment().getClasses().CONFIGURATION;
 			JBlock onConfigurationChangedBeforeSuperBlock = holder().getOnConfigurationChangedBeforeSuperBlock();
 			currentConfig = onConfigurationChangedBeforeSuperBlock.decl(configurationClass, "currentConfig", JExpr.invoke("getResources").invoke("getConfiguration"));
 			new APTCodeModelHelper(environment()).removeBraces(onConfigurationChangedBeforeSuperBlock);

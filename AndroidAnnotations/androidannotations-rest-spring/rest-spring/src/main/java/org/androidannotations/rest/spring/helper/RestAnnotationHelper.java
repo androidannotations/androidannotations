@@ -100,7 +100,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 
-		JClass hashMapClass = holder.classes().HASH_MAP.narrow(String.class, Object.class);
+		JClass hashMapClass = getEnvironment().getClasses().HASH_MAP.narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
 			JVar hashMapVar = methodBody.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
 			for (String urlVariable : urlVariables) {
@@ -215,11 +215,11 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		}
 
 		if (requiresCookies) {
-			JClass stringBuilderClass = holder.classes().STRING_BUILDER;
+			JClass stringBuilderClass = getEnvironment().getClasses().STRING_BUILDER;
 			JVar cookiesValueVar = body.decl(stringBuilderClass, "cookiesValue", JExpr._new(stringBuilderClass));
 			for (String cookie : cookies) {
 				JInvocation cookieValue = JExpr.invoke(holder.getAvailableCookiesField(), "get").arg(cookie);
-				JInvocation cookieFormatted = holder.classes().STRING.staticInvoke("format").arg(String.format("%s=%%s;", cookie)).arg(cookieValue);
+				JInvocation cookieFormatted = getEnvironment().getClasses().STRING.staticInvoke("format").arg(String.format("%s=%%s;", cookie)).arg(cookieValue);
 				JInvocation appendCookie = JExpr.invoke(cookiesValueVar, "append").arg(cookieFormatted);
 				body.add(appendCookie);
 			}

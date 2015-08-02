@@ -46,7 +46,7 @@ public class OnSeekBarChangeListenerHolder  {
 		JMethod onProgressChangedMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "onProgressChanged");
 		onProgressChangedMethod.annotate(Override.class);
 		onProgressChangedBody = onProgressChangedMethod.body();
-		onProgressChangedSeekBarParam = onProgressChangedMethod.param(holder.classes().SEEKBAR, "seekBar");
+		onProgressChangedSeekBarParam = onProgressChangedMethod.param(holder.getClasses().SEEKBAR, "seekBar");
 		onProgressChangedProgressParam = onProgressChangedMethod.param(holder.codeModel().INT, "progress");
 		onProgressChangedFromUserParam = onProgressChangedMethod.param(holder.codeModel().BOOLEAN, "fromUser");
 	}
@@ -55,14 +55,14 @@ public class OnSeekBarChangeListenerHolder  {
 		JMethod onStartTrackingTouchMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "onStartTrackingTouch");
 		onStartTrackingTouchMethod.annotate(Override.class);
 		onStartTrackingTouchBody = onStartTrackingTouchMethod.body();
-		onStartTrackingTouchSeekBarParam = onStartTrackingTouchMethod.param(holder.classes().SEEKBAR, "seekBar");
+		onStartTrackingTouchSeekBarParam = onStartTrackingTouchMethod.param(holder.getClasses().SEEKBAR, "seekBar");
 	}
 
 	private void createOnStopTrackingTouch() {
 		JMethod onStopTrackingTouchMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "onStopTrackingTouch");
 		onStopTrackingTouchMethod.annotate(Override.class);
 		onStopTrackingTouchBody = onStopTrackingTouchMethod.body();
-		onStopTrackingTouchSeekBarParam = onStopTrackingTouchMethod.param(holder.classes().SEEKBAR, "seekBar");
+		onStopTrackingTouchSeekBarParam = onStopTrackingTouchMethod.param(holder.getClasses().SEEKBAR, "seekBar");
 	}
 
 	public JBlock getOnProgressChangedBody() {

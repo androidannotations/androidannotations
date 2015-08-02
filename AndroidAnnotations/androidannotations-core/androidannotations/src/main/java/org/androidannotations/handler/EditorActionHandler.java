@@ -73,9 +73,9 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
-		JVar textView = listenerMethod.param(classes().TEXT_VIEW, "textView");
+		JVar textView = listenerMethod.param(getClasses().TEXT_VIEW, "textView");
 		JVar actionId = listenerMethod.param(codeModel().INT, "actionId");
-		JVar event = listenerMethod.param(classes().KEY_EVENT, "event");
+		JVar event = listenerMethod.param(getClasses().KEY_EVENT, "event");
 
 		for (VariableElement param : userParameters) {
 			String paramClassQualifiedName = param.asType().toString();
@@ -101,11 +101,11 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().TEXT_VIEW_ON_EDITOR_ACTION_LISTENER;
+		return getClasses().TEXT_VIEW_ON_EDITOR_ACTION_LISTENER;
 	}
 
 	@Override
 	protected JClass getListenerTargetClass() {
-		return classes().TEXT_VIEW;
+		return getClasses().TEXT_VIEW;
 	}
 }

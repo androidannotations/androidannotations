@@ -43,7 +43,7 @@ public class HierarchyViewerSupportHandler extends BaseAnnotationHandler<EActivi
 
 	@Override
 	public void process(Element element, EActivityHolder holder) throws Exception {
-		JInvocation viewServerInvocation = classes().VIEW_SERVER.staticInvoke("get").arg(_this());
+		JInvocation viewServerInvocation = getClasses().VIEW_SERVER.staticInvoke("get").arg(_this());
 
 		holder.getOnViewChangedBody().invoke(viewServerInvocation, "addWindow").arg(_this());
 		holder.getOnDestroyAfterSuperBlock().invoke(viewServerInvocation, "removeWindow").arg(_this());

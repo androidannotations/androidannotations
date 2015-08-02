@@ -52,7 +52,7 @@ public class EReceiverHolder extends EComponentHolder {
 	@Override
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
-		contextRef = init.param(classes().CONTEXT, "context");
+		contextRef = init.param(getClasses().CONTEXT, "context");
 		if (onReceiveMethod == null) {
 			createOnReceive();
 		}
@@ -60,8 +60,8 @@ public class EReceiverHolder extends EComponentHolder {
 
 	private void createOnReceive() {
 		onReceiveMethod = generatedClass.method(PUBLIC, codeModel().VOID, "onReceive");
-		onReceiveContext = onReceiveMethod.param(classes().CONTEXT, "context");
-		onReceiveIntent = onReceiveMethod.param(classes().INTENT, "intent");
+		onReceiveContext = onReceiveMethod.param(getClasses().CONTEXT, "context");
+		onReceiveIntent = onReceiveMethod.param(getClasses().INTENT, "intent");
 		onReceiveMethod.annotate(Override.class);
 		onReceiveBody = onReceiveMethod.body();
 		onReceiveBody.invoke(getInit()).arg(onReceiveContext);
@@ -70,12 +70,12 @@ public class EReceiverHolder extends EComponentHolder {
 
 	private void setOnReceiveIntentAction() {
 		JInvocation getActionInvocation = JExpr.invoke(getOnReceiveIntent(), "getAction");
-		onReceiveIntentAction = getOnReceiveBody().decl(classes().STRING, "action", getActionInvocation);
+		onReceiveIntentAction = getOnReceiveBody().decl(getClasses().STRING, "action", getActionInvocation);
 	}
 
 	private void setOnReceiveIntentDataScheme() {
 		JInvocation getDataSchemeInvocation = JExpr.invoke(getOnReceiveIntent(), "getScheme");
-		onReceiveIntentDataScheme = getOnReceiveBody().decl(classes().STRING, "dataScheme", getDataSchemeInvocation);
+		onReceiveIntentDataScheme = getOnReceiveBody().decl(getClasses().STRING, "dataScheme", getDataSchemeInvocation);
 	}
 
 	public JMethod getOnReceiveMethod() {

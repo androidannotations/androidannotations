@@ -54,7 +54,7 @@ public class TextWatcherHolder {
 		JMethod beforeTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "beforeTextChanged");
 		beforeTextChangedMethod.annotate(Override.class);
 		beforeTextChangedBody = beforeTextChangedMethod.body();
-		beforeTextChangedCharSequenceParam = beforeTextChangedMethod.param(holder.classes().CHAR_SEQUENCE, "s");
+		beforeTextChangedCharSequenceParam = beforeTextChangedMethod.param(holder.getClasses().CHAR_SEQUENCE, "s");
 		beforeTextChangedStartParam = beforeTextChangedMethod.param(intClass, "start");
 		beforeTextChangedCountParam = beforeTextChangedMethod.param(intClass, "count");
 		beforeTextChangedAfterParam = beforeTextChangedMethod.param(intClass, "after");
@@ -65,7 +65,7 @@ public class TextWatcherHolder {
 		JMethod onTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "onTextChanged");
 		onTextChangedMethod.annotate(Override.class);
 		onTextChangedBody = onTextChangedMethod.body();
-		onTextChangedCharSequenceParam = onTextChangedMethod.param(holder.classes().CHAR_SEQUENCE, "s");
+		onTextChangedCharSequenceParam = onTextChangedMethod.param(holder.getClasses().CHAR_SEQUENCE, "s");
 		onTextChangedStartParam = onTextChangedMethod.param(intClass, "start");
 		onTextChangedBeforeParam = onTextChangedMethod.param(intClass, "before");
 		onTextChangedCountParam = onTextChangedMethod.param(intClass, "count");
@@ -75,7 +75,7 @@ public class TextWatcherHolder {
 		JMethod afterTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "afterTextChanged");
 		afterTextChangedMethod.annotate(Override.class);
 		afterTextChangedBody = afterTextChangedMethod.body();
-		afterTextChangedEditableParam = afterTextChangedMethod.param(holder.classes().EDITABLE, "s");
+		afterTextChangedEditableParam = afterTextChangedMethod.param(holder.getClasses().EDITABLE, "s");
 	}
 
 	public JVar getTextViewVariable() {

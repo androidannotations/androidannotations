@@ -32,6 +32,6 @@ public class AnimationResHandler extends AbstractResHandler {
 
 	@Override
 	protected void makeCall(String fieldName, EComponentHolder holder, JBlock methodBody, JFieldRef idRef) {
-		methodBody.assign(ref(fieldName), classes().ANIMATION_UTILS.staticInvoke("loadAnimation").arg(holder.getContextRef()).arg(idRef));
+		methodBody.assign(ref(fieldName), getClasses().ANIMATION_UTILS.staticInvoke("loadAnimation").arg(holder.getContextRef()).arg(idRef));
 	}
 }

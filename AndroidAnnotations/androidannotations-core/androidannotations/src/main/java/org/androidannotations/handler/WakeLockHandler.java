@@ -71,16 +71,16 @@ public class WakeLockHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JBlock methodBody = method.body();
 
-		JExpression levelAndFlags = classes().POWER_MANAGER.staticRef(level.name());
+		JExpression levelAndFlags = getClasses().POWER_MANAGER.staticRef(level.name());
 		if (flags.length > 0) {
 			for (Flag flag : flags) {
-				levelAndFlags = levelAndFlags.bor(classes().POWER_MANAGER.staticRef(flag.name()));
+				levelAndFlags = levelAndFlags.bor(getClasses().POWER_MANAGER.staticRef(flag.name()));
 			}
 		}
 
 		JInvocation newWakeLock = holder.getPowerManagerRef().invoke("newWakeLock").arg(levelAndFlags).arg(JExpr.lit(tag));
 
-		JVar wakeLock = methodBody.decl(classes().WAKE_LOCK, "wakeLock", JExpr._null());
+		JVar wakeLock = methodBody.decl(getClasses().WAKE_LOCK, "wakeLock", JExpr._null());
 
 		JTryBlock tryBlock = methodBody._try();
 		tryBlock.body().assign(wakeLock, newWakeLock);

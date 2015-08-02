@@ -47,7 +47,7 @@ public class DrawableResHandler extends AbstractResHandler {
 	protected void makeCall(String fieldName, EComponentHolder holder, JBlock methodBody, JFieldRef idRef) {
 		JFieldRef ref = ref(fieldName);
 		if (hasContextCompatInClasspath()) {
-			methodBody.assign(ref, classes().CONTEXT_COMPAT.staticInvoke("getDrawable").arg(holder.getContextRef()).arg(idRef));
+			methodBody.assign(ref, getClasses().CONTEXT_COMPAT.staticInvoke("getDrawable").arg(holder.getContextRef()).arg(idRef));
 		} else if (shouldUseContextGetDrawableMethod() && !hasContextCompatInClasspath()) {
 			methodBody.assign(ref, holder.getContextRef().invoke("getDrawable").arg(idRef));
 		} else if (!shouldUseContextGetDrawableMethod() && hasGetDrawableInContext() && !hasContextCompatInClasspath()) {
@@ -73,7 +73,7 @@ public class DrawableResHandler extends AbstractResHandler {
 
 	private void createCallWithIfGuard(EComponentHolder holder, JFieldRef ref, JBlock methodBody, JFieldRef idRef) {
 		JVar resourcesRef = holder.getResourcesRef();
-		JConditional guardIf = methodBody._if(holder.classes().BUILD_VERSION.staticRef("SDK_INT").gte(holder.classes().BUILD_VERSION_CODES.staticRef("LOLLIPOP")));
+		JConditional guardIf = methodBody._if(getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef("LOLLIPOP")));
 		JBlock ifBlock = guardIf._then();
 		ifBlock.assign(ref, holder.getContextRef().invoke("getDrawable").arg(idRef));
 

@@ -180,9 +180,9 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			JVar responseEntity = methodBody.decl(responseEntityClass, "response", exchangeCall);
 
 			// set cookies
-			JClass stringListClass = classes().LIST.narrow(classes().STRING);
-			JClass stringArrayClass = classes().STRING.array();
-			JArray cookiesArray = JExpr.newArray(classes().STRING);
+			JClass stringListClass = getClasses().LIST.narrow(getClasses().STRING);
+			JClass stringArrayClass = getClasses().STRING.array();
+			JArray cookiesArray = JExpr.newArray(getClasses().STRING);
 			for (String cookie : settingCookies) {
 				cookiesArray.add(JExpr.lit(cookie));
 			}
@@ -193,12 +193,12 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			// for loop over list... add if in string array
 			JForEach forEach = methodBody._if(allCookiesList.ne(JExpr._null()))._then() //
-					.forEach(classes().STRING, "rawCookie", allCookiesList);
+					.forEach(getClasses().STRING, "rawCookie", allCookiesList);
 			JVar rawCookieVar = forEach.var();
 
 			JBlock forLoopBody = forEach.body();
 
-			JForEach innerForEach = forLoopBody.forEach(classes().STRING, "thisCookieName", requestedCookiesVar);
+			JForEach innerForEach = forLoopBody.forEach(getClasses().STRING, "thisCookieName", requestedCookiesVar);
 			JBlock innerBody = innerForEach.body();
 			JBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var()))._then();
 

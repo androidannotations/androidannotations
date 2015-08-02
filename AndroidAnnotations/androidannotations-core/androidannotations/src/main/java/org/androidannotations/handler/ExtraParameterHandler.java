@@ -84,7 +84,7 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 		String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, extraName, "Extra");
 		JFieldVar staticExtraField = generatedClass.fields().get(staticFieldName);
 		if (staticExtraField == null) {
-			staticExtraField = generatedClass.field(PUBLIC | STATIC | FINAL, holder.classes().STRING, staticFieldName, lit(extraName));
+			staticExtraField = generatedClass.field(PUBLIC | STATIC | FINAL, getClasses().STRING, staticFieldName, lit(extraName));
 		}
 		return staticExtraField;
 	}

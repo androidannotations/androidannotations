@@ -82,7 +82,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, fieldName, "Extra");
 		JFieldVar staticExtraField = holder.getGeneratedClass().fields().get(staticFieldName);
 		if (staticExtraField == null) {
-			staticExtraField = holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(extraKey));
+			staticExtraField = holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, getClasses().STRING, staticFieldName, lit(extraKey));
 		}
 		return staticExtraField;
 	}

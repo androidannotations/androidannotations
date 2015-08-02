@@ -119,7 +119,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 			assignExpression = foundViewHolder.getOrCastRef(viewClass);
 		} else {
 			assignExpression = findViewById(idRef);
-			if (viewClass != null && viewClass != classes().VIEW) {
+			if (viewClass != null && viewClass != getClasses().VIEW) {
 				assignExpression = cast(viewClass, assignExpression);
 
 				if (viewClass.isParameterized()) {
@@ -147,8 +147,8 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		JBlock block = getOnViewChangedBody().block();
 
 		if (viewClass == null) {
-			viewClass = classes().VIEW;
-		} else if (viewClass != classes().VIEW) {
+			viewClass = getClasses().VIEW;
+		} else if (viewClass != getClasses().VIEW) {
 			findViewExpression = cast(viewClass, findViewExpression);
 		}
 
@@ -164,14 +164,14 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	protected void setFindNativeFragmentById() {
-		findNativeFragmentById = getGeneratedClass().method(PRIVATE, classes().FRAGMENT, "findNativeFragmentById");
+		findNativeFragmentById = getGeneratedClass().method(PRIVATE, getClasses().FRAGMENT, "findNativeFragmentById");
 		JVar idParam = findNativeFragmentById.param(codeModel().INT, "id");
 
 		JBlock body = findNativeFragmentById.body();
 
-		body._if(getContextRef()._instanceof(classes().ACTIVITY).not())._then()._return(_null());
+		body._if(getContextRef()._instanceof(getClasses().ACTIVITY).not())._then()._return(_null());
 
-		JVar activityVar = body.decl(classes().ACTIVITY, "activity_", cast(classes().ACTIVITY, getContextRef()));
+		JVar activityVar = body.decl(getClasses().ACTIVITY, "activity_", cast(getClasses().ACTIVITY, getContextRef()));
 
 		body._return(activityVar.invoke("getFragmentManager").invoke("findFragmentById").arg(idParam));
 	}
@@ -184,14 +184,14 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	protected void setFindSupportFragmentById() {
-		findSupportFragmentById = getGeneratedClass().method(PRIVATE, classes().SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
+		findSupportFragmentById = getGeneratedClass().method(PRIVATE, getClasses().SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
 		JVar idParam = findSupportFragmentById.param(codeModel().INT, "id");
 
 		JBlock body = findSupportFragmentById.body();
 
-		body._if(getContextRef()._instanceof(classes().FRAGMENT_ACTIVITY).not())._then()._return(_null());
+		body._if(getContextRef()._instanceof(getClasses().FRAGMENT_ACTIVITY).not())._then()._return(_null());
 
-		JVar activityVar = body.decl(classes().FRAGMENT_ACTIVITY, "activity_", cast(classes().FRAGMENT_ACTIVITY, getContextRef()));
+		JVar activityVar = body.decl(getClasses().FRAGMENT_ACTIVITY, "activity_", cast(getClasses().FRAGMENT_ACTIVITY, getContextRef()));
 
 		body._return(activityVar.invoke("getSupportFragmentManager").invoke("findFragmentById").arg(idParam));
 	}
@@ -204,14 +204,14 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	protected void setFindNativeFragmentByTag() {
-		findNativeFragmentByTag = getGeneratedClass().method(PRIVATE, classes().FRAGMENT, "findNativeFragmentByTag");
-		JVar tagParam = findNativeFragmentByTag.param(classes().STRING, "tag");
+		findNativeFragmentByTag = getGeneratedClass().method(PRIVATE, getClasses().FRAGMENT, "findNativeFragmentByTag");
+		JVar tagParam = findNativeFragmentByTag.param(getClasses().STRING, "tag");
 
 		JBlock body = findNativeFragmentByTag.body();
 
-		body._if(getContextRef()._instanceof(classes().ACTIVITY).not())._then()._return(_null());
+		body._if(getContextRef()._instanceof(getClasses().ACTIVITY).not())._then()._return(_null());
 
-		JVar activityVar = body.decl(classes().ACTIVITY, "activity_", cast(classes().ACTIVITY, getContextRef()));
+		JVar activityVar = body.decl(getClasses().ACTIVITY, "activity_", cast(getClasses().ACTIVITY, getContextRef()));
 
 		body._return(activityVar.invoke("getFragmentManager").invoke("findFragmentByTag").arg(tagParam));
 	}
@@ -224,14 +224,14 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	protected void setFindSupportFragmentByTag() {
-		findSupportFragmentByTag = getGeneratedClass().method(PRIVATE, classes().SUPPORT_V4_FRAGMENT, "findSupportFragmentByTag");
-		JVar tagParam = findSupportFragmentByTag.param(classes().STRING, "tag");
+		findSupportFragmentByTag = getGeneratedClass().method(PRIVATE, getClasses().SUPPORT_V4_FRAGMENT, "findSupportFragmentByTag");
+		JVar tagParam = findSupportFragmentByTag.param(getClasses().STRING, "tag");
 
 		JBlock body = findSupportFragmentByTag.body();
 
-		body._if(getContextRef()._instanceof(classes().FRAGMENT_ACTIVITY).not())._then()._return(_null());
+		body._if(getContextRef()._instanceof(getClasses().FRAGMENT_ACTIVITY).not())._then()._return(_null());
 
-		JVar activityVar = body.decl(classes().FRAGMENT_ACTIVITY, "activity_", cast(classes().FRAGMENT_ACTIVITY, getContextRef()));
+		JVar activityVar = body.decl(getClasses().FRAGMENT_ACTIVITY, "activity_", cast(getClasses().FRAGMENT_ACTIVITY, getContextRef()));
 
 		body._return(activityVar.invoke("getSupportFragmentManager").invoke("findFragmentByTag").arg(tagParam));
 	}
@@ -247,8 +247,8 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	private TextWatcherHolder createTextWatcherHolder(JFieldRef idRef, TypeMirror viewParameterType) {
-		JDefinedClass onTextChangeListenerClass = codeModel().anonymousClass(classes().TEXT_WATCHER);
-		JClass viewClass = classes().TEXT_VIEW;
+		JDefinedClass onTextChangeListenerClass = codeModel().anonymousClass(getClasses().TEXT_WATCHER);
+		JClass viewClass = getClasses().TEXT_VIEW;
 		if (viewParameterType != null) {
 			viewClass = refClass(viewParameterType.toString());
 		}
@@ -272,8 +272,8 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	private OnSeekBarChangeListenerHolder createOnSeekBarChangeListenerHolder(JFieldRef idRef) {
-		JDefinedClass onSeekbarChangeListenerClass = codeModel().anonymousClass(classes().ON_SEEKBAR_CHANGE_LISTENER);
-		JClass viewClass = classes().SEEKBAR;
+		JDefinedClass onSeekbarChangeListenerClass = codeModel().anonymousClass(getClasses().ON_SEEKBAR_CHANGE_LISTENER);
+		JClass viewClass = getClasses().SEEKBAR;
 
 		JBlock onViewChangedBody = getOnViewChangedBody().block();
 		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));

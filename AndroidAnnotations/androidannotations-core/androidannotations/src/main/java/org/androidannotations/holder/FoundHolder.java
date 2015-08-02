@@ -21,6 +21,7 @@ import static com.sun.codemodel.JExpr.cast;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
+import org.androidannotations.process.ProcessHolder;
 
 public abstract class FoundHolder {
 
@@ -62,5 +63,9 @@ public abstract class FoundHolder {
 			ifNotNullCreated = true;
 		}
 		return ifNotNullBlock;
+	}
+
+	protected ProcessHolder.Classes getClasses() {
+		return holder.environment().getClasses();
 	}
 }

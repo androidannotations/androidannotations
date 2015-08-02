@@ -51,7 +51,7 @@ public class PreferenceActivityDelegate extends PreferencesDelegate implements H
 		JMethod method = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onBuildHeaders");
 		method.annotate(Override.class);
 		onBuildHeadersBlock = method.body();
-		onBuildHeadersTargetParam = method.param(classes().LIST.narrow(classes().PREFERENCE_ACTIVITY_HEADER), "target");
+		onBuildHeadersTargetParam = method.param(getClasses().LIST.narrow(getClasses().PREFERENCE_ACTIVITY_HEADER), "target");
 	}
 
 }

@@ -76,7 +76,7 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 			assignExpression = foundViewHolder.getOrCastRef(preferenceClass);
 		} else {
 			assignExpression = findPreferenceByKey(idRef);
-			if (preferenceClass != null && preferenceClass != classes().PREFERENCE) {
+			if (preferenceClass != null && preferenceClass != getClasses().PREFERENCE) {
 				assignExpression = cast(preferenceClass, assignExpression);
 			}
 			holder.foundHolders.put(idRefString, new FoundPreferenceHolder(this, preferenceClass, fieldRef, block));
@@ -101,8 +101,8 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 		JBlock block = getAddPreferencesFromResourceBlock().block();
 
 		if (preferenceClass == null) {
-			preferenceClass = classes().PREFERENCE;
-		} else if (preferenceClass != classes().PREFERENCE) {
+			preferenceClass = getClasses().PREFERENCE;
+		} else if (preferenceClass != getClasses().PREFERENCE) {
 			findPreferenceExpression = cast(preferenceClass, findPreferenceExpression);
 		}
 

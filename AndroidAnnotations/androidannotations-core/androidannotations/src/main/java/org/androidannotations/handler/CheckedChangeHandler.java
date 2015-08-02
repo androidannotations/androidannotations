@@ -63,7 +63,7 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
-		JVar btnParam = listenerMethod.param(classes().COMPOUND_BUTTON, "buttonView");
+		JVar btnParam = listenerMethod.param(getClasses().COMPOUND_BUTTON, "buttonView");
 		JVar isCheckedParam = listenerMethod.param(codeModel().BOOLEAN, "isChecked");
 
 		for (VariableElement parameter : parameters) {
@@ -88,11 +88,11 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER;
+		return getClasses().COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER;
 	}
 
 	@Override
 	protected JClass getListenerTargetClass() {
-		return classes().COMPOUND_BUTTON;
+		return getClasses().COMPOUND_BUTTON;
 	}
 }

@@ -32,6 +32,6 @@ public class HtmlResHandler extends AbstractResHandler {
 
 	@Override
 	protected void makeCall(String fieldName, EComponentHolder holder, JBlock methodBody, JFieldRef idRef) {
-		methodBody.assign(ref(fieldName), classes().HTML.staticInvoke("fromHtml").arg(holder.getResourcesRef().invoke(AndroidRes.HTML.getResourceMethodName()).arg(idRef)));
+		methodBody.assign(ref(fieldName), getClasses().HTML.staticInvoke("fromHtml").arg(holder.getResourcesRef().invoke(AndroidRes.HTML.getResourceMethodName()).arg(idRef)));
 	}
 }

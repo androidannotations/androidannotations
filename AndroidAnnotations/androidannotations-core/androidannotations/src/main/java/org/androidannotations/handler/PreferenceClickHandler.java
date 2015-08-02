@@ -71,7 +71,7 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected void processParameters(HasPreferences holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
-		JVar preferenceParam = listenerMethod.param(classes().PREFERENCE, "preference");
+		JVar preferenceParam = listenerMethod.param(getClasses().PREFERENCE, "preference");
 
 		if (userParameters.size() == 1) {
 			call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.PREFERENCE, preferenceParam, userParameters.get(0)));
@@ -90,7 +90,7 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected JClass getListenerClass() {
-		return classes().PREFERENCE_CLICK_LISTENER;
+		return getClasses().PREFERENCE_CLICK_LISTENER;
 	}
 
 }

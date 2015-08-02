@@ -57,7 +57,7 @@ public abstract class AbstractViewListenerHandler extends AbstractListenerHandle
 
 	@Override
 	protected JClass getListenerTargetClass() {
-		return classes().VIEW;
+		return getClasses().VIEW;
 	}
 
 	@Override

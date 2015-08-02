@@ -222,7 +222,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 
 	private void setInit() {
 		init = getGeneratedClass().constructor(JMod.PUBLIC);
-		initContextParam = init.param(classes().CONTEXT, "context");
+		initContextParam = init.param(getClasses().CONTEXT, "context");
 	}
 
 	public JFieldVar getRootUrlField() {
@@ -233,7 +233,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setRootUrlField() {
-		rootUrlField = getGeneratedClass().field(JMod.PRIVATE, classes().STRING, "rootUrl");
+		rootUrlField = getGeneratedClass().field(JMod.PRIVATE, getClasses().STRING, "rootUrl");
 	}
 
 	public JFieldVar getRestTemplateField() {
@@ -256,8 +256,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setAvailableHeadersField() {
-		JClass stringClass = classes().STRING;
-		JClass mapClass = classes().HASH_MAP.narrow(stringClass, stringClass);
+		JClass stringClass = getClasses().STRING;
+		JClass mapClass = getClasses().HASH_MAP.narrow(stringClass, stringClass);
 		availableHeadersField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableHeaders");
 		getInit().body().assign(availableHeadersField, _new(mapClass));
 	}
@@ -270,8 +270,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setAvailableCookiesField() {
-		JClass stringClass = classes().STRING;
-		JClass mapClass = classes().HASH_MAP.narrow(stringClass, stringClass);
+		JClass stringClass = getClasses().STRING;
+		JClass mapClass = getClasses().HASH_MAP.narrow(stringClass, stringClass);
 		availableCookiesField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableCookies");
 		getInit().body().assign(availableCookiesField, _new(mapClass));
 	}

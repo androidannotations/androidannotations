@@ -194,9 +194,9 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 
 	private JMethod getLocalClassName(SharedPrefHolder holder) {
 
-		JClass stringClass = classes().STRING;
+		JClass stringClass = getClasses().STRING;
 		JMethod getLocalClassName = holder.getGeneratedClass().method(PRIVATE | STATIC, stringClass, "getLocalClassName");
-		JClass contextClass = classes().CONTEXT;
+		JClass contextClass = getClasses().CONTEXT;
 
 		JVar contextParam = getLocalClassName.param(contextClass, "context");
 
@@ -301,7 +301,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 	}
 
 	private JExpression newEmptyStringHashSet() {
-		return JExpr._new(classes().HASH_SET.narrow(classes().STRING)).arg(lit(0));
+		return JExpr._new(getClasses().HASH_SET.narrow(getClasses().STRING)).arg(lit(0));
 	}
 
 }

@@ -136,7 +136,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scope, JFieldVar scopedObjects, JFieldVar eventManager) {
 		JBlock body = holder.getInitBody();
 		JClass keyWildCard = refClass(RoboGuiceClasses.KEY).narrow(codeModel().wildcard());
-		JClass scopedHashMap = classes().HASH_MAP.narrow(keyWildCard, classes().OBJECT);
+		JClass scopedHashMap = getClasses().HASH_MAP.narrow(keyWildCard, getClasses().OBJECT);
 		body.assign(scopedObjects, JExpr._new(scopedHashMap));
 
 		JVar injector = body.decl(refClass(RoboGuiceClasses.ROBO_INJECTOR), "injector_", refClass(RoboGuiceClasses.ROBO_GUICE).staticInvoke("getInjector").arg(_this()));
@@ -234,7 +234,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	private void fireEvent(JFieldVar eventManager, JBlock body, JClass eventClass, JExpression... eventArguments) {
 		JClass actualEventClass = eventClass;
 		if (eventClass.fullName().startsWith("roboguice.context.event")) {
-			actualEventClass = eventClass.narrow(classes().ACTIVITY);
+			actualEventClass = eventClass.narrow(getClasses().ACTIVITY);
 		}
 
 		JInvocation newEvent = _new(actualEventClass);

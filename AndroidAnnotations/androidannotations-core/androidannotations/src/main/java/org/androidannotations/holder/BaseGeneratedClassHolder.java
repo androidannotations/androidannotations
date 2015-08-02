@@ -104,8 +104,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 		return environment.getProcessHolder();
 	}
 
-	@Override
-	public ProcessHolder.Classes classes() {
+	protected ProcessHolder.Classes getClasses() {
 		return processHolder().classes();
 	}
 

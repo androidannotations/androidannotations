@@ -56,7 +56,7 @@ public class InstanceStateDelegate extends GeneratedClassHolderDelegate<ECompone
 	private void setSaveStateMethod() {
 		JMethod method = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onSaveInstanceState");
 		method.annotate(Override.class);
-		saveStateBundleParam = method.param(classes().BUNDLE, "bundle" + generationSuffix());
+		saveStateBundleParam = method.param(getClasses().BUNDLE, "bundle" + generationSuffix());
 
 		saveStateMethodBody = method.body();
 
@@ -81,7 +81,7 @@ public class InstanceStateDelegate extends GeneratedClassHolderDelegate<ECompone
 
 	private void setRestoreStateMethod() {
 		restoreStateMethod = getGeneratedClass().method(PRIVATE, codeModel().VOID, "restoreSavedInstanceState" + generationSuffix());
-		restoreStateBundleParam = restoreStateMethod.param(classes().BUNDLE, "savedInstanceState");
+		restoreStateBundleParam = restoreStateMethod.param(getClasses().BUNDLE, "savedInstanceState");
 		getInit().body().invoke(restoreStateMethod).arg(restoreStateBundleParam);
 
 		restoreStateMethod.body() //

@@ -19,7 +19,6 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
@@ -43,10 +42,6 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 
 	public JDefinedClass definedClass(String fullyQualifiedClassName) {
 		return holder.definedClass(fullyQualifiedClassName);
-	}
-
-	public ProcessHolder.Classes classes() {
-		return holder.classes();
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {

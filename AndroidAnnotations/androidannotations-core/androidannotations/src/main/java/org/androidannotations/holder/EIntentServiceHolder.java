@@ -69,11 +69,11 @@ public class EIntentServiceHolder extends EServiceHolder {
 
 	private void createOnHandleIntent() {
 		onHandleIntentMethod = generatedClass.method(PUBLIC, codeModel().VOID, "onHandleIntent");
-		onHandleIntentIntent = onHandleIntentMethod.param(classes().INTENT, "intent");
+		onHandleIntentIntent = onHandleIntentMethod.param(getClasses().INTENT, "intent");
 		onHandleIntentMethod.annotate(Override.class);
 		onHandleIntentBody = onHandleIntentMethod.body();
 		codeModelHelper.callSuperMethod(onHandleIntentMethod, this, onHandleIntentBody);
 		JInvocation getActionInvocation = JExpr.invoke(onHandleIntentIntent, "getAction");
-		onHandleIntentIntentAction = onHandleIntentBody.decl(classes().STRING, "action", getActionInvocation);
+		onHandleIntentIntentAction = onHandleIntentBody.decl(getClasses().STRING, "action", getActionInvocation);
 	}
 }

@@ -73,17 +73,17 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JBlock methodBody = method.body();
 
-		JInvocation isLoggableInvocation = classes().LOG.staticInvoke("isLoggable");
-		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, classes().LOG));
+		JInvocation isLoggableInvocation = getClasses().LOG.staticInvoke("isLoggable");
+		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, getClasses().LOG));
 
 		JConditional ifStatement = methodBody._if(isLoggableInvocation);
 
-		JInvocation currentTimeInvoke = classes().SYSTEM.staticInvoke("currentTimeMillis");
+		JInvocation currentTimeInvoke = getClasses().SYSTEM.staticInvoke("currentTimeMillis");
 		JBlock thenBody = ifStatement._then();
 
 		// Log In
 		String logMethodName = logMethodNameFromLevel(level);
-		JInvocation logEnterInvoke = classes().LOG.staticInvoke(logMethodName);
+		JInvocation logEnterInvoke = getClasses().LOG.staticInvoke(logMethodName);
 		logEnterInvoke.arg(tag);
 
 		logEnterInvoke.arg(getEnterMessage(method, executableElement));
@@ -108,7 +108,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JVar durationDeclaration = finallyBlock.decl(codeModel().LONG, "duration", currentTimeInvoke.minus(startDeclaration));
 
-		JInvocation logExitInvoke = classes().LOG.staticInvoke(logMethodName);
+		JInvocation logExitInvoke = getClasses().LOG.staticInvoke(logMethodName);
 		logExitInvoke.arg(tag);
 
 		logExitInvoke.arg(getExitMessage(executableElement, method, result, durationDeclaration));

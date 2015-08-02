@@ -59,8 +59,8 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		return environment.getProcessHolder();
 	}
 
-	public ProcessHolder.Classes classes() {
-		return processHolder().classes();
+	protected ProcessHolder.Classes getClasses() {
+		return environment.getClasses();
 	}
 
 	public JCodeModel codeModel() {

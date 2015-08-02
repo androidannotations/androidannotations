@@ -63,7 +63,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 		JBlock methodBody = holder.getInitBody();
 
 		if (CanonicalNameConstants.APP_WIDGET_MANAGER.equals(fieldTypeQualifiedName)) {
-			createSpecialInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody, 21, "LOLLIPOP", holder.classes().APP_WIDGET_MANAGER, "getInstance", true);
+			createSpecialInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody, 21, "LOLLIPOP", getClasses().APP_WIDGET_MANAGER, "getInstance", true);
 		} else {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		}
@@ -82,7 +82,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 			JStatement oldInjection = (JStatement) assign(ref(fieldName), injectionMethodInvokation);
 
 			if (isApiOnClasspath(apiLevelName)) {
-				JConditional conditional = methodBody._if(holder.classes().BUILD_VERSION.staticRef("SDK_INT").gte(holder.classes().BUILD_VERSION_CODES.staticRef(apiLevelName)));
+				JConditional conditional = methodBody._if(getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef(apiLevelName)));
 				conditional._then().add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 				conditional._else().add(oldInjection);
 			} else {

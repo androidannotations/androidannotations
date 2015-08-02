@@ -52,8 +52,8 @@ public class ReceiverRegistrationDelegate<T extends EComponentHolder & HasReceiv
 
 	private JFieldVar createIntentFilterField(IntentFilterData intentFilterData) {
 		String intentFilterName = "intentFilter" + (intentFilterFields.size() + 1) + generationSuffix();
-		JExpression newIntentFilterExpr = _new(classes().INTENT_FILTER);
-		JFieldVar intentFilterField = getGeneratedClass().field(PRIVATE | FINAL, classes().INTENT_FILTER, intentFilterName, newIntentFilterExpr);
+		JExpression newIntentFilterExpr = _new(getClasses().INTENT_FILTER);
+		JFieldVar intentFilterField = getGeneratedClass().field(PRIVATE | FINAL, getClasses().INTENT_FILTER, intentFilterName, newIntentFilterExpr);
 
 		JBlock intentFilterTarget = holder.getIntentFilterInitializationBlock(intentFilterData);
 		for (String action : intentFilterData.getActionSet()) {

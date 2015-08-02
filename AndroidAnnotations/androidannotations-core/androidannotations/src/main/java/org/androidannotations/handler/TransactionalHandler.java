@@ -99,7 +99,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JBlock catchBody = catchBlock.body();
 
-		JInvocation errorInvoke = catchBody.staticInvoke(classes().LOG, "e");
+		JInvocation errorInvoke = catchBody.staticInvoke(getClasses().LOG, "e");
 
 		errorInvoke.arg(holder.getGeneratedClass().name());
 		errorInvoke.arg("Error in transaction");

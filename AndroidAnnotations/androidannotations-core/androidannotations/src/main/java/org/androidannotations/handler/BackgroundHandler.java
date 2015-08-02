@@ -59,12 +59,12 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 		// Catch exception in user code
 		JTryBlock tryBlock = executeMethod.body()._try();
 		tryBlock.body().add(previousMethodBody);
-		JCatchBlock catchBlock = tryBlock._catch(holder.classes().THROWABLE);
+		JCatchBlock catchBlock = tryBlock._catch(getClasses().THROWABLE);
 		JVar caughtException = catchBlock.param("e");
-		JStatement uncaughtExceptionCall = holder.classes().THREAD //
+		JStatement uncaughtExceptionCall = getClasses().THREAD //
 				.staticInvoke("getDefaultUncaughtExceptionHandler") //
 				.invoke("uncaughtException") //
-				.arg(holder.classes().THREAD.staticInvoke("currentThread")) //
+				.arg(getClasses().THREAD.staticInvoke("currentThread")) //
 				.arg(caughtException);
 		catchBlock.body().add(uncaughtExceptionCall);
 

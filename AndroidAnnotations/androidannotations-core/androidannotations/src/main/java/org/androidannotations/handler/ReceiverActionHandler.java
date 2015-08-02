@@ -96,15 +96,15 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 		if (values == null || values.length == 0) {
 			return null;
 		} else if (values.length == 1) {
-			return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, classes().STRING, staticFieldName, lit(values[0]));
+			return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, getClasses().STRING, staticFieldName, lit(values[0]));
 
 		}
 
-		JInvocation asListInvoke = classes().ARRAYS.staticInvoke("asList");
+		JInvocation asListInvoke = getClasses().ARRAYS.staticInvoke("asList");
 		for (String scheme : values) {
 			asListInvoke.arg(scheme);
 		}
-		JClass listOfStrings = classes().LIST.narrow(classes().STRING);
+		JClass listOfStrings = getClasses().LIST.narrow(getClasses().STRING);
 		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, listOfStrings, staticFieldName, asListInvoke);
 	}
 
@@ -127,14 +127,14 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 		for (VariableElement param : methodParameters) {
 			JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType());
 
-			if (extraParamClass.equals(classes().CONTEXT)) {
+			if (extraParamClass.equals(getClasses().CONTEXT)) {
 				callActionInvocation.arg(holder.getOnReceiveContext());
-			} else if (extraParamClass.equals(classes().INTENT)) {
+			} else if (extraParamClass.equals(getClasses().INTENT)) {
 				callActionInvocation.arg(intent);
 			} else if (param.getAnnotation(ReceiverAction.Extra.class) != null) {
 				if (extras == null) {
-					extras = callActionBlock.decl(classes().BUNDLE, "extras_", JOp.cond(intent.invoke("getExtras") //
-							.ne(_null()), intent.invoke("getExtras"), _new(classes().BUNDLE)));
+					extras = callActionBlock.decl(getClasses().BUNDLE, "extras_", JOp.cond(intent.invoke("getExtras") //
+							.ne(_null()), intent.invoke("getExtras"), _new(getClasses().BUNDLE)));
 				}
 				callActionInvocation.arg(extraHandler.getExtraValue(param, extras, callActionBlock, holder));
 			}
@@ -144,7 +144,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 	}
 
 	private String getInvocationName(JFieldVar field) {
-		JClass listOfStrings = classes().LIST.narrow(classes().STRING);
+		JClass listOfStrings = getClasses().LIST.narrow(getClasses().STRING);
 		if (field.type().fullName().equals(listOfStrings.fullName())) {
 			return "contains";
 		}

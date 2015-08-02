@@ -57,6 +57,6 @@ public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSup
 		methodBody //
 				._if(ref(fieldName).ne(_null())) //
 				._then() //
-				.invoke(ref(fieldName), "setText").arg(classes().HTML.staticInvoke("fromHtml").arg(holder.getContextRef().invoke("getString").arg(idRef)));
+				.invoke(ref(fieldName), "setText").arg(getClasses().HTML.staticInvoke("fromHtml").arg(holder.getContextRef().invoke("getString").arg(idRef)));
 	}
 }
