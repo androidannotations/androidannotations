@@ -52,7 +52,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 		String fieldName = element.getSimpleName().toString();
 
 		TypeMirror fieldTypeMirror = element.asType();
-		TypeMirror erasedFieldTypeMirror = processingEnvironment().getTypeUtils().erasure(fieldTypeMirror);
+		TypeMirror erasedFieldTypeMirror = getProcessingEnvironment().getTypeUtils().erasure(fieldTypeMirror);
 		String interfaceName = erasedFieldTypeMirror.toString();
 
 		String generatedClassName = interfaceName + classSuffix();

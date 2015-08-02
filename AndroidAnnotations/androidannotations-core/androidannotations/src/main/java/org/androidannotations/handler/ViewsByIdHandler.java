@@ -75,7 +75,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 
 	private void instantiateArrayList(JFieldRef elementRef, TypeMirror viewType, EComponentWithViewSupportHolder holder) {
 		TypeElement arrayListTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ARRAYLIST);
-		DeclaredType arrayListType = processingEnvironment().getTypeUtils().getDeclaredType(arrayListTypeElement, viewType);
+		DeclaredType arrayListType = getProcessingEnvironment().getTypeUtils().getDeclaredType(arrayListTypeElement, viewType);
 		JClass arrayListClass = codeModelHelper.typeMirrorToJClass(arrayListType);
 
 		holder.getInitBody().assign(elementRef, _new(arrayListClass));

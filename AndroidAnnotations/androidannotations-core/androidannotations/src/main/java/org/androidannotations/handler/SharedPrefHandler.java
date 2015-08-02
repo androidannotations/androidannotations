@@ -114,7 +114,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 
 		validatorHelper.isInterface(typeElement, validation);
 
-		List<? extends Element> inheritedMembers = processingEnvironment().getElementUtils().getAllMembers(typeElement);
+		List<? extends Element> inheritedMembers = getProcessingEnvironment().getElementUtils().getAllMembers(typeElement);
 
 		for (Element memberElement : inheritedMembers) {
 			if (!memberElement.getEnclosingElement().asType().toString().equals("java.lang.Object")) {

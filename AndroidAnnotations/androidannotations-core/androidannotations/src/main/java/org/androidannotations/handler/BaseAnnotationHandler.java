@@ -51,7 +51,25 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		codeModelHelper = new APTCodeModelHelper(environment);
 	}
 
-	public ProcessingEnvironment processingEnvironment() {
+	@Override
+	public String getTarget() {
+		return target;
+	}
+
+	@Override
+	public ElementValidation validate(Element element) {
+		ElementValidation validation = new ElementValidation(target, element);
+		validate(element, validation);
+		return validation;
+	}
+
+	protected abstract void validate(Element element, ElementValidation validation);
+
+	protected AndroidAnnotationsEnvironment getEnvironment() {
+		return environment;
+	}
+
+	protected ProcessingEnvironment getProcessingEnvironment() {
 		return environment.getProcessingEnvironment();
 	}
 
@@ -79,21 +97,5 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		return processHolder().refClass(clazz);
 	}
 
-	@Override
-	public String getTarget() {
-		return target;
-	}
 
-	public AndroidAnnotationsEnvironment getEnvironment() {
-		return environment;
-	}
-
-	@Override
-	public ElementValidation validate(Element element) {
-		ElementValidation validation = new ElementValidation(target, element);
-		validate(element, validation);
-		return validation;
-	}
-
-	protected abstract void validate(Element element, ElementValidation validation);
 }

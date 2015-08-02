@@ -96,7 +96,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 	}
 
 	private boolean isApiOnClasspath(String apiName) {
-		TypeElement typeElement = processingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.BUILD_VERSION_CODES);
+		TypeElement typeElement = getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.BUILD_VERSION_CODES);
 		for (Element element : typeElement.getEnclosedElements()) {
 			if (element.getSimpleName().contentEquals(apiName)) {
 				return true;

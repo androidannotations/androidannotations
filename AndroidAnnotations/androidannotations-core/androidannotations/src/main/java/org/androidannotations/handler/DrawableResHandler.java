@@ -58,7 +58,7 @@ public class DrawableResHandler extends AbstractResHandler {
 	}
 
 	private boolean hasContextCompatInClasspath() {
-		return processingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT) != null;
+		return getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT) != null;
 	}
 
 	private boolean shouldUseContextGetDrawableMethod() {
@@ -66,7 +66,7 @@ public class DrawableResHandler extends AbstractResHandler {
 	}
 
 	private boolean hasGetDrawableInContext() {
-		TypeElement context = processingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT);
+		TypeElement context = getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT);
 
 		return hasGetDrawable(context);
 	}
@@ -86,7 +86,7 @@ public class DrawableResHandler extends AbstractResHandler {
 			return false;
 		}
 
-		List<? extends Element> allMembers = processingEnvironment().getElementUtils().getAllMembers(type);
+		List<? extends Element> allMembers = getProcessingEnvironment().getElementUtils().getAllMembers(type);
 		for (ExecutableElement element : ElementFilter.methodsIn(allMembers)) {
 			if (element.getSimpleName().contentEquals("getDrawable")) {
 				return true;
