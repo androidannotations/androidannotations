@@ -62,12 +62,12 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 
 		TypeMirror type = codeModelHelper.getActualType(element, holder);
 
-		BundleHelper bundleHelper = new BundleHelper(annotationHelper, type);
+		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), type);
 
 		JFieldRef ref = ref(fieldName);
 		saveStateBody.invoke(saveStateBundleParam, bundleHelper.getMethodNameToSave()).arg(fieldName).arg(ref);
 
-		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, restoreStateBundleParam, JExpr.lit(fieldName), restoreStateMethod, holder);
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, restoreStateBundleParam, JExpr.lit(fieldName), restoreStateMethod);
 		restoreStateBody.assign(ref, restoreMethodCall);
 	}
 }

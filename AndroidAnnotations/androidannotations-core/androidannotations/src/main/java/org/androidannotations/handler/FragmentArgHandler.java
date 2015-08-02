@@ -68,7 +68,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
 		TypeMirror actualType = codeModelHelper.getActualType(element, holder);
 
-		BundleHelper bundleHelper = new BundleHelper(annotationHelper, actualType);
+		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), actualType);
 		JFieldVar argKeyStaticField = createStaticArgField(holder, argKey, fieldName);
 		injectArgInComponent(element, holder, bundleHelper, argKeyStaticField, fieldName);
 		createBuilderInjectionMethod(element, holder, bundleHelper, argKeyStaticField, fieldName);
@@ -94,7 +94,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JFieldRef extraField = JExpr.ref(fieldName);
 
 		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(bundle, "containsKey").arg(extraKeyStaticField))._then();
-		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, bundle, extraKeyStaticField, injectExtrasMethod, holder);
+		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, bundle, extraKeyStaticField, injectExtrasMethod);
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 
