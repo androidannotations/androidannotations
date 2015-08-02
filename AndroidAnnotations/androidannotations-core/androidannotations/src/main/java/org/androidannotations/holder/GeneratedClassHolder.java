@@ -27,5 +27,5 @@ public interface GeneratedClassHolder {
 
 	TypeElement getAnnotatedElement();
 
-	AndroidAnnotationsEnvironment environment();
+	AndroidAnnotationsEnvironment getEnvironment();
 }

@@ -67,7 +67,7 @@ public abstract class IntentBuilder {
 	protected APTCodeModelHelper codeModelHelper;
 
 	public IntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
-		this.environment = holder.environment();
+		this.environment = holder.getEnvironment();
 		this.holder = holder;
 		this.androidManifest = androidManifest;
 		codeModelHelper = new APTCodeModelHelper(environment);

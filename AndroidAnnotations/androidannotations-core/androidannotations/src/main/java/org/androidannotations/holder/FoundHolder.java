@@ -66,6 +66,6 @@ public abstract class FoundHolder {
 	}
 
 	protected ProcessHolder.Classes getClasses() {
-		return holder.environment().getClasses();
+		return holder.getEnvironment().getClasses();
 	}
 }

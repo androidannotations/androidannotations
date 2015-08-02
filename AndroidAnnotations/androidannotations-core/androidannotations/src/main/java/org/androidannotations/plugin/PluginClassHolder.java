@@ -45,7 +45,7 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 	}
 
 	public AndroidAnnotationsEnvironment environment() {
-		return holder().environment();
+		return holder().getEnvironment();
 	}
 
 	protected JClass getJClass(String fullyQualifiedClassName) {

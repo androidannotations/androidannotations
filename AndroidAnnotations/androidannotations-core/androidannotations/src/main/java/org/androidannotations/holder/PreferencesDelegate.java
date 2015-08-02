@@ -39,7 +39,7 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 
 	public PreferencesDelegate(EComponentWithViewSupportHolder holder) {
 		super(holder);
-		codeModelHelper = new APTCodeModelHelper(holder.environment());
+		codeModelHelper = new APTCodeModelHelper(holder.getEnvironment());
 	}
 
 	@Override
