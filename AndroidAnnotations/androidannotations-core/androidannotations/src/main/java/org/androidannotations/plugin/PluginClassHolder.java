@@ -15,7 +15,6 @@
  */
 package org.androidannotations.plugin;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
@@ -60,10 +59,6 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 
 	public JCodeModel codeModel() {
 		return holder.codeModel();
-	}
-
-	public ProcessingEnvironment processingEnvironment() {
-		return holder.processingEnvironment();
 	}
 
 	public TypeElement getAnnotatedElement() {

@@ -15,7 +15,6 @@
  */
 package org.androidannotations.holder;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
@@ -41,11 +40,6 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 	@Override
 	public final TypeElement getAnnotatedElement() {
 		return holder.getAnnotatedElement();
-	}
-
-	@Override
-	public final ProcessingEnvironment processingEnvironment() {
-		return holder.processingEnvironment();
 	}
 
 	@Override

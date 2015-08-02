@@ -35,6 +35,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.HasIntentBuilder;
 
 import com.sun.codemodel.JClass;
@@ -50,6 +51,7 @@ import com.sun.codemodel.JVar;
 
 public abstract class IntentBuilder {
 
+	private AndroidAnnotationsEnvironment environment;
 	protected HasIntentBuilder holder;
 	protected AndroidManifest androidManifest;
 	protected JDefinedClass builderClass;
@@ -64,13 +66,14 @@ public abstract class IntentBuilder {
 	protected APTCodeModelHelper codeModelHelper;
 
 	public IntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
+		this.environment = holder.environment();
 		this.holder = holder;
 		this.androidManifest = androidManifest;
-		codeModelHelper = new APTCodeModelHelper(holder.environment());
-		elementUtils = holder.processingEnvironment().getElementUtils();
-		typeUtils = holder.processingEnvironment().getTypeUtils();
-		contextClass = holder.classes().CONTEXT;
-		intentClass = holder.classes().INTENT;
+		codeModelHelper = new APTCodeModelHelper(environment);
+		elementUtils = environment.getProcessingEnvironment().getElementUtils();
+		typeUtils = environment.getProcessingEnvironment().getTypeUtils();
+		contextClass = environment.getClasses().CONTEXT;
+		intentClass = environment.getClasses().INTENT;
 	}
 
 	public void build() throws JClassAlreadyExistsException {
@@ -123,17 +126,17 @@ public abstract class IntentBuilder {
 		JExpression extraParameterArg = extraParam;
 		// Cast to Parcelable or Serializable if needed
 		if (elementType.getKind() == TypeKind.DECLARED) {
-			Elements elementUtils = holder.processingEnvironment().getElementUtils();
+			Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
 			if (!typeUtils.isSubtype(elementType, parcelableType)) {
 				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
 				if (!typeUtils.isSubtype(elementType, stringType)) {
-					extraParameterArg = cast(holder.classes().SERIALIZABLE, extraParameterArg);
+					extraParameterArg = cast(environment.getClasses().SERIALIZABLE, extraParameterArg);
 				}
 			} else {
 				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
 				if (typeUtils.isSubtype(elementType, serializableType)) {
-					extraParameterArg = cast(holder.classes().PARCELABLE, extraParameterArg);
+					extraParameterArg = cast(environment.getClasses().PARCELABLE, extraParameterArg);
 				}
 			}
 		}

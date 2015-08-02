@@ -15,7 +15,6 @@
  */
 package org.androidannotations.holder;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
@@ -30,7 +29,7 @@ public interface GeneratedClassHolder {
 
 	TypeElement getAnnotatedElement();
 
-	ProcessingEnvironment processingEnvironment();
+	AndroidAnnotationsEnvironment environment();
 
 	ProcessHolder.Classes classes();
 
@@ -41,6 +40,4 @@ public interface GeneratedClassHolder {
 	JClass refClass(Class<?> clazz);
 
 	JDefinedClass definedClass(String fullyQualifiedClassName);
-
-	AndroidAnnotationsEnvironment environment();
 }
