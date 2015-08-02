@@ -272,7 +272,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 			keyExpression = lit(fieldName);
 		} else {
 			IRInnerClass idClass = getEnvironment().getRClass().get(IRClass.Res.STRING);
-			JFieldRef idRef = idClass.getIdStaticRef(keyResId, processHolder());
+			JFieldRef idRef = idClass.getIdStaticRef(keyResId, getEnvironment());
 			keyExpression = holder.getEditorContextField().invoke("getString").arg(idRef);
 		}
 

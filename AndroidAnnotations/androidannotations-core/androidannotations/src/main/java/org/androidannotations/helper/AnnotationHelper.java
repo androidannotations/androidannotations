@@ -180,7 +180,7 @@ public class AnnotationHelper {
 		List<JFieldRef> fieldRefs = new ArrayList<>();
 
 		for (String refQualifiedName : extractAnnotationResources(element, annotationName, rInnerClass, useElementName, idFieldName, resFieldName)) {
-			fieldRefs.add(RInnerClass.extractIdStaticRef(getProcessHolder(), refQualifiedName));
+			fieldRefs.add(RInnerClass.extractIdStaticRef(environment, refQualifiedName));
 		}
 
 		return fieldRefs;

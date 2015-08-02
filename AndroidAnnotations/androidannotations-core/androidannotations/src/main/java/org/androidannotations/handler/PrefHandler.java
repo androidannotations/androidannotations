@@ -62,7 +62,7 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		Set<? extends Element> sharedPrefElements = getEnvironment().getValidatedElements().getRootAnnotatedElements(SharedPref.class.getName());
 		for (Element sharedPrefElement : sharedPrefElements) {
-			GeneratedClassHolder sharedPrefHolder = processHolder().getGeneratedClassHolder(sharedPrefElement);
+			GeneratedClassHolder sharedPrefHolder = getEnvironment().getGeneratedClassHolder(sharedPrefElement);
 			String sharedPrefName = sharedPrefHolder.getGeneratedClass().name();
 
 			if (elementTypeName.equals(sharedPrefName)) {

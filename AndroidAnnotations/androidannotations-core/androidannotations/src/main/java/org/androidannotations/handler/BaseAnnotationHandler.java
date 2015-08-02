@@ -73,28 +73,24 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		return environment.getProcessingEnvironment();
 	}
 
-	public ProcessHolder processHolder() {
-		return environment.getProcessHolder();
-	}
-
 	protected ProcessHolder.Classes getClasses() {
 		return environment.getClasses();
 	}
 
 	public JCodeModel codeModel() {
-		return processHolder().codeModel();
+		return environment.getCodeModel();
 	}
 
 	public JClass refClass(String fullyQualifiedClassName) {
-		return processHolder().refClass(fullyQualifiedClassName);
+		return environment.getJClass(fullyQualifiedClassName);
 	}
 
 	public JClass refClass(TypeMirror typeMirror) {
-		return processHolder().refClass(typeMirror.toString());
+		return environment.getJClass(typeMirror.toString());
 	}
 
 	public JClass refClass(Class<?> clazz) {
-		return processHolder().refClass(clazz);
+		return environment.getJClass(clazz);
 	}
 
 

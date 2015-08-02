@@ -15,7 +15,7 @@
  */
 package org.androidannotations.rclass;
 
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JFieldRef;
 
@@ -29,9 +29,9 @@ public interface IRInnerClass {
 
 	String getIdQualifiedName(String name);
 
-	JFieldRef getIdStaticRef(Integer idValue, ProcessHolder holder);
+	JFieldRef getIdStaticRef(Integer idValue, AndroidAnnotationsEnvironment environment);
 
-	JFieldRef getIdStaticRef(String name, ProcessHolder holder);
+	JFieldRef getIdStaticRef(String name, AndroidAnnotationsEnvironment environment);
 
 	IRInnerClass EMPTY_R_INNER_CLASS = new RInnerClass(null);
 

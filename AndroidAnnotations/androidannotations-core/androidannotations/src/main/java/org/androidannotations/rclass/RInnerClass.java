@@ -27,8 +27,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.CaseHelper;
-import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldRef;
@@ -105,24 +105,24 @@ public class RInnerClass implements IRInnerClass {
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(Integer idValue, ProcessHolder holder) {
+	public JFieldRef getIdStaticRef(Integer idValue, AndroidAnnotationsEnvironment environment) {
 		String layoutFieldQualifiedName = getIdQualifiedName(idValue);
-		return extractIdStaticRef(holder, layoutFieldQualifiedName);
+		return extractIdStaticRef(environment, layoutFieldQualifiedName);
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(String name, ProcessHolder holder) {
+	public JFieldRef getIdStaticRef(String name, AndroidAnnotationsEnvironment environment) {
 		String layoutFieldQualifiedName = getIdQualifiedName(name);
-		return extractIdStaticRef(holder, layoutFieldQualifiedName);
+		return extractIdStaticRef(environment, layoutFieldQualifiedName);
 	}
 
-	public static JFieldRef extractIdStaticRef(ProcessHolder holder, String layoutFieldQualifiedName) {
+	public static JFieldRef extractIdStaticRef(AndroidAnnotationsEnvironment environment, String layoutFieldQualifiedName) {
 		if (layoutFieldQualifiedName != null) {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
 			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
 			String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
 
-			JClass refClass = holder.refClass(rInnerClassName);
+			JClass refClass = environment.getJClass(rInnerClassName);
 			return refClass.staticRef(fieldName);
 		} else {
 			return null;

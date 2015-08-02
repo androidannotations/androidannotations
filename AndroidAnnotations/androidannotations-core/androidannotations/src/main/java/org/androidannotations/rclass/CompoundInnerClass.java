@@ -15,7 +15,7 @@
  */
 package org.androidannotations.rclass;
 
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JFieldRef;
 
@@ -58,19 +58,19 @@ public class CompoundInnerClass implements IRInnerClass {
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(Integer idValue, ProcessHolder holder) {
-		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, holder);
+	public JFieldRef getIdStaticRef(Integer idValue, AndroidAnnotationsEnvironment environment) {
+		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(idValue, environment);
 		if (idStaticRef == null) {
-			idStaticRef = androidRInnerClass.getIdStaticRef(idValue, holder);
+			idStaticRef = androidRInnerClass.getIdStaticRef(idValue, environment);
 		}
 		return idStaticRef;
 	}
 
 	@Override
-	public JFieldRef getIdStaticRef(String name, ProcessHolder holder) {
-		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, holder);
+	public JFieldRef getIdStaticRef(String name, AndroidAnnotationsEnvironment environment) {
+		JFieldRef idStaticRef = rInnerClass.getIdStaticRef(name, environment);
 		if (idStaticRef == null) {
-			idStaticRef = androidRInnerClass.getIdStaticRef(name, holder);
+			idStaticRef = androidRInnerClass.getIdStaticRef(name, environment);
 		}
 		return idStaticRef;
 	}
