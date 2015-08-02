@@ -69,7 +69,7 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 			// Put in the check for the UI thread.
 			addUIThreadCheck(delegatingMethod, previousBody, holder);
 		}
-		delegatingMethod.body().add(refClass(UiThreadExecutor.class).staticInvoke(METHOD_RUN_TASK) //
+		delegatingMethod.body().add(getJClass(UiThreadExecutor.class).staticInvoke(METHOD_RUN_TASK) //
 				.arg(annotation.id()) //
 				.arg(_new(anonymousRunnableClass)) //
 				.arg(lit(delay)));

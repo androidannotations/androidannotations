@@ -63,7 +63,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		String returnTypeName = executableElement.getReturnType().toString();
-		JClass returnType = refClass(returnTypeName);
+		JClass returnType = getJClass(returnTypeName);
 
 		JMethod method = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		codeModelHelper.removeBody(method);
@@ -93,7 +93,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 			tryBody._return(result);
 		}
 
-		JCatchBlock catchBlock = tryBlock._catch(refClass(RuntimeException.class));
+		JCatchBlock catchBlock = tryBlock._catch(getJClass(RuntimeException.class));
 
 		JVar exceptionParam = catchBlock.param("e");
 

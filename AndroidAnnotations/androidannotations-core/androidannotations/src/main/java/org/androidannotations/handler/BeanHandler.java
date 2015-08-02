@@ -58,7 +58,7 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 		}
 
 		String typeQualifiedName = typeMirror.toString();
-		JClass injectedClass = refClass(annotationHelper.generatedClassQualifiedNameFromQualifiedName(typeQualifiedName));
+		JClass injectedClass = getJClass(annotationHelper.generatedClassQualifiedNameFromQualifiedName(typeQualifiedName));
 
 		String fieldName = element.getSimpleName().toString();
 		JFieldRef beanField = ref(fieldName);

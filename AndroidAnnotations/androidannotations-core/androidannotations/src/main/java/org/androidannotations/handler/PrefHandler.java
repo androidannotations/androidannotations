@@ -52,7 +52,7 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		String fieldName = element.getSimpleName().toString();
 		TypeMirror fieldTypeMirror = element.asType();
-		JClass prefClass = refClass(fieldTypeMirror.toString());
+		JClass prefClass = getJClass(fieldTypeMirror.toString());
 
 		String elementTypeName = fieldTypeMirror.toString();
 		int index = elementTypeName.lastIndexOf(".");

@@ -48,7 +48,7 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 	public void process(Element element, EComponentHolder holder) {
 		String fieldName = element.getSimpleName().toString();
 		String applicationQualifiedName = element.asType().toString();
-		JClass applicationClass = refClass(applicationQualifiedName + classSuffix());
+		JClass applicationClass = getJClass(applicationQualifiedName + classSuffix());
 
 		holder.getInitBody().assign(ref(fieldName), applicationClass.staticInvoke(EApplicationHolder.GET_APPLICATION_INSTANCE));
 	}

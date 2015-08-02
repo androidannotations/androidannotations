@@ -83,7 +83,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 				elementType = element.asType();
 			}
 			String typeQualifiedName = elementType.toString();
-			JClass fieldGeneratedBeanClass = refClass(typeQualifiedName + classSuffix());
+			JClass fieldGeneratedBeanClass = getJClass(typeQualifiedName + classSuffix());
 
 			initIfNonConfigurationNotNullBlock.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}

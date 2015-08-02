@@ -59,7 +59,7 @@ public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences
 		String typeQualifiedName = prefFieldTypeMirror.toString();
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.STRING, true);
-		JClass preferenceClass = refClass(typeQualifiedName);
+		JClass preferenceClass = getJClass(typeQualifiedName);
 		JFieldRef fieldRef = ref(fieldName);
 
 		holder.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);

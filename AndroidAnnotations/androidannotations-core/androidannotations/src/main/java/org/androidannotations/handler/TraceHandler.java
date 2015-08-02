@@ -88,7 +88,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		logEnterInvoke.arg(getEnterMessage(method, executableElement));
 		thenBody.add(logEnterInvoke);
-		JVar startDeclaration = thenBody.decl(codeModel().LONG, "start", currentTimeInvoke);
+		JVar startDeclaration = thenBody.decl(getCodeModel().LONG, "start", currentTimeInvoke);
 
 		JTryBlock tryBlock;
 
@@ -98,7 +98,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 			tryBlock.body().add(previousMethodBody);
 		} else {
 			JInvocation superCall = codeModelHelper.getSuperCall(holder, method);
-			result = thenBody.decl(refClass(Object.class), "result", JExpr._null());
+			result = thenBody.decl(getJClass(Object.class), "result", JExpr._null());
 			tryBlock = thenBody._try();
 			tryBlock.body().assign(result, superCall);
 			tryBlock.body()._return(JExpr.cast(boxify(method.type()), result));
@@ -106,7 +106,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JBlock finallyBlock = tryBlock._finally();
 
-		JVar durationDeclaration = finallyBlock.decl(codeModel().LONG, "duration", currentTimeInvoke.minus(startDeclaration));
+		JVar durationDeclaration = finallyBlock.decl(getCodeModel().LONG, "duration", currentTimeInvoke.minus(startDeclaration));
 
 		JInvocation logExitInvoke = getClasses().LOG.staticInvoke(logMethodName);
 		logExitInvoke.arg(tag);
@@ -120,7 +120,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 	}
 
 	private JClass boxify(JType type) throws ClassNotFoundException {
-		return codeModel().parseType(type.fullName()).boxify();
+		return getCodeModel().parseType(type.fullName()).boxify();
 	}
 
 	private JExpression getExitMessage(ExecutableElement element, JMethod method, JVar result, JVar duration) throws ClassNotFoundException {
@@ -138,13 +138,13 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		methodName += "(" + paramStr.toString() + ")";
 
-		JInvocation format = refClass(String.class).staticInvoke("format");
+		JInvocation format = getJClass(String.class).staticInvoke("format");
 		if (result == null) {
 			format.arg("Exiting [" + methodName + "], duration in ms: %d");
 		} else {
 			format.arg("Exiting [" + methodName + " returning: %s], duration in ms: %d");
 			if (method.type().isArray()) {
-				JClass arraysClass = refClass(Arrays.class);
+				JClass arraysClass = getJClass(Arrays.class);
 				format.arg(arraysClass.staticInvoke("toString").arg(JExpr.cast(boxify(method.type()), result)));
 			} else {
 				format.arg(result);
@@ -163,7 +163,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 			return JExpr.lit("Entering [" + methodName + "()]");
 		}
 
-		JClass arraysClass = refClass(Arrays.class);
+		JClass arraysClass = getJClass(Arrays.class);
 		StringBuilder paramStr = new StringBuilder();
 		List<JExpression> paramExpressions = new ArrayList<>();
 		for (int i = 0; i < params.size(); i++) {
@@ -179,7 +179,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 			}
 		}
 
-		JInvocation format = refClass(String.class).staticInvoke("format");
+		JInvocation format = getJClass(String.class).staticInvoke("format");
 		format.arg(JExpr.lit("Entering [" + methodName + "(" + paramStr + ")]"));
 		for (JExpression expr : paramExpressions) {
 			format.arg(expr);

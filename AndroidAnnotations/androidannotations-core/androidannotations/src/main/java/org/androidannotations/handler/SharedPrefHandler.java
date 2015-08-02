@@ -183,7 +183,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 			break;
 		}
 		case APPLICATION_DEFAULT: {
-			JClass preferenceManagerClass = refClass("android.preference.PreferenceManager");
+			JClass preferenceManagerClass = getJClass("android.preference.PreferenceManager");
 			constructorSuperBlock.invoke("super") //
 					.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
 							.arg(contextParam));
@@ -206,7 +206,7 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 
 		JVar className = body.decl(stringClass, "className", contextParam.invoke("getClass").invoke("getName"));
 
-		JVar packageLen = body.decl(codeModel().INT, "packageLen", packageName.invoke("length"));
+		JVar packageLen = body.decl(getCodeModel().INT, "packageLen", packageName.invoke("length"));
 
 		JExpression condition = className.invoke("startsWith").arg(packageName).not() //
 				.cor(className.invoke("length").lte(packageLen)) //

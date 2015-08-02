@@ -80,7 +80,7 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onPreferenceClick");
+		return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().BOOLEAN, "onPreferenceClick");
 	}
 
 	@Override

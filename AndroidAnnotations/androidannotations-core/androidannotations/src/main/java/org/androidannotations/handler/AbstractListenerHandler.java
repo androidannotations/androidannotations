@@ -78,7 +78,7 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(element, getResourceType(), true);
 
-		JDefinedClass listenerAnonymousClass = codeModel().anonymousClass(getListenerClass());
+		JDefinedClass listenerAnonymousClass = getCodeModel().anonymousClass(getListenerClass());
 		JMethod listenerMethod = createListenerMethod(listenerAnonymousClass);
 		listenerMethod.annotate(Override.class);
 

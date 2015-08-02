@@ -74,14 +74,14 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 	@Override
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
 		JVar textView = listenerMethod.param(getClasses().TEXT_VIEW, "textView");
-		JVar actionId = listenerMethod.param(codeModel().INT, "actionId");
+		JVar actionId = listenerMethod.param(getCodeModel().INT, "actionId");
 		JVar event = listenerMethod.param(getClasses().KEY_EVENT, "event");
 
 		for (VariableElement param : userParameters) {
 			String paramClassQualifiedName = param.asType().toString();
 			if (isTypeOrSubclass(CanonicalNameConstants.TEXT_VIEW, param)) {
 				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.TEXT_VIEW, textView, param));
-			} else if (paramClassQualifiedName.equals(CanonicalNameConstants.INTEGER) || paramClassQualifiedName.equals(codeModel().INT.fullName())) {
+			} else if (paramClassQualifiedName.equals(CanonicalNameConstants.INTEGER) || paramClassQualifiedName.equals(getCodeModel().INT.fullName())) {
 				call.arg(actionId);
 			} else if (paramClassQualifiedName.equals(CanonicalNameConstants.KEY_EVENT)) {
 				call.arg(event);
@@ -91,7 +91,7 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onEditorAction");
+		return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().BOOLEAN, "onEditorAction");
 	}
 
 	@Override

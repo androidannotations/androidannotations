@@ -120,7 +120,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			JVar param;
 			if (parameter.asType().getKind().isPrimitive()) {
-				param = method.param(JType.parse(codeModel(), paramType), paramName);
+				param = method.param(JType.parse(getCodeModel(), paramType), paramName);
 			} else {
 				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType());
 				param = method.param(parameterClass, paramName);
@@ -142,7 +142,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	protected abstract String getUrlSuffix(Element element);
 
 	protected JExpression getHttpMethod() {
-		JClass httpMethod = refClass(HTTP_METHOD);
+		JClass httpMethod = getJClass(HTTP_METHOD);
 		String simpleName = getTarget().substring(getTarget().lastIndexOf('.') + 1);
 		String restMethodInCapitalLetters = simpleName.toUpperCase(Locale.ENGLISH);
 		return httpMethod.staticRef(restMethodInCapitalLetters);
@@ -175,8 +175,8 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			boolean methodReturnVoid = executableElement.getReturnType().getKind() == TypeKind.VOID;
 
 			JClass exchangeResponseClass = restAnnotationHelper.retrieveResponseClass(executableElement.getReturnType(), restHolder);
-			JType narrowType = exchangeResponseClass == null || methodReturnVoid ? codeModel().VOID : exchangeResponseClass;
-			JClass responseEntityClass = refClass(RESPONSE_ENTITY).narrow(narrowType);
+			JType narrowType = exchangeResponseClass == null || methodReturnVoid ? getCodeModel().VOID : exchangeResponseClass;
+			JClass responseEntityClass = getJClass(RESPONSE_ENTITY).narrow(narrowType);
 			JVar responseEntity = methodBody.decl(responseEntityClass, "response", exchangeCall);
 
 			// set cookies
@@ -204,7 +204,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			// where does the cookie VALUE end?
 			JInvocation valueEnd = rawCookieVar.invoke("indexOf").arg(JExpr.lit(';'));
-			JVar valueEndVar = thenBlock.decl(codeModel().INT, "valueEnd", valueEnd);
+			JVar valueEndVar = thenBlock.decl(getCodeModel().INT, "valueEnd", valueEnd);
 			JBlock fixValueEndBlock = thenBlock._if(valueEndVar.eq(JExpr.lit(-1)))._then();
 			fixValueEndBlock.assign(valueEndVar, rawCookieVar.invoke("length"));
 
@@ -233,7 +233,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			JTryBlock tryBlock = newBlock._try();
 			codeModelHelper.copy(block, tryBlock.body());
 
-			JCatchBlock jCatch = tryBlock._catch(refClass(NESTED_RUNTIME_EXCEPTION));
+			JCatchBlock jCatch = tryBlock._catch(getJClass(NESTED_RUNTIME_EXCEPTION));
 
 			JBlock catchBlock = jCatch.body();
 			JConditional conditional = catchBlock._if(JOp.ne(holder.getRestErrorHandlerField(), JExpr._null()));

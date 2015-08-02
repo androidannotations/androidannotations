@@ -17,7 +17,6 @@ package org.androidannotations.handler;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -77,21 +76,15 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		return environment.getClasses();
 	}
 
-	public JCodeModel codeModel() {
+	protected JCodeModel getCodeModel() {
 		return environment.getCodeModel();
 	}
 
-	public JClass refClass(String fullyQualifiedClassName) {
+	protected JClass getJClass(String fullyQualifiedClassName) {
 		return environment.getJClass(fullyQualifiedClassName);
 	}
 
-	public JClass refClass(TypeMirror typeMirror) {
-		return environment.getJClass(typeMirror.toString());
-	}
-
-	public JClass refClass(Class<?> clazz) {
+	protected JClass getJClass(Class<?> clazz) {
 		return environment.getJClass(clazz);
 	}
-
-
 }

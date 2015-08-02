@@ -70,6 +70,6 @@ public class FragmentByTagHandler extends BaseAnnotationHandler<EComponentWithVi
 		}
 
 		JBlock methodBody = holder.getOnViewChangedBody();
-		methodBody.assign(ref(fieldName), cast(refClass(typeQualifiedName), invoke(findFragmentByTag).arg(lit(tagValue))));
+		methodBody.assign(ref(fieldName), cast(getJClass(typeQualifiedName), invoke(findFragmentByTag).arg(lit(tagValue))));
 	}
 }

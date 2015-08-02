@@ -44,7 +44,7 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
 
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 
-		JClass bgExecutor = refClass(BackgroundExecutor.class);
+		JClass bgExecutor = getJClass(BackgroundExecutor.class);
 
 		SupposeBackground annotation = element.getAnnotation(SupposeBackground.class);
 		String[] serial = annotation.serial();

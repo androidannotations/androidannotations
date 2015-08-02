@@ -73,7 +73,7 @@ public class FragmentByIdHandler extends BaseAnnotationHandler<EComponentWithVie
 
 		JBlock methodBody = holder.getOnViewChangedBody();
 
-		methodBody.assign(ref(fieldName), cast(refClass(typeQualifiedName), invoke(findFragmentById).arg(idRef)));
+		methodBody.assign(ref(fieldName), cast(getJClass(typeQualifiedName), invoke(findFragmentById).arg(idRef)));
 
 	}
 }

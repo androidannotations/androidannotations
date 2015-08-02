@@ -42,7 +42,7 @@ public class SupposeUiThreadHandler extends SupposeThreadHandler {
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock body = delegatingMethod.body();
 
-		JClass bgExecutor = refClass(BackgroundExecutor.class);
+		JClass bgExecutor = getJClass(BackgroundExecutor.class);
 
 		body.pos(0);
 		body.staticInvoke(bgExecutor, METHOD_CHECK_UI_THREAD);

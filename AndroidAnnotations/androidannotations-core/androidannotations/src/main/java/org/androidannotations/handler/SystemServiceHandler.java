@@ -92,7 +92,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 	}
 
 	private JStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
-		return (JStatement) assign(ref(fieldName), cast(refClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
+		return (JStatement) assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
 	}
 
 	private boolean isApiOnClasspath(String apiName) {

@@ -71,11 +71,11 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation itemSelectedCall, List<? extends VariableElement> parameters) {
-		JClass narrowAdapterViewClass = getClasses().ADAPTER_VIEW.narrow(codeModel().wildcard());
+		JClass narrowAdapterViewClass = getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 		JVar onItemClickParentParam = listenerMethod.param(narrowAdapterViewClass, "parent");
 		listenerMethod.param(getClasses().VIEW, "view");
-		JVar onItemClickPositionParam = listenerMethod.param(codeModel().INT, "position");
-		listenerMethod.param(codeModel().LONG, "id");
+		JVar onItemClickPositionParam = listenerMethod.param(getCodeModel().INT, "position");
+		listenerMethod.param(getCodeModel().LONG, "id");
 
 		itemSelectedCall.arg(JExpr.TRUE);
 		boolean hasItemParameter = parameters.size() == 2;
@@ -93,7 +93,7 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 			if (secondParameterIsInt) {
 				itemSelectedCall.arg(onItemClickPositionParam);
 			} else {
-				itemSelectedCall.arg(JExpr.cast(refClass(secondParameterQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
+				itemSelectedCall.arg(JExpr.cast(getJClass(secondParameterQualifiedName), invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 			}
 		}
 
@@ -114,9 +114,9 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		onNothingSelectedMethod = listenerAnonymousClass.method(JMod.PUBLIC, codeModel().VOID, "onNothingSelected");
+		onNothingSelectedMethod = listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().VOID, "onNothingSelected");
 		onNothingSelectedMethod.annotate(Override.class);
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().VOID, "onItemSelected");
+		return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().VOID, "onItemSelected");
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JClass getListenerTargetClass() {
-		return getClasses().ADAPTER_VIEW.narrow(codeModel().wildcard());
+		return getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 	}
 
 }

@@ -77,7 +77,7 @@ public class LongClickHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onLongClick");
+		return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().BOOLEAN, "onLongClick");
 	}
 
 	@Override

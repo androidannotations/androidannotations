@@ -108,8 +108,8 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 	private void setInterceptors(Element element, RestHolder holder) {
 		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "interceptors");
 		if (interceptors != null) {
-			JClass listClass = refClass(ARRAYLIST);
-			JClass clientInterceptorClass = refClass(CLIENT_HTTP_REQUEST_INTERCEPTOR);
+			JClass listClass = getJClass(ARRAYLIST);
+			JClass clientInterceptorClass = getJClass(CLIENT_HTTP_REQUEST_INTERCEPTOR);
 			listClass = listClass.narrow(clientInterceptorClass);
 			JFieldVar restTemplateField = holder.getRestTemplateField();
 			JBlock init = holder.getInit().body();

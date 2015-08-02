@@ -57,7 +57,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 		String generatedClassName = interfaceName + classSuffix();
 
-		JClass clazz = codeModelHelper.narrowGeneratedClass(refClass(generatedClassName), fieldTypeMirror);
+		JClass clazz = codeModelHelper.narrowGeneratedClass(getJClass(generatedClassName), fieldTypeMirror);
 
 		JBlock methodBody = holder.getInitBody();
 

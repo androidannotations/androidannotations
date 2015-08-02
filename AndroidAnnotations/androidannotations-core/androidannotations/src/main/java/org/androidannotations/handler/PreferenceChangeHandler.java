@@ -90,7 +90,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 			} else if (type.equals(CanonicalNameConstants.INTEGER) || type.equals(int.class.getName()) || //
 					type.equals(CanonicalNameConstants.FLOAT) || type.equals(float.class.getName()) || //
 					type.equals(CanonicalNameConstants.LONG) || type.equals(long.class.getName())) {
-				JClass wrapperClass = type.startsWith("java") ? refClass(type) : JType.parse(getEnvironment().getCodeModel(), type.replace(".class", "")).boxify();
+				JClass wrapperClass = type.startsWith("java") ? getJClass(type) : JType.parse(getEnvironment().getCodeModel(), type.replace(".class", "")).boxify();
 				call.arg(wrapperClass.staticInvoke("valueOf").arg(JExpr.cast(getClasses().STRING, newValueParam)));
 			} else {
 				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType());
@@ -105,7 +105,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onPreferenceChange");
+		return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().BOOLEAN, "onPreferenceChange");
 	}
 
 	@Override

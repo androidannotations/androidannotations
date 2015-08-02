@@ -71,7 +71,7 @@ public class ClickHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().VOID, "onClick");
+		return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().VOID, "onClick");
 	}
 
 	@Override

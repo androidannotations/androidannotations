@@ -88,7 +88,7 @@ public class TouchHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected JMethod createListenerMethod(JDefinedClass listenerAnonymousClass) {
-		return listenerAnonymousClass.method(JMod.PUBLIC, codeModel().BOOLEAN, "onTouch");
+		return listenerAnonymousClass.method(JMod.PUBLIC, getCodeModel().BOOLEAN, "onTouch");
 	}
 
 	@Override
