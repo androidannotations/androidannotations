@@ -89,7 +89,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	protected void setOnViewChanged() {
 		getGeneratedClass()._implements(OnViewChangedListener.class);
-		onViewChanged = getGeneratedClass().method(PUBLIC, codeModel().VOID, "onViewChanged");
+		onViewChanged = getGeneratedClass().method(PUBLIC, getCodeModel().VOID, "onViewChanged");
 		onViewChanged.annotate(Override.class);
 		onViewChangedBody = onViewChanged.body();
 		onViewChangedBodyBeforeFindViews = onViewChangedBody.block();
@@ -165,7 +165,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	protected void setFindNativeFragmentById() {
 		findNativeFragmentById = getGeneratedClass().method(PRIVATE, getClasses().FRAGMENT, "findNativeFragmentById");
-		JVar idParam = findNativeFragmentById.param(codeModel().INT, "id");
+		JVar idParam = findNativeFragmentById.param(getCodeModel().INT, "id");
 
 		JBlock body = findNativeFragmentById.body();
 
@@ -185,7 +185,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 
 	protected void setFindSupportFragmentById() {
 		findSupportFragmentById = getGeneratedClass().method(PRIVATE, getClasses().SUPPORT_V4_FRAGMENT, "findSupportFragmentById");
-		JVar idParam = findSupportFragmentById.param(codeModel().INT, "id");
+		JVar idParam = findSupportFragmentById.param(getCodeModel().INT, "id");
 
 		JBlock body = findSupportFragmentById.body();
 
@@ -247,7 +247,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	private TextWatcherHolder createTextWatcherHolder(JFieldRef idRef, TypeMirror viewParameterType) {
-		JDefinedClass onTextChangeListenerClass = codeModel().anonymousClass(getClasses().TEXT_WATCHER);
+		JDefinedClass onTextChangeListenerClass = getCodeModel().anonymousClass(getClasses().TEXT_WATCHER);
 		JClass viewClass = getClasses().TEXT_VIEW;
 		if (viewParameterType != null) {
 			viewClass = refClass(viewParameterType.toString());
@@ -272,7 +272,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 	}
 
 	private OnSeekBarChangeListenerHolder createOnSeekBarChangeListenerHolder(JFieldRef idRef) {
-		JDefinedClass onSeekbarChangeListenerClass = codeModel().anonymousClass(getClasses().ON_SEEKBAR_CHANGE_LISTENER);
+		JDefinedClass onSeekbarChangeListenerClass = getCodeModel().anonymousClass(getClasses().ON_SEEKBAR_CHANGE_LISTENER);
 		JClass viewClass = getClasses().SEEKBAR;
 
 		JBlock onViewChangedBody = getOnViewChangedBody().block();

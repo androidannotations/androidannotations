@@ -74,7 +74,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
+		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 	}
 
 	public void invokeInitInConstructor() {
@@ -116,7 +116,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 	}
 
 	public void createRebindMethod() {
-		JMethod rebindMethod = generatedClass.method(PUBLIC, codeModel().VOID, "rebind");
+		JMethod rebindMethod = generatedClass.method(PUBLIC, getCodeModel().VOID, "rebind");
 		JVar contextParam = rebindMethod.param(getClasses().CONTEXT, "context");
 		JBlock body = rebindMethod.body();
 		body.assign(getContextField(), contextParam);

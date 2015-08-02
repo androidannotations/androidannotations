@@ -41,12 +41,12 @@ public class EProviderHolder extends EComponentHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
+		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 		createOnCreate();
 	}
 
 	private void createOnCreate() {
-		JMethod onCreate = generatedClass.method(PUBLIC, codeModel().BOOLEAN, "onCreate");
+		JMethod onCreate = generatedClass.method(PUBLIC, getCodeModel().BOOLEAN, "onCreate");
 		onCreate.annotate(Override.class);
 		JBlock onCreateBody = onCreate.body();
 		onCreateBody.invoke(getInit());

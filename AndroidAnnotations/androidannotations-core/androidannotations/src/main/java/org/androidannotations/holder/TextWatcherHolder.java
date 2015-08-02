@@ -50,8 +50,8 @@ public class TextWatcherHolder {
 	}
 
 	private void createBeforeTextChanged() {
-		JPrimitiveType intClass = holder.codeModel().INT;
-		JMethod beforeTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "beforeTextChanged");
+		JPrimitiveType intClass = holder.getCodeModel().INT;
+		JMethod beforeTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.getCodeModel().VOID, "beforeTextChanged");
 		beforeTextChangedMethod.annotate(Override.class);
 		beforeTextChangedBody = beforeTextChangedMethod.body();
 		beforeTextChangedCharSequenceParam = beforeTextChangedMethod.param(holder.getClasses().CHAR_SEQUENCE, "s");
@@ -61,8 +61,8 @@ public class TextWatcherHolder {
 	}
 
 	private void createOnTextChanged() {
-		JPrimitiveType intClass = holder.codeModel().INT;
-		JMethod onTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "onTextChanged");
+		JPrimitiveType intClass = holder.getCodeModel().INT;
+		JMethod onTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.getCodeModel().VOID, "onTextChanged");
 		onTextChangedMethod.annotate(Override.class);
 		onTextChangedBody = onTextChangedMethod.body();
 		onTextChangedCharSequenceParam = onTextChangedMethod.param(holder.getClasses().CHAR_SEQUENCE, "s");
@@ -72,7 +72,7 @@ public class TextWatcherHolder {
 	}
 
 	private void createAfterTextChanged() {
-		JMethod afterTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.codeModel().VOID, "afterTextChanged");
+		JMethod afterTextChangedMethod = listenerClass.method(JMod.PUBLIC, holder.getCodeModel().VOID, "afterTextChanged");
 		afterTextChangedMethod.annotate(Override.class);
 		afterTextChangedBody = afterTextChangedMethod.body();
 		afterTextChangedEditableParam = afterTextChangedMethod.param(holder.getClasses().EDITABLE, "s");

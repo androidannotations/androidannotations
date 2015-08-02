@@ -113,7 +113,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
+		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 		viewNotifierHelper.wrapInitWithNotifier();
 	}
 
@@ -137,7 +137,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	}
 
 	protected void setOnFinishInflate() {
-		onFinishInflate = generatedClass.method(PUBLIC, codeModel().VOID, "onFinishInflate");
+		onFinishInflate = generatedClass.method(PUBLIC, getCodeModel().VOID, "onFinishInflate");
 		onFinishInflate.annotate(Override.class);
 		onFinishInflate.javadoc().append(ALREADY_INFLATED_COMMENT.replaceAll("alreadyInflated_", "alreadyInflated" + generationSuffix()));
 
@@ -158,6 +158,6 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	}
 
 	private void setAlreadyInflated() {
-		alreadyInflated = generatedClass.field(PRIVATE, JType.parse(codeModel(), "boolean"), "alreadyInflated" + generationSuffix(), JExpr.FALSE);
+		alreadyInflated = generatedClass.field(PRIVATE, JType.parse(getCodeModel(), "boolean"), "alreadyInflated" + generationSuffix(), JExpr.FALSE);
 	}
 }

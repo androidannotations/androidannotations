@@ -33,7 +33,7 @@ public class EViewGroupHolder extends EViewHolder {
 	}
 
 	protected void setOnFinishInflate() {
-		onFinishInflate = generatedClass.method(PUBLIC, codeModel().VOID, "onFinishInflate");
+		onFinishInflate = generatedClass.method(PUBLIC, getCodeModel().VOID, "onFinishInflate");
 		onFinishInflate.annotate(Override.class);
 		onFinishInflate.javadoc().append(ALREADY_INFLATED_COMMENT);
 

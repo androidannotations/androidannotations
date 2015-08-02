@@ -20,7 +20,6 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 
 public interface GeneratedClassHolder {
@@ -29,8 +28,6 @@ public interface GeneratedClassHolder {
 	TypeElement getAnnotatedElement();
 
 	AndroidAnnotationsEnvironment environment();
-
-	JCodeModel codeModel();
 
 	JClass refClass(String fullyQualifiedClassName);
 

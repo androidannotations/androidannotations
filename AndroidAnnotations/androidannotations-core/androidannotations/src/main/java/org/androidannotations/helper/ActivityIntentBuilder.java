@@ -114,9 +114,9 @@ public class ActivityIntentBuilder extends IntentBuilder {
 	}
 
 	private void overrideStartForResultMethod() {
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.codeModel().VOID, "startForResult");
+		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, environment.getCodeModel().VOID, "startForResult");
 		method.annotate(Override.class);
-		JVar requestCode = method.param(holder.codeModel().INT, "requestCode");
+		JVar requestCode = method.param(environment.getCodeModel().INT, "requestCode");
 		JBlock body = method.body();
 
 		JConditional condition = null;

@@ -51,7 +51,7 @@ public class EReceiverHolder extends EComponentHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
+		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 		contextRef = init.param(getClasses().CONTEXT, "context");
 		if (onReceiveMethod == null) {
 			createOnReceive();
@@ -59,7 +59,7 @@ public class EReceiverHolder extends EComponentHolder {
 	}
 
 	private void createOnReceive() {
-		onReceiveMethod = generatedClass.method(PUBLIC, codeModel().VOID, "onReceive");
+		onReceiveMethod = generatedClass.method(PUBLIC, getCodeModel().VOID, "onReceive");
 		onReceiveContext = onReceiveMethod.param(getClasses().CONTEXT, "context");
 		onReceiveIntent = onReceiveMethod.param(getClasses().INTENT, "intent");
 		onReceiveMethod.annotate(Override.class);

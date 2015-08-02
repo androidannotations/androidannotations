@@ -53,7 +53,7 @@ public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 
 	public JFieldVar getScopedObjectsField() {
 		if (scopedObjects == null) {
-			JClass keyWildCard = refClass(RoboGuiceClasses.KEY).narrow(codeModel().wildcard());
+			JClass keyWildCard = refClass(RoboGuiceClasses.KEY).narrow(getCodeModel().wildcard());
 			JClass scopedHashMap = environment().getClasses().HASH_MAP.narrow(keyWildCard, environment().getClasses().OBJECT);
 			scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + generationSuffix());
 			scopedObjects.assign(JExpr._new(scopedHashMap));

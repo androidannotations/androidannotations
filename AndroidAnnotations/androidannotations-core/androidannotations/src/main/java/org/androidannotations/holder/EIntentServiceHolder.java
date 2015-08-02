@@ -68,7 +68,7 @@ public class EIntentServiceHolder extends EServiceHolder {
 	}
 
 	private void createOnHandleIntent() {
-		onHandleIntentMethod = generatedClass.method(PUBLIC, codeModel().VOID, "onHandleIntent");
+		onHandleIntentMethod = generatedClass.method(PUBLIC, getCodeModel().VOID, "onHandleIntent");
 		onHandleIntentIntent = onHandleIntentMethod.param(getClasses().INTENT, "intent");
 		onHandleIntentMethod.annotate(Override.class);
 		onHandleIntentBody = onHandleIntentMethod.body();

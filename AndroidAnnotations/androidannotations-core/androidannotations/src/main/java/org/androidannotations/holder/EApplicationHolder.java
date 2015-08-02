@@ -53,14 +53,14 @@ public class EApplicationHolder extends EComponentHolder {
 		JMethod getInstance = generatedClass.method(PUBLIC | STATIC, annotatedComponent, GET_APPLICATION_INSTANCE);
 		getInstance.body()._return(staticInstanceField);
 
-		JMethod setInstance = generatedClass.method(PUBLIC | STATIC, codeModel().VOID, "setForTesting");
+		JMethod setInstance = generatedClass.method(PUBLIC | STATIC, getCodeModel().VOID, "setForTesting");
 		setInstance.javadoc().append("Visible for testing purposes");
 		JVar applicationParam = setInstance.param(annotatedComponent, "application");
 		setInstance.body().assign(staticInstanceField, applicationParam);
 	}
 
 	private void createOnCreate() {
-		JMethod onCreate = generatedClass.method(PUBLIC, codeModel().VOID, "onCreate");
+		JMethod onCreate = generatedClass.method(PUBLIC, getCodeModel().VOID, "onCreate");
 		onCreate.annotate(Override.class);
 		JBlock onCreateBody = onCreate.body();
 		onCreateBody.assign(staticInstanceField, _this());
@@ -75,6 +75,6 @@ public class EApplicationHolder extends EComponentHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, codeModel().VOID, "init" + generationSuffix());
+		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 	}
 }

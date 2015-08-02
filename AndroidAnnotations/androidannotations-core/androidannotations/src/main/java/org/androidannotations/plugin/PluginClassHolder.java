@@ -52,8 +52,8 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 		return holder.refClass(clazz);
 	}
 
-	public JCodeModel codeModel() {
-		return holder.codeModel();
+	protected JCodeModel getCodeModel() {
+		return environment().getCodeModel();
 	}
 
 	public TypeElement getAnnotatedElement() {
