@@ -27,7 +27,7 @@ public class ServiceIntentBuilder extends IntentBuilder {
 
 	@Override
 	protected JClass getSuperClass() {
-		JClass superClass = holder.refClass(org.androidannotations.api.builder.ServiceIntentBuilder.class);
+		JClass superClass = getJClass(org.androidannotations.api.builder.ServiceIntentBuilder.class);
 		return superClass.narrow(builderClass);
 	}
 }

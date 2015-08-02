@@ -203,12 +203,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
 			// we need the headers
-			httpHeadersVar = body.decl(holder.refClass(HTTP_HEADERS), "httpHeaders", JExpr._new(holder.refClass(HTTP_HEADERS)));
+			httpHeadersVar = body.decl(getEnvironment().getJClass(HTTP_HEADERS), "httpHeaders", JExpr._new(getEnvironment().getJClass(HTTP_HEADERS)));
 		}
 
 		if (hasMediaTypeDefined) {
-			JClass collectionsClass = holder.refClass(CanonicalNameConstants.COLLECTIONS);
-			JClass mediaTypeClass = holder.refClass(MEDIA_TYPE);
+			JClass collectionsClass = getEnvironment().getJClass(CanonicalNameConstants.COLLECTIONS);
+			JClass mediaTypeClass = getEnvironment().getJClass(MEDIA_TYPE);
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
@@ -305,7 +305,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			if (declaredReturnType.getTypeArguments().size() > 0) {
 				responseClass = resolveResponseClass(declaredReturnType.getTypeArguments().get(0), holder);
 			} else {
-				responseClass = holder.refClass(RESPONSE_ENTITY);
+				responseClass = getEnvironment().getJClass(RESPONSE_ENTITY);
 			}
 		} else {
 			responseClass = resolveResponseClass(returnType, holder);
@@ -395,7 +395,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		if (decoratedClassName != null) {
 			// Configure the super class of the final decorated class
 			String decoratedClassNameSuffix = "";
-			JClass decoratedSuperClass = holder.refClass(decoratedClassName);
+			JClass decoratedSuperClass = getEnvironment().getJClass(decoratedClassName);
 			for (TypeMirror typeArgument : declaredType.getTypeArguments()) {
 				TypeMirror actualTypeArgument = typeArgument;
 				if (typeArgument instanceof WildcardType) {
@@ -446,6 +446,6 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public JExpression nullCastedToNarrowedClass(RestHolder holder) {
-		return JExpr.cast(holder.refClass(Class.class).narrow(holder.refClass(Void.class)), JExpr._null());
+		return JExpr.cast(getEnvironment().getJClass(Class.class).narrow(getEnvironment().getJClass(Void.class)), JExpr._null());
 	}
 }

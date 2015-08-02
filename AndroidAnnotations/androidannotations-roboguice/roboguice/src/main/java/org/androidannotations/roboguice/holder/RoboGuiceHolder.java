@@ -46,14 +46,14 @@ public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 
 	public JFieldVar getEventManagerField() {
 		if (eventManager == null) {
-			eventManager = getGeneratedClass().field(JMod.PROTECTED, refClass(RoboGuiceClasses.EVENT_MANAGER), "eventManager" + generationSuffix());
+			eventManager = getGeneratedClass().field(JMod.PROTECTED, getJClass(RoboGuiceClasses.EVENT_MANAGER), "eventManager" + generationSuffix());
 		}
 		return eventManager;
 	}
 
 	public JFieldVar getScopedObjectsField() {
 		if (scopedObjects == null) {
-			JClass keyWildCard = refClass(RoboGuiceClasses.KEY).narrow(getCodeModel().wildcard());
+			JClass keyWildCard = getJClass(RoboGuiceClasses.KEY).narrow(getCodeModel().wildcard());
 			JClass scopedHashMap = environment().getClasses().HASH_MAP.narrow(keyWildCard, environment().getClasses().OBJECT);
 			scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + generationSuffix());
 			scopedObjects.assign(JExpr._new(scopedHashMap));
@@ -63,15 +63,15 @@ public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 
 	public JFieldVar getScopeField() {
 		if (scope == null) {
-			scope = getGeneratedClass().field(JMod.PRIVATE, refClass(RoboGuiceClasses.CONTEXT_SCOPE), "scope" + generationSuffix());
+			scope = getGeneratedClass().field(JMod.PRIVATE, getJClass(RoboGuiceClasses.CONTEXT_SCOPE), "scope" + generationSuffix());
 		}
 		return scope;
 	}
 
 	public JFieldVar getContentViewListenerField() {
 		if (contentViewListenerField == null) {
-			contentViewListenerField = getGeneratedClass().field(JMod.NONE, refClass(RoboGuiceClasses.CONTENT_VIEW_LISTENER), "ignored" + generationSuffix());
-			contentViewListenerField.annotate(refClass(RoboGuiceClasses.INJECT));
+			contentViewListenerField = getGeneratedClass().field(JMod.NONE, getJClass(RoboGuiceClasses.CONTENT_VIEW_LISTENER), "ignored" + generationSuffix());
+			contentViewListenerField.annotate(getJClass(RoboGuiceClasses.INJECT));
 		}
 		return contentViewListenerField;
 	}

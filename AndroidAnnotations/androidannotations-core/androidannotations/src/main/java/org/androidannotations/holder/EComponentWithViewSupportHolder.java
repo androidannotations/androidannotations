@@ -94,7 +94,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		onViewChangedBody = onViewChanged.body();
 		onViewChangedBodyBeforeFindViews = onViewChangedBody.block();
 		onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
-		JClass notifierClass = refClass(OnViewChangedNotifier.class);
+		JClass notifierClass = getJClass(OnViewChangedNotifier.class);
 		getInitBody().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
 	}
 
@@ -250,7 +250,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder {
 		JDefinedClass onTextChangeListenerClass = getCodeModel().anonymousClass(getClasses().TEXT_WATCHER);
 		JClass viewClass = getClasses().TEXT_VIEW;
 		if (viewParameterType != null) {
-			viewClass = refClass(viewParameterType.toString());
+			viewClass = getJClass(viewParameterType.toString());
 		}
 
 		JBlock onViewChangedBody = getOnViewChangedBody().block();

@@ -134,7 +134,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		narrowBuilderClass = narrow(fragmentBuilderClass);
 
 		generify(fragmentBuilderClass);
-		JClass superClass = refClass(org.androidannotations.api.builder.FragmentBuilder.class);
+		JClass superClass = getJClass(org.androidannotations.api.builder.FragmentBuilder.class);
 		superClass = superClass.narrow(narrowBuilderClass, getAnnotatedClass());
 		fragmentBuilderClass._extends(superClass);
 		fragmentArgumentsBuilderField = ref("args");

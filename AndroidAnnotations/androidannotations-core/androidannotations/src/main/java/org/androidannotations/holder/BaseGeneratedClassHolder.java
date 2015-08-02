@@ -112,14 +112,12 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 		return environment().getCodeModel();
 	}
 
-	@Override
-	public JClass refClass(String fullyQualifiedClassName) {
-		return processHolder().refClass(fullyQualifiedClassName);
+	protected JClass getJClass(String fullyQualifiedClassName) {
+		return environment().getJClass(fullyQualifiedClassName);
 	}
 
-	@Override
-	public JClass refClass(Class<?> clazz) {
-		return processHolder().refClass(clazz);
+	protected JClass getJClass(Class<?> clazz) {
+		return environment().getJClass(clazz);
 	}
 
 	@Override

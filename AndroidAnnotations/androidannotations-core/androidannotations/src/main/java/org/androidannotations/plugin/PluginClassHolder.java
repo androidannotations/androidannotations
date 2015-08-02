@@ -40,27 +40,27 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 		return holder.getGeneratedClass();
 	}
 
-	public JDefinedClass definedClass(String fullyQualifiedClassName) {
-		return holder.definedClass(fullyQualifiedClassName);
-	}
-
-	public JClass refClass(String fullyQualifiedClassName) {
-		return holder.refClass(fullyQualifiedClassName);
-	}
-
-	public JClass refClass(Class<?> clazz) {
-		return holder.refClass(clazz);
-	}
-
-	protected JCodeModel getCodeModel() {
-		return environment().getCodeModel();
-	}
-
 	public TypeElement getAnnotatedElement() {
 		return holder.getAnnotatedElement();
 	}
 
 	public AndroidAnnotationsEnvironment environment() {
 		return holder().environment();
+	}
+
+	public JDefinedClass definedClass(String fullyQualifiedClassName) {
+		return holder.definedClass(fullyQualifiedClassName);
+	}
+
+	protected JClass getJClass(String fullyQualifiedClassName) {
+		return environment().getJClass(fullyQualifiedClassName);
+	}
+
+	protected JClass getJClass(Class<?> clazz) {
+		return environment().getJClass(clazz);
+	}
+
+	protected JCodeModel getCodeModel() {
+		return environment().getCodeModel();
 	}
 }

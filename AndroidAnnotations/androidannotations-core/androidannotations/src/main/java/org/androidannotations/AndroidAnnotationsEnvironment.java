@@ -56,6 +56,7 @@ public class AndroidAnnotationsEnvironment {
 		this.processingEnvironment = processingEnvironment;
 		options = new Options(processingEnvironment);
 		annotationHandlers = new AnnotationHandlers();
+		androidSystemServices = new AndroidSystemServices(this);
 	}
 
 	public void setPlugins(List<AndroidAnnotationsPlugin> plugins) {
@@ -66,9 +67,8 @@ public class AndroidAnnotationsEnvironment {
 		}
 	}
 
-	public void setAndroidEnvironment(IRClass rClass, AndroidSystemServices androidSystemServices, AndroidManifest androidManifest) {
+	public void setAndroidEnvironment(IRClass rClass, AndroidManifest androidManifest) {
 		this.rClass = rClass;
-		this.androidSystemServices = androidSystemServices;
 		this.androidManifest = androidManifest;
 	}
 
@@ -146,6 +146,10 @@ public class AndroidAnnotationsEnvironment {
 
 	public JClass getJClass(String fullyQualifiedName) {
 		return processHolder.refClass(fullyQualifiedName);
+	}
+
+	public JClass getJClass(Class<?> clazz) {
+		return processHolder.refClass(clazz);
 	}
 
 	public ProcessHolder.Classes getClasses() {

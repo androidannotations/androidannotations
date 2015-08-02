@@ -46,7 +46,7 @@ public class ViewNotifierHelper {
 	}
 
 	public JVar replacePreviousNotifier(JBlock block) {
-		JClass notifierClass = holder.refClass(OnViewChangedNotifier.class);
+		JClass notifierClass = holder.getEnvironment().getJClass(OnViewChangedNotifier.class);
 		if (notifier == null) {
 			notifier = holder.getGeneratedClass().field(PRIVATE | FINAL, notifierClass, "onViewChangedNotifier" + generationSuffix(), _new(notifierClass));
 			holder.getGeneratedClass()._implements(HasViews.class);
@@ -55,12 +55,12 @@ public class ViewNotifierHelper {
 	}
 
 	public JVar replacePreviousNotifierWithNull(JBlock block) {
-		JClass notifierClass = holder.refClass(OnViewChangedNotifier.class);
+		JClass notifierClass = holder.getEnvironment().getJClass(OnViewChangedNotifier.class);
 		return block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(_null()));
 	}
 
 	public void resetPreviousNotifier(JBlock block, JVar previousNotifier) {
-		JClass notifierClass = holder.refClass(OnViewChangedNotifier.class);
+		JClass notifierClass = holder.getEnvironment().getJClass(OnViewChangedNotifier.class);
 		block.staticInvoke(notifierClass, "replaceNotifier").arg(previousNotifier);
 	}
 

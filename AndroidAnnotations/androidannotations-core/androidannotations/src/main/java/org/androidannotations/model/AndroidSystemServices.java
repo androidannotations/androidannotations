@@ -20,15 +20,17 @@ import java.util.Map;
 
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.sun.codemodel.JFieldRef;
 
 public class AndroidSystemServices {
 
+	private AndroidAnnotationsEnvironment environment;
 	private Map<String, String> registeredServices = new HashMap<>();
 
-	public AndroidSystemServices() {
+	public AndroidSystemServices(AndroidAnnotationsEnvironment environment) {
+		this.environment = environment;
 		// in alphabetical order
 		registeredServices.put("android.view.accessibility.AccessibilityManager", "android.content.Context.ACCESSIBILITY_SERVICE");
 		registeredServices.put("android.accounts.AccountManager", "android.content.Context.ACCOUNT_SERVICE");
@@ -108,17 +110,17 @@ public class AndroidSystemServices {
 		return registeredServices.get(serviceType.toString());
 	}
 
-	public JFieldRef getServiceConstant(TypeMirror serviceType, EComponentHolder holder) {
-		return extractIdStaticRef(holder, getServiceConstant(serviceType));
+	public JFieldRef getServiceConstantRef(TypeMirror serviceType) {
+		return extractIdStaticRef(getServiceConstant(serviceType));
 	}
 
-	private JFieldRef extractIdStaticRef(EComponentHolder holder, String staticFieldQualifiedName) {
+	private JFieldRef extractIdStaticRef(String staticFieldQualifiedName) {
 		if (staticFieldQualifiedName != null) {
 			int fieldSuffix = staticFieldQualifiedName.lastIndexOf('.');
 			String fieldName = staticFieldQualifiedName.substring(fieldSuffix + 1);
 			String className = staticFieldQualifiedName.substring(0, fieldSuffix);
 
-			return holder.refClass(className).staticRef(fieldName);
+			return environment.getJClass(className).staticRef(fieldName);
 		} else {
 			return null;
 		}

@@ -50,14 +50,12 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 		return environment().getCodeModel();
 	}
 
-	@Override
-	public final JClass refClass(String fullyQualifiedClassName) {
-		return holder.refClass(fullyQualifiedClassName);
+	protected final JClass refClass(String fullyQualifiedClassName) {
+		return environment().getJClass(fullyQualifiedClassName);
 	}
 
-	@Override
-	public final JClass refClass(Class<?> clazz) {
-		return holder.refClass(clazz);
+	protected final JClass refClass(Class<?> clazz) {
+		return environment().getJClass(clazz);
 	}
 
 	@Override

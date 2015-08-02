@@ -19,7 +19,6 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JClass;
 import com.sun.codemodel.JDefinedClass;
 
 public interface GeneratedClassHolder {
@@ -28,10 +27,6 @@ public interface GeneratedClassHolder {
 	TypeElement getAnnotatedElement();
 
 	AndroidAnnotationsEnvironment environment();
-
-	JClass refClass(String fullyQualifiedClassName);
-
-	JClass refClass(Class<?> clazz);
 
 	JDefinedClass definedClass(String fullyQualifiedClassName);
 }

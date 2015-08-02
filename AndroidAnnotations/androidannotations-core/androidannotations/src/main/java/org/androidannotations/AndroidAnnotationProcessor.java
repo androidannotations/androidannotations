@@ -46,7 +46,6 @@ import org.androidannotations.logger.Level;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerContext;
 import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.model.AndroidSystemServices;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
 import org.androidannotations.model.ModelExtractor;
@@ -165,9 +164,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 			IRClass rClass = findRClasses(androidManifest);
 
-			AndroidSystemServices androidSystemServices = new AndroidSystemServices();
-
-			androidAnnotationsEnv.setAndroidEnvironment(rClass, androidSystemServices, androidManifest);
+			androidAnnotationsEnv.setAndroidEnvironment(rClass, androidManifest);
 
 		} catch (Exception e) {
 			return;

@@ -129,7 +129,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setHttpBasicAuth", TypeKind.VOID.toString(), STRING, STRING);
 
 		if (setAuthMethod != null) {
-			JClass basicAuthClass = refClass(HTTP_BASIC_AUTHENTICATION);
+			JClass basicAuthClass = getJClass(HTTP_BASIC_AUTHENTICATION);
 			JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(setAuthMethod.params().get(0)).arg(setAuthMethod.params().get(1));
 			setAuthMethod.body().assign(_this().ref(getAuthenticationField()), basicAuthentication);
 		}
@@ -142,7 +142,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 			JVar tokenParamVar = setBearerMethod.params().get(0);
 			JExpression tokenExpr = lit("Bearer ").plus(tokenParamVar);
 
-			JClass authClass = refClass(HTTP_AUTHENTICATION);
+			JClass authClass = getJClass(HTTP_AUTHENTICATION);
 			JDefinedClass anonymousHttpAuthClass = getCodeModel().anonymousClass(authClass);
 
 			JMethod getHeaderValueMethod = anonymousHttpAuthClass.method(JMod.PUBLIC, String.class, "getHeaderValue");
@@ -244,8 +244,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setRestTemplateField() {
-		restTemplateField = getGeneratedClass().field(JMod.PRIVATE, refClass(REST_TEMPLATE), "restTemplate");
-		getInit().body().assign(restTemplateField, _new(refClass(REST_TEMPLATE)));
+		restTemplateField = getGeneratedClass().field(JMod.PRIVATE, getJClass(REST_TEMPLATE), "restTemplate");
+		getInit().body().assign(restTemplateField, _new(getJClass(REST_TEMPLATE)));
 	}
 
 	public JFieldVar getAvailableHeadersField() {
@@ -284,7 +284,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setAuthenticationField() {
-		authenticationField = getGeneratedClass().field(JMod.PRIVATE, refClass(HTTP_AUTHENTICATION), "authentication");
+		authenticationField = getGeneratedClass().field(JMod.PRIVATE, getJClass(HTTP_AUTHENTICATION), "authentication");
 	}
 
 	public JFieldVar getRestErrorHandlerField() {
@@ -294,7 +294,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setRestErrorHandlerField() {
-		JClass restErrorHandlerClass = refClass(RestErrorHandler.class.getName());
+		JClass restErrorHandlerClass = getJClass(RestErrorHandler.class.getName());
 		restErrorHandlerField = getGeneratedClass().field(JMod.PRIVATE, restErrorHandlerClass, "restErrorHandler");
 	}
 
