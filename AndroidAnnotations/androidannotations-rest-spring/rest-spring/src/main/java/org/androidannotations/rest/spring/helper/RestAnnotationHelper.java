@@ -415,7 +415,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			decoratedFinalClassName = decoratedFinalClassName.replaceAll("\\[\\]", "s");
 			String packageName = holder.getGeneratedClass()._package().name();
 			decoratedFinalClassName = packageName + "." + decoratedFinalClassName;
-			JDefinedClass decoratedJClass = holder.definedClass(decoratedFinalClassName);
+			JDefinedClass decoratedJClass = getEnvironment().getDefinedClass(decoratedFinalClassName);
 			decoratedJClass._extends(decoratedSuperClass);
 
 			return decoratedJClass;

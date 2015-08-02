@@ -121,11 +121,6 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	}
 
 	@Override
-	public JDefinedClass definedClass(String fullyQualifiedClassName) {
-		return processHolder().definedClass(fullyQualifiedClassName);
-	}
-
-	@Override
 	public AndroidAnnotationsEnvironment environment() {
 		return environment;
 	}

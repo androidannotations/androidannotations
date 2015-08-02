@@ -23,6 +23,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
@@ -150,6 +151,10 @@ public class AndroidAnnotationsEnvironment {
 
 	public JClass getJClass(Class<?> clazz) {
 		return processHolder.refClass(clazz);
+	}
+
+	public JDefinedClass getDefinedClass(String fullyQualifiedName) {
+		return processHolder.definedClass(fullyQualifiedName);
 	}
 
 	public ProcessHolder.Classes getClasses() {

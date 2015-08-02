@@ -22,11 +22,10 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import com.sun.codemodel.JDefinedClass;
 
 public interface GeneratedClassHolder {
+
 	JDefinedClass getGeneratedClass();
 
 	TypeElement getAnnotatedElement();
 
 	AndroidAnnotationsEnvironment environment();
-
-	JDefinedClass definedClass(String fullyQualifiedClassName);
 }

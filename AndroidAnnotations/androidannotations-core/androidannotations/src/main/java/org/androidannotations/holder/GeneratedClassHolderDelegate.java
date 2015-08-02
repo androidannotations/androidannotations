@@ -42,6 +42,11 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 		return holder.getAnnotatedElement();
 	}
 
+	@Override
+	public AndroidAnnotationsEnvironment environment() {
+		return holder.environment();
+	}
+
 	protected final Classes getClasses() {
 		return environment().getClasses();
 	}
@@ -56,15 +61,5 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 
 	protected final JClass refClass(Class<?> clazz) {
 		return environment().getJClass(clazz);
-	}
-
-	@Override
-	public final JDefinedClass definedClass(String fullyQualifiedClassName) {
-		return holder.definedClass(fullyQualifiedClassName);
-	}
-
-	@Override
-	public AndroidAnnotationsEnvironment environment() {
-		return holder.environment();
 	}
 }
