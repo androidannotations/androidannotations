@@ -109,5 +109,10 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JVar arg = method.param(paramClass, fieldName);
 		method.body().invoke(builderArgsField, bundleHelper.getMethodNameToSave()).arg(argKeyStaticField).arg(arg);
 		method.body()._return(_this());
+
+		String docComment = getProcessingEnvironment().getElementUtils().getDocComment(element);
+		codeModelHelper.addTrimmedDocComment(method, docComment);
+		method.javadoc().addParam(fieldName).append("the Fragment argument");
+		method.javadoc().addReturn().append("the FragmentBuilder to chain calls");
 	}
 }
