@@ -44,7 +44,7 @@ public class AfterExtrasActivityTest {
 	public void afterExtraCalledActivityAfterSetIntent() {
 		activityController.create();
 		assertThat(activity.extraDataSet).isFalse();
-		assertThat(activity.afterExtrasCalled).isFalse();
+		assertThat(activity.afterExtrasCalled).isTrue();
 
 		activity.setIntent(intent);
 		assertThat(activity.extraDataSet).isTrue();
