@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public interface IRClass {
 
-	public enum Res {
+	enum Res {
 		LAYOUT, ID, STRING, ARRAY, COLOR, ANIM, BOOL, DIMEN, DRAWABLE, INTEGER, MOVIE, MENU, RAW, XML;
 		public String rName() {
 			return toString().toLowerCase(Locale.ENGLISH);

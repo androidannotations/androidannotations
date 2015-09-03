@@ -167,7 +167,7 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 	private static class ExtraHandler extends ExtraParameterHandler {
 
-		public ExtraHandler(AndroidAnnotationsEnvironment environment) {
+		ExtraHandler(AndroidAnnotationsEnvironment environment) {
 			super(Receiver.Extra.class, Receiver.class, environment);
 		}
 

@@ -152,6 +152,7 @@
         <!-- <module name="AtclauseOrder" /> -->
         <!-- <module name="NonEmptyAtclauseDescription" /> -->
         <!-- <module name="SingleLineJavadoc" /> -->
+		<module name="CommentsIndentation" />
 	</module>
 	<module name="FileLength" />
 	<module name="SuppressionCommentFilter" />

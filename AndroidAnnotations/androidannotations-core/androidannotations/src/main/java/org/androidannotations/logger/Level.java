@@ -25,7 +25,7 @@ public enum Level {
 	public final int weight;
 	public final String name;
 
-	private Level(int weight, String name) {
+	Level(int weight, String name) {
 		this.weight = weight;
 		this.name = name;
 	}

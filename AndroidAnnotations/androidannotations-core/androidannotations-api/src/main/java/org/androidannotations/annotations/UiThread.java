@@ -147,7 +147,7 @@ public @interface UiThread {
 	/**
 	 * Indicates the propagation behavior of the UiThread annotated method.
 	 */
-	public enum Propagation {
+	enum Propagation {
 
 		/**
 		 * The method will always call the Handler.

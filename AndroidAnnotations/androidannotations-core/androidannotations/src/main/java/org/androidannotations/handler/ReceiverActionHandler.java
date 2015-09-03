@@ -153,7 +153,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 
 	private static class ExtraHandler extends ExtraParameterHandler {
 
-		public ExtraHandler(AndroidAnnotationsEnvironment environment) {
+		ExtraHandler(AndroidAnnotationsEnvironment environment) {
 			super(ReceiverAction.Extra.class, ReceiverAction.class, environment);
 		}
 

@@ -74,7 +74,7 @@ public @interface SharedPref {
 	/**
 	 * Represents the scope of a SharedPreference.
 	 */
-	public enum Scope {
+	enum Scope {
 		/**
 		 * The default shared SharedPreference.
 		 */

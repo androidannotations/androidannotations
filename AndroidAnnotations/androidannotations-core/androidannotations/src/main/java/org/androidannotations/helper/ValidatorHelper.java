@@ -616,7 +616,7 @@ public class ValidatorHelper {
 
 		private final TypeKind typeKind;
 
-		public TypeKindAnnotationCondition(TypeKind typeKind) {
+		TypeKindAnnotationCondition(TypeKind typeKind) {
 			this.typeKind = typeKind;
 		}
 

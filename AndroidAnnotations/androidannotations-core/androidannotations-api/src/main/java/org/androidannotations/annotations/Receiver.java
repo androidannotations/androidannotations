@@ -128,7 +128,7 @@ public @interface Receiver {
 	/**
 	 * Represents event pairs for BroadcastReceiver registration/unregistration.
 	 */
-	public enum RegisterAt {
+	enum RegisterAt {
 		/**
 		 * Register in the onCreate method, unregister in the onDestroy method.
 		 */

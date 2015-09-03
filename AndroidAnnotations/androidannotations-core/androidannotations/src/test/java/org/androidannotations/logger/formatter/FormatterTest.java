@@ -28,7 +28,7 @@ public class FormatterTest {
 	class SomeObject {
 		String name;
 
-		public SomeObject(String name) {
+		SomeObject(String name) {
 			this.name = name;
 		}
 

@@ -56,7 +56,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		public final Class<?> fieldClass;
 		public final String fieldMethodName;
 
-		public EditorFieldHolder(Class<?> fieldClass, String fieldMethodName) {
+		EditorFieldHolder(Class<?> fieldClass, String fieldMethodName) {
 			this.fieldClass = fieldClass;
 			this.fieldMethodName = fieldMethodName;
 		}

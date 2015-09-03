@@ -106,7 +106,7 @@ public final class FileHelper {
 		File sourcesGenerationFolder;
 		File projectRoot;
 
-		public FileHolder(String dummySourceFilePath, File sourcesGenerationFolder, File projectRoot) {
+		FileHolder(String dummySourceFilePath, File sourcesGenerationFolder, File projectRoot) {
 			this.dummySourceFilePath = dummySourceFilePath;
 			this.sourcesGenerationFolder = sourcesGenerationFolder;
 			this.projectRoot = projectRoot;

@@ -19,6 +19,7 @@ package android.os;
  * We have to put this on resources folder because we want to add it to
  * classpath only on some unit tests methods
  */
+@SuppressWarnings("checkstyle:typename")
 public class Build {
 	
 	public static class VERSION {

@@ -574,7 +574,7 @@ public class ViewServer implements Runnable {
 
 		private final Object[] mLock = new Object[0];
 
-		public ViewServerWorker(Socket client) {
+		private ViewServerWorker(Socket client) {
 			mClient = client;
 			mNeedWindowListUpdate = false;
 			mNeedFocusedWindowUpdate = false;

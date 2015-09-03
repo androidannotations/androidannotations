@@ -113,7 +113,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 
 	private static class ExtraHandler extends ExtraParameterHandler {
 
-		public ExtraHandler(AndroidAnnotationsEnvironment environment) {
+		ExtraHandler(AndroidAnnotationsEnvironment environment) {
 			super(OnActivityResult.Extra.class, OnActivityResult.class, environment);
 		}
 

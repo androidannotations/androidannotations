@@ -18,6 +18,7 @@ package android.support.v4.content;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+@SuppressWarnings("checkstyle:hideutilityclassconstructor")
 public class ContextCompat {
 
 	public static Drawable getDrawable(Context context, int id) {

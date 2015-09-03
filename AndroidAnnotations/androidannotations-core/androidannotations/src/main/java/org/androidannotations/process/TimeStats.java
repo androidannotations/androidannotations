@@ -35,7 +35,7 @@ public class TimeStats {
 		public final String key;
 		public final long durationInMs;
 
-		public Duration(String key, long durationInMs) {
+		Duration(String key, long durationInMs) {
 			this.key = key;
 			this.durationInMs = durationInMs;
 		}

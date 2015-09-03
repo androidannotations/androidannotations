@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+@SuppressWarnings("checkstyle:hideutilityclassconstructor")
 public class ActivityCompat {
 
 	public static void startActivity(Activity activity, Intent intent, Bundle options) {

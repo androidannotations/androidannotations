@@ -22,11 +22,11 @@ import javax.lang.model.element.TypeElement;
 
 public interface AnnotationElements {
 
-	public static class AnnotatedAndRootElements {
+	class AnnotatedAndRootElements {
 		public final Element annotatedElement;
 		public final TypeElement rootTypeElement;
 
-		public AnnotatedAndRootElements(Element annotatedElement, TypeElement rootTypeElement) {
+		AnnotatedAndRootElements(Element annotatedElement, TypeElement rootTypeElement) {
 			this.annotatedElement = annotatedElement;
 			this.rootTypeElement = rootTypeElement;
 		}

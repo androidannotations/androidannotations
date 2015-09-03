@@ -90,7 +90,7 @@ public @interface WakeLock {
 	 * A convenience wrapper enum for the
 	 * {@link android.os.PowerManager.WakeLock WakeLock} level integer values.
 	 */
-	public enum Level {
+	enum Level {
 		/**
 		 * Represents {@link android.os.PowerManager#FULL_WAKE_LOCK}.
 		 */
@@ -116,7 +116,7 @@ public @interface WakeLock {
 	 * A convenience wrapper enum for the
 	 * {@link android.os.PowerManager.WakeLock WakeLock} flag integer values.
 	 */
-	public enum Flag {
+	enum Flag {
 
 		/**
 		 * Represents {@link android.os.PowerManager#ACQUIRE_CAUSES_WAKEUP}.

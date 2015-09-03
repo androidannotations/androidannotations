@@ -80,7 +80,7 @@ public class ParameterizedRobolectricTestRunnerWorkaround extends Suite {
 
 	private static class ClassLoaderCreatorRobolectricTestRunner extends RobolectricTestRunner {
 
-		public ClassLoaderCreatorRobolectricTestRunner(Class<?> testClass) throws Exception {
+		ClassLoaderCreatorRobolectricTestRunner(Class<?> testClass) throws Exception {
 			super(testClass);
 
 			Map<Class<? extends RobolectricTestRunner>, EnvHolder> envHoldersByTestRunner = field("envHoldersByTestRunner") //

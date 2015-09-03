@@ -94,7 +94,7 @@ public @interface EBean {
 	/**
 	 * The scope of an enhanced bean.
 	 */
-	public enum Scope {
+	enum Scope {
 
 		/**
 		 * A new instance of the bean is created each time it is needed.
