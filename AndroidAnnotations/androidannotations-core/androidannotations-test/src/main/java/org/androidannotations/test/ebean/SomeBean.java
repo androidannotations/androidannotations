@@ -15,10 +15,10 @@
  */
 package org.androidannotations.test.ebean;
 
-import android.content.Context;
-
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
+
+import android.content.Context;
 
 @EBean
 public class SomeBean {

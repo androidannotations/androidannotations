@@ -15,9 +15,10 @@
  */
 package org.androidannotations.ormlite.test;
 
-import android.app.Activity;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
+
+import android.app.Activity;
 
 @EActivity
 public class OrmLiteOnDestroyActivity extends Activity {

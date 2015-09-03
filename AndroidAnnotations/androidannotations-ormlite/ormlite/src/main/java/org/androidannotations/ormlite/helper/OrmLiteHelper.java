@@ -16,7 +16,7 @@
 package org.androidannotations.ormlite.helper;
 
 
-import org.androidannotations.helper.TargetAnnotationHelper;
+import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -24,7 +24,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import java.util.List;
+
+import org.androidannotations.helper.TargetAnnotationHelper;
 
 public class OrmLiteHelper {
 

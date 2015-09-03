@@ -15,11 +15,11 @@
  */
 package org.androidannotations.test.prefs;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.test.R;
+
+import android.app.Activity;
 
 @EActivity(R.layout.main)
 public class PrefsActivity extends Activity {

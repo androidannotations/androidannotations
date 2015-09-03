@@ -1,11 +1,13 @@
 package org.androidannotations.roboguice.test;
 
-import android.app.Application;
+import java.lang.reflect.Method;
+
 import org.robolectric.Robolectric;
 import org.robolectric.TestLifecycleApplication;
-import roboguice.RoboGuice;
 
-import java.lang.reflect.Method;
+import android.app.Application;
+
+import roboguice.RoboGuice;
 
 // CHECKSTYLE:OFF
 public class TestSampleRoboApplication_ extends Application implements TestLifecycleApplication {

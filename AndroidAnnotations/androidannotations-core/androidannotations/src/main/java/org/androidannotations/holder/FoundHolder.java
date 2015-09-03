@@ -18,10 +18,11 @@ package org.androidannotations.holder;
 import static com.sun.codemodel.JExpr._null;
 import static com.sun.codemodel.JExpr.cast;
 
+import org.androidannotations.process.ProcessHolder;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpression;
-import org.androidannotations.process.ProcessHolder;
 
 public abstract class FoundHolder {
 

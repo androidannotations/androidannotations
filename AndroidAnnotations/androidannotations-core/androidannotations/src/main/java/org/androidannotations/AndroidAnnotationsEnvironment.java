@@ -22,9 +22,6 @@ import java.util.Set;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
@@ -37,6 +34,10 @@ import org.androidannotations.process.Option;
 import org.androidannotations.process.Options;
 import org.androidannotations.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
+
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 
 public class AndroidAnnotationsEnvironment {
 

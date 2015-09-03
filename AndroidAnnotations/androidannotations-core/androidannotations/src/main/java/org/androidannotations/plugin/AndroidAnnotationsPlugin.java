@@ -15,18 +15,18 @@
  */
 package org.androidannotations.plugin;
 
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.exception.VersionNotFoundException;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.process.Option;
-
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
 
 public abstract class AndroidAnnotationsPlugin {
 

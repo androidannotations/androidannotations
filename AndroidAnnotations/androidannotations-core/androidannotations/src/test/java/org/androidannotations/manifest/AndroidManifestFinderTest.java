@@ -15,14 +15,14 @@
  */
 package org.androidannotations.manifest;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.testutils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 

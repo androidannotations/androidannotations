@@ -15,9 +15,9 @@
  */
 package org.androidannotations.test.ebean;
 
-import org.androidannotations.annotations.EBean;
-
 import java.util.List;
+
+import org.androidannotations.annotations.EBean;
 
 @EBean
 public class SubtypedGenericBeanExt<S extends List<Integer>> extends SubtypedGenericBean<S, Integer> {

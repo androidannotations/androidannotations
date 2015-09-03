@@ -37,6 +37,7 @@ import javax.lang.model.util.Types;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.HasIntentBuilder;
+import org.androidannotations.process.ProcessHolder;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
@@ -48,7 +49,6 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.process.ProcessHolder;
 
 public abstract class IntentBuilder {
 

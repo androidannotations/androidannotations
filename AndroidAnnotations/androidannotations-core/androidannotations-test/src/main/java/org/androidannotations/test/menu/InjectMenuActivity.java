@@ -15,10 +15,11 @@
  */
 package org.androidannotations.test.menu;
 
-import android.app.Activity;
-import android.view.Menu;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InjectMenu;
+
+import android.app.Activity;
+import android.view.Menu;
 
 @EActivity
 public class InjectMenuActivity extends Activity {

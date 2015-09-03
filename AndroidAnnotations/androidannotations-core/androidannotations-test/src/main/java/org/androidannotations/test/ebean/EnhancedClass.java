@@ -15,13 +15,6 @@
  */
 package org.androidannotations.test.ebean;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Service;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.widget.TextView;
-
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
@@ -35,6 +28,13 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.test.ThreadActivity;
+
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Service;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.widget.TextView;
 
 /**
  * This class doesn't have any test, currently it's just there to show that

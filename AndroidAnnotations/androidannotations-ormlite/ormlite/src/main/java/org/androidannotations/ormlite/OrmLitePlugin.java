@@ -16,9 +16,9 @@
 package org.androidannotations.ormlite;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.ormlite.handler.OrmLiteDaoHandler;
+import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 
 public class OrmLitePlugin extends AndroidAnnotationsPlugin {
 

@@ -15,12 +15,12 @@
  */
 package org.androidannotations.test.afterviews;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.test.R;
+
+import android.app.Activity;
 
 @EActivity(R.layout.main)
 public class AfterViewsActivity extends Activity {

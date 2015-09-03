@@ -15,12 +15,14 @@
  */
 package org.androidannotations.ormlite.test;
 
-import android.app.IntentService;
-import android.content.Intent;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
+
+import android.app.IntentService;
+import android.content.Intent;
+
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 @EService
 public class MyService extends IntentService {

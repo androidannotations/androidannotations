@@ -15,12 +15,12 @@
  */
 package org.androidannotations.test.afterinject;
 
-import android.app.Activity;
-import android.app.NotificationManager;
-
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
+
+import android.app.Activity;
+import android.app.NotificationManager;
 
 @EActivity
 public class AfterInjectActivity extends Activity {

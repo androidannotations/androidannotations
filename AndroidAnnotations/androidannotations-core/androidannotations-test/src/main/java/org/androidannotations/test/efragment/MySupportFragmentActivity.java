@@ -15,13 +15,13 @@
  */
 package org.androidannotations.test.efragment;
 
-import android.support.v4.app.FragmentActivity;
-
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.test.R;
+
+import android.support.v4.app.FragmentActivity;
 
 @EActivity(R.layout.support_fragments)
 public class MySupportFragmentActivity extends FragmentActivity {

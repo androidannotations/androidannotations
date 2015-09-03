@@ -15,10 +15,11 @@
  */
 package org.androidannotations.ormlite.test;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
+
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 @EBean
 public class MyBean {

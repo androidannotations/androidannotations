@@ -15,11 +15,13 @@
  */
 package org.androidannotations.ormlite.test;
 
-import android.app.Fragment;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
+
+import android.app.Fragment;
+
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 @EFragment
 public class MyFragment extends Fragment {

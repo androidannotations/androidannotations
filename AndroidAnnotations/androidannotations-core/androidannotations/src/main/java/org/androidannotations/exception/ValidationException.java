@@ -15,9 +15,9 @@
  */
 package org.androidannotations.exception;
 
-import org.androidannotations.process.ElementValidation;
-
 import java.util.List;
+
+import org.androidannotations.process.ElementValidation;
 
 public class ValidationException extends Exception {
 

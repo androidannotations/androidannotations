@@ -15,13 +15,13 @@
  */
 package org.androidannotations.ormlite.handler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
+import static com.sun.codemodel.JExpr._new;
+import static com.sun.codemodel.JExpr.cast;
+import static com.sun.codemodel.JExpr.ref;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
+
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
@@ -32,12 +32,13 @@ import org.androidannotations.ormlite.helper.OrmLiteValidatorHelper;
 import org.androidannotations.ormlite.holder.OrmLiteHolder;
 import org.androidannotations.process.ElementValidation;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JCatchBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JTryBlock;
+import com.sun.codemodel.JVar;
 
 public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 

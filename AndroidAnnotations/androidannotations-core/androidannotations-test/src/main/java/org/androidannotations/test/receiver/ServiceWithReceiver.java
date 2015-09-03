@@ -15,11 +15,12 @@
  */
 package org.androidannotations.test.receiver;
 
+import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.Receiver;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.Receiver;
 
 @EService
 public class ServiceWithReceiver extends Service {

@@ -15,18 +15,20 @@
  */
 package org.androidannotations.generation;
 
-import com.sun.codemodel.CodeWriter;
-import com.sun.codemodel.JPackage;
-import org.androidannotations.logger.Logger;
-import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.process.OriginatingElements;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.OutputStream;
+
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
+import org.androidannotations.process.OriginatingElements;
+
+import com.sun.codemodel.CodeWriter;
+import com.sun.codemodel.JPackage;
 
 public class SourceCodeWriter extends CodeWriter {
 

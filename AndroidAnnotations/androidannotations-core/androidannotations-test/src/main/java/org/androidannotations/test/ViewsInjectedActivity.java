@@ -15,16 +15,17 @@
  */
 package org.androidannotations.test;
 
-import android.app.Activity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import java.util.List;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.ViewsById;
 
-import java.util.List;
+import android.app.Activity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 @EActivity(R.layout.views_injected)
 public class ViewsInjectedActivity extends Activity {

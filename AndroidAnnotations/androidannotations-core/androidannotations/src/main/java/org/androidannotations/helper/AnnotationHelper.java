@@ -24,15 +24,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.sun.codemodel.JFieldRef;
-import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.OptionsItem;
-import org.androidannotations.annotations.ResId;
-import org.androidannotations.logger.Logger;
-import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.rclass.IRInnerClass;
-import org.androidannotations.rclass.RInnerClass;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -48,7 +39,17 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.ResId;
 import org.androidannotations.annotations.SeekBarTouchStop;
+import org.androidannotations.logger.Logger;
+import org.androidannotations.logger.LoggerFactory;
+import org.androidannotations.rclass.IRInnerClass;
+import org.androidannotations.rclass.RInnerClass;
+
+import com.sun.codemodel.JFieldRef;
 
 public class AnnotationHelper {
 

@@ -15,16 +15,17 @@
  */
 package org.androidannotations.otto.handler;
 
-import com.sun.codemodel.JMethod;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.process.ElementValidation;
 
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
+import com.sun.codemodel.JMethod;
 
 public abstract class AbstractOttoHandler extends BaseAnnotationHandler<EComponentHolder> {
 

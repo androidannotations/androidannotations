@@ -15,10 +15,10 @@
  */
 package org.androidannotations.test.ebean;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+
+import android.app.Activity;
 
 @EActivity
 public class BeanInjectedActivity extends Activity {

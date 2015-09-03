@@ -15,11 +15,7 @@
  */
 package org.androidannotations.ormlite.helper;
 
-import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.ormlite.annotations.OrmLiteDao;
-import org.androidannotations.process.ElementValidation;
+import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -29,7 +25,12 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import java.util.List;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.ormlite.annotations.OrmLiteDao;
+import org.androidannotations.process.ElementValidation;
 
 public class OrmLiteValidatorHelper {
 

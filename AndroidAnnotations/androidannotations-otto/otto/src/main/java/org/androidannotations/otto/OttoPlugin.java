@@ -16,10 +16,10 @@
 package org.androidannotations.otto;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.otto.handler.ProduceHandler;
 import org.androidannotations.otto.handler.SubscribeHandler;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
-import org.androidannotations.handler.AnnotationHandlers;
 
 public class OttoPlugin extends AndroidAnnotationsPlugin {
 

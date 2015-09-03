@@ -15,10 +15,10 @@
  */
 package org.androidannotations.test.ebean;
 
+import org.androidannotations.annotations.EBean;
+
 import android.content.Context;
 import android.widget.ArrayAdapter;
-
-import org.androidannotations.annotations.EBean;
 
 @EBean
 public class SomeArrayAdapter extends ArrayAdapter<String> {

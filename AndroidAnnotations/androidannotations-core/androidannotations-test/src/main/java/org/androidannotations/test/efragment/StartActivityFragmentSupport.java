@@ -15,9 +15,10 @@
  */
 package org.androidannotations.test.efragment;
 
-import android.support.v4.app.Fragment;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.test.ExtraInjectedActivity_;
+
+import android.support.v4.app.Fragment;
 
 @EFragment
 public class StartActivityFragmentSupport extends Fragment {

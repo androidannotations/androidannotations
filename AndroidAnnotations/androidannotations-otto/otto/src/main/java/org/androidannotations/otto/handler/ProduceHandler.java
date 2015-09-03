@@ -15,12 +15,12 @@
  */
 package org.androidannotations.otto.handler;
 
+import javax.lang.model.element.ExecutableElement;
+
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.otto.helper.OttoClasses;
 import org.androidannotations.process.ElementValidation;
-
-import javax.lang.model.element.ExecutableElement;
 
 public class ProduceHandler extends AbstractOttoHandler {
 

@@ -15,11 +15,11 @@
  */
 package org.androidannotations.test.ebean;
 
+import java.util.List;
+
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.UiThread;
-
-import java.util.List;
 
 @EBean
 public class SubtypedGenericBean<S extends List<T>, T extends Number> {

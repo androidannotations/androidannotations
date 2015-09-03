@@ -15,9 +15,9 @@
  */
 package org.androidannotations.test.ebean;
 
-import org.androidannotations.annotations.EBean;
-
 import java.util.ArrayList;
+
+import org.androidannotations.annotations.EBean;
 
 @EBean
 public class SubtypedGenericBeanExtExt extends SubtypedGenericBeanExt<ArrayList<Integer>> {

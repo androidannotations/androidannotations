@@ -35,10 +35,12 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EActivityHolder;
+import org.androidannotations.process.ElementValidation;
+import org.androidannotations.roboguice.annotations.RoboGuice;
+import org.androidannotations.roboguice.api.RoboGuiceHelper;
 import org.androidannotations.roboguice.helper.RoboGuiceClasses;
 import org.androidannotations.roboguice.helper.RoboGuiceValidatorHelper;
 import org.androidannotations.roboguice.holder.RoboGuiceHolder;
-import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -50,8 +52,6 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JVar;
-import org.androidannotations.roboguice.annotations.RoboGuice;
-import org.androidannotations.roboguice.api.RoboGuiceHelper;
 
 public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 

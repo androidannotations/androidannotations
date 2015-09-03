@@ -16,12 +16,11 @@
 package org.androidannotations.rest.spring.helper;
 
 import static java.util.Arrays.asList;
-
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_FACTORY;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_INTERCEPTOR;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_MESSAGE_CONVERTER;
-import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_TEMPLATE;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_CLIENT_EXCEPTION;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_TEMPLATE;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

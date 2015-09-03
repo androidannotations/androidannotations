@@ -16,12 +16,12 @@
 package org.androidannotations.menu;
 
 
+import java.io.IOException;
+
 import org.androidannotations.AndroidAnnotationProcessor;
 import org.androidannotations.testutils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class InjectMenuTest extends AAProcessorTestHelper {
 

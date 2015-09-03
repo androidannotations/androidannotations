@@ -15,11 +15,6 @@
  */
 package org.androidannotations.test.efragment;
 
-import android.app.ActivityManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.Fragment;
-import android.widget.TextView;
-
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -32,6 +27,11 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.test.R;
 import org.androidannotations.test.ebean.SomeBean;
+
+import android.app.ActivityManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.Fragment;
+import android.widget.TextView;
 
 @EFragment(R.layout.injected)
 public class MySupportFragment extends Fragment {

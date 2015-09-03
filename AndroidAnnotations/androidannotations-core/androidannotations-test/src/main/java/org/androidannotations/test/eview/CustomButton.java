@@ -15,11 +15,6 @@
  */
 package org.androidannotations.test.eview;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.animation.Animation;
-import android.widget.Button;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EView;
@@ -28,6 +23,11 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.res.AnimationRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.test.R;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.animation.Animation;
+import android.widget.Button;
 
 @EView
 public class CustomButton extends Button {

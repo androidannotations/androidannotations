@@ -15,10 +15,14 @@
  */
 package org.androidannotations.ormlite.holder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
+import static com.sun.codemodel.JExpr._null;
+import static com.sun.codemodel.JMod.PRIVATE;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.lang.model.type.TypeMirror;
+
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.EComponentHolder;
@@ -26,12 +30,10 @@ import org.androidannotations.holder.HasLifecycleMethods;
 import org.androidannotations.ormlite.helper.OrmLiteClasses;
 import org.androidannotations.plugin.PluginClassHolder;
 
-import javax.lang.model.type.TypeMirror;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JMod.PRIVATE;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JExpression;
+import com.sun.codemodel.JFieldVar;
 
 public class OrmLiteHolder extends PluginClassHolder<EComponentHolder> {
 

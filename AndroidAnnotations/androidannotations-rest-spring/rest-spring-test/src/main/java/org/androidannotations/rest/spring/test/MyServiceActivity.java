@@ -15,10 +15,10 @@
  */
 package org.androidannotations.rest.spring.test;
 
-import android.app.Activity;
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.rest.spring.annotations.RestService;
+
+import android.app.Activity;
 
 @EActivity
 public class MyServiceActivity extends Activity {

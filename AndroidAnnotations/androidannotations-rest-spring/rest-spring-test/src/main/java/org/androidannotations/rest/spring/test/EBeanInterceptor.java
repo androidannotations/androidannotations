@@ -15,13 +15,13 @@
  */
 package org.androidannotations.rest.spring.test;
 
+import java.io.IOException;
+
 import org.androidannotations.annotations.EBean;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-
-import java.io.IOException;
 
 @EBean
 public class EBeanInterceptor implements ClientHttpRequestInterceptor {

@@ -15,11 +15,12 @@
  */
 package org.androidannotations.process;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ElementValidation {
 

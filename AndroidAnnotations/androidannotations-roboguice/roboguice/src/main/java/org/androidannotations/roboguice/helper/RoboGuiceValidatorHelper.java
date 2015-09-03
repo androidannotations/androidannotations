@@ -15,10 +15,10 @@
  */
 package org.androidannotations.roboguice.helper;
 
+import javax.lang.model.util.Elements;
+
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.process.ElementValidation;
-
-import javax.lang.model.util.Elements;
 
 public class RoboGuiceValidatorHelper {
 

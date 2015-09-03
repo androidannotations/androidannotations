@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.mockito.ArgumentMatcher;
@@ -36,6 +34,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.RestTemplate;
+
+import junit.framework.AssertionFailedError;
 
 public class RequestTestBuilder {
 	private MyService_ myService = new MyService_(null);

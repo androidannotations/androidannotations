@@ -19,16 +19,17 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
 import org.androidannotations.roboguice.annotations.RoboGuice;
-import roboguice.inject.InjectResource;
-import roboguice.inject.InjectView;
+
 import android.app.Activity;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
+import roboguice.inject.InjectResource;
+import roboguice.inject.InjectView;
 
 /**
  * Adapted from http://pivotal.github.com/robolectric/roboguice.html

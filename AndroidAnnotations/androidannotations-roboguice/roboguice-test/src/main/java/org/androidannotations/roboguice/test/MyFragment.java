@@ -15,9 +15,10 @@
  */
 package org.androidannotations.roboguice.test;
 
-import android.app.Fragment;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EFragment;
+
+import android.app.Fragment;
 
 @EFragment(R.layout.injected)
 public class MyFragment extends Fragment {

@@ -15,18 +15,19 @@
  */
 package org.androidannotations.roboguice.holder;
 
+import static org.androidannotations.helper.ModelConstants.generationSuffix;
+
+import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.holder.EActivityHolder;
+import org.androidannotations.plugin.PluginClassHolder;
+import org.androidannotations.roboguice.helper.RoboGuiceClasses;
+
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JVar;
-import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.holder.EActivityHolder;
-import org.androidannotations.plugin.PluginClassHolder;
-import org.androidannotations.roboguice.helper.RoboGuiceClasses;
-
-import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 

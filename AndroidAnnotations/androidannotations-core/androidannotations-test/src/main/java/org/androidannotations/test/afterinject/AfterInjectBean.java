@@ -15,11 +15,11 @@
  */
 package org.androidannotations.test.afterinject;
 
-import android.app.NotificationManager;
-
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.SystemService;
+
+import android.app.NotificationManager;
 
 @EBean
 public class AfterInjectBean {

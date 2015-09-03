@@ -15,11 +15,11 @@
  */
 package org.androidannotations.ormlite.test;
 
+import java.sql.SQLException;
+
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
-
-import java.sql.SQLException;
 
 public class UserDaoImpl extends BaseDaoImpl<User, Long> implements UserDao {
 	

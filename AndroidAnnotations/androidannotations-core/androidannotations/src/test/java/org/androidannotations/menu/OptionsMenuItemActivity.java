@@ -15,10 +15,11 @@
  */
 package org.androidannotations.menu;
 
-import android.app.Activity;
-import android.view.MenuItem;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenuItem;
+
+import android.app.Activity;
+import android.view.MenuItem;
 
 @EActivity
 public class OptionsMenuItemActivity extends Activity {

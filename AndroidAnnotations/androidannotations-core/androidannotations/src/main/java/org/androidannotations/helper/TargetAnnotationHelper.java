@@ -15,11 +15,12 @@
  */
 package org.androidannotations.helper;
 
-import org.androidannotations.AndroidAnnotationsEnvironment;
+import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
-import java.lang.annotation.Annotation;
+
+import org.androidannotations.AndroidAnnotationsEnvironment;
 
 public class TargetAnnotationHelper extends AnnotationHelper {
 

@@ -15,8 +15,8 @@
  */
 package android.support.v4.app;
 
-import android.content.Intent;
 import android.app.Activity;
+import android.content.Intent;
 
 /**
  * We have to put this on resources folder because we want to add it to

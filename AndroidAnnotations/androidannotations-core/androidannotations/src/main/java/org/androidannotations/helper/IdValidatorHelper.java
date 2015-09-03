@@ -15,13 +15,14 @@
  */
 package org.androidannotations.helper;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.lang.model.element.Element;
+
 import org.androidannotations.annotations.ResId;
 import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass.Res;
-
-import javax.lang.model.element.Element;
-import java.util.List;
-import java.util.Set;
 
 public class IdValidatorHelper extends ValidatorHelper {
 

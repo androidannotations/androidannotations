@@ -15,6 +15,9 @@
  */
 package org.androidannotations.rest.spring.test;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.androidannotations.annotations.EBean;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -22,9 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-
-import java.io.IOException;
-import java.util.List;
 
 @EBean
 public class EBeanConverter implements HttpMessageConverter<Object> {

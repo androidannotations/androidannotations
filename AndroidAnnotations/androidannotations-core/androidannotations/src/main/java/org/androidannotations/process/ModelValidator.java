@@ -15,6 +15,14 @@
  */
 package org.androidannotations.process;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.exception.ValidationException;
 import org.androidannotations.handler.AnnotationHandler;
@@ -22,13 +30,6 @@ import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.model.AnnotationElements;
 import org.androidannotations.model.AnnotationElementsHolder;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ModelValidator {
 

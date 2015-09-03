@@ -15,14 +15,16 @@
  */
 package org.androidannotations.ormlite.test;
 
+import org.androidannotations.annotations.EProvider;
+import org.androidannotations.ormlite.annotations.OrmLiteDao;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import org.androidannotations.annotations.EProvider;
-import org.androidannotations.ormlite.annotations.OrmLiteDao;
 
 @EProvider
 public class MyProvider extends ContentProvider {

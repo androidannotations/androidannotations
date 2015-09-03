@@ -15,12 +15,6 @@
  */
 package org.androidannotations.test.eservice;
 
-import android.app.IntentService;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
-
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
@@ -28,6 +22,12 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.test.ebean.EnhancedClass;
+
+import android.app.IntentService;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
 @EService
 public class MySimpleIntentService extends IntentService {

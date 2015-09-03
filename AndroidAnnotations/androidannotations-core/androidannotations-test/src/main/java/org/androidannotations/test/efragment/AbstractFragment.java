@@ -15,11 +15,11 @@
  */
 package org.androidannotations.test.efragment;
 
-import android.app.Fragment;
-
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.test.ebean.SomeBean;
+
+import android.app.Fragment;
 
 @EFragment
 public abstract class AbstractFragment extends Fragment {

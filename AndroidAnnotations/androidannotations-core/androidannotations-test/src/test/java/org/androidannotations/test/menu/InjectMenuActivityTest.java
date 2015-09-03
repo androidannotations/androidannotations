@@ -15,15 +15,16 @@
  */
 package org.androidannotations.test.menu;
 
-import android.view.Menu;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import android.view.Menu;
 
 @RunWith(RobolectricTestRunner.class)
 public class InjectMenuActivityTest {

@@ -15,9 +15,9 @@
  */
 package org.androidannotations.test.prefs;
 
-import android.content.Context;
-
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+
+import android.content.Context;
 
 @SharedPref(mode = Context.MODE_WORLD_WRITEABLE)
 public interface PublicPrefs {

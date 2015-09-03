@@ -15,12 +15,14 @@
  */
 package org.androidannotations.ormlite.test;
 
-import android.app.Activity;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
+
+import android.app.Activity;
+
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 @EActivity
 public class MyActivity extends Activity {

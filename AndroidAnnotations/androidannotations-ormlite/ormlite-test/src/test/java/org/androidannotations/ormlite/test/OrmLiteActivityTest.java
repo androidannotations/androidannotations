@@ -15,13 +15,13 @@
  */
 package org.androidannotations.ormlite.test;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class OrmLiteActivityTest {
