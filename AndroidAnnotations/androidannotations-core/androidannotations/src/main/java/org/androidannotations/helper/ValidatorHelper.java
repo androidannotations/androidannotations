@@ -106,6 +106,12 @@ public class ValidatorHelper {
 		}
 	}
 
+	public void isNotInterface(TypeElement element, ElementValidation valid) {
+		if (annotationHelper.isInterface(element)) {
+			valid.addError("%s cannot be used on an interface");
+		}
+	}
+
 	public void isTopLevel(TypeElement element, ElementValidation valid) {
 		if (!annotationHelper.isTopLevel(element)) {
 			valid.addError("%s can only be used on a top level type");

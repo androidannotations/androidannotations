@@ -38,6 +38,11 @@ import java.lang.annotation.Target;
  * create Abstract classes that handle common code.
  * </p>
  * <p>
+ * {@link EBean} can  only be used on classes and NOT on interfaces.
+ * If you want to use an {@link EBean} with interface you must annotate
+ * the implementation class and not the interface.
+ * </p>
+ * <p>
  * Most annotations are supported in {@link EBean} classes, except the ones
  * related to extras. Views related annotations will only work if the bean was
  * injected in an activity with a layout containing the views you're dealing
