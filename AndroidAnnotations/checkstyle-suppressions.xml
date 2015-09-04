@@ -20,7 +20,7 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-    <suppress files="org[\\/]androidannotations[\\/](?:[^\\/]+$|(?!annotations)[^\\/]+[\\/])" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle|JavadocTagContinuationIndentation|AtclauseOrder|NonEmptyAtclauseDescription|SingleLineJavadoc" />
+    <suppress files="org[\\/]androidannotations[\\/](?!(([^\\/]+)[\\/])*annotations)" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle|JavadocTagContinuationIndentation|AtclauseOrder|NonEmptyAtclauseDescription|SingleLineJavadoc" />
 	<suppress files="org[\\/]robolectric[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
     <suppress files="(com|android)[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
     <suppress files="R.java" checks=".*" />
