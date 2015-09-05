@@ -20,10 +20,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JMethod;
 

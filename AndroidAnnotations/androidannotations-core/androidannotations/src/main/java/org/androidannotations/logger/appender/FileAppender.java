@@ -26,11 +26,11 @@ import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.helper.FileHelper;
+import org.androidannotations.Option;
+import org.androidannotations.internal.helper.FileHelper;
 import org.androidannotations.logger.Level;
 import org.androidannotations.logger.LoggerContext;
 import org.androidannotations.logger.formatter.FormatterFull;
-import org.androidannotations.process.Option;
 
 public class FileAppender extends Appender {
 

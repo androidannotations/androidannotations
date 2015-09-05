@@ -20,8 +20,8 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 
+import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.ResId;
-import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rclass.IRClass.Res;
 
 public class IdValidatorHelper extends ValidatorHelper {

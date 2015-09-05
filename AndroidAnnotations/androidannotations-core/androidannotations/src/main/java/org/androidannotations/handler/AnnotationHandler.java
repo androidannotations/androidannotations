@@ -17,8 +17,8 @@ package org.androidannotations.handler;
 
 import javax.lang.model.element.Element;
 
+import org.androidannotations.ElementValidation;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.process.ElementValidation;
 
 public interface AnnotationHandler<T extends GeneratedClassHolder> {
 

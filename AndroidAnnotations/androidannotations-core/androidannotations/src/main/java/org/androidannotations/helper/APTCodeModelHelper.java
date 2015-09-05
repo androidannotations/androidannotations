@@ -50,6 +50,7 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.internal.helper.AnnotationParamExtractor;
 
 import com.sun.codemodel.JAnnotatable;
 import com.sun.codemodel.JAnnotationArrayMember;

@@ -19,7 +19,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.process.ElementValidation;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Delete;
 
 public class DeleteHandler extends RestMethodHandler {

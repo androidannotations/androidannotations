@@ -30,8 +30,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.process.ElementValidation;
 import org.androidannotations.rest.spring.helper.RestAnnotationHelper;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
 import org.androidannotations.rest.spring.holder.RestHolder;

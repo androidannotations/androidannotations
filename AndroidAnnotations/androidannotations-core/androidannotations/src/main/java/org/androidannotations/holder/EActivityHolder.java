@@ -31,12 +31,12 @@ import java.util.List;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.helper.ActivityIntentBuilder;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.IntentBuilder;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
+import org.androidannotations.internal.core.helper.ActivityIntentBuilder;
+import org.androidannotations.internal.core.helper.IntentBuilder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;

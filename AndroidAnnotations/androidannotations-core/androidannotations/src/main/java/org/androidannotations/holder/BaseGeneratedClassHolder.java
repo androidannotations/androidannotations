@@ -31,7 +31,7 @@ import javax.lang.model.element.TypeParameterElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.APTCodeModelHelper;
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.internal.process.ProcessHolder;
 
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JClass;

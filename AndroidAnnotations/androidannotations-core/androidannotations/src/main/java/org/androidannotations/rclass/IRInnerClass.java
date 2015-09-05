@@ -33,6 +33,4 @@ public interface IRInnerClass {
 
 	JFieldRef getIdStaticRef(String name, AndroidAnnotationsEnvironment environment);
 
-	IRInnerClass EMPTY_R_INNER_CLASS = new RInnerClass(null);
-
 }

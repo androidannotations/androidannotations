@@ -15,7 +15,7 @@
  */
 package org.androidannotations.holder;
 
-import org.androidannotations.helper.IntentBuilder;
+import org.androidannotations.internal.core.helper.IntentBuilder;
 
 import com.sun.codemodel.JDefinedClass;
 

@@ -23,6 +23,7 @@ import java.util.List;
 import javax.lang.model.SourceVersion;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.Option;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.EBean;
@@ -33,7 +34,6 @@ import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.process.Option;
 
 public abstract class ModelConstants {
 

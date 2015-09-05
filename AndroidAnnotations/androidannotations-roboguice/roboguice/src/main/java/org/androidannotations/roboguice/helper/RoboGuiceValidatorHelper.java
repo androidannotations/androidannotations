@@ -17,8 +17,8 @@ package org.androidannotations.roboguice.helper;
 
 import javax.lang.model.util.Elements;
 
+import org.androidannotations.ElementValidation;
 import org.androidannotations.helper.AnnotationHelper;
-import org.androidannotations.process.ElementValidation;
 
 public class RoboGuiceValidatorHelper {
 

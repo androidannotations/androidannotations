@@ -22,12 +22,12 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.Option;
 import org.androidannotations.logger.appender.Appender;
 import org.androidannotations.logger.appender.ConsoleAppender;
 import org.androidannotations.logger.appender.FileAppender;
 import org.androidannotations.logger.appender.MessagerAppender;
 import org.androidannotations.logger.formatter.Formatter;
-import org.androidannotations.process.Option;
 
 public final class LoggerContext {
 

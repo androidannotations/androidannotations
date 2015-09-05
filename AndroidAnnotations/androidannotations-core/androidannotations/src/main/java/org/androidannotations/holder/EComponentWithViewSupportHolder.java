@@ -34,7 +34,7 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
 import org.androidannotations.api.view.OnViewChangedNotifier;
-import org.androidannotations.helper.ViewNotifierHelper;
+import org.androidannotations.internal.helper.ViewNotifierHelper;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;

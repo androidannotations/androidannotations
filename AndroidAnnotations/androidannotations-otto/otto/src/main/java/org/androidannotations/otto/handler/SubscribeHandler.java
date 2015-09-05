@@ -18,9 +18,9 @@ package org.androidannotations.otto.handler;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.otto.helper.OttoClasses;
-import org.androidannotations.process.ElementValidation;
 
 public class SubscribeHandler extends AbstractOttoHandler {
 

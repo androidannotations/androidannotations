@@ -24,9 +24,9 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.IntentBuilder;
-import org.androidannotations.helper.ServiceIntentBuilder;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
+import org.androidannotations.internal.core.helper.IntentBuilder;
+import org.androidannotations.internal.core.helper.ServiceIntentBuilder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JDefinedClass;

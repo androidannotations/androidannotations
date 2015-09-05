@@ -26,7 +26,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import org.androidannotations.process.ElementValidation;
+import org.androidannotations.ElementValidation;
 
 public class ValidatorParameterHelper {
 

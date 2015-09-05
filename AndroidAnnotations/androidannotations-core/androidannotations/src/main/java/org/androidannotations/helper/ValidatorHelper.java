@@ -54,6 +54,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
@@ -73,9 +74,8 @@ import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.api.sharedpreferences.SharedPreferencesHelper;
-import org.androidannotations.model.AndroidSystemServices;
-import org.androidannotations.model.AnnotationElements;
-import org.androidannotations.process.ElementValidation;
+import org.androidannotations.internal.core.model.AndroidSystemServices;
+import org.androidannotations.internal.model.AnnotationElements;
 
 @SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
@@ -556,7 +556,8 @@ public class ValidatorHelper {
 		}
 	}
 
-	public void androidService(AndroidSystemServices androidSystemServices, Element element, ElementValidation valid) {
+	public void androidService(Element element, ElementValidation valid) {
+		AndroidSystemServices androidSystemServices = new AndroidSystemServices(environment());
 		TypeMirror serviceType = element.asType();
 		if (!androidSystemServices.contains(serviceType)) {
 			valid.addError("Unknown service type: " + serviceType.toString());

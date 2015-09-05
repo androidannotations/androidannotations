@@ -27,10 +27,10 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
-import org.androidannotations.process.ElementValidation;
 
 public class OrmLiteValidatorHelper {
 

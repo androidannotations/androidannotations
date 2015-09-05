@@ -33,9 +33,9 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EActivityHolder;
-import org.androidannotations.process.ElementValidation;
 import org.androidannotations.roboguice.annotations.RoboGuice;
 import org.androidannotations.roboguice.api.RoboGuiceHelper;
 import org.androidannotations.roboguice.helper.RoboGuiceClasses;

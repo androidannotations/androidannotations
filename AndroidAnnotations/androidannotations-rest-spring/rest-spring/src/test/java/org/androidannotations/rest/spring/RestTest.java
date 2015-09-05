@@ -17,7 +17,7 @@ package org.androidannotations.rest.spring;
 
 import java.io.IOException;
 
-import org.androidannotations.AndroidAnnotationProcessor;
+import org.androidannotations.internal.AndroidAnnotationProcessor;
 import org.androidannotations.testutils.AAProcessorTestHelper;
 import org.junit.Before;
 import org.junit.Test;

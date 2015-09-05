@@ -44,10 +44,10 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
 import org.androidannotations.annotations.SeekBarTouchStop;
+import org.androidannotations.internal.rclass.RInnerClass;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 import org.androidannotations.rclass.IRInnerClass;
-import org.androidannotations.rclass.RInnerClass;
 
 import com.sun.codemodel.JFieldRef;
 

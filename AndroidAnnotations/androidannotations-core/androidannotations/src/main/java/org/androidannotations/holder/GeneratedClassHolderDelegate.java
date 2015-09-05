@@ -18,7 +18,7 @@ package org.androidannotations.holder;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.process.ProcessHolder.Classes;
+import org.androidannotations.internal.process.ProcessHolder.Classes;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;

@@ -23,6 +23,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
@@ -30,7 +31,6 @@ import org.androidannotations.ormlite.helper.OrmLiteClasses;
 import org.androidannotations.ormlite.helper.OrmLiteHelper;
 import org.androidannotations.ormlite.helper.OrmLiteValidatorHelper;
 import org.androidannotations.ormlite.holder.OrmLiteHolder;
-import org.androidannotations.process.ElementValidation;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JCatchBlock;

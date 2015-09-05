@@ -19,12 +19,12 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.ElementValidation;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.process.ElementValidation;
-import org.androidannotations.process.ProcessHolder;
+import org.androidannotations.internal.process.ProcessHolder;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;

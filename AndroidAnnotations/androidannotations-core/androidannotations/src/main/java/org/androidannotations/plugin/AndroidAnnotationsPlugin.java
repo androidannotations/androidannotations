@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Properties;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.exception.VersionNotFoundException;
+import org.androidannotations.Option;
 import org.androidannotations.handler.AnnotationHandlers;
+import org.androidannotations.internal.exception.VersionNotFoundException;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
-import org.androidannotations.process.Option;
 
 public abstract class AndroidAnnotationsPlugin {
 

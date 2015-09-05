@@ -15,7 +15,6 @@
  */
 package org.androidannotations.ormlite.helper;
 
-
 import java.util.List;
 
 import javax.lang.model.element.Element;
