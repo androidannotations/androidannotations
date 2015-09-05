@@ -50,7 +50,6 @@ import org.androidannotations.api.sharedpreferences.IntPrefField;
 import org.androidannotations.api.sharedpreferences.LongPrefField;
 import org.androidannotations.api.sharedpreferences.StringPrefField;
 import org.androidannotations.api.sharedpreferences.StringSetPrefField;
-import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdAnnotationHelper;
 import org.androidannotations.helper.IdValidatorHelper;
@@ -68,7 +67,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
-public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPrefHolder> {
+public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<SharedPrefHolder> {
 
 	private static final class DefaultPrefInfo<T> {
 		final Class<? extends Annotation> annotationClass;
@@ -119,14 +118,14 @@ public class SharedPrefHandler extends BaseGeneratingAnnotationHandler<SharedPre
 
 		for (Element memberElement : inheritedMembers) {
 			if (!memberElement.getEnclosingElement().asType().toString().equals("java.lang.Object")) {
-				validatorHelper.isPrefMethod(memberElement, validation);
+				coreValidatorHelper.isPrefMethod(memberElement, validation);
 
 				DefaultPrefInfo<?> info;
 				IdValidatorHelper defaultAnnotationValidatorHelper = null;
 
 				if (validation.isValid()) {
 					info = DEFAULT_PREF_INFOS.get(((ExecutableElement) memberElement).getReturnType().toString());
-					validatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement, validation);
+					coreValidatorHelper.hasCorrectDefaultAnnotation((ExecutableElement) memberElement, validation);
 
 					if (validation.isValid() && memberElement.getAnnotation(DefaultRes.class) != null) {
 						defaultAnnotationValidatorHelper = new IdValidatorHelper(new IdAnnotationHelper(getEnvironment(), DefaultRes.class.getName()));

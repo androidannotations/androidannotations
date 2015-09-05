@@ -21,10 +21,9 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.EApplication;
-import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.holder.EApplicationHolder;
 
-public class EApplicationHandler extends BaseGeneratingAnnotationHandler<EApplicationHolder> {
+public class EApplicationHandler extends CoreBaseGeneratingAnnotationHandler<EApplicationHolder> {
 
 	public EApplicationHandler(AndroidAnnotationsEnvironment environment) {
 		super(EApplication.class, environment);
@@ -41,7 +40,7 @@ public class EApplicationHandler extends BaseGeneratingAnnotationHandler<EApplic
 
 		validatorHelper.extendsApplication(element, valid);
 
-		validatorHelper.applicationRegistered(element, getEnvironment().getAndroidManifest(), valid);
+		coreValidatorHelper.applicationRegistered(element, getEnvironment().getAndroidManifest(), valid);
 	}
 
 	@Override

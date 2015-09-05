@@ -20,10 +20,9 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
 
-public abstract class AbstractRunnableHandler extends BaseAnnotationHandler<EComponentHolder> {
+public abstract class AbstractRunnableHandler extends CoreBaseAnnotationHandler<EComponentHolder> {
 
 	public AbstractRunnableHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
 		super(targetClass, environment);

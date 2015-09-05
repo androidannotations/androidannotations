@@ -51,7 +51,7 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	public void validate(Element element, ElementValidation valid) {
 		super.validate(element, valid);
 
-		validatorHelper.usesEnqueueIfHasId(element, valid);
+		coreValidatorHelper.usesEnqueueIfHasId(element, valid);
 	}
 
 	@Override

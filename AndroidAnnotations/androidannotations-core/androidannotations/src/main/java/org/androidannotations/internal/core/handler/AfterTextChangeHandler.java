@@ -25,7 +25,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.AfterTextChange;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
@@ -38,7 +37,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 
-public class AfterTextChangeHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public class AfterTextChangeHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	public AfterTextChangeHandler(AndroidAnnotationsEnvironment environment) {
 		super(AfterTextChange.class, environment);
@@ -56,7 +55,7 @@ public class AfterTextChangeHandler extends BaseAnnotationHandler<EComponentWith
 
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
-		validatorHelper.hasAfterTextChangedMethodParameters((ExecutableElement) element, validation);
+		coreValidatorHelper.hasAfterTextChangedMethodParameters((ExecutableElement) element, validation);
 
 		validatorHelper.param.anyOrder().type(CanonicalNameConstants.TEXT_VIEW).optional().type(CanonicalNameConstants.EDITABLE).optional().validate((ExecutableElement) element, validation);
 	}

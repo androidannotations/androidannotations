@@ -26,7 +26,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.BeforeTextChange;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
@@ -39,7 +38,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 
-public class BeforeTextChangeHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public class BeforeTextChangeHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	public BeforeTextChangeHandler(AndroidAnnotationsEnvironment environment) {
 		super(BeforeTextChange.class, environment);
@@ -57,7 +56,7 @@ public class BeforeTextChangeHandler extends BaseAnnotationHandler<EComponentWit
 
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
-		validatorHelper.hasBeforeTextChangedMethodParameters((ExecutableElement) element, validation);
+		coreValidatorHelper.hasBeforeTextChangedMethodParameters((ExecutableElement) element, validation);
 	}
 
 	@Override

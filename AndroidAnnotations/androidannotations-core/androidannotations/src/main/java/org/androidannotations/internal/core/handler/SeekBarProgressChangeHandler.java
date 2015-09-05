@@ -26,7 +26,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.SeekBarProgressChange;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
@@ -39,7 +38,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 
-public class SeekBarProgressChangeHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public class SeekBarProgressChangeHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	public SeekBarProgressChangeHandler(AndroidAnnotationsEnvironment environment) {
 		super(SeekBarProgressChange.class, environment);
@@ -57,7 +56,7 @@ public class SeekBarProgressChangeHandler extends BaseAnnotationHandler<ECompone
 
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
-		validatorHelper.hasSeekBarProgressChangeMethodParameters((ExecutableElement) element, validation);
+		coreValidatorHelper.hasSeekBarProgressChangeMethodParameters((ExecutableElement) element, validation);
 	}
 
 	@Override

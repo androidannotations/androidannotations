@@ -26,7 +26,6 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.TextChange;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
@@ -39,7 +38,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 
-public class TextChangeHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public class TextChangeHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	public TextChangeHandler(AndroidAnnotationsEnvironment environment) {
 		super(TextChange.class, environment);
@@ -57,7 +56,7 @@ public class TextChangeHandler extends BaseAnnotationHandler<EComponentWithViewS
 
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
-		validatorHelper.hasTextChangedMethodParameters((ExecutableElement) element, validation);
+		coreValidatorHelper.hasTextChangedMethodParameters((ExecutableElement) element, validation);
 	}
 
 	@Override

@@ -24,7 +24,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 
@@ -33,7 +32,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldRef;
 
-public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
+public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder> {
 
 	public PrefHandler(AndroidAnnotationsEnvironment environment) {
 		super(Pref.class, environment);
@@ -45,7 +44,7 @@ public class PrefHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.isSharedPreference(element, validation);
+		coreValidatorHelper.isSharedPreference(element, validation);
 	}
 
 	@Override

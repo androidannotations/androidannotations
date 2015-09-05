@@ -23,7 +23,6 @@ import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
@@ -36,7 +35,7 @@ import com.sun.codemodel.JFieldRef;
 import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JVar;
 
-public abstract class AbstractSeekBarTouchHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public abstract class AbstractSeekBarTouchHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
 	public AbstractSeekBarTouchHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
 		super(targetClass, environment);
@@ -54,7 +53,7 @@ public abstract class AbstractSeekBarTouchHandler extends BaseAnnotationHandler<
 
 		validatorHelper.returnTypeIsVoid((ExecutableElement) element, validation);
 
-		validatorHelper.hasSeekBarTouchTrackingMethodParameters((ExecutableElement) element, validation);
+		coreValidatorHelper.hasSeekBarTouchTrackingMethodParameters((ExecutableElement) element, validation);
 
 		validatorHelper.param.type(CanonicalNameConstants.SEEKBAR).optional().validate((ExecutableElement) element, validation);
 	}

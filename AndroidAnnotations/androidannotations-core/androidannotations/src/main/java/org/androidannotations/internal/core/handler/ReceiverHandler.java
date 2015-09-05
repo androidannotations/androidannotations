@@ -33,7 +33,6 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.handler.AnnotationHandler;
-import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.handler.HasParameterHandlers;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -50,7 +49,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JOp;
 import com.sun.codemodel.JVar;
 
-public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistration> implements HasParameterHandlers<HasReceiverRegistration> {
+public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegistration> implements HasParameterHandlers<HasReceiverRegistration> {
 
 	private ExtraHandler extraHandler;
 
@@ -81,9 +80,9 @@ public class ReceiverHandler extends BaseAnnotationHandler<HasReceiverRegistrati
 
 		validatorHelper.hasNotMultipleAnnotatedMethodWithSameName(element.getEnclosingElement(), validation, Receiver.class);
 
-		validatorHelper.hasRightRegisterAtValueDependingOnEnclosingElement(element, validation);
+		coreValidatorHelper.hasRightRegisterAtValueDependingOnEnclosingElement(element, validation);
 
-		validatorHelper.hasSupportV4JarIfLocal(element, validation);
+		coreValidatorHelper.hasSupportV4JarIfLocal(element, validation);
 	}
 
 	@Override
