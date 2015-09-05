@@ -26,7 +26,7 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.internal.AndroidAnnotationsEnvironment;
+import org.androidannotations.internal.InternalAndroidAnnotationsEnvironment;
 import org.androidannotations.internal.exception.ProcessingException;
 import org.androidannotations.internal.model.AnnotationElements;
 import org.androidannotations.internal.model.AnnotationElements.AnnotatedAndRootElements;
@@ -51,9 +51,9 @@ public class ModelProcessor {
 		}
 	}
 
-	private final AndroidAnnotationsEnvironment environment;
+	private final InternalAndroidAnnotationsEnvironment environment;
 
-	public ModelProcessor(AndroidAnnotationsEnvironment environment) {
+	public ModelProcessor(InternalAndroidAnnotationsEnvironment environment) {
 		this.environment = environment;
 	}
 

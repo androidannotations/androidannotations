@@ -67,12 +67,12 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 	private final TimeStats timeStats = new TimeStats();
 	private final ErrorHelper errorHelper = new ErrorHelper();
-	private AndroidAnnotationsEnvironment androidAnnotationsEnv;
+	private InternalAndroidAnnotationsEnvironment androidAnnotationsEnv;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		super.init(processingEnv);
-		androidAnnotationsEnv = new AndroidAnnotationsEnvironment(processingEnv);
+		androidAnnotationsEnv = new InternalAndroidAnnotationsEnvironment(processingEnv);
 
 		ModelConstants.init(androidAnnotationsEnv);
 
