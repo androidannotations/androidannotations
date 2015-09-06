@@ -15,8 +15,11 @@
  */
 package org.androidannotations.otto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.handler.AnnotationHandlers;
+import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.otto.handler.ProduceHandler;
 import org.androidannotations.otto.handler.SubscribeHandler;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
@@ -36,8 +39,10 @@ public class OttoPlugin extends AndroidAnnotationsPlugin {
 	}
 
 	@Override
-	public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
+	public List<AnnotationHandler<?>> getHandlers(AndroidAnnotationsEnvironment androidAnnotationEnv) {
+		List<AnnotationHandler<?>> annotationHandlers = new ArrayList<>();
 		annotationHandlers.add(new SubscribeHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ProduceHandler(androidAnnotationEnv));
+		return annotationHandlers;
 	}
 }

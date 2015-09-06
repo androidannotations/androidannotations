@@ -15,8 +15,11 @@
  */
 package org.androidannotations.ormlite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.handler.AnnotationHandlers;
+import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.ormlite.handler.OrmLiteDaoHandler;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 
@@ -30,7 +33,9 @@ public class OrmLitePlugin extends AndroidAnnotationsPlugin {
 	}
 
 	@Override
-	public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
+	public List<AnnotationHandler<?>> getHandlers(AndroidAnnotationsEnvironment androidAnnotationEnv) {
+		List<AnnotationHandler<?>> annotationHandlers = new ArrayList<>();
 		annotationHandlers.add(new OrmLiteDaoHandler(androidAnnotationEnv));
+		return annotationHandlers;
 	}
 }

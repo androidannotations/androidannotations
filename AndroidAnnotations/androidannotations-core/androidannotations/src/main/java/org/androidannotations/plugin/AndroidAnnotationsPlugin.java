@@ -23,7 +23,7 @@ import java.util.Properties;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.Option;
-import org.androidannotations.handler.AnnotationHandlers;
+import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.internal.exception.VersionNotFoundException;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
@@ -36,7 +36,7 @@ public abstract class AndroidAnnotationsPlugin {
 	private String apiVersion;
 
 	public abstract String getName();
-	public abstract void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv);
+	public abstract List<AnnotationHandler<?>> getHandlers(AndroidAnnotationsEnvironment androidAnnotationEnv);
 
 	@Override
 	public String toString() {

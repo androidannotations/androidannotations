@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.handler;
+package org.androidannotations.internal;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -22,55 +22,55 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.handler.AnnotationHandler;
+import org.androidannotations.handler.GeneratingAnnotationHandler;
+import org.androidannotations.handler.HasParameterHandlers;
 
 public class AnnotationHandlers {
 
-	private List<AnnotationHandler<? extends GeneratedClassHolder>> annotationHandlers = new ArrayList<>();
-	private List<GeneratingAnnotationHandler<? extends GeneratedClassHolder>> generatingAnnotationHandlers = new ArrayList<>();
-	private List<AnnotationHandler<? extends GeneratedClassHolder>> decoratingAnnotationHandlers = new ArrayList<>();
+	private List<AnnotationHandler<?>> annotationHandlers = new ArrayList<>();
+	private List<GeneratingAnnotationHandler<?>> generatingAnnotationHandlers = new ArrayList<>();
+	private List<AnnotationHandler<?>> decoratingAnnotationHandlers = new ArrayList<>();
 	private Set<String> supportedAnnotationNames;
 
 	public AnnotationHandlers() {
 	}
 
-	public void add(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
+	public void add(AnnotationHandler<?> annotationHandler) {
 		annotationHandlers.add(annotationHandler);
-		decoratingAnnotationHandlers.add(annotationHandler);
+		if (annotationHandler instanceof GeneratingAnnotationHandler) {
+			generatingAnnotationHandlers.add((GeneratingAnnotationHandler) annotationHandler);
+		} else {
+			decoratingAnnotationHandlers.add(annotationHandler);
+		}
 		addParameterHandlers(annotationHandler);
 	}
 
-	public void add(GeneratingAnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
-		annotationHandlers.add(annotationHandler);
-		generatingAnnotationHandlers.add(annotationHandler);
-		addParameterHandlers(annotationHandler);
-	}
-
-	private void addParameterHandlers(AnnotationHandler<? extends GeneratedClassHolder> annotationHandler) {
+	private void addParameterHandlers(AnnotationHandler<?> annotationHandler) {
 		if (annotationHandler instanceof HasParameterHandlers) {
-			HasParameterHandlers<? extends GeneratedClassHolder> hasParameterHandlers = (HasParameterHandlers<? extends GeneratedClassHolder>) annotationHandler;
-			for (AnnotationHandler<? extends GeneratedClassHolder> parameterHandler : hasParameterHandlers.getParameterHandlers()) {
+			HasParameterHandlers<?> hasParameterHandlers = (HasParameterHandlers<?>) annotationHandler;
+			for (AnnotationHandler<?> parameterHandler : hasParameterHandlers.getParameterHandlers()) {
 				add(parameterHandler);
 			}
 		}
 	}
 
-	public List<AnnotationHandler<? extends GeneratedClassHolder>> get() {
+	public List<AnnotationHandler<?>> get() {
 		return annotationHandlers;
 	}
 
-	public List<GeneratingAnnotationHandler<? extends GeneratedClassHolder>> getGenerating() {
+	public List<GeneratingAnnotationHandler<?>> getGenerating() {
 		return generatingAnnotationHandlers;
 	}
 
-	public List<AnnotationHandler<? extends GeneratedClassHolder>> getDecorating() {
+	public List<AnnotationHandler<?>> getDecorating() {
 		return decoratingAnnotationHandlers;
 	}
 
 	public Set<String> getSupportedAnnotationTypes() {
 		if (supportedAnnotationNames == null) {
 			Set<String> annotationNames = new HashSet<>();
-			for (AnnotationHandler<?> annotationHandler : annotationHandlers) {
+			for (AnnotationHandler annotationHandler : annotationHandlers) {
 				annotationNames.add(annotationHandler.getTarget());
 			}
 			supportedAnnotationNames = Collections.unmodifiableSet(annotationNames);
@@ -81,7 +81,7 @@ public class AnnotationHandlers {
 	@SuppressWarnings("unchecked")
 	public List<Class<? extends Annotation>> getGeneratingAnnotations() {
 		List<Class<? extends Annotation>> generatingAnnotations = new ArrayList<>();
-		for (GeneratingAnnotationHandler<? extends GeneratedClassHolder> generatingAnnotationHandler : getGenerating()) {
+		for (GeneratingAnnotationHandler generatingAnnotationHandler : getGenerating()) {
 			try {
 				generatingAnnotations.add((Class<? extends Annotation>) Class.forName(generatingAnnotationHandler.getTarget()));
 			} catch (ClassNotFoundException | ClassCastException e) {

@@ -15,12 +15,13 @@
  */
 package org.androidannotations.internal.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.Option;
-import org.androidannotations.handler.AnnotationHandlers;
+import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.internal.core.handler.AfterExtrasHandler;
 import org.androidannotations.internal.core.handler.AfterInjectHandler;
 import org.androidannotations.internal.core.handler.AfterPreferencesHandler;
@@ -116,7 +117,8 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 	}
 
 	@Override
-	public void addHandlers(AnnotationHandlers annotationHandlers, AndroidAnnotationsEnvironment androidAnnotationEnv) {
+	public List<AnnotationHandler<?>> getHandlers(AndroidAnnotationsEnvironment androidAnnotationEnv) {
+		List<AnnotationHandler<?>> annotationHandlers = new ArrayList<>();
 		annotationHandlers.add(new EApplicationHandler(androidAnnotationEnv));
 		annotationHandlers.add(new EActivityHandler(androidAnnotationEnv));
 		annotationHandlers.add(new EProviderHandler(androidAnnotationEnv));
@@ -225,5 +227,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 			annotationHandlers.add(new SupposeUiThreadHandler(androidAnnotationEnv));
 			annotationHandlers.add(new SupposeBackgroundHandler(androidAnnotationEnv));
 		}
+
+		return annotationHandlers;
 	}
 }

@@ -52,7 +52,7 @@ public class ModelValidator {
 		 * unique ids might not be check all situations.
 		 */
 
-		for (AnnotationHandler<?> annotationHandler : environment.getHandlers()) {
+		for (AnnotationHandler annotationHandler : environment.getHandlers()) {
 			String validatorSimpleName = annotationHandler.getClass().getSimpleName();
 			String annotationName = annotationHandler.getTarget();
 

@@ -19,5 +19,5 @@ import org.androidannotations.holder.GeneratedClassHolder;
 
 public interface HasParameterHandlers<T extends GeneratedClassHolder> extends AnnotationHandler<T> {
 
-	Iterable<AnnotationHandler<? extends GeneratedClassHolder>> getParameterHandlers();
+	Iterable<AnnotationHandler> getParameterHandlers();
 }

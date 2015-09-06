@@ -35,7 +35,6 @@ import org.androidannotations.annotations.Receiver;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.HasParameterHandlers;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.holder.HasReceiverRegistration;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
@@ -59,8 +58,8 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 	}
 
 	@Override
-	public Iterable<AnnotationHandler<? extends GeneratedClassHolder>> getParameterHandlers() {
-		return Collections.<AnnotationHandler<? extends GeneratedClassHolder>> singleton(extraHandler);
+	public Iterable<AnnotationHandler> getParameterHandlers() {
+		return Collections.<AnnotationHandler> singleton(extraHandler);
 	}
 
 

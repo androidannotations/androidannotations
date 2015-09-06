@@ -34,7 +34,6 @@ import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.handler.HasParameterHandlers;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.holder.HasOnActivityResult;
 
 import com.sun.codemodel.JBlock;
@@ -54,8 +53,8 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 	}
 
 	@Override
-	public Iterable<AnnotationHandler<? extends GeneratedClassHolder>> getParameterHandlers() {
-		return Collections.<AnnotationHandler<? extends GeneratedClassHolder>> singleton(extraHandler);
+	public Iterable<AnnotationHandler> getParameterHandlers() {
+		return Collections.<AnnotationHandler> singleton(extraHandler);
 	}
 
 	@Override

@@ -25,7 +25,6 @@ import javax.lang.model.element.Element;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.Option;
 import org.androidannotations.handler.AnnotationHandler;
-import org.androidannotations.handler.AnnotationHandlers;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.holder.GeneratedClassHolder;
@@ -63,7 +62,9 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 		this.plugins = plugins;
 		for (AndroidAnnotationsPlugin plugin : plugins) {
 			options.addAllSupportedOptions(plugin.getSupportedOptions());
-			plugin.addHandlers(annotationHandlers, this);
+			for (AnnotationHandler<?> annotationHandler : plugin.getHandlers(this)) {
+				annotationHandlers.add(annotationHandler);
+			}
 		}
 	}
 
@@ -116,17 +117,17 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 	}
 
 	@Override
-	public List<AnnotationHandler<? extends GeneratedClassHolder>> getHandlers() {
+	public List<AnnotationHandler<?>> getHandlers() {
 		return annotationHandlers.get();
 	}
 
 	@Override
-	public List<AnnotationHandler<? extends GeneratedClassHolder>> getDecoratingHandlers() {
+	public List<AnnotationHandler<?>> getDecoratingHandlers() {
 		return annotationHandlers.getDecorating();
 	}
 
 	@Override
-	public List<GeneratingAnnotationHandler<? extends GeneratedClassHolder>> getGeneratingHandlers() {
+	public List<GeneratingAnnotationHandler<?>> getGeneratingHandlers() {
 		return annotationHandlers.getGenerating();
 	}
 

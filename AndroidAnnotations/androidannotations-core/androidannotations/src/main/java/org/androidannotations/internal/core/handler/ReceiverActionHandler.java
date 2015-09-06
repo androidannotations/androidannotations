@@ -38,7 +38,6 @@ import org.androidannotations.handler.HasParameterHandlers;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EReceiverHolder;
-import org.androidannotations.holder.GeneratedClassHolder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -58,8 +57,8 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 	}
 
 	@Override
-	public Iterable<AnnotationHandler<? extends GeneratedClassHolder>> getParameterHandlers() {
-		return Collections.<AnnotationHandler<? extends GeneratedClassHolder>> singleton(extraHandler);
+	public Iterable<AnnotationHandler> getParameterHandlers() {
+		return Collections.<AnnotationHandler> singleton(extraHandler);
 	}
 
 	@Override
