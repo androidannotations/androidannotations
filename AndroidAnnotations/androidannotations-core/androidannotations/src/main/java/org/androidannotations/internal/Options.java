@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations;
+package org.androidannotations.internal;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
+import org.androidannotations.Option;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.internal.helper.AndroidManifestFinder;
 import org.androidannotations.internal.rclass.ProjectRClassFinder;
