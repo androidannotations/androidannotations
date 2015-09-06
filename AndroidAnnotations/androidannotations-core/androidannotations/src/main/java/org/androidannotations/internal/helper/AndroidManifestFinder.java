@@ -22,8 +22,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.lang.model.util.Elements;
 import javax.xml.parsers.DocumentBuilder;
@@ -46,7 +50,6 @@ public class AndroidManifestFinder {
 	public static final Option OPTION_MANIFEST = new Option("androidManifestFile", null);
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidManifestFinder.class);
-	private static final int MAX_PARENTS_FROM_SOURCE_FOLDER = 10;
 
 	private final AndroidAnnotationsEnvironment environment;
 
@@ -88,7 +91,7 @@ public class AndroidManifestFinder {
 		if (androidManifestFile != null) {
 			return findManifestInSpecifiedPath(androidManifestFile);
 		} else {
-			return findManifestInParentsDirectories();
+			return findManifestInKnownPaths();
 		}
 	}
 
@@ -103,41 +106,108 @@ public class AndroidManifestFinder {
 		return androidManifestFile;
 	}
 
-	/**
-	 * We use a dirty trick to find the AndroidManifest.xml file, since it's not
-	 * available in the classpath. The idea is quite simple : create a fake
-	 * class file, retrieve its URI, and start going up in parent folders to
-	 * find the AndroidManifest.xml file. Any better solution will be
-	 * appreciated.
-	 */
-	private File findManifestInParentsDirectories() throws FileNotFoundException {
-		FileHelper.FileHolder projectRootHolder = FileHelper.findRootProjectHolder(environment.getProcessingEnvironment());
+	private File findManifestInKnownPaths() throws FileNotFoundException {
+		FileHelper.FileHolder holder = FileHelper.findRootProjectHolder(environment.getProcessingEnvironment());
+		return findManifestInKnownPathsStartingFromGenFolder(holder.sourcesGenerationFolder.getAbsolutePath());
+	}
 
-		File projectRoot = projectRootHolder.projectRoot;
+	File findManifestInKnownPathsStartingFromGenFolder(String sourcesGenerationFolder) throws FileNotFoundException {
+		Iterable<AndroidManifestFinderStrategy> strategies = Arrays.asList(new GradleAndroidManifestFinderStrategy(sourcesGenerationFolder),
+				new MavenAndroidManifestFinderStrategy(sourcesGenerationFolder), new EclipseAndroidManifestFinderStrategy(sourcesGenerationFolder));
 
-		File androidManifestFile = new File(projectRoot, "AndroidManifest.xml");
-		for (int i = 0; i < MAX_PARENTS_FROM_SOURCE_FOLDER; i++) {
-			if (androidManifestFile.exists()) {
+		AndroidManifestFinderStrategy applyingStrategy = null;
+
+		for (AndroidManifestFinderStrategy strategy : strategies) {
+			if (strategy.applies()) {
+				applyingStrategy = strategy;
 				break;
-			} else {
-				if (projectRoot.getParentFile() != null) {
-					projectRoot = projectRoot.getParentFile();
-					androidManifestFile = new File(projectRoot, "AndroidManifest.xml");
-				} else {
-					break;
-				}
 			}
 		}
 
-		if (!androidManifestFile.exists()) {
-			LOGGER.error("Could not find the AndroidManifest.xml file, going up from path [{}] found using dummy file [{}] (max atempts: {})",
-					projectRootHolder.sourcesGenerationFolder.getAbsolutePath(), projectRootHolder.dummySourceFilePath, MAX_PARENTS_FROM_SOURCE_FOLDER);
-			throw new FileNotFoundException();
+		File androidManifestFile = null;
+
+		if (applyingStrategy != null) {
+			androidManifestFile = applyingStrategy.findAndroidManifestFile();
+		}
+
+		if (androidManifestFile != null) {
+			LOGGER.debug("{} AndroidManifest.xml file found using generation folder {}: {}", applyingStrategy.name, sourcesGenerationFolder, androidManifestFile.toString());
 		} else {
-			LOGGER.debug("AndroidManifest.xml file found in parent folder {}: {}", projectRoot.getAbsolutePath(), androidManifestFile.toString());
+			LOGGER.error("Could not find the AndroidManifest.xml file, using  generation folder [{}])", sourcesGenerationFolder);
 		}
 
 		return androidManifestFile;
+	}
+
+	private static abstract class AndroidManifestFinderStrategy {
+		final String name;
+
+		final Matcher matcher;
+
+		AndroidManifestFinderStrategy(String name, Pattern sourceFolderPattern, String sourceFolder) {
+			this.name = name;
+			this.matcher = sourceFolderPattern.matcher(sourceFolder);
+		}
+
+		File findAndroidManifestFile() {
+			for (String location : possibleLocations()) {
+				File manifestFile = new File(matcher.group(1), location + "/AndroidManifest.xml");
+				if (manifestFile.exists()) {
+					return manifestFile;
+				}
+			}
+			return null;
+		}
+
+		boolean applies() {
+			return  matcher.matches();
+		}
+
+		abstract Iterable<String> possibleLocations();
+	}
+
+	private static class GradleAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
+
+		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/]apt(.*)$");
+
+		GradleAndroidManifestFinderStrategy(String sourceFolder) {
+			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
+		}
+
+		@Override
+		Iterable<String> possibleLocations() {
+			String gradleVariant = matcher.group(2);
+
+			return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/bundles" + gradleVariant);
+		}
+	}
+
+	private static class MavenAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
+
+		static final Pattern MAVEN_GEN_FOLDER = Pattern.compile("^(.*?)target[\\\\/]generated-sources.*$");
+		
+		MavenAndroidManifestFinderStrategy(String sourceFolder) {
+			super("Maven", MAVEN_GEN_FOLDER, sourceFolder);
+		}
+
+		@Override
+		Iterable<String> possibleLocations() {
+			return Arrays.asList("target", "src/main", "");
+		}
+	}
+
+	private static class EclipseAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
+
+		static final Pattern ECLIPSE_GEN_FOLDER = Pattern.compile("^(.*?)\\.apt_generated.*$");
+		
+		EclipseAndroidManifestFinderStrategy(String sourceFolder) {
+			super("Eclipse", ECLIPSE_GEN_FOLDER, sourceFolder);
+		}
+
+		@Override
+		Iterable<String> possibleLocations() {
+			return Collections.singleton("");
+		}
 	}
 
 	private AndroidManifest parse(File androidManifestFile, boolean libraryProject) throws AndroidManifestNotFoundException {

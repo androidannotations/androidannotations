@@ -100,7 +100,6 @@
 						<arg>-Atrace=true</arg>
 						<arg>-AlogLevel=WARNING</arg>
 						<arg>-AlogFile=${project.build.directory}/functional-test.log</arg>
-						<arg>-AandroidManifestFile=${project.basedir}/src/main/AndroidManifest.xml</arg>
 					</compilerArgs>
 				</configuration>
 			</plugin>

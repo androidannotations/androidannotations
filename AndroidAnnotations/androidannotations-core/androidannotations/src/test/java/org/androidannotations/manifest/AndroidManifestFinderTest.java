@@ -15,10 +15,6 @@
  */
 package org.androidannotations.manifest;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
 import org.androidannotations.internal.AndroidAnnotationProcessor;
 import org.androidannotations.testutils.AAProcessorTestHelper;
 import org.junit.Before;
@@ -54,34 +50,11 @@ public class AndroidManifestFinderTest extends AAProcessorTestHelper {
 	}
 
 	@Test
-	public void findsManifestInGeneratedSourceParentFolder() throws Exception {
-		deleteManifestFromParentOfOutputDirectory();
-		copyManifestToParentOfOutputDirectory();
-		CompileResult result = compileFiles(SomeClass.class);
-		assertCompilationSuccessful(result);
-		deleteManifestFromParentOfOutputDirectory();
-	}
-
-	@Test
 	public void failsIfCannotParseManifest() {
 		addManifestProcessorParameter(AndroidManifestFinderTest.class, "ParseErrorManifest.xml");
 		CompileResult result = compileFiles(SomeClass.class);
 		assertCompilationErrorWithNoSource(result);
 		assertCompilationErrorCount(1, result);
-	}
-
-	private void deleteManifestFromParentOfOutputDirectory() {
-		manifestFileInParentOfOutputDirectory().delete();
-	}
-
-	private void copyManifestToParentOfOutputDirectory() throws IOException {
-		Files.copy(AndroidManifestFinderTest.class.getResourceAsStream("AndroidManifest.xml"), manifestFileInParentOfOutputDirectory().toPath());
-	}
-
-	private File manifestFileInParentOfOutputDirectory() {
-		File outputDirectory = getOuputDirectory();
-		File manifestFile = new File(outputDirectory.getParentFile(), "AndroidManifest.xml");
-		return manifestFile;
 	}
 
 }
