@@ -67,6 +67,7 @@ import org.androidannotations.internal.core.handler.ItemSelectHandler;
 import org.androidannotations.internal.core.handler.KeyDownHandler;
 import org.androidannotations.internal.core.handler.KeyLongPressHandler;
 import org.androidannotations.internal.core.handler.KeyMultipleHandler;
+import org.androidannotations.internal.core.handler.KeyUpHandler;
 import org.androidannotations.internal.core.handler.LongClickHandler;
 import org.androidannotations.internal.core.handler.NonConfigurationInstanceHandler;
 import org.androidannotations.internal.core.handler.OnActivityResultHandler;
@@ -183,6 +184,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new KeyDownHandler(androidAnnotationEnv));
 		annotationHandlers.add(new KeyLongPressHandler(androidAnnotationEnv));
 		annotationHandlers.add(new KeyMultipleHandler(androidAnnotationEnv));
+		annotationHandlers.add(new KeyUpHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ServiceActionHandler(androidAnnotationEnv));
 		annotationHandlers.add(new InstanceStateHandler(androidAnnotationEnv));
 		annotationHandlers.add(new HttpsClientHandler(androidAnnotationEnv));
