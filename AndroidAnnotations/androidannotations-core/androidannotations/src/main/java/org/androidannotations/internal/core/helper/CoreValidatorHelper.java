@@ -399,4 +399,12 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 			valid.addError("An id only can be used with Propagation.ENQUEUE");
 		}
 	}
+
+	public void extendsKeyEventCallback(Element element, ElementValidation validation) {
+		extendsType(element, CanonicalNameConstants.KEY_EVENT_CALLBACK, validation);
+	}
+
+	public void enclosingElementExtendsKeyEventCallback(Element element, ElementValidation validation) {
+		extendsKeyEventCallback(element.getEnclosingElement(), validation);
+	}
 }
