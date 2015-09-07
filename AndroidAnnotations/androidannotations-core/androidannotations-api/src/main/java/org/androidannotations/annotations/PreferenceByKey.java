@@ -23,11 +23,13 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * Use it on a {@link android.preference.Preference Preference} or
- * {@link android.preference.Preference Preference} subtype fields in a
+ * {@link android.preference.Preference Preference} subtype or
+ * <code>android.support.v7.preference.Preference</code> or
+ * <code>android.support.v7.preference.Preference</code> subtype fields in a
  * {@link org.androidannotations.annotations.EActivity EActivity} or
  * {@link org.androidannotations.annotations.EFragment EFragment} annotated
  * class, which is a subclass of {@link android.preference.PreferenceActivity
- * PreferenceActivity} or <code>PreferenceFragment</code>, respectively.
+ * PreferenceActivity} or <code>PreferenceFragment(Compat)</code>, respectively.
  * </p>
  * <p>
  * The annotation value should be an array of R.string.* fields.

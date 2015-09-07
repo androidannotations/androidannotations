@@ -43,4 +43,9 @@ public class PreferenceFragmentTest extends AAProcessorTestHelper {
 		assertCompilationSuccessful(compileFiles(MachinariusSettingsFragment.class));
 	}
 
+	@Test
+	public void supportV7PreferenceFragmentCompiles() {
+		assertCompilationSuccessful(compileFiles(SupportV7SettingsFragment.class));
+	}
+
 }

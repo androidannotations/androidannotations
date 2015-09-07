@@ -13,23 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.holder;
+package android.support.v7.preference;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
+public class PreferenceFragmentCompat extends android.app.Fragment {
 
-public interface HasPreferences extends GeneratedClassHolder {
+	public void addPreferencesFromResource(int preferencesResId) {
 
-	JBlock getPreferenceScreenInitializationBlock();
+	}
 
-	JBlock getAddPreferencesFromResourceBlock();
-
-	void assignFindPreferenceByKey(JFieldRef idRef, JClass preferenceClass, JFieldRef fieldRef);
-
-	FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass);
-
-	boolean usingSupportV7Preference();
-
-	JClass getBasePreferenceClass();
+	public Preference findPreference(CharSequence key) {
+		return null;
+	}
 }

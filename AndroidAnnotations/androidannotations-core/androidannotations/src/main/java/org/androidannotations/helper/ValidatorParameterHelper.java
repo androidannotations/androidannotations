@@ -119,6 +119,10 @@ public class ValidatorParameterHelper {
 			return param(new ExtendsTypeParameterRequirement(qualifiedName));
 		}
 
+		public V extendsAnyOfTypes(String... types) {
+			return  param(new ExtendsAnyOfTypesParameterRequirement(types));
+		}
+
 		public V anyType() {
 			return extendsType(CanonicalNameConstants.OBJECT);
 		}
@@ -361,6 +365,44 @@ public class ValidatorParameterHelper {
 		}
 	}
 
+	public class ExtendsAnyOfTypesParameterRequirement extends BaseParameterRequirement {
+
+		private List<String> types;
+
+		public ExtendsAnyOfTypesParameterRequirement(String... types) {
+			this.types = Arrays.asList(types);
+		}
+
+		@Override
+		public boolean isSatisfied(VariableElement parameter) {
+			TypeMirror elementType = parameter.asType();
+
+			for (String type : types) {
+				TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(type);
+				if (typeElement != null) {
+					TypeMirror expectedType = typeElement.asType();
+					if (annotationHelper.isSubtype(elementType, expectedType)) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		@Override
+		protected String description() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("extending one of the following: [");
+			for (int i = 0; i < types.size() - 1; ++i) {
+				builder.append(types.get(i)).append(", ");
+			}
+			builder.append(types.get(types.size() - 1)).append(" ]");
+
+			return builder.toString();
+		}
+	}
+
 	public class AnnotatedWithParameterRequirement extends BaseParameterRequirement {
 
 		private Class<? extends Annotation> annotationClass;
@@ -458,6 +500,10 @@ public class ValidatorParameterHelper {
 
 	public OneParamValidator extendsType(String qualifiedName) {
 		return param(new ExtendsTypeParameterRequirement(qualifiedName));
+	}
+
+	public OneParamValidator extendsAnyOfTypes(String... types) {
+		return param(new ExtendsAnyOfTypesParameterRequirement(types));
 	}
 
 	public OneParamValidator anyType() {

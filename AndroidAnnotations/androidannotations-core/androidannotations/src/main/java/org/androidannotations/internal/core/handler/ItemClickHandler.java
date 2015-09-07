@@ -99,12 +99,12 @@ public class ItemClickHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
+	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ON_ITEM_CLICK_LISTENER;
 	}
 
 	@Override
-	protected JClass getListenerTargetClass() {
+	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 	}
 }

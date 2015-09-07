@@ -97,7 +97,7 @@ public class TouchHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
+	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().VIEW_ON_TOUCH_LISTENER;
 	}
 }

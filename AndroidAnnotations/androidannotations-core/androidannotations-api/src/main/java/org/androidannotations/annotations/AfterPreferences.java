@@ -31,6 +31,13 @@ import java.lang.annotation.Target;
  * an {@link AfterPreferences} annotated method.
  * </p>
  * <p>
+ * This annotation only can be used inside
+ * {@link org.androidannotations.annotations.EActivity EActivity} or
+ * {@link org.androidannotations.annotations.EFragment EFragment} annotated
+ * class, which is a subclass of {@link android.preference.PreferenceActivity
+ * PreferenceActivity} or <code>PreferenceFragment(Compat)</code>, respectively.
+ * </p>
+ * <p>
  * The method MUST have zero parameters.
  * </p>
  * <p>

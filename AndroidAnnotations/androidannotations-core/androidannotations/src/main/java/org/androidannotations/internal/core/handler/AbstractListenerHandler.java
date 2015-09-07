@@ -79,7 +79,7 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(element, getResourceType(), true);
 
-		JDefinedClass listenerAnonymousClass = getCodeModel().anonymousClass(getListenerClass());
+		JDefinedClass listenerAnonymousClass = getCodeModel().anonymousClass(getListenerClass(holder));
 		JMethod listenerMethod = createListenerMethod(listenerAnonymousClass);
 		listenerMethod.annotate(Override.class);
 
@@ -108,7 +108,8 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 	protected final boolean isTypeOrSubclass(String baseType, Element element) {
 		TypeMirror typeMirror = element.asType();
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(baseType);
-		return annotationHelper.isSubtype(typeMirror, typeElement.asType());
+
+		return typeElement != null && annotationHelper.isSubtype(typeMirror, typeElement.asType());
 	}
 
 	protected abstract void assignListeners(T holder, List<JFieldRef> idsRefs, JDefinedClass listenerAnonymousClass);
@@ -121,9 +122,9 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 	protected abstract String getSetterName();
 
-	protected abstract JClass getListenerClass();
+	protected abstract JClass getListenerClass(T holder);
 
-	protected abstract JClass getListenerTargetClass();
+	protected abstract JClass getListenerTargetClass(T holder);
 
 	protected String getMethodName() {
 		return methodName;

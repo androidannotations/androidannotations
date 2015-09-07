@@ -25,8 +25,10 @@ import java.lang.annotation.Target;
  * Should be used on {@link org.androidannotations.annotations.EActivity
  * EActivity} or {@link org.androidannotations.annotations.EFragment EFragment}
  * classes which are subclass of {@link android.preference.PreferenceActivity
- * PreferenceActivity} or <code>PreferenceFragment</code>, to inject the
- * preference screen from resource.
+ * PreferenceActivity} or <code>PreferenceFragment</code> or
+ * <code>android.support.v7.preference.PreferenceFragmentCompat</code> or
+ * <code>android.support.v14.PreferenceFragment</code>, to inject the preference
+ * screen from resource.
  * </p>
  * <p>
  * The annotation value should be one of R.xml.* fields.

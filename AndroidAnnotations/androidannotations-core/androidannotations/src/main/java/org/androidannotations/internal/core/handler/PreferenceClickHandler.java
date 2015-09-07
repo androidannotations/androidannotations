@@ -54,7 +54,7 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
 		validatorHelper.param //
-				.extendsType(CanonicalNameConstants.PREFERENCE).optional() //
+				.extendsAnyOfTypes(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE).optional() //
 				.validate(executableElement, valid);
 	}
 
@@ -71,10 +71,12 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected void processParameters(HasPreferences holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
-		JVar preferenceParam = listenerMethod.param(getClasses().PREFERENCE, "preference");
+		String preferenceClassName = holder.getBasePreferenceClass().fullName();
+
+		JVar preferenceParam = listenerMethod.param(getEnvironment().getJClass(preferenceClassName), "preference");
 
 		if (userParameters.size() == 1) {
-			call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.PREFERENCE, preferenceParam, userParameters.get(0)));
+			call.arg(castArgumentIfNecessary(holder, preferenceClassName, preferenceParam, userParameters.get(0)));
 		}
 	}
 
@@ -89,8 +91,8 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
-		return getClasses().PREFERENCE_CLICK_LISTENER;
+	protected JClass getListenerClass(HasPreferences holder) {
+		return holder.usingSupportV7Preference() ?  getClasses().SUPPORT_V7_PREFERENCE_CLICK_LISTENER : getClasses().PREFERENCE_CLICK_LISTENER;
 	}
 
 }

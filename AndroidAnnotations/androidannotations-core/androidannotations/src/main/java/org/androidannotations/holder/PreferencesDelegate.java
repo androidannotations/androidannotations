@@ -20,7 +20,13 @@ import static com.sun.codemodel.JExpr.cast;
 import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JMod.PUBLIC;
 
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+
 import org.androidannotations.helper.APTCodeModelHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -37,9 +43,28 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 
 	protected JBlock addPreferencesFromResourceBlock;
 
+	private boolean usingSupportV7Preference = false;
+	private JClass basePreferenceClass;
+
 	public PreferencesDelegate(EComponentWithViewSupportHolder holder) {
 		super(holder);
 		codeModelHelper = new APTCodeModelHelper(holder.getEnvironment());
+		Elements elementUtils = holder.getEnvironment().getProcessingEnvironment().getElementUtils();
+		Types typeUtils = holder.getEnvironment().getProcessingEnvironment().getTypeUtils();
+
+		TypeElement supportV7PreferenceFragmentCompat = elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V7_PREFERENCE_FRAGMENTCOMPAT);
+
+		TypeElement supportV14PreferenceFragment = elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V14_PREFERENCE_FRAGMENT);
+
+		TypeMirror annotatedType = holder.getAnnotatedElement().asType();
+
+		if (supportV7PreferenceFragmentCompat != null && typeUtils.isSubtype(annotatedType, supportV7PreferenceFragmentCompat.asType())
+				|| supportV14PreferenceFragment != null && typeUtils.isSubtype(annotatedType, supportV14PreferenceFragment.asType())) {
+			usingSupportV7Preference = true;
+			basePreferenceClass = getClasses().SUPPORT_V7_PREFERENCE;
+		} else {
+			basePreferenceClass = getClasses().PREFERENCE;
+		}
 	}
 
 	@Override
@@ -76,7 +101,7 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 			assignExpression = foundViewHolder.getOrCastRef(preferenceClass);
 		} else {
 			assignExpression = findPreferenceByKey(idRef);
-			if (preferenceClass != null && preferenceClass != getClasses().PREFERENCE) {
+			if (preferenceClass != null && preferenceClass != getClasses().PREFERENCE && preferenceClass != getClasses().SUPPORT_V7_PREFERENCE) {
 				assignExpression = cast(preferenceClass, assignExpression);
 			}
 			holder.foundHolders.put(idRefString, new FoundPreferenceHolder(this, preferenceClass, fieldRef, block));
@@ -96,13 +121,22 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 		return foundPreferenceHolder;
 	}
 
+	@Override
+	public boolean usingSupportV7Preference() {
+		return usingSupportV7Preference;
+	}
+
+	public JClass getBasePreferenceClass() {
+		return basePreferenceClass;
+	}
+
 	private FoundPreferenceHolder createFoundPreferenceAndIfNotNullBlock(JFieldRef idRef, JClass preferenceClass) {
 		JExpression findPreferenceExpression = findPreferenceByKey(idRef);
 		JBlock block = getAddPreferencesFromResourceBlock().block();
 
 		if (preferenceClass == null) {
-			preferenceClass = getClasses().PREFERENCE;
-		} else if (preferenceClass != getClasses().PREFERENCE) {
+			preferenceClass = basePreferenceClass;
+		} else if (!preferenceClass.equals(basePreferenceClass)) {
 			findPreferenceExpression = cast(preferenceClass, findPreferenceExpression);
 		}
 

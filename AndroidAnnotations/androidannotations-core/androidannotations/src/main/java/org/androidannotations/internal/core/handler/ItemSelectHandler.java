@@ -125,12 +125,12 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
+	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ON_ITEM_SELECTED_LISTENER;
 	}
 
 	@Override
-	protected JClass getListenerTargetClass() {
+	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 	}
 
