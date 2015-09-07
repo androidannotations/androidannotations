@@ -328,6 +328,7 @@
 						<exclude>**/.checkstyle</exclude>
 						<exclude>**/.bks</exclude>
 						<exclude>**/org.robolectric.Config.properties</exclude>
+						<exclude>**/*.importorder</exclude>
 					</excludes>
 					<strictCheck>true</strictCheck>
 				</configuration>
