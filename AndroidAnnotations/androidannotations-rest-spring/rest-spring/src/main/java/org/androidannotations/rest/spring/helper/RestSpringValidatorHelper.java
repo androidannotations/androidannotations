@@ -302,34 +302,42 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void validateRequestFactory(Element element, ElementValidation valid) {
-		TypeMirror clientHttpRequestFactoryType = annotationHelper.typeElementFromQualifiedName(CLIENT_HTTP_REQUEST_FACTORY).asType();
-		DeclaredType requestFactory = annotationHelper.extractAnnotationClassParameter(element, annotationHelper.getTarget(), "requestFactory");
-		if (requestFactory != null) {
-			if (annotationHelper.isSubtype(requestFactory, clientHttpRequestFactoryType)) {
-				Element requestFactoryElement = requestFactory.asElement();
-				if (requestFactoryElement.getKind().isClass()) {
-					if (!annotationHelper.isAbstract(requestFactoryElement)) {
-						if (requestFactoryElement.getAnnotation(EBean.class) != null) {
+	public void validateRestSimpleParameter(Element element, String requiredClass, String parameterName, ElementValidation validation) {
+		TypeMirror requiredType = annotationHelper.typeElementFromQualifiedName(requiredClass).asType();
+		DeclaredType paramterType = annotationHelper.extractAnnotationClassParameter(element, annotationHelper.getTarget(), parameterName);
+		if (paramterType != null) {
+			if (annotationHelper.isSubtype(paramterType, requiredType)) {
+				Element parameterElement = paramterType.asElement();
+				if (parameterElement.getKind().isClass()) {
+					if (!annotationHelper.isAbstract(parameterElement)) {
+						if (parameterElement.getAnnotation(EBean.class) != null) {
 							return;
 						}
-						List<ExecutableElement> constructors = ElementFilter.constructorsIn(requestFactoryElement.getEnclosedElements());
+						List<ExecutableElement> constructors = ElementFilter.constructorsIn(parameterElement.getEnclosedElements());
 						for (ExecutableElement constructor : constructors) {
 							if (annotationHelper.isPublic(constructor) && constructor.getParameters().isEmpty()) {
 								return;
 							}
 						}
-						valid.addError("The requestFactory class must have a public no argument constructor or must be annotated with @EBean");
+						validation.addError(element, "The " + parameterName + " class must have a public no argument constructor or must be annotated with @EBean");
 					} else {
-						valid.addError("The requestFactory class must not be abstract");
+						validation.addError(element, "The " + parameterName + " class must not be abstract");
 					}
 				} else {
-					valid.addError("The requestFactory class must be a class");
+					validation.addError(element, "The " + parameterName + " class must be a class");
 				}
 			} else {
-				valid.addError("The requestFactory class must be a subtype of " + CLIENT_HTTP_REQUEST_FACTORY);
+				validation.addError(element, "The " + parameterName + " class must be a subtype of " + requiredClass);
 			}
 		}
+	}
+
+	public void validateRequestFactory(Element element, ElementValidation validation) {
+		validateRestSimpleParameter(element, CLIENT_HTTP_REQUEST_FACTORY, "requestFactory", validation);
+	}
+
+	public void validateResponseErrorHandler(Element element, ElementValidation validation) {
+		validateRestSimpleParameter(element, RestSpringClasses.RESPONSE_ERROR_HANDLER, "responseErrorHandler", validation);
 	}
 
 	public void throwsOnlyRestClientException(ExecutableElement element, ElementValidation valid) {

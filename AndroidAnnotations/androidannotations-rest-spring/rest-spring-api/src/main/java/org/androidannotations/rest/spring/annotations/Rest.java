@@ -170,6 +170,47 @@ import java.lang.annotation.Target;
  * </pre>
  * 
  * </blockquote>
+ *
+ * <h1>ResponseErrorHandler</h1>
+ * <p>
+ * You can use your own error handler to customize how errors
+ * are handled. The {@link #responseErrorHandler()} parameter lets you define the
+ * {@link org.springframework.web.client.ResponseErrorHandler
+ * ResponseErrorHandler}.
+ * </p>
+ *
+ * <p>
+ * You can inject an {@link org.androidannotations.annotations.EBean EBean} response errork
+ * handler just like as a request factory.
+ * </p>
+ * <blockquote>
+ *
+ * <b>Example :</b>
+ *
+ * <pre>
+ * &#064;Rest(converters = MappingJacksonHttpMessageConverter.class, <b>responseErrorHandler</b> = MyResponseErrorHandler.class)
+ * public interface MyRestClient {
+ *
+ * 	&#064;Get(&quot;/events&quot;)
+ * 	EventList getEvents();
+ * }
+ *
+ * public class MyResponseErrorHandler implements ResponseErrorHandler {
+ *
+ * 	&#064;Override
+ * 	void handleError(ClientHttpResponse response) throws IOException {
+ *		// handles the error in the given response
+ * 	}
+ *
+ * 	&#064;Override
+ * 	boolean hasError(ClientHttpResponse response) throws IOException {
+ * 	    // indicates whether the given response has any errors
+ * 	    return true;
+ * 	}
+ * }
+ * </pre>
+ *
+ * </blockquote>
  * 
  * <h1>Magic methods</h1>
  * <p>
@@ -274,4 +315,11 @@ public @interface Rest {
 	 * @return the request factory class
 	 */
 	Class<?> requestFactory() default Void.class;
+
+	/**
+	 * The response error handler class which is used to handle errors.
+	 *
+	 * @return the response error handler class
+	 */
+	Class<?> responseErrorHandler() default Void.class;
 }
