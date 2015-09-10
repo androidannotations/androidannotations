@@ -30,7 +30,9 @@
         <module name="IllegalInstantiation" />
         <module name="OneTopLevelClass" />
 		<module name="AnnotationUseStyle" />
-		<module name="AnnotationLocation" />
+		<module name="AnnotationLocation" >
+			<property name="allowSamelineSingleParameterlessAnnotation" value="false" />
+		</module>
 		<module name="ClassTypeParameterName" />
 		<module name="ConstantName" />
 		<module name="LocalVariableName" />
@@ -45,10 +47,13 @@
 		<module name="MissingOverride" />
 		<module name="AvoidStarImport" />
 		<module name="IllegalImport" />
-		<!-- unfortunetaly could not synchronize with eclipse -->
-		<!-- <module name="ImportOrder"> <property name="separated" value="true"/> 
-			<property name="groups" value="java,javax,/com\..*/,/org\..*/,android"/> 
-			<property name="option" value="top"/> </module> -->
+		<module name="ImportOrder">
+			<property name="groups" value="/^javax?\./,org"/>
+			<property name="ordered" value="true"/>
+			<property name="separated" value="true"/>
+			<property name="option" value="top"/>
+			<property name="sortStaticImportsAlphabetically" value="true"/>
+		</module>
 		<module name="RedundantImport" />
 		<module name="UnusedImports" />
 
@@ -150,6 +155,7 @@
         <!-- <module name="AtclauseOrder" /> -->
         <!-- <module name="NonEmptyAtclauseDescription" /> -->
         <!-- <module name="SingleLineJavadoc" /> -->
+		<module name="CommentsIndentation" />
 	</module>
 	<module name="FileLength" />
 	<module name="SuppressionCommentFilter" />

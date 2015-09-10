@@ -131,22 +131,27 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.basedir>${project.basedir}</main.basedir>
 	</properties>
-	
-	
+
+
 	<prerequisites>
-		<maven>3.1.1</maven>
+		<maven>3.2.1</maven>
 	</prerequisites>
 
 	<modules>
-		<module>androidannotations</module>
-		<module>androidannotations-api</module>
-		<module>functional-test-1-5</module>
-		<module>androidannotations-with-codemodel</module>
-		<module>androidannotations-bundle</module>
+		<module>androidannotations-core</module>
+		<module>androidannotations-ormlite</module>
+		<module>androidannotations-otto</module>
+		<module>androidannotations-rest-spring</module>
+		<module>androidannotations-roboguice</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.androidannotations</groupId>
+				<artifactId>androidannotations-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
 				<artifactId>androidannotations</artifactId>
@@ -155,42 +160,9 @@
 			</dependency>
 			<dependency>
 				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
+				<artifactId>androidannotations-testutils</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>javadoc</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-api</artifactId>
-				<version>${project.version}</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations</artifactId>
-				<version>${project.version}</version>
-				<classifier>javadoc</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations</artifactId>
-				<version>${project.version}</version>
-				<classifier>sources</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>androidannotations-with-codemodel</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.androidannotations</groupId>
-				<artifactId>functional-test-1-5</artifactId>
-				<version>${project.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.codemodel</groupId>
@@ -204,10 +176,47 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.springframework.android</groupId>
-				<artifactId>spring-android-rest-template</artifactId>
-				<version>1.0.1.RELEASE</version>
-				<scope>provided</scope>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-core</artifactId>
+				<version>1.3</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.robolectric</groupId>
+				<artifactId>robolectric</artifactId>
+				<version>2.4</version>
+				<scope>test</scope>
+
+				<exclusions>
+					<exclusion>
+						<groupId>com.android.support</groupId>
+						<artifactId>support-v4</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup</groupId>
+				<artifactId>fest-android</artifactId>
+				<version>1.0.8</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>com.android.support</groupId>
+						<artifactId>support-v4</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.easytesting</groupId>
+				<artifactId>fest-reflect</artifactId>
+				<version>1.4.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>1.10.8</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -218,29 +227,24 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5.1</version>
+					<version>2.5.2</version>
 					<configuration>
 						<mavenExecutorId>forked-path</mavenExecutorId>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>jarjar-maven-plugin</artifactId>
-					<version>1.9</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 					<configuration>
-					   <source>1.7</source>
-					   <target>1.7</target>
+						<source>1.7</source>
+						<target>1.7</target>
 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.6</version>
+					<version>2.7</version>
 					<configuration>
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
@@ -248,17 +252,14 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.5</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5</version>
+					<version>2.6</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.1</version>
+					<version>2.10.3</version>
 					<configuration>
 						<locale>en_US</locale>
+						<quiet>true</quiet>
 					</configuration>
 					<executions>
 						<execution>
@@ -281,7 +282,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.15</version>
+					<version>2.16</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -291,7 +292,19 @@
 				<plugin>
 					<groupId>com.mycila</groupId>
 					<artifactId>license-maven-plugin</artifactId>
-					<version>2.6</version>
+					<version>2.11</version>
+				</plugin>
+				<plugin>
+					<groupId>com.simpligility.maven.plugins</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>4.3.0</version>
+					<configuration>
+						<sdk>
+							<platform>16</platform>
+						</sdk>
+						<disableConflictingDependenciesWarning>true</disableConflictingDependenciesWarning>
+					</configuration>
+					<extensions>true</extensions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -322,7 +335,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.3.1</version>
+				<version>1.4.1</version>
 				<executions>
 					<execution>
 						<id>enforce-maven-version</id>
@@ -332,7 +345,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.1.1</version>
+									<version>3.0.5</version>
 								</requireMavenVersion>
 							</rules>
 						</configuration>
@@ -340,45 +353,62 @@
 				</executions>
 			</plugin>
 			<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<configuration>
-						<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
-						<suppressionsLocation>${main.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
-						<consoleOutput>true</consoleOutput>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>com.puppycrawl.tools</groupId>
-							<artifactId>checkstyle</artifactId>
-							<version>6.7</version>
-							<exclusions>
-								<exclusion>
-									<groupId>com.sun</groupId>
-									<artifactId>tools</artifactId>
-								</exclusion>
-							</exclusions>
-					   </dependency>
-					</dependencies>
-					<executions>
-						<execution>
-							<phase>process-sources</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>${main.basedir}/checkstyle-checks.xml</configLocation>
+					<suppressionsLocation>${main.basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+					<consoleOutput>true</consoleOutput>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					<resourceIncludes>**\/*.java</resourceIncludes>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>6.10.1</version>
+						<exclusions>
+							<exclusion>
+								<groupId>com.sun</groupId>
+								<artifactId>tools</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<excludes>
+					<exclude>rebel.xml</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 	<scm>
 		<connection>scm:git:git@github.com:excilys/androidannotations.git</connection>
 		<developerConnection>scm:git:git@github.com:excilys/androidannotations.git</developerConnection>
 		<url>https://github.com/excilys/androidannotations</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<profiles>
 		<profile>
@@ -394,7 +424,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
