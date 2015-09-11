@@ -21,9 +21,11 @@ import java.util.Set;
 
 import org.androidannotations.rest.spring.annotations.Accept;
 import org.androidannotations.rest.spring.annotations.Delete;
+import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.annotations.Options;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Put;
 import org.androidannotations.rest.spring.annotations.RequiresAuthentication;
@@ -149,6 +151,12 @@ public interface MyService {
 
 	@Post("/events/")
 	ResponseEntity<Event> addEvent2(Event event);
+
+	@Post("/events/{date}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void addEventWithPathParameters(@Path("date") String pathParam, @Field String parameter);
 
 	/**
 	 * Output different then input

@@ -274,4 +274,19 @@ public class MyServiceTest {
 				});
 	}
 
+	@Test
+	public void addEventWithPathParameters() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilder.RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.addEventWithPathParameters("now", "param1");
+					}
+				});
+	}
+
 }
