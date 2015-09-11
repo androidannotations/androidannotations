@@ -23,12 +23,13 @@ import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_C
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_TEMPLATE;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -99,6 +100,10 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 	public void enclosingElementHasRestAnnotation(Element element, ElementValidation valid) {
 		String error = "can only be used in an interface annotated with";
 		enclosingElementHasAnnotation(Rest.class, element, valid, error);
+	}
+
+	public void enclosingElementHasOneOfRestMethodAnnotations(Element element, ElementValidation validation) {
+		enclosingElementHasOneOfAnnotations(element, REST_ANNOTATION_CLASSES, validation);
 	}
 
 	public void unannotatedMethodReturnsRestTemplate(TypeElement typeElement, ElementValidation valid) {
@@ -353,9 +358,15 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 		List<? extends VariableElement> parameters = element.getParameters();
 
-		List<String> parametersName = new ArrayList<>();
+		Set<String> parametersName = new HashSet<>();
 		for (VariableElement parameter : parameters) {
-			parametersName.add(parameter.getSimpleName().toString());
+			String nameToAdd = restAnnotationHelper.getUrlVariableCorrespondingTo(parameter);
+
+			if (parametersName.contains(nameToAdd)) {
+				valid.addError(element, "%s has multiple method parameters which correspond to the same url variable");
+				return;
+			}
+			parametersName.add(nameToAdd);
 		}
 
 		String[] cookiesToUrl = restAnnotationHelper.requiredUrlCookies(element);
@@ -396,6 +407,32 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 					valid.addError("%s annotated method has more than one entity parameter");
 				}
 			}
+		}
+	}
+
+	public void urlVariableNameExistsInEnclosingAnnotation(Element element, ElementValidation validation) {
+		Set<String> validRestMethodAnnotationNames = new HashSet<>();
+
+		for (Class<? extends Annotation> validAnnotation : REST_ANNOTATION_CLASSES) {
+			validRestMethodAnnotationNames.add(validAnnotation.getCanonicalName());
+		}
+
+		String url = null;
+
+		for (AnnotationMirror annotationMirror : element.getEnclosingElement().getAnnotationMirrors()) {
+			if (validRestMethodAnnotationNames.contains(annotationMirror.getAnnotationType().toString())) {
+				url = restAnnotationHelper.extractAnnotationParameter(element.getEnclosingElement(), annotationMirror.getAnnotationType().toString(), "value");
+				break;
+			}
+		}
+
+		Set<String> urlVariableNames = restAnnotationHelper.extractUrlVariableNames(url);
+
+		String annotationValue = restAnnotationHelper.extractAnnotationValueParameter(element);
+		String expectedUrlVariableName = !annotationValue.equals("") ? annotationValue : element.getSimpleName().toString();
+
+		if (!urlVariableNames.contains(expectedUrlVariableName)) {
+			validation.addError(element, "%s annotated parameter is has no corresponding url variable");
 		}
 	}
 

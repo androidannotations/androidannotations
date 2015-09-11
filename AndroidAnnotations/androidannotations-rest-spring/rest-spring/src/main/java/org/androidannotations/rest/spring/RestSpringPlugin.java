@@ -25,6 +25,7 @@ import org.androidannotations.rest.spring.handler.DeleteHandler;
 import org.androidannotations.rest.spring.handler.GetHandler;
 import org.androidannotations.rest.spring.handler.HeadHandler;
 import org.androidannotations.rest.spring.handler.OptionsHandler;
+import org.androidannotations.rest.spring.handler.PathHandler;
 import org.androidannotations.rest.spring.handler.PostHandler;
 import org.androidannotations.rest.spring.handler.PutHandler;
 import org.androidannotations.rest.spring.handler.RestHandler;
@@ -49,6 +50,7 @@ public class RestSpringPlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new DeleteHandler(androidAnnotationEnv));
 		annotationHandlers.add(new HeadHandler(androidAnnotationEnv));
 		annotationHandlers.add(new OptionsHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PathHandler(androidAnnotationEnv));
 		annotationHandlers.add(new RestServiceHandler(androidAnnotationEnv));
 		return annotationHandlers;
 	}
