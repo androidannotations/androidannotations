@@ -21,10 +21,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to add a form-encoded parameter to the request
+ * This annotation can be used to add a multi-part parameter to the POST request
  * from a method parameter. The annotation value should be the name of the
- * form-encoded parameter, if not specified, the method parameter name will be
- * used as the name of the form-encoded parameter. This annotation only can be
+ * multi-part parameter, if not specified, the method parameter name will be
+ * used as the name of the multi-part parameter. This annotation only can be
  * used with POST requests, hence the method must be annotated with {@link Post}
  * . To use this annotation, you must add <code>FormHttpMessageConverter</code>
  * to the list of converters.
@@ -38,22 +38,22 @@ import java.lang.annotation.Target;
  * public interface RestClient {
  *
  * 	&#064;Post(&quot;/events/{id}&quot;)
- * 	EventList addEvent(String id, <b>&#064;Field</b> String eventName);
+ * 	EventList addEvent(String id, <b>&#064;Part</b> FileResource image);
  * }
  * </pre>
  *
  * </blockquote>
  *
- * @see Rest
  * @see Post
  * @see Part
+ * @see Rest
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.PARAMETER)
-public @interface Field {
+public @interface Part {
 
 	/**
-	 * Name of the form-encoded parameter.
+	 * Name of the post parameter.
 	 *
 	 * @return name of the parameter
 	 */
