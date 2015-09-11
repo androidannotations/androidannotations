@@ -215,6 +215,19 @@ public class ValidatorHelper {
 	}
 
 	private void hasOneOfAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, ElementValidation validation) {
+		checkAnnotations(reportElement, element, validAnnotations, true, validation);
+	}
+
+	public void doesNotHaveOneOfAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations, ElementValidation validation) {
+		checkAnnotations(element, element, validAnnotations, false, validation);
+	}
+
+	public void doesNotHaveAnnotation(Element element, Class<? extends Annotation> annotation, ElementValidation validation) {
+		doesNotHaveOneOfAnnotations(element, Collections.<Class<? extends Annotation>> singletonList(annotation), validation);
+	}
+
+	private void checkAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, boolean shouldFind, ElementValidation validation) {
+
 		boolean foundAnnotation = false;
 		for (Class<? extends Annotation> validAnnotation : validAnnotations) {
 			if (element.getAnnotation(validAnnotation) != null) {
@@ -222,9 +235,12 @@ public class ValidatorHelper {
 				break;
 			}
 		}
-		if (!foundAnnotation) {
-			validation.addError(reportElement,
-					"%s can only be used in a " + element.getKind().toString().toLowerCase() + " annotated with " + getFormattedValidEnhancedBeanAnnotationTypes(validAnnotations) + ".");
+
+		if (shouldFind != foundAnnotation) {
+			String not = shouldFind ? "" : " not";
+
+			validation.addError(reportElement, "%s can only be used in a " + element.getKind().toString().toLowerCase() + not + " annotated with "
+					+ getFormattedValidEnhancedBeanAnnotationTypes(validAnnotations) + ".");
 		}
 	}
 

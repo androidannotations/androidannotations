@@ -18,6 +18,7 @@ package org.androidannotations.rest.spring.helper;
 import static java.util.Arrays.asList;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_FACTORY;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.FORM_HTTP_MESSAGE_CONVERTER;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_MESSAGE_CONVERTER;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_CLIENT_EXCEPTION;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_TEMPLATE;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -48,9 +50,11 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
 import org.androidannotations.rest.spring.annotations.Delete;
+import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.annotations.Options;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Put;
 import org.androidannotations.rest.spring.annotations.Rest;
@@ -360,6 +364,10 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 		Set<String> parametersName = new HashSet<>();
 		for (VariableElement parameter : parameters) {
+			if (parameter.getAnnotation(Field.class) != null) {
+				continue;
+			}
+
 			String nameToAdd = restAnnotationHelper.getUrlVariableCorrespondingTo(parameter);
 
 			if (parametersName.contains(nameToAdd)) {
@@ -405,6 +413,32 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 				if (parameters.size() > variableNames.size() + 1) {
 					valid.addError("%s annotated method has more than one entity parameter");
+				}
+			}
+		}
+	}
+
+	public void urlVariableNamesExistInParametersAndHasOnlyOneEntityParameterOrOneOrMorePostParameter(ExecutableElement element, ElementValidation validation) {
+		if (validation.isValid()) {
+			Set<String> variableNames = restAnnotationHelper.extractUrlVariableNames(element);
+			urlVariableNamesExistInParameters(element, variableNames, validation);
+			if (validation.isValid()) {
+				List<? extends VariableElement> parameters = element.getParameters();
+
+				Map<String, String> postParameters = restAnnotationHelper.extractPostParameters(element);
+
+				if (postParameters == null) {
+					validation.addError(element, "%s annotated method has multiple form parameters with the same name");
+					return;
+				}
+
+				if (!postParameters.isEmpty() && postParameters.size() + variableNames.size() < parameters.size()) {
+					validation.addError(element, "%s method cannot have both entity parameter and @Field annotated parameters");
+					return;
+				}
+
+				if (postParameters.isEmpty() && parameters.size() > variableNames.size() + 1) {
+					validation.addError(element, "%s annotated method has more than one entity parameter");
 				}
 			}
 		}
@@ -466,6 +500,40 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 					valid.addError("%s annotated methods can only return a parameterized Set of HttpMethod, not " + typeArgument.toString());
 				}
 			}
+		}
+	}
+
+	public void doesNotHavePathAnnotation(Element element, ElementValidation validation) {
+		doesNotHaveAnnotation(element, Path.class, validation);
+	}
+
+	public void doesNotHaveFieldAnnotation(Element element, ElementValidation validation) {
+		doesNotHaveAnnotation(element, Field.class, validation);
+	}
+
+	public void restInterfaceHasFormConverter(Element element, ElementValidation validation) {
+		Element restInterface = element.getEnclosingElement().getEnclosingElement();
+
+		if (restInterface.getAnnotation(Rest.class) == null) {
+			return;
+		}
+
+		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(restInterface, Rest.class.getCanonicalName(), "converters");
+
+		boolean formConverterFound = false;
+
+		TypeElement formConverter = annotationHelper.getElementUtils().getTypeElement(FORM_HTTP_MESSAGE_CONVERTER);
+
+		for (DeclaredType converter : converters) {
+			if (formConverter != null && annotationHelper.isSubtype(formConverter.asType(), converter)) {
+				formConverterFound = true;
+				break;
+			}
+		}
+
+		if (!formConverterFound) {
+			validation.addError(element, "%s annotated method parameter must be in a @Rest annotated interface which uses at least one " //
+					+ FORM_HTTP_MESSAGE_CONVERTER + " (or subtype)");
 		}
 	}
 }
