@@ -39,14 +39,15 @@ import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 // if defined, the rootUrl will be added as a prefix to every request
-@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class, EBeanConverter.class },
-		interceptors = { RequestInterceptor.class, EBeanInterceptor.class },
-		requestFactory = MyRequestFactory.class)
+@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class, EBeanConverter.class, FormHttpMessageConverter.class }, //
+				interceptors = { RequestInterceptor.class, EBeanInterceptor.class }, //
+				requestFactory = MyRequestFactory.class)
 public interface MyService {
 
 	// *** GET ***
@@ -151,6 +152,12 @@ public interface MyService {
 
 	@Post("/events/")
 	ResponseEntity<Event> addEvent2(Event event);
+
+	@Post("/events/{date}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void addEventWithParameters(String date, @Field String parameter, @Field String otherParameter);
 
 	@Post("/events/{date}")
 	@RequiresHeader("SomeFancyHeader")
