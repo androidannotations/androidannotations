@@ -15,17 +15,33 @@
  */
 package org.androidannotations.rest.spring.handler;
 
+import java.util.Collections;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.handler.AnnotationHandler;
+import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.HasParameterHandlers;
+import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Post;
+import org.androidannotations.rest.spring.holder.RestHolder;
 
-public class PostHandler extends RestMethodHandler {
+public class PostHandler extends RestMethodHandler implements HasParameterHandlers<RestHolder> {
+
+	private FieldHandler fieldHandler;
 
 	public PostHandler(AndroidAnnotationsEnvironment environment) {
 		super(Post.class, environment);
+		fieldHandler = new FieldHandler(environment);
+	}
+
+	@Override
+	public Iterable<AnnotationHandler> getParameterHandlers() {
+		return Collections.<AnnotationHandler> singleton(fieldHandler);
 	}
 
 	@Override
@@ -41,5 +57,22 @@ public class PostHandler extends RestMethodHandler {
 	protected String getUrlSuffix(Element element) {
 		Post annotation = element.getAnnotation(Post.class);
 		return annotation.value();
+	}
+
+	public class FieldHandler extends BaseAnnotationHandler<GeneratedClassHolder> {
+
+		public FieldHandler(AndroidAnnotationsEnvironment environment) {
+			super(Field.class, environment);
+		}
+
+		@Override
+		protected void validate(Element element, ElementValidation validation) {
+			validatorHelper.enclosingMethodHasAnnotation(Post.class, element, validation);
+		}
+
+		@Override
+		public void process(Element element, GeneratedClassHolder holder) throws Exception {
+			// Don't do anything here.
+		}
 	}
 }
