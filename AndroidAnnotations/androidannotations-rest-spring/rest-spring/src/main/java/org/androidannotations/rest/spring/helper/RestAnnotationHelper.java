@@ -20,7 +20,9 @@ import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_H
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.MEDIA_TYPE;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.RESPONSE_ENTITY;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -49,6 +51,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.rest.spring.annotations.Accept;
 import org.androidannotations.rest.spring.annotations.Field;
+import org.androidannotations.rest.spring.annotations.Part;
 import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.RequiresAuthentication;
 import org.androidannotations.rest.spring.annotations.RequiresCookie;
@@ -103,7 +106,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	public JVar declareUrlVariables(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> methodParams) {
 		Map<String, String> urlNameToElementName = new HashMap<String, String>();
 		for (VariableElement variableElement : element.getParameters()) {
-			if (variableElement.getAnnotation(Field.class) == null) {
+			if (!hasPostParameterAnnotation(variableElement)) {
 				urlNameToElementName.put(getUrlVariableCorrespondingTo(variableElement), variableElement.getSimpleName().toString());
 			}
 		}
@@ -148,6 +151,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		} else {
 			return null;
 		}
+	}
+
+	public boolean multipartHeaderRequired(ExecutableElement executableElement) {
+		for (VariableElement parameter : executableElement.getParameters()) {
+			if (parameter.getAnnotation(Part.class) != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String[] requiredHeaders(ExecutableElement executableElement) {
@@ -220,7 +232,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		boolean requiresAuth = requiredAuthentication(executableElement);
 
-		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
+		boolean requiresMultipartHeader = multipartHeaderRequired(executableElement);
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth || requiresMultipartHeader) {
 			// we need the headers
 			httpHeadersVar = body.decl(getEnvironment().getJClass(HTTP_HEADERS), "httpHeaders", JExpr._new(getEnvironment().getJClass(HTTP_HEADERS)));
 		}
@@ -247,6 +261,10 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			body.add(JExpr.invoke(httpHeadersVar, "set").arg("Cookie").arg(cookiesToString));
 		}
 
+		if (requiresMultipartHeader) {
+			body.add(JExpr.invoke(httpHeadersVar, "set").arg(JExpr.lit("Content-Type")).arg(getEnvironment().getJClass(MEDIA_TYPE).staticRef("MULTIPART_FORM_DATA_VALUE")));
+		}
+
 		if (requiresHeaders) {
 			for (String header : headers) {
 				JInvocation headerValue = JExpr.invoke(holder.getAvailableHeadersField(), "get").arg(header);
@@ -266,7 +284,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	public JVar getEntitySentToServer(ExecutableElement element, SortedMap<String, JVar> params) {
 		Set<String> urlVariables = extractUrlVariableNames(element);
 		for (VariableElement parameter : element.getParameters()) {
-			if (parameter.getAnnotation(Field.class) == null) {
+			if (!hasPostParameterAnnotation(parameter)) {
 				String parameterName = getUrlVariableCorrespondingTo(parameter);
 
 				if (!urlVariables.contains(parameterName)) {
@@ -517,19 +535,35 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	 * if duplicate names found.
 	 */
 	public Map<String, String> extractPostParameters(ExecutableElement element) {
-		Map<String, String> formNameToElementName = new HashMap<>();
+		Map<String, String> postParameterNameToElementName = new HashMap<String, String>();
 
 		for (VariableElement parameter : element.getParameters()) {
-			Field annotation = parameter.getAnnotation(Field.class);
-			if (annotation != null) {
-				String elementName = !annotation.value().equals("") ? annotation.value() : parameter.getSimpleName().toString();
-				if (formNameToElementName.containsKey(elementName)) {
+			String postParameterName = null;
+
+			if (parameter.getAnnotation(Field.class) != null) {
+				postParameterName = extractPostParameter(parameter, Field.class);
+			} else if (parameter.getAnnotation(Part.class) != null) {
+				postParameterName = extractPostParameter(parameter, Part.class);
+			}
+
+			if (postParameterName != null) {
+				if (postParameterNameToElementName.containsKey(postParameterName)) {
 					return null;
 				}
 
-				formNameToElementName.put(elementName, parameter.getSimpleName().toString());
+				postParameterNameToElementName.put(postParameterName, parameter.getSimpleName().toString());
 			}
 		}
-		return formNameToElementName;
+		return postParameterNameToElementName;
+	}
+
+	private String extractPostParameter(VariableElement parameter, Class<? extends Annotation> clazz) {
+		String value = extractAnnotationParameter(parameter, clazz.getCanonicalName(), "value");
+
+		return !value.equals("") ? value : parameter.getSimpleName().toString();
+	}
+
+	public boolean hasPostParameterAnnotation(VariableElement variableElement) {
+		return hasOneOfClassAnnotations(variableElement, Arrays.asList(Field.class, Part.class));
 	}
 }
