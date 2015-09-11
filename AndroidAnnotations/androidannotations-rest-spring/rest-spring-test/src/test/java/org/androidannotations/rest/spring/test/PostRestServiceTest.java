@@ -21,6 +21,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -34,15 +35,32 @@ import org.springframework.web.client.RestTemplate;
 @RunWith(RobolectricTestRunner.class)
 public class PostRestServiceTest {
 
+	PostRestService_ service;
+
+	RestTemplate restTemplate;
+
+	@Before
+	public void setUp() {
+		service = new PostRestService_(null);
+		restTemplate = mock(RestTemplate.class);
+		service.setRestTemplate(restTemplate);
+	}
+
 	@Test
 	public void injectsPostParametersIntoRequestEntity() {
-		PostRestService_ service = new PostRestService_(null);
-
-		RestTemplate restTemplate = mock(RestTemplate.class);
-		service.setRestTemplate(restTemplate);
-
 		service.post("first", "second", "last");
 
+		verifyPostParametersAdded();
+	}
+
+	@Test
+	public void injectsMultipartPostParametersIntoRequestEntity() {
+		service.multipart("first", "second", "last");
+
+		verifyPostParametersAdded();
+	}
+
+	private void verifyPostParametersAdded() {
 		LinkedMultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<String, Object>();
 		postParameters.add("thirdParam", "last");
 		postParameters.add("otherParam", "first");
