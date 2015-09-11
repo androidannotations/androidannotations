@@ -21,6 +21,7 @@ import org.androidannotations.rest.spring.annotations.Delete;
 import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.annotations.Options;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Put;
 import org.androidannotations.rest.spring.annotations.Rest;
@@ -49,4 +50,12 @@ public interface ClientWithPathVariable {
 	@Put("/test/{v1}/{v2}")
 	void putWithParameterEntity(int v1, String v2);
 
+	@Get("/test/{v1}")
+	void getWithPathAnnotation(@Path("v1") int version);
+
+	@Get("/test/{v1}/{v2}")
+	void getWithPathAnnotationAndParam(@Path("v1") int v1, String v2);
+
+	@Get("/test/{v1}/{v2}")
+	void getWithCrossParamAnnotations(@Path("v1") int v2, @Path("v2") int v1);
 }

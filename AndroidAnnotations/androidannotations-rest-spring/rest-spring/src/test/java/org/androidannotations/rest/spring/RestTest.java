@@ -79,6 +79,16 @@ public class RestTest extends AAProcessorTestHelper {
 	}
 
 	@Test
+	public void clientWithWrongPathVariables() throws IOException {
+		CompileResult result = compileFiles(ClientWithWrongPathVariables.class);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Get(\"/duplicates/{v1}\")", result);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Get(\"/missingvariable/{v1}\")", result);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Path(\"v2\")", result);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Path(\"missingGet\")", result);
+		assertCompilationErrorCount(5, result);
+	}
+
+	@Test
 	public void clientWithWrongEnhancedMethods() throws IOException {
 		CompileResult result = compileFiles(ClientWithWrongEnhancedMethod.class);
 		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "Object getRestTemplate();", result);
