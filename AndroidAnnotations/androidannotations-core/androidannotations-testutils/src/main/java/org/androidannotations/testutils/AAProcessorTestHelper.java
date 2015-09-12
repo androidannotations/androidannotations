@@ -34,6 +34,10 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 		return output;
 	}
 
+	public File toGeneratedFile(Class<?> classOfPackagingContainingFile, String compiledClassSimpleName) {
+		return new File(OUTPUT_DIRECTORY, toPath(classOfPackagingContainingFile.getPackage()) + "/" + compiledClassSimpleName + getAndroidAnnotationsClassSuffix() + SOURCE_FILE_SUFFIX);
+	}
+
 	public String toPath(Class<?> classOfPackagingContainingFile, String filename) {
 		return classOfPackagingContainingFile.getResource(filename).getPath();
 	}

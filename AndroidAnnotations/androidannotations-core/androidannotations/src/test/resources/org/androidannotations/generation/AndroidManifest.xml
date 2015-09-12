@@ -24,6 +24,7 @@
     <application>
     		<activity android:name="org.androidannotations.generation.ActivityWithOnBackPressedMethod_" />
     		<activity android:name="org.androidannotations.generation.ActivityWithBackgroundMethod_" />
+    		<activity android:name="org.androidannotations.generation.WindowFeatureAppCompatActivity_" />
    	</application>
 
 </manifest>
