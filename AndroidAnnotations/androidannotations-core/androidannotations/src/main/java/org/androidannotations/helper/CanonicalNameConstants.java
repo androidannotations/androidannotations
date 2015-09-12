@@ -77,6 +77,7 @@ public final class CanonicalNameConstants {
 	public static final String VIEW_GROUP = "android.view.ViewGroup";
 	public static final String CONTEXT = "android.content.Context";
 	public static final String KEY_EVENT = "android.view.KeyEvent";
+	public static final String KEY_EVENT_CALLBACK = "android.view.KeyEvent.Callback";
 	public static final String LAYOUT_INFLATER = "android.view.LayoutInflater";
 	public static final String FRAGMENT_ACTIVITY = "android.support.v4.app.FragmentActivity";
 	public static final String FRAGMENT = "android.app.Fragment";
