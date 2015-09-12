@@ -326,7 +326,7 @@
 						<exclude>**/project.properties</exclude>
 						<exclude>**/rebel.xml</exclude>
 						<exclude>**/.checkstyle</exclude>
-						<exclude>**/.bks</exclude>
+						<exclude>**/*.bks</exclude>
 						<exclude>**/org.robolectric.Config.properties</exclude>
 						<exclude>**/*.importorder</exclude>
 					</excludes>
