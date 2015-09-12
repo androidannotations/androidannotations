@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -28,8 +28,8 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JFieldRef;
 
 public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
@@ -57,7 +57,7 @@ public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSup
 		TypeMirror uiFieldTypeMirror = element.asType();
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
-		JClass viewClass = codeModelHelper.typeMirrorToJClass(uiFieldTypeMirror);
+		AbstractJClass viewClass = codeModelHelper.typeMirrorToJClass(uiFieldTypeMirror);
 		JFieldRef fieldRef = ref(fieldName);
 
 		holder.processViewById(idRef, viewClass, fieldRef);

@@ -20,9 +20,9 @@ import javax.lang.model.element.TypeElement;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.GeneratedClassHolder;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JCodeModel;
+import com.helger.jcodemodel.JDefinedClass;
 
 public class PluginClassHolder<H extends GeneratedClassHolder> {
 
@@ -48,11 +48,11 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 		return holder().getEnvironment();
 	}
 
-	protected JClass getJClass(String fullyQualifiedClassName) {
+	protected AbstractJClass getJClass(String fullyQualifiedClassName) {
 		return environment().getJClass(fullyQualifiedClassName);
 	}
 
-	protected JClass getJClass(Class<?> clazz) {
+	protected AbstractJClass getJClass(Class<?> clazz) {
 		return environment().getJClass(clazz);
 	}
 

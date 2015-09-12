@@ -15,10 +15,10 @@
  */
 package org.androidannotations.roboguice.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._super;
+import static com.helger.jcodemodel.JExpr._this;
+import static com.helger.jcodemodel.JExpr.invoke;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.ArrayList;
@@ -42,16 +42,17 @@ import org.androidannotations.roboguice.helper.RoboGuiceClasses;
 import org.androidannotations.roboguice.helper.RoboGuiceValidatorHelper;
 import org.androidannotations.roboguice.holder.RoboGuiceHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JSynchronizedBlock;
+import com.helger.jcodemodel.JTryBlock;
+import com.helger.jcodemodel.JVar;
 
 public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
@@ -99,7 +100,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		List<TypeMirror> listenerTypeMirrors = extractListenerTypeMirrors(element);
 		int i = 1;
 		for (TypeMirror listenerTypeMirror : listenerTypeMirrors) {
-			JClass listenerClass = codeModelHelper.typeMirrorToJClass(listenerTypeMirror);
+			AbstractJClass listenerClass = codeModelHelper.typeMirrorToJClass(listenerTypeMirror);
 			JFieldVar listener = holder.getGeneratedClass().field(JMod.PRIVATE, listenerClass, "listener" + i + generationSuffix());
 			codeModelHelper.addSuppressWarnings(listener, "unused");
 			listener.annotate(getJClass(RoboGuiceClasses.INJECT));
@@ -135,8 +136,8 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
 	private void beforeCreateMethod(EActivityHolder holder, JFieldVar scope, JFieldVar scopedObjects, JFieldVar eventManager) {
 		JBlock body = holder.getInitBody();
-		JClass keyWildCard = getJClass(RoboGuiceClasses.KEY).narrow(getCodeModel().wildcard());
-		JClass scopedHashMap = getClasses().HASH_MAP.narrow(keyWildCard, getClasses().OBJECT);
+		AbstractJClass keyWildCard = getJClass(RoboGuiceClasses.KEY).narrow(getCodeModel().wildcard());
+		AbstractJClass scopedHashMap = getClasses().HASH_MAP.narrow(keyWildCard, getClasses().OBJECT);
 		body.assign(scopedObjects, JExpr._new(scopedHashMap));
 
 		JVar injector = body.decl(getJClass(RoboGuiceClasses.ROBO_INJECTOR), "injector_", getJClass(RoboGuiceClasses.ROBO_GUICE).staticInvoke("getInjector").arg(_this()));
@@ -172,7 +173,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void onStopMethod(EActivityHolder holder, JFieldVar eventManager) {
-		JBlock onStopBlock = new JBlock(false, false);
+		JBlock onStopBlock = new JBlock().bracesRequired(false).indentRequired(false);
 
 		JTryBlock tryBlock = onStopBlock._try();
 		fireEvent(eventManager, tryBlock.body(), getJClass(RoboGuiceClasses.ON_STOP_EVENT));
@@ -185,7 +186,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	}
 
 	private void onDestroyMethod(EActivityHolder holder, JFieldVar eventManager) {
-		JBlock onDestroyBlock = new JBlock(false, false);
+		JBlock onDestroyBlock = new JBlock().bracesRequired(false).indentRequired(false);
 
 		JTryBlock tryBlock = onDestroyBlock._try();
 		fireEvent(eventManager, tryBlock.body(), getJClass(RoboGuiceClasses.ON_DESTROY_EVENT));
@@ -201,7 +202,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
 	private void onConfigurationChangedMethod(EActivityHolder holder, RoboGuiceHolder roboGuiceHolder, JFieldVar eventManager) {
 		JVar currentConfig = roboGuiceHolder.getCurrentConfig();
-		JExpression newConfig = holder.getOnConfigurationChangedNewConfigParam();
+		IJExpression newConfig = holder.getOnConfigurationChangedNewConfigParam();
 		JBlock onConfigurationChangedAfterSuperBlock = holder.getOnConfigurationChangedAfterSuperBlock();
 		fireEvent(eventManager, onConfigurationChangedAfterSuperBlock, getJClass(RoboGuiceClasses.ON_CONFIGURATION_CHANGED_EVENT), currentConfig, newConfig);
 	}
@@ -209,12 +210,10 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 	private void onContentChangedMethod(RoboGuiceHolder holder, JFieldVar scope, JFieldVar eventManager) {
 		JBlock onContentChangedAfterSuperBlock = holder.getOnContentChangedAfterSuperBlock();
 
-		// no synchronized in CodeModel
-		// https://java.net/jira/browse/CODEMODEL-6
-		onContentChangedAfterSuperBlock.directStatement("synchronized(" + getJClass(RoboGuiceClasses.CONTEXT_SCOPE).name() + ".class" + ")");
-		JBlock synchronizedBlock = new JBlock(true, true);
-		synchronizedBlock.invoke(scope, "enter").arg(_this());
-		JTryBlock tryBlock = synchronizedBlock._try();
+		JSynchronizedBlock synchronizedBlock = onContentChangedAfterSuperBlock.synchronizedBlock(getJClass(RoboGuiceClasses.CONTEXT_SCOPE).dotclass());
+		JBlock synchronizedBlockBody = synchronizedBlock.body();
+		synchronizedBlockBody.invoke(scope, "enter").arg(_this());
+		JTryBlock tryBlock = synchronizedBlockBody._try();
 		tryBlock.body().staticInvoke(getJClass(RoboGuiceHelper.class), "callInjectViews").arg(_this());
 		tryBlock._finally().invoke(scope, "exit").arg(_this());
 		onContentChangedAfterSuperBlock.add(synchronizedBlock);
@@ -231,15 +230,15 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		fireEvent(eventManager, onActivityResultAfterSuperBlock, getJClass(RoboGuiceClasses.ON_ACTIVITY_RESULT_EVENT), requestCode, resultCode, data);
 	}
 
-	private void fireEvent(JFieldVar eventManager, JBlock body, JClass eventClass, JExpression... eventArguments) {
-		JClass actualEventClass = eventClass;
+	private void fireEvent(JFieldVar eventManager, JBlock body, AbstractJClass eventClass, IJExpression... eventArguments) {
+		AbstractJClass actualEventClass = eventClass;
 		if (eventClass.fullName().startsWith("roboguice.context.event")) {
 			actualEventClass = eventClass.narrow(getClasses().ACTIVITY);
 		}
 
 		JInvocation newEvent = _new(actualEventClass);
 		newEvent.arg(_this());
-		for (JExpression eventArgument : eventArguments) {
+		for (IJExpression eventArgument : eventArguments) {
 			newEvent.arg(eventArgument);
 		}
 		body.invoke(eventManager, "fire").arg(newEvent);

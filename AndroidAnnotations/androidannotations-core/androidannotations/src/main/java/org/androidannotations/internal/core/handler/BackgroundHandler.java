@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr.lit;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -26,16 +26,16 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JStatement;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJStatement;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JCatchBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JTryBlock;
+import com.helger.jcodemodel.JVar;
 
 public class BackgroundHandler extends AbstractRunnableHandler {
 
@@ -61,7 +61,7 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 		tryBlock.body().add(previousMethodBody);
 		JCatchBlock catchBlock = tryBlock._catch(getClasses().THROWABLE);
 		JVar caughtException = catchBlock.param("e");
-		JStatement uncaughtExceptionCall = getClasses().THREAD //
+		IJStatement uncaughtExceptionCall = getClasses().THREAD //
 				.staticInvoke("getDefaultUncaughtExceptionHandler") //
 				.invoke("uncaughtException") //
 				.arg(getClasses().THREAD.staticInvoke("currentThread")) //
@@ -73,7 +73,7 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 		int delay = annotation.delay();
 		String serial = annotation.serial();
 
-		JClass backgroundExecutorClass = getJClass(BackgroundExecutor.class);
+		AbstractJClass backgroundExecutorClass = getJClass(BackgroundExecutor.class);
 		JInvocation newTask = _new(anonymousTaskClass).arg(lit(id)).arg(lit(delay)).arg(lit(serial));
 		JInvocation executeCall = backgroundExecutorClass.staticInvoke("execute").arg(newTask);
 

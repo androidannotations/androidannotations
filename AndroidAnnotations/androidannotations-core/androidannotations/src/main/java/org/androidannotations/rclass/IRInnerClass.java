@@ -17,7 +17,7 @@ package org.androidannotations.rclass;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldRef;
 
 public interface IRInnerClass {
 

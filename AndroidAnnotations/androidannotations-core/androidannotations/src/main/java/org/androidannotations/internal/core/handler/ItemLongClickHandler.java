@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JExpr.invoke;
 
 import java.util.List;
 
@@ -31,14 +31,14 @@ import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class ItemLongClickHandler extends AbstractViewListenerHandler {
 
@@ -72,7 +72,7 @@ public class ItemLongClickHandler extends AbstractViewListenerHandler {
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
 		boolean hasItemParameter = parameters.size() == 1;
 
-		JClass narrowAdapterViewClass = getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
+		AbstractJClass narrowAdapterViewClass = getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 		JVar onItemClickParentParam = listenerMethod.param(narrowAdapterViewClass, "parent");
 		listenerMethod.param(getClasses().VIEW, "view");
 		JVar onItemClickPositionParam = listenerMethod.param(getCodeModel().INT, "position");
@@ -85,7 +85,7 @@ public class ItemLongClickHandler extends AbstractViewListenerHandler {
 			if (parameterType.getKind() == TypeKind.INT) {
 				call.arg(onItemClickPositionParam);
 			} else {
-				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameterType);
+				AbstractJClass parameterClass = codeModelHelper.typeMirrorToJClass(parameterType);
 				call.arg(cast(parameterClass, invoke(onItemClickParentParam, "getAdapter").invoke("getItem").arg(onItemClickPositionParam)));
 
 				if (parameterClass.isParameterized()) {
@@ -106,12 +106,12 @@ public class ItemLongClickHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
+	protected AbstractJClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ON_ITEM_LONG_CLICK_LISTENER;
 	}
 
 	@Override
-	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
+	protected AbstractJClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 	}
 }

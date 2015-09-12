@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.TRUE;
+import static com.helger.jcodemodel.JExpr.invoke;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -29,9 +29,9 @@ import org.androidannotations.helper.KeyCodeHelper;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.holder.HasKeyEventCallbackMethods;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JSwitch;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JSwitch;
 
 public abstract class AbstractKeyEventHandler extends CoreBaseAnnotationHandler<HasKeyEventCallbackMethods> {
 

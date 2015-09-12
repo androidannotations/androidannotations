@@ -22,14 +22,15 @@ import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
-import com.sun.codemodel.CodeWriter;
-import com.sun.codemodel.JPackage;
+import com.helger.jcodemodel.AbstractCodeWriter;
+import com.helger.jcodemodel.JPackage;
 
-public class ResourceCodeWriter extends CodeWriter {
+public class ResourceCodeWriter extends AbstractCodeWriter {
 
 	private final Filer filer;
 
 	public ResourceCodeWriter(Filer filer) {
+		super(null);
 		this.filer = filer;
 	}
 

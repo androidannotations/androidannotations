@@ -15,12 +15,12 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr.lit;
+import static com.helger.jcodemodel.JMod.FINAL;
+import static com.helger.jcodemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.STATIC;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,13 +39,13 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EReceiverHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JOp;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JOp;
+import com.helger.jcodemodel.JVar;
 
 public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder> implements HasParameterHandlers<EReceiverHolder> {
 
@@ -106,20 +106,20 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 		for (String scheme : values) {
 			asListInvoke.arg(scheme);
 		}
-		JClass listOfStrings = getClasses().LIST.narrow(getClasses().STRING);
+		AbstractJClass listOfStrings = getClasses().LIST.narrow(getClasses().STRING);
 		return holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, listOfStrings, staticFieldName, asListInvoke);
 	}
 
 	private void addActionInOnReceive(EReceiverHolder holder, ExecutableElement executableElement, String methodName, JFieldVar actionsField, JFieldVar dataSchemesField) {
 		String actionsInvoke = getInvocationName(actionsField);
-		JExpression filterCondition = actionsField.invoke(actionsInvoke).arg(holder.getOnReceiveIntentAction());
+		IJExpression filterCondition = actionsField.invoke(actionsInvoke).arg(holder.getOnReceiveIntentAction());
 		if (dataSchemesField != null) {
 			String dataSchemesInvoke = getInvocationName(dataSchemesField);
 			filterCondition = filterCondition.cand(dataSchemesField.invoke(dataSchemesInvoke).arg(holder.getOnReceiveIntentDataScheme()));
 		}
 
 		JBlock callActionBlock = holder.getOnReceiveBody()._if(filterCondition)._then();
-		JExpression receiverRef = holder.getGeneratedClass().staticRef("this");
+		IJExpression receiverRef = holder.getGeneratedClass().staticRef("this");
 		JInvocation callActionInvocation = receiverRef.invoke(methodName);
 
 		JVar intent = holder.getOnReceiveIntent();
@@ -127,7 +127,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 
 		List<? extends VariableElement> methodParameters = executableElement.getParameters();
 		for (VariableElement param : methodParameters) {
-			JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType());
+			AbstractJClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType());
 
 			if (extraParamClass.equals(getClasses().CONTEXT)) {
 				callActionInvocation.arg(holder.getOnReceiveContext());
@@ -146,7 +146,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 	}
 
 	private String getInvocationName(JFieldVar field) {
-		JClass listOfStrings = getClasses().LIST.narrow(getClasses().STRING);
+		AbstractJClass listOfStrings = getClasses().LIST.narrow(getClasses().STRING);
 		if (field.type().fullName().equals(listOfStrings.fullName())) {
 			return "contains";
 		}
@@ -164,7 +164,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 			return parameter.getAnnotation(ReceiverAction.Extra.class).value();
 		}
 
-		public JExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, EReceiverHolder holder) {
+		public IJExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, EReceiverHolder holder) {
 			return getExtraValue(parameter, holder.getOnReceiveIntent(), extras, block, holder.getOnReceiveMethod(), holder);
 		}
 	}

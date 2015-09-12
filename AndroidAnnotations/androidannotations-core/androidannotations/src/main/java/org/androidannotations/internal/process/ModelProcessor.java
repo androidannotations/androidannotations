@@ -33,7 +33,7 @@ import org.androidannotations.internal.model.AnnotationElements.AnnotatedAndRoot
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 
-import com.sun.codemodel.JCodeModel;
+import com.helger.jcodemodel.JCodeModel;
 
 public class ModelProcessor {
 

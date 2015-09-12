@@ -43,8 +43,8 @@
 			<artifactId>rest-spring-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.codemodel</groupId>
-			<artifactId>codemodel</artifactId>
+			<groupId>com.helger</groupId>
+			<artifactId>jcodemodel</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>

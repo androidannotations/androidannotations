@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._null;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,12 +36,12 @@ import org.androidannotations.handler.HasParameterHandlers;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasOnActivityResult;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JOp;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JOp;
+import com.helger.jcodemodel.JVar;
 
 public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivityResult> implements HasParameterHandlers<HasOnActivityResult> {
 
@@ -86,9 +86,9 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
 		int requestCode = executableElement.getAnnotation(OnActivityResult.class).value();
-		JBlock onResultBlock = holder.getOnActivityResultCaseBlock(requestCode).block();
+		JBlock onResultBlock = codeModelHelper.blockNoBraces(holder.getOnActivityResultCaseBlock(requestCode));
 
-		JExpression activityRef = holder.getGeneratedClass().staticRef("this");
+		IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
 		JInvocation onResultInvocation = JExpr.invoke(activityRef, methodName);
 
 		JVar intent = holder.getOnActivityResultDataParam();
@@ -101,7 +101,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 					extras = onResultBlock.decl(getClasses().BUNDLE, "extras_",
 							JOp.cond(intent.ne(_null()).cand(intent.invoke("getExtras").ne(_null())), intent.invoke("getExtras"), _new(getClasses().BUNDLE)));
 				}
-				JExpression extraParameter = extraHandler.getExtraValue(parameter, extras, onResultBlock, holder);
+				IJExpression extraParameter = extraHandler.getExtraValue(parameter, extras, onResultBlock, holder);
 				onResultInvocation.arg(extraParameter);
 			} else if (CanonicalNameConstants.INTENT.equals(parameterType.toString())) {
 				onResultInvocation.arg(intent);
@@ -124,7 +124,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 			return parameter.getAnnotation(OnActivityResult.Extra.class).value();
 		}
 
-		public JExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, HasOnActivityResult holder) {
+		public IJExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, HasOnActivityResult holder) {
 			return super.getExtraValue(parameter, holder.getOnActivityResultDataParam(), extras, block, holder.getOnActivityResultMethod(), holder);
 		}
 	}

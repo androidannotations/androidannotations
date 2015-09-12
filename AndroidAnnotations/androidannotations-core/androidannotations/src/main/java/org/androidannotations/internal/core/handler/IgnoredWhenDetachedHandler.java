@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr.invoke;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -27,8 +27,8 @@ import org.androidannotations.annotations.IgnoredWhenDetached;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EFragmentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JMethod;
 
 public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentHolder> {
 

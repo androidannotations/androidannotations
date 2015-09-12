@@ -15,8 +15,8 @@
  */
 package org.androidannotations.ormlite.holder;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JMod.PRIVATE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +30,10 @@ import org.androidannotations.holder.HasLifecycleMethods;
 import org.androidannotations.ormlite.helper.OrmLiteClasses;
 import org.androidannotations.plugin.PluginClassHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldVar;
 
 public class OrmLiteHolder extends PluginClassHolder<EComponentHolder> {
 
@@ -53,12 +53,12 @@ public class OrmLiteHolder extends PluginClassHolder<EComponentHolder> {
 	}
 
 	private JFieldVar setDatabaseHelperRef(TypeMirror databaseHelperTypeMirror) {
-		JClass databaseHelperClass = getJClass(databaseHelperTypeMirror.toString());
+		AbstractJClass databaseHelperClass = getJClass(databaseHelperTypeMirror.toString());
 		String fieldName = CaseHelper.lowerCaseFirst(databaseHelperClass.name()) + ModelConstants.generationSuffix();
 		JFieldVar databaseHelperRef = getGeneratedClass().field(PRIVATE, databaseHelperClass, fieldName);
 		databaseHelperRefs.put(databaseHelperTypeMirror, databaseHelperRef);
 
-		JExpression dbHelperClass = databaseHelperClass.dotclass();
+		IJExpression dbHelperClass = databaseHelperClass.dotclass();
 		holder().getInitBody().assign(databaseHelperRef, //
 				getJClass(OrmLiteClasses.OPEN_HELPER_MANAGER).staticInvoke("getHelper").arg(holder().getContextRef()).arg(dbHelperClass));
 

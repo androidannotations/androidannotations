@@ -15,9 +15,9 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JMod.FINAL;
+import static com.helger.jcodemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
@@ -38,17 +38,17 @@ import org.androidannotations.api.sharedpreferences.StringPrefEditorField;
 import org.androidannotations.api.sharedpreferences.StringSetPrefEditorField;
 import org.androidannotations.helper.CanonicalNameConstants;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JClassAlreadyExistsException;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
@@ -104,7 +104,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 
 	private void createEditorConstructor() {
 		editorConstructor = editorClass.constructor(JMod.NONE);
-		JClass sharedPreferencesClass = getJClass("android.content.SharedPreferences");
+		AbstractJClass sharedPreferencesClass = getJClass("android.content.SharedPreferences");
 		JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
 		editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
 	}
@@ -115,7 +115,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		editMethod.body()._return(editMethodEditorInvocation);
 	}
 
-	public void createFieldMethod(Class<?> prefFieldHelperClass, JExpression keyExpression, String fieldName, String fieldHelperMethodName, JExpression defaultValue,
+	public void createFieldMethod(Class<?> prefFieldHelperClass, IJExpression keyExpression, String fieldName, String fieldHelperMethodName, IJExpression defaultValue,
 			String docComment, String defaultValueStr) {
 		JMethod fieldMethod = generatedClass.method(PUBLIC, prefFieldHelperClass, fieldName);
 		if (defaultValueStr != null) {
@@ -125,10 +125,10 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(keyExpression).arg(defaultValue));
 	}
 
-	public void createEditorFieldMethods(ExecutableElement method, JExpression keyExpression) {
+	public void createEditorFieldMethods(ExecutableElement method, IJExpression keyExpression) {
 		String returnType = method.getReturnType().toString();
 		EditorFieldHolder editorFieldHolder = EDITOR_FIELD_BY_TYPE.get(returnType);
-		JClass editorFieldClass = getJClass(editorFieldHolder.fieldClass);
+		AbstractJClass editorFieldClass = getJClass(editorFieldHolder.fieldClass);
 		String fieldName = method.getSimpleName().toString();
 		JMethod editorFieldMethod = editorClass.method(PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
 		String docComment = getProcessingEnvironment().getElementUtils().getDocComment(method);
@@ -161,7 +161,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		constructor = generatedClass.constructor(PUBLIC);
 		constructorContextParam = constructor.param(getClasses().CONTEXT, "context");
 		JBlock constructorBody = constructor.body();
-		constructorSuperBlock = constructorBody.block();
+		constructorSuperBlock = codeModelHelper.blockNoBraces(constructorBody);
 	}
 
 	public JFieldVar getContextField() {

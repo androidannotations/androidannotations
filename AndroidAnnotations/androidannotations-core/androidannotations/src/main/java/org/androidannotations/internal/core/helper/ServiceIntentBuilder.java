@@ -18,7 +18,7 @@ package org.androidannotations.internal.core.helper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.holder.HasIntentBuilder;
 
-import com.sun.codemodel.JClass;
+import com.helger.jcodemodel.AbstractJClass;
 
 public class ServiceIntentBuilder extends IntentBuilder {
 
@@ -27,8 +27,8 @@ public class ServiceIntentBuilder extends IntentBuilder {
 	}
 
 	@Override
-	protected JClass getSuperClass() {
-		JClass superClass = getJClass(org.androidannotations.api.builder.ServiceIntentBuilder.class);
+	protected AbstractJClass getSuperClass() {
+		AbstractJClass superClass = getJClass(org.androidannotations.api.builder.ServiceIntentBuilder.class);
 		return superClass.narrow(builderClass);
 	}
 }

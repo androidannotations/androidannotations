@@ -25,7 +25,7 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldRef;
 
 public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreferences> {
 

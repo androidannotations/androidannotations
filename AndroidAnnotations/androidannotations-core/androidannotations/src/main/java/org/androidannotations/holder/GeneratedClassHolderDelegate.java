@@ -18,18 +18,22 @@ package org.androidannotations.holder;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.internal.process.ProcessHolder.Classes;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JCodeModel;
+import com.helger.jcodemodel.JDefinedClass;
 
 public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolder> implements GeneratedClassHolder {
 
 	protected T holder;
 
+	protected APTCodeModelHelper codeModelHelper;
+
 	public GeneratedClassHolderDelegate(T holder) {
 		this.holder = holder;
+		codeModelHelper = new APTCodeModelHelper(holder.getEnvironment());
 	}
 
 	@Override
@@ -55,11 +59,11 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 		return getEnvironment().getCodeModel();
 	}
 
-	protected final JClass refClass(String fullyQualifiedClassName) {
+	protected final AbstractJClass refClass(String fullyQualifiedClassName) {
 		return getEnvironment().getJClass(fullyQualifiedClassName);
 	}
 
-	protected final JClass refClass(Class<?> clazz) {
+	protected final AbstractJClass refClass(Class<?> clazz) {
 		return getEnvironment().getJClass(clazz);
 	}
 }

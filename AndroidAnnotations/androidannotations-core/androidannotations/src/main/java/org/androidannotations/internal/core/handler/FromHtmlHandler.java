@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 
@@ -28,8 +28,8 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
 
 public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 

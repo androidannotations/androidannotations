@@ -29,14 +29,14 @@ import org.androidannotations.annotations.Touch;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class TouchHandler extends AbstractViewListenerHandler {
 
@@ -97,7 +97,7 @@ public class TouchHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
+	protected AbstractJClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().VIEW_ON_TOUCH_LISTENER;
 	}
 }

@@ -15,7 +15,7 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.JBlock;
+import com.helger.jcodemodel.JBlock;
 
 public interface HasLifecycleMethods extends GeneratedClassHolder {
 

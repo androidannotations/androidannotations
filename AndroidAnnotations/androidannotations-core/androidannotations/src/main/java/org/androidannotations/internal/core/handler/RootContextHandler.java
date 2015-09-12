@@ -15,9 +15,9 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -29,11 +29,11 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EBeanHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JConditional;
+import com.helger.jcodemodel.JInvocation;
 
 public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
 
@@ -58,19 +58,19 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
 		String typeQualifiedName = elementType.toString();
 
 		JBlock body = holder.getInitBody();
-		JExpression contextRef = holder.getContextRef();
+		IJExpression contextRef = holder.getContextRef();
 
 		if (CanonicalNameConstants.CONTEXT.equals(typeQualifiedName)) {
 			body.assign(ref(fieldName), contextRef);
 		} else {
-			JClass extendingContextClass = getEnvironment().getJClass(typeQualifiedName);
+			AbstractJClass extendingContextClass = getEnvironment().getJClass(typeQualifiedName);
 			JConditional cond = body._if(holder.getContextRef()._instanceof(extendingContextClass));
 			cond._then() //
 					.assign(ref(fieldName), cast(extendingContextClass, holder.getContextRef()));
 
 			JInvocation warningInvoke = getClasses().LOG.staticInvoke("w");
 			warningInvoke.arg(holder.getGeneratedClass().name());
-			JExpression expr = lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName")).plus(
+			IJExpression expr = lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName")).plus(
 					lit(", the @RootContext " + extendingContextClass.name() + " won't be populated"));
 			warningInvoke.arg(expr);
 			cond._else() //

@@ -15,18 +15,18 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr._super;
+import static com.helger.jcodemodel.JExpr._super;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCase;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JSwitch;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JCase;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JSwitch;
+import com.helger.jcodemodel.JVar;
 
 public class OnActivityResultDelegate extends GeneratedClassHolderDelegate<EComponentHolder> {
 
@@ -81,7 +81,7 @@ public class OnActivityResultDelegate extends GeneratedClassHolderDelegate<EComp
 
 	private JBlock createCaseBlock(int requestCode) {
 		JCase onActivityResultCase = getSwitch()._case(JExpr.lit(requestCode));
-		JBlock onActivityResultCaseBlock = onActivityResultCase.body().block();
+		JBlock onActivityResultCaseBlock = codeModelHelper.blockNoBraces(onActivityResultCase.body());
 		onActivityResultCase.body()._break();
 		return onActivityResultCaseBlock;
 	}
@@ -112,6 +112,6 @@ public class OnActivityResultDelegate extends GeneratedClassHolderDelegate<EComp
 		dataParam = method.param(getClasses().INTENT, "data");
 		JBlock body = method.body();
 		body.invoke(_super(), method).arg(requestCodeParam).arg(resultCodeParam).arg(dataParam);
-		afterSuperBlock = body.block();
+		afterSuperBlock = codeModelHelper.blockNoBraces(body);
 	}
 }

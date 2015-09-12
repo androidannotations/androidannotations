@@ -29,15 +29,14 @@ import org.androidannotations.annotations.PreferenceChange;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasPreferences;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
@@ -93,10 +92,10 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 			} else if (type.equals(CanonicalNameConstants.INTEGER) || type.equals(int.class.getName()) || //
 					type.equals(CanonicalNameConstants.FLOAT) || type.equals(float.class.getName()) || //
 					type.equals(CanonicalNameConstants.LONG) || type.equals(long.class.getName())) {
-				JClass wrapperClass = type.startsWith("java") ? getJClass(type) : JType.parse(getEnvironment().getCodeModel(), type.replace(".class", "")).boxify();
+				AbstractJClass wrapperClass = getEnvironment().getCodeModel().parseType(type).boxify();
 				call.arg(wrapperClass.staticInvoke("valueOf").arg(JExpr.cast(getClasses().STRING, newValueParam)));
 			} else {
-				JClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType());
+				AbstractJClass userParamClass = codeModelHelper.typeMirrorToJClass(variableElement.asType());
 				call.arg(JExpr.cast(userParamClass, newValueParam));
 
 				if (type.equals(CanonicalNameConstants.STRING_SET)) {
@@ -117,7 +116,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass(HasPreferences holder) {
+	protected AbstractJClass getListenerClass(HasPreferences holder) {
 		return holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CHANGE_LISTENER : getClasses().PREFERENCE_CHANGE_LISTENER;
 	}
 }

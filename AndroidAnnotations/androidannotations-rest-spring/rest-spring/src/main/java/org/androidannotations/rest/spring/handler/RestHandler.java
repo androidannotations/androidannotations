@@ -15,9 +15,9 @@
  */
 package org.androidannotations.rest.spring.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.lit;
 import static org.androidannotations.helper.CanonicalNameConstants.ARRAYLIST;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_INTERCEPTOR;
 
@@ -34,10 +34,10 @@ import org.androidannotations.rest.spring.annotations.Rest;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
 import org.androidannotations.rest.spring.holder.RestHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
 
 public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 
@@ -111,8 +111,8 @@ public class RestHandler extends BaseGeneratingAnnotationHandler<RestHolder> {
 	private void setInterceptors(Element element, RestHolder holder) {
 		List<DeclaredType> interceptors = annotationHelper.extractAnnotationClassArrayParameter(element, getTarget(), "interceptors");
 		if (interceptors != null) {
-			JClass listClass = getJClass(ARRAYLIST);
-			JClass clientInterceptorClass = getJClass(CLIENT_HTTP_REQUEST_INTERCEPTOR);
+			AbstractJClass listClass = getJClass(ARRAYLIST);
+			AbstractJClass clientInterceptorClass = getJClass(CLIENT_HTTP_REQUEST_INTERCEPTOR);
 			listClass = listClass.narrow(clientInterceptorClass);
 			JFieldVar restTemplateField = holder.getRestTemplateField();
 			JBlock init = holder.getInit().body();

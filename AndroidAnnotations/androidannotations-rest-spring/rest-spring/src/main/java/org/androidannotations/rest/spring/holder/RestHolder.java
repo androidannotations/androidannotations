@@ -15,9 +15,9 @@
  */
 package org.androidannotations.rest.spring.holder;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._this;
+import static com.helger.jcodemodel.JExpr.lit;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_AUTHENTICATION;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_BASIC_AUTHENTICATION;
@@ -33,16 +33,16 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.BaseGeneratedClassHolder;
 import org.androidannotations.rest.spring.api.RestErrorHandler;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class RestHolder extends BaseGeneratedClassHolder {
 
@@ -63,7 +63,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	@Override
 	protected void setExtends() {
 		String annotatedComponentQualifiedName = annotatedElement.getQualifiedName().toString();
-		JClass annotatedComponent = getCodeModel().directClass(annotatedComponentQualifiedName);
+		AbstractJClass annotatedComponent = getCodeModel().directClass(annotatedComponentQualifiedName);
 		generatedClass._implements(narrow(annotatedComponent));
 	}
 
@@ -129,7 +129,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 		JMethod setAuthMethod = codeModelHelper.implementMethod(this, methods, "setHttpBasicAuth", TypeKind.VOID.toString(), STRING, STRING);
 
 		if (setAuthMethod != null) {
-			JClass basicAuthClass = getJClass(HTTP_BASIC_AUTHENTICATION);
+			AbstractJClass basicAuthClass = getJClass(HTTP_BASIC_AUTHENTICATION);
 			JInvocation basicAuthentication = JExpr._new(basicAuthClass).arg(setAuthMethod.params().get(0)).arg(setAuthMethod.params().get(1));
 			setAuthMethod.body().assign(_this().ref(getAuthenticationField()), basicAuthentication);
 		}
@@ -140,9 +140,9 @@ public class RestHolder extends BaseGeneratedClassHolder {
 
 		if (setBearerMethod != null) {
 			JVar tokenParamVar = setBearerMethod.params().get(0);
-			JExpression tokenExpr = lit("Bearer ").plus(tokenParamVar);
+			IJExpression tokenExpr = lit("Bearer ").plus(tokenParamVar);
 
-			JClass authClass = getJClass(HTTP_AUTHENTICATION);
+			AbstractJClass authClass = getJClass(HTTP_AUTHENTICATION);
 			JDefinedClass anonymousHttpAuthClass = getCodeModel().anonymousClass(authClass);
 
 			JMethod getHeaderValueMethod = anonymousHttpAuthClass.method(JMod.PUBLIC, String.class, "getHeaderValue");
@@ -256,8 +256,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setAvailableHeadersField() {
-		JClass stringClass = getClasses().STRING;
-		JClass mapClass = getClasses().HASH_MAP.narrow(stringClass, stringClass);
+		AbstractJClass stringClass = getClasses().STRING;
+		AbstractJClass mapClass = getClasses().HASH_MAP.narrow(stringClass, stringClass);
 		availableHeadersField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableHeaders");
 		getInit().body().assign(availableHeadersField, _new(mapClass));
 	}
@@ -270,8 +270,8 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setAvailableCookiesField() {
-		JClass stringClass = getClasses().STRING;
-		JClass mapClass = getClasses().HASH_MAP.narrow(stringClass, stringClass);
+		AbstractJClass stringClass = getClasses().STRING;
+		AbstractJClass mapClass = getClasses().HASH_MAP.narrow(stringClass, stringClass);
 		availableCookiesField = getGeneratedClass().field(JMod.PRIVATE, mapClass, "availableCookies");
 		getInit().body().assign(availableCookiesField, _new(mapClass));
 	}
@@ -294,7 +294,7 @@ public class RestHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setRestErrorHandlerField() {
-		JClass restErrorHandlerClass = getJClass(RestErrorHandler.class.getName());
+		AbstractJClass restErrorHandlerClass = getJClass(RestErrorHandler.class.getName());
 		restErrorHandlerField = getGeneratedClass().field(JMod.PRIVATE, restErrorHandlerClass, "restErrorHandler");
 	}
 

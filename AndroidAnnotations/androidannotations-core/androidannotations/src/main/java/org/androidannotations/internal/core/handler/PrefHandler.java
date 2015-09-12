@@ -27,10 +27,10 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
 
 public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder> {
 
@@ -52,7 +52,7 @@ public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder> {
 
 		String fieldName = element.getSimpleName().toString();
 		TypeMirror fieldTypeMirror = element.asType();
-		JClass prefClass = getJClass(fieldTypeMirror.toString());
+		AbstractJClass prefClass = getJClass(fieldTypeMirror.toString());
 
 		String elementTypeName = fieldTypeMirror.toString();
 		int index = elementTypeName.lastIndexOf(".");

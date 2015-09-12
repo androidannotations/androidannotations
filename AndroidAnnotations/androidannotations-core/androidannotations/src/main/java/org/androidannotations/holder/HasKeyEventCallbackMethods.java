@@ -15,8 +15,8 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.JSwitch;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JSwitch;
+import com.helger.jcodemodel.JVar;
 
 public interface HasKeyEventCallbackMethods extends GeneratedClassHolder {
 	JSwitch getOnKeyDownSwitchBody();

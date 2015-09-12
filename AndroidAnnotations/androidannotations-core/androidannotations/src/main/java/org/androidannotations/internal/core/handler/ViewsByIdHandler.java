@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import java.util.List;
 
@@ -35,8 +35,8 @@ import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.FoundViewHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JFieldRef;
 
 public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
@@ -62,7 +62,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 		JFieldRef elementRef = ref(element.getSimpleName().toString());
 
 		TypeMirror viewType = extractViewClass(element);
-		JClass viewClass = codeModelHelper.typeMirrorToJClass(viewType);
+		AbstractJClass viewClass = codeModelHelper.typeMirrorToJClass(viewType);
 
 		instantiateArrayList(elementRef, viewType, holder);
 		clearList(elementRef, holder);
@@ -77,7 +77,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 	private void instantiateArrayList(JFieldRef elementRef, TypeMirror viewType, EComponentWithViewSupportHolder holder) {
 		TypeElement arrayListTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ARRAYLIST);
 		DeclaredType arrayListType = getProcessingEnvironment().getTypeUtils().getDeclaredType(arrayListTypeElement, viewType);
-		JClass arrayListClass = codeModelHelper.typeMirrorToJClass(arrayListType);
+		AbstractJClass arrayListClass = codeModelHelper.typeMirrorToJClass(arrayListType);
 
 		holder.getInitBody().assign(elementRef, _new(arrayListClass));
 	}
@@ -97,7 +97,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 		holder.getOnViewChangedBodyBeforeFindViews().add(elementRef.invoke("clear"));
 	}
 
-	private void addViewToListIfNotNull(JFieldRef elementRef, JClass viewClass, JFieldRef idRef, EComponentWithViewSupportHolder holder) {
+	private void addViewToListIfNotNull(JFieldRef elementRef, AbstractJClass viewClass, JFieldRef idRef, EComponentWithViewSupportHolder holder) {
 		FoundViewHolder foundViewHolder = holder.getFoundViewHolder(idRef, viewClass);
 		foundViewHolder.getIfNotNullBlock().invoke(elementRef, "add").arg(foundViewHolder.getOrCastRef(viewClass));
 	}

@@ -15,11 +15,11 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JMod.FINAL;
+import static com.helger.jcodemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.Collections;
@@ -38,15 +38,15 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasReceiverRegistration;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JOp;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JOp;
+import com.helger.jcodemodel.JVar;
 
 public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegistration> implements HasParameterHandlers<HasReceiverRegistration> {
 
@@ -109,13 +109,13 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 
 		JBlock body = onReceiveMethod.body();
 
-		JExpression receiverRef = holder.getGeneratedClass().staticRef("this");
+		IJExpression receiverRef = holder.getGeneratedClass().staticRef("this");
 		JInvocation methodCall = receiverRef.invoke(methodName);
 		JVar extras = null;
 
 		List<? extends VariableElement> methodParameters = executableElement.getParameters();
 		for (VariableElement param : methodParameters) {
-			JClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType());
+			AbstractJClass extraParamClass = codeModelHelper.typeMirrorToJClass(param.asType());
 
 			if (extraParamClass.equals(getClasses().CONTEXT)) {
 				methodCall.arg(contextVar);
@@ -130,7 +130,7 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 		}
 
 		body.add(methodCall);
-		JExpression receiverInit = _new(anonymousReceiverClass);
+		IJExpression receiverInit = _new(anonymousReceiverClass);
 		return holder.getGeneratedClass().field(PRIVATE | FINAL, getClasses().BROADCAST_RECEIVER, receiverName, receiverInit);
 	}
 
@@ -155,7 +155,7 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 			unregisterBlock = holder.getOnDetachBeforeSuperBlock();
 		}
 
-		JExpression broadcastManager;
+		IJExpression broadcastManager;
 		if (local) {
 			broadcastManager = getClasses().LOCAL_BROADCAST_MANAGER.staticInvoke("getInstance").arg(holder.getContextRef());
 		} else {

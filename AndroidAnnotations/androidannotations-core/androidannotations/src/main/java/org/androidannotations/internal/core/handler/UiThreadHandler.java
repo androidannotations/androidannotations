@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr.lit;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -27,14 +27,14 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.api.UiThreadExecutor;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JOp;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JClassAlreadyExistsException;
+import com.helger.jcodemodel.JConditional;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JOp;
 
 public class UiThreadHandler extends AbstractRunnableHandler {
 
@@ -84,12 +84,12 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 	 */
 	private void addUIThreadCheck(JMethod delegatingMethod, JBlock previousBody, EComponentHolder holder) throws JClassAlreadyExistsException {
 		// Get the Thread and Looper class.
-		JClass tClass = getClasses().THREAD;
-		JClass lClass = getClasses().LOOPER;
+		AbstractJClass tClass = getClasses().THREAD;
+		AbstractJClass lClass = getClasses().LOOPER;
 
 		// invoke the methods.
-		JExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
-		JExpression rhs = lClass.staticInvoke(METHOD_MAIN_LOOPER).invoke(METHOD_GET_THREAD);
+		IJExpression lhs = tClass.staticInvoke(METHOD_CUR_THREAD);
+		IJExpression rhs = lClass.staticInvoke(METHOD_MAIN_LOOPER).invoke(METHOD_GET_THREAD);
 
 		// create the conditional and the block.
 		JConditional con = delegatingMethod.body()._if(JOp.eq(lhs, rhs));

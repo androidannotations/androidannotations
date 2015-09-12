@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._new;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ import org.androidannotations.holder.FoundPreferenceHolder;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.rclass.IRClass.Res;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JFieldRef;
 
 public abstract class AbstractPreferenceListenerHandler extends AbstractListenerHandler<HasPreferences> {
 
@@ -48,7 +48,7 @@ public abstract class AbstractPreferenceListenerHandler extends AbstractListener
 	}
 
 	@Override
-	protected final JClass getListenerTargetClass(HasPreferences holder) {
+	protected final AbstractJClass getListenerTargetClass(HasPreferences holder) {
 		return holder.getBasePreferenceClass();
 	}
 

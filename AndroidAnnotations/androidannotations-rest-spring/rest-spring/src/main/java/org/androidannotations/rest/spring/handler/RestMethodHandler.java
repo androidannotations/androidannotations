@@ -36,21 +36,21 @@ import org.androidannotations.rest.spring.helper.RestAnnotationHelper;
 import org.androidannotations.rest.spring.helper.RestSpringValidatorHelper;
 import org.androidannotations.rest.spring.holder.RestHolder;
 
-import com.sun.codemodel.JArray;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JForEach;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JOp;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.AbstractJType;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JArray;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JCatchBlock;
+import com.helger.jcodemodel.JConditional;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JForEach;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JOp;
+import com.helger.jcodemodel.JTryBlock;
+import com.helger.jcodemodel.JVar;
 
 public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder> {
 
@@ -76,14 +76,14 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	public void process(Element element, RestHolder holder) {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		String methodName = element.getSimpleName().toString();
-		JClass methodReturnClass = getMethodReturnClass(element, holder);
+		AbstractJClass methodReturnClass = getMethodReturnClass(element, holder);
 		boolean methodReturnVoid = executableElement.getReturnType().getKind() == TypeKind.VOID;
 
 		// Creating method signature
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, methodReturnClass, methodName);
 		method.annotate(Override.class);
 		SortedMap<String, JVar> params = addMethodParams(executableElement, holder, method);
-		JBlock methodBody = new JBlock(false, false);
+		JBlock methodBody = new JBlock().bracesRequired(false).indentRequired(false);
 
 		// RestTemplate exchange() method call
 		JInvocation exchangeCall = JExpr.invoke(holder.getRestTemplateField(), "exchange");
@@ -91,12 +91,12 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		exchangeCall.arg(getHttpMethod());
 		exchangeCall.arg(getRequestEntity(executableElement, holder, methodBody, params));
 		exchangeCall.arg(getResponseClass(element, holder));
-		JExpression urlVariables = getUrlVariables(element, holder, methodBody, params);
+		IJExpression urlVariables = getUrlVariables(element, holder, methodBody, params);
 		if (urlVariables != null) {
 			exchangeCall.arg(urlVariables);
 		}
 
-		JExpression response = setCookies(executableElement, holder, methodBody, exchangeCall);
+		IJExpression response = setCookies(executableElement, holder, methodBody, exchangeCall);
 		if (methodReturnVoid && response.equals(exchangeCall)) {
 			methodBody.add(exchangeCall);
 		} else if (!methodReturnVoid) {
@@ -106,7 +106,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		codeModelHelper.copy(methodBody, method.body());
 	}
 
-	protected JClass getMethodReturnClass(Element element, RestHolder holder) {
+	protected AbstractJClass getMethodReturnClass(Element element, RestHolder holder) {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		return codeModelHelper.typeMirrorToJClass(executableElement.getReturnType());
 	}
@@ -120,9 +120,9 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			JVar param;
 			if (parameter.asType().getKind().isPrimitive()) {
-				param = method.param(JType.parse(getCodeModel(), paramType), paramName);
+				param = method.param(getCodeModel().parseType(paramType), paramName);
 			} else {
-				JClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType());
+				AbstractJClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType());
 				param = method.param(parameterClass, paramName);
 			}
 			methodParams.put(paramName, param);
@@ -130,9 +130,9 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		return methodParams;
 	}
 
-	protected JExpression getUrl(Element element, RestHolder restHolder) {
+	protected IJExpression getUrl(Element element, RestHolder restHolder) {
 		String urlSuffix = getUrlSuffix(element);
-		JExpression url = JExpr.lit(getUrlSuffix(element));
+		IJExpression url = JExpr.lit(getUrlSuffix(element));
 		if (!(urlSuffix.startsWith("http://") || urlSuffix.startsWith("https://"))) {
 			url = JExpr.invoke(restHolder.getRootUrlField(), "concat").arg(url);
 		}
@@ -141,47 +141,47 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 	protected abstract String getUrlSuffix(Element element);
 
-	protected JExpression getHttpMethod() {
-		JClass httpMethod = getJClass(HTTP_METHOD);
+	protected IJExpression getHttpMethod() {
+		AbstractJClass httpMethod = getJClass(HTTP_METHOD);
 		String simpleName = getTarget().substring(getTarget().lastIndexOf('.') + 1);
 		String restMethodInCapitalLetters = simpleName.toUpperCase(Locale.ENGLISH);
 		return httpMethod.staticRef(restMethodInCapitalLetters);
 	}
 
-	protected JExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> params) {
+	protected IJExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> params) {
 		JVar httpHeaders = restAnnotationHelper.declareHttpHeaders(element, holder, methodBody);
 		JVar entitySentToServer = restAnnotationHelper.getEntitySentToServer(element, params);
 		return restAnnotationHelper.declareHttpEntity(methodBody, entitySentToServer, httpHeaders);
 	}
 
-	protected JExpression getResponseClass(Element element, RestHolder holder) {
+	protected IJExpression getResponseClass(Element element, RestHolder holder) {
 		return restAnnotationHelper.getResponseClass(element, holder);
 	}
 
-	protected JExpression getUrlVariables(Element element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> params) {
+	protected IJExpression getUrlVariables(Element element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> params) {
 		return restAnnotationHelper.declareUrlVariables((ExecutableElement) element, holder, methodBody, params);
 	}
 
-	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
+	protected IJExpression addResultCallMethod(IJExpression exchangeCall, AbstractJClass methodReturnClass) {
 		if (methodReturnClass != null && !methodReturnClass.fullName().startsWith(RESPONSE_ENTITY)) {
 			return JExpr.invoke(exchangeCall, "getBody");
 		}
 		return exchangeCall;
 	}
 
-	private JExpression setCookies(ExecutableElement executableElement, RestHolder restHolder, JBlock methodBody, JInvocation exchangeCall) {
+	private IJExpression setCookies(ExecutableElement executableElement, RestHolder restHolder, JBlock methodBody, JInvocation exchangeCall) {
 		String[] settingCookies = restAnnotationHelper.settingCookies(executableElement);
 		if (settingCookies != null) {
 			boolean methodReturnVoid = executableElement.getReturnType().getKind() == TypeKind.VOID;
 
-			JClass exchangeResponseClass = restAnnotationHelper.retrieveResponseClass(executableElement.getReturnType(), restHolder);
-			JType narrowType = exchangeResponseClass == null || methodReturnVoid ? getCodeModel().VOID : exchangeResponseClass;
-			JClass responseEntityClass = getJClass(RESPONSE_ENTITY).narrow(narrowType);
+			AbstractJClass exchangeResponseClass = restAnnotationHelper.retrieveResponseClass(executableElement.getReturnType(), restHolder);
+			AbstractJType narrowType = exchangeResponseClass == null || methodReturnVoid ? getCodeModel().VOID : exchangeResponseClass;
+			AbstractJClass responseEntityClass = getJClass(RESPONSE_ENTITY).narrow(narrowType);
 			JVar responseEntity = methodBody.decl(responseEntityClass, "response", exchangeCall);
 
 			// set cookies
-			JClass stringListClass = getClasses().LIST.narrow(getClasses().STRING);
-			JClass stringArrayClass = getClasses().STRING.array();
+			AbstractJClass stringListClass = getClasses().LIST.narrow(getClasses().STRING);
+			AbstractJClass stringArrayClass = getClasses().STRING.array();
 			JArray cookiesArray = JExpr.newArray(getClasses().STRING);
 			for (String cookie : settingCookies) {
 				cookiesArray.add(JExpr.lit(cookie));
@@ -208,7 +208,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 			JBlock fixValueEndBlock = thenBlock._if(valueEndVar.eq(JExpr.lit(-1)))._then();
 			fixValueEndBlock.assign(valueEndVar, rawCookieVar.invoke("length"));
 
-			JExpression indexOfValue = rawCookieVar.invoke("indexOf").arg("=").plus(JExpr.lit(1));
+			IJExpression indexOfValue = rawCookieVar.invoke("indexOf").arg("=").plus(JExpr.lit(1));
 			JInvocation cookieValue = rawCookieVar.invoke("substring").arg(indexOfValue).arg(valueEndVar);
 			thenBlock.invoke(restHolder.getAvailableCookiesField(), "put").arg(innerForEach.var()).arg(cookieValue);
 			thenBlock._break();
@@ -228,7 +228,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	 */
 	private JBlock surroundWithRestTryCatch(RestHolder holder, JBlock block, boolean methodReturnVoid) {
 		if (holder.getRestErrorHandlerField() != null) {
-			JBlock newBlock = new JBlock(false, false);
+			JBlock newBlock = new JBlock().bracesRequired(false).indentRequired(false);
 
 			JTryBlock tryBlock = newBlock._try();
 			codeModelHelper.copy(block, tryBlock.body());

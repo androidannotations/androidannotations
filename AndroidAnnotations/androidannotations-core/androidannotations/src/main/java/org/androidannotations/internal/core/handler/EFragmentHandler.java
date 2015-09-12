@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.FALSE;
-import static com.sun.codemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr.FALSE;
+import static com.helger.jcodemodel.JExpr._null;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -29,10 +29,10 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JVar;
 
 public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentHolder> {
 

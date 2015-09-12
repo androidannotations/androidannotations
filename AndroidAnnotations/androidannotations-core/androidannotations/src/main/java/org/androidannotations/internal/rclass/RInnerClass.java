@@ -31,8 +31,8 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.rclass.IRInnerClass;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JFieldRef;
 
 public class RInnerClass implements IRInnerClass {
 
@@ -123,7 +123,7 @@ public class RInnerClass implements IRInnerClass {
 			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
 			String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
 
-			JClass refClass = environment.getJClass(rInnerClassName);
+			AbstractJClass refClass = environment.getJClass(rInnerClassName);
 			return refClass.staticRef(fieldName);
 		} else {
 			return null;

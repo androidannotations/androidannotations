@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._this;
+import static com.helger.jcodemodel.JExpr._this;
 
 import javax.lang.model.element.Element;
 
@@ -27,9 +27,9 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JVar;
 
 public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 

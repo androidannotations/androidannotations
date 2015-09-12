@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import java.util.List;
 
@@ -30,10 +30,10 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidRes;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JConditional;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JVar;
 
 public class DrawableResHandler extends AbstractResHandler {
 

@@ -15,11 +15,11 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.FINAL;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JExpr._this;
+import static com.helger.jcodemodel.JExpr.lit;
+import static com.helger.jcodemodel.JMod.FINAL;
+import static com.helger.jcodemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.STATIC;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -32,15 +32,15 @@ import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.holder.EFragmentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
@@ -87,7 +87,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
 	private void injectArgInComponent(Element element, EFragmentHolder holder, BundleHelper bundleHelper, JFieldVar extraKeyStaticField, String fieldName) {
 		TypeMirror elementType = codeModelHelper.getActualType(element, holder);
-		JClass elementClass = codeModelHelper.typeMirrorToJClass(elementType);
+		AbstractJClass elementClass = codeModelHelper.typeMirrorToJClass(elementType);
 
 		JVar bundle = holder.getInjectBundleArgs();
 		JBlock injectExtrasBlock = holder.getInjectArgsBlock();
@@ -95,7 +95,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JFieldRef extraField = JExpr.ref(fieldName);
 
 		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(bundle, "containsKey").arg(extraKeyStaticField))._then();
-		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, bundle, extraKeyStaticField, injectExtrasMethod);
+		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, bundle, extraKeyStaticField, injectExtrasMethod);
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 
@@ -103,7 +103,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JDefinedClass builderClass = holder.getBuilderClass();
 		JFieldRef builderArgsField = holder.getBuilderArgsField();
 		TypeMirror type = codeModelHelper.getActualType(element, holder);
-		JClass paramClass = codeModelHelper.typeMirrorToJClass(type);
+		AbstractJClass paramClass = codeModelHelper.typeMirrorToJClass(type);
 
 		JMethod method = builderClass.method(PUBLIC, holder.narrow(builderClass), fieldName);
 		JVar arg = method.param(paramClass, fieldName);

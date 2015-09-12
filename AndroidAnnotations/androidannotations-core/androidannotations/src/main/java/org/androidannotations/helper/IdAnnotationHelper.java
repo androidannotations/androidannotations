@@ -24,7 +24,7 @@ import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 import org.androidannotations.rclass.IRInnerClass;
 
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldRef;
 
 public class IdAnnotationHelper extends TargetAnnotationHelper {
 

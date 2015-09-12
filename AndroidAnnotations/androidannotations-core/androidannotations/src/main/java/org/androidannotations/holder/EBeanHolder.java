@@ -15,11 +15,11 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import java.util.List;
@@ -30,11 +30,11 @@ import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public class EBeanHolder extends EComponentWithViewSupportHolder {
 
@@ -84,7 +84,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	public void createFactoryMethod(boolean hasSingletonScope) {
 
-		JClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType());
+		AbstractJClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType());
 
 		JMethod factoryMethod = generatedClass.method(PUBLIC | STATIC, narrowedGeneratedClass, GET_INSTANCE_METHOD_NAME);
 

@@ -15,9 +15,9 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JExpr._this;
+import static com.helger.jcodemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JMod.PUBLIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
@@ -28,11 +28,11 @@ import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterDa
 import org.androidannotations.internal.core.helper.IntentBuilder;
 import org.androidannotations.internal.core.helper.ServiceIntentBuilder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JMethod;
 
 public class EServiceHolder extends EComponentHolder implements HasIntentBuilder, HasReceiverRegistration {
 
@@ -76,7 +76,7 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 		JMethod onDestroy = generatedClass.method(PUBLIC, getCodeModel().VOID, "onDestroy");
 		onDestroy.annotate(Override.class);
 		JBlock onDestroyBody = onDestroy.body();
-		onDestroyBeforeSuperBlock = onDestroyBody.block();
+		onDestroyBeforeSuperBlock = codeModelHelper.blockNoBraces(onDestroyBody);
 		onDestroyBody.invoke(JExpr._super(), onDestroy);
 	}
 

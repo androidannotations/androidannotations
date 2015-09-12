@@ -15,8 +15,8 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JVar;
 
 public interface HasOptionsMenu extends GeneratedClassHolder {
 	JBlock getOnCreateOptionsMenuMethodBody();

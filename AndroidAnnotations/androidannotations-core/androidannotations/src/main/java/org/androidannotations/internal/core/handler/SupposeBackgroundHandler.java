@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr.lit;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -25,10 +25,10 @@ import org.androidannotations.annotations.SupposeBackground;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
 
 public class SupposeBackgroundHandler extends SupposeThreadHandler {
 
@@ -44,7 +44,7 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
 
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 
-		JClass bgExecutor = getJClass(BackgroundExecutor.class);
+		AbstractJClass bgExecutor = getJClass(BackgroundExecutor.class);
 
 		SupposeBackground annotation = element.getAnnotation(SupposeBackground.class);
 		String[] serial = annotation.serial();

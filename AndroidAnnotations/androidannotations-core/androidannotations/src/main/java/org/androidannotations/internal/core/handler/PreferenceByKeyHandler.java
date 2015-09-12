@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -28,8 +28,8 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JFieldRef;
 
 public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences> {
 
@@ -60,7 +60,7 @@ public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences
 		String typeQualifiedName = prefFieldTypeMirror.toString();
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.STRING, true);
-		JClass preferenceClass = getJClass(typeQualifiedName);
+		AbstractJClass preferenceClass = getJClass(typeQualifiedName);
 		JFieldRef fieldRef = ref(fieldName);
 
 		holder.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);

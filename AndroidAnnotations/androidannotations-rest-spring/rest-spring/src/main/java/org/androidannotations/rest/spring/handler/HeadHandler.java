@@ -23,9 +23,9 @@ import org.androidannotations.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.holder.RestHolder;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JExpr;
 
 public class HeadHandler extends RestMethodHandler {
 
@@ -49,12 +49,12 @@ public class HeadHandler extends RestMethodHandler {
 	}
 
 	@Override
-	protected JExpression getResponseClass(Element element, RestHolder holder) {
+	protected IJExpression getResponseClass(Element element, RestHolder holder) {
 		return restAnnotationHelper.nullCastedToNarrowedClass(holder);
 	}
 
 	@Override
-	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
+	protected IJExpression addResultCallMethod(IJExpression exchangeCall, AbstractJClass methodReturnClass) {
 		return JExpr.invoke(exchangeCall, "getHeaders");
 	}
 }

@@ -15,9 +15,9 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.lit;
 
 import java.util.List;
 
@@ -32,15 +32,15 @@ import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class ItemSelectHandler extends AbstractViewListenerHandler {
 
@@ -71,7 +71,7 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation itemSelectedCall, List<? extends VariableElement> parameters) {
-		JClass narrowAdapterViewClass = getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
+		AbstractJClass narrowAdapterViewClass = getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 		JVar onItemClickParentParam = listenerMethod.param(narrowAdapterViewClass, "parent");
 		listenerMethod.param(getClasses().VIEW, "view");
 		JVar onItemClickPositionParam = listenerMethod.param(getCodeModel().INT, "position");
@@ -98,7 +98,7 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 		}
 
 		onNothingSelectedMethod.param(narrowAdapterViewClass, "parent");
-		JExpression activityRef = holder.getGeneratedClass().staticRef("this");
+		IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
 
 		JInvocation nothingSelectedCall = invoke(activityRef, getMethodName());
 		onNothingSelectedMethod.body().add(nothingSelectedCall);
@@ -125,12 +125,12 @@ public class ItemSelectHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
+	protected AbstractJClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ON_ITEM_SELECTED_LISTENER;
 	}
 
 	@Override
-	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
+	protected AbstractJClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().ADAPTER_VIEW.narrow(getCodeModel().wildcard());
 	}
 

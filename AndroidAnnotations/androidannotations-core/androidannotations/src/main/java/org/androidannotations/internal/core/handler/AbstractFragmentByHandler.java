@@ -15,9 +15,9 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -29,9 +29,10 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.EFragmentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JMethod;
+
 
 public abstract class AbstractFragmentByHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
@@ -82,6 +83,6 @@ public abstract class AbstractFragmentByHandler extends CoreBaseAnnotationHandle
 
 	protected abstract JMethod getFindFragmentMethod(boolean isNativeFragment, EComponentWithViewSupportHolder holder);
 
-	protected abstract JExpression getFragmentId(Element element, String fieldName);
+	protected abstract IJExpression getFragmentId(Element element, String fieldName);
 
 }

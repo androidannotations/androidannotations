@@ -27,10 +27,10 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.androidannotations.rest.spring.annotations.RestService;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
 
 public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -57,7 +57,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 		String generatedClassName = interfaceName + classSuffix();
 
-		JClass clazz = codeModelHelper.narrowGeneratedClass(getJClass(generatedClassName), fieldTypeMirror);
+		AbstractJClass clazz = codeModelHelper.narrowGeneratedClass(getJClass(generatedClassName), fieldTypeMirror);
 
 		JBlock methodBody = holder.getInitBody();
 

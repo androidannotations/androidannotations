@@ -15,8 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.TRUE;
-import static com.sun.codemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.TRUE;
+import static com.helger.jcodemodel.JExpr.invoke;
 
 import java.util.List;
 
@@ -35,10 +35,10 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
 
 public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
@@ -80,7 +80,7 @@ public class OptionsItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
 		JBlock block = holder.getOnOptionsItemSelectedMiddleBlock();
 
-		JExpression ifExpr = holder.getOnOptionsItemSelectedItemId().eq(idsRefs.get(0));
+		IJExpression ifExpr = holder.getOnOptionsItemSelectedItemId().eq(idsRefs.get(0));
 		for (int i = 1; i < idsRefs.size(); i++) {
 			ifExpr = ifExpr.cor(holder.getOnOptionsItemSelectedItemId().eq(idsRefs.get(i)));
 		}

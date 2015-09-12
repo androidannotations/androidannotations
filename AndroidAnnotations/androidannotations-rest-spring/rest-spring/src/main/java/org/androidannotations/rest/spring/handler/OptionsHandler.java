@@ -23,8 +23,8 @@ import org.androidannotations.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Options;
 import org.androidannotations.rest.spring.holder.RestHolder;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
 
 public class OptionsHandler extends RestMethodHandler {
 
@@ -48,12 +48,12 @@ public class OptionsHandler extends RestMethodHandler {
 	}
 
 	@Override
-	protected JExpression getResponseClass(Element element, RestHolder holder) {
+	protected IJExpression getResponseClass(Element element, RestHolder holder) {
 		return restAnnotationHelper.nullCastedToNarrowedClass(holder);
 	}
 
 	@Override
-	protected JExpression addResultCallMethod(JExpression exchangeCall, JClass methodReturnClass) {
+	protected IJExpression addResultCallMethod(IJExpression exchangeCall, AbstractJClass methodReturnClass) {
 		return exchangeCall.invoke("getHeaders").invoke("getAllow");
 	}
 }

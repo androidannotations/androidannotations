@@ -17,13 +17,13 @@ package org.androidannotations.holder;
 
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldVar;
 
 public interface HasReceiverRegistration extends HasLifecycleMethods {
 
-	JExpression getContextRef();
+	IJExpression getContextRef();
 
 	JFieldVar getIntentFilterField(IntentFilterData intentFilterData);
 

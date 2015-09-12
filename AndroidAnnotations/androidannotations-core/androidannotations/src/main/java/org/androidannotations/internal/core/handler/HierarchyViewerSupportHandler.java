@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._this;
+import static com.helger.jcodemodel.JExpr._this;
 
 import javax.lang.model.element.Element;
 
@@ -25,7 +25,7 @@ import org.androidannotations.annotations.HierarchyViewerSupport;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EActivityHolder;
 
-import com.sun.codemodel.JInvocation;
+import com.helger.jcodemodel.JInvocation;
 
 public class HierarchyViewerSupportHandler extends BaseAnnotationHandler<EActivityHolder> {
 

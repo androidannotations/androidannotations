@@ -34,17 +34,17 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.AbstractJType;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JConditional;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JTryBlock;
+import com.helger.jcodemodel.JVar;
 
 public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -120,11 +120,11 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		elseBlock.add(previousMethodBody);
 	}
 
-	private JClass boxify(JType type) throws ClassNotFoundException {
+	private AbstractJClass boxify(AbstractJType type) throws ClassNotFoundException {
 		return getCodeModel().parseType(type.fullName()).boxify();
 	}
 
-	private JExpression getExitMessage(ExecutableElement element, JMethod method, JVar result, JVar duration) throws ClassNotFoundException {
+	private IJExpression getExitMessage(ExecutableElement element, JMethod method, JVar result, JVar duration) throws ClassNotFoundException {
 		String methodName = getMethodName(element);
 
 		List<JVar> params = method.params();
@@ -145,7 +145,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		} else {
 			format.arg("Exiting [" + methodName + " returning: %s], duration in ms: %d");
 			if (method.type().isArray()) {
-				JClass arraysClass = getJClass(Arrays.class);
+				AbstractJClass arraysClass = getJClass(Arrays.class);
 				format.arg(arraysClass.staticInvoke("toString").arg(JExpr.cast(boxify(method.type()), result)));
 			} else {
 				format.arg(result);
@@ -155,7 +155,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		return format.arg(duration);
 	}
 
-	private JExpression getEnterMessage(JMethod method, ExecutableElement element) {
+	private IJExpression getEnterMessage(JMethod method, ExecutableElement element) {
 		String methodName = getMethodName(element);
 
 		List<JVar> params = method.params();
@@ -164,9 +164,9 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 			return JExpr.lit("Entering [" + methodName + "()]");
 		}
 
-		JClass arraysClass = getJClass(Arrays.class);
+		AbstractJClass arraysClass = getJClass(Arrays.class);
 		StringBuilder paramStr = new StringBuilder();
-		List<JExpression> paramExpressions = new ArrayList<>();
+		List<IJExpression> paramExpressions = new ArrayList<>();
 		for (int i = 0; i < params.size(); i++) {
 			if (i > 0) {
 				paramStr.append(", ");
@@ -182,7 +182,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		JInvocation format = getJClass(String.class).staticInvoke("format");
 		format.arg(JExpr.lit("Entering [" + methodName + "(" + paramStr + ")]"));
-		for (JExpression expr : paramExpressions) {
+		for (IJExpression expr : paramExpressions) {
 			format.arg(expr);
 		}
 
@@ -212,7 +212,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		}
 	}
 
-	private JFieldRef logLevelFromInt(int level, JClass logClass) {
+	private JFieldRef logLevelFromInt(int level, AbstractJClass logClass) {
 		switch (level) {
 		case LOG_DEBUG:
 			return logClass.staticRef("DEBUG");

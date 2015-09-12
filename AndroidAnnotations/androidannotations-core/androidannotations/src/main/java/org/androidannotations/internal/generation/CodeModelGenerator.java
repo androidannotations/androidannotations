@@ -21,7 +21,7 @@ import javax.annotation.processing.Filer;
 
 import org.androidannotations.internal.process.ModelProcessor;
 
-import com.sun.codemodel.writer.PrologCodeWriter;
+import com.helger.jcodemodel.writer.PrologCodeWriter;
 
 public class CodeModelGenerator {
 

@@ -19,8 +19,8 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.SeekBarTouchStop;
 import org.androidannotations.holder.OnSeekBarChangeListenerHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JVar;
 
 public class SeekBarTouchStopHandler extends AbstractSeekBarTouchHandler {
 

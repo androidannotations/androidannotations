@@ -15,13 +15,13 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.PUBLIC;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMod;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JClassAlreadyExistsException;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JMod;
 
 public class NonConfigurationHolder {
 
@@ -51,7 +51,7 @@ public class NonConfigurationHolder {
 		superNonConfigurationInstanceField = generatedClass.field(PUBLIC, Object.class, "superNonConfigurationInstance");
 	}
 
-	public JFieldVar createField(String fieldName, JClass fieldType) {
+	public JFieldVar createField(String fieldName, AbstractJClass fieldType) {
 		return generatedClass.field(PUBLIC, fieldType, fieldName);
 	}
 }

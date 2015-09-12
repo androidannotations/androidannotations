@@ -18,7 +18,7 @@ package org.androidannotations.internal.rclass;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.rclass.IRInnerClass;
 
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldRef;
 
 public class CompoundInnerClass implements IRInnerClass {
 

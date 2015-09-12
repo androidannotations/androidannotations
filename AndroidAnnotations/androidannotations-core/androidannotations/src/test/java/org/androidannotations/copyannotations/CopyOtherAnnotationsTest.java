@@ -53,7 +53,7 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 	public void testOverridenMethodHasCopiedNonAAAnnotations() {
 		// CHECKSTYLE:OFF
 		String[] methodSignature = { //
-				"    @Addressing(responses = (javax.xml.ws.soap.AddressingFeature.Responses.ALL))", //
+				"    @Addressing(responses = Responses.ALL)", //
 				"    @Action(input = \"someString\")", //
 				"    @SuppressWarnings({", //
 				"        \"\",", //
