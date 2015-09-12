@@ -37,4 +37,9 @@ public class EBeanTest extends AAProcessorTestHelper {
 				SomeGenericBeanExt.class));
 	}
 
+	@Test
+	public void eBeanOnInterfaceDoesNotCompile() {
+		assertCompilationError(compileFiles(InterfaceWithEBean.class));
+	}
+
 }

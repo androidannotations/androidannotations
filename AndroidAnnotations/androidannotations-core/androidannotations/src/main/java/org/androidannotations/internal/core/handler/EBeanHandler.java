@@ -39,6 +39,8 @@ public class EBeanHandler extends BaseGeneratingAnnotationHandler<EBeanHolder> {
 	public void validate(Element element, ElementValidation valid) {
 		super.validate(element, valid);
 
+		validatorHelper.isNotInterface((TypeElement) element, valid);
+
 		validatorHelper.isNotPrivate(element, valid);
 
 		validatorHelper.isAbstractOrHasEmptyOrContextConstructor(element, valid);
