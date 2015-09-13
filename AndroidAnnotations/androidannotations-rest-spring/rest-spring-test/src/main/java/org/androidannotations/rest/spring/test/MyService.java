@@ -87,6 +87,9 @@ public interface MyService {
 	List<Event>[] getEventsGenericsArrayList(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
+	List<Event>[][] getEventsGenericsArrayList2(String location, int year) throws RestClientException;
+
+	@Get("/events/{year}/{location}")
 	List<List<Event>> getEventsGenericsListListEvent(String location, int year) throws RestClientException;
 
 	@Get("/events/{year}/{location}")
