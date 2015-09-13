@@ -387,17 +387,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			return decoratedExpectedClass;
 		} else if (expectedType.getKind() == TypeKind.ARRAY) {
 			ArrayType arrayType = (ArrayType) expectedType;
-
 			TypeMirror componentType = arrayType.getComponentType();
-
-			if (componentType.getKind() == TypeKind.DECLARED) {
-				DeclaredType declaredType = (DeclaredType) componentType;
-
-				if (useTypeReference && getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null) {
-					return codeModelHelper.typeMirrorToJClass(expectedType);
-				}
-			}
-
 			return resolveResponseClass(componentType, holder, false).array();
 		}
 
