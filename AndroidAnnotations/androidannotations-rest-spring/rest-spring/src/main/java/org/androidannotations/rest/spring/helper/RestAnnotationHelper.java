@@ -287,10 +287,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		JExpression responseClassExpr = nullCastedToNarrowedClass(holder);
 		TypeMirror returnType = executableElement.getReturnType();
 		if (returnType.getKind() != TypeKind.VOID) {
-			if (getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null //
-					&& returnType.getKind() == TypeKind.DECLARED && !((DeclaredType) returnType).getTypeArguments().isEmpty() //
-					&& !returnType.toString().startsWith(RestSpringClasses.RESPONSE_ENTITY)) {
-				return createParameterizedTypeReferenceAnonymousSubclassInstance(returnType, holder);
+			if (getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null && !returnType.toString().startsWith(RestSpringClasses.RESPONSE_ENTITY)
+					&& checkIfParameterizedTypeReferenceShouldBeUsed(returnType)) {
+				return createParameterizedTypeReferenceAnonymousSubclassInstance(returnType);
 			}
 
 			JClass responseClass = retrieveResponseClass(returnType, holder);
@@ -301,9 +300,22 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return responseClassExpr;
 	}
 
-	public JExpression createParameterizedTypeReferenceAnonymousSubclassInstance(TypeMirror returnType, RestHolder holder) {
-		JClass narrowedTypeReference = holder.getEnvironment().getJClass(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE).narrow(codeModelHelper.typeMirrorToJClass(returnType));
-		JDefinedClass anonymousClass = holder.getEnvironment().getCodeModel().anonymousClass(narrowedTypeReference);
+	private boolean checkIfParameterizedTypeReferenceShouldBeUsed(TypeMirror returnType) {
+		switch (returnType.getKind()) {
+		case DECLARED:
+			return !((DeclaredType) returnType).getTypeArguments().isEmpty();
+
+		case ARRAY:
+			ArrayType arrayType = (ArrayType) returnType;
+			TypeMirror componentType = arrayType.getComponentType();
+			return checkIfParameterizedTypeReferenceShouldBeUsed(componentType);
+		}
+		return false;
+	}
+
+	public JExpression createParameterizedTypeReferenceAnonymousSubclassInstance(TypeMirror returnType) {
+		JClass narrowedTypeReference = getEnvironment().getJClass(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE).narrow(codeModelHelper.typeMirrorToJClass(returnType));
+		JDefinedClass anonymousClass = getEnvironment().getCodeModel().anonymousClass(narrowedTypeReference);
 		return JExpr._new(anonymousClass);
 	}
 
