@@ -162,13 +162,6 @@ public class ProcessHolder {
 		this.processingEnvironment = processingEnvironment;
 		codeModel = new JCodeModel();
 		classes = new Classes();
-		refClass(CanonicalNameConstants.STRING);
-		preloadJavaLangClasses();
-	}
-
-	private void preloadJavaLangClasses() {
-		loadedClasses.put(String.class.getName(), refClass(String.class));
-		loadedClasses.put(Object.class.getName(), refClass(Object.class));
 	}
 
 	public void put(Element element, GeneratedClassHolder generatedClassHolder) {
@@ -192,7 +185,9 @@ public class ProcessHolder {
 	}
 
 	public AbstractJClass refClass(Class<?> clazz) {
-		return codeModel.ref(clazz);
+		AbstractJClass referencedClass = codeModel.ref(clazz);
+		loadedClasses.put(clazz.getCanonicalName(), referencedClass);
+		return referencedClass;
 	}
 
 	public AbstractJClass refClass(String fullyQualifiedClassName) {
