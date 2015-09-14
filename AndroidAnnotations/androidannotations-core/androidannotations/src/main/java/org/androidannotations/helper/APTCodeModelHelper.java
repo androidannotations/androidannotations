@@ -57,6 +57,7 @@ import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.AbstractJType;
 import com.helger.jcodemodel.IJAnnotatable;
 import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.IJGenerifiable;
 import com.helger.jcodemodel.IJStatement;
 import com.helger.jcodemodel.JAnnotationArrayMember;
 import com.helger.jcodemodel.JAnnotationUse;
@@ -68,6 +69,7 @@ import com.helger.jcodemodel.JFormatter;
 import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JTypeVar;
 import com.helger.jcodemodel.JVar;
 
 public class APTCodeModelHelper {
@@ -162,16 +164,32 @@ public class APTCodeModelHelper {
 		return Collections.emptyMap();
 	}
 
-	public AbstractJClass typeBoundsToJClass(List<? extends TypeMirror> bounds) {
+	public List<AbstractJClass> typeBoundsToJClass(List<? extends TypeMirror> bounds) {
 		return typeBoundsToJClass(bounds, Collections.<String, TypeMirror>emptyMap());
 	}
 
-	private AbstractJClass typeBoundsToJClass(List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
+	private List<AbstractJClass> typeBoundsToJClass(List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
 		if (bounds.isEmpty()) {
-			return environment.getClasses().OBJECT;
+			return Collections.singletonList(environment.getClasses().OBJECT);
 		} else {
-			// TODO resolve <T extends A&B> bounds
-			return typeMirrorToJClass(bounds.get(0), actualTypes);
+			List<AbstractJClass> jClassBounds = new ArrayList<>();
+
+			for (TypeMirror bound : bounds) {
+				jClassBounds.add(typeMirrorToJClass(bound, actualTypes));
+			}
+			return  jClassBounds;
+		}
+	}
+
+	private void addTypeBounds(IJGenerifiable generifiable, List<AbstractJClass> bounds, String name) {
+		JTypeVar typeVar = null;
+
+		for (AbstractJClass bound : bounds) {
+			if (typeVar == null) {
+				typeVar = generifiable.generify(name, bound);
+			} else {
+				typeVar.bound(bound);
+			}
 		}
 	}
 
@@ -182,12 +200,13 @@ public class APTCodeModelHelper {
 		Types typeUtils = environment.getProcessingEnvironment().getTypeUtils();
 
 		Map<String, TypeMirror> actualTypes = getActualTypes(typeUtils, baseClass, annotatedClass);
-		Map<String, AbstractJClass> methodTypes = new LinkedHashMap<>();
+		Map<String, List<AbstractJClass>> methodTypes = new LinkedHashMap<>();
 
 		for (TypeParameterElement typeParameter : executableElement.getTypeParameters()) {
 			List<? extends TypeMirror> bounds = typeParameter.getBounds();
-			AbstractJClass jClassBounds = typeBoundsToJClass(bounds, actualTypes);
-			methodTypes.put(typeParameter.toString(), jClassBounds);
+
+			List<AbstractJClass> addedBounds = typeBoundsToJClass(bounds, actualTypes);
+			methodTypes.put(typeParameter.toString(), addedBounds);
 		}
 
 		actualTypes.keySet().removeAll(methodTypes.keySet());
@@ -206,8 +225,9 @@ public class APTCodeModelHelper {
 			method.annotate(Override.class);
 		}
 
-		for (Map.Entry<String, AbstractJClass> typeDeclaration : methodTypes.entrySet()) {
-			method.generify(typeDeclaration.getKey(), typeDeclaration.getValue());
+		for (Map.Entry<String, List<AbstractJClass>> typeDeclaration : methodTypes.entrySet()) {
+			List<AbstractJClass> bounds = typeDeclaration.getValue();
+			addTypeBounds(method, bounds, typeDeclaration.getKey());
 		}
 
 		int i = 0;
@@ -227,10 +247,11 @@ public class APTCodeModelHelper {
 		return method;
 	}
 
-	public void generifyStaticHelper(JMethod staticHelper, TypeElement annotatedClass) {
-		for (TypeParameterElement param : annotatedClass.getTypeParameters()) {
-			AbstractJClass bounds = typeBoundsToJClass(param.getBounds());
-			staticHelper.generify(param.getSimpleName().toString(), bounds);
+	public void generify(IJGenerifiable generifiable, TypeElement fromTypeParameters) {
+		for (TypeParameterElement param : fromTypeParameters.getTypeParameters()) {
+			List<AbstractJClass> bounds = typeBoundsToJClass(param.getBounds());
+
+			addTypeBounds(generifiable, bounds, param.getSimpleName().toString());
 		}
 	}
 

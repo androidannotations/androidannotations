@@ -28,7 +28,6 @@ import java.util.Map;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.APTCodeModelHelper;
@@ -70,10 +69,7 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 			String generatedClassQualifiedName = annotatedComponentQualifiedName + classSuffix();
 			generatedClass = getCodeModel()._class(PUBLIC | FINAL, generatedClassQualifiedName, EClassType.CLASS);
 		}
-		for (TypeParameterElement typeParam : annotatedElement.getTypeParameters()) {
-			AbstractJClass bound = codeModelHelper.typeBoundsToJClass(typeParam.getBounds());
-			generatedClass.generify(typeParam.getSimpleName().toString(), bound);
-		}
+		codeModelHelper.generify(generatedClass, annotatedElement);
 		setExtends();
 		codeModelHelper.copyNonAAAnnotations(generatedClass, annotatedElement.getAnnotationMirrors());
 	}

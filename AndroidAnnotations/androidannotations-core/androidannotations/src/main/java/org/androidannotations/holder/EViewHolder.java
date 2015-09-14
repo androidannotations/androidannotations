@@ -82,7 +82,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			JMethod copyConstructor = generatedClass.constructor(PUBLIC);
 			JMethod staticHelper = generatedClass.method(PUBLIC | STATIC, generatedClass._extends(), "build");
 
-			codeModelHelper.generifyStaticHelper(staticHelper, getAnnotatedElement());
+			codeModelHelper.generify(staticHelper, getAnnotatedElement());
 
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");

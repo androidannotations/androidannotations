@@ -15,6 +15,7 @@
  */
 package org.androidannotations.ebean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.androidannotations.annotations.Background;
@@ -37,6 +38,11 @@ public class SomeGenericBean<T> {
 
 	@UiThread
 	<U, S extends Number> void emptyUiMethod(List<? extends T> param, List<? super S> param2) {
+	}
+
+	@UiThread
+	<U, S extends Number & Serializable> void multipleBounds() {
+
 	}
 
 }

@@ -33,7 +33,6 @@ import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
 import com.helger.jcodemodel.AbstractJClass;
-import com.helger.jcodemodel.IJGenerifiable;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JClassAlreadyExistsException;
 import com.helger.jcodemodel.JDefinedClass;
@@ -42,7 +41,6 @@ import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JMod;
-import com.helger.jcodemodel.JTypeVar;
 import com.helger.jcodemodel.JVar;
 
 public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration, HasPreferences {
@@ -133,7 +131,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 		narrowBuilderClass = narrow(fragmentBuilderClass);
 
-		generify(fragmentBuilderClass);
+		codeModelHelper.generify(fragmentBuilderClass, annotatedElement);
 		AbstractJClass superClass = getJClass(org.androidannotations.api.builder.FragmentBuilder.class);
 		superClass = superClass.narrow(narrowBuilderClass, getAnnotatedClass());
 		fragmentBuilderClass._extends(superClass);
@@ -155,14 +153,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setFragmentBuilderCreate() {
 		JMethod method = generatedClass.method(STATIC | PUBLIC, narrowBuilderClass, "builder");
-		generify(method);
+		codeModelHelper.generify(method, annotatedElement);
 		method.body()._return(_new(narrowBuilderClass));
-	}
-
-	private void generify(IJGenerifiable generifiable) {
-		for (JTypeVar type : generatedClass.typeParams()) {
-			generifiable.generify(type.name(), type._extends());
-		}
 	}
 
 	private void setOnCreateOptionsMenu() {
