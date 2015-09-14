@@ -30,6 +30,7 @@ public final class RestSpringClasses {
 	public static final String HTTP_BASIC_AUTHENTICATION = "org.springframework.http.HttpBasicAuthentication";
 	public static final String REST_CLIENT_EXCEPTION = "org.springframework.web.client.RestClientException";
 	public static final String NESTED_RUNTIME_EXCEPTION = "org.springframework.core.NestedRuntimeException";
+	public static final String RESPONSE_ERROR_HANDLER = "org.springframework.web.client.ResponseErrorHandler";
 
 	private RestSpringClasses() {
 
