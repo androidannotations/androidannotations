@@ -32,6 +32,8 @@ import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.rclass.IRInnerClass;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JClassAlreadyExistsException;
+import com.helger.jcodemodel.JDirectClass;
 import com.helger.jcodemodel.JFieldRef;
 
 public class RInnerClass implements IRInnerClass {
@@ -122,9 +124,30 @@ public class RInnerClass implements IRInnerClass {
 			int fieldSuffix = layoutFieldQualifiedName.lastIndexOf('.');
 			String fieldName = layoutFieldQualifiedName.substring(fieldSuffix + 1);
 			String rInnerClassName = layoutFieldQualifiedName.substring(0, fieldSuffix);
+			int innerClassSuffix = rInnerClassName.lastIndexOf('.');
 
-			AbstractJClass refClass = environment.getJClass(rInnerClassName);
-			return refClass.staticRef(fieldName);
+			String rClassQualifiedName = rInnerClassName.substring(0, innerClassSuffix);
+			String innerClassSimpleName = rInnerClassName.substring(innerClassSuffix + 1);
+
+			JDirectClass rClass = (JDirectClass) environment.getJClass(rClassQualifiedName);
+
+			AbstractJClass innerClass = null;
+
+			for (JDirectClass clazz : rClass.classes()) {
+				if (clazz.name().equals(innerClassSimpleName)) {
+					innerClass = clazz;
+					break;
+				}
+			}
+			if (innerClass == null) {
+				try {
+					innerClass = rClass._class(innerClassSimpleName);
+				} catch (JClassAlreadyExistsException e) {
+					// never happens, since we already checked the inner class does not exist
+				}
+			}
+
+			return innerClass.staticRef(fieldName);
 		} else {
 			return null;
 		}
