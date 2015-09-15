@@ -122,6 +122,10 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), methodName);
 		JBlock body = method.body();
 
+		String docComment = getProcessingEnvironment().getElementUtils().getDocComment(executableElement);
+		codeModelHelper.addTrimmedDocComment(method, docComment);
+		method.javadoc().addReturn().append("the IntentBuilder to chain calls");
+
 		// setAction
 		body.invoke("action").arg(actionKeyField);
 
@@ -132,8 +136,8 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 			JFieldVar paramVar = getStaticExtraField(holder, paramName);
 			JVar methodParam = method.param(parameterClass, paramName);
 
-			JMethod putExtraMethod = holder.getIntentBuilder().getPutExtraMethod(param.asType(), paramName, paramVar);
-			body.invoke(putExtraMethod).arg(methodParam);
+			JInvocation putExtraInvocation = holder.getIntentBuilder().getSuperPutExtraInvocation(param.asType(), methodParam, paramVar);
+			body.add(putExtraInvocation);
 		}
 		body._return(JExpr._this());
 	}

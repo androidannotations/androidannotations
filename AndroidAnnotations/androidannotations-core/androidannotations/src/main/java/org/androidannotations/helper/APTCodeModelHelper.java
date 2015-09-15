@@ -584,4 +584,10 @@ public class APTCodeModelHelper {
 
 		generatedElement.annotate(SuppressWarnings.class).param("value", annotationValue);
 	}
+
+	public void addTrimmedDocComment(JMethod method, String docComment) {
+		if (docComment != null) {
+			method.javadoc().append(docComment.replaceAll("\r", "").trim());
+		}
+	}
 }

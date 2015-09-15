@@ -75,7 +75,8 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		injectExtraInComponent(element, holder, extraKeyStaticField, fieldName);
 
 		if (holder instanceof HasIntentBuilder) {
-			createIntentInjectionMethod(element, (HasIntentBuilder) holder, extraKeyStaticField, fieldName);
+			String docComment = getProcessingEnvironment().getElementUtils().getDocComment(element);
+			createIntentInjectionMethod(element, (HasIntentBuilder) holder, extraKeyStaticField, fieldName, docComment);
 		}
 	}
 
@@ -105,7 +106,7 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 
-	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName) {
-		holder.getIntentBuilder().getPutExtraMethod(element.asType(), fieldName, extraKeyStaticField);
+	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName, String docComment) {
+		holder.getIntentBuilder().getPutExtraMethod(element.asType(), fieldName, extraKeyStaticField, docComment);
 	}
 }

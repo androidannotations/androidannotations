@@ -107,22 +107,25 @@ public abstract class IntentBuilder {
 		method.body()._return(_new(holder.getIntentBuilderClass()).arg(contextParam));
 	}
 
-	public JMethod getPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
+	public JMethod getPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField, String docComment) {
 		Pair<TypeMirror, String> signature = new Pair<>(elementType, parameterName);
 		JMethod putExtraMethod = putExtraMethods.get(signature);
 		if (putExtraMethod == null) {
-			putExtraMethod = addPutExtraMethod(elementType, parameterName, extraKeyField);
+			putExtraMethod = addPutExtraMethod(elementType, parameterName, extraKeyField, docComment);
 			putExtraMethods.put(signature, putExtraMethod);
 		}
 		return putExtraMethod;
 	}
 
-	private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField) {
+	private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField, String docComment) {
 		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
 		JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType);
 		JVar extraParameterVar = method.param(parameterClass, parameterName);
 		JInvocation superCall = getSuperPutExtraInvocation(elementType, extraParameterVar, extraKeyField);
 		method.body()._return(superCall);
+		codeModelHelper.addTrimmedDocComment(method, docComment);
+		method.javadoc().addParam(parameterName).append("the extra value");
+		method.javadoc().addReturn().append("the IntentBuilder to chain calls");
 		return method;
 	}
 
