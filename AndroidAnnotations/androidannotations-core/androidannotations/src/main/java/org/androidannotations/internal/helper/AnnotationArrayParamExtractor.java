@@ -23,8 +23,9 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import org.androidannotations.helper.APTCodeModelHelper;
 
 import com.helger.jcodemodel.AbstractJClass;
-import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JAnnotationArrayMember;
+import com.helger.jcodemodel.JEnumConstantRef;
+import com.helger.jcodemodel.JExpr;
 
 public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6<Void, JAnnotationArrayMember> {
 
@@ -98,8 +99,8 @@ public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6
 	@Override
 	public Void visitEnumConstant(VariableElement c, JAnnotationArrayMember p) {
 		AbstractJClass annotationClass = helper.typeMirrorToJClass(c.asType());
-		IJExpression expression = annotationClass.staticRef(c.getSimpleName().toString());
-		p.param(expression);
+		JEnumConstantRef ref = JExpr.enumConstantRef(annotationClass, c.getSimpleName().toString());
+		p.param(ref);
 		return null;
 	}
 
