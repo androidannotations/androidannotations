@@ -81,7 +81,7 @@ public class OnActivityResultDelegate extends GeneratedClassHolderDelegate<EComp
 
 	private JBlock createCaseBlock(int requestCode) {
 		JCase onActivityResultCase = getSwitch()._case(JExpr.lit(requestCode));
-		JBlock onActivityResultCaseBlock = codeModelHelper.blockNoBraces(onActivityResultCase.body());
+		JBlock onActivityResultCaseBlock = onActivityResultCase.body().blockSimple();
 		onActivityResultCase.body()._break();
 		return onActivityResultCaseBlock;
 	}
@@ -112,6 +112,6 @@ public class OnActivityResultDelegate extends GeneratedClassHolderDelegate<EComp
 		dataParam = method.param(getClasses().INTENT, "data");
 		JBlock body = method.body();
 		body.invoke(_super(), method).arg(requestCodeParam).arg(resultCodeParam).arg(dataParam);
-		afterSuperBlock = codeModelHelper.blockNoBraces(body);
+		afterSuperBlock = body.blockSimple();
 	}
 }

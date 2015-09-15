@@ -24,7 +24,6 @@ import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedNotifier;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.EViewHolder;
 
@@ -37,12 +36,9 @@ public class ViewNotifierHelper {
 
 	private EComponentHolder holder;
 	private JFieldVar notifier;
-	
-	private APTCodeModelHelper codeModelHelper;
 
 	public ViewNotifierHelper(EComponentHolder holder) {
 		this.holder = holder;
-		codeModelHelper = new APTCodeModelHelper(holder.getEnvironment());
 	}
 
 	public void invokeViewChanged(JBlock block) {
@@ -71,8 +67,8 @@ public class ViewNotifierHelper {
 	public void wrapInitWithNotifier() {
 		JBlock initBlock = holder.getInit().body();
 		JVar previousNotifier = replacePreviousNotifier(initBlock);
-		((EViewHolder) holder).setInitBody(codeModelHelper.blockNoBraces(holder.getInit().body()));
-		resetPreviousNotifier(codeModelHelper.blockNoBraces(initBlock), previousNotifier);
+		((EViewHolder) holder).setInitBody(holder.getInit().body().blockSimple());
+		resetPreviousNotifier(initBlock.blockSimple(), previousNotifier);
 	}
 
 }

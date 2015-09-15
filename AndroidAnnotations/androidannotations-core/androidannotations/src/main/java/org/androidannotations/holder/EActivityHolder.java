@@ -157,9 +157,9 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onStart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		onStartBeforeSuperBlock = codeModelHelper.blockNoBraces(body);
+		onStartBeforeSuperBlock = body.blockSimple();
 		body.invoke(_super(), method);
-		onStartAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onStartAfterSuperBlock = body.blockSimple();
 	}
 
 	public JBlock getOnRestartAfterSuperBlock() {
@@ -173,27 +173,27 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JMethod method = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onRestart");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		onRestartBeforeSuperBlock = codeModelHelper.blockNoBraces(body);
+		onRestartBeforeSuperBlock = body.blockSimple();
 		body.invoke(_super(), method);
-		onRestartAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onRestartAfterSuperBlock = body.blockSimple();
 	}
 
 	private void setOnResume() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onResume");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		onResumeBeforeSuperBlock = codeModelHelper.blockNoBraces(body);
+		onResumeBeforeSuperBlock = body.blockSimple();
 		body.invoke(_super(), method);
-		onResumeAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onResumeAfterSuperBlock = body.blockSimple();
 	}
 
 	private void setOnPause() {
 		JMethod method = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onPause");
 		method.annotate(Override.class);
 		JBlock body = method.body();
-		onPauseBeforeSuperBlock = codeModelHelper.blockNoBraces(body);
+		onPauseBeforeSuperBlock = body.blockSimple();
 		body.invoke(_super(), method);
-		onPauseAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onPauseAfterSuperBlock = body.blockSimple();
 	}
 
 	private void setOnNewIntent() {
@@ -203,7 +203,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JBlock body = onNewIntentMethod.body();
 		body.invoke(_super(), onNewIntentMethod).arg(intent);
 		body.invoke(getSetIntent()).arg(intent);
-		onNewIntentAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onNewIntentAfterSuperBlock = body.blockSimple();
 	}
 
 	private void setSetIntent() {
@@ -225,7 +225,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		onStopMethod = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onStop");
 		onStopMethod.annotate(Override.class);
 		JBlock body = onStopMethod.body();
-		onStopBeforeSuperBlock = codeModelHelper.blockNoBraces(body);
+		onStopBeforeSuperBlock = body.blockSimple();
 		body.invoke(_super(), onStopMethod);
 	}
 
@@ -240,9 +240,9 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		onDestroyMethod = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onDestroy");
 		onDestroyMethod.annotate(Override.class);
 		JBlock body = onDestroyMethod.body();
-		onDestroyBeforeSuperBlock = codeModelHelper.blockNoBraces(body);
+		onDestroyBeforeSuperBlock = body.blockSimple();
 		body.invoke(_super(), onDestroyMethod);
-		onDestroyAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onDestroyAfterSuperBlock = body.blockSimple();
 	}
 
 	public JBlock getOnConfigurationChangedBeforeSuperBlock() {
@@ -272,9 +272,9 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		AbstractJClass configurationClass = getClasses().CONFIGURATION;
 		onConfigurationChangedNewConfigParam = method.param(configurationClass, "newConfig");
 		JBlock body = method.body();
-		onConfigurationChangedBeforeSuperBlock = codeModelHelper.blockNoBraces(body);
+		onConfigurationChangedBeforeSuperBlock = body.blockSimple();
 		body.invoke(_super(), method).arg(onConfigurationChangedNewConfigParam);
-		onConfigurationChangedAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onConfigurationChangedAfterSuperBlock = body.blockSimple();
 	}
 
 	public JMethod getOnContentChanged() {
@@ -296,7 +296,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		onContentChanged.annotate(Override.class);
 		JBlock body = onContentChanged.body();
 		body.invoke(_super(), onContentChanged);
-		onContentChangedAfterSuperBlock = codeModelHelper.blockNoBraces(body);
+		onContentChangedAfterSuperBlock = body.blockSimple();
 	}
 
 	private void setOnCreateOptionsMenu() {
@@ -305,7 +305,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JBlock methodBody = method.body();
 		onCreateOptionsMenuMenuParam = method.param(getClasses().MENU, "menu");
 		onCreateOptionsMenuMenuInflaterVar = methodBody.decl(getClasses().MENU_INFLATER, "menuInflater", invoke("getMenuInflater"));
-		onCreateOptionsMenuMethodBody = codeModelHelper.blockNoBraces(methodBody);
+		onCreateOptionsMenuMethodBody = methodBody.blockSimple();
 		methodBody._return(_super().invoke(method).arg(onCreateOptionsMenuMenuParam));
 	}
 
@@ -315,7 +315,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JBlock methodBody = method.body();
 		onOptionsItemSelectedItem = method.param(getClasses().MENU_ITEM, "item");
 		onOptionsItemSelectedItemId = methodBody.decl(getCodeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
-		onOptionsItemSelectedMiddleBlock = codeModelHelper.blockNoBraces(methodBody);
+		onOptionsItemSelectedMiddleBlock = methodBody.blockSimple();
 
 		methodBody._return(invoke(_super(), method).arg(onOptionsItemSelectedItem));
 	}
@@ -621,7 +621,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		onRetainNonConfigurationInstance = methodBody.decl(ncHolderClass, "nonConfigurationInstanceState_", _new(ncHolderClass));
 		IJExpression superCall = _super().invoke(onRetainNonConfigurationInstanceMethod);
 		methodBody.assign(onRetainNonConfigurationInstance.ref(ncHolder.getSuperNonConfigurationInstanceField()), superCall);
-		onRetainNonConfigurationInstanceBindBlock = codeModelHelper.blockNoBraces(methodBody);
+		onRetainNonConfigurationInstanceBindBlock = methodBody.blockSimple();
 		methodBody._return(onRetainNonConfigurationInstance);
 	}
 

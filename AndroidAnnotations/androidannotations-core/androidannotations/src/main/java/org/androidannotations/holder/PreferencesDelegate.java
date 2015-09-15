@@ -25,7 +25,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 
 import com.helger.jcodemodel.AbstractJClass;
@@ -39,8 +38,6 @@ import com.helger.jcodemodel.JVar;
 
 public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponentWithViewSupportHolder> implements HasPreferences {
 
-	private APTCodeModelHelper codeModelHelper;
-
 	protected JBlock addPreferencesFromResourceBlock;
 
 	private boolean usingSupportV7Preference = false;
@@ -48,7 +45,6 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 
 	public PreferencesDelegate(EComponentWithViewSupportHolder holder) {
 		super(holder);
-		codeModelHelper = new APTCodeModelHelper(holder.getEnvironment());
 		Elements elementUtils = holder.getEnvironment().getProcessingEnvironment().getElementUtils();
 		Types typeUtils = holder.getEnvironment().getProcessingEnvironment().getTypeUtils();
 
@@ -133,7 +129,7 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 
 	private FoundPreferenceHolder createFoundPreferenceAndIfNotNullBlock(JFieldRef idRef, AbstractJClass preferenceClass) {
 		IJExpression findPreferenceExpression = findPreferenceByKey(idRef);
-		JBlock block = codeModelHelper.blockNoBraces(getAddPreferencesFromResourceBlock());
+		JBlock block = getAddPreferencesFromResourceBlock().blockSimple();
 
 		if (preferenceClass == null) {
 			preferenceClass = basePreferenceClass;
