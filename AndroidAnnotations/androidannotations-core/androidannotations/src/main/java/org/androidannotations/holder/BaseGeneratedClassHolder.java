@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -99,6 +100,10 @@ public abstract class BaseGeneratedClassHolder implements GeneratedClassHolder {
 	@Override
 	public AndroidAnnotationsEnvironment getEnvironment() {
 		return environment;
+	}
+
+	protected ProcessingEnvironment getProcessingEnvironment() {
+		return environment.getProcessingEnvironment();
 	}
 
 	protected ProcessHolder.Classes getClasses() {
