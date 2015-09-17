@@ -71,4 +71,18 @@ public @interface OptionsMenu {
 	 * @return the resource names of the menus
 	 */
 	String[] resName() default "";
+
+	/**
+	 * Whether to prevent from displaying parent's menu.
+	 *
+	 * @return <b>true</b> if prevent from displaying parent's menu, <b>false</b> otherwise
+	 */
+	boolean overrideParent() default false;
+
+	/**
+	 * Whether to clean before inflate menu.
+	 *
+	 * @return <b>true</b> if clean before inflate menu, <b>false</b> otherwise
+	 */
+	boolean cleanBeforeInflate() default false;
 }
