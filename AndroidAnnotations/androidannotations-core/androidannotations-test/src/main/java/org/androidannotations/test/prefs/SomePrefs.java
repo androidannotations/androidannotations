@@ -22,6 +22,7 @@ import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.DefaultStringSet;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
 import org.androidannotations.test.R;
@@ -50,4 +51,7 @@ public interface SomePrefs {
 	long lastUpdated();
 
 	Set<String> types();
+
+	@DefaultStringSet({"a", "b", "c"})
+	Set<String> setWithDefault();
 }

@@ -18,6 +18,7 @@ package org.androidannotations.test.prefs;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -85,6 +86,12 @@ public class PrefsActivityTest {
 		Set<String> values = new TreeSet<String>(Arrays.asList("1", "2", "3"));
 		somePrefs.types().put(values);
 		assertThat(sharedPref.getStringSet("types", null)).isEqualTo(values);
+	}
+
+	@Test
+	public void checkSetDefaultValues() {
+		Set<String> values = new HashSet<String>(Arrays.asList("a", "b", "c"));
+		assertThat(somePrefs.setWithDefault().get()).isEqualTo(values);
 	}
 
 	@Test
