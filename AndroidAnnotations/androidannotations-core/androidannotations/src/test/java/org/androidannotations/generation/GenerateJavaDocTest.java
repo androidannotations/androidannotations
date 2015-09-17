@@ -67,4 +67,34 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		assertGeneratedClassMatches(generatedFile, ".*\\*  @param param this is a param");
 		assertGeneratedClassMatches(generatedFile, ".*\\* @return");
 	}
+
+	@Test
+	public void generateJavaDocForSharedPref() throws IOException {
+		CompileResult result = compileFiles(SharedPrefWithJavaDoc.class);
+		File generatedFile = toGeneratedFile(SharedPrefWithJavaDoc.class);
+
+		assertCompilationSuccessful(result);
+
+		// CHECKSTYLE:OFF
+		String[] fieldDoc = { //
+				"     * <p><b>Defaults to</b>: 42</p>", //
+				"     * The Age!", //
+				"     *  @return the age as int", //
+				"     *  @deprecated use {@link #ageLong()}", //
+				"     * ", //
+				"     */", //
+				"    public IntPrefField age() {", //
+		};
+		String[] editorDoc = { //
+				"         * The Age!", //
+				"         *  @return the age as int", //
+				"         *  @deprecated use {@link #ageLong()}", //
+				"         * ", //
+				"         */", //
+				"        public IntPrefEditorField<SharedPrefWithJavaDoc_.SharedPrefWithJavaDocEditor_> age() {", //
+		};
+		// CHECKSTYLE:ON
+		assertGeneratedClassContains(generatedFile, fieldDoc);
+		assertGeneratedClassContains(generatedFile, editorDoc);
+	}
 }
