@@ -115,8 +115,13 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		editMethod.body()._return(editMethodEditorInvocation);
 	}
 
-	public void createFieldMethod(Class<?> prefFieldHelperClass, JExpression keyExpression, String fieldName, String fieldHelperMethodName, JExpression defaultValue) {
+	public void createFieldMethod(Class<?> prefFieldHelperClass, JExpression keyExpression, String fieldName, String fieldHelperMethodName, JExpression defaultValue,
+			String docComment, String defaultValueStr) {
 		JMethod fieldMethod = generatedClass.method(PUBLIC, prefFieldHelperClass, fieldName);
+		if (defaultValueStr != null) {
+			fieldMethod.javadoc().append("<p><b>Defaults to</b>: " + defaultValueStr + "</p>\n");
+		}
+		codeModelHelper.addTrimmedDocComment(fieldMethod, docComment);
 		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(keyExpression).arg(defaultValue));
 	}
 
@@ -126,6 +131,8 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		JClass editorFieldClass = getJClass(editorFieldHolder.fieldClass);
 		String fieldName = method.getSimpleName().toString();
 		JMethod editorFieldMethod = editorClass.method(PUBLIC, editorFieldClass.narrow(editorClass), fieldName);
+		String docComment = getProcessingEnvironment().getElementUtils().getDocComment(method);
+		codeModelHelper.addTrimmedDocComment(editorFieldMethod, docComment);
 		editorFieldMethod.body()._return(JExpr.invoke(editorFieldHolder.fieldMethodName).arg(keyExpression));
 	}
 

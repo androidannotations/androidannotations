@@ -246,8 +246,10 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 		Annotation annotation = method.getAnnotation(annotationClass);
 		JExpression defaultValueExpr;
 
+		Object value = null;
 		if (annotation != null && method.getAnnotation(DefaultStringSet.class) == null) {
-			defaultValueExpr = codeModelHelper.litObject(annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "value"));
+			value = annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "value");
+			defaultValueExpr = codeModelHelper.litObject(value);
 		} else if (method.getAnnotation(DefaultRes.class) != null) {
 			defaultValueExpr = extractResValue(holder, method, resType);
 			annotationClass = DefaultRes.class;
@@ -276,7 +278,12 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 			keyExpression = holder.getEditorContextField().invoke("getString").arg(idRef);
 		}
 
-		holder.createFieldMethod(prefFieldClass, keyExpression, fieldName, fieldHelperMethodName, defaultValueExpr);
+		String docComment = getProcessingEnvironment().getElementUtils().getDocComment(method);
+		String defaultValueStr = value == null ? null : value.toString();
+		if (defaultValueStr == null) {
+			defaultValueStr = defaultValue == null ? null : defaultValue.toString();
+		}
+		holder.createFieldMethod(prefFieldClass, keyExpression, fieldName, fieldHelperMethodName, defaultValueExpr, docComment, defaultValueStr);
 		return keyExpression;
 	}
 
