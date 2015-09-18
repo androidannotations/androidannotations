@@ -22,7 +22,9 @@ import static com.sun.codemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,6 +66,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JVar;
 
@@ -247,14 +250,28 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 		JExpression defaultValueExpr;
 
 		Object value = null;
-		if (annotation != null && method.getAnnotation(DefaultStringSet.class) == null) {
+		if (annotation != null) {
 			value = annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "value");
+		}
+
+		if (annotation != null && method.getAnnotation(DefaultStringSet.class) == null) {
 			defaultValueExpr = codeModelHelper.litObject(value);
 		} else if (method.getAnnotation(DefaultRes.class) != null) {
 			defaultValueExpr = extractResValue(holder, method, resType);
 			annotationClass = DefaultRes.class;
 		} else if (method.getAnnotation(DefaultStringSet.class) != null) {
-			defaultValueExpr = newEmptyStringHashSet();
+			if (value != null) {
+				Set<String> arrayValues = new HashSet<>(Arrays.asList((String[]) value));
+				value = arrayValues;
+
+				JInvocation arrayAsList = getClasses().ARRAYS.staticInvoke("asList");
+				for (String arrayValue : arrayValues) {
+					arrayAsList.arg(lit(arrayValue));
+				}
+				defaultValueExpr = JExpr._new(getClasses().HASH_SET.narrow(getClasses().STRING)).arg(arrayAsList);
+			} else {
+				defaultValueExpr = newEmptyStringHashSet();
+			}
 			annotationClass = DefaultStringSet.class;
 		} else {
 			defaultValueExpr = defaultValue != null ? codeModelHelper.litObject(defaultValue) : newEmptyStringHashSet();
