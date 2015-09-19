@@ -39,6 +39,7 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
+import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.Pair;
 import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.internal.process.ProcessHolder;
@@ -138,15 +139,17 @@ public abstract class IntentBuilder {
 		if (elementType.getKind() == TypeKind.DECLARED) {
 			Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
-			if (!typeUtils.isSubtype(elementType, parcelableType)) {
-				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
-				if (!typeUtils.isSubtype(elementType, stringType)) {
-					extraParameterArg = cast(environment.getClasses().SERIALIZABLE, extraParameterArg);
-				}
-			} else {
+			if (typeUtils.isSubtype(elementType, parcelableType)) {
 				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
 				if (typeUtils.isSubtype(elementType, serializableType)) {
 					extraParameterArg = cast(environment.getClasses().PARCELABLE, extraParameterArg);
+				}
+			} else if (!BundleHelper.METHOD_SUFFIX_BY_TYPE_NAME.containsKey(elementType.toString()) && annotationHelper.isParcelType(elementType)) {
+				extraParameterArg = environment.getCodeModel().ref("org.parceler.Parcels").staticInvoke("wrap").arg(extraParameterArg);
+			} else {
+				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
+				if (!typeUtils.isSubtype(elementType, stringType)) {
+					extraParameterArg = cast(environment.getClasses().SERIALIZABLE, extraParameterArg);
 				}
 			}
 		}

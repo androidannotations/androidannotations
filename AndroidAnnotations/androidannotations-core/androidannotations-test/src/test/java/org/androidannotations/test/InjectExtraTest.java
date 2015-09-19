@@ -18,7 +18,9 @@ package org.androidannotations.test;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.androidannotations.test.parceler.ParcelerBean;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,6 +93,24 @@ public class InjectExtraTest {
 	public void extraWithoutValueInjected() {
 		controller.withIntent(ExtraInjectedActivity_.intent(context).extraWithoutValue("Hello!").get()).create();
 		assertThat(activity.extraWithoutValue).isEqualTo("Hello!");
+	}
+
+	@Test
+	public void parcelerExtraInjected() {
+		controller.withIntent(ExtraInjectedActivity_.intent(context).parcelerExample(new ParcelerBean("Andy", 42)).get()).create();
+		assertThat(activity.parcelerExample.getName()).isEqualTo("Andy");
+		assertThat(activity.parcelerExample.getAge()).isEqualTo(42);
+	}
+
+	@Test
+	public void parcelerExtraCollectionInjected() {
+		List<ParcelerBean> parcelerBeans = new ArrayList<ParcelerBean>();
+		parcelerBeans.add(new ParcelerBean("Duke", 1337));
+		controller.withIntent(ExtraInjectedActivity_.intent(context).parcelerExampleCollection(parcelerBeans).get()).create();
+		assertThat(activity.parcelerExampleCollection.size()).isEqualTo(1);
+		ParcelerBean bean = activity.parcelerExampleCollection.iterator().next();
+		assertThat(bean.getName()).isEqualTo("Duke");
+		assertThat(bean.getAge()).isEqualTo(1337);
 	}
 
 }

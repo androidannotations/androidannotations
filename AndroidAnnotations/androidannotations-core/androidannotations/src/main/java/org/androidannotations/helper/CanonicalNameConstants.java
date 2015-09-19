@@ -58,6 +58,9 @@ public final class CanonicalNameConstants {
 	public static final String INTENT_FILTER = "android.content.IntentFilter";
 	public static final String COMPONENT_NAME = "android.content.ComponentName";
 	public static final String BUNDLE = "android.os.Bundle";
+	public static final String IBINDER = "android.os.IBinder";
+	public static final String SPARSE_ARRAY = "android.util.SparseArray";
+	public static final String SPARSE_BOOLEAN_ARRAY = "android.util.SparseBooleanArray";
 	public static final String APPLICATION = "android.app.Application";
 	public static final String ACTIVITY = "android.app.Activity";
 	public static final String EDITABLE = "android.text.Editable";

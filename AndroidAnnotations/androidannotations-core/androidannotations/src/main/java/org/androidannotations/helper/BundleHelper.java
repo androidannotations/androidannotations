@@ -33,6 +33,7 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.IJStatement;
 import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JMethod;
 
@@ -83,6 +84,7 @@ public class BundleHelper {
 
 	private boolean restoreCallNeedCastStatement = false;
 	private boolean restoreCallNeedsSuppressWarning = false;
+	private boolean parcelerBean = false;
 
 	private String methodNameToSave;
 	private String methodNameToRestore;
@@ -172,6 +174,10 @@ public class BundleHelper {
 			if (isTypeParcelable(type)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
+			} else if (annotationHelper.isParcelType(type)) {
+				methodNameToSave = "put" + "Parcelable";
+				methodNameToRestore = "get" + "Parcelable";
+				parcelerBean = true;
 			} else {
 				methodNameToSave = "put" + "Serializable";
 				methodNameToRestore = "get" + "Serializable";
@@ -225,6 +231,10 @@ public class BundleHelper {
 			expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
 		}
 
+		if (parcelerBean) {
+			expressionToRestore = environment.getCodeModel().ref("org.parceler.Parcels").staticInvoke("unwrap").arg(expressionToRestore);
+		}
+
 		if (restoreCallNeedCastStatement) {
 			expressionToRestore = JExpr.cast(variableClass, expressionToRestore);
 
@@ -233,5 +243,13 @@ public class BundleHelper {
 			}
 		}
 		return expressionToRestore;
+	}
+
+	public IJStatement getExpressionToSaveFromField(IJExpression saveStateBundleParam, IJExpression fieldName, IJExpression variableRef) {
+		IJExpression refExpression = variableRef;
+		if (parcelerBean) {
+			refExpression = environment.getCodeModel().ref("org.parceler.Parcels").staticInvoke("wrap").arg(refExpression);
+		}
+		return JExpr.invoke(saveStateBundleParam, methodNameToSave).arg(fieldName).arg(refExpression);
 	}
 }
