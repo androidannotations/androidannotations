@@ -212,8 +212,11 @@ public class APTCodeModelHelper {
 			method.generify(typeDeclaration.getKey(), typeDeclaration.getValue());
 		}
 
+		int i = 0;
 		for (VariableElement parameter : executableElement.getParameters()) {
-			addParamToMethod(method, parameter, JMod.FINAL, actualTypes);
+			boolean varParam = i == executableElement.getParameters().size() - 1 && executableElement.isVarArgs();
+			addParamToMethod(method, parameter, JMod.FINAL, actualTypes, varParam);
+			i++;
 		}
 
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
@@ -266,10 +269,10 @@ public class APTCodeModelHelper {
 		return null;
 	}
 
-	private void addParamToMethod(JMethod method, VariableElement parameter, int mod, Map<String, TypeMirror> actualTypes) {
+	private void addParamToMethod(JMethod method, VariableElement parameter, int mod, Map<String, TypeMirror> actualTypes, boolean varParam) {
 		String parameterName = parameter.getSimpleName().toString();
 		JClass parameterClass = typeMirrorToJClass(parameter.asType(), actualTypes);
-		JVar param = method.param(mod, parameterClass, parameterName);
+		JVar param = varParam ? method.varParam(parameterClass.elementType(), parameterName) : method.param(mod, parameterClass, parameterName);
 		copyNonAAAnnotations(param, parameter.getAnnotationMirrors());
 	}
 
