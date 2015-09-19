@@ -278,10 +278,8 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		JDefinedClass onSeekbarChangeListenerClass = getCodeModel().anonymousClass(getClasses().ON_SEEKBAR_CHANGE_LISTENER);
 		JClass viewClass = getClasses().SEEKBAR;
 
-		JBlock onViewChangedBody = getOnViewChangedBody().block();
-		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));
-		onViewChangedBody._if(viewVariable.ne(JExpr._null()))._then() //
-		.invoke(viewVariable, "setOnSeekBarChangeListener").arg(_new(onSeekbarChangeListenerClass));
+		FoundViewHolder foundViewHolder = getFoundViewHolder(idRef, viewClass);
+		foundViewHolder.getIfNotNullBlock().invoke(foundViewHolder.getRef(), "setOnSeekBarChangeListener").arg(_new(onSeekbarChangeListenerClass));
 
 		return new OnSeekBarChangeListenerHolder(this, onSeekbarChangeListenerClass);
 	}
