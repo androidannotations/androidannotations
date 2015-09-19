@@ -26,6 +26,22 @@ public class MyParcelableBean implements Parcelable {
 		this.x = x;
 	}
 
+	protected MyParcelableBean(Parcel in) {
+		x = in.readInt();
+	}
+
+	public static final Creator<MyParcelableBean> CREATOR = new Creator<MyParcelableBean>() {
+		@Override
+		public MyParcelableBean createFromParcel(Parcel in) {
+			return new MyParcelableBean(in);
+		}
+
+		@Override
+		public MyParcelableBean[] newArray(int size) {
+			return new MyParcelableBean[size];
+		}
+	};
+
 	@Override
 	public int describeContents() {
 		return 0;

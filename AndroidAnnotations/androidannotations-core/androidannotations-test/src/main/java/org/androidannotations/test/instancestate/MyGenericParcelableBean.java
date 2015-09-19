@@ -20,11 +20,26 @@ import android.os.Parcelable;
 
 public class MyGenericParcelableBean<T> implements Parcelable {
 
-	private final T t;
+	private T t;
 
 	public MyGenericParcelableBean(T t) {
 		this.t = t;
 	}
+
+	protected MyGenericParcelableBean(Parcel in) {
+	}
+
+	public static final Creator<MyGenericParcelableBean> CREATOR = new Creator<MyGenericParcelableBean>() {
+		@Override
+		public MyGenericParcelableBean createFromParcel(Parcel in) {
+			return new MyGenericParcelableBean(in);
+		}
+
+		@Override
+		public MyGenericParcelableBean[] newArray(int size) {
+			return new MyGenericParcelableBean[size];
+		}
+	};
 
 	@Override
 	public int describeContents() {

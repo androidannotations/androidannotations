@@ -24,6 +24,24 @@ public class ParcelableSerializableData implements Parcelable, Serializable {
 
 	private static final long serialVersionUID = 920532042616086169L;
 
+	public ParcelableSerializableData() {
+	}
+
+	protected ParcelableSerializableData(Parcel in) {
+	}
+
+	public static final Creator<ParcelableSerializableData> CREATOR = new Creator<ParcelableSerializableData>() {
+		@Override
+		public ParcelableSerializableData createFromParcel(Parcel in) {
+			return new ParcelableSerializableData(in);
+		}
+
+		@Override
+		public ParcelableSerializableData[] newArray(int size) {
+			return new ParcelableSerializableData[size];
+		}
+	};
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -31,6 +49,5 @@ public class ParcelableSerializableData implements Parcelable, Serializable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-
 	}
 }
