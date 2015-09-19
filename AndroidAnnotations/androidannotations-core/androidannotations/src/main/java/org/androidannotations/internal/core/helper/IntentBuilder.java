@@ -38,6 +38,7 @@ import javax.lang.model.util.Types;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.Pair;
 import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.internal.process.ProcessHolder;
@@ -68,11 +69,13 @@ public abstract class IntentBuilder {
 	protected Elements elementUtils;
 	protected Types typeUtils;
 	protected APTCodeModelHelper codeModelHelper;
+	protected AnnotationHelper annotationHelper;
 
 	public IntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
 		this.environment = holder.getEnvironment();
 		this.holder = holder;
 		this.androidManifest = androidManifest;
+		this.annotationHelper = new AnnotationHelper(environment);
 		codeModelHelper = new APTCodeModelHelper(environment);
 		elementUtils = environment.getProcessingEnvironment().getElementUtils();
 		typeUtils = environment.getProcessingEnvironment().getTypeUtils();
