@@ -162,4 +162,5 @@
 	<module name="SuppressionFilter">
         <property name="file" value="${checkstyle.suppressions.file}"/>
     </module>
+	<module name="NewlineAtEndOfFile"/>
 </module>
