@@ -222,8 +222,9 @@ public class ValidatorParameterHelper {
 			}
 			if (currentParameterRequirement.isSatisfied(parameter)) {
 				satisfiedParameterRequirements.add(currentParameterRequirement);
-			} else if (!currentParameterRequirement.multiple()) {
-				nextParameterRequirement();
+				if (!currentParameterRequirement.multiple()) {
+					nextParameterRequirement();
+				}
 			} else {
 				if (currentParameterRequirement.required() && !satisfiedParameterRequirements.contains(currentParameterRequirement)) {
 					return false;
