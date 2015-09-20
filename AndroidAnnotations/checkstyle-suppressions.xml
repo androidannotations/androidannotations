@@ -24,4 +24,5 @@
 	<suppress files="org[\\/]robolectric[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
     <suppress files="(com|android)[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle" />
     <suppress files="R.java" checks=".*" />
+	<suppress files="generated-sources" checks=".*"/>
 </suppressions>
