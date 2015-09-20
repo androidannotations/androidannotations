@@ -151,6 +151,12 @@ public final class CanonicalNameConstants {
 	public static final String SCHEME_REGISTRY = "org.apache.http.conn.scheme.SchemeRegistry";
 	public static final String SINGLE_CLIENT_CONN_MANAGER = "org.apache.http.impl.conn.SingleClientConnManager";
 
+	/*
+	 * Parceler
+	 */
+	public static final String PARCEL_ANNOTATION = "org.parceler.Parcel";
+	public static final String PARCELS_UTILITY_CLASS = "org.parceler.Parcels";
+
 	private CanonicalNameConstants() {
 	}
 

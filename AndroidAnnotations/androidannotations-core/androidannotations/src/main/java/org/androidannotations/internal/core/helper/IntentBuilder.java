@@ -40,7 +40,9 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.Pair;
+import org.androidannotations.helper.ParcelerHelper;
 import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.internal.process.ProcessHolder;
 
@@ -71,12 +73,14 @@ public abstract class IntentBuilder {
 	protected Types typeUtils;
 	protected APTCodeModelHelper codeModelHelper;
 	protected AnnotationHelper annotationHelper;
+	protected ParcelerHelper parcelerHelper;
 
 	public IntentBuilder(HasIntentBuilder holder, AndroidManifest androidManifest) {
 		this.environment = holder.getEnvironment();
 		this.holder = holder;
 		this.androidManifest = androidManifest;
 		this.annotationHelper = new AnnotationHelper(environment);
+		this.parcelerHelper = new ParcelerHelper(environment);
 		codeModelHelper = new APTCodeModelHelper(environment);
 		elementUtils = environment.getProcessingEnvironment().getElementUtils();
 		typeUtils = environment.getProcessingEnvironment().getTypeUtils();
@@ -135,7 +139,7 @@ public abstract class IntentBuilder {
 
 	public JInvocation getSuperPutExtraInvocation(TypeMirror elementType, JVar extraParam, JFieldVar extraKeyField) {
 		IJExpression extraParameterArg = extraParam;
-		// Cast to Parcelable or Serializable if needed
+		// Cast to Parcelable, wrap with Parcels.wrap or cast Serializable if needed
 		if (elementType.getKind() == TypeKind.DECLARED) {
 			Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
@@ -144,8 +148,8 @@ public abstract class IntentBuilder {
 				if (typeUtils.isSubtype(elementType, serializableType)) {
 					extraParameterArg = cast(environment.getClasses().PARCELABLE, extraParameterArg);
 				}
-			} else if (!BundleHelper.METHOD_SUFFIX_BY_TYPE_NAME.containsKey(elementType.toString()) && annotationHelper.isParcelType(elementType)) {
-				extraParameterArg = environment.getCodeModel().ref("org.parceler.Parcels").staticInvoke("wrap").arg(extraParameterArg);
+			} else if (!BundleHelper.METHOD_SUFFIX_BY_TYPE_NAME.containsKey(elementType.toString()) && parcelerHelper.isParcelType(elementType)) {
+				extraParameterArg = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("wrap").arg(extraParameterArg);
 			} else {
 				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
 				if (!typeUtils.isSubtype(elementType, stringType)) {

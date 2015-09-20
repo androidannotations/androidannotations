@@ -22,19 +22,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -66,40 +55,6 @@ public class AnnotationHelper {
 
 	public static final String DEFAULT_FIELD_NAME_VALUE = "value";
 	public static final String DEFAULT_FIELD_NAME_RESNAME = "resName";
-	private static final String PARCEL_ANNOTATION = "org.parceler.Parcel";
-	private static final Map<String, Integer> SUPPORTED_PARCEL_TYPES = new HashMap<>();
-
-	static {
-		SUPPORTED_PARCEL_TYPES.put(Collection.class.getName(), 1);
-		SUPPORTED_PARCEL_TYPES.put(List.class.getName(), 1);
-		SUPPORTED_PARCEL_TYPES.put(ArrayList.class.getName(), 1);
-		SUPPORTED_PARCEL_TYPES.put(Set.class.getName(), 1);
-		SUPPORTED_PARCEL_TYPES.put(HashSet.class.getName(), 2);
-		SUPPORTED_PARCEL_TYPES.put(TreeSet.class.getName(), 2);
-		SUPPORTED_PARCEL_TYPES.put(CanonicalNameConstants.SPARSE_ARRAY, 1);
-		SUPPORTED_PARCEL_TYPES.put(Map.class.getName(), 2);
-		SUPPORTED_PARCEL_TYPES.put(HashMap.class.getName(), 2);
-		SUPPORTED_PARCEL_TYPES.put(TreeMap.class.getName(), 2);
-		SUPPORTED_PARCEL_TYPES.put(Integer.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(Long.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(Double.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(Float.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(Byte.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(String.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(Character.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(Boolean.class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(byte[].class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(char[].class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(boolean[].class.getName(), 0);
-		SUPPORTED_PARCEL_TYPES.put(CanonicalNameConstants.IBINDER, 0);
-		SUPPORTED_PARCEL_TYPES.put(CanonicalNameConstants.BUNDLE, 0);
-		SUPPORTED_PARCEL_TYPES.put(CanonicalNameConstants.SPARSE_BOOLEAN_ARRAY, 0);
-		SUPPORTED_PARCEL_TYPES.put(LinkedList.class.getName(), 1);
-		SUPPORTED_PARCEL_TYPES.put(LinkedHashMap.class.getName(), 2);
-		SUPPORTED_PARCEL_TYPES.put(SortedMap.class.getName(), 2);
-		SUPPORTED_PARCEL_TYPES.put(SortedSet.class.getName(), 1);
-		SUPPORTED_PARCEL_TYPES.put(LinkedHashSet.class.getName(), 1);
-	};
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationHelper.class);
 
@@ -140,39 +95,7 @@ public class AnnotationHelper {
 		return getElementUtils().getTypeElement(qualifiedName);
 	}
 
-	public boolean isParcelType(TypeMirror typeMirror) {
-		return isParcelType(typeMirror, true);
-	}
-
-	public boolean isParcelType(TypeMirror typeMirror, boolean root) {
-		if (typeMirror instanceof DeclaredType && getElementUtils().getTypeElement(PARCEL_ANNOTATION) != null) {
-			DeclaredType declaredType = (DeclaredType) typeMirror;
-			TypeElement element = (TypeElement) declaredType.asElement();
-
-			String name = element.getQualifiedName().toString();
-
-			if (isAnnotatedWith(element, PARCEL_ANNOTATION)) {
-				return true;
-			}
-
-			if (SUPPORTED_PARCEL_TYPES.containsKey(name)) {
-				boolean genericsMatch = true;
-
-				Integer genericsSize = SUPPORTED_PARCEL_TYPES.get(name);
-				if (genericsSize == declaredType.getTypeArguments().size()
-						&& (!root || genericsSize > 0)) {
-					for (int i = 0; i < genericsSize; i++) {
-						genericsMatch &= isParcelType(declaredType.getTypeArguments().get(i), false);
-					}
-
-					return genericsMatch;
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean isAnnotatedWith(Element element, String qualifiedName) {
+	public boolean isAnnotatedWith(Element element, String qualifiedName) {
 		for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
 			if (annotationMirror.getAnnotationType().toString().equals(qualifiedName)) {
 				return true;

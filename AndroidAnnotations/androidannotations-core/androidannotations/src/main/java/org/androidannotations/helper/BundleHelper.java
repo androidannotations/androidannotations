@@ -78,6 +78,7 @@ public class BundleHelper {
 
 	private AndroidAnnotationsEnvironment environment;
 	private AnnotationHelper annotationHelper;
+	private ParcelerHelper parcelerHelper;
 	private APTCodeModelHelper codeModelHelper;
 
 	private TypeMirror element;
@@ -95,6 +96,7 @@ public class BundleHelper {
 		this.environment = environment;
 		annotationHelper = new AnnotationHelper(environment);
 		codeModelHelper = new APTCodeModelHelper(environment);
+		parcelerHelper = new ParcelerHelper(environment);
 		this.element = element;
 
 		String typeString = element.toString();
@@ -174,7 +176,7 @@ public class BundleHelper {
 			if (isTypeParcelable(type)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
-			} else if (annotationHelper.isParcelType(type)) {
+			} else if (parcelerHelper.isParcelType(type)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
 				parcelerBean = true;
@@ -232,7 +234,7 @@ public class BundleHelper {
 		}
 
 		if (parcelerBean) {
-			expressionToRestore = environment.getCodeModel().ref("org.parceler.Parcels").staticInvoke("unwrap").arg(expressionToRestore);
+			expressionToRestore = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("unwrap").arg(expressionToRestore);
 		}
 
 		if (restoreCallNeedCastStatement) {
@@ -248,7 +250,7 @@ public class BundleHelper {
 	public IJStatement getExpressionToSaveFromField(IJExpression saveStateBundleParam, IJExpression fieldName, IJExpression variableRef) {
 		IJExpression refExpression = variableRef;
 		if (parcelerBean) {
-			refExpression = environment.getCodeModel().ref("org.parceler.Parcels").staticInvoke("wrap").arg(refExpression);
+			refExpression = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("wrap").arg(refExpression);
 		}
 		return JExpr.invoke(saveStateBundleParam, methodNameToSave).arg(fieldName).arg(refExpression);
 	}

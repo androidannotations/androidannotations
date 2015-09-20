@@ -73,12 +73,14 @@ public class ValidatorHelper {
 			CanonicalNameConstants.SUPPORT_V14_PREFERENCE_FRAGMENT);
 
 	protected final TargetAnnotationHelper annotationHelper;
+	private final ParcelerHelper parcelerHelper;
 
 	public final ValidatorParameterHelper param;
 
 	public ValidatorHelper(TargetAnnotationHelper targetAnnotationHelper) {
 		annotationHelper = targetAnnotationHelper;
 		param = new ValidatorParameterHelper(annotationHelper);
+		parcelerHelper = new ParcelerHelper(environment());
 	}
 
 	protected AndroidAnnotationsEnvironment environment() {
@@ -558,7 +560,7 @@ public class ValidatorHelper {
 				TypeMirror serializableType = annotationHelper.typeElementFromQualifiedName("java.io.Serializable").asType();
 				if (!annotationHelper.isSubtype(typeMirror, parcelableType)
 						&& !annotationHelper.isSubtype(typeMirror, serializableType)
-						&& !annotationHelper.isParcelType(typeMirror)) {
+						&& !parcelerHelper.isParcelType(typeMirror)) {
 					valid.addError("Unrecognized type. Please let your attribute be primitive or implement Serializable or Parcelable or an annotated Parceler bean.");
 				}
 			}
