@@ -17,6 +17,7 @@ package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -25,10 +26,15 @@ import org.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class ServiceInjectionTest {
 
+	private ActivityWithServices_ activity;
+
+	@Before
+	public void setUp() {
+		activity = Robolectric.buildActivity(ActivityWithServices_.class).create().get();
+	}
+
 	@Test
 	public void servicesAreInjected() {
-		ActivityWithServices_ activity = Robolectric.buildActivity(ActivityWithServices_.class).create().get();
-
 		// in alphabetical order
 		
 		assertThat(activity.accessibilityManager).isNotNull();
@@ -99,6 +105,27 @@ public class ServiceInjectionTest {
 		// assertThat(activity.wifiPasspointManager).isNotNull(); // hidden API
 		// assertThat(activity.wifiP2pManager).isNotNull(); // TODO no support yet in Robolectric
 		assertThat(activity.windowManager).isNotNull();
+	}
+
+	@Test
+	public void methodInjectedAppWidgetManager() {
+		assertThat(activity.methodInjectedAppWidgetManager).isNotNull();
+	}
+
+	@Test
+	public void serviceWithMethodAnnotation() {
+		assertThat(activity.serviceWithMethodAnnotation).isNotNull();
+	}
+
+	@Test
+	public void serviceWithParameterAnnotation() {
+		assertThat(activity.serviceWithParameterAnnotation).isNotNull();
+	}
+
+	@Test
+	public void multipleService() {
+		assertThat(activity.firstMultipleService).isNotNull();
+		assertThat(activity.secondMultipleService).isNotNull();
 	}
 
 }

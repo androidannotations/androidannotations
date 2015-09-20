@@ -279,4 +279,28 @@ public class ActivityWithServices extends Activity {
 	@SystemService
 	WindowManager windowManager;
 
+	AppWidgetManager methodInjectedAppWidgetManager;
+	ActivityManager serviceWithMethodAnnotation;
+	WindowManager serviceWithParameterAnnotation;
+	ActivityManager firstMultipleService;
+	WindowManager secondMultipleService;
+
+	@SystemService
+	void injectAppWidgetManager(AppWidgetManager methodInjectedAppWidgetManager) {
+		this.methodInjectedAppWidgetManager = methodInjectedAppWidgetManager;
+	}
+
+	@SystemService
+	void injectSingleServiceWithMethodAnnotation(ActivityManager serviceWithMethodAnnotation) {
+		this.serviceWithMethodAnnotation = serviceWithMethodAnnotation;
+	}
+
+	void injectSingleServiceWithParameterAnnotation(@SystemService WindowManager serviceWithParameterAnnotation) {
+		this.serviceWithParameterAnnotation = serviceWithParameterAnnotation;
+	}
+
+	void injectMultipleServices(@SystemService ActivityManager firstMultipleService, @SystemService WindowManager secondMultipleService) {
+		this.firstMultipleService = firstMultipleService;
+		this.secondMultipleService = secondMultipleService;
+	}
 }
