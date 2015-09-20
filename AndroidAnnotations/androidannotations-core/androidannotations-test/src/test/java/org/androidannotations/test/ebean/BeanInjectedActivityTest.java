@@ -39,13 +39,43 @@ public class BeanInjectedActivityTest {
 	}
 
 	@Test
+	public void methodInjectedDependencyIsInjected() {
+		assertThat(activity.methodInjectedDependency).isNotNull();
+	}
+
+	@Test
+	public void methodAnnotatedParamsDependencyIsInjected() {
+		assertThat(activity.annotatedParamDependency).isNotNull();
+	}
+
+	@Test
 	public void dependencyWithAnnotationValueIsInjected() {
 		assertThat(activity.interfaceDependency).isNotNull();
 	}
 
 	@Test
+	public void methodInjectedDependencyWithAnnotationValueIsInjected() {
+		assertThat(activity.methodInjectedInterface).isNotNull();
+	}
+
+	@Test
+	public void methodAnnotatedParamsDependencyWithAnnotationValueIsInjected() {
+		assertThat(activity.annotatedParamInterface).isNotNull();
+	}
+
+	@Test
 	public void dependencyWithAnnotationValueIsOfAnnotationValueType() {
 		assertThat(activity.interfaceDependency).isInstanceOf(SomeImplementation.class);
+	}
+
+	@Test
+	public void methodInjectedDependencyWithAnnotationValueIsOfAnnotationValueType() {
+		assertThat(activity.methodInjectedInterface).isInstanceOf(SomeImplementation.class);
+	}
+
+	@Test
+	public void methodAnnotatedParamsDependencyWithAnnotationValueIsOfAnnotationValueType() {
+		assertThat(activity.annotatedParamInterface).isInstanceOf(SomeImplementation.class);
 	}
 
 	@Test
@@ -57,4 +87,34 @@ public class BeanInjectedActivityTest {
 		assertThat(newActivity.singletonDependency).isSameAs(initialDependency);
 	}
 
+	@Test
+	public void methodInjectedSingletonDependencyIsSameReference() {
+		SomeSingleton initialDependency = activity.methodInjectedSingleton;
+
+		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
+
+		assertThat(newActivity.methodInjectedSingleton).isSameAs(initialDependency);
+	}
+
+	@Test
+	public void methodAnnotatedParamsSingletonDependencyIsSameReference() {
+		SomeSingleton initialDependency = activity.annotatedParamSingleton;
+
+		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
+
+		assertThat(newActivity.annotatedParamSingleton).isSameAs(initialDependency);
+	}
+
+	@Test
+	public void multipleDependenciesInjected() {
+		assertThat(activity.multiDependency).isNotNull();
+		assertThat(activity.multiDependencyInterface).isNotNull();
+		assertThat(activity.multiDependencySingleton).isNotNull();
+
+		assertThat(activity.multiDependencyInterface).isInstanceOf(SomeImplementation.class);
+
+		SomeSingleton initialDependency = activity.multiDependencySingleton;
+		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
+		assertThat(newActivity.multiDependencySingleton).isSameAs(initialDependency);
+	}
 }
