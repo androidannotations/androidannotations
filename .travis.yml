@@ -23,7 +23,7 @@ before_script:
 
 script:
   - mvn -f AndroidAnnotations/pom.xml install -P travis
-  - mvn -f examples/maveneclipse/pom.xml install
+  - mvn -f examples/maven/pom.xml install
   - ./examples/gradle/gradlew build --build-file examples/gradle/build.gradle
 
 after_success:
