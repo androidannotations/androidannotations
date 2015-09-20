@@ -754,6 +754,15 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
+	public boolean usingSupportV7Preference() {
+		return preferencesHolder.usingSupportV7Preference();
+	}
+
+	public JClass getBasePreferenceClass() {
+		return preferencesHolder.getBasePreferenceClass();
+	}
+
+	@Override
 	public JBlock getOnBuildHeadersBlock() {
 		return preferencesHolder.getOnBuildHeadersBlock();
 	}

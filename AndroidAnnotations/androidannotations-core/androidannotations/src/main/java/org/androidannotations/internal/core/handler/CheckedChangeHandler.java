@@ -87,12 +87,12 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
+	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER;
 	}
 
 	@Override
-	protected JClass getListenerTargetClass() {
+	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().COMPOUND_BUTTON;
 	}
 }

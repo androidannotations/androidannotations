@@ -88,7 +88,7 @@ public class FocusChangeHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
+	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().VIEW_ON_FOCUS_CHANGE_LISTENER;
 	}
 }

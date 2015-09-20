@@ -48,8 +48,8 @@ public abstract class AbstractPreferenceListenerHandler extends AbstractListener
 	}
 
 	@Override
-	protected final JClass getListenerTargetClass() {
-		return getClasses().PREFERENCE;
+	protected final JClass getListenerTargetClass(HasPreferences holder) {
+		return holder.getBasePreferenceClass();
 	}
 
 	@Override
@@ -60,9 +60,8 @@ public abstract class AbstractPreferenceListenerHandler extends AbstractListener
 	@Override
 	protected final void assignListeners(HasPreferences holder, List<JFieldRef> idsRefs, JDefinedClass listenerAnonymousClass) {
 		for (JFieldRef idRef : idsRefs) {
-			FoundPreferenceHolder foundPreferenceHolder = holder.getFoundPreferenceHolder(idRef, getListenerTargetClass());
+			FoundPreferenceHolder foundPreferenceHolder = holder.getFoundPreferenceHolder(idRef, getListenerTargetClass(holder));
 			foundPreferenceHolder.getIfNotNullBlock().invoke(foundPreferenceHolder.getRef(), getSetterName()).arg(_new(listenerAnonymousClass));
 		}
 	}
-
 }

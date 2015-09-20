@@ -80,7 +80,7 @@ public class ClickHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
+	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().VIEW_ON_CLICK_LISTENER;
 	}
 

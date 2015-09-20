@@ -565,4 +565,13 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass) {
 		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass);
 	}
+
+	@Override
+	public boolean usingSupportV7Preference() {
+		return preferencesDelegate.usingSupportV7Preference();
+	}
+
+	public JClass getBasePreferenceClass() {
+		return preferencesDelegate.getBasePreferenceClass();
+	}
 }

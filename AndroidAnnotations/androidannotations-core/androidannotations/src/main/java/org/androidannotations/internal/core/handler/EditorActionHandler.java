@@ -100,12 +100,12 @@ public class EditorActionHandler extends AbstractViewListenerHandler {
 	}
 
 	@Override
-	protected JClass getListenerClass() {
+	protected JClass getListenerClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().TEXT_VIEW_ON_EDITOR_ACTION_LISTENER;
 	}
 
 	@Override
-	protected JClass getListenerTargetClass() {
+	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().TEXT_VIEW;
 	}
 }

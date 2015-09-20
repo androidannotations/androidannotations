@@ -50,13 +50,13 @@ public abstract class AbstractViewListenerHandler extends AbstractListenerHandle
 	@Override
 	protected final void assignListeners(EComponentWithViewSupportHolder holder, List<JFieldRef> idsRefs, JDefinedClass listenerAnonymousClass) {
 		for (JFieldRef idRef : idsRefs) {
-			FoundViewHolder foundViewHolder = holder.getFoundViewHolder(idRef, getListenerTargetClass());
+			FoundViewHolder foundViewHolder = holder.getFoundViewHolder(idRef, getListenerTargetClass(holder));
 			foundViewHolder.getIfNotNullBlock().invoke(foundViewHolder.getRef(), getSetterName()).arg(_new(listenerAnonymousClass));
 		}
 	}
 
 	@Override
-	protected JClass getListenerTargetClass() {
+	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().VIEW;
 	}
 

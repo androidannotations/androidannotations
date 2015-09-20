@@ -23,11 +23,15 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * This annotation is intended to be used on methods to receive events defined
- * by
- * {@link android.preference.Preference.OnPreferenceClickListener#onPreferenceClick(android.preference.Preference)
- * OnPreferenceClickListener#onPreferenceClick} when the
- * {@link android.preference.Preference Preference} has been clicked by the
- * user.
+ * by <code>OnPreferenceClickListener#onPreferenceClick(Preference)</code> when
+ * the <code>Preference</code> has been clicked by the user.
+ * </p>
+ * <p>
+ * This annotation only can be used inside
+ * {@link org.androidannotations.annotations.EActivity EActivity} or
+ * {@link org.androidannotations.annotations.EFragment EFragment} annotated
+ * class, which is a subclass of {@link android.preference.PreferenceActivity
+ * PreferenceActivity} or <code>PreferenceFragment(Compat)</code>, respectively.
  * </p>
  * <p>
  * The annotation value should be one or several of R.string.* fields. If not
@@ -37,7 +41,8 @@ import java.lang.annotation.Target;
  * The method MAY have one parameter:
  * </p>
  * <ul>
- * <li>A {@link android.preference.Preference Preference} (or a subclass)
+ * <li>A {@link android.preference.Preference Preference} (or a subclass) or
+ * <code>android.support.v7.preference.Preference</code> (or a subclass)
  * parameter to know which preference has been clicked</li>
  * </ul>
  * <blockquote>

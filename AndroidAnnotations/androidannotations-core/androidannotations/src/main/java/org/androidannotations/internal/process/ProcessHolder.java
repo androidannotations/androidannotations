@@ -125,8 +125,11 @@ public class ProcessHolder {
 		public final JClass APP_WIDGET_MANAGER = refClass(CanonicalNameConstants.APP_WIDGET_MANAGER);
 
 		public final JClass PREFERENCE = refClass(CanonicalNameConstants.PREFERENCE);
+		public final JClass SUPPORT_V7_PREFERENCE = refClass(CanonicalNameConstants.SUPPORT_V7_PREFERENCE);
 		public final JClass PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.PREFERENCE_CHANGE_LISTENER);
+		public final JClass SUPPORT_V7_PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.SUPPORT_V7_PREFERENCE_CHANGE_LISTENER);
 		public final JClass PREFERENCE_CLICK_LISTENER = refClass(CanonicalNameConstants.PREFERENCE_CLICK_LISTENER);
+		public final JClass SUPPORT_V7_PREFERENCE_CLICK_LISTENER = refClass(CanonicalNameConstants.SUPPORT_V7_PREFERENCE_CLICK_LISTENER);
 		public final JClass PREFERENCE_ACTIVITY_HEADER = refClass(CanonicalNameConstants.PREFERENCE_ACTIVITY_HEADER);
 
 		/*
