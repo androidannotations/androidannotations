@@ -29,6 +29,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
 
+import org.androidannotations.api.builder.PostActivityStarter;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasIntentBuilder;
@@ -116,7 +117,9 @@ public class ActivityIntentBuilder extends IntentBuilder {
 	}
 
 	private void overrideStartForResultMethod() {
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, environment.getCodeModel().VOID, "startForResult");
+		JClass postActivityStarterClass = environment.getJClass(PostActivityStarter.class);
+
+		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, postActivityStarterClass, "startForResult");
 		method.annotate(Override.class);
 		JVar requestCode = method.param(environment.getCodeModel().INT, "requestCode");
 		JBlock body = method.body();
@@ -188,6 +191,8 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		} else {
 			activityCondition._else().invoke(contextField, "startActivity").arg(intentField);
 		}
+
+		body._return(_new(postActivityStarterClass).arg(contextField));
 	}
 
 	private JBlock createCallWithIfGuard(JVar requestCode, JBlock thenBlock, JExpression invocationTarget) {

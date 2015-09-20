@@ -28,8 +28,11 @@ public interface ActivityStarter {
 	 * objects. It also passes the given extras, the options
 	 * {@link android.os.Bundle Bundle}, if new methods are available which
 	 * accept that.
+	 * 
+	 * @return a {@link PostActivityStarter} object to optionally chain
+	 *         additional actions.
 	 */
-	void start();
+	PostActivityStarter start();
 
 	/**
 	 * Starts the {@link android.app.Activity Activity} for result, by calling
@@ -43,6 +46,9 @@ public interface ActivityStarter {
 	 * @param requestCode
 	 *            this code will be returned in onActivityResult() when the
 	 *            activity exits.
+	 * 
+	 * @return a {@link PostActivityStarter} object to optionally chain
+	 *         additional actions.
 	 */
-	void startForResult(int requestCode);
+	PostActivityStarter startForResult(int requestCode);
 }
