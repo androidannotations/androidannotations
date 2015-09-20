@@ -131,13 +131,24 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.basedir>${project.basedir}</main.basedir>
-		<robolectric.version>3.0</robolectric.version>
+		<robolectric.version>3.1-SNAPSHOT</robolectric.version> <!-- TODO 3.1-->
 	</properties>
 
 
 	<prerequisites>
 		<maven>3.2.1</maven>
 	</prerequisites>
+
+	<repositories> <!-- TODO remove-->
+		<repository>
+			<id>oss-sonatype</id>
+			<name>oss-sonatype</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<modules>
 		<module>androidannotations-core</module>

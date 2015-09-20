@@ -24,12 +24,10 @@ import java.io.Serializable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import android.accounts.Account;
 import android.os.Bundle;
 
-@Config(shadows = CustomShadowBundle.class)
 @RunWith(RobolectricTestRunner.class)
 public class GenericFragmentArgsTest {
 

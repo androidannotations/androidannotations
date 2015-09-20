@@ -26,13 +26,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
 import android.app.Activity;
 import android.content.Context;
 
-@Config(shadows = CustomShadowBundle.class)
 @RunWith(RobolectricTestRunner.class)
 public class InjectExtraTest {
 

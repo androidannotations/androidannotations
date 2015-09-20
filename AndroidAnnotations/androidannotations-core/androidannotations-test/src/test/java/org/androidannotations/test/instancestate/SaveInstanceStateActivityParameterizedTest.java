@@ -22,21 +22,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.androidannotations.test.CustomShadowBundle;
 import org.fest.util.Lists;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.ParameterizedRobolectricTestRunner;
 import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
-import org.robolectric.ParameterizedRobolectricTestRunnerWorkaround;
 import org.robolectric.Robolectric;
-import org.robolectric.annotation.Config;
 
 import android.os.Bundle;
 
-@Ignore
-@Config(shadows = CustomShadowBundle.class)
-@RunWith(ParameterizedRobolectricTestRunnerWorkaround.class)
+@RunWith(ParameterizedRobolectricTestRunner.class)
 public class SaveInstanceStateActivityParameterizedTest {
 
 	@Parameters(name = "{0}")

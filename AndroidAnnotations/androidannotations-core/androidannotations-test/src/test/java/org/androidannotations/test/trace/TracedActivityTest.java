@@ -118,7 +118,7 @@ public class TracedActivityTest {
 	public void noReturnIntentParam() {
 		activity.noReturnIntentParam(new Intent("TEST", Uri.parse("http://www.androidannotations.org")));
 
-		assertTrue(logContains("Entering [void noReturnIntentParam(param = Intent{action=TEST, extras=Bundle[{}], data=http://www.androidannotations.org})]"));
+		assertTrue(logContains("Entering [void noReturnIntentParam(param = Intent { act=TEST dat=http://www.androidannotations.org })]"));
 		assertTrue(logContains("Exiting [void noReturnIntentParam(Intent)], duration in ms: "));
 	}
 
