@@ -11,8 +11,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>4.1.1.4</android.version>
 		<android.platform>16</android.platform>
-		<androidannotations.version>3.3.2</androidannotations.version>
 		<java.version>1.6</java.version>
+
+		<!-- change this to your desired version, for example the latest stable: 3.3.2 -->
+		<androidannotations.version>4.0-SNAPSHOT</androidannotations.version>
 	</properties>
 
 	<dependencies>
