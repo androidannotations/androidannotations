@@ -308,17 +308,40 @@ public class ValidatorHelper {
 	}
 
 	public void typeOrTargetValueHasAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid) {
+		Element targetElement = findTargetElement(element, valid);
+		if (targetElement == null) {
+			return;
+		}
+
 		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
 
 		if (targetAnnotationClassValue != null) {
 			typeHasAnnotation(annotation, targetAnnotationClassValue, valid);
 
-			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, element.asType())) {
+			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, targetElement.asType())) {
 				valid.addError("The value of %s must be assignable into the annotated field");
 			}
 		} else {
-			typeHasAnnotation(annotation, element, valid);
+			typeHasAnnotation(annotation, targetElement, valid);
 		}
+	}
+
+	Element findTargetElement(Element element, ElementValidation valid) {
+		if (element instanceof ExecutableElement) {
+			ExecutableElement executableElement = (ExecutableElement) element;
+			returnTypeIsVoid(executableElement, valid);
+			if (!valid.isValid()) {
+				return null;
+			}
+
+			List<? extends VariableElement> parameters = executableElement.getParameters();
+			if (parameters.size() != 1) {
+				valid.addError("The method can only have 1 parameter");
+				return null;
+			}
+			return parameters.get(0);
+		}
+		return element;
 	}
 
 	private boolean elementHasAnnotationSafe(Class<? extends Annotation> annotation, Element element) {
