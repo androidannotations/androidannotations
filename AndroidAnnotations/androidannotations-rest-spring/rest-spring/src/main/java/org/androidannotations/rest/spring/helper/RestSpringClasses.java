@@ -31,6 +31,7 @@ public final class RestSpringClasses {
 	public static final String REST_CLIENT_EXCEPTION = "org.springframework.web.client.RestClientException";
 	public static final String NESTED_RUNTIME_EXCEPTION = "org.springframework.core.NestedRuntimeException";
 	public static final String RESPONSE_ERROR_HANDLER = "org.springframework.web.client.ResponseErrorHandler";
+	public static final String PARAMETERIZED_TYPE_REFERENCE = "org.springframework.core.ParameterizedTypeReference";
 
 	private RestSpringClasses() {
 
