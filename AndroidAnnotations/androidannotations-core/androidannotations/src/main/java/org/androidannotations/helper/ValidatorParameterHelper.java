@@ -97,7 +97,7 @@ public class ValidatorParameterHelper {
 		}
 
 		protected void invalidate(ElementValidation validation) {
-			validation.addError("%s can only have the following parameter: " + parameterRequirement);
+			validation.addError("method annotated with %s can only have the following parameter: " + parameterRequirement);
 		}
 	}
 
