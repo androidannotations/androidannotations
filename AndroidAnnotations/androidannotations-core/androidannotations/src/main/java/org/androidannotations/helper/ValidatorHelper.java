@@ -228,6 +228,17 @@ public class ValidatorHelper {
 		doesNotHaveOneOfAnnotations(element, Collections.<Class<? extends Annotation>> singletonList(annotation), validation);
 	}
 
+	public void doesNotHaveAnyOfSupportedAnnotations(Element element, ElementValidation validation) {
+		Set<String> supportedAnnotationTypes = environment().getSupportedAnnotationTypes();
+		for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+			if (supportedAnnotationTypes.contains(annotationMirror.getAnnotationType().toString())) {
+				validation.addError(element,
+						"method injection does only allow the annotation to be placed on the method OR on each parameter.");
+				break;
+			}
+		}
+	}
+
 	private void checkAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, boolean shouldFind, ElementValidation validation) {
 
 		boolean foundAnnotation = false;
