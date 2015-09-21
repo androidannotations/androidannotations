@@ -25,8 +25,8 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
 
 public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 

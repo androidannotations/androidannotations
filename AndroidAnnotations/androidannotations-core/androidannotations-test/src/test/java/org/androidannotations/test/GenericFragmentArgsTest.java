@@ -17,6 +17,8 @@ package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.Serializable;
 
 import org.junit.Test;
@@ -38,7 +40,7 @@ public class GenericFragmentArgsTest {
 		Bundle bundle = new Bundle();
 		bundle.putParcelableArray("parcelableArray", TEST_ARRAY);
 
-		GenericFragmentArguments<Serializable, Account> fragment = new GenericFragmentArguments_<Serializable, Account>();
+		GenericFragmentArguments<CloseableSerializable, Account> fragment = new GenericFragmentArguments_<CloseableSerializable, Account>();
 		fragment.setArguments(bundle);
 
 		assertThat(fragment.parcelableArray).isNull();
@@ -46,5 +48,12 @@ public class GenericFragmentArgsTest {
 		fragment.onCreate(null);
 
 		assertThat(fragment.parcelableArray).isEqualTo(TEST_ARRAY);
+	}
+
+	private static class CloseableSerializable implements Closeable, Serializable {
+		@Override
+		public void close() throws IOException {
+
+		}
 	}
 }

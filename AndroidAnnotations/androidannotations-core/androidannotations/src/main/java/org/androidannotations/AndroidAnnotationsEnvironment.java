@@ -31,9 +31,9 @@ import org.androidannotations.internal.process.ProcessHolder;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JCodeModel;
+import com.helger.jcodemodel.JDefinedClass;
 
 public interface AndroidAnnotationsEnvironment {
 
@@ -65,9 +65,9 @@ public interface AndroidAnnotationsEnvironment {
 
 	JCodeModel getCodeModel();
 
-	JClass getJClass(String fullyQualifiedName);
+	AbstractJClass getJClass(String fullyQualifiedName);
 
-	JClass getJClass(Class<?> clazz);
+	AbstractJClass getJClass(Class<?> clazz);
 
 	JDefinedClass getDefinedClass(String fullyQualifiedName);
 

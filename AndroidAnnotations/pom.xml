@@ -165,9 +165,9 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.sun.codemodel</groupId>
-				<artifactId>codemodel</artifactId>
-				<version>2.6</version>
+				<groupId>com.helger</groupId>
+				<artifactId>jcodemodel</artifactId>
+				<version>2.7.10</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>

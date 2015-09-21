@@ -15,11 +15,11 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.PUBLIC;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public class PreferenceActivityDelegate extends PreferencesDelegate implements HasPreferenceHeaders {
 

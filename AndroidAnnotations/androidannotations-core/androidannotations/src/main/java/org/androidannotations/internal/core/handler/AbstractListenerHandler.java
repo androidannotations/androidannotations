@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.invoke;
 
 import java.util.List;
 
@@ -32,15 +32,15 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> {
 
@@ -85,7 +85,7 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 		JBlock listenerMethodBody = listenerMethod.body();
 
-		JExpression activityRef = holder.getGeneratedClass().staticRef("this");
+		IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
 		JInvocation call = invoke(activityRef, methodName);
 
 		makeCall(listenerMethodBody, call, returnType);
@@ -95,11 +95,11 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 		assignListeners(holder, idsRefs, listenerAnonymousClass);
 	}
 
-	protected final JExpression castArgumentIfNecessary(T holder, String baseType, JVar param, Element element) {
-		JExpression argument = param;
+	protected final IJExpression castArgumentIfNecessary(T holder, String baseType, JVar param, Element element) {
+		IJExpression argument = param;
 		TypeMirror typeMirror = element.asType();
 		if (!baseType.equals(typeMirror.toString())) {
-			JClass typeMirrorToJClass = codeModelHelper.typeMirrorToJClass(typeMirror);
+			AbstractJClass typeMirrorToJClass = codeModelHelper.typeMirrorToJClass(typeMirror);
 			argument = JExpr.cast(typeMirrorToJClass, param);
 		}
 		return argument;
@@ -122,9 +122,9 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 	protected abstract String getSetterName();
 
-	protected abstract JClass getListenerClass(T holder);
+	protected abstract AbstractJClass getListenerClass(T holder);
 
-	protected abstract JClass getListenerTargetClass(T holder);
+	protected abstract AbstractJClass getListenerTargetClass(T holder);
 
 	protected String getMethodName() {
 		return methodName;

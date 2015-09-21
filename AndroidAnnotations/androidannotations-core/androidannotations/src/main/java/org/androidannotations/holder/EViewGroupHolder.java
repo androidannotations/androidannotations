@@ -15,14 +15,14 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.PUBLIC;
 
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
 
 public class EViewGroupHolder extends EViewHolder {
 
@@ -40,7 +40,7 @@ public class EViewGroupHolder extends EViewHolder {
 		JBlock ifNotInflated = onFinishInflate.body()._if(getAlreadyInflated().not())._then();
 		ifNotInflated.assign(getAlreadyInflated(), JExpr.TRUE);
 
-		setContentViewBlock = ifNotInflated.block();
+		setContentViewBlock = codeModelHelper.blockNoBraces(ifNotInflated);
 
 		getInit();
 		viewNotifierHelper.invokeViewChanged(ifNotInflated);

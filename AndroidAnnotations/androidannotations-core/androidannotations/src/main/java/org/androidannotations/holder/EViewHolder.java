@@ -15,10 +15,10 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.STATIC;
 import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
@@ -32,14 +32,13 @@ import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public class EViewHolder extends EComponentWithViewSupportHolder {
 
@@ -83,16 +82,16 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			JMethod copyConstructor = generatedClass.constructor(PUBLIC);
 			JMethod staticHelper = generatedClass.method(PUBLIC | STATIC, generatedClass._extends(), "build");
 
-			codeModelHelper.generifyStaticHelper(staticHelper, getAnnotatedElement());
+			codeModelHelper.generify(staticHelper, getAnnotatedElement());
 
 			JBlock body = copyConstructor.body();
 			JInvocation superCall = body.invoke("super");
-			JClass narrowedGeneratedClass = narrow(generatedClass);
+			AbstractJClass narrowedGeneratedClass = narrow(generatedClass);
 
 			JInvocation newInvocation = JExpr._new(narrowedGeneratedClass);
 			for (VariableElement param : userConstructor.getParameters()) {
 				String paramName = param.getSimpleName().toString();
-				JClass paramType = codeModelHelper.typeMirrorToJClass(param.asType());
+				AbstractJClass paramType = codeModelHelper.typeMirrorToJClass(param.asType());
 				copyConstructor.param(paramType, paramName);
 				staticHelper.param(paramType, paramName);
 				superCall.arg(JExpr.ref(paramName));
@@ -158,6 +157,6 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	}
 
 	private void setAlreadyInflated() {
-		alreadyInflated = generatedClass.field(PRIVATE, JType.parse(getCodeModel(), "boolean"), "alreadyInflated" + generationSuffix(), JExpr.FALSE);
+		alreadyInflated = generatedClass.field(PRIVATE, getCodeModel().BOOLEAN, "alreadyInflated" + generationSuffix(), JExpr.FALSE);
 	}
 }

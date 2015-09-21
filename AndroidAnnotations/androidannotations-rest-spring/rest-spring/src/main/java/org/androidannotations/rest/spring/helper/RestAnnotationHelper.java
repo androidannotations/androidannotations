@@ -60,14 +60,14 @@ import org.androidannotations.rest.spring.annotations.RequiresHeader;
 import org.androidannotations.rest.spring.annotations.SetsCookie;
 import org.androidannotations.rest.spring.holder.RestHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.AbstractJType;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JVar;
 
 public class RestAnnotationHelper extends TargetAnnotationHelper {
 
@@ -121,7 +121,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 
-		JClass hashMapClass = getEnvironment().getClasses().HASH_MAP.narrow(String.class, Object.class);
+		AbstractJClass hashMapClass = getEnvironment().getClasses().HASH_MAP.narrow(String.class, Object.class);
 		if (!urlVariables.isEmpty()) {
 			JVar hashMapVar = methodBody.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
 			for (String urlVariable : urlVariables) {
@@ -240,15 +240,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		}
 
 		if (hasMediaTypeDefined) {
-			JClass collectionsClass = getEnvironment().getJClass(CanonicalNameConstants.COLLECTIONS);
-			JClass mediaTypeClass = getEnvironment().getJClass(MEDIA_TYPE);
+			AbstractJClass collectionsClass = getEnvironment().getJClass(CanonicalNameConstants.COLLECTIONS);
+			AbstractJClass mediaTypeClass = getEnvironment().getJClass(MEDIA_TYPE);
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
 		}
 
 		if (requiresCookies) {
-			JClass stringBuilderClass = getEnvironment().getClasses().STRING_BUILDER;
+			AbstractJClass stringBuilderClass = getEnvironment().getClasses().STRING_BUILDER;
 			JVar cookiesValueVar = body.decl(stringBuilderClass, "cookiesValue", JExpr._new(stringBuilderClass));
 			for (String cookie : cookies) {
 				JInvocation cookieValue = JExpr.invoke(holder.getAvailableCookiesField(), "get").arg(cookie);
@@ -306,8 +306,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return parameterName;
 	}
 
-	public JExpression declareHttpEntity(JBlock body, JVar entitySentToServer, JVar httpHeaders) {
-		JType entityType = getEnvironment().getJClass(Object.class);
+	public IJExpression declareHttpEntity(JBlock body, JVar entitySentToServer, JVar httpHeaders) {
+		AbstractJType entityType = getEnvironment().getJClass(Object.class);
 
 		if (entitySentToServer != null) {
 			entityType = entitySentToServer.type();
@@ -317,8 +317,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			}
 		}
 
-		JClass httpEntity = getEnvironment().getJClass(HTTP_ENTITY);
-		JClass narrowedHttpEntity = httpEntity.narrow(entityType);
+		AbstractJClass httpEntity = getEnvironment().getJClass(HTTP_ENTITY);
+		AbstractJClass narrowedHttpEntity = httpEntity.narrow(entityType);
 		JInvocation newHttpEntityVarCall = JExpr._new(narrowedHttpEntity);
 
 		if (entitySentToServer != null) {
@@ -334,9 +334,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return body.decl(narrowedHttpEntity, "requestEntity", newHttpEntityVarCall);
 	}
 
-	public JExpression getResponseClass(Element element, RestHolder holder) {
+	public IJExpression getResponseClass(Element element, RestHolder holder) {
 		ExecutableElement executableElement = (ExecutableElement) element;
-		JExpression responseClassExpr = nullCastedToNarrowedClass(holder);
+		IJExpression responseClassExpr = nullCastedToNarrowedClass(holder);
 		TypeMirror returnType = executableElement.getReturnType();
 		if (returnType.getKind() != TypeKind.VOID) {
 			if (getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null && !returnType.toString().startsWith(RestSpringClasses.RESPONSE_ENTITY)
@@ -344,7 +344,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 				return createParameterizedTypeReferenceAnonymousSubclassInstance(returnType);
 			}
 
-			JClass responseClass = retrieveResponseClass(returnType, holder);
+			AbstractJClass responseClass = retrieveResponseClass(returnType, holder);
 			if (responseClass != null) {
 				responseClassExpr = responseClass.dotclass();
 			}
@@ -365,16 +365,16 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return false;
 	}
 
-	public JExpression createParameterizedTypeReferenceAnonymousSubclassInstance(TypeMirror returnType) {
-		JClass narrowedTypeReference = getEnvironment().getJClass(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE).narrow(codeModelHelper.typeMirrorToJClass(returnType));
+	public IJExpression createParameterizedTypeReferenceAnonymousSubclassInstance(TypeMirror returnType) {
+		AbstractJClass narrowedTypeReference = getEnvironment().getJClass(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE).narrow(codeModelHelper.typeMirrorToJClass(returnType));
 		JDefinedClass anonymousClass = getEnvironment().getCodeModel().anonymousClass(narrowedTypeReference);
 		return JExpr._new(anonymousClass);
 	}
 
-	public JClass retrieveResponseClass(TypeMirror returnType, RestHolder holder) {
+	public AbstractJClass retrieveResponseClass(TypeMirror returnType, RestHolder holder) {
 		String returnTypeString = returnType.toString();
 
-		JClass responseClass;
+		AbstractJClass responseClass;
 
 		if (returnTypeString.startsWith(RESPONSE_ENTITY)) {
 			DeclaredType declaredReturnType = (DeclaredType) returnType;
@@ -412,7 +412,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	 * </ul>
 	 *
 	 */
-	private JClass resolveResponseClass(TypeMirror expectedType, RestHolder holder, boolean useTypeReference) {
+	private AbstractJClass resolveResponseClass(TypeMirror expectedType, RestHolder holder, boolean useTypeReference) {
 		// is a class or an interface
 		if (expectedType.getKind() == TypeKind.DECLARED) {
 			DeclaredType declaredType = (DeclaredType) expectedType;
@@ -431,8 +431,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 				return codeModelHelper.typeMirrorToJClass(declaredType);
 			}
 
-			JClass baseClass = codeModelHelper.typeMirrorToJClass(declaredType).erasure();
-			JClass decoratedExpectedClass = retrieveDecoratedResponseClass(declaredType, declaredElement, holder);
+			AbstractJClass baseClass = codeModelHelper.typeMirrorToJClass(declaredType).erasure();
+			AbstractJClass decoratedExpectedClass = retrieveDecoratedResponseClass(declaredType, declaredElement, holder);
 			if (decoratedExpectedClass == null) {
 				decoratedExpectedClass = baseClass;
 			}
@@ -452,7 +452,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	 * <code>enclosingJClass</code> is {@link java.util.Map Map}, {@link Set} or
 	 * {@link java.util.Collection Collection}.
 	 */
-	private JClass retrieveDecoratedResponseClass(DeclaredType declaredType, TypeElement typeElement, RestHolder holder) {
+	private AbstractJClass retrieveDecoratedResponseClass(DeclaredType declaredType, TypeElement typeElement, RestHolder holder) {
 		String classTypeBaseName = typeElement.toString();
 
 		// Looking for basic java.util interfaces to set a default
@@ -476,7 +476,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		if (decoratedClassName != null) {
 			// Configure the super class of the final decorated class
 			String decoratedClassNameSuffix = "";
-			JClass decoratedSuperClass = getEnvironment().getJClass(decoratedClassName);
+			AbstractJClass decoratedSuperClass = getEnvironment().getJClass(decoratedClassName);
 			for (TypeMirror typeArgument : declaredType.getTypeArguments()) {
 				TypeMirror actualTypeArgument = typeArgument;
 				if (typeArgument instanceof WildcardType) {
@@ -487,7 +487,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 						actualTypeArgument = wildcardType.getSuperBound();
 					}
 				}
-				JClass narrowJClass = codeModelHelper.typeMirrorToJClass(actualTypeArgument);
+				AbstractJClass narrowJClass = codeModelHelper.typeMirrorToJClass(actualTypeArgument);
 				decoratedSuperClass = decoratedSuperClass.narrow(narrowJClass);
 				decoratedClassNameSuffix += plainName(narrowJClass);
 			}
@@ -514,19 +514,19 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return null;
 	}
 
-	protected String plainName(JClass jClass) {
+	protected String plainName(AbstractJClass jClass) {
 		String plainName = jClass.erasure().name();
-		List<JClass> typeParameters = jClass.getTypeParameters();
+		List<? extends AbstractJClass> typeParameters = jClass.getTypeParameters();
 		if (typeParameters.size() > 0) {
 			plainName += "_";
-			for (JClass typeParameter : typeParameters) {
+			for (AbstractJClass typeParameter : typeParameters) {
 				plainName += plainName(typeParameter);
 			}
 		}
 		return plainName;
 	}
 
-	public JExpression nullCastedToNarrowedClass(RestHolder holder) {
+	public IJExpression nullCastedToNarrowedClass(RestHolder holder) {
 		return JExpr.cast(getEnvironment().getJClass(Class.class).narrow(getEnvironment().getJClass(Void.class)), JExpr._null());
 	}
 

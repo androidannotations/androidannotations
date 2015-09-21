@@ -15,18 +15,18 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
 
 public class FoundPreferenceHolder extends FoundHolder {
 
-	public FoundPreferenceHolder(GeneratedClassHolder holder, JClass type, JExpression ref, JBlock block) {
+	public FoundPreferenceHolder(GeneratedClassHolder holder, AbstractJClass type, IJExpression ref, JBlock block) {
 		super(holder, type, ref, block);
 	}
 
 	@Override
-	protected JClass getBaseType() {
+	protected AbstractJClass getBaseType() {
 		HasPreferences hasPreferences = (HasPreferences) getGeneratedClassHolder();
 
 		return hasPreferences.getBasePreferenceClass();

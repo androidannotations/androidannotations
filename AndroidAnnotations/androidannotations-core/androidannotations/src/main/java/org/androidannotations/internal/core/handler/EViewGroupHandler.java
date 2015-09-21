@@ -26,8 +26,8 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EViewGroupHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
 
 public class EViewGroupHandler extends BaseGeneratingAnnotationHandler<EViewGroupHolder> {
 

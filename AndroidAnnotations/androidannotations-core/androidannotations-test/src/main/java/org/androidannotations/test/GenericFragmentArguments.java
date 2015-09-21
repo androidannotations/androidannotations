@@ -15,6 +15,7 @@
  */
 package org.androidannotations.test;
 
+import java.io.Closeable;
 import java.io.Serializable;
 
 import org.androidannotations.annotations.EFragment;
@@ -24,7 +25,7 @@ import android.accounts.Account;
 import android.app.Fragment;
 
 @EFragment
-public class GenericFragmentArguments<S extends Serializable, P extends Account> extends Fragment {
+public class GenericFragmentArguments<S extends Serializable & Closeable, P extends Account> extends Fragment {
 
 	@FragmentArg
 	S[] serializableArray;

@@ -26,8 +26,8 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidRes;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
 
 public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponentHolder> {
 

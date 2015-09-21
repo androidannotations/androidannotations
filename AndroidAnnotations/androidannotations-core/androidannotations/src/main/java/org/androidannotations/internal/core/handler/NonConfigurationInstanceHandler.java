@@ -15,9 +15,9 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._this;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr._this;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JExpr.ref;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import javax.lang.model.element.Element;
@@ -31,11 +31,11 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.holder.NonConfigurationHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JClassAlreadyExistsException;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JVar;
 
 public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
@@ -53,7 +53,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 	@Override
 	public void process(Element element, EActivityHolder holder) throws JClassAlreadyExistsException {
 		String fieldName = element.getSimpleName().toString();
-		JClass fieldType = codeModelHelper.typeMirrorToJClass(element.asType());
+		AbstractJClass fieldType = codeModelHelper.typeMirrorToJClass(element.asType());
 
 		NonConfigurationHolder ncHolder = holder.getNonConfigurationHolder();
 		JFieldVar ncHolderField = ncHolder.createField(fieldName, fieldType);
@@ -84,7 +84,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 				elementType = element.asType();
 			}
 			String typeQualifiedName = elementType.toString();
-			JClass fieldGeneratedBeanClass = getJClass(typeQualifiedName + classSuffix());
+			AbstractJClass fieldGeneratedBeanClass = getJClass(typeQualifiedName + classSuffix());
 
 			initIfNonConfigurationNotNullBlock.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
 		}

@@ -15,9 +15,9 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.assign;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.assign;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -31,12 +31,12 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidSystemServices;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JConditional;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JStatement;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJStatement;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JConditional;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
 
 public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -73,7 +73,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 	@SuppressWarnings("checkstyle:parameternumber")
 	private void createSpecialInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody, int apiLevel, String apiLevelName,
-			JClass serviceClass, String injectionMethodName, boolean contextNeeded) {
+										AbstractJClass serviceClass, String injectionMethodName, boolean contextNeeded) {
 		if (getEnvironment().getAndroidManifest().getMinSdkVersion() >= apiLevel) {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		} else {
@@ -81,7 +81,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 			if (contextNeeded) {
 				injectionMethodInvokation.arg(holder.getContextRef());
 			}
-			JStatement oldInjection = (JStatement) assign(ref(fieldName), injectionMethodInvokation);
+			IJStatement oldInjection = assign(ref(fieldName), injectionMethodInvokation);
 
 			if (isApiOnClasspath(apiLevelName)) {
 				JConditional conditional = methodBody._if(getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef(apiLevelName)));
@@ -93,8 +93,8 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 		}
 	}
 
-	private JStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
-		return (JStatement) assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
+	private IJStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
+		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
 	}
 
 	private boolean isApiOnClasspath(String apiName) {

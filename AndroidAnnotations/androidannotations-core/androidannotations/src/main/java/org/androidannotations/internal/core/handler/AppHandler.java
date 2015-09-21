@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.ref;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import javax.lang.model.element.Element;
@@ -28,7 +28,7 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EApplicationHolder;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JClass;
+import com.helger.jcodemodel.AbstractJClass;
 
 public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -49,7 +49,7 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 	public void process(Element element, EComponentHolder holder) {
 		String fieldName = element.getSimpleName().toString();
 		String applicationQualifiedName = element.asType().toString();
-		JClass applicationClass = getJClass(applicationQualifiedName + classSuffix());
+		AbstractJClass applicationClass = getJClass(applicationQualifiedName + classSuffix());
 
 		holder.getInitBody().assign(ref(fieldName), applicationClass.staticInvoke(EApplicationHolder.GET_APPLICATION_INSTANCE));
 	}

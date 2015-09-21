@@ -15,10 +15,10 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.lit;
+import static com.helger.jcodemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JMod.STATIC;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -61,14 +61,14 @@ import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRClass.Res;
 import org.androidannotations.rclass.IRInnerClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<SharedPrefHolder> {
 
@@ -186,7 +186,7 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 			break;
 		}
 		case APPLICATION_DEFAULT: {
-			JClass preferenceManagerClass = getJClass("android.preference.PreferenceManager");
+			AbstractJClass preferenceManagerClass = getJClass("android.preference.PreferenceManager");
 			constructorSuperBlock.invoke("super") //
 					.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
 							.arg(contextParam));
@@ -197,9 +197,9 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 
 	private JMethod getLocalClassName(SharedPrefHolder holder) {
 
-		JClass stringClass = getClasses().STRING;
+		AbstractJClass stringClass = getClasses().STRING;
 		JMethod getLocalClassName = holder.getGeneratedClass().method(PRIVATE | STATIC, stringClass, "getLocalClassName");
-		JClass contextClass = getClasses().CONTEXT;
+		AbstractJClass contextClass = getClasses().CONTEXT;
 
 		JVar contextParam = getLocalClassName.param(contextClass, "context");
 
@@ -211,7 +211,7 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 
 		JVar packageLen = body.decl(getCodeModel().INT, "packageLen", packageName.invoke("length"));
 
-		JExpression condition = className.invoke("startsWith").arg(packageName).not() //
+		IJExpression condition = className.invoke("startsWith").arg(packageName).not() //
 				.cor(className.invoke("length").lte(packageLen)) //
 				.cor(className.invoke("charAt").arg(packageLen).ne(lit('.')));
 
@@ -224,7 +224,7 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 
 	private void generateFieldMethodAndEditorFieldMethod(Element element, SharedPrefHolder sharedPrefHolder) {
 		for (ExecutableElement method : getValidMethods(element)) {
-			JExpression keyExpression = generateFieldMethod(sharedPrefHolder, method);
+			IJExpression keyExpression = generateFieldMethod(sharedPrefHolder, method);
 			sharedPrefHolder.createEditorFieldMethods(method, keyExpression);
 		}
 	}
@@ -239,15 +239,15 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 		return validMethods;
 	}
 
-	private JExpression generateFieldMethod(SharedPrefHolder holder, ExecutableElement method) {
+	private IJExpression generateFieldMethod(SharedPrefHolder holder, ExecutableElement method) {
 		DefaultPrefInfo<?> info = DEFAULT_PREF_INFOS.get(method.getReturnType().toString());
 		return createFieldMethod(holder, method, info.annotationClass, info.prefFieldClass, info.defaultValue, info.resType, info.fieldHelperMethodName);
 	}
 
-	private JExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass,
+	private IJExpression createFieldMethod(SharedPrefHolder holder, ExecutableElement method, Class<? extends Annotation> annotationClass, Class<? extends AbstractPrefField<?>> prefFieldClass,
 			Object defaultValue, Res resType, String fieldHelperMethodName) {
 		Annotation annotation = method.getAnnotation(annotationClass);
-		JExpression defaultValueExpr;
+		IJExpression defaultValueExpr;
 
 		Object value = null;
 		if (annotation != null) {
@@ -284,7 +284,7 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 			keyResId = annotationHelper.extractAnnotationParameter(method, annotationClass.getName(), "keyRes");
 		}
 
-		JExpression keyExpression;
+		IJExpression keyExpression;
 		String fieldName = method.getSimpleName().toString();
 
 		if (keyResId == ResId.DEFAULT_VALUE) {
@@ -304,7 +304,7 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 		return keyExpression;
 	}
 
-	private JExpression extractResValue(SharedPrefHolder holder, Element method, IRClass.Res res) {
+	private IJExpression extractResValue(SharedPrefHolder holder, Element method, IRClass.Res res) {
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(method, DefaultRes.class.getCanonicalName(), res, true);
 
 		String resourceGetMethodName = null;
@@ -324,7 +324,7 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 		return holder.getContextField().invoke("getResources").invoke(resourceGetMethodName).arg(idRef);
 	}
 
-	private JExpression newEmptyStringHashSet() {
+	private IJExpression newEmptyStringHashSet() {
 		return JExpr._new(getClasses().HASH_SET.narrow(getClasses().STRING)).arg(lit(0));
 	}
 

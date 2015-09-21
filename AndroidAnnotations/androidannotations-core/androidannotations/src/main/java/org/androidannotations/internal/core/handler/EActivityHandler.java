@@ -28,9 +28,9 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JMethod;
 
 public class EActivityHandler extends BaseGeneratingAnnotationHandler<EActivityHolder> {
 

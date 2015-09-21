@@ -33,9 +33,9 @@ import org.androidannotations.internal.process.ProcessHolder;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JCodeModel;
+import com.helger.jcodemodel.JDefinedClass;
 
 public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotationsEnvironment {
 
@@ -152,12 +152,12 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 	}
 
 	@Override
-	public JClass getJClass(String fullyQualifiedName) {
+	public AbstractJClass getJClass(String fullyQualifiedName) {
 		return processHolder.refClass(fullyQualifiedName);
 	}
 
 	@Override
-	public JClass getJClass(Class<?> clazz) {
+	public AbstractJClass getJClass(Class<?> clazz) {
 		return processHolder.refClass(clazz);
 	}
 

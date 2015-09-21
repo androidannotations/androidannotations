@@ -22,7 +22,7 @@ import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldRef;
 
 public class AndroidSystemServices {
 

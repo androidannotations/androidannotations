@@ -25,7 +25,7 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EActivityHolder;
 
-import com.sun.codemodel.JExpr;
+import com.helger.jcodemodel.JExpr;
 
 public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder> {
 

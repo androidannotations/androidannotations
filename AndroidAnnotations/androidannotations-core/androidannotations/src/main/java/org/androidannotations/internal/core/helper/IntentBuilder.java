@@ -16,12 +16,12 @@
 
 package org.androidannotations.internal.core.helper;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._super;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JExpr.ref;
+import static com.helger.jcodemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.STATIC;
 import static org.androidannotations.helper.CanonicalNameConstants.PARCELABLE;
 import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
@@ -42,16 +42,16 @@ import org.androidannotations.helper.Pair;
 import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.internal.process.ProcessHolder;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JClassAlreadyExistsException;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public abstract class IntentBuilder {
 
@@ -61,8 +61,8 @@ public abstract class IntentBuilder {
 	protected JDefinedClass builderClass;
 	protected JFieldRef contextField;
 	protected JFieldRef intentField;
-	protected JClass contextClass;
-	protected JClass intentClass;
+	protected AbstractJClass contextClass;
+	protected AbstractJClass intentClass;
 	protected Map<Pair<TypeMirror, String>, JMethod> putExtraMethods = new HashMap<>();
 
 	protected Elements elementUtils;
@@ -95,7 +95,7 @@ public abstract class IntentBuilder {
 	}
 
 	private void createContextConstructor() {
-		JExpression generatedClass = holder.getGeneratedClass().dotclass();
+		IJExpression generatedClass = holder.getGeneratedClass().dotclass();
 		JMethod constructor = holder.getIntentBuilderClass().constructor(JMod.PUBLIC);
 		JVar constructorContextParam = constructor.param(getClasses().CONTEXT, "context");
 		constructor.body().invoke("super").arg(constructorContextParam).arg(generatedClass);
@@ -119,7 +119,7 @@ public abstract class IntentBuilder {
 
 	private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField, String docComment) {
 		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
-		JClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType);
+		AbstractJClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType);
 		JVar extraParameterVar = method.param(parameterClass, parameterName);
 		JInvocation superCall = getSuperPutExtraInvocation(elementType, extraParameterVar, extraKeyField);
 		method.body()._return(superCall);
@@ -130,7 +130,7 @@ public abstract class IntentBuilder {
 	}
 
 	public JInvocation getSuperPutExtraInvocation(TypeMirror elementType, JVar extraParam, JFieldVar extraKeyField) {
-		JExpression extraParameterArg = extraParam;
+		IJExpression extraParameterArg = extraParam;
 		// Cast to Parcelable or Serializable if needed
 		if (elementType.getKind() == TypeKind.DECLARED) {
 			Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
@@ -150,13 +150,13 @@ public abstract class IntentBuilder {
 		return _super().invoke("extra").arg(extraKeyField).arg(extraParameterArg);
 	}
 
-	protected abstract JClass getSuperClass();
+	protected abstract AbstractJClass getSuperClass();
 
 	protected ProcessHolder.Classes getClasses() {
 		return environment.getClasses();
 	}
 
-	protected JClass getJClass(Class<?> clazz) {
+	protected AbstractJClass getJClass(Class<?> clazz) {
 		return environment.getJClass(clazz);
 	}
 }

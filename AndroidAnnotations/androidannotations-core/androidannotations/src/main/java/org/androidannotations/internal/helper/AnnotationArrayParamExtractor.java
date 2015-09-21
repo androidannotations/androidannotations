@@ -22,10 +22,9 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 
 import org.androidannotations.helper.APTCodeModelHelper;
 
-import com.sun.codemodel.JAnnotationArrayMember;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JAnnotationArrayMember;
 
 public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6<Void, JAnnotationArrayMember> {
 
@@ -91,16 +90,15 @@ public class AnnotationArrayParamExtractor extends SimpleAnnotationValueVisitor6
 
 	@Override
 	public Void visitType(TypeMirror t, JAnnotationArrayMember p) {
-		JClass annotationClass = helper.typeMirrorToJClass(t);
-		JExpression dotclass = JExpr.dotclass(annotationClass);
-		p.param(dotclass);
+		AbstractJClass annotationClass = helper.typeMirrorToJClass(t);
+		p.param(annotationClass);
 		return null;
 	}
 
 	@Override
 	public Void visitEnumConstant(VariableElement c, JAnnotationArrayMember p) {
-		JClass annotationClass = helper.typeMirrorToJClass(c.asType());
-		JExpression expression = JExpr.direct(annotationClass.fullName() + "." + c.getSimpleName());
+		AbstractJClass annotationClass = helper.typeMirrorToJClass(c.asType());
+		IJExpression expression = annotationClass.staticRef(c.getSimpleName().toString());
 		p.param(expression);
 		return null;
 	}

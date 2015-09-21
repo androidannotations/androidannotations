@@ -15,24 +15,24 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JMod.PRIVATE;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
-	protected JExpression contextRef;
+	protected IJExpression contextRef;
 	protected JMethod init;
 	private JVar resourcesRef;
 	private JFieldVar powerManagerRef;
@@ -41,7 +41,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		super(environment, annotatedElement);
 	}
 
-	public JExpression getContextRef() {
+	public IJExpression getContextRef() {
 		if (contextRef == null) {
 			setContextRef();
 		}

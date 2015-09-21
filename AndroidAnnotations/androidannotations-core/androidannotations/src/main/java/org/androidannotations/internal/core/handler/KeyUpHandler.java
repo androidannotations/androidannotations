@@ -26,8 +26,8 @@ import org.androidannotations.annotations.KeyUp;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.HasKeyEventCallbackMethods;
 
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JSwitch;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JSwitch;
 
 public class KeyUpHandler extends AbstractKeyEventHandler {
 

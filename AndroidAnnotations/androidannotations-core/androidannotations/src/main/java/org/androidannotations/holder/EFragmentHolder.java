@@ -15,14 +15,14 @@
  */
 package org.androidannotations.holder;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr._null;
-import static com.sun.codemodel.JExpr._super;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.ref;
-import static com.sun.codemodel.JMod.PRIVATE;
-import static com.sun.codemodel.JMod.PUBLIC;
-import static com.sun.codemodel.JMod.STATIC;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr._super;
+import static com.helger.jcodemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.ref;
+import static com.helger.jcodemodel.JMod.PRIVATE;
+import static com.helger.jcodemodel.JMod.PUBLIC;
+import static com.helger.jcodemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import javax.lang.model.element.TypeElement;
@@ -32,18 +32,16 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JGenerifiable;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JTypeVar;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JClassAlreadyExistsException;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class EFragmentHolder extends EComponentWithViewSupportHolder implements HasInstanceState, HasOptionsMenu, HasOnActivityResult, HasReceiverRegistration, HasPreferences {
 
@@ -52,7 +50,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private JVar inflater;
 	private JVar container;
 	private JDefinedClass fragmentBuilderClass;
-	private JClass narrowBuilderClass;
+	private AbstractJClass narrowBuilderClass;
 	private JFieldRef fragmentArgumentsBuilderField;
 	private JMethod injectArgsMethod;
 	private JBlock injectArgsBlock;
@@ -98,7 +96,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		setFindViewById();
 		onCreateBody.invoke(getInit()).arg(onCreateSavedInstanceState);
 		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
-		onCreateAfterSuperBlock = onCreateBody.block();
+		onCreateAfterSuperBlock = codeModelHelper.blockNoBraces(onCreateBody);
 		viewNotifierHelper.resetPreviousNotifier(onCreateBody, previousNotifier);
 	}
 
@@ -133,8 +131,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 		narrowBuilderClass = narrow(fragmentBuilderClass);
 
-		generify(fragmentBuilderClass);
-		JClass superClass = getJClass(org.androidannotations.api.builder.FragmentBuilder.class);
+		codeModelHelper.generify(fragmentBuilderClass, annotatedElement);
+		AbstractJClass superClass = getJClass(org.androidannotations.api.builder.FragmentBuilder.class);
 		superClass = superClass.narrow(narrowBuilderClass, getAnnotatedClass());
 		fragmentBuilderClass._extends(superClass);
 		fragmentArgumentsBuilderField = ref("args");
@@ -147,7 +145,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		method.annotate(Override.class);
 		JBlock body = method.body();
 
-		JClass result = narrow(generatedClass);
+		AbstractJClass result = narrow(generatedClass);
 		JVar fragment = body.decl(result, "fragment_", _new(result));
 		body.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);
 		body._return(fragment);
@@ -155,14 +153,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setFragmentBuilderCreate() {
 		JMethod method = generatedClass.method(STATIC | PUBLIC, narrowBuilderClass, "builder");
-		generify(method);
+		codeModelHelper.generify(method, annotatedElement);
 		method.body()._return(_new(narrowBuilderClass));
-	}
-
-	private void generify(JGenerifiable generifiable) {
-		for (JTypeVar type : generatedClass.typeParams()) {
-			generifiable.generify(type.name(), type._extends());
-		}
 	}
 
 	private void setOnCreateOptionsMenu() {
@@ -171,7 +163,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JBlock methodBody = method.body();
 		onCreateOptionsMenuMenuParam = method.param(getClasses().MENU, "menu");
 		onCreateOptionsMenuMenuInflaterVar = method.param(getClasses().MENU_INFLATER, "inflater");
-		onCreateOptionsMenuMethodBody = methodBody.block();
+		onCreateOptionsMenuMethodBody = codeModelHelper.blockNoBraces(methodBody);
 		methodBody.invoke(_super(), method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar);
 
 		getInitBody().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
@@ -183,7 +175,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JBlock methodBody = method.body();
 		onOptionsItemSelectedItem = method.param(getClasses().MENU_ITEM, "item");
 		onOptionsItemSelectedItemId = methodBody.decl(getCodeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
-		onOptionsItemSelectedMiddleBlock = methodBody.block();
+		onOptionsItemSelectedMiddleBlock = codeModelHelper.blockNoBraces(methodBody);
 
 		methodBody._return(invoke(_super(), method).arg(onOptionsItemSelectedItem));
 	}
@@ -233,7 +225,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 			body.assign(contentView, _super().invoke(onCreateView).arg(inflater).arg(container).arg(savedInstanceState));
 		}
 
-		setContentViewBlock = body.block();
+		setContentViewBlock = codeModelHelper.blockNoBraces(body);
 
 		body._return(contentView);
 	}
@@ -244,7 +236,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JBlock body = onDestroyView.body();
 		body.invoke(_super(), onDestroyView);
 		body.assign(contentView, _null());
-		onDestroyViewAfterSuperBlock = body.block();
+		onDestroyViewAfterSuperBlock = codeModelHelper.blockNoBraces(body);
 	}
 
 	private JBlock getOnDestroyViewAfterSuperBlock() {
@@ -255,7 +247,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public void processViewById(JFieldRef idRef, JClass viewClass, JFieldRef fieldRef) {
+	public void processViewById(JFieldRef idRef, AbstractJClass viewClass, JFieldRef fieldRef) {
 		super.processViewById(idRef, viewClass, fieldRef);
 		clearInjectedView(fieldRef);
 	}
@@ -270,7 +262,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		onStart.annotate(Override.class);
 		JBlock onStartBody = onStart.body();
 		onStartBody.invoke(_super(), onStart);
-		onStartAfterSuperBlock = onStartBody.block();
+		onStartAfterSuperBlock = codeModelHelper.blockNoBraces(onStartBody);
 	}
 
 	private void setOnAttach() {
@@ -279,7 +271,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JVar activityParam = onAttach.param(getClasses().ACTIVITY, "activity");
 		JBlock onAttachBody = onAttach.body();
 		onAttachBody.invoke(_super(), onAttach).arg(activityParam);
-		onAttachAfterSuperBlock = onAttachBody.block();
+		onAttachAfterSuperBlock = codeModelHelper.blockNoBraces(onAttachBody);
 	}
 
 	private void setOnResume() {
@@ -287,14 +279,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		onResume.annotate(Override.class);
 		JBlock onResumeBody = onResume.body();
 		onResumeBody.invoke(_super(), onResume);
-		onResumeAfterSuperBlock = onResumeBody.block();
+		onResumeAfterSuperBlock = codeModelHelper.blockNoBraces(onResumeBody);
 	}
 
 	private void setOnPause() {
 		JMethod onPause = generatedClass.method(PUBLIC, getCodeModel().VOID, "onPause");
 		onPause.annotate(Override.class);
 		JBlock onPauseBody = onPause.body();
-		onPauseBeforeSuperBlock = onPauseBody.block();
+		onPauseBeforeSuperBlock = codeModelHelper.blockNoBraces(onPauseBody);
 		onPauseBody.invoke(_super(), onPause);
 	}
 
@@ -302,7 +294,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod onDetach = generatedClass.method(PUBLIC, getCodeModel().VOID, "onDetach");
 		onDetach.annotate(Override.class);
 		JBlock onDetachBody = onDetach.body();
-		onDetachBeforeSuperBlock = onDetachBody.block();
+		onDetachBeforeSuperBlock = codeModelHelper.blockNoBraces(onDetachBody);
 		onDetachBody.invoke(_super(), onDetach);
 	}
 
@@ -310,7 +302,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod onStop = generatedClass.method(PUBLIC, getCodeModel().VOID, "onStop");
 		onStop.annotate(Override.class);
 		JBlock onStopBody = onStop.body();
-		onStopBeforeSuperBlock = onStopBody.block();
+		onStopBeforeSuperBlock = codeModelHelper.blockNoBraces(onStopBody);
 		onStopBody.invoke(_super(), onStop);
 	}
 
@@ -318,7 +310,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JMethod onDestroy = generatedClass.method(PUBLIC, getCodeModel().VOID, "onDestroy");
 		onDestroy.annotate(Override.class);
 		JBlock onDestroyBody = onDestroy.body();
-		onDestroyBeforeSuperBlock = onDestroyBody.block();
+		onDestroyBeforeSuperBlock = codeModelHelper.blockNoBraces(onDestroyBody);
 		onDestroyBody.invoke(_super(), onDestroy);
 	}
 
@@ -557,12 +549,12 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public void assignFindPreferenceByKey(JFieldRef idRef, JClass preferenceClass, JFieldRef fieldRef) {
+	public void assignFindPreferenceByKey(JFieldRef idRef, AbstractJClass preferenceClass, JFieldRef fieldRef) {
 		preferencesDelegate.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
 	}
 
 	@Override
-	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, JClass preferenceClass) {
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass) {
 		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass);
 	}
 
@@ -571,7 +563,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		return preferencesDelegate.usingSupportV7Preference();
 	}
 
-	public JClass getBasePreferenceClass() {
+	public AbstractJClass getBasePreferenceClass() {
 		return preferencesDelegate.getBasePreferenceClass();
 	}
 }

@@ -23,9 +23,9 @@ import org.androidannotations.annotations.SupposeUiThread;
 import org.androidannotations.api.BackgroundExecutor;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JMethod;
 
 public class SupposeUiThreadHandler extends SupposeThreadHandler {
 
@@ -42,7 +42,7 @@ public class SupposeUiThreadHandler extends SupposeThreadHandler {
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock body = delegatingMethod.body();
 
-		JClass bgExecutor = getJClass(BackgroundExecutor.class);
+		AbstractJClass bgExecutor = getJClass(BackgroundExecutor.class);
 
 		body.pos(0);
 		body.staticInvoke(bgExecutor, METHOD_CHECK_UI_THREAD);

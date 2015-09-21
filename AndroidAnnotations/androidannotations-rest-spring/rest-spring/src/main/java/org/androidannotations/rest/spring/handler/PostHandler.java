@@ -34,11 +34,11 @@ import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.helper.RestSpringClasses;
 import org.androidannotations.rest.spring.holder.RestHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JVar;
 
 public class PostHandler extends RestMethodHandler implements HasParameterHandlers<RestHolder> {
 
@@ -74,7 +74,7 @@ public class PostHandler extends RestMethodHandler implements HasParameterHandle
 	}
 
 	@Override
-	protected JExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> params) {
+	protected IJExpression getRequestEntity(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> params) {
 		JVar httpHeaders = restAnnotationHelper.declareHttpHeaders(element, holder, methodBody);
 		JVar entitySentToServer = restAnnotationHelper.getEntitySentToServer(element, params);
 
@@ -82,7 +82,7 @@ public class PostHandler extends RestMethodHandler implements HasParameterHandle
 			Map<String, String> postParameters = restAnnotationHelper.extractPostParameters(element);
 
 			if (postParameters != null) {
-				JClass hashMapClass = getJClass(RestSpringClasses.LINKED_MULTI_VALUE_MAP).narrow(String.class, Object.class);
+				AbstractJClass hashMapClass = getJClass(RestSpringClasses.LINKED_MULTI_VALUE_MAP).narrow(String.class, Object.class);
 				entitySentToServer = methodBody.decl(hashMapClass, "postParameters", JExpr._new(hashMapClass));
 
 				for (Map.Entry<String, String> postParameter : postParameters.entrySet()) {

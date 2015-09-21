@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.invoke;
+import static com.helger.jcodemodel.JExpr.invoke;
 
 import javax.lang.model.element.Element;
 
@@ -25,8 +25,8 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EActivityHolder;
 
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
 
 public class FullscreenHandler extends BaseAnnotationHandler<EActivityHolder> {
 

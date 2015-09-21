@@ -25,7 +25,7 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.ValidatorParameterHelper;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.JMethod;
 
 public abstract class AbstractOttoHandler extends BaseAnnotationHandler<EComponentHolder> {
 

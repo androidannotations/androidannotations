@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr.lit;
 
 import javax.lang.model.element.Element;
 
@@ -23,8 +23,8 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JMethod;
 
 public class FragmentByTagHandler extends AbstractFragmentByHandler {
 
@@ -38,7 +38,7 @@ public class FragmentByTagHandler extends AbstractFragmentByHandler {
 	}
 
 	@Override
-	protected JExpression getFragmentId(Element element, String fieldName) {
+	protected IJExpression getFragmentId(Element element, String fieldName) {
 		FragmentByTag annotation = element.getAnnotation(FragmentByTag.class);
 		String tagValue = annotation.value();
 		if (tagValue.equals("")) {

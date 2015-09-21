@@ -15,26 +15,20 @@
  */
 package org.androidannotations.internal.helper;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 
 import org.androidannotations.helper.APTCodeModelHelper;
 
-import com.sun.codemodel.JAnnotationArrayMember;
-import com.sun.codemodel.JAnnotationUse;
-import com.sun.codemodel.JAnnotationValue;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JAnnotationArrayMember;
+import com.helger.jcodemodel.JAnnotationUse;
 
 public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void, String> {
 
@@ -113,38 +107,23 @@ public class AnnotationParamExtractor extends SimpleAnnotationValueVisitor6<Void
 
 	@Override
 	public Void visitEnumConstant(VariableElement c, String p) {
-		JClass annotationClass = helper.typeMirrorToJClass(c.asType());
-		JExpression expression = JExpr.direct(annotationClass.fullName() + "." + c.getSimpleName());
+		AbstractJClass annotationClass = helper.typeMirrorToJClass(c.asType());
+		IJExpression expression = annotationClass.staticRef(c.getSimpleName().toString());
 		use.param(p, expression);
 		return null;
 	}
 
 	@Override
 	public Void visitType(TypeMirror t, String p) {
-		JClass annotationClass = helper.typeMirrorToJClass(t);
-		JExpression dotclass = JExpr.dotclass(annotationClass);
-		use.param(p, dotclass);
+		AbstractJClass annotationClass = helper.typeMirrorToJClass(t);
+		use.param(p, annotationClass);
 		return null;
 	}
 
 	@Override
 	public Void visitAnnotation(AnnotationMirror a, String p) {
-		try {
-			JClass annotationJClass = helper.typeMirrorToJClass(a.getAnnotationType());
-			Constructor<JAnnotationUse> constructor = JAnnotationUse.class.getDeclaredConstructor(JClass.class);
-			constructor.setAccessible(true);
-			JAnnotationUse paramAnnotation = constructor.newInstance(annotationJClass);
-			Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = a.getElementValues();
-			for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
-				param.getValue().accept(new AnnotationParamExtractor(paramAnnotation, helper), param.getKey().getSimpleName().toString());
-			}
-
-			Method addValueMethod = use.getClass().getDeclaredMethod("addValue", String.class, JAnnotationValue.class);
-			addValueMethod.setAccessible(true);
-			addValueMethod.invoke(use, p, paramAnnotation);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		AbstractJClass annotationJClass = helper.typeMirrorToJClass(a.getAnnotationType());
+		use.annotationParam(p, annotationJClass);
 		return null;
 	}
 };

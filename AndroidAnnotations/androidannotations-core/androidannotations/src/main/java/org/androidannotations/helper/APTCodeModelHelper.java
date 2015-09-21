@@ -15,8 +15,8 @@
  */
 package org.androidannotations.helper;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.lit;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr.lit;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import java.io.StringWriter;
@@ -52,25 +52,25 @@ import org.androidannotations.holder.EBeanHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.internal.helper.AnnotationParamExtractor;
 
-import com.sun.codemodel.JAnnotatable;
-import com.sun.codemodel.JAnnotationArrayMember;
-import com.sun.codemodel.JAnnotationUse;
-import com.sun.codemodel.JAnnotationValue;
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JFormatter;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JStatement;
-import com.sun.codemodel.JSuperWildcard;
-import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJAnnotationValue;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.AbstractJType;
+import com.helger.jcodemodel.IJAnnotatable;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.IJGenerifiable;
+import com.helger.jcodemodel.IJStatement;
+import com.helger.jcodemodel.JAnnotationArrayMember;
+import com.helger.jcodemodel.JAnnotationUse;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JCodeModel;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFormatter;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JTypeVar;
+import com.helger.jcodemodel.JVar;
 
 public class APTCodeModelHelper {
 
@@ -80,11 +80,11 @@ public class APTCodeModelHelper {
 		this.environment = environment;
 	}
 
-	public JClass typeMirrorToJClass(TypeMirror type) {
+	public AbstractJClass typeMirrorToJClass(TypeMirror type) {
 		return typeMirrorToJClass(type, Collections.<String, TypeMirror> emptyMap());
 	}
 
-	private JClass typeMirrorToJClass(TypeMirror type, Map<String, TypeMirror> substitute) {
+	private AbstractJClass typeMirrorToJClass(TypeMirror type, Map<String, TypeMirror> substitute) {
 		if (type instanceof DeclaredType) {
 			return typeMirrorToJClass((DeclaredType) type, substitute);
 		} else if (type instanceof WildcardType) {
@@ -100,14 +100,14 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	private JClass typeMirrorToJClass(DeclaredType declaredType, Map<String, TypeMirror> substitute) {
+	private AbstractJClass typeMirrorToJClass(DeclaredType declaredType, Map<String, TypeMirror> substitute) {
 		String declaredTypeName = declaredType.asElement().toString();
 
-		JClass declaredClass = environment.getJClass(declaredTypeName);
+		AbstractJClass declaredClass = environment.getJClass(declaredTypeName);
 
 		List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
 
-		List<JClass> typeArgumentJClasses = new ArrayList<>();
+		List<AbstractJClass> typeArgumentJClasses = new ArrayList<>();
 		for (TypeMirror typeArgument : typeArguments) {
 			typeArgumentJClasses.add(typeMirrorToJClass(typeArgument, substitute));
 		}
@@ -118,14 +118,14 @@ public class APTCodeModelHelper {
 		return declaredClass;
 	}
 
-	private JClass typeMirrorToJClass(WildcardType wildcardType, Map<String, TypeMirror> substitute) {
+	private AbstractJClass typeMirrorToJClass(WildcardType wildcardType, Map<String, TypeMirror> substitute) {
 		TypeMirror bound = wildcardType.getExtendsBound();
 		if (bound == null) {
 			bound = wildcardType.getSuperBound();
 			if (bound == null) {
 				return environment.getClasses().OBJECT.wildcard();
 			}
-			return new JSuperWildcard(typeMirrorToJClass(bound, substitute));
+			return typeMirrorToJClass(bound, substitute).wildcardSuper();
 		}
 
 		TypeMirror extendsBound = wildcardType.getExtendsBound();
@@ -137,8 +137,8 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	private JClass typeMirrorToJClass(ArrayType arrayType, Map<String, TypeMirror> substitute) {
-		JClass refClass = typeMirrorToJClass(arrayType.getComponentType(), substitute);
+	private AbstractJClass typeMirrorToJClass(ArrayType arrayType, Map<String, TypeMirror> substitute) {
+		AbstractJClass refClass = typeMirrorToJClass(arrayType.getComponentType(), substitute);
 		return refClass.array();
 	}
 
@@ -164,16 +164,32 @@ public class APTCodeModelHelper {
 		return Collections.emptyMap();
 	}
 
-	public JClass typeBoundsToJClass(List<? extends TypeMirror> bounds) {
+	public List<AbstractJClass> typeBoundsToJClass(List<? extends TypeMirror> bounds) {
 		return typeBoundsToJClass(bounds, Collections.<String, TypeMirror>emptyMap());
 	}
 
-	private JClass typeBoundsToJClass(List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
+	private List<AbstractJClass> typeBoundsToJClass(List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
 		if (bounds.isEmpty()) {
-			return environment.getClasses().OBJECT;
+			return Collections.singletonList(environment.getClasses().OBJECT);
 		} else {
-			// TODO resolve <T extends A&B> bounds
-			return typeMirrorToJClass(bounds.get(0), actualTypes);
+			List<AbstractJClass> jClassBounds = new ArrayList<>();
+
+			for (TypeMirror bound : bounds) {
+				jClassBounds.add(typeMirrorToJClass(bound, actualTypes));
+			}
+			return  jClassBounds;
+		}
+	}
+
+	private void addTypeBounds(IJGenerifiable generifiable, List<AbstractJClass> bounds, String name) {
+		JTypeVar typeVar = null;
+
+		for (AbstractJClass bound : bounds) {
+			if (typeVar == null) {
+				typeVar = generifiable.generify(name, bound);
+			} else {
+				typeVar.bound(bound);
+			}
 		}
 	}
 
@@ -184,12 +200,13 @@ public class APTCodeModelHelper {
 		Types typeUtils = environment.getProcessingEnvironment().getTypeUtils();
 
 		Map<String, TypeMirror> actualTypes = getActualTypes(typeUtils, baseClass, annotatedClass);
-		Map<String, JClass> methodTypes = new LinkedHashMap<>();
+		Map<String, List<AbstractJClass>> methodTypes = new LinkedHashMap<>();
 
 		for (TypeParameterElement typeParameter : executableElement.getTypeParameters()) {
 			List<? extends TypeMirror> bounds = typeParameter.getBounds();
-			JClass jClassBounds = typeBoundsToJClass(bounds, actualTypes);
-			methodTypes.put(typeParameter.toString(), jClassBounds);
+
+			List<AbstractJClass> addedBounds = typeBoundsToJClass(bounds, actualTypes);
+			methodTypes.put(typeParameter.toString(), addedBounds);
 		}
 
 		actualTypes.keySet().removeAll(methodTypes.keySet());
@@ -200,7 +217,7 @@ public class APTCodeModelHelper {
 		}
 
 		String methodName = executableElement.getSimpleName().toString();
-		JClass returnType = typeMirrorToJClass(executableElement.getReturnType(), actualTypes);
+		AbstractJClass returnType = typeMirrorToJClass(executableElement.getReturnType(), actualTypes);
 		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
 		copyNonAAAnnotations(method, executableElement.getAnnotationMirrors());
 
@@ -208,8 +225,9 @@ public class APTCodeModelHelper {
 			method.annotate(Override.class);
 		}
 
-		for (Map.Entry<String, JClass> typeDeclaration : methodTypes.entrySet()) {
-			method.generify(typeDeclaration.getKey(), typeDeclaration.getValue());
+		for (Map.Entry<String, List<AbstractJClass>> typeDeclaration : methodTypes.entrySet()) {
+			List<AbstractJClass> bounds = typeDeclaration.getValue();
+			addTypeBounds(method, bounds, typeDeclaration.getKey());
 		}
 
 		int i = 0;
@@ -220,7 +238,7 @@ public class APTCodeModelHelper {
 		}
 
 		for (TypeMirror superThrownType : executableElement.getThrownTypes()) {
-			JClass thrownType = typeMirrorToJClass(superThrownType, actualTypes);
+			AbstractJClass thrownType = typeMirrorToJClass(superThrownType, actualTypes);
 			method._throws(thrownType);
 		}
 
@@ -229,18 +247,19 @@ public class APTCodeModelHelper {
 		return method;
 	}
 
-	public void generifyStaticHelper(JMethod staticHelper, TypeElement annotatedClass) {
-		for (TypeParameterElement param : annotatedClass.getTypeParameters()) {
-			JClass bounds = typeBoundsToJClass(param.getBounds());
-			staticHelper.generify(param.getSimpleName().toString(), bounds);
+	public void generify(IJGenerifiable generifiable, TypeElement fromTypeParameters) {
+		for (TypeParameterElement param : fromTypeParameters.getTypeParameters()) {
+			List<AbstractJClass> bounds = typeBoundsToJClass(param.getBounds());
+
+			addTypeBounds(generifiable, bounds, param.getSimpleName().toString());
 		}
 	}
 
-	public JClass narrowGeneratedClass(JClass generatedClass, TypeMirror fromTypeArguments) {
+	public AbstractJClass narrowGeneratedClass(AbstractJClass generatedClass, TypeMirror fromTypeArguments) {
 		DeclaredType type = (DeclaredType) fromTypeArguments;
 
 		for (TypeMirror param : type.getTypeArguments()) {
-			JClass paramClass = typeMirrorToJClass(param);
+			AbstractJClass paramClass = typeMirrorToJClass(param);
 			generatedClass = generatedClass.narrow(paramClass);
 		}
 		return generatedClass;
@@ -271,15 +290,15 @@ public class APTCodeModelHelper {
 
 	private void addParamToMethod(JMethod method, VariableElement parameter, int mod, Map<String, TypeMirror> actualTypes, boolean varParam) {
 		String parameterName = parameter.getSimpleName().toString();
-		JClass parameterClass = typeMirrorToJClass(parameter.asType(), actualTypes);
+		AbstractJClass parameterClass = typeMirrorToJClass(parameter.asType(), actualTypes);
 		JVar param = varParam ? method.varParam(parameterClass.elementType(), parameterName) : method.param(mod, parameterClass, parameterName);
 		copyNonAAAnnotations(param, parameter.getAnnotationMirrors());
 	}
 
-	public void copyNonAAAnnotations(JAnnotatable annotatable, List<? extends AnnotationMirror> annotationMirrors) {
+	public void copyNonAAAnnotations(IJAnnotatable annotatable, List<? extends AnnotationMirror> annotationMirrors) {
 		for (AnnotationMirror annotationMirror : annotationMirrors) {
 			if (annotationMirror.getAnnotationType().asElement().getAnnotation(Inherited.class) == null) {
-				JClass annotationClass = typeMirrorToJClass(annotationMirror.getAnnotationType());
+				AbstractJClass annotationClass = typeMirrorToJClass(annotationMirror.getAnnotationType());
 				if (!environment.isAndroidAnnotation(annotationClass.fullName())) {
 					copyAnnotation(annotatable, annotationMirror);
 				}
@@ -287,11 +306,11 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	public void copyAnnotation(JAnnotatable annotatable, AnnotationMirror annotationMirror) {
+	public void copyAnnotation(IJAnnotatable annotatable, AnnotationMirror annotationMirror) {
 		Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = annotationMirror.getElementValues();
 
 		if (!hasAnnotation(annotatable, annotationMirror)) {
-			JClass annotation = typeMirrorToJClass(annotationMirror.getAnnotationType());
+			AbstractJClass annotation = typeMirrorToJClass(annotationMirror.getAnnotationType());
 			JAnnotationUse annotate = annotatable.annotate(annotation);
 
 			for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> param : parameters.entrySet()) {
@@ -300,15 +319,15 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	private boolean hasAnnotation(JAnnotatable annotatable, AnnotationMirror annotationMirror) {
+	private boolean hasAnnotation(IJAnnotatable annotatable, AnnotationMirror annotationMirror) {
 		return hasAnnotation(annotatable, annotationMirror.getAnnotationType().toString());
 	}
 
-	public boolean hasAnnotation(JAnnotatable annotatable, Class<? extends Annotation> annotationClass) {
+	public boolean hasAnnotation(IJAnnotatable annotatable, Class<? extends Annotation> annotationClass) {
 		return hasAnnotation(annotatable, annotationClass.getCanonicalName());
 	}
 
-	private boolean hasAnnotation(JAnnotatable annotatable, String annotationFQN) {
+	private boolean hasAnnotation(IJAnnotatable annotatable, String annotationFQN) {
 		for (JAnnotationUse annotation : annotatable.annotations()) {
 			if (annotation.getAnnotationClass().fullName().equals(annotationFQN)) {
 				return true;
@@ -318,7 +337,7 @@ public class APTCodeModelHelper {
 	}
 
 	public JInvocation getSuperCall(GeneratedClassHolder holder, JMethod superMethod) {
-		JExpression activitySuper = holder.getGeneratedClass().staticRef("super");
+		IJExpression activitySuper = holder.getGeneratedClass().staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, superMethod);
 
 		for (JVar param : superMethod.params()) {
@@ -331,7 +350,7 @@ public class APTCodeModelHelper {
 	public void callSuperMethod(JMethod superMethod, GeneratedClassHolder holder, JBlock callBlock) {
 		JInvocation superCall = getSuperCall(holder, superMethod);
 
-		JType returnType = superMethod.type();
+		AbstractJType returnType = superMethod.type();
 		if (returnType.fullName().equals("void")) {
 			callBlock.add(superCall);
 		} else {
@@ -342,14 +361,14 @@ public class APTCodeModelHelper {
 	public JBlock removeBody(JMethod method) {
 		JBlock body = method.body();
 		try {
-			Field bodyField = JMethod.class.getDeclaredField("body");
+			Field bodyField = JMethod.class.getDeclaredField("m_aBody");
 			bodyField.setAccessible(true);
 			bodyField.set(method, null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
-		JBlock clonedBody = new JBlock(false, false);
+		JBlock clonedBody = new JBlock().bracesRequired(false).indentRequired(false);
 		copy(body, clonedBody);
 		return clonedBody;
 	}
@@ -359,30 +378,17 @@ public class APTCodeModelHelper {
 			if (statement instanceof JVar) {
 				JVar var = (JVar) statement;
 				try {
-					Field varInitField = JVar.class.getDeclaredField("init");
+					Field varInitField = JVar.class.getDeclaredField("m_aInitExpr");
 					varInitField.setAccessible(true);
-					JExpression varInit = (JExpression) varInitField.get(var);
+					IJExpression varInit = (IJExpression) varInitField.get(var);
 
 					newBody.decl(var.type(), var.name(), varInit);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 			} else {
-				newBody.add((JStatement) statement);
+				newBody.add((IJStatement) statement);
 			}
-		}
-	}
-
-	public void removeBraces(JBlock block) {
-		try {
-			Field bracesRequiredField = JBlock.class.getDeclaredField("bracesRequired");
-			bracesRequiredField.setAccessible(true);
-			bracesRequiredField.set(block, false);
-			Field indentRequiredField = JBlock.class.getDeclaredField("indentRequired");
-			indentRequiredField.setAccessible(true);
-			indentRequiredField.set(block, false);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
 		}
 	}
 
@@ -395,7 +401,7 @@ public class APTCodeModelHelper {
 		for (Object content : oldBody.getContents()) {
 			StringWriter writer = new StringWriter();
 			JFormatter formatter = new JFormatter(writer);
-			JStatement statement = (JStatement) content;
+			IJStatement statement = (IJStatement) content;
 			statement.state(formatter);
 			String statementString = writer.getBuffer().toString();
 			if (statementString.startsWith(superCallStart)) {
@@ -404,31 +410,6 @@ public class APTCodeModelHelper {
 				newBody.add(statement);
 			}
 		}
-	}
-
-	public String getIdStringFromIdFieldRef(JFieldRef idRef) {
-		try {
-			Field nameField = JFieldRef.class.getDeclaredField("name");
-			nameField.setAccessible(true);
-			String name = (String) nameField.get(idRef);
-
-			if (name != null) {
-				return name;
-			}
-
-			Field varField = JFieldRef.class.getDeclaredField("var");
-			varField.setAccessible(true);
-			JVar var = (JVar) varField.get(idRef);
-
-			if (var != null) {
-				return var.name();
-			}
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
-		throw new IllegalStateException("Unable to extract target name from JFieldRef");
 	}
 
 	public JDefinedClass createDelegatingAnonymousRunnableClass(JBlock previousBody) {
@@ -475,7 +456,7 @@ public class APTCodeModelHelper {
 
 		if (method != null) {
 			// Get the return type or VOID if none.
-			JType jcReturnType = returnType.equals(TypeKind.VOID.toString()) ? environment.getCodeModel().VOID : environment.getJClass(returnType);
+			AbstractJType jcReturnType = returnType.equals(TypeKind.VOID.toString()) ? environment.getCodeModel().VOID : environment.getJClass(returnType);
 
 			// Create the implementation and annotate it with the Override
 			// annotation.
@@ -531,14 +512,14 @@ public class APTCodeModelHelper {
 	public JInvocation newBeanOrEBean(DeclaredType beanType, JVar contextVar) {
 		if (beanType.asElement().getAnnotation(EBean.class) != null) {
 			String typeQualifiedName = beanType.toString();
-			JClass injectedClass = environment.getJClass(typeQualifiedName + classSuffix());
+			AbstractJClass injectedClass = environment.getJClass(typeQualifiedName + classSuffix());
 			return injectedClass.staticInvoke(EBeanHolder.GET_INSTANCE_METHOD_NAME).arg(contextVar);
 		} else {
 			return _new(environment.getJClass(beanType.toString()));
 		}
 	}
 
-	public JExpression litObject(Object o) {
+	public IJExpression litObject(Object o) {
 		if (o instanceof Integer) {
 			return lit((Integer) o);
 		} else if (o instanceof Float) {
@@ -564,14 +545,14 @@ public class APTCodeModelHelper {
 		return type == null ? element.asType() : type;
 	}
 
-	public void addSuppressWarnings(JAnnotatable generatedElement, String annotationValue) {
+	public void addSuppressWarnings(IJAnnotatable generatedElement, String annotationValue) {
 		Collection<JAnnotationUse> annotations = generatedElement.annotations();
 		for (JAnnotationUse annotationUse : annotations) {
 			if (annotationUse.getAnnotationClass().fullName().equals(SuppressWarnings.class.getCanonicalName())) {
-				JAnnotationValue value = annotationUse.getAnnotationMembers().values().iterator().next();
+				AbstractJAnnotationValue value = annotationUse.getParam("value");
 				StringWriter code = new StringWriter();
 				JFormatter formatter = new JFormatter(code);
-				formatter.g(value);
+				formatter.generable(value);
 				if (!code.toString().contains(annotationValue)) {
 					if (value instanceof JAnnotationArrayMember) {
 						((JAnnotationArrayMember) value).param(annotationValue);
@@ -586,6 +567,10 @@ public class APTCodeModelHelper {
 		}
 
 		generatedElement.annotate(SuppressWarnings.class).param("value", annotationValue);
+	}
+
+	public JBlock blockNoBraces(JBlock block) {
+		return  block.block().bracesRequired(false).indentRequired(false);
 	}
 
 	public void addTrimmedDocComment(JMethod method, String docComment) {

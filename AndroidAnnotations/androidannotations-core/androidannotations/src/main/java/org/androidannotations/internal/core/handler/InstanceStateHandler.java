@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -27,13 +27,13 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.holder.HasInstanceState;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
 public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState> {
 
@@ -52,7 +52,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 
 	@Override
 	public void process(Element element, HasInstanceState holder) {
-		JClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType());
+		AbstractJClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType());
 		String fieldName = element.getSimpleName().toString();
 
 		JBlock saveStateBody = holder.getSaveStateMethodBody();
@@ -68,7 +68,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 		JFieldRef ref = ref(fieldName);
 		saveStateBody.invoke(saveStateBundleParam, bundleHelper.getMethodNameToSave()).arg(fieldName).arg(ref);
 
-		JExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, restoreStateBundleParam, JExpr.lit(fieldName), restoreStateMethod);
+		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, restoreStateBundleParam, JExpr.lit(fieldName), restoreStateMethod);
 		restoreStateBody.assign(ref, restoreMethodCall);
 	}
 }

@@ -29,11 +29,11 @@ import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.OnSeekBarChangeListenerHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldRef;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JVar;
 
 public abstract class AbstractSeekBarTouchHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> {
 
@@ -68,7 +68,7 @@ public abstract class AbstractSeekBarTouchHandler extends CoreBaseAnnotationHand
 			OnSeekBarChangeListenerHolder onSeekBarChangeListenerHolder = holder.getOnSeekBarChangeListenerHolder(idRef);
 			JBlock methodBody = getMethodBodyToCall(onSeekBarChangeListenerHolder);
 
-			JExpression activityRef = holder.getGeneratedClass().staticRef("this");
+			IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
 			JInvocation textChangeCall = methodBody.invoke(activityRef, methodName);
 
 			ExecutableElement executableElement = (ExecutableElement) element;

@@ -23,9 +23,9 @@ import org.androidannotations.annotations.InjectMenu;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.HasOptionsMenu;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JVar;
 
 public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 

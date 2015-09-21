@@ -15,7 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr._new;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.FoundViewHolder;
 import org.androidannotations.rclass.IRClass.Res;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JFieldRef;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JFieldRef;
 
 public abstract class AbstractViewListenerHandler extends AbstractListenerHandler<EComponentWithViewSupportHolder> {
 
@@ -56,7 +56,7 @@ public abstract class AbstractViewListenerHandler extends AbstractListenerHandle
 	}
 
 	@Override
-	protected JClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
+	protected AbstractJClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
 		return getClasses().VIEW;
 	}
 

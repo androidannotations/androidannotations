@@ -17,17 +17,16 @@ package org.androidannotations.roboguice.holder;
 
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.plugin.PluginClassHolder;
 import org.androidannotations.roboguice.helper.RoboGuiceClasses;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMod;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JMod;
+import com.helger.jcodemodel.JVar;
 
 public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 
@@ -54,8 +53,8 @@ public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 
 	public JFieldVar getScopedObjectsField() {
 		if (scopedObjects == null) {
-			JClass keyWildCard = getJClass(RoboGuiceClasses.KEY).narrow(getCodeModel().wildcard());
-			JClass scopedHashMap = environment().getClasses().HASH_MAP.narrow(keyWildCard, environment().getClasses().OBJECT);
+			AbstractJClass keyWildCard = getJClass(RoboGuiceClasses.KEY).narrow(getCodeModel().wildcard());
+			AbstractJClass scopedHashMap = environment().getClasses().HASH_MAP.narrow(keyWildCard, environment().getClasses().OBJECT);
 			scopedObjects = getGeneratedClass().field(JMod.PROTECTED, scopedHashMap, "scopedObjects" + generationSuffix());
 			scopedObjects.assign(JExpr._new(scopedHashMap));
 		}
@@ -87,10 +86,10 @@ public class RoboGuiceHolder extends PluginClassHolder<EActivityHolder> {
 
 	public JVar getCurrentConfig() {
 		if (currentConfig == null) {
-			JClass configurationClass = environment().getClasses().CONFIGURATION;
+			AbstractJClass configurationClass = environment().getClasses().CONFIGURATION;
 			JBlock onConfigurationChangedBeforeSuperBlock = holder().getOnConfigurationChangedBeforeSuperBlock();
 			currentConfig = onConfigurationChangedBeforeSuperBlock.decl(configurationClass, "currentConfig", JExpr.invoke("getResources").invoke("getConfiguration"));
-			new APTCodeModelHelper(environment()).removeBraces(onConfigurationChangedBeforeSuperBlock);
+			onConfigurationChangedBeforeSuperBlock.bracesRequired(false).indentRequired(false);
 		}
 		return currentConfig;
 	}

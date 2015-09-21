@@ -31,10 +31,10 @@ import javax.lang.model.type.TypeVariable;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JMethod;
 
 public class BundleHelper {
 	public static final Map<String, String> METHOD_SUFFIX_BY_TYPE_NAME = new HashMap<>();
@@ -203,7 +203,7 @@ public class BundleHelper {
 		return declaredType.getTypeArguments().size() > 0;
 	}
 
-	public JExpression getExpressionToRestoreFromIntentOrBundle(JClass variableClass, JExpression intent, JExpression extras, JExpression extraKey, JMethod method) {
+	public IJExpression getExpressionToRestoreFromIntentOrBundle(AbstractJClass variableClass, IJExpression intent, IJExpression extras, IJExpression extraKey, JMethod method) {
 		if ("byte[]".equals(element.toString())) {
 			return intent.invoke("getByteArrayExtra").arg(extraKey);
 		} else {
@@ -211,10 +211,10 @@ public class BundleHelper {
 		}
 	}
 
-	public JExpression getExpressionToRestoreFromBundle(JClass variableClass, JExpression bundle, JExpression extraKey, JMethod method) {
-		JExpression expressionToRestore;
+	public IJExpression getExpressionToRestoreFromBundle(AbstractJClass variableClass, IJExpression bundle, IJExpression extraKey, JMethod method) {
+		IJExpression expressionToRestore;
 		if (methodNameToRestore.equals("getParcelableArray")) {
-			JClass erasure;
+			AbstractJClass erasure;
 			if (upperBound != null) {
 				erasure = codeModelHelper.typeMirrorToJClass(upperBound).erasure().array();
 			} else {

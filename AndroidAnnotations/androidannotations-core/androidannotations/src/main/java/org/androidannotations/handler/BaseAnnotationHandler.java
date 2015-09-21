@@ -26,8 +26,8 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.internal.process.ProcessHolder;
 
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JCodeModel;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.JCodeModel;
 
 public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> implements AnnotationHandler<T> {
 
@@ -80,11 +80,11 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		return environment.getCodeModel();
 	}
 
-	protected JClass getJClass(String fullyQualifiedClassName) {
+	protected AbstractJClass getJClass(String fullyQualifiedClassName) {
 		return environment.getJClass(fullyQualifiedClassName);
 	}
 
-	protected JClass getJClass(Class<?> clazz) {
+	protected AbstractJClass getJClass(Class<?> clazz) {
 		return environment.getJClass(clazz);
 	}
 }

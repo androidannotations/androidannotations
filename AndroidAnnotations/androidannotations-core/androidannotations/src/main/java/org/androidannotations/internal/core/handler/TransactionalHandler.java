@@ -25,15 +25,15 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JCatchBlock;
+import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JTryBlock;
+import com.helger.jcodemodel.JVar;
 
 public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -64,7 +64,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		String returnTypeName = executableElement.getReturnType().toString();
-		JClass returnType = getJClass(returnTypeName);
+		AbstractJClass returnType = getJClass(returnTypeName);
 
 		JMethod method = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		codeModelHelper.removeBody(method);
@@ -77,7 +77,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JTryBlock tryBlock = body._try();
 
-		JExpression activitySuper = holder.getGeneratedClass().staticRef("super");
+		IJExpression activitySuper = holder.getGeneratedClass().staticRef("super");
 		JInvocation superCall = JExpr.invoke(activitySuper, method);
 
 		for (JVar param : method.params()) {

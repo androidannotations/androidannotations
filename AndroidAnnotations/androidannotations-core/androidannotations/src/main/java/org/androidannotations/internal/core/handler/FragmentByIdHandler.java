@@ -24,8 +24,8 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JMethod;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JMethod;
 
 public class FragmentByIdHandler extends AbstractFragmentByHandler {
 
@@ -46,7 +46,7 @@ public class FragmentByIdHandler extends AbstractFragmentByHandler {
 	}
 
 	@Override
-	protected JExpression getFragmentId(Element element, String fieldName) {
+	protected IJExpression getFragmentId(Element element, String fieldName) {
 		return annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
 	}
 }

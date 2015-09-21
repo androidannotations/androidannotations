@@ -27,10 +27,10 @@ import org.androidannotations.internal.process.OriginatingElements;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 
-import com.sun.codemodel.CodeWriter;
-import com.sun.codemodel.JPackage;
+import com.helger.jcodemodel.AbstractCodeWriter;
+import com.helger.jcodemodel.JPackage;
 
-public class SourceCodeWriter extends CodeWriter {
+public class SourceCodeWriter extends AbstractCodeWriter {
 
 	private static final VoidOutputStream VOID_OUTPUT_STREAM = new VoidOutputStream();
 	private static final Logger LOGGER = LoggerFactory.getLogger(SourceCodeWriter.class);
@@ -45,6 +45,7 @@ public class SourceCodeWriter extends CodeWriter {
 	}
 
 	public SourceCodeWriter(Filer filer, OriginatingElements originatingElements) {
+		super(null);
 		this.filer = filer;
 		this.originatingElements = originatingElements;
 	}

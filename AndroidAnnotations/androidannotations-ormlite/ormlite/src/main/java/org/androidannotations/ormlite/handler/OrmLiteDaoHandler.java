@@ -15,9 +15,9 @@
  */
 package org.androidannotations.ormlite.handler;
 
-import static com.sun.codemodel.JExpr._new;
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.ref;
+import static com.helger.jcodemodel.JExpr._new;
+import static com.helger.jcodemodel.JExpr.cast;
+import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -32,13 +32,13 @@ import org.androidannotations.ormlite.helper.OrmLiteHelper;
 import org.androidannotations.ormlite.helper.OrmLiteValidatorHelper;
 import org.androidannotations.ormlite.holder.OrmLiteHolder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JCatchBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JTryBlock;
-import com.sun.codemodel.JVar;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JCatchBlock;
+import com.helger.jcodemodel.JFieldVar;
+import com.helger.jcodemodel.JTryBlock;
+import com.helger.jcodemodel.JVar;
 
 public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -70,20 +70,20 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		String fieldName = element.getSimpleName().toString();
 
-		JClass modelClass = getJClass(ormLiteHelper.getEntityType(element).toString());
-		JClass idClass = getJClass(ormLiteHelper.getEntityIdType(element).toString());
-		JExpression modelClassDotClass = modelClass.dotclass();
+		AbstractJClass modelClass = getJClass(ormLiteHelper.getEntityType(element).toString());
+		AbstractJClass idClass = getJClass(ormLiteHelper.getEntityIdType(element).toString());
+		IJExpression modelClassDotClass = modelClass.dotclass();
 
-		JClass daoClass = getJClass(OrmLiteClasses.DAO).narrow(modelClass, idClass);
+		AbstractJClass daoClass = getJClass(OrmLiteClasses.DAO).narrow(modelClass, idClass);
 
 		TypeMirror databaseHelperTypeMirror = annotationHelper.extractAnnotationParameter(element, "helper");
 		JFieldVar databaseHelperRef = ormLiteHolder.getDatabaseHelperRef(databaseHelperTypeMirror);
 
 		JBlock initBody = holder.getInitBody();
 
-		JExpression injectExpr = databaseHelperRef.invoke("getDao").arg(modelClassDotClass);
+		IJExpression injectExpr = databaseHelperRef.invoke("getDao").arg(modelClassDotClass);
 		if (elementExtendsRuntimeExceptionDao(element)) {
-			JClass daoImplClass = codeModelHelper.typeMirrorToJClass(element.asType());
+			AbstractJClass daoImplClass = codeModelHelper.typeMirrorToJClass(element.asType());
 			injectExpr = _new(daoImplClass).arg(cast(daoClass, injectExpr));
 		}
 

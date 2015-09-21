@@ -19,7 +19,7 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 
-import com.sun.codemodel.JDefinedClass;
+import com.helger.jcodemodel.JDefinedClass;
 
 public interface GeneratedClassHolder {
 

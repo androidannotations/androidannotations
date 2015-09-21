@@ -15,18 +15,18 @@
  */
 package org.androidannotations.holder;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JClass;
-import com.sun.codemodel.JExpression;
+import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
 
 public class FoundViewHolder extends FoundHolder {
 
-	public FoundViewHolder(GeneratedClassHolder holder, JClass viewClass, JExpression view, JBlock block) {
+	public FoundViewHolder(GeneratedClassHolder holder, AbstractJClass viewClass, IJExpression view, JBlock block) {
 		super(holder, viewClass, view, block);
 	}
 
 	@Override
-	protected JClass getBaseType() {
+	protected AbstractJClass getBaseType() {
 		return getClasses().VIEW;
 	}
 
