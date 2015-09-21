@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.maveneclipse"
+    package="org.androidannotations.sample"
     android:versionCode="1"
-    android:versionName="0.0.1-SNAPSHOT" >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:maxSdkVersion="17"
@@ -12,13 +12,17 @@
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
-        <activity android:name="org.androidannotations.maveneclipse.HelloAndroidActivity_" >
+        <activity
+            android:name=".MyActivity_"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ActivityWithExtra_" />
+        <activity android:name=".MyListActivity_" />
     </application>
 
 </manifest>
