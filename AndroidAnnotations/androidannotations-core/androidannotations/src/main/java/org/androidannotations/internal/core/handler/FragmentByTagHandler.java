@@ -15,62 +15,35 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
 import static com.sun.codemodel.JExpr.lit;
-import static com.sun.codemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.FragmentByTag;
-import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 
-import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 
-public class FragmentByTagHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public class FragmentByTagHandler extends AbstractFragmentByHandler {
 
 	public FragmentByTagHandler(AndroidAnnotationsEnvironment environment) {
-		super(FragmentByTag.class, environment);
+		super(FragmentByTag.class, environment, "findFragmentByTag");
 	}
 
 	@Override
-	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element,  validation);
-
-		validatorHelper.extendsFragment(element, validation);
-
-		validatorHelper.isNotPrivate(element, validation);
+	protected JMethod getFindFragmentMethod(boolean isNativeFragment, EComponentWithViewSupportHolder holder) {
+		return isNativeFragment ? holder.getFindNativeFragmentByTag() : holder.getFindSupportFragmentByTag();
 	}
 
 	@Override
-	public void process(Element element, EComponentWithViewSupportHolder holder) {
-
-		TypeMirror elementType = element.asType();
-		String typeQualifiedName = elementType.toString();
-		TypeMirror nativeFragmentType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT).asType();
-		boolean isNativeFragment = annotationHelper.isSubtype(elementType, nativeFragmentType);
-
-		JMethod findFragmentByTag;
-		if (isNativeFragment) {
-			findFragmentByTag = holder.getFindNativeFragmentByTag();
-		} else {
-			findFragmentByTag = holder.getFindSupportFragmentByTag();
-		}
-
-		String fieldName = element.getSimpleName().toString();
+	protected JExpression getFragmentId(Element element, String fieldName) {
 		FragmentByTag annotation = element.getAnnotation(FragmentByTag.class);
 		String tagValue = annotation.value();
 		if (tagValue.equals("")) {
 			tagValue = fieldName;
 		}
-
-		JBlock methodBody = holder.getOnViewChangedBody();
-		methodBody.assign(ref(fieldName), cast(getJClass(typeQualifiedName), invoke(findFragmentByTag).arg(lit(tagValue))));
+		return lit(tagValue);
 	}
 }

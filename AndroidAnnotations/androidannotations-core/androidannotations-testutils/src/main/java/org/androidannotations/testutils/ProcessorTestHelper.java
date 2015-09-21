@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.processing.Processor;
 import javax.tools.Diagnostic;
@@ -166,18 +167,31 @@ public class ProcessorTestHelper {
 		assertCompilationDiagnostingOn(Kind.ERROR, expectedErrorClassFile, expectedContentInError, result);
 	}
 
+	public static void assertCompilationErrorOn(String expectedClassName, String expectedContentInError, CompileResult result) throws IOException {
+		assertCompilationDiagnostingOn(Kind.ERROR, new File(expectedClassName + ".java"), expectedContentInError, result);
+	}
+
 	public static void assertCompilationWarningOn(File expectedErrorClassFile, String expectedContentInError, CompileResult result) throws IOException {
 		assertCompilationDiagnostingOn(Kind.WARNING, expectedErrorClassFile, expectedContentInError, result);
 	}
 
 	private static void assertCompilationDiagnostingOn(Kind expectedDiagnosticKind, File expectedErrorClassFile, String expectedContentInError, CompileResult result) throws IOException {
 
-		String expectedErrorPath = expectedErrorClassFile.toURI().toString();
+		String expectedErrorPath;
+		boolean fileNameOnly = expectedErrorClassFile.getPath().split(Pattern.quote(File.separator)).length == 1;
+
+		if (fileNameOnly) {
+			// this is just the filename
+			expectedErrorPath = expectedErrorClassFile.getPath();
+		} else {
+			expectedErrorPath = expectedErrorClassFile.toURI().toString();
+		}
+
 		for (Diagnostic<? extends JavaFileObject> diagnostic : result.diagnostics) {
 			if (diagnostic.getKind() == expectedDiagnosticKind) {
 				JavaFileObject source = diagnostic.getSource();
 				if (source != null) {
-					if (expectedErrorPath.endsWith(source.toUri().toString())) {
+					if (expectedErrorPath.endsWith(source.toUri().toString()) || fileNameOnly && source.toUri().toString().endsWith(expectedErrorPath)) {
 
 						CharSequence sourceContent = source.getCharContent(true);
 						if (diagnostic.getPosition() != Diagnostic.NOPOS) {

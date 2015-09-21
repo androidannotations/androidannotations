@@ -23,6 +23,26 @@ import android.content.Intent;
  * classpath only on some unit tests methods
  */
 public class Fragment {
+	
+	public void onCreate(android.os.Bundle savedInstanceState) {
+		
+	}
+	
+	public void onViewCreated(android.view.View view, android.os.Bundle savedInstanceState) {
+		
+	}
+	
+	public android.view.View onCreateView(android.view.LayoutInflater inflater, android.view.ViewGroup container, android.os.Bundle savedInstanceState) {
+		return null;
+	}
+	
+	public  void onDestroyView() {
+		
+	}
+	
+	public  void setArguments(android.os.Bundle args) {
+		
+	}
 
 	public Activity getActivity() {
 		return null;
@@ -30,6 +50,21 @@ public class Fragment {
 
 	public void startActivityForResult(Intent intent, int flag) {
 
+	}
+	
+	public FragmentManager getFragmentManager() {
+		return null;
+	}
+	
+	public FragmentManager getChildFragmentManager() {
+		return null;
+	}
+
+	public abstract class FragmentManager {
+		
+		public abstract Fragment findFragmentById(int id);
+		
+		public abstract Fragment findFragmentByTag(String tag);
 	}
 
 }

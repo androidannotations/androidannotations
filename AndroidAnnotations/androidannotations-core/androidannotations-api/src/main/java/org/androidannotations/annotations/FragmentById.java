@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
  *     android:layout_height="match_parent" &gt;
  * 
  *     &lt;fragment
- *         android:id="@+id/myFragment"
+ *         android:id="@+id/<b>myFragment</b>"
  *         android:name="mypackage.MyFragment_"
  *         android:layout_width="match_parent"
  *         android:layout_height="match_parent" /&gt;
@@ -55,10 +55,47 @@ import java.lang.annotation.Target;
  * // all injected fragment will be the same
  * 
  * 	&#064;FragmentById
- * 	public MyFragment myFragment;
+ * 	public MyFragment <b>myFragment</b>;
  * 	
- * 	&#064;FragmentById(R.id.myFragment)
+ * 	&#064;FragmentById(R.id.<b>myFragment</b>)
  * 	public MyFragment myFragment2;
+ * }
+ * </pre>
+ * 
+ * </blockquote>
+ * 
+ * <p>
+ * To use the <code>getChildFragmentManager()</code> to inject the
+ * <code>Fragment</code>, set the {@link #childFragment()} annotation parameter
+ * to <code>true</code>. You can only do this if the annotated field is in a
+ * class which extends <code>android.app.Fragment</code> or
+ * <code>android.support.v4.app.Fragment</code> and the
+ * <code>getChildFragmentManager()</code> method is available.
+ * </p>
+ * 
+ * <blockquote>
+ * 
+ * Example :
+ * 
+ * <pre>
+ * &lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ *     android:layout_width="match_parent"
+ *     android:layout_height="match_parent" &gt;
+ * 
+ *     &lt;fragment
+ *         android:id="@+id/myChildFragment"
+ *         android:name="mypackage.MyChildFragment_"
+ *         android:layout_width="match_parent"
+ *         android:layout_height="match_parent" /&gt;
+ * &lt;/LinearLayout&gt;
+ * 
+ * 
+ * &#064;EFragment(R.layout.parentfragment)
+ * public class MyParentFragment extends Fragment {
+ * 
+ * 	&#064;FragmentById(<b>childFragment = true</b>)
+ * 	MyChildFragment myFragment;
+ * 
  * }
  * </pre>
  * 
@@ -85,4 +122,14 @@ public @interface FragmentById {
 	 * @return the resource name of the Fragment
 	 */
 	String resName() default "";
+
+	/**
+	 * Whether to use <code>getChildFragmentManager()</code> or
+	 * <code>getFragmentManager()</code> to obtain the Fragment. Only can be
+	 * <code>true</code> when injecting into a <code>Fragment</code>.
+	 * 
+	 * @return <code>true</code> to use <code>getChildFragmentManager()</code>,
+	 *         <code>false</code> to use <code>getFragmentManager()</code>
+	 */
+	boolean childFragment() default false;
 }

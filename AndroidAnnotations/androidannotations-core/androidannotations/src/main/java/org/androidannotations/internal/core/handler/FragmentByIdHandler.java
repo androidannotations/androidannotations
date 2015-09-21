@@ -15,66 +15,38 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.sun.codemodel.JExpr.cast;
-import static com.sun.codemodel.JExpr.invoke;
-import static com.sun.codemodel.JExpr.ref;
-
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.FragmentById;
-import org.androidannotations.handler.BaseAnnotationHandler;
-import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.rclass.IRClass;
 
-import com.sun.codemodel.JBlock;
-import com.sun.codemodel.JFieldRef;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 
-public class FragmentByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public class FragmentByIdHandler extends AbstractFragmentByHandler {
 
 	public FragmentByIdHandler(AndroidAnnotationsEnvironment environment) {
-		super(FragmentById.class, environment);
+		super(FragmentById.class, environment, "findFragmentById");
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element,  validation);
-
-		validatorHelper.extendsFragment(element, validation);
+		super.validate(element, validation);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
-
-		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override
-	public void process(Element element, EComponentWithViewSupportHolder holder) {
+	protected JMethod getFindFragmentMethod(boolean isNativeFragment, EComponentWithViewSupportHolder holder) {
+		return isNativeFragment ? holder.getFindNativeFragmentById() : holder.getFindSupportFragmentById();
+	}
 
-		TypeMirror elementType = element.asType();
-		String typeQualifiedName = elementType.toString();
-		TypeElement nativeFragmentElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT);
-		boolean isNativeFragment = nativeFragmentElement != null && annotationHelper.isSubtype(elementType, nativeFragmentElement.asType());
-
-		JMethod findFragmentById;
-		if (isNativeFragment) {
-			findFragmentById = holder.getFindNativeFragmentById();
-		} else {
-			findFragmentById = holder.getFindSupportFragmentById();
-		}
-
-		String fieldName = element.getSimpleName().toString();
-
-		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
-
-		JBlock methodBody = holder.getOnViewChangedBody();
-
-		methodBody.assign(ref(fieldName), cast(getJClass(typeQualifiedName), invoke(findFragmentById).arg(idRef)));
-
+	@Override
+	protected JExpression getFragmentId(Element element, String fieldName) {
+		return annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
 	}
 }
