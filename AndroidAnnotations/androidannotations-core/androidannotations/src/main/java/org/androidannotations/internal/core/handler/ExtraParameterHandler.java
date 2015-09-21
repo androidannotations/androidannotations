@@ -51,7 +51,7 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 
 	@Override
 	protected void validate(Element element, ElementValidation valid) {
-		validatorHelper.enclosingMethodHasAnnotation(methodAnnotationClass, element, valid);
+		validatorHelper.enclosingElementHasAnnotation(methodAnnotationClass, element, valid);
 
 		validatorHelper.canBePutInABundle(element, valid);
 	}

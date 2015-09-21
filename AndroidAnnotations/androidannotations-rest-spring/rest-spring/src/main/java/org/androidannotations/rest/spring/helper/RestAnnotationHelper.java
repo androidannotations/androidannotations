@@ -20,10 +20,14 @@ import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_H
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.MEDIA_TYPE;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.RESPONSE_ENTITY;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeSet;
@@ -34,6 +38,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -45,6 +50,9 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.rest.spring.annotations.Accept;
+import org.androidannotations.rest.spring.annotations.Field;
+import org.androidannotations.rest.spring.annotations.Part;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.RequiresAuthentication;
 import org.androidannotations.rest.spring.annotations.RequiresCookie;
 import org.androidannotations.rest.spring.annotations.RequiresCookieInUrl;
@@ -74,9 +82,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
 
 	public Set<String> extractUrlVariableNames(ExecutableElement element) {
+		String uriTemplate = extractAnnotationValueParameter(element);
+
+		return extractUrlVariableNames(uriTemplate);
+	}
+
+
+	public Set<String> extractUrlVariableNames(String uriTemplate) {
 
 		Set<String> variableNames = new HashSet<>();
-		String uriTemplate = extractAnnotationValueParameter(element);
 
 		boolean hasValueInAnnotation = uriTemplate != null;
 		if (hasValueInAnnotation) {
@@ -90,6 +104,13 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public JVar declareUrlVariables(ExecutableElement element, RestHolder holder, JBlock methodBody, SortedMap<String, JVar> methodParams) {
+		Map<String, String> urlNameToElementName = new HashMap<String, String>();
+		for (VariableElement variableElement : element.getParameters()) {
+			if (!hasPostParameterAnnotation(variableElement)) {
+				urlNameToElementName.put(getUrlVariableCorrespondingTo(variableElement), variableElement.getSimpleName().toString());
+			}
+		}
+
 		Set<String> urlVariables = extractUrlVariableNames(element);
 
 		// cookies in url?
@@ -104,10 +125,11 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		if (!urlVariables.isEmpty()) {
 			JVar hashMapVar = methodBody.decl(hashMapClass, "urlVariables", JExpr._new(hashMapClass));
 			for (String urlVariable : urlVariables) {
-				JVar methodParam = methodParams.get(urlVariable);
-				if (methodParam != null) {
+				String elementName = urlNameToElementName.get(urlVariable);
+				if (elementName != null) {
+					JVar methodParam = methodParams.get(elementName);
 					methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(methodParam);
-					methodParams.remove(urlVariable);
+					methodParams.remove(elementName);
 				} else {
 					// cookie from url
 					JInvocation cookieValue = holder.getAvailableCookiesField().invoke("get").arg(JExpr.lit(urlVariable));
@@ -129,6 +151,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		} else {
 			return null;
 		}
+	}
+
+	public boolean multipartHeaderRequired(ExecutableElement executableElement) {
+		for (VariableElement parameter : executableElement.getParameters()) {
+			if (parameter.getAnnotation(Part.class) != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String[] requiredHeaders(ExecutableElement executableElement) {
@@ -201,7 +232,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		boolean requiresAuth = requiredAuthentication(executableElement);
 
-		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth) {
+		boolean requiresMultipartHeader = multipartHeaderRequired(executableElement);
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth || requiresMultipartHeader) {
 			// we need the headers
 			httpHeadersVar = body.decl(getEnvironment().getJClass(HTTP_HEADERS), "httpHeaders", JExpr._new(getEnvironment().getJClass(HTTP_HEADERS)));
 		}
@@ -228,6 +261,10 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 			body.add(JExpr.invoke(httpHeadersVar, "set").arg("Cookie").arg(cookiesToString));
 		}
 
+		if (requiresMultipartHeader) {
+			body.add(JExpr.invoke(httpHeadersVar, "set").arg(JExpr.lit("Content-Type")).arg(getEnvironment().getJClass(MEDIA_TYPE).staticRef("MULTIPART_FORM_DATA_VALUE")));
+		}
+
 		if (requiresHeaders) {
 			for (String header : headers) {
 				JInvocation headerValue = JExpr.invoke(holder.getAvailableHeadersField(), "get").arg(header);
@@ -246,12 +283,27 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	public JVar getEntitySentToServer(ExecutableElement element, SortedMap<String, JVar> params) {
 		Set<String> urlVariables = extractUrlVariableNames(element);
-		for (String paramName : params.keySet()) {
-			if (!urlVariables.contains(paramName)) {
-				return params.get(paramName);
+		for (VariableElement parameter : element.getParameters()) {
+			if (!hasPostParameterAnnotation(parameter)) {
+				String parameterName = getUrlVariableCorrespondingTo(parameter);
+
+				if (!urlVariables.contains(parameterName)) {
+					return params.get(parameterName);
+				}
 			}
 		}
 		return null;
+	}
+
+	public String getUrlVariableCorrespondingTo(VariableElement parameter) {
+		Path path = parameter.getAnnotation(Path.class);
+		String parameterName;
+		if (path != null && !path.value().equals("")) {
+			parameterName = path.value();
+		} else {
+			parameterName = parameter.getSimpleName().toString();
+		}
+		return parameterName;
 	}
 
 	public JExpression declareHttpEntity(JBlock body, JVar entitySentToServer, JVar httpHeaders) {
@@ -476,5 +528,42 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 	public JExpression nullCastedToNarrowedClass(RestHolder holder) {
 		return JExpr.cast(getEnvironment().getJClass(Class.class).narrow(getEnvironment().getJClass(Void.class)), JExpr._null());
+	}
+
+	/**
+	 * Returns the post parameter name to method parameter name mapping, or null
+	 * if duplicate names found.
+	 */
+	public Map<String, String> extractPostParameters(ExecutableElement element) {
+		Map<String, String> postParameterNameToElementName = new HashMap<String, String>();
+
+		for (VariableElement parameter : element.getParameters()) {
+			String postParameterName = null;
+
+			if (parameter.getAnnotation(Field.class) != null) {
+				postParameterName = extractPostParameter(parameter, Field.class);
+			} else if (parameter.getAnnotation(Part.class) != null) {
+				postParameterName = extractPostParameter(parameter, Part.class);
+			}
+
+			if (postParameterName != null) {
+				if (postParameterNameToElementName.containsKey(postParameterName)) {
+					return null;
+				}
+
+				postParameterNameToElementName.put(postParameterName, parameter.getSimpleName().toString());
+			}
+		}
+		return postParameterNameToElementName;
+	}
+
+	private String extractPostParameter(VariableElement parameter, Class<? extends Annotation> clazz) {
+		String value = extractAnnotationParameter(parameter, clazz.getCanonicalName(), "value");
+
+		return !value.equals("") ? value : parameter.getSimpleName().toString();
+	}
+
+	public boolean hasPostParameterAnnotation(VariableElement variableElement) {
+		return hasOneOfClassAnnotations(variableElement, Arrays.asList(Field.class, Part.class));
 	}
 }

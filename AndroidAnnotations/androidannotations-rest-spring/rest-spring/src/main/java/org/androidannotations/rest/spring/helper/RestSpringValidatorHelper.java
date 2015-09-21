@@ -18,17 +18,20 @@ package org.androidannotations.rest.spring.helper;
 import static java.util.Arrays.asList;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_FACTORY;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.CLIENT_HTTP_REQUEST_INTERCEPTOR;
+import static org.androidannotations.rest.spring.helper.RestSpringClasses.FORM_HTTP_MESSAGE_CONVERTER;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.HTTP_MESSAGE_CONVERTER;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_CLIENT_EXCEPTION;
 import static org.androidannotations.rest.spring.helper.RestSpringClasses.REST_TEMPLATE;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -47,9 +50,12 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.helper.ValidatorHelper;
 import org.androidannotations.rest.spring.annotations.Delete;
+import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.annotations.Options;
+import org.androidannotations.rest.spring.annotations.Part;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Put;
 import org.androidannotations.rest.spring.annotations.Rest;
@@ -99,6 +105,10 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 	public void enclosingElementHasRestAnnotation(Element element, ElementValidation valid) {
 		String error = "can only be used in an interface annotated with";
 		enclosingElementHasAnnotation(Rest.class, element, valid, error);
+	}
+
+	public void enclosingElementHasOneOfRestMethodAnnotations(Element element, ElementValidation validation) {
+		enclosingElementHasOneOfAnnotations(element, REST_ANNOTATION_CLASSES, validation);
 	}
 
 	public void unannotatedMethodReturnsRestTemplate(TypeElement typeElement, ElementValidation valid) {
@@ -353,9 +363,19 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 		List<? extends VariableElement> parameters = element.getParameters();
 
-		List<String> parametersName = new ArrayList<>();
+		Set<String> parametersName = new HashSet<>();
 		for (VariableElement parameter : parameters) {
-			parametersName.add(parameter.getSimpleName().toString());
+			if (restAnnotationHelper.hasPostParameterAnnotation(parameter)) {
+				continue;
+			}
+
+			String nameToAdd = restAnnotationHelper.getUrlVariableCorrespondingTo(parameter);
+
+			if (parametersName.contains(nameToAdd)) {
+				valid.addError(element, "%s has multiple method parameters which correspond to the same url variable");
+				return;
+			}
+			parametersName.add(nameToAdd);
 		}
 
 		String[] cookiesToUrl = restAnnotationHelper.requiredUrlCookies(element);
@@ -399,6 +419,80 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		}
 	}
 
+	public void urlVariableNamesExistInParametersAndHasOnlyOneEntityParameterOrOneOrMorePostParameter(ExecutableElement element, ElementValidation validation) {
+		if (validation.isValid()) {
+			Set<String> variableNames = restAnnotationHelper.extractUrlVariableNames(element);
+			urlVariableNamesExistInParameters(element, variableNames, validation);
+			if (validation.isValid()) {
+				List<? extends VariableElement> parameters = element.getParameters();
+
+				Map<String, String> postParameters = restAnnotationHelper.extractPostParameters(element);
+
+				if (postParameters == null) {
+					validation.addError(element, "%s annotated method has multiple form parameters with the same name");
+					return;
+				}
+
+				if (!postParameters.isEmpty() && postParameters.size() + variableNames.size() < parameters.size()) {
+					validation.addError(element, "%s method cannot have both entity parameter and @Field annotated parameters");
+					return;
+				}
+
+				if (postParameters.isEmpty() && parameters.size() > variableNames.size() + 1) {
+					validation.addError(element, "%s annotated method has more than one entity parameter");
+				}
+			}
+		}
+	}
+
+	public void doesNotMixPartAndFieldAnnotations(ExecutableElement element, ElementValidation validation) {
+		boolean partFound = false;
+		boolean fieldFound = false;
+
+		for (VariableElement parameter : element.getParameters()) {
+			Part part = parameter.getAnnotation(Part.class);
+			if (part != null) {
+				partFound = true;
+			}
+
+			Field field = parameter.getAnnotation(Field.class);
+			if (field != null) {
+				fieldFound = true;
+			}
+		}
+
+		if (partFound && fieldFound) {
+			validation.addError(element, "Only one of @Part and @Field annotations can be used on the same method's parameters, not both.");
+		}
+	}
+
+
+	public void urlVariableNameExistsInEnclosingAnnotation(Element element, ElementValidation validation) {
+		Set<String> validRestMethodAnnotationNames = new HashSet<>();
+
+		for (Class<? extends Annotation> validAnnotation : REST_ANNOTATION_CLASSES) {
+			validRestMethodAnnotationNames.add(validAnnotation.getCanonicalName());
+		}
+
+		String url = null;
+
+		for (AnnotationMirror annotationMirror : element.getEnclosingElement().getAnnotationMirrors()) {
+			if (validRestMethodAnnotationNames.contains(annotationMirror.getAnnotationType().toString())) {
+				url = restAnnotationHelper.extractAnnotationParameter(element.getEnclosingElement(), annotationMirror.getAnnotationType().toString(), "value");
+				break;
+			}
+		}
+
+		Set<String> urlVariableNames = restAnnotationHelper.extractUrlVariableNames(url);
+
+		String annotationValue = restAnnotationHelper.extractAnnotationValueParameter(element);
+		String expectedUrlVariableName = !annotationValue.equals("") ? annotationValue : element.getSimpleName().toString();
+
+		if (!urlVariableNames.contains(expectedUrlVariableName)) {
+			validation.addError(element, "%s annotated parameter is has no corresponding url variable");
+		}
+	}
+
 	public void hasSpringAndroidJars(ElementValidation valid) {
 		Elements elementUtils = annotationHelper.getElementUtils();
 		if (elementUtils.getTypeElement(REST_TEMPLATE) == null) {
@@ -429,6 +523,44 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 					valid.addError("%s annotated methods can only return a parameterized Set of HttpMethod, not " + typeArgument.toString());
 				}
 			}
+		}
+	}
+
+	public void doesNotHavePathAnnotation(Element element, ElementValidation validation) {
+		doesNotHaveAnnotation(element, Path.class, validation);
+	}
+
+	public void doesNotHaveFieldAnnotation(Element element, ElementValidation validation) {
+		doesNotHaveAnnotation(element, Field.class, validation);
+	}
+
+	public void doesNotHavePartAnnotation(Element element, ElementValidation validation) {
+		doesNotHaveAnnotation(element, Part.class, validation);
+	}
+
+	public void restInterfaceHasFormConverter(Element element, ElementValidation validation) {
+		Element restInterface = element.getEnclosingElement().getEnclosingElement();
+
+		if (restInterface.getAnnotation(Rest.class) == null) {
+			return;
+		}
+
+		List<DeclaredType> converters = annotationHelper.extractAnnotationClassArrayParameter(restInterface, Rest.class.getCanonicalName(), "converters");
+
+		boolean formConverterFound = false;
+
+		TypeElement formConverter = annotationHelper.getElementUtils().getTypeElement(FORM_HTTP_MESSAGE_CONVERTER);
+
+		for (DeclaredType converter : converters) {
+			if (formConverter != null && annotationHelper.isSubtype(formConverter.asType(), converter)) {
+				formConverterFound = true;
+				break;
+			}
+		}
+
+		if (!formConverterFound) {
+			validation.addError(element, "%s annotated method parameter must be in a @Rest annotated interface which uses at least one " //
+					+ FORM_HTTP_MESSAGE_CONVERTER + " (or subtype)");
 		}
 	}
 }

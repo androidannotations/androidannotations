@@ -79,6 +79,55 @@ public class RestTest extends AAProcessorTestHelper {
 	}
 
 	@Test
+	public void clientWithWrongPathVariables() throws IOException {
+		CompileResult result = compileFiles(ClientWithWrongPathVariables.class);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Get(\"/duplicates/{v1}\")", result);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Get(\"/missingvariable/{v1}\")", result);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Path(\"v2\")", result);
+		assertCompilationErrorOn(ClientWithWrongPathVariables.class, "@Path(\"missingGet\")", result);
+		assertCompilationErrorCount(5, result);
+	}
+
+	@Test
+	public void clientWithPostParameters() throws IOException {
+		CompileResult result = compileFiles(ClientWithPostParameters.class);
+		assertCompilationSuccessful(result);
+	}
+
+	@Test
+	public void clientWithWrongPostParameters() throws IOException {
+		CompileResult result = compileFiles(ClientWithWrongFields.class);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "void missingPostAnnotation(@Field(\"missingPost\") int v1);", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Field(\"missingPost\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Post(\"/pathParamAndEntity\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Path(\"conflict\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Post(\"/conflictElementNameWithPathParam\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Post(\"/conflictWithPathParamWithElementName\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Path(\"elementNameConflict\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Path(\"pathParamConflict\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Post(\"/conflictWithPathParam\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Post(\"/duplicateField\")", result);
+		assertCompilationErrorOn(ClientWithWrongFields.class, "@Post(\"/fieldAndPartOnSameMethod\")", result);
+
+		assertCompilationErrorCount(11, result);
+	}
+
+	@Test
+	public void fieldPathParamOnSameArgument() throws IOException {
+		CompileResult result = compileFiles(FieldPathParamOnSameArgument.class);
+		assertCompilationErrorOn(FieldPathParamOnSameArgument.class, "@Field", result);
+		assertCompilationErrorOn(FieldPathParamOnSameArgument.class, "@Path", result);
+
+		assertCompilationErrorCount(2, result);
+	}
+
+	@Test
+	public void clientWithMissingFormConverter() throws IOException {
+		CompileResult result = compileFiles(ClientWithMissingFormConverter.class);
+		assertCompilationErrorCount(1, result);
+	}
+
+	@Test
 	public void clientWithWrongEnhancedMethods() throws IOException {
 		CompileResult result = compileFiles(ClientWithWrongEnhancedMethod.class);
 		assertCompilationErrorOn(ClientWithWrongEnhancedMethod.class, "Object getRestTemplate();", result);

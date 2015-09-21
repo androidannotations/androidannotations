@@ -21,9 +21,12 @@ import java.util.Set;
 
 import org.androidannotations.rest.spring.annotations.Accept;
 import org.androidannotations.rest.spring.annotations.Delete;
+import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.annotations.Options;
+import org.androidannotations.rest.spring.annotations.Part;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Put;
 import org.androidannotations.rest.spring.annotations.RequiresAuthentication;
@@ -37,14 +40,15 @@ import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 // if defined, the rootUrl will be added as a prefix to every request
-@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class, EBeanConverter.class },
-		interceptors = { RequestInterceptor.class, EBeanInterceptor.class },
-		requestFactory = MyRequestFactory.class)
+@Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class, EBeanConverter.class, FormHttpMessageConverter.class }, //
+				interceptors = { RequestInterceptor.class, EBeanInterceptor.class }, //
+				requestFactory = MyRequestFactory.class)
 public interface MyService {
 
 	// *** GET ***
@@ -149,6 +153,24 @@ public interface MyService {
 
 	@Post("/events/")
 	ResponseEntity<Event> addEvent2(Event event);
+
+	@Post("/events/{date}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void addEventWithParameters(String date, @Field String parameter, @Field String otherParameter);
+
+	@Post("/events/{date}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void addEventWithParts(String date, @Part String parameter, @Part String otherParameter);
+
+	@Post("/events/{date}")
+	@RequiresHeader("SomeFancyHeader")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void addEventWithPathParameters(@Path("date") String pathParam, @Field String parameter);
 
 	/**
 	 * Output different then input

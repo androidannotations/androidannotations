@@ -274,4 +274,50 @@ public class MyServiceTest {
 				});
 	}
 
+	@Test
+	public void addEventWithParameters() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilder.RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.addEventWithParameters("now", "param1", "param2");
+					}
+				});
+	}
+
+	@Test
+	public void addEventWithParts() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.expectedHeader("Content-Type", "multipart/form-data") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilder.RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.addEventWithParts("now", "param1", "param2");
+					}
+				});
+	}
+
+	@Test
+	public void addEventWithPathParameters() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilder.RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.addEventWithPathParameters("now", "param1");
+					}
+				});
+	}
+
 }

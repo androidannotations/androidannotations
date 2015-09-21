@@ -63,6 +63,11 @@ public class RequestTestBuilder {
 		return this;
 	}
 
+	public RequestTestBuilder expectedHeader(String name, String value) {
+		requestHeaders.put(name, value);
+		return this;
+	}
+
 	public RequestTestBuilder requestCookie(String name, String value) {
 		requestCookies.put(name, value);
 		myService.setCookie(name, value);
