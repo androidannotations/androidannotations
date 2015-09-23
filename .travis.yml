@@ -27,7 +27,7 @@ script:
   - ./examples/gradle/gradlew build --build-file examples/gradle/build.gradle
 
 after_success:
-  - if [[ $TRAVIS_REPO_SLUG == 'excilys/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk7' ]]; then mvn -f AndroidAnnotations/pom.xml -pl androidannotations-bundle -am -DskipTests -Dquiet -s settings.xml deploy ; fi
+  - if [[ $TRAVIS_REPO_SLUG == 'excilys/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk7' ]]; then mvn -f AndroidAnnotations/pom.xml -DskipTests -Dquiet -s settings.xml deploy ; fi
 
 notifications:
   webhooks:
