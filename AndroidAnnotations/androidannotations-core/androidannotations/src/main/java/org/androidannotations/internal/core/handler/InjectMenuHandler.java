@@ -47,8 +47,8 @@ public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 	@Override
 	public void process(Element element, HasOptionsMenu holder) {
 		String fieldName = element.getSimpleName().toString();
-		JBlock body = holder.getOnCreateOptionsMenuMethodBody();
-		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
+		JBlock body = holder.getOnCreateOptionsMenuMethodBody(null);
+		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam(null);
 
 		body.assign(JExpr._this().ref(fieldName), menuParam);
 	}

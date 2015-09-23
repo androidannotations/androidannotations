@@ -65,15 +65,10 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	private OnActivityResultDelegate onActivityResultDelegate;
 	private ReceiverRegistrationDelegate<EActivityHolder> receiverRegistrationDelegate;
 	private PreferenceActivityDelegate preferencesHolder;
+	private OnCreateOptionMenuDelegate onCreateOptionMenuDelegate;
 	private JMethod injectExtrasMethod;
 	private JBlock injectExtrasBlock;
 	private JVar injectExtras;
-	private JBlock onCreateOptionsMenuMethodBody;
-	private JVar onCreateOptionsMenuMenuInflaterVar;
-	private JVar onCreateOptionsMenuMenuParam;
-	private JVar onOptionsItemSelectedItem;
-	private JVar onOptionsItemSelectedItemId;
-	private JBlock onOptionsItemSelectedMiddleBlock;
 	private NonConfigurationHolder nonConfigurationHolder;
 	private JBlock initIfNonConfigurationNotNullBlock;
 	private JVar initNonConfigurationInstance;
@@ -107,6 +102,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		onActivityResultDelegate = new OnActivityResultDelegate(this);
 		receiverRegistrationDelegate = new ReceiverRegistrationDelegate<>(this);
 		preferencesHolder = new PreferenceActivityDelegate(this);
+		onCreateOptionMenuDelegate = new OnCreateOptionMenuDelegate(this);
 		setSetContentView();
 		intentBuilder = new ActivityIntentBuilder(this, androidManifest);
 		intentBuilder.build();
@@ -298,27 +294,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		onContentChangedAfterSuperBlock = body.blockSimple();
 	}
 
-	private void setOnCreateOptionsMenu() {
-		JMethod method = generatedClass.method(PUBLIC, getCodeModel().BOOLEAN, "onCreateOptionsMenu");
-		method.annotate(Override.class);
-		JBlock methodBody = method.body();
-		onCreateOptionsMenuMenuParam = method.param(getClasses().MENU, "menu");
-		onCreateOptionsMenuMenuInflaterVar = methodBody.decl(getClasses().MENU_INFLATER, "menuInflater", invoke("getMenuInflater"));
-		onCreateOptionsMenuMethodBody = methodBody.blockSimple();
-		methodBody._return(_super().invoke(method).arg(onCreateOptionsMenuMenuParam));
-	}
-
-	private void setOnOptionsItemSelected() {
-		JMethod method = generatedClass.method(JMod.PUBLIC, getCodeModel().BOOLEAN, "onOptionsItemSelected");
-		method.annotate(Override.class);
-		JBlock methodBody = method.body();
-		onOptionsItemSelectedItem = method.param(getClasses().MENU_ITEM, "item");
-		onOptionsItemSelectedItemId = methodBody.decl(getCodeModel().INT, "itemId_", onOptionsItemSelectedItem.invoke("getItemId"));
-		onOptionsItemSelectedMiddleBlock = methodBody.blockSimple();
-
-		methodBody._return(invoke(_super(), method).arg(onOptionsItemSelectedItem));
-	}
-
 	@Override
 	protected void setFindNativeFragmentById() {
 		JMethod method = generatedClass.method(PRIVATE, getClasses().FRAGMENT, "findNativeFragmentById");
@@ -473,51 +448,33 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JBlock getOnCreateOptionsMenuMethodBody() {
-		if (onCreateOptionsMenuMethodBody == null) {
-			setOnCreateOptionsMenu();
-		}
-		return onCreateOptionsMenuMethodBody;
+	public JBlock getOnCreateOptionsMenuMethodBody(OnCreateOptionMenuDelegate.CreateOptionAnnotationData createOptionAnnotationData) {
+		return onCreateOptionMenuDelegate.getOnCreateOptionsMenuMethodBody(createOptionAnnotationData);
 	}
 
 	@Override
-	public JVar getOnCreateOptionsMenuMenuInflaterVar() {
-		if (onCreateOptionsMenuMenuInflaterVar == null) {
-			setOnCreateOptionsMenu();
-		}
-		return onCreateOptionsMenuMenuInflaterVar;
+	public JVar getOnCreateOptionsMenuMenuInflaterVar(OnCreateOptionMenuDelegate.CreateOptionAnnotationData createOptionAnnotationData) {
+		return onCreateOptionMenuDelegate.getOnCreateOptionsMenuMenuInflaterVar(createOptionAnnotationData);
 	}
 
 	@Override
-	public JVar getOnCreateOptionsMenuMenuParam() {
-		if (onCreateOptionsMenuMenuParam == null) {
-			setOnCreateOptionsMenu();
-		}
-		return onCreateOptionsMenuMenuParam;
+	public JVar getOnCreateOptionsMenuMenuParam(OnCreateOptionMenuDelegate.CreateOptionAnnotationData createOptionAnnotationData) {
+		return onCreateOptionMenuDelegate.getOnCreateOptionsMenuMenuParam(createOptionAnnotationData);
 	}
 
 	@Override
 	public JVar getOnOptionsItemSelectedItem() {
-		if (onOptionsItemSelectedItem == null) {
-			setOnOptionsItemSelected();
-		}
-		return onOptionsItemSelectedItem;
+		return onCreateOptionMenuDelegate.getOnOptionsItemSelectedItem();
 	}
 
 	@Override
 	public JVar getOnOptionsItemSelectedItemId() {
-		if (onOptionsItemSelectedItemId == null) {
-			setOnOptionsItemSelected();
-		}
-		return onOptionsItemSelectedItemId;
+		return onCreateOptionMenuDelegate.getOnOptionsItemSelectedItemId();
 	}
 
 	@Override
 	public JBlock getOnOptionsItemSelectedMiddleBlock() {
-		if (onOptionsItemSelectedMiddleBlock == null) {
-			setOnOptionsItemSelected();
-		}
-		return onOptionsItemSelectedMiddleBlock;
+		return onCreateOptionMenuDelegate.getOnOptionsItemSelectedMiddleBlock();
 	}
 
 	public NonConfigurationHolder getNonConfigurationHolder() throws JClassAlreadyExistsException {

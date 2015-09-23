@@ -19,11 +19,11 @@ import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JVar;
 
 public interface HasOptionsMenu extends GeneratedClassHolder {
-	JBlock getOnCreateOptionsMenuMethodBody();
+	JBlock getOnCreateOptionsMenuMethodBody(OnCreateOptionMenuDelegate.CreateOptionAnnotationData createOptionAnnotationData);
 
-	JVar getOnCreateOptionsMenuMenuInflaterVar();
+	JVar getOnCreateOptionsMenuMenuInflaterVar(OnCreateOptionMenuDelegate.CreateOptionAnnotationData createOptionAnnotationData);
 
-	JVar getOnCreateOptionsMenuMenuParam();
+	JVar getOnCreateOptionsMenuMenuParam(OnCreateOptionMenuDelegate.CreateOptionAnnotationData createOptionAnnotationData);
 
 	JVar getOnOptionsItemSelectedItem();
 
