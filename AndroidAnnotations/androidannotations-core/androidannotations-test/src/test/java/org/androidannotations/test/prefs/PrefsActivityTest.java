@@ -63,6 +63,17 @@ public class PrefsActivityTest {
 	}
 
 	@Test
+	public void methodInjectedPrefsNotNull() {
+		assertThat(activity.methodInjectedPref).isNotNull();
+	}
+
+	@Test
+	public void multiInjectedPrefsNotNull() {
+		assertThat(activity.firstMultiInjectedPref).isNotNull();
+		assertThat(activity.secondMultiInjectedPref).isNotNull();
+	}
+
+	@Test
 	public void putString() {
 		somePrefs.name().put("John");
 		assertThat(sharedPref.getString("name", null)).isEqualTo("John");
