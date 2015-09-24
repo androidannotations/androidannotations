@@ -116,6 +116,10 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 	public void isSharedPreference(Element element, ElementValidation valid) {
 
 		TypeMirror type = element.asType();
+		if (element instanceof ExecutableElement) {
+			element = ((ExecutableElement) element).getParameters().get(0);
+			type = element.asType();
+		}
 
 		/*
 		 * The type is not available yet because it has just been generated
