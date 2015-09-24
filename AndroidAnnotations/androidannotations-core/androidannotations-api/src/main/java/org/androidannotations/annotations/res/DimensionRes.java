@@ -33,7 +33,7 @@ import org.androidannotations.annotations.ResId;
  * </p>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface DimensionRes {
 
 	/**

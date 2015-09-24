@@ -505,8 +505,18 @@ public class ValidatorHelper {
 		return false;
 	}
 
-	public void allowedType(TypeMirror fieldTypeMirror, List<String> allowedTypes, ElementValidation valid) {
-		String qualifiedName = fieldTypeMirror.toString();
+	public void allowedType(Element element, List<String> allowedTypes, ElementValidation valid) {
+		String qualifiedName;
+		Element enclosingElement = element.getEnclosingElement();
+		if (element instanceof VariableElement && enclosingElement instanceof ExecutableElement) {
+			qualifiedName = element.asType().toString();
+		} else if (element instanceof ExecutableElement) {
+			element = ((ExecutableElement) element).getParameters().get(0);
+			qualifiedName = element.asType().toString();
+		} else {
+			qualifiedName = element.asType().toString();
+		}
+
 		if (!allowedTypes.contains(qualifiedName)) {
 			valid.addError("%s can only be used on a field which is a " + allowedTypes.toString() + ", not " + qualifiedName);
 		}
