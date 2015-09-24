@@ -48,6 +48,16 @@ public class ResActivityTest {
 		assertThat(activity.injectedString).isEqualTo("test");
 	}
 
+	@Test
+	public void methodInjectedStringNotNull() {
+		assertNotNull(activity.methodInjectedString);
+	}
+
+	@Test
+	public void multiInjectedStringNotNull() {
+		assertNotNull(activity.multiInjectedString);
+	}
+
 	/**
 	 * Cannot be tested right now, because there is no Robolectric shadow class
 	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
@@ -66,6 +76,39 @@ public class ResActivityTest {
 	// @Test
 	public void xmlResAnimNotNull() {
 		assertThat(activity.fade_in).isNotNull();
+	}
+
+	/**
+	 * Cannot be tested right now, because there is no Robolectric shadow class
+	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
+	 */
+	// @Test
+	public void methodInjectedAnimationNotNull() {
+		assertNotNull(activity.methodInjectedAnimation);
+	}
+
+	/**
+	 * Cannot be tested right now, because there is no Robolectric shadow class
+	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
+	 */
+	// @Test
+	public void multiInjectedAnimationNotNull() {
+		assertNotNull(activity.multiInjectedAnimation);
+	}
+
+	@Test
+	public void drawableResNotNull() {
+		assertNotNull(activity.icon);
+	}
+
+	@Test
+	public void methodInjectedDrawableNotNull() {
+		assertNotNull(activity.methodInjectedDrawable);
+	}
+
+	@Test
+	public void multiInjectedDrawableNotNull() {
+		assertNotNull(activity.multiInjectedDrawable);
 	}
 
 	@Test
@@ -87,4 +130,15 @@ public class ResActivityTest {
 	public void htmlInjectedCorrectlySet() {
 		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.htmlInjected);
 	}
+
+	@Test
+	public void methodInjectedHtmlNotNull() {
+		assertNotNull(activity.methodInjectedHtml);
+	}
+
+	@Test
+	public void multiInjectedHtmlNotNull() {
+		assertNotNull(activity.multiInjectedHtml);
+	}
+
 }

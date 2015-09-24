@@ -29,9 +29,9 @@ public class ContextCompatDrawableTest extends AAProcessorTestHelper {
 	private static final String DRAWABLE_VIA_CONTEXT_ON_LOLLIPOP = ".*myDrawable = this\\.getDrawable\\(R\\.drawable\\.myDrawable\\);.*";
 	private static final String[] DRAWABLE_CONDITIONAL_WITHOUT_CONTEXT_COMPAT =  new String[] {
 		"        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {",
-		"            myDrawable = this.getDrawable(R.drawable.myDrawable);",
+		"            this.myDrawable = this.getDrawable(R.drawable.myDrawable);",
 		"        } else {",
-		"            myDrawable = resources_.getDrawable(R.drawable.myDrawable);",
+		"            this.myDrawable = resources_.getDrawable(R.drawable.myDrawable);",
 		"        }",
 	};
 
@@ -63,29 +63,27 @@ public class ContextCompatDrawableTest extends AAProcessorTestHelper {
 		assertCompilationSuccessful(result);
 		assertGeneratedClassMatches(generatedFile, DRAWABLE_VIA_SUPPORT_SIGNATURE);
 	}
-	
+
 	@Test
 	public void activityCompilesOnMinSdk21WithoutContextCompat() throws Exception {
 		addManifestProcessorParameter(ContextCompatDrawableTest.class, "AndroidManifestForDrawableMinSdk21.xml");
 
 		CompileResult result = compileFiles(ActivityWithGetDrawableMethod.class);
 		File generatedFile = toGeneratedFile(ActivityWithGetDrawableMethod.class);
-		
+
 		assertCompilationSuccessful(result);
 		assertGeneratedClassMatches(generatedFile, DRAWABLE_VIA_CONTEXT_ON_LOLLIPOP);
 	}
-	
+
 	@Test
 	public void activityCompilesOnMinSdkLower21CompileSdkHigher21WithoutContextCompat() throws Exception {
 		addManifestProcessorParameter(ContextCompatDrawableTest.class, "AndroidManifestForDrawableMinSdk20.xml");
 
-		CompileResult result = compileFiles(toPath(ContextCompatDrawableTest.class, "Context.java"),
-				toPath(ContextCompatDrawableTest.class, "Build.java"), 
-				ActivityWithGetDrawableMethod.class);
+		CompileResult result = compileFiles(toPath(ContextCompatDrawableTest.class, "Context.java"), toPath(ContextCompatDrawableTest.class, "Build.java"), ActivityWithGetDrawableMethod.class);
 		File generatedFile = toGeneratedFile(ActivityWithGetDrawableMethod.class);
-		
+
 		assertCompilationSuccessful(result);
 		assertGeneratedClassContains(generatedFile, DRAWABLE_CONDITIONAL_WITHOUT_CONTEXT_COMPAT);
 	}
-	
+
 }
