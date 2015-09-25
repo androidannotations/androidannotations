@@ -82,4 +82,18 @@ public class SSLConnectionTest {
 		ClientConnectionManager ccm = activity.mHttpsClientTest3.getConnectionManager();
 		assertNotNull(ccm);
 	}
+
+	@Test
+	public void methodInjectedHttpsClient() {
+		assertNotNull(activity.methodInjectedHttpsClient);
+		ClientConnectionManager ccm = activity.methodInjectedHttpsClient.getConnectionManager();
+		assertNotNull(ccm);
+	}
+
+	@Test
+	public void multiInjectedHttpsClient() {
+		assertNotNull(activity.multiInjectedHttpsClient);
+		ClientConnectionManager ccm = activity.multiInjectedHttpsClient.getConnectionManager();
+		assertNotNull(ccm);
+	}
 }
