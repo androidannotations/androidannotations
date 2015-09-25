@@ -50,6 +50,6 @@ import java.lang.annotation.Target;
  * @see EApplication
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface App {
 }
