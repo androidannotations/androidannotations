@@ -42,6 +42,18 @@ public class OptionsMenuActivity extends Activity {
 	@OptionsMenuItem(resName = "menu_share")
 	MenuItem aMenuByResName;
 
+	MenuItem methodInjectedMenuItem;
+	MenuItem multiInjectedMenuItem;
+
+	@OptionsMenuItem(R.id.menu_search)
+	void methodInjectedExtra(MenuItem methodInjectedMenuItem) {
+		this.methodInjectedMenuItem = methodInjectedMenuItem;
+	}
+
+	void multiInjectedMenuItem(@OptionsMenuItem(R.id.menu_search) MenuItem multiInjectedMenuItem, @OptionsMenuItem(R.id.menu_refresh) MenuItem multiInjectedMenuItem2) {
+		this.multiInjectedMenuItem = multiInjectedMenuItem;
+	}
+
 	boolean menuRefreshSelected;
 	boolean menuRefreshSelectedFromAnnotatedClass;
 	boolean multipleMenuItems;

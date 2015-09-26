@@ -21,11 +21,13 @@ import static org.mockito.Mockito.when;
 
 import org.androidannotations.test.R;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import android.view.Menu;
 import android.view.MenuItem;
 
 @RunWith(RobolectricTestRunner.class)
@@ -91,4 +93,21 @@ public class OptionsMenuActivityTest {
 		assertThat(activity.menuRefreshSelectedFromAnnotatedClass).isFalse();
 	}
 
+	@Test
+	@Ignore
+	// TODO robolectric does not support menu inflation
+	public void methodInjectedMenuItem() {
+		Menu menu = mock(Menu.class);
+		activity.onCreateOptionsMenu(menu);
+		assertThat(activity.methodInjectedMenuItem).isNotNull();
+	}
+
+	@Test
+	@Ignore
+	// TODO robolectric does not support menu inflation
+	public void multiInjectedMenuItem() {
+		Menu menu = mock(Menu.class);
+		activity.onCreateOptionsMenu(menu);
+		assertThat(activity.multiInjectedMenuItem).isNotNull();
+	}
 }
