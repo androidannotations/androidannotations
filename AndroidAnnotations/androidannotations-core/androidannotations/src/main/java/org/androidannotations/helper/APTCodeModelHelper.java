@@ -550,13 +550,17 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	// TODO it would be nice to cache the result map for better performance
 	public TypeMirror getActualType(Element element, GeneratedClassHolder holder) {
+		DeclaredType enclosingClassType = (DeclaredType) element.getEnclosingElement().asType();
+		return getActualType(element, enclosingClassType, holder);
+	}
+
+	// TODO it would be nice to cache the result map for better performance
+	public TypeMirror getActualType(Element element, DeclaredType enclosingClassType, GeneratedClassHolder holder) {
 		Types types = environment.getProcessingEnvironment().getTypeUtils();
-		DeclaredType typeMirror = (DeclaredType) element.getEnclosingElement().asType();
 		TypeMirror annotatedClass = holder.getAnnotatedElement().asType();
 
-		Map<String, TypeMirror> actualTypes = getActualTypes(types, typeMirror, annotatedClass);
+		Map<String, TypeMirror> actualTypes = getActualTypes(types, enclosingClassType, annotatedClass);
 
 		TypeMirror type = actualTypes.get(element.asType().toString());
 		return type == null ? element.asType() : type;
@@ -565,7 +569,7 @@ public class APTCodeModelHelper {
 	public void addSuppressWarnings(IJAnnotatable generatedElement, String annotationValue) {
 		Collection<JAnnotationUse> annotations = generatedElement.annotations();
 		for (JAnnotationUse annotationUse : annotations) {
-			if (annotationUse.getAnnotationClass().fullName().equals(SuppressWarnings.class.getCanonicalName())) {
+			if (SuppressWarnings.class.getCanonicalName().equals(annotationUse.getAnnotationClass().fullName())) {
 				AbstractJAnnotationValue value = annotationUse.getParam("value");
 				StringWriter code = new StringWriter();
 				JFormatter formatter = new JFormatter(code);

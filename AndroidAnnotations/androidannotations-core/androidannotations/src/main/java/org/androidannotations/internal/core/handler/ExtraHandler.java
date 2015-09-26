@@ -22,30 +22,37 @@ import static com.helger.jcodemodel.JMod.PUBLIC;
 import static com.helger.jcodemodel.JMod.STATIC;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.MethodInjectionHandler;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.HasExtras;
 import org.androidannotations.holder.HasIntentBuilder;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JExpr;
-import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JVar;
 
-public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
+public class ExtraHandler extends BaseAnnotationHandler<HasExtras>implements MethodInjectionHandler<HasExtras> {
+
+	private final InjectHelper<HasExtras> injectHelper;
 
 	public ExtraHandler(AndroidAnnotationsEnvironment environment) {
 		super(Extra.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
@@ -55,15 +62,25 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		 * setIntent() method can be overridden
 		 */
 
-		validatorHelper.enclosingElementHasEActivity(element,  validation);
+		injectHelper.validate(Extra.class, element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
 
-		validatorHelper.canBePutInABundle(element, validation);
+		Element param = injectHelper.getParam(element);
+		validatorHelper.canBePutInABundle(param, validation);
 	}
 
 	@Override
 	public void process(Element element, HasExtras holder) {
+		injectHelper.process(element, holder);
+	}
+
+	@Override
+	public JBlock getInvocationBlock(HasExtras holder) {
+		return holder.getInjectExtrasBlock();
+	}
+
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, HasExtras holder, Element element, Element param) {
 		Extra annotation = element.getAnnotation(Extra.class);
 		String extraKey = annotation.value();
 		String fieldName = element.getSimpleName().toString();
@@ -72,12 +89,34 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 		}
 
 		JFieldVar extraKeyStaticField = createStaticExtraField(holder, extraKey, fieldName);
-		injectExtraInComponent(element, holder, extraKeyStaticField, fieldName);
-
 		if (holder instanceof HasIntentBuilder) {
 			String docComment = getProcessingEnvironment().getElementUtils().getDocComment(element);
-			createIntentInjectionMethod(element, (HasIntentBuilder) holder, extraKeyStaticField, fieldName, docComment);
+			createIntentInjectionMethod(param, (HasIntentBuilder) holder, extraKeyStaticField, fieldName, docComment);
 		}
+
+		JMethod injectExtrasMethod = holder.getInjectExtrasMethod();
+		JVar extras = holder.getInjectExtras();
+
+		DeclaredType enclosingClassType;
+		if (param.getKind() == ElementKind.PARAMETER) {
+			enclosingClassType = (DeclaredType) param.getEnclosingElement().getEnclosingElement().asType();
+		} else {
+			enclosingClassType = (DeclaredType) param.getEnclosingElement().asType();
+		}
+		TypeMirror type = codeModelHelper.getActualType(param, enclosingClassType, holder);
+		AbstractJClass elementClass = codeModelHelper.typeMirrorToJClass(param.asType());
+		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), type);
+
+		IJExpression intent = invoke("getIntent");
+		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(elementClass, intent, extras, extraKeyStaticField, injectExtrasMethod);
+
+		JBlock ifContainsKey = targetBlock._if(JExpr.invoke(extras, "containsKey").arg(extraKeyStaticField))._then();
+		ifContainsKey.assign(fieldRef, restoreMethodCall);
+	}
+
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEActivity(element, valid);
 	}
 
 	private JFieldVar createStaticExtraField(HasExtras holder, String extraKey, String fieldName) {
@@ -87,23 +126,6 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras> {
 			staticExtraField = holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, getClasses().STRING, staticFieldName, lit(extraKey));
 		}
 		return staticExtraField;
-	}
-
-	private void injectExtraInComponent(Element element, HasExtras hasExtras, JFieldVar extraKeyStaticField, String fieldName) {
-		JMethod injectExtrasMethod = hasExtras.getInjectExtrasMethod();
-		JVar extras = hasExtras.getInjectExtras();
-		JBlock injectExtrasBlock = hasExtras.getInjectExtrasBlock();
-
-		TypeMirror type = codeModelHelper.getActualType(element, hasExtras);
-		AbstractJClass elementClass = codeModelHelper.typeMirrorToJClass(element.asType());
-		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), type);
-
-		JFieldRef extraField = JExpr.ref(fieldName);
-		IJExpression intent = invoke("getIntent");
-		JBlock ifContainsKey = injectExtrasBlock._if(JExpr.invoke(extras, "containsKey").arg(extraKeyStaticField))._then();
-
-		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(elementClass, intent, extras, extraKeyStaticField, injectExtrasMethod);
-		ifContainsKey.assign(extraField, restoreMethodCall);
 	}
 
 	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName, String docComment) {
