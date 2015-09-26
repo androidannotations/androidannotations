@@ -53,4 +53,23 @@ public class MyFragmentActivityTest {
 		assertThat(activity.myFragmentTag2).isNotNull();
 	}
 
+	@Test
+	public void methodInjectedFragmentById() {
+		assertThat(activity.methodInjectedFragmentById).isNotNull();
+	}
+
+	@Test
+	public void multiInjectedFragmentById() {
+		assertThat(activity.multiInjectedFragmentById).isNotNull();
+	}
+
+	@Test
+	public void methodInjectedFragmentByTag() {
+		assertThat(activity.methodInjectedFragmentByTag).isNotNull();
+	}
+
+	@Test
+	public void multiInjectedFragmentByTag() {
+		assertThat(activity.multiInjectedFragmentByTag).isNotNull();
+	}
 }
