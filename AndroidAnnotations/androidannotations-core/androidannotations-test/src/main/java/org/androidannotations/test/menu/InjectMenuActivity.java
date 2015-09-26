@@ -27,4 +27,16 @@ public class InjectMenuActivity extends Activity {
 	@InjectMenu
 	Menu menu;
 
+	Menu methodInjectedMenu;
+	Menu multiInjectedMenu;
+
+	@InjectMenu
+	void methodInjectedExtra(Menu methodInjectedMenu) {
+		this.methodInjectedMenu = methodInjectedMenu;
+	}
+
+	void multiInjectedMenu(@InjectMenu Menu multiInjectedMenu, @InjectMenu Menu multiInjectedMenu2) {
+		this.multiInjectedMenu = multiInjectedMenu;
+	}
+
 }
