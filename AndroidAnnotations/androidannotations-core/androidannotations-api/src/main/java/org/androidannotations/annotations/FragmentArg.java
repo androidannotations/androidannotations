@@ -73,7 +73,7 @@ import java.lang.annotation.Target;
  * @see FragmentByTag
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface FragmentArg {
 
 	/**
