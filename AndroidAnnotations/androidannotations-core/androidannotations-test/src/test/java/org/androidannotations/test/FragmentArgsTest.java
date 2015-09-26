@@ -51,4 +51,20 @@ public class FragmentArgsTest {
 
 		assertThat(fragment.myInt).isEqualTo(TEST_INT);
 	}
+
+	@Test
+	public void methodInjectedExtra() {
+		FragmentArguments fragment = FragmentArguments_.builder().methodInjectedExtra("Hello!").build();
+		assertThat(fragment.methodInjectedExtra).isNull();
+		fragment.onCreate(null);
+		assertThat(fragment.methodInjectedExtra).isEqualTo("Hello!");
+	}
+
+	@Test
+	public void multiInjectedExtra() {
+		FragmentArguments fragment = FragmentArguments_.builder().multiInjectedExtra("Hello!").build();
+		assertThat(fragment.methodInjectedExtra).isNull();
+		fragment.onCreate(null);
+		assertThat(fragment.multiInjectedExtra).isEqualTo("Hello!");
+	}
 }

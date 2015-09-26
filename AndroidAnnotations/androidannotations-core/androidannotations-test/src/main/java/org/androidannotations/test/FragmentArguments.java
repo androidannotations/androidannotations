@@ -177,6 +177,18 @@ public class FragmentArguments extends Fragment {
 
 	}
 
+	String methodInjectedExtra;
+	String multiInjectedExtra;
+
+	@FragmentArg
+	void methodInjectedExtra(String methodInjectedExtra) {
+		this.methodInjectedExtra = methodInjectedExtra;
+	}
+
+	void multiInjectedExtra(@FragmentArg String multiInjectedExtra, @FragmentArg String multiInjectedExtra2) {
+		this.multiInjectedExtra = multiInjectedExtra;
+	}
+
 	static {
 		FragmentArguments_.builder().myBundle(null).myCharSequence(null).build();
 	}
