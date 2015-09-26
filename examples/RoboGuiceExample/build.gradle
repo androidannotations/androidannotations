@@ -22,16 +22,13 @@ def AAVersion = '4.0-SNAPSHOT' // change this to your desired version, for examp
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
+    apt "org.androidannotations:roboguice:$AAVersion"
+    compile "org.androidannotations:roboguice-api:$AAVersion"
     compile 'org.roboguice:roboguice:3.0.1'
     // apt 'org.roboguice:roboblender:3.0.1'
     // RoboBlender does not work with android-apt currently, so unfortunately we have to turn it off
 }
 
-apt {
-    arguments {
-        androidManifestFile variant.outputs[0].processResources.manifestFile
-    }
-}
 
 android {
     compileSdkVersion 22
