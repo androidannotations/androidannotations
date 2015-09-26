@@ -53,7 +53,7 @@ import java.lang.annotation.Target;
  * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface OptionsMenuItem {
 
 	/**
