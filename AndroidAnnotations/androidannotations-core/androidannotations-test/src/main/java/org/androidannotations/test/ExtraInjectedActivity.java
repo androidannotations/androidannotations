@@ -55,6 +55,18 @@ public class ExtraInjectedActivity extends Activity {
 	@Extra
 	ParcelableSerializableData parcelableSerializableData;
 
+	String methodInjectedExtra;
+	String multiInjectedExtra;
+
+	@Extra
+	void methodInjectedExtra(String methodInjectedExtra) {
+		this.methodInjectedExtra = methodInjectedExtra;
+	}
+
+	void multiInjectedExtra(@Extra String multiInjectedExtra, @Extra String multiInjectedExtra2) {
+		this.multiInjectedExtra = multiInjectedExtra;
+	}
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
