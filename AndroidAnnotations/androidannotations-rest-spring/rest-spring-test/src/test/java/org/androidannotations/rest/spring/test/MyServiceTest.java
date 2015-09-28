@@ -320,4 +320,49 @@ public class MyServiceTest {
 				});
 	}
 
+	@Test
+	public void addEventWithHeadersOverriden() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.requestHeader("SomeFancyHeader", "aFancyHeader") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilder.RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.addEventWithHeaders("now", "event");
+					}
+				});
+	}
+
+	@Test
+	public void addEventWithHeaders() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.expectedHeader("SomeFancyHeader", "fancy") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilder.RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.addEventWithHeaders("now", "event");
+					}
+				});
+	}
+
+	@Test
+	public void addEventWithHeadersHeadersAnnotation() {
+		RequestTestBuilder.build() //
+				.requestCookie("myCookie", "myCookieValue") //
+				.expectedHeader("SomeFancyHeader", "fancy") //
+				.responseContent("{'id':1,'name':'event1'}") //
+				.hasUrlVariables(true) //
+				.asserts(new RequestTestBuilder.RequestTestBuilderExecutor() {
+					@Override
+					public void execute(MyService myService) {
+						myService.addEventWithHeadersHeadersAnnotation("now", "event");
+					}
+				});
+	}
+
 }

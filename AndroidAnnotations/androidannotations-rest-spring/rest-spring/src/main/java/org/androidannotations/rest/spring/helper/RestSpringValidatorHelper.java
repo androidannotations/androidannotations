@@ -563,4 +563,8 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 					+ FORM_HTTP_MESSAGE_CONVERTER + " (or subtype)");
 		}
 	}
+
+	public void elementHasOneOfRestMethodAnnotations(Element element, ElementValidation validation) {
+		hasOneOfAnnotations(element, element, REST_ANNOTATION_CLASSES, validation);
+	}
 }

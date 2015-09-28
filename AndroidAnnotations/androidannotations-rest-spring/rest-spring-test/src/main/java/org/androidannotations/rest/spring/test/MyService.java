@@ -24,6 +24,8 @@ import org.androidannotations.rest.spring.annotations.Delete;
 import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
+import org.androidannotations.rest.spring.annotations.Header;
+import org.androidannotations.rest.spring.annotations.Headers;
 import org.androidannotations.rest.spring.annotations.Options;
 import org.androidannotations.rest.spring.annotations.Part;
 import org.androidannotations.rest.spring.annotations.Path;
@@ -171,6 +173,19 @@ public interface MyService {
 	@RequiresCookie("myCookie")
 	@RequiresCookieInUrl("myCookieInUrl")
 	void addEventWithPathParameters(@Path("date") String pathParam, @Field String parameter);
+
+	@Post("/events/{date}")
+	@RequiresHeader("SomeFancyHeader")
+	@Header(name = "SomeFancyHeader", value = "fancy")
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void addEventWithHeaders(String date, String parameter);
+
+	@Post("/events/{date}")
+	@Headers(@Header(name = "SomeFancyHeader", value = "fancy"))
+	@RequiresCookie("myCookie")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void addEventWithHeadersHeadersAnnotation(String date, String parameter);
 
 	/**
 	 * Output different then input

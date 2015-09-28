@@ -51,6 +51,8 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.rest.spring.annotations.Accept;
 import org.androidannotations.rest.spring.annotations.Field;
+import org.androidannotations.rest.spring.annotations.Header;
+import org.androidannotations.rest.spring.annotations.Headers;
 import org.androidannotations.rest.spring.annotations.Part;
 import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.RequiresAuthentication;
@@ -163,15 +165,34 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public String[] requiredHeaders(ExecutableElement executableElement) {
-		RequiresHeader cookieAnnotation = executableElement.getAnnotation(RequiresHeader.class);
-		if (cookieAnnotation == null) {
-			cookieAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
+		RequiresHeader requiresHeaderAnnotation = executableElement.getAnnotation(RequiresHeader.class);
+		if (requiresHeaderAnnotation == null) {
+			requiresHeaderAnnotation = executableElement.getEnclosingElement().getAnnotation(RequiresHeader.class);
 		}
-		if (cookieAnnotation != null) {
-			return cookieAnnotation.value();
+		if (requiresHeaderAnnotation != null) {
+			return requiresHeaderAnnotation.value();
 		} else {
 			return null;
 		}
+	}
+
+	private Map<String, String> getHeadersFromAnnotations(ExecutableElement executableElement) {
+		Headers headers = executableElement.getAnnotation(Headers.class);
+		Map<String, String> headerMap = new HashMap<>();
+		if (headers != null) {
+			Header[] headerList = headers.value();
+
+			for (Header header : headerList) {
+				headerMap.put(header.name(), header.value());
+			}
+		}
+
+		Header header = executableElement.getAnnotation(Header.class);
+		if (header != null) {
+			headerMap.put(header.name(), header.value());
+		}
+
+		return headerMap;
 	}
 
 	public String[] requiredCookies(ExecutableElement executableElement) {
@@ -234,7 +255,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		boolean requiresMultipartHeader = multipartHeaderRequired(executableElement);
 
-		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth || requiresMultipartHeader) {
+		Map<String, String> headersFromAnnotations = getHeadersFromAnnotations(executableElement);
+
+		if (hasMediaTypeDefined || requiresCookies || requiresHeaders || requiresAuth || requiresMultipartHeader || !headersFromAnnotations.isEmpty()) {
 			// we need the headers
 			httpHeadersVar = body.decl(getEnvironment().getJClass(HTTP_HEADERS), "httpHeaders", JExpr._new(getEnvironment().getJClass(HTTP_HEADERS)));
 		}
@@ -245,6 +268,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 			JInvocation mediaTypeListParam = collectionsClass.staticInvoke("singletonList").arg(mediaTypeClass.staticInvoke("parseMediaType").arg(mediaType));
 			body.add(JExpr.invoke(httpHeadersVar, "setAccept").arg(mediaTypeListParam));
+		}
+
+		// Set pre-defined headers here so that they can be overridden by any
+		// runtime calls
+
+		if (headersFromAnnotations != null) {
+			for (Map.Entry<String, String> header : headersFromAnnotations.entrySet()) {
+				body.add(JExpr.invoke(httpHeadersVar, "set").arg(header.getKey()).arg(header.getValue()));
+			}
 		}
 
 		if (requiresCookies) {
@@ -267,8 +299,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 
 		if (requiresHeaders) {
 			for (String header : headers) {
+				JBlock block = null;
+				if (headersFromAnnotations.containsKey(header)) {
+					block = body._if(JExpr.invoke(holder.getAvailableHeadersField(), "containsKey").arg(header))._then();
+				} else {
+					block = body;
+				}
+
 				JInvocation headerValue = JExpr.invoke(holder.getAvailableHeadersField(), "get").arg(header);
-				body.add(JExpr.invoke(httpHeadersVar, "set").arg(header).arg(headerValue));
+				block.add(JExpr.invoke(httpHeadersVar, "set").arg(header).arg(headerValue));
 			}
 
 		}
