@@ -50,7 +50,7 @@ public final class PostActivityStarter {
 	 *            A resource ID of the animation resource to use for the
 	 *            outgoing activity. Use 0 for no animation.
 	 */
-	void withAnimation(int enterAnim, int exitAnim) {
+	public void withAnimation(int enterAnim, int exitAnim) {
 		if (context instanceof Activity) {
 			((Activity) context).overridePendingTransition(enterAnim, exitAnim);
 		}
