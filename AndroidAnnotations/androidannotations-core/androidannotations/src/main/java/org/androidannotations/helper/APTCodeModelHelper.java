@@ -30,11 +30,13 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -218,7 +220,8 @@ public class APTCodeModelHelper {
 
 		String methodName = executableElement.getSimpleName().toString();
 		AbstractJClass returnType = typeMirrorToJClass(executableElement.getReturnType(), actualTypes);
-		JMethod method = holder.getGeneratedClass().method(JMod.PUBLIC, returnType, methodName);
+		int modifier = elementVisibilityModifierToJMod(executableElement);
+		JMethod method = holder.getGeneratedClass().method(modifier, returnType, methodName);
 		copyNonAAAnnotations(method, executableElement.getAnnotationMirrors());
 
 		if (!hasAnnotation(method, Override.class)) {
@@ -245,6 +248,20 @@ public class APTCodeModelHelper {
 		callSuperMethod(method, holder, method.body());
 
 		return method;
+	}
+
+	public int elementVisibilityModifierToJMod(Element element) {
+		Set<Modifier> modifiers = element.getModifiers();
+
+		if (modifiers.contains(Modifier.PUBLIC)) {
+			return JMod.PUBLIC;
+		} else if (modifiers.contains(Modifier.PROTECTED)) {
+			return JMod.PROTECTED;
+		} else if (modifiers.contains(Modifier.PRIVATE)) {
+			return JMod.PRIVATE;
+		} else {
+			return JMod.NONE;
+		}
 	}
 
 	public void generify(IJGenerifiable generifiable, TypeElement fromTypeParameters) {
