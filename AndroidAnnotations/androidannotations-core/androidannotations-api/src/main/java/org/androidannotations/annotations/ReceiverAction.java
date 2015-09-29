@@ -115,6 +115,10 @@ public @interface ReceiverAction {
 	 * {@code void onReceive(Context context, Intent intent)}. The key of this
 	 * extra is the value of the annotation {@link ReceiverAction.Extra} if it
 	 * is set or the name of the parameter.
+	 * If <a href="http://parceler.org">Parceler</a> is on the classpath, extras
+	 * annotated with &#064;Parcel, or collections supported by Parceler will be
+	 * automatically marshaled using a {@link android.os.Parcelable Parcelable}
+	 * through the Parcels utility class.
 	 * </p>
 	 */
 	@Retention(RetentionPolicy.CLASS)
