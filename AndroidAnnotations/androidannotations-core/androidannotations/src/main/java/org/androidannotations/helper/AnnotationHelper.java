@@ -95,6 +95,15 @@ public class AnnotationHelper {
 		return getElementUtils().getTypeElement(qualifiedName);
 	}
 
+	public boolean isAnnotatedWith(Element element, String qualifiedName) {
+		for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+			if (annotationMirror.getAnnotationType().toString().equals(qualifiedName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public String generatedClassQualifiedNameFromQualifiedName(String qualifiedName) {
 		TypeElement type = typeElementFromQualifiedName(qualifiedName);
 		if (type.getNestingKind() == NestingKind.MEMBER) {
@@ -443,5 +452,4 @@ public class AnnotationHelper {
 		}
 		return false;
 	}
-
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.test.R;
+import org.androidannotations.test.parceler.ParcelerBean;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -180,4 +181,6 @@ public class SaveInstanceStateActivity extends Activity {
 	@InstanceState
 	Bundle bundle;
 
+	@InstanceState
+	ParcelerBean parcelerBean;
 }

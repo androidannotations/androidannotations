@@ -33,6 +33,7 @@
 		<main.basedir>${project.parent.parent.basedir}</main.basedir>
 		<android-rome-version>1.0.0-r2</android-rome-version>
 		<checkstyle.excludes>**/R.java,**/BuildConfig.java,</checkstyle.excludes>
+		<parceler.version>1.0.3</parceler.version>
 	</properties>
 
 	<dependencies>
@@ -81,6 +82,17 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>140</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.parceler</groupId>
+			<artifactId>parceler</artifactId>
+			<version>${parceler.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.parceler</groupId>
+			<artifactId>parceler-api</artifactId>
+			<version>${parceler.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

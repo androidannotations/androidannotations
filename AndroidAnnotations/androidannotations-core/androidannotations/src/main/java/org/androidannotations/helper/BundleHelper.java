@@ -33,6 +33,7 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.IJStatement;
 import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JMethod;
 
@@ -77,12 +78,14 @@ public class BundleHelper {
 
 	private AndroidAnnotationsEnvironment environment;
 	private AnnotationHelper annotationHelper;
+	private ParcelerHelper parcelerHelper;
 	private APTCodeModelHelper codeModelHelper;
 
 	private TypeMirror element;
 
 	private boolean restoreCallNeedCastStatement = false;
 	private boolean restoreCallNeedsSuppressWarning = false;
+	private boolean parcelerBean = false;
 
 	private String methodNameToSave;
 	private String methodNameToRestore;
@@ -93,6 +96,7 @@ public class BundleHelper {
 		this.environment = environment;
 		annotationHelper = new AnnotationHelper(environment);
 		codeModelHelper = new APTCodeModelHelper(environment);
+		parcelerHelper = new ParcelerHelper(environment);
 		this.element = element;
 
 		String typeString = element.toString();
@@ -172,6 +176,10 @@ public class BundleHelper {
 			if (isTypeParcelable(type)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
+			} else if (parcelerHelper.isParcelType(type)) {
+				methodNameToSave = "put" + "Parcelable";
+				methodNameToRestore = "get" + "Parcelable";
+				parcelerBean = true;
 			} else {
 				methodNameToSave = "put" + "Serializable";
 				methodNameToRestore = "get" + "Serializable";
@@ -225,6 +233,10 @@ public class BundleHelper {
 			expressionToRestore = JExpr.invoke(bundle, methodNameToRestore).arg(extraKey);
 		}
 
+		if (parcelerBean) {
+			expressionToRestore = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("unwrap").arg(expressionToRestore);
+		}
+
 		if (restoreCallNeedCastStatement) {
 			expressionToRestore = JExpr.cast(variableClass, expressionToRestore);
 
@@ -233,5 +245,13 @@ public class BundleHelper {
 			}
 		}
 		return expressionToRestore;
+	}
+
+	public IJStatement getExpressionToSaveFromField(IJExpression saveStateBundleParam, IJExpression fieldName, IJExpression variableRef) {
+		IJExpression refExpression = variableRef;
+		if (parcelerBean) {
+			refExpression = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("wrap").arg(refExpression);
+		}
+		return JExpr.invoke(saveStateBundleParam, methodNameToSave).arg(fieldName).arg(refExpression);
 	}
 }

@@ -66,7 +66,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), type);
 
 		JFieldRef ref = ref(fieldName);
-		saveStateBody.invoke(saveStateBundleParam, bundleHelper.getMethodNameToSave()).arg(fieldName).arg(ref);
+		saveStateBody.add(bundleHelper.getExpressionToSaveFromField(saveStateBundleParam, JExpr.lit(fieldName), ref));
 
 		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, restoreStateBundleParam, JExpr.lit(fieldName), restoreStateMethod);
 		restoreStateBody.assign(ref, restoreMethodCall);

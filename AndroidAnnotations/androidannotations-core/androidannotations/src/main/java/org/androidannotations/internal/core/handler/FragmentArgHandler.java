@@ -107,7 +107,7 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
 		JMethod method = builderClass.method(PUBLIC, holder.narrow(builderClass), fieldName);
 		JVar arg = method.param(paramClass, fieldName);
-		method.body().invoke(builderArgsField, bundleHelper.getMethodNameToSave()).arg(argKeyStaticField).arg(arg);
+		method.body().add(bundleHelper.getExpressionToSaveFromField(builderArgsField, argKeyStaticField, arg));
 		method.body()._return(_this());
 
 		String docComment = getProcessingEnvironment().getElementUtils().getDocComment(element);

@@ -58,6 +58,9 @@ public final class CanonicalNameConstants {
 	public static final String INTENT_FILTER = "android.content.IntentFilter";
 	public static final String COMPONENT_NAME = "android.content.ComponentName";
 	public static final String BUNDLE = "android.os.Bundle";
+	public static final String IBINDER = "android.os.IBinder";
+	public static final String SPARSE_ARRAY = "android.util.SparseArray";
+	public static final String SPARSE_BOOLEAN_ARRAY = "android.util.SparseBooleanArray";
 	public static final String APPLICATION = "android.app.Application";
 	public static final String ACTIVITY = "android.app.Activity";
 	public static final String EDITABLE = "android.text.Editable";
@@ -147,6 +150,12 @@ public final class CanonicalNameConstants {
 	public static final String SCHEME = "org.apache.http.conn.scheme.Scheme";
 	public static final String SCHEME_REGISTRY = "org.apache.http.conn.scheme.SchemeRegistry";
 	public static final String SINGLE_CLIENT_CONN_MANAGER = "org.apache.http.impl.conn.SingleClientConnManager";
+
+	/*
+	 * Parceler
+	 */
+	public static final String PARCEL_ANNOTATION = "org.parceler.Parcel";
+	public static final String PARCELS_UTILITY_CLASS = "org.parceler.Parcels";
 
 	private CanonicalNameConstants() {
 	}
