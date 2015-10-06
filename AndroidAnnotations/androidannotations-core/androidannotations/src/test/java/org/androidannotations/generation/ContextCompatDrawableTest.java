@@ -24,14 +24,14 @@ import org.junit.Test;
 
 public class ContextCompatDrawableTest extends AAProcessorTestHelper {
 
-	private static final String DRAWABLE_SIGNATURE = ".*myDrawable = resources_\\.getDrawable\\(drawable\\.myDrawable\\);.*";
-	private static final String DRAWABLE_VIA_SUPPORT_SIGNATURE = ".*myDrawable = ContextCompat\\.getDrawable\\(this, drawable\\.myDrawable\\);.*";
-	private static final String DRAWABLE_VIA_CONTEXT_ON_LOLLIPOP = ".*myDrawable = this\\.getDrawable\\(drawable\\.myDrawable\\);.*";
+	private static final String DRAWABLE_SIGNATURE = ".*myDrawable = resources_\\.getDrawable\\(R\\.drawable\\.myDrawable\\);.*";
+	private static final String DRAWABLE_VIA_SUPPORT_SIGNATURE = ".*myDrawable = ContextCompat\\.getDrawable\\(this, R\\.drawable\\.myDrawable\\);.*";
+	private static final String DRAWABLE_VIA_CONTEXT_ON_LOLLIPOP = ".*myDrawable = this\\.getDrawable\\(R\\.drawable\\.myDrawable\\);.*";
 	private static final String[] DRAWABLE_CONDITIONAL_WITHOUT_CONTEXT_COMPAT =  new String[] {
 		"        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {",
-		"            myDrawable = this.getDrawable(drawable.myDrawable);",
+		"            myDrawable = this.getDrawable(R.drawable.myDrawable);",
 		"        } else {",
-		"            myDrawable = resources_.getDrawable(drawable.myDrawable);",
+		"            myDrawable = resources_.getDrawable(R.drawable.myDrawable);",
 		"        }",
 	};
 

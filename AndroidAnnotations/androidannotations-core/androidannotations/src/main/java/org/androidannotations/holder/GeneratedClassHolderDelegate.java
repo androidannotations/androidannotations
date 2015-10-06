@@ -18,7 +18,6 @@ package org.androidannotations.holder;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.internal.process.ProcessHolder.Classes;
 
 import com.helger.jcodemodel.AbstractJClass;
@@ -29,11 +28,8 @@ public abstract class GeneratedClassHolderDelegate<T extends GeneratedClassHolde
 
 	protected T holder;
 
-	protected APTCodeModelHelper codeModelHelper;
-
 	public GeneratedClassHolderDelegate(T holder) {
 		this.holder = holder;
-		codeModelHelper = new APTCodeModelHelper(holder.getEnvironment());
 	}
 
 	@Override

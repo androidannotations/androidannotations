@@ -40,7 +40,7 @@ public class EViewGroupHolder extends EViewHolder {
 		JBlock ifNotInflated = onFinishInflate.body()._if(getAlreadyInflated().not())._then();
 		ifNotInflated.assign(getAlreadyInflated(), JExpr.TRUE);
 
-		setContentViewBlock = codeModelHelper.blockNoBraces(ifNotInflated);
+		setContentViewBlock = ifNotInflated.blockSimple();
 
 		getInit();
 		viewNotifierHelper.invokeViewChanged(ifNotInflated);

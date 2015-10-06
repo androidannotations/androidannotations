@@ -95,7 +95,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		onViewChanged = getGeneratedClass().method(PUBLIC, getCodeModel().VOID, "onViewChanged");
 		onViewChanged.annotate(Override.class);
 		onViewChangedBody = onViewChanged.body();
-		onViewChangedBodyBeforeFindViews = codeModelHelper.blockNoBraces(onViewChangedBody);
+		onViewChangedBodyBeforeFindViews = onViewChangedBody.blockSimple();
 		onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
 		AbstractJClass notifierClass = getJClass(OnViewChangedNotifier.class);
 		getInitBody().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
@@ -147,7 +147,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 
 	protected FoundViewHolder createFoundViewAndIfNotNullBlock(JFieldRef idRef, AbstractJClass viewClass) {
 		IJExpression findViewExpression = findViewById(idRef);
-		JBlock block = codeModelHelper.blockNoBraces(getOnViewChangedBody());
+		JBlock block = getOnViewChangedBody().blockSimple();
 
 		if (viewClass == null) {
 			viewClass = getClasses().VIEW;
@@ -256,7 +256,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 			viewClass = getJClass(viewParameterType.toString());
 		}
 
-		JBlock onViewChangedBody = codeModelHelper.blockNoBraces(getOnViewChangedBody());
+		JBlock onViewChangedBody = getOnViewChangedBody().blockSimple();
 		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));
 		onViewChangedBody._if(viewVariable.ne(JExpr._null()))._then() //
 		.invoke(viewVariable, "addTextChangedListener").arg(_new(onTextChangeListenerClass));

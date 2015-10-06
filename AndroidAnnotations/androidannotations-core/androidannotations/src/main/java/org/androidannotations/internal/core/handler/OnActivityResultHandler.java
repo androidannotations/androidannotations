@@ -86,7 +86,7 @@ public class OnActivityResultHandler extends BaseAnnotationHandler<HasOnActivity
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
 		int requestCode = executableElement.getAnnotation(OnActivityResult.class).value();
-		JBlock onResultBlock = codeModelHelper.blockNoBraces(holder.getOnActivityResultCaseBlock(requestCode));
+		JBlock onResultBlock = holder.getOnActivityResultCaseBlock(requestCode).blockSimple();
 
 		IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
 		JInvocation onResultInvocation = JExpr.invoke(activityRef, methodName);

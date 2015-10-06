@@ -76,7 +76,7 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 		JMethod onDestroy = generatedClass.method(PUBLIC, getCodeModel().VOID, "onDestroy");
 		onDestroy.annotate(Override.class);
 		JBlock onDestroyBody = onDestroy.body();
-		onDestroyBeforeSuperBlock = codeModelHelper.blockNoBraces(onDestroyBody);
+		onDestroyBeforeSuperBlock = onDestroyBody.blockSimple();
 		onDestroyBody.invoke(JExpr._super(), onDestroy);
 	}
 

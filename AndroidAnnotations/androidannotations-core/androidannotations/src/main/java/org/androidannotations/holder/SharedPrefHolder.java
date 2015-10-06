@@ -161,7 +161,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		constructor = generatedClass.constructor(PUBLIC);
 		constructorContextParam = constructor.param(getClasses().CONTEXT, "context");
 		JBlock constructorBody = constructor.body();
-		constructorSuperBlock = codeModelHelper.blockNoBraces(constructorBody);
+		constructorSuperBlock = constructorBody.blockSimple();
 	}
 
 	public JFieldVar getContextField() {
