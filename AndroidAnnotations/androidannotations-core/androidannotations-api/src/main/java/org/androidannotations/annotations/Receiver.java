@@ -151,9 +151,9 @@ public @interface Receiver {
 	 * <p>
 	 * Should be used on any native, {@link android.os.Parcelable} or
 	 * {@link java.io.Serializable} parameter of a method annotated with
-	 * {@link ReceiverAction} to inject the extra put in the intent parameter of
+	 * {@link Receiver} to inject the extra put in the intent parameter of
 	 * {@code void onReceive(Context context, Intent intent)}. The key of this
-	 * extra is the value of the annotation {@link ReceiverAction.Extra} if it
+	 * extra is the value of the annotation {@link Receiver.Extra} if it
 	 * is set or the name of the parameter.
 	 * If <a href="http://parceler.org">Parceler</a> is on the classpath, extras
 	 * annotated with &#064;Parcel, or collections supported by Parceler will be
