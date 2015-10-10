@@ -13,22 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.rest.spring.handler;
+package org.androidannotations.rest.spring;
 
-import javax.lang.model.element.Element;
-
-import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Put;
+import org.androidannotations.rest.spring.annotations.Rest;
+import org.springframework.http.converter.FormHttpMessageConverter;
 
-public class PutHandler extends AbstractRestMethodWithParameterHandler {
+@Rest(converters = FormHttpMessageConverter.class)
+public interface ClientWithParameters {
 
-	public PutHandler(AndroidAnnotationsEnvironment environment) {
-		super(Put.class, environment);
-	}
+	@Put("/")
+	void oneParameter(@Field int id);
 
-	@Override
-	protected String getUrlSuffix(Element element) {
-		Put annotation = element.getAnnotation(Put.class);
-		return annotation.value();
-	}
+	@Put("/")
+	void oneParameterWithName(@Field("identifier") int id);
+
+	@Put("/")
+	void moreParameter(@Field int id, @Field String str);
+
+	@Put("/{url}")
+	void oneParameterWithUrl(@Field int id, String url);
+
 }

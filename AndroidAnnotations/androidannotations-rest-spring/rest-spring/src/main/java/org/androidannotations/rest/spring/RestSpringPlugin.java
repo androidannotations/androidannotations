@@ -22,11 +22,14 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.rest.spring.handler.DeleteHandler;
+import org.androidannotations.rest.spring.handler.FieldHandler;
 import org.androidannotations.rest.spring.handler.GetHandler;
 import org.androidannotations.rest.spring.handler.HeadHandler;
 import org.androidannotations.rest.spring.handler.HeaderHandler;
 import org.androidannotations.rest.spring.handler.HeadersHandler;
 import org.androidannotations.rest.spring.handler.OptionsHandler;
+import org.androidannotations.rest.spring.handler.PartHandler;
+import org.androidannotations.rest.spring.handler.PatchHandler;
 import org.androidannotations.rest.spring.handler.PathHandler;
 import org.androidannotations.rest.spring.handler.PostHandler;
 import org.androidannotations.rest.spring.handler.PutHandler;
@@ -46,9 +49,12 @@ public class RestSpringPlugin extends AndroidAnnotationsPlugin {
 	public List<AnnotationHandler<?>> getHandlers(AndroidAnnotationsEnvironment androidAnnotationEnv) {
 		List<AnnotationHandler<?>> annotationHandlers = new ArrayList<>();
 		annotationHandlers.add(new RestHandler(androidAnnotationEnv));
+		annotationHandlers.add(new FieldHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PartHandler(androidAnnotationEnv));
 		annotationHandlers.add(new GetHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PostHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PutHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PatchHandler(androidAnnotationEnv));
 		annotationHandlers.add(new DeleteHandler(androidAnnotationEnv));
 		annotationHandlers.add(new HeadHandler(androidAnnotationEnv));
 		annotationHandlers.add(new OptionsHandler(androidAnnotationEnv));

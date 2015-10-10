@@ -18,17 +18,19 @@ package org.androidannotations.rest.spring.handler;
 import javax.lang.model.element.Element;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.rest.spring.annotations.Post;
+import org.androidannotations.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Part;
 
-public class PostHandler extends AbstractRestMethodWithParameterHandler {
+public class PartHandler extends AbstractParamHandler {
 
-	public PostHandler(AndroidAnnotationsEnvironment environment) {
-		super(Post.class, environment);
+	public PartHandler(AndroidAnnotationsEnvironment environment) {
+		super(Part.class, environment);
 	}
 
 	@Override
-	protected String getUrlSuffix(Element element) {
-		Post annotation = element.getAnnotation(Post.class);
-		return annotation.value();
+	protected void validate(Element element, ElementValidation validation) {
+		super.validate(element, validation);
+
+		restSpringValidatorHelper.doesNotHaveFieldAnnotation(element, validation);
 	}
 }

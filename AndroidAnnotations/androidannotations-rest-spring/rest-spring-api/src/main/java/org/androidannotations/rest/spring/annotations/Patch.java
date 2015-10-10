@@ -21,43 +21,47 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to add a form-encoded parameter to the request
- * from a method parameter. The annotation value should be the name of the
- * form-encoded parameter, if not specified, the method parameter name will be
- * used as the name of the form-encoded parameter. This annotation only can be
- * used with a method which be annotated with {@link Post}, {@link Put} or
- * {@link Patch}. To use this annotation, you must add
- * <code>FormHttpMessageConverter</code> to the list of converters.
- *
+ * <p>
+ * Use on methods in {@link Rest} annotated class to add a new rest service of
+ * type PATCH.
+ * </p>
+ * <p>
+ * This annotation as the EXACT same constraints as {@link Post}.
+ * </p>
  * <blockquote>
- *
+ * 
  * <b>Example :</b>
- *
+ * 
  * <pre>
- * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = FormHttpMessageConverter.class)
- * public interface RestClient {
- *
- * 	&#064;Post(&quot;/events/{id}&quot;)
- * 	EventList addEvent(String id, <b>&#064;Field</b> String eventName);
+ * &#064;Rest(rootUrl = &quot;http://myserver&quot;, converters = MappingJacksonHttpMessageConverter.class)
+ * public interface MyRestClient {
+ * 
+ * 	&#064;Patch(&quot;/events/update/last&quot;)
+ * 	Event updateEvent();
+ * 
+ * 	&#064;Patch(&quot;/events/update/<b>{id}</b>&quot;)
+ * 	void updateEvent(Event <i>event</i>, int <b>id</b>);
  * }
  * </pre>
- *
+ * 
  * </blockquote>
- *
+ * 
  * @see Rest
- * @see Post
  * @see Put
- * @see Patch
- * @see Part
+ * @see Get
+ * @see Post
+ * @see Delete
+ * @see Head
+ * @see Options
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.PARAMETER)
-public @interface Field {
+@Target(ElementType.METHOD)
+public @interface Patch {
 
 	/**
-	 * Name of the form-encoded parameter.
-	 *
-	 * @return name of the parameter
+	 * The URI or the full URL of the web service.
+	 * 
+	 * @return the address of the web service
 	 */
-	String value() default "";
+	String value();
 }
