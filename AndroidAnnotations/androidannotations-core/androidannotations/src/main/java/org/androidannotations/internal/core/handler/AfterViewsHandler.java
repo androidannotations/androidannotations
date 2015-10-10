@@ -48,6 +48,6 @@ public class AfterViewsHandler extends BaseAnnotationHandler<EComponentWithViewS
 	@Override
 	public void process(Element element, EComponentWithViewSupportHolder holder) throws Exception {
 		String methodName = element.getSimpleName().toString();
-		holder.getOnViewChangedBody().invoke(methodName);
+		holder.getOnViewChangedBodyAfterInjectionBlock().invoke(methodName);
 	}
 }

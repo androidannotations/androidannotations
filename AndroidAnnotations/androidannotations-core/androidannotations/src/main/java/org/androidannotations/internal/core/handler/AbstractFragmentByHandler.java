@@ -66,7 +66,7 @@ public abstract class AbstractFragmentByHandler extends CoreBaseAnnotationHandle
 		boolean isNativeFragment = nativeFragmentElement != null && annotationHelper.isSubtype(elementType, nativeFragmentElement.asType());
 
 		String fieldName = element.getSimpleName().toString();
-		JBlock methodBody = holder.getOnViewChangedBody();
+		JBlock methodBody = holder.getOnViewChangedBodyInjectionBlock();
 
 		if (holder instanceof EFragmentHolder) {
 			boolean childFragment = annotationHelper.extractAnnotationParameter(element, "childFragment");

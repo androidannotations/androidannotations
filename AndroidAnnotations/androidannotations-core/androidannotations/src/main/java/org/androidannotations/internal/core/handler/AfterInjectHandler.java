@@ -48,6 +48,6 @@ public class AfterInjectHandler extends BaseAnnotationHandler<EComponentHolder> 
 	@Override
 	public void process(Element element, EComponentHolder holder) {
 		String methodName = element.getSimpleName().toString();
-		holder.getInitBody().invoke(methodName);
+		holder.getInitBodyAfterInjectionBlock().invoke(methodName);
 	}
 }

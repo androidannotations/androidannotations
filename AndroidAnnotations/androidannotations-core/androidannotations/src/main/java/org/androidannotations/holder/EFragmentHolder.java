@@ -370,7 +370,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		injectBundleArgs = injectExtrasBody.decl(getClasses().BUNDLE, "args_", invoke("getArguments"));
 		injectArgsBlock = injectExtrasBody._if(injectBundleArgs.ne(_null()))._then();
 
-		getInitBody().invoke(injectArgsMethod);
+		getInitBodyInjectionBlock().invoke(injectArgsMethod);
 	}
 
 	@Override
@@ -535,7 +535,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		if (RegisterAt.OnAttachOnDetach.equals(intentFilterData.getRegisterAt())) {
 			return getOnAttachAfterSuperBlock();
 		}
-		return getInitBody();
+		return getInitBodyInjectionBlock();
 	}
 
 	@Override
@@ -544,8 +544,13 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JBlock getAddPreferencesFromResourceBlock() {
-		return preferencesDelegate.getAddPreferencesFromResourceBlock();
+	public JBlock getAddPreferencesFromResourceInjectionBlock() {
+		return preferencesDelegate.getAddPreferencesFromResourceInjectionBlock();
+	}
+
+	@Override
+	public JBlock getAddPreferencesFromResourceAfterInjectionBlock() {
+		return preferencesDelegate.getAddPreferencesFromResourceAfterInjectionBlock();
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSup
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.STRING, true);
 
-		JBlock methodBody = holder.getOnViewChangedBody();
+		JBlock methodBody = holder.getOnViewChangedBodyAfterInjectionBlock();
 		methodBody //
 				._if(ref(fieldName).ne(_null())) //
 				._then() //

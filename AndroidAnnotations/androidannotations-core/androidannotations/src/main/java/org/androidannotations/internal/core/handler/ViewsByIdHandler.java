@@ -79,7 +79,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 		DeclaredType arrayListType = getProcessingEnvironment().getTypeUtils().getDeclaredType(arrayListTypeElement, viewType);
 		AbstractJClass arrayListClass = codeModelHelper.typeMirrorToJClass(arrayListType);
 
-		holder.getInitBody().assign(elementRef, _new(arrayListClass));
+		holder.getInitBodyInjectionBlock().assign(elementRef, _new(arrayListClass));
 	}
 
 	private TypeMirror extractViewClass(Element element) {
@@ -94,7 +94,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 	}
 
 	private void clearList(JFieldRef elementRef, EComponentWithViewSupportHolder holder) {
-		holder.getOnViewChangedBodyBeforeFindViews().add(elementRef.invoke("clear"));
+		holder.getOnViewChangedBodyBeforeInjectionBlock().add(elementRef.invoke("clear"));
 	}
 
 	private void addViewToListIfNotNull(JFieldRef elementRef, AbstractJClass viewClass, JFieldRef idRef, EComponentWithViewSupportHolder holder) {

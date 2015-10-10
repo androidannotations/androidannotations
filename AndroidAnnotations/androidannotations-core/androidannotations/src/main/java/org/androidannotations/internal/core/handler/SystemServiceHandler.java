@@ -62,7 +62,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JFieldRef serviceRef = new AndroidSystemServices(getEnvironment()).getServiceConstantRef(serviceType);
 
-		JBlock methodBody = holder.getInitBody();
+		JBlock methodBody = holder.getInitBodyInjectionBlock();
 
 		if (CanonicalNameConstants.APP_WIDGET_MANAGER.equals(fieldTypeQualifiedName)) {
 			createSpecialInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody, 21, "LOLLIPOP", getClasses().APP_WIDGET_MANAGER, "getInstance", true);

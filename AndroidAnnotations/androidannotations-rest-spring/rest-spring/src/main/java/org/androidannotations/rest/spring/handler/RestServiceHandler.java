@@ -59,7 +59,7 @@ public class RestServiceHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 		AbstractJClass clazz = codeModelHelper.narrowGeneratedClass(getJClass(generatedClassName), fieldTypeMirror);
 
-		JBlock methodBody = holder.getInitBody();
+		JBlock methodBody = holder.getInitBodyInjectionBlock();
 
 		JFieldRef field = JExpr.ref(fieldName);
 

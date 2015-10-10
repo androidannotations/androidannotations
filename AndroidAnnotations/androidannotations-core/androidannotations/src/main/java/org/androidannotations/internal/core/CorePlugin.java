@@ -195,19 +195,16 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new OnActivityResultHandler(androidAnnotationEnv));
 
 		annotationHandlers.add(new IgnoredWhenDetachedHandler(androidAnnotationEnv));
-		/* After injection methods must be after injections */
+
 		annotationHandlers.add(new AfterInjectHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AfterExtrasHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AfterViewsHandler(androidAnnotationEnv));
 
-		/* preference screen handler must be after injections */
 		annotationHandlers.add(new PreferenceScreenHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PreferenceHeadersHandler(androidAnnotationEnv));
-		/* Preference injections must be after preference screen handler */
 		annotationHandlers.add(new PreferenceByKeyHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PreferenceChangeHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PreferenceClickHandler(androidAnnotationEnv));
-		/* After preference injection methods must be after preference injections */
 		annotationHandlers.add(new AfterPreferencesHandler(androidAnnotationEnv));
 
 		if (androidAnnotationEnv.getOptionBooleanValue(OPTION_TRACE)) {
