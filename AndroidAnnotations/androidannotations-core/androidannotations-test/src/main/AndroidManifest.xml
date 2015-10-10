@@ -81,7 +81,13 @@
         <activity android:name=".ActivityWithGenerics_" />
         <activity android:name=".WakeLockActivity_" />
         <activity android:name=".FragmentStartedActivity_" />
-        <activity android:name=".KeyEventsActivity_" />
+        <activity android:name=".keyevents.KeyEventsActivity_" />
+        <activity android:name=".preference.PreferenceHeadersActivity_" />
+        <activity android:name=".preference.PreferencesInjectedActivity_" />
+        <activity android:name=".preference.PreferenceScreenActivity_" />
+        <activity android:name=".preference.PreferenceEventsHandledActivity_" />
+        <activity android:name=".afterextras.AfterExtrasActivity_" />
+        <activity android:name=".FullscreenActivity_" />
 
         <receiver android:name=".ereceiver.MyReceiver_" />
 
