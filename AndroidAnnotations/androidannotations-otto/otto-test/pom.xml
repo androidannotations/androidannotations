@@ -89,7 +89,7 @@
 					<target>1.6</target>
 					<showWarnings>true</showWarnings>
 					<compilerArgs>
-						<arg>-AlogLevel=WARNING</arg>
+						<arg>-AlogLevel=WARN</arg>
 					</compilerArgs>
 				</configuration>
 			</plugin>
