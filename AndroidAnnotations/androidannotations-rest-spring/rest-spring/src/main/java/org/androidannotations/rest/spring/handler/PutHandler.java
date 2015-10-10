@@ -16,25 +16,14 @@
 package org.androidannotations.rest.spring.handler;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.ElementValidation;
 import org.androidannotations.rest.spring.annotations.Put;
 
-public class PutHandler extends RestMethodHandler {
+public class PutHandler extends AbstractRestMethodWithParameterHandler {
 
 	public PutHandler(AndroidAnnotationsEnvironment environment) {
 		super(Put.class, environment);
-	}
-
-	@Override
-	public void validate(Element element, ElementValidation validation) {
-		super.validate(element, validation);
-
-		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
-
-		restSpringValidatorHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter((ExecutableElement) element, validation);
 	}
 
 	@Override

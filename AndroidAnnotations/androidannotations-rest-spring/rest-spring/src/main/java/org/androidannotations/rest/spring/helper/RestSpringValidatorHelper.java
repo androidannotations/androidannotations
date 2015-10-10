@@ -419,26 +419,26 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void urlVariableNamesExistInParametersAndHasOnlyOneEntityParameterOrOneOrMorePostParameter(ExecutableElement element, ElementValidation validation) {
+	public void urlVariableNamesExistInParametersAndHasOnlyOneEntityParameterOrOneOrMoreParameter(ExecutableElement element, ElementValidation validation) {
 		if (validation.isValid()) {
 			Set<String> variableNames = restAnnotationHelper.extractUrlVariableNames(element);
 			urlVariableNamesExistInParameters(element, variableNames, validation);
 			if (validation.isValid()) {
 				List<? extends VariableElement> parameters = element.getParameters();
 
-				Map<String, String> postParameters = restAnnotationHelper.extractPostParameters(element);
+				Map<String, String> fieldAndPartParameters = restAnnotationHelper.extractFieldAndPartParameters(element);
 
-				if (postParameters == null) {
+				if (fieldAndPartParameters == null) {
 					validation.addError(element, "%s annotated method has multiple form parameters with the same name");
 					return;
 				}
 
-				if (!postParameters.isEmpty() && postParameters.size() + variableNames.size() < parameters.size()) {
+				if (!fieldAndPartParameters.isEmpty() && fieldAndPartParameters.size() + variableNames.size() < parameters.size()) {
 					validation.addError(element, "%s method cannot have both entity parameter and @Field annotated parameters");
 					return;
 				}
 
-				if (postParameters.isEmpty() && parameters.size() > variableNames.size() + 1) {
+				if (fieldAndPartParameters.isEmpty() && parameters.size() > variableNames.size() + 1) {
 					validation.addError(element, "%s annotated method has more than one entity parameter");
 				}
 			}

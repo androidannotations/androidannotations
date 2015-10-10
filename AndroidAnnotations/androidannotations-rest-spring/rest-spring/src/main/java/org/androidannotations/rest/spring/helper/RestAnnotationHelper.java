@@ -573,30 +573,30 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	 * Returns the post parameter name to method parameter name mapping, or null
 	 * if duplicate names found.
 	 */
-	public Map<String, String> extractPostParameters(ExecutableElement element) {
+	public Map<String, String> extractFieldAndPartParameters(ExecutableElement element) {
 		Map<String, String> postParameterNameToElementName = new HashMap<String, String>();
 
 		for (VariableElement parameter : element.getParameters()) {
-			String postParameterName = null;
+			String parameterName = null;
 
 			if (parameter.getAnnotation(Field.class) != null) {
-				postParameterName = extractPostParameter(parameter, Field.class);
+				parameterName = extractParameter(parameter, Field.class);
 			} else if (parameter.getAnnotation(Part.class) != null) {
-				postParameterName = extractPostParameter(parameter, Part.class);
+				parameterName = extractParameter(parameter, Part.class);
 			}
 
-			if (postParameterName != null) {
-				if (postParameterNameToElementName.containsKey(postParameterName)) {
+			if (parameterName != null) {
+				if (postParameterNameToElementName.containsKey(parameterName)) {
 					return null;
 				}
 
-				postParameterNameToElementName.put(postParameterName, parameter.getSimpleName().toString());
+				postParameterNameToElementName.put(parameterName, parameter.getSimpleName().toString());
 			}
 		}
 		return postParameterNameToElementName;
 	}
 
-	private String extractPostParameter(VariableElement parameter, Class<? extends Annotation> clazz) {
+	private String extractParameter(VariableElement parameter, Class<? extends Annotation> clazz) {
 		String value = extractAnnotationParameter(parameter, clazz.getCanonicalName(), "value");
 
 		return !value.equals("") ? value : parameter.getSimpleName().toString();
