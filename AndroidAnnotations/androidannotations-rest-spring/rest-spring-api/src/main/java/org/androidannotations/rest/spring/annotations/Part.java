@@ -21,13 +21,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to add a multi-part parameter to the POST request
- * from a method parameter. The annotation value should be the name of the
- * multi-part parameter, if not specified, the method parameter name will be
- * used as the name of the multi-part parameter. This annotation only can be
- * used with POST requests, hence the method must be annotated with {@link Post}
- * . To use this annotation, you must add <code>FormHttpMessageConverter</code>
- * to the list of converters.
+ * This annotation can be used to add a multi-part parameter to the POST, PUT or
+ * PATCH request from a method parameter. The annotation value should be the
+ * name of the multi-part parameter, if not specified, the method parameter name
+ * will be used as the name of the multi-part parameter. This annotation only
+ * can be used with a method which be annotated with {@link Post}, {@link Put}
+ * or {@link Patch}. To use this annotation, you must add
+ * <code>FormHttpMessageConverter</code> to the list of converters.
  *
  * <blockquote>
  *
@@ -44,9 +44,11 @@ import java.lang.annotation.Target;
  *
  * </blockquote>
  *
- * @see Post
- * @see Part
  * @see Rest
+ * @see Post
+ * @see Put
+ * @see Patch
+ * @see Field
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.PARAMETER)

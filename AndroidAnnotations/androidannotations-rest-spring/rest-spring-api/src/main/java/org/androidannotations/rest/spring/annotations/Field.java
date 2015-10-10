@@ -25,9 +25,9 @@ import java.lang.annotation.Target;
  * from a method parameter. The annotation value should be the name of the
  * form-encoded parameter, if not specified, the method parameter name will be
  * used as the name of the form-encoded parameter. This annotation only can be
- * used with POST requests, hence the method must be annotated with {@link Post}
- * . To use this annotation, you must add <code>FormHttpMessageConverter</code>
- * to the list of converters.
+ * used with a method which be annotated with {@link Post}, {@link Put} or
+ * {@link Patch}. To use this annotation, you must add
+ * <code>FormHttpMessageConverter</code> to the list of converters.
  *
  * <blockquote>
  *
@@ -46,6 +46,8 @@ import java.lang.annotation.Target;
  *
  * @see Rest
  * @see Post
+ * @see Put
+ * @see Patch
  * @see Part
  */
 @Retention(RetentionPolicy.CLASS)
