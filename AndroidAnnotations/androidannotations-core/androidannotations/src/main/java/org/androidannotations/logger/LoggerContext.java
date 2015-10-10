@@ -92,7 +92,7 @@ public final class LoggerContext {
 	}
 
 	private void resolveLogLevel(AndroidAnnotationsEnvironment environment) {
-		Level level = Level.DEBUG;
+		Level level = Level.WARN;
 		try {
 			level = Level.parse(environment.getOptionValue(OPTION_LOG_LEVEL));
 		} catch (Exception ignored) {
