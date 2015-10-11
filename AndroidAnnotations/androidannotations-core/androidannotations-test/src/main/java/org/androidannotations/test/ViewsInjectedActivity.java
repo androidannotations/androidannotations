@@ -49,9 +49,21 @@ public class ViewsInjectedActivity extends Activity {
 	@ViewsById({R.id.my_text_view, R.id.someView})
 	List<TextView> textViews;
 
+	TextView methodInjectedView;
+	TextView multiInjectedView;
+
 	@AfterViews
 	void incrementCounter() {
 		counter++;
+	}
+
+	@ViewById(R.id.my_text_view)
+	void methodInjectedView(TextView someView) {
+		methodInjectedView = someView;
+	}
+
+	void multiInjectedView(@ViewById TextView someView, @ViewById(R.id.my_text_view) TextView activityPrefs) {
+		multiInjectedView = someView;
 	}
 
 }
