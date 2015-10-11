@@ -263,13 +263,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		return onDestroyViewAfterSuperBlock;
 	}
 
-	@Override
-	public void processViewById(JFieldRef idRef, AbstractJClass viewClass, JFieldRef fieldRef) {
-		super.processViewById(idRef, viewClass, fieldRef);
-		clearInjectedView(fieldRef);
-	}
-
-	private void clearInjectedView(JFieldRef fieldRef) {
+	public void clearInjectedView(JFieldRef fieldRef) {
 		JBlock block = getOnDestroyViewAfterSuperBlock();
 		block.assign(fieldRef, _null());
 	}
