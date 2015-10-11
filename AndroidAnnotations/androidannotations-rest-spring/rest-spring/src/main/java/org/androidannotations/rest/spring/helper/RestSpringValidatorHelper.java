@@ -55,6 +55,7 @@ import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.annotations.Options;
 import org.androidannotations.rest.spring.annotations.Part;
+import org.androidannotations.rest.spring.annotations.Patch;
 import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Put;
@@ -68,7 +69,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(),
 			RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
-	private static final List<Class<? extends Annotation>> REST_ANNOTATION_CLASSES = Arrays.asList(Get.class, Head.class, Options.class, Post.class, Put.class, Delete.class);
+	private static final List<Class<? extends Annotation>> REST_ANNOTATION_CLASSES = Arrays.asList(Get.class, Head.class, Options.class, Post.class, Put.class, Patch.class, Delete.class);
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
 	private static final String METHOD_NAME_SET_AUTHENTICATION = "setAuthentication";
