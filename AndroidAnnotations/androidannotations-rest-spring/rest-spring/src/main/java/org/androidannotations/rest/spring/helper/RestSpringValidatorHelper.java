@@ -570,7 +570,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 	}
 
 	public void usesSpringAndroid2(Element element, ElementValidation validation) {
-		if (environment().getProcessingEnvironment().getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) != null) {
+		if (environment().getProcessingEnvironment().getElementUtils().getTypeElement(RestSpringClasses.PARAMETERIZED_TYPE_REFERENCE) == null) {
 			validation.addError(element, "To use %s annotated method you must add Spring Android Rest Template 2.0 to your classpath");
 		}
 	}
