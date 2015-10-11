@@ -565,11 +565,6 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public void assignFindPreferenceByKey(JFieldRef idRef, AbstractJClass preferenceClass, JFieldRef fieldRef) {
-		preferencesDelegate.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
-	}
-
-	@Override
 	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass) {
 		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass);
 	}

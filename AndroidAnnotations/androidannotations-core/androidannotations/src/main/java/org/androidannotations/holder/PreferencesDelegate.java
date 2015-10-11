@@ -96,27 +96,6 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 	}
 
 	@Override
-	public void assignFindPreferenceByKey(JFieldRef idRef, AbstractJClass preferenceClass, JFieldRef fieldRef) {
-		String idRefString = idRef.name();
-		FoundPreferenceHolder foundViewHolder = (FoundPreferenceHolder) holder.foundHolders.get(idRefString);
-
-		JBlock block = getAddPreferencesFromResourceInjectionBlock();
-		IJExpression assignExpression;
-
-		if (foundViewHolder != null) {
-			assignExpression = foundViewHolder.getOrCastRef(preferenceClass);
-		} else {
-			assignExpression = findPreferenceByKey(idRef);
-			if (preferenceClass != null && preferenceClass != getClasses().PREFERENCE && preferenceClass != getClasses().SUPPORT_V7_PREFERENCE) {
-				assignExpression = cast(preferenceClass, assignExpression);
-			}
-			holder.foundHolders.put(idRefString, new FoundPreferenceHolder(this, preferenceClass, fieldRef, block));
-		}
-
-		block.assign(fieldRef, assignExpression);
-	}
-
-	@Override
 	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass) {
 		String idRefString = idRef.name();
 		FoundPreferenceHolder foundPreferenceHolder = (FoundPreferenceHolder) holder.foundHolders.get(idRefString);
@@ -139,7 +118,7 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 
 	private FoundPreferenceHolder createFoundPreferenceAndIfNotNullBlock(JFieldRef idRef, AbstractJClass preferenceClass) {
 		IJExpression findPreferenceExpression = findPreferenceByKey(idRef);
-		JBlock block = getAddPreferencesFromResourceInjectionBlock().blockSimple();
+		JBlock block = getAddPreferencesFromResourceInjectionBlock();
 
 		if (preferenceClass == null) {
 			preferenceClass = basePreferenceClass;
@@ -147,7 +126,7 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 			findPreferenceExpression = cast(preferenceClass, findPreferenceExpression);
 		}
 
-		JVar preference = block.decl(preferenceClass, "preference", findPreferenceExpression);
+		JVar preference = block.decl(preferenceClass, "preference_" + idRef.name(), findPreferenceExpression);
 		return new FoundPreferenceHolder(this, preferenceClass, preference, block);
 	}
 

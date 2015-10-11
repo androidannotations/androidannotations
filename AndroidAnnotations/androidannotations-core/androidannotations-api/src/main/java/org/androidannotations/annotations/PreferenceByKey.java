@@ -65,7 +65,7 @@ import java.lang.annotation.Target;
  * @see org.androidannotations.annotations.AfterPreferences AfterPreferences
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface PreferenceByKey {
 
 	int value() default ResId.DEFAULT_VALUE;
