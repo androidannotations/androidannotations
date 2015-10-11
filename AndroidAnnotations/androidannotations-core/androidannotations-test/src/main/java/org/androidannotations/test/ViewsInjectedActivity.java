@@ -51,6 +51,8 @@ public class ViewsInjectedActivity extends Activity {
 
 	TextView methodInjectedView;
 	TextView multiInjectedView;
+	List<TextView> methodInjectedViews;
+	List<View> multiInjectedViews;
 
 	@AfterViews
 	void incrementCounter() {
@@ -64,6 +66,15 @@ public class ViewsInjectedActivity extends Activity {
 
 	void multiInjectedView(@ViewById TextView someView, @ViewById(R.id.my_text_view) TextView activityPrefs) {
 		multiInjectedView = someView;
+	}
+
+	@ViewsById({ R.id.my_text_view, R.id.someView })
+	void methodInjectedViews(List<TextView> someView) {
+		methodInjectedViews = someView;
+	}
+
+	void multiInjectedViews(@ViewsById({ R.id.someView, R.id.myButton }) List<View> someView, @ViewsById(R.id.my_text_view) List<TextView> activityPrefs) {
+		multiInjectedViews = someView;
 	}
 
 }
