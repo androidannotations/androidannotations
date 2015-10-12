@@ -36,4 +36,22 @@ public class OptionsMenuItemTest extends AAProcessorTestHelper {
 		assertCompilationSuccessful(result);
 	}
 
+	@Test
+	public void testDeeplyInheritedMenuNotBreakOrder() throws IOException {
+		CompileResult result = compileFiles(OptionsMenuItemSubSubSubActivity.class);
+		assertCompilationSuccessful(result);
+		// CHECKSTYLE:OFF
+		String[] codeFragment = { //
+				"    @Override", //
+				"    public boolean onCreateOptionsMenu(Menu menu) {", //
+				"        MenuInflater menuInflater = getMenuInflater();", //
+				"        this.menu = menu.findItem(R.id.menu);", //
+				"        this.menu1 = menu.findItem(R.id.menu1);", //
+				"        this.menu2 = menu.findItem(R.id.menu2);", //
+				"        this.menu3 = menu.findItem(R.id.menu3);", //
+				"        return super.onCreateOptionsMenu(menu);", //
+				"    }",};
+		// CHECKSTYLE:ON
+		assertGeneratedClassContains(toGeneratedFile(OptionsMenuItemSubSubSubActivity.class), codeFragment);
+	}
 }
