@@ -16,7 +16,7 @@
 package org.androidannotations.internal.process;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +58,7 @@ public class ModelValidator {
 
 			Set<? extends Element> annotatedElements = extractedModel.getRootAnnotatedElements(annotationName);
 
-			Set<Element> validatedAnnotatedElements = new HashSet<>();
+			Set<Element> validatedAnnotatedElements = new LinkedHashSet<>();
 
 			validatingHolder.putRootAnnotatedElements(annotationName, validatedAnnotatedElements);
 

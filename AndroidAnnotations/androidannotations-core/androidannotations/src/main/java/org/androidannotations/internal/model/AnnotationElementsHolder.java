@@ -18,6 +18,7 @@ package org.androidannotations.internal.model;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class AnnotationElementsHolder implements AnnotationElements {
 	public void putAncestorAnnotatedElement(String annotationName, Element annotatedElement, TypeElement rootTypeElement) {
 		Set<AnnotatedAndRootElements> set = ancestorAnnotatedElementsByAnnotation.get(annotationName);
 		if (set == null) {
-			set = new HashSet<>();
+			set = new LinkedHashSet<>();
 			ancestorAnnotatedElementsByAnnotation.put(annotationName, set);
 		}
 		set.add(new AnnotatedAndRootElements(annotatedElement, rootTypeElement));
