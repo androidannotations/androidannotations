@@ -122,8 +122,8 @@ public class ModelExtractor {
 			DeclaredType ancestorDeclaredType = (DeclaredType) ancestorTypeMirror;
 			Element ancestorElement = ancestorDeclaredType.asElement();
 			if (ancestorElement instanceof TypeElement) {
-				elements.add((TypeElement) ancestorElement);
 				addAncestorsElements(elements, (TypeElement) ancestorElement);
+				elements.add((TypeElement) ancestorElement);
 			}
 		}
 	}
