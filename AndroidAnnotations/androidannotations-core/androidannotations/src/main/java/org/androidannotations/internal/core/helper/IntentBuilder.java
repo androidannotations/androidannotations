@@ -149,7 +149,7 @@ public abstract class IntentBuilder {
 					extraParameterArg = cast(environment.getClasses().PARCELABLE, extraParameterArg);
 				}
 			} else if (!BundleHelper.METHOD_SUFFIX_BY_TYPE_NAME.containsKey(elementType.toString()) && parcelerHelper.isParcelType(elementType)) {
-				extraParameterArg = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("wrap").arg(extraParameterArg);
+				extraParameterArg = environment.getJClass(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("wrap").arg(extraParameterArg);
 			} else {
 				TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
 				if (!typeUtils.isSubtype(elementType, stringType)) {

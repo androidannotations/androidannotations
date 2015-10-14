@@ -234,7 +234,7 @@ public class BundleHelper {
 		}
 
 		if (parcelerBean) {
-			expressionToRestore = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("unwrap").arg(expressionToRestore);
+			expressionToRestore = environment.getJClass(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("unwrap").arg(expressionToRestore);
 		}
 
 		if (restoreCallNeedCastStatement) {
@@ -250,7 +250,7 @@ public class BundleHelper {
 	public IJStatement getExpressionToSaveFromField(IJExpression saveStateBundleParam, IJExpression fieldName, IJExpression variableRef) {
 		IJExpression refExpression = variableRef;
 		if (parcelerBean) {
-			refExpression = environment.getCodeModel().ref(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("wrap").arg(refExpression);
+			refExpression = environment.getJClass(CanonicalNameConstants.PARCELS_UTILITY_CLASS).staticInvoke("wrap").arg(refExpression);
 		}
 		return JExpr.invoke(saveStateBundleParam, methodNameToSave).arg(fieldName).arg(refExpression);
 	}
