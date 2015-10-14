@@ -85,8 +85,8 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 		method.annotate(Override.class);
 		JVar preferencesResIdParam = method.param(int.class, "preferencesResId");
 		method.body().invoke(JExpr._super(), "addPreferencesFromResource").arg(preferencesResIdParam);
-		addPreferencesFromResourceInjectionBlock = method.body().blockSimple();
-		addPreferencesFromResourceAfterInjectionBlock = method.body().blockSimple();
+		addPreferencesFromResourceInjectionBlock = method.body().blockVirtual();
+		addPreferencesFromResourceAfterInjectionBlock = method.body().blockVirtual();
 	}
 
 	private JInvocation findPreferenceByKey(JFieldRef idRef) {

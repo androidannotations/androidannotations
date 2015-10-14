@@ -111,9 +111,9 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		onViewChanged = getGeneratedClass().method(PUBLIC, getCodeModel().VOID, "onViewChanged");
 		onViewChanged.annotate(Override.class);
 		onViewChangedBody = onViewChanged.body();
-		onViewChangedBodyBeforeInjectionBlock = onViewChangedBody.blockSimple();
-		onViewChangedBodyInjectionBlock = onViewChangedBody.blockSimple();
-		onViewChangedBodyAfterInjectionBlock = onViewChangedBody.blockSimple();
+		onViewChangedBodyBeforeInjectionBlock = onViewChangedBody.blockVirtual();
+		onViewChangedBodyInjectionBlock = onViewChangedBody.blockVirtual();
+		onViewChangedBodyAfterInjectionBlock = onViewChangedBody.blockVirtual();
 		onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
 		AbstractJClass notifierClass = getJClass(OnViewChangedNotifier.class);
 		getInitBodyInjectionBlock().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());

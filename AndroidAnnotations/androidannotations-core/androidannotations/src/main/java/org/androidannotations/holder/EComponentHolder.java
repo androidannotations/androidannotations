@@ -82,8 +82,8 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setInitBodyBlocks() {
-		initBodyInjectionBlock = getInitBody().blockSimple();
-		initBodyAfterInjectionBlock = getInitBody().blockSimple();
+		initBodyInjectionBlock = getInitBody().blockVirtual();
+		initBodyAfterInjectionBlock = getInitBody().blockVirtual();
 	}
 
 	public JVar getResourcesRef() {
