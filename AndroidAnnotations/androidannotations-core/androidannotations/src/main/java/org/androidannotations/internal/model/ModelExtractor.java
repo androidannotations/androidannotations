@@ -16,6 +16,7 @@
 package org.androidannotations.internal.model;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +72,7 @@ public class ModelExtractor {
 
 	private void extractAncestorsAnnotations(AnnotationElementsHolder extractedModel, Set<String> annotationTypesToCheck, Set<TypeElement> rootTypeElements) {
 		for (TypeElement rootTypeElement : rootTypeElements) {
-			Set<TypeElement> ancestors = new HashSet<>();
+			Set<TypeElement> ancestors = new LinkedHashSet<>();
 			addAncestorsElements(ancestors, rootTypeElement);
 			if (!ancestors.isEmpty()) {
 
@@ -121,8 +122,8 @@ public class ModelExtractor {
 			DeclaredType ancestorDeclaredType = (DeclaredType) ancestorTypeMirror;
 			Element ancestorElement = ancestorDeclaredType.asElement();
 			if (ancestorElement instanceof TypeElement) {
-				elements.add((TypeElement) ancestorElement);
 				addAncestorsElements(elements, (TypeElement) ancestorElement);
+				elements.add((TypeElement) ancestorElement);
 			}
 		}
 	}
