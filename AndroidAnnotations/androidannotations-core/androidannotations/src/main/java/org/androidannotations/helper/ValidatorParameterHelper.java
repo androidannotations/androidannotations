@@ -97,7 +97,7 @@ public class ValidatorParameterHelper {
 		}
 
 		protected void invalidate(ElementValidation validation) {
-			validation.addError("%s can only have the following parameter: " + parameterRequirement);
+			validation.addError("method annotated with %s can only have the following parameter: " + parameterRequirement);
 		}
 	}
 
@@ -124,7 +124,7 @@ public class ValidatorParameterHelper {
 		}
 
 		public V anyType() {
-			return extendsType(CanonicalNameConstants.OBJECT);
+			return param(new AnyTypeParameterRequirement());
 		}
 
 		public V annotatedWith(Class<? extends Annotation> annotationClass) {
@@ -226,8 +226,9 @@ public class ValidatorParameterHelper {
 			}
 			if (currentParameterRequirement.isSatisfied(parameter)) {
 				satisfiedParameterRequirements.add(currentParameterRequirement);
-			} else if (!currentParameterRequirement.multiple()) {
-				nextParameterRequirement();
+				if (!currentParameterRequirement.multiple()) {
+					nextParameterRequirement();
+				}
 			} else {
 				if (currentParameterRequirement.required() && !satisfiedParameterRequirements.contains(currentParameterRequirement)) {
 					return false;
@@ -447,12 +448,17 @@ public class ValidatorParameterHelper {
 			case INT:
 				return CanonicalNameConstants.INTEGER;
 			case BYTE:
+				return CanonicalNameConstants.BYTE;
 			case SHORT:
+				return CanonicalNameConstants.SHORT;
 			case LONG:
+				return CanonicalNameConstants.LONG;
 			case CHAR:
+				return CanonicalNameConstants.CHAR;
 			case FLOAT:
+				return CanonicalNameConstants.FLOAT;
 			case DOUBLE:
-				throw new UnsupportedOperationException("This primitive is not handled yet");
+				return CanonicalNameConstants.DOUBLE;
 			default:
 				throw new IllegalArgumentException("The TypeKind passed does not represent a primitive");
 			}

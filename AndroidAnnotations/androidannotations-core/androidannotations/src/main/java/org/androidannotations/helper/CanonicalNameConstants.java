@@ -48,6 +48,10 @@ public final class CanonicalNameConstants {
 	public static final String LONG = Long.class.getCanonicalName();
 	public static final String ARRAYLIST = ArrayList.class.getCanonicalName();
 	public static final String SERIALIZABLE = Serializable.class.getCanonicalName();
+	public static final String BYTE = Byte.class.getCanonicalName();
+	public static final String SHORT = Short.class.getCanonicalName();
+	public static final String CHAR = Character.class.getCanonicalName();
+	public static final String DOUBLE = Double.class.getCanonicalName();
 
 	/*
 	 * Android
