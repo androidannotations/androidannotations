@@ -120,9 +120,6 @@
 					<source>1.6</source>
 					<target>1.6</target>
 					<showWarnings>true</showWarnings>
-					<compilerArgs>
-						<arg>-AlogLevel=WARN</arg>
-					</compilerArgs>
 				</configuration>
 			</plugin>
 

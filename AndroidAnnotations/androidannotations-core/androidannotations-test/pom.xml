@@ -110,7 +110,6 @@
 					<showWarnings>true</showWarnings>
 					<compilerArgs>
 						<arg>-Atrace=true</arg>
-						<arg>-AlogLevel=WARN</arg>
 						<arg>-AlogFile=${project.build.directory}/functional-test.log</arg>
 					</compilerArgs>
 				</configuration>
