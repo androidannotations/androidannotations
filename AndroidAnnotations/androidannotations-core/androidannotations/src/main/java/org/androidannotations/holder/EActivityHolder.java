@@ -202,7 +202,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		JVar intent = onNewIntentMethod.param(getClasses().INTENT, "intent");
 		JBlock body = onNewIntentMethod.body();
 		body.invoke(_super(), onNewIntentMethod).arg(intent);
-		body.invoke(getSetIntent()).arg(intent);
 		onNewIntentAfterSuperBlock = body.blockSimple();
 	}
 
@@ -444,13 +443,6 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 		getSetIntent().body().invoke(injectExtrasMethod);
 		getInitBody().invoke(injectExtrasMethod);
-	}
-
-	public JMethod getOnNewIntent() {
-		if (onNewIntentMethod == null) {
-			setOnNewIntent();
-		}
-		return onNewIntentMethod;
 	}
 
 	public JBlock getOnNewIntentAfterSuperBlock() {
