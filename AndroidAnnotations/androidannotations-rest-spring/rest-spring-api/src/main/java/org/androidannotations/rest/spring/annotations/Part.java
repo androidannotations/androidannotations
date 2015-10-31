@@ -49,6 +49,7 @@ import java.lang.annotation.Target;
  * @see Put
  * @see Patch
  * @see Field
+ * @see Body
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.PARAMETER)

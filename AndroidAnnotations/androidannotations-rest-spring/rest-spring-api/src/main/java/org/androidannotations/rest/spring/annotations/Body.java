@@ -21,15 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to add a form-encoded parameter to the request
- * from a method parameter. The annotation value should be the name of the
- * form-encoded parameter, if not specified, the method parameter name will be
- * used as the name of the form-encoded parameter. This annotation only can be
- * used with a method which be annotated with {@link Post}, {@link Put} or
- * {@link Patch}. To use this annotation, you must add
- * <code>FormHttpMessageConverter</code> to the list of converters.
- *
- * <blockquote>
+ * This annotation can be used to add a method body to the POST, PUT, or
+ * PATCH request from a method parameter.
  *
  * <b>Example :</b>
  *
@@ -38,27 +31,17 @@ import java.lang.annotation.Target;
  * public interface RestClient {
  *
  * 	&#064;Post(&quot;/events/{id}&quot;)
- * 	EventList addEvent(String id, <b>&#064;Field</b> String eventName);
+ * 	EventList addEvent(String id, <b>&#064;Body</b> Event event);
  * }
  * </pre>
- *
- * </blockquote>
  *
  * @see Rest
  * @see Post
  * @see Put
  * @see Patch
- * @see Part
- * @see Body
+ * @see Field
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.PARAMETER)
-public @interface Field {
-
-	/**
-	 * Name of the form-encoded parameter.
-	 *
-	 * @return name of the parameter
-	 */
-	String value() default "";
+public @interface Body {
 }
