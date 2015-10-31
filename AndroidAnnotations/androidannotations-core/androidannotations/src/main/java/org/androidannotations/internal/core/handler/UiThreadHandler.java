@@ -52,6 +52,13 @@ public class UiThreadHandler extends AbstractRunnableHandler {
 		super.validate(element, valid);
 
 		coreValidatorHelper.usesEnqueueIfHasId(element, valid);
+
+		UiThread annotation = element.getAnnotation(UiThread.class);
+		long delay = annotation.delay();
+		UiThread.Propagation propagation = annotation.propagation();
+		if (delay != 0 && propagation == UiThread.Propagation.REUSE) {
+			valid.addWarning("propagation=REUSE is ignored when using a delay");
+		}
 	}
 
 	@Override

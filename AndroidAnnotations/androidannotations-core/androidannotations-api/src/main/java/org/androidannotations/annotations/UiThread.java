@@ -137,6 +137,8 @@ public @interface UiThread {
 	 * if it is inside the UI thread already. If so, it will directly call the
 	 * method instead of using the handler. The default value is
 	 * {@link Propagation#ENQUEUE}, which will always call the handler.
+	 *
+	 * When using a non-zero {@link #delay() delay} the propagation parameter is ignored.
 	 * 
 	 * @return {@link Propagation#ENQUEUE} to always call the handler,
 	 *         {@link Propagation#REUSE}, to check whether it is already on the
