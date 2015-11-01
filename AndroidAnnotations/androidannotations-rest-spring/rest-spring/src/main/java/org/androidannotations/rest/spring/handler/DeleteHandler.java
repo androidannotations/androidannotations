@@ -33,8 +33,9 @@ public class DeleteHandler extends RestMethodHandler {
 		super.validate(element, validation);
 
 		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
-
-		restSpringValidatorHelper.urlVariableNamesExistInParametersAndHasOnlyOneMoreParameter((ExecutableElement) element, validation);
+		restSpringValidatorHelper.hasValidBodyParameter((ExecutableElement) element, validation);
+		restSpringValidatorHelper.doesNotHavePartAnnotatedParameter((ExecutableElement) element, validation);
+		restSpringValidatorHelper.doesNotHaveFieldAnnotatedParameter((ExecutableElement) element, validation);
 	}
 
 	@Override

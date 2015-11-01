@@ -50,6 +50,7 @@ import org.androidannotations.helper.APTCodeModelHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.TargetAnnotationHelper;
 import org.androidannotations.rest.spring.annotations.Accept;
+import org.androidannotations.rest.spring.annotations.Body;
 import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Header;
 import org.androidannotations.rest.spring.annotations.Headers;
@@ -321,14 +322,9 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public JVar getEntitySentToServer(ExecutableElement element, SortedMap<String, JVar> params) {
-		Set<String> urlVariables = extractUrlVariableNames(element);
 		for (VariableElement parameter : element.getParameters()) {
-			if (!hasPostParameterAnnotation(parameter)) {
-				String parameterName = getUrlVariableCorrespondingTo(parameter);
-
-				if (!urlVariables.contains(parameterName)) {
-					return params.get(parameterName);
-				}
+			if (parameter.getAnnotation(Body.class) != null) {
+				return params.get(parameter.getSimpleName().toString());
 			}
 		}
 		return null;
@@ -603,6 +599,6 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	public boolean hasPostParameterAnnotation(VariableElement variableElement) {
-		return hasOneOfClassAnnotations(variableElement, Arrays.asList(Field.class, Part.class));
+		return hasOneOfClassAnnotations(variableElement, Arrays.asList(Field.class, Part.class, Body.class));
 	}
 }

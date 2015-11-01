@@ -68,8 +68,8 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		validatorHelper.notAlreadyValidated(element, validation);
 
 		restSpringValidatorHelper.enclosingElementHasRestAnnotation(element, validation);
-
 		restSpringValidatorHelper.throwsOnlyRestClientException((ExecutableElement) element, validation);
+		restSpringValidatorHelper.hasAnnotatedAllParameters((ExecutableElement) element, validation);
 	}
 
 	@Override

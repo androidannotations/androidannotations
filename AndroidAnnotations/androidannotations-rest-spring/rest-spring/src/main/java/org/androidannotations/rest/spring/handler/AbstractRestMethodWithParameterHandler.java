@@ -44,9 +44,9 @@ public abstract class AbstractRestMethodWithParameterHandler extends RestMethodH
 
 		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
 
-		restSpringValidatorHelper.urlVariableNamesExistInParametersAndHasOnlyOneEntityParameterOrOneOrMoreParameter((ExecutableElement) element, validation);
-
-		restSpringValidatorHelper.doesNotMixPartAndFieldAnnotations((ExecutableElement) element, validation);
+		restSpringValidatorHelper.hasAnnotatedAllParameters((ExecutableElement) element, validation);
+		restSpringValidatorHelper.hasValidBodyParameter((ExecutableElement) element, validation);
+		restSpringValidatorHelper.doesNotMixRequestEntityAnnotations((ExecutableElement) element, validation);
 	}
 
 	@Override

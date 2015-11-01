@@ -32,5 +32,6 @@ public class PartHandler extends AbstractParamHandler {
 		super.validate(element, validation);
 
 		restSpringValidatorHelper.doesNotHaveFieldAnnotation(element, validation);
+		restSpringValidatorHelper.doesNotHaveBodyAnnotation(element, validation);
 	}
 }
