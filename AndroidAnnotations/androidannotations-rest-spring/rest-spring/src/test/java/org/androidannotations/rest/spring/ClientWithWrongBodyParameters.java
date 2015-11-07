@@ -17,36 +17,29 @@ package org.androidannotations.rest.spring;
 
 import java.util.Set;
 
-import org.androidannotations.rest.spring.annotations.Delete;
+import org.androidannotations.rest.spring.annotations.Body;
 import org.androidannotations.rest.spring.annotations.Get;
 import org.androidannotations.rest.spring.annotations.Head;
 import org.androidannotations.rest.spring.annotations.Options;
 import org.androidannotations.rest.spring.annotations.Post;
-import org.androidannotations.rest.spring.annotations.Put;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 
 @Rest(converters = MappingJacksonHttpMessageConverter.class)
-public interface ClientWithRequestEntity {
-
-	@Delete("/test/")
-	void deleteWithReturnType(Entity entity);
+public interface ClientWithWrongBodyParameters {
 
 	@Get("/test/")
-	void getWithReturnType(Entity entity);
+	void getWithReturnType(@Body Entity entity);
 
 	@Head("/test/")
-	HttpHeaders headWithReturnType(Entity entity);
+	HttpHeaders headWithReturnType(@Body Entity entity);
 
 	@Options("/test/")
-	Set<HttpMethod> optionsWithReturnType(Entity entity);
+	Set<HttpMethod> optionsWithReturnType(@Body Entity entity);
 
-	@Post("/test/")
-	void postWithReturnType(Entity entity);
-
-	@Put("/test/")
-	void putWithReturnType(Entity entity);
+	@Post("/multipleBodyNotAcceptable/")
+	void postWithReturnType(@Body Entity entity, @Body Entity entity2);
 
 }
