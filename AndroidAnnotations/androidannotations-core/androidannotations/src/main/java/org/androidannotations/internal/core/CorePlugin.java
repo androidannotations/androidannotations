@@ -34,6 +34,8 @@ import org.androidannotations.internal.core.handler.BeanHandler;
 import org.androidannotations.internal.core.handler.BeforeTextChangeHandler;
 import org.androidannotations.internal.core.handler.CheckedChangeHandler;
 import org.androidannotations.internal.core.handler.ClickHandler;
+import org.androidannotations.internal.core.handler.ColorResHandler;
+import org.androidannotations.internal.core.handler.ColorStateListResHandler;
 import org.androidannotations.internal.core.handler.CustomTitleHandler;
 import org.androidannotations.internal.core.handler.DefaultResHandler;
 import org.androidannotations.internal.core.handler.DrawableResHandler;
@@ -152,6 +154,10 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		for (AndroidRes androidRes : AndroidRes.values()) {
 			if (androidRes == AndroidRes.ANIMATION) {
 				annotationHandlers.add(new AnimationResHandler(androidAnnotationEnv));
+			} else if (androidRes == AndroidRes.COLOR) {
+				annotationHandlers.add(new ColorResHandler(androidAnnotationEnv));
+			} else if (androidRes == AndroidRes.COLOR_STATE_LIST) {
+				annotationHandlers.add(new ColorStateListResHandler(androidAnnotationEnv));
 			} else if (androidRes == AndroidRes.DRAWABLE) {
 				annotationHandlers.add(new DrawableResHandler(androidAnnotationEnv));
 			} else if (androidRes == AndroidRes.HTML) {

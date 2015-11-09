@@ -13,26 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package android.content;
+package org.androidannotations.generation;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.res.ColorStateListRes;
+
+import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 
-public class Context {
+@EActivity
+public class ActivityWithGetColorStateListMethod extends Activity {
 
-	public void startActivity(Intent intent, Bundle options) {
-	}
-	
-	public Drawable getDrawable(int id) {
-		return null;
-	}
+	@ColorStateListRes(R.color.myColorStateList)
+	ColorStateList myColorStateList;
 
-	public int getColor(int id) {
-		return 0;
-	}
-
+	// http://developer.android.com/reference/android/content/Context.html#getColorStateList(int)
+	// This method was added in API 23 and should be used to get a ColorStateList which is styled/adjusted for the current theme.
 	public ColorStateList getColorStateList(int id) {
 		return null;
 	}
+
 }
