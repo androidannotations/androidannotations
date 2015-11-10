@@ -15,83 +15,15 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.helger.jcodemodel.JExpr.invoke;
-import static com.helger.jcodemodel.JExpr.ref;
-
-import java.util.List;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.ElementFilter;
-
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidRes;
 
-import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JConditional;
-import com.helger.jcodemodel.JFieldRef;
-import com.helger.jcodemodel.JVar;
-
-public class ColorStateListResHandler extends AbstractResHandler {
+public class ColorStateListResHandler extends ContextCompatAwareResHandler {
 
 	private static final int MIN_SDK_WITH_CONTEXT_GET_COLOR_STATE_LIST = 23;
+	private static final String MIN_SDK_PLATFORM_NAME = "M";
 
 	public ColorStateListResHandler(AndroidAnnotationsEnvironment environment) {
-		super(AndroidRes.COLOR_STATE_LIST, environment);
-	}
-
-	@Override
-	protected void makeCall(String fieldName, EComponentHolder holder, JBlock methodBody, JFieldRef idRef) {
-		JFieldRef ref = ref(fieldName);
-		if (hasContextCompatInClasspath()) {
-			methodBody.assign(ref, getClasses().CONTEXT_COMPAT.staticInvoke("getColorStateList").arg(holder.getContextRef()).arg(idRef));
-		} else if (shouldUseContextGetColorStateListMethod() && !hasContextCompatInClasspath()) {
-			methodBody.assign(ref, holder.getContextRef().invoke("getColorStateList").arg(idRef));
-		} else if (!shouldUseContextGetColorStateListMethod() && hasGetColorStateListInContext() && !hasContextCompatInClasspath()) {
-			createCallWithIfGuard(holder, ref, methodBody, idRef);
-		} else {
-			methodBody.assign(ref, invoke(holder.getResourcesRef(), androidRes.getResourceMethodName()).arg(idRef));
-		}
-	}
-
-	private boolean hasContextCompatInClasspath() {
-		return getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT) != null;
-	}
-
-	private boolean shouldUseContextGetColorStateListMethod() {
-		return getEnvironment().getAndroidManifest().getMinSdkVersion() >= MIN_SDK_WITH_CONTEXT_GET_COLOR_STATE_LIST;
-	}
-
-	private boolean hasGetColorStateListInContext() {
-		TypeElement context = getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT);
-
-		return hasGetColorStateList(context);
-	}
-
-	private void createCallWithIfGuard(EComponentHolder holder, JFieldRef ref, JBlock methodBody, JFieldRef idRef) {
-		JVar resourcesRef = holder.getResourcesRef();
-		JConditional guardIf = methodBody._if(getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef("M")));
-		JBlock ifBlock = guardIf._then();
-		ifBlock.assign(ref, holder.getContextRef().invoke("getColorStateList").arg(idRef));
-
-		JBlock elseBlock = guardIf._else();
-		elseBlock.assign(ref, resourcesRef.invoke("getColorStateList").arg(idRef));
-	}
-
-	private boolean hasGetColorStateList(TypeElement type) {
-		if (type == null) {
-			return false;
-		}
-
-		List<? extends Element> allMembers = getProcessingEnvironment().getElementUtils().getAllMembers(type);
-		for (ExecutableElement element : ElementFilter.methodsIn(allMembers)) {
-			if (element.getSimpleName().contentEquals("getColorStateList")) {
-				return true;
-			}
-		}
-		return false;
+		super(AndroidRes.COLOR_STATE_LIST, environment, MIN_SDK_WITH_CONTEXT_GET_COLOR_STATE_LIST, MIN_SDK_PLATFORM_NAME);
 	}
 }

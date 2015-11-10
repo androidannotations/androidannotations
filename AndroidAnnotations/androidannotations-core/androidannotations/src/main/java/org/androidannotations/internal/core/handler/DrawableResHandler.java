@@ -15,83 +15,15 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.helger.jcodemodel.JExpr.invoke;
-import static com.helger.jcodemodel.JExpr.ref;
-
-import java.util.List;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.ElementFilter;
-
 import org.androidannotations.AndroidAnnotationsEnvironment;
-import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidRes;
 
-import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JConditional;
-import com.helger.jcodemodel.JFieldRef;
-import com.helger.jcodemodel.JVar;
-
-public class DrawableResHandler extends AbstractResHandler {
+public class DrawableResHandler extends ContextCompatAwareResHandler {
 
 	private static final int MIN_SDK_WITH_CONTEXT_GET_DRAWABLE = 21;
+	private static final String MIN_SDK_PLATFORM_NAME = "LOLLIPOP";
 
 	public DrawableResHandler(AndroidAnnotationsEnvironment environment) {
-		super(AndroidRes.DRAWABLE, environment);
-	}
-
-	@Override
-	protected void makeCall(String fieldName, EComponentHolder holder, JBlock methodBody, JFieldRef idRef) {
-		JFieldRef ref = ref(fieldName);
-		if (hasContextCompatInClasspath()) {
-			methodBody.assign(ref, getClasses().CONTEXT_COMPAT.staticInvoke("getDrawable").arg(holder.getContextRef()).arg(idRef));
-		} else if (shouldUseContextGetDrawableMethod() && !hasContextCompatInClasspath()) {
-			methodBody.assign(ref, holder.getContextRef().invoke("getDrawable").arg(idRef));
-		} else if (!shouldUseContextGetDrawableMethod() && hasGetDrawableInContext() && !hasContextCompatInClasspath()) {
-			createCallWithIfGuard(holder, ref, methodBody, idRef);
-		} else {
-			methodBody.assign(ref, invoke(holder.getResourcesRef(), androidRes.getResourceMethodName()).arg(idRef));
-		}
-	}
-
-	private boolean hasContextCompatInClasspath() {
-		return getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT) != null;
-	}
-
-	private boolean shouldUseContextGetDrawableMethod() {
-		return getEnvironment().getAndroidManifest().getMinSdkVersion() >= MIN_SDK_WITH_CONTEXT_GET_DRAWABLE;
-	}
-
-	private boolean hasGetDrawableInContext() {
-		TypeElement context = getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT);
-
-		return hasGetDrawable(context);
-	}
-
-	private void createCallWithIfGuard(EComponentHolder holder, JFieldRef ref, JBlock methodBody, JFieldRef idRef) {
-		JVar resourcesRef = holder.getResourcesRef();
-		JConditional guardIf = methodBody._if(getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef("LOLLIPOP")));
-		JBlock ifBlock = guardIf._then();
-		ifBlock.assign(ref, holder.getContextRef().invoke("getDrawable").arg(idRef));
-
-		JBlock elseBlock = guardIf._else();
-		elseBlock.assign(ref, resourcesRef.invoke("getDrawable").arg(idRef));
-	}
-
-	private boolean hasGetDrawable(TypeElement type) {
-		if (type == null) {
-			return false;
-		}
-
-		List<? extends Element> allMembers = getProcessingEnvironment().getElementUtils().getAllMembers(type);
-		for (ExecutableElement element : ElementFilter.methodsIn(allMembers)) {
-			if (element.getSimpleName().contentEquals("getDrawable")) {
-				return true;
-			}
-		}
-		return false;
+		super(AndroidRes.DRAWABLE, environment, MIN_SDK_WITH_CONTEXT_GET_DRAWABLE, MIN_SDK_PLATFORM_NAME);
 	}
 }
