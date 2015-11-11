@@ -38,6 +38,7 @@ public class Options {
 	public Options(ProcessingEnvironment processingEnvironment) {
 		options = processingEnvironment.getOptions();
 		addSupportedOption(AndroidManifestFinder.OPTION_MANIFEST);
+		addSupportedOption(AndroidManifestFinder.OPTION_LIBRARY);
 		addSupportedOption(ProjectRClassFinder.OPTION_RESOURCE_PACKAGE_NAME);
 		addSupportedOption(ModelConstants.OPTION_CLASS_SUFFIX);
 		addSupportedOption(FileAppender.OPTION_LOG_FILE);

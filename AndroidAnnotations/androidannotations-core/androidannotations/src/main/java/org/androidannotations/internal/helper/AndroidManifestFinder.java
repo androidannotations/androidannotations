@@ -49,6 +49,8 @@ public class AndroidManifestFinder {
 
 	public static final Option OPTION_MANIFEST = new Option("androidManifestFile", null);
 
+	public static final Option OPTION_LIBRARY = new Option("library", "false");
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidManifestFinder.class);
 
 	private final AndroidAnnotationsEnvironment environment;
@@ -61,6 +63,12 @@ public class AndroidManifestFinder {
 		try {
 			File androidManifestFile = findManifestFile();
 			String projectDirectory = androidManifestFile.getParent();
+
+			boolean libraryOption = environment.getOptionBooleanValue(OPTION_LIBRARY);
+
+			if (libraryOption) {
+				return parse(androidManifestFile, true);
+			}
 
 			File projectProperties = new File(projectDirectory, "project.properties");
 
