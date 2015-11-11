@@ -507,6 +507,12 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		return numberOfElementParameterHasAnnotation(element, Field.class);
 	}
 
+	public void doesNotHaveDuplicateFieldAndPartName(ExecutableElement element, ElementValidation validation) {
+		if (restAnnotationHelper.extractFieldAndPartParameters(element) == null) {
+			validation.addError(element, "%s annotated method has multiple form parameters with the same name");
+		}
+	}
+
 	public void doesNotHaveBodyAnnotatedParameter(ExecutableElement element, ElementValidation validation) {
 		if (numberOfBodyAnnotatedParameter(element) != 0) {
 			validation.addError(element, "%s parameters must not have @Body parameter");
