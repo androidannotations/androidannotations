@@ -13,22 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package android.os;
+package org.androidannotations.generation;
 
-/**
- * We have to put this on resources folder because we want to add it to
- * classpath only on some unit tests methods
- */
-@SuppressWarnings("checkstyle:typename")
-public class Build {
-	
-	public static class VERSION {
-		public static final int SDK_INT = 20;
-	}
 
-	public static class VERSION_CODES {
-		public static final int LOLLIPOP = 21;
-		public static final int M = 23;
-	}
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.res.ColorStateListRes;
 
+import android.app.Activity;
+import android.content.res.ColorStateList;
+
+@EActivity
+public class ActivityWithColorStateList extends Activity {
+	@ColorStateListRes(R.color.myColorStateList)
+	ColorStateList myColorStateList;
 }

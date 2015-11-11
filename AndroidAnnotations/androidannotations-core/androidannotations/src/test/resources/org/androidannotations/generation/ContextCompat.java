@@ -16,12 +16,21 @@
 package android.support.v4.content;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 
 @SuppressWarnings("checkstyle:hideutilityclassconstructor")
 public class ContextCompat {
 
 	public static Drawable getDrawable(Context context, int id) {
+		return null;
+	}
+
+	public static int getColor(Context context, int id) {
+		return 0;
+	}
+
+	public static ColorStateList getColorStateList(Context context, int id) {
 		return null;
 	}
 }

@@ -13,22 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package android.os;
+package org.androidannotations.internal.core.handler;
 
-/**
- * We have to put this on resources folder because we want to add it to
- * classpath only on some unit tests methods
- */
-@SuppressWarnings("checkstyle:typename")
-public class Build {
-	
-	public static class VERSION {
-		public static final int SDK_INT = 20;
+import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.internal.core.model.AndroidRes;
+
+public class ColorStateListResHandler extends ContextCompatAwareResHandler {
+
+	private static final int MIN_SDK_WITH_CONTEXT_GET_COLOR_STATE_LIST = 23;
+	private static final String MIN_SDK_PLATFORM_NAME = "M";
+
+	public ColorStateListResHandler(AndroidAnnotationsEnvironment environment) {
+		super(AndroidRes.COLOR_STATE_LIST, environment, MIN_SDK_WITH_CONTEXT_GET_COLOR_STATE_LIST, MIN_SDK_PLATFORM_NAME);
 	}
-
-	public static class VERSION_CODES {
-		public static final int LOLLIPOP = 21;
-		public static final int M = 23;
-	}
-
 }

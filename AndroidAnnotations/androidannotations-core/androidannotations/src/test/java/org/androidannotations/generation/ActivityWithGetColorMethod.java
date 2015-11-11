@@ -13,22 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package android.os;
+package org.androidannotations.generation;
 
-/**
- * We have to put this on resources folder because we want to add it to
- * classpath only on some unit tests methods
- */
-@SuppressWarnings("checkstyle:typename")
-public class Build {
-	
-	public static class VERSION {
-		public static final int SDK_INT = 20;
-	}
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.res.ColorRes;
 
-	public static class VERSION_CODES {
-		public static final int LOLLIPOP = 21;
-		public static final int M = 23;
+import android.app.Activity;
+
+@EActivity
+public class ActivityWithGetColorMethod extends Activity {
+
+	@ColorRes(R.color.myColor)
+	int myColor;
+
+	// http://developer.android.com/reference/android/content/Context.html#getColor(int)
+	// This method was added in API 23 and should be used to get a color which is styled/adjusted for the current theme.
+	public int getColor(int id) {
+		return 0;
 	}
 
 }
