@@ -442,7 +442,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		injectExtrasBlock = injectExtrasBody._if(injectExtras.ne(_null()))._then();
 
 		getSetIntent().body().invoke(injectExtrasMethod);
-		getInitBody().invoke(injectExtrasMethod);
+		getInitBodyInjectionBlock().invoke(injectExtrasMethod);
 	}
 
 	public JBlock getOnNewIntentAfterSuperBlock() {
@@ -546,7 +546,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setInitNonConfigurationInstance() throws JClassAlreadyExistsException {
-		JBlock initBody = getInitBody();
+		JBlock initBody = getInitBodyInjectionBlock();
 		JDefinedClass ncHolderClass = getNonConfigurationHolder().getGeneratedClass();
 		initNonConfigurationInstance = initBody.decl(ncHolderClass, "nonConfigurationInstance", cast(ncHolderClass, _super().invoke(getGetLastNonConfigurationInstance())));
 		initIfNonConfigurationNotNullBlock = initBody._if(initNonConfigurationInstance.ne(_null()))._then();
@@ -722,7 +722,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	@Override
 	public JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData) {
-		return getInitBody();
+		return getInitBodyInjectionBlock();
 	}
 
 	@Override
@@ -731,8 +731,13 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public JBlock getAddPreferencesFromResourceBlock() {
-		return preferencesHolder.getAddPreferencesFromResourceBlock();
+	public JBlock getAddPreferencesFromResourceInjectionBlock() {
+		return preferencesHolder.getAddPreferencesFromResourceInjectionBlock();
+	}
+
+	@Override
+	public JBlock getAddPreferencesFromResourceAfterInjectionBlock() {
+		return preferencesHolder.getAddPreferencesFromResourceAfterInjectionBlock();
 	}
 
 	@Override

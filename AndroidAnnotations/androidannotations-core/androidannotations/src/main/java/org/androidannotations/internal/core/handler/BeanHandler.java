@@ -63,7 +63,7 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 		String fieldName = element.getSimpleName().toString();
 		JFieldRef beanField = ref(fieldName);
-		JBlock block = holder.getInitBody();
+		JBlock block = holder.getInitBodyInjectionBlock();
 
 		boolean hasNonConfigurationInstanceAnnotation = element.getAnnotation(NonConfigurationInstance.class) != null;
 		if (hasNonConfigurationInstanceAnnotation) {

@@ -51,6 +51,6 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder> {
 		String applicationQualifiedName = element.asType().toString();
 		AbstractJClass applicationClass = getJClass(applicationQualifiedName + classSuffix());
 
-		holder.getInitBody().assign(ref(fieldName), applicationClass.staticInvoke(EApplicationHolder.GET_APPLICATION_INSTANCE));
+		holder.getInitBodyInjectionBlock().assign(ref(fieldName), applicationClass.staticInvoke(EApplicationHolder.GET_APPLICATION_INSTANCE));
 	}
 }

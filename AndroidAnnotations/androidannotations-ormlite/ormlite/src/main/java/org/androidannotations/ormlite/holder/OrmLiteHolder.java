@@ -59,7 +59,7 @@ public class OrmLiteHolder extends PluginClassHolder<EComponentHolder> {
 		databaseHelperRefs.put(databaseHelperTypeMirror, databaseHelperRef);
 
 		IJExpression dbHelperClass = databaseHelperClass.dotclass();
-		holder().getInitBody().assign(databaseHelperRef, //
+		holder().getInitBodyInjectionBlock().assign(databaseHelperRef, //
 				getJClass(OrmLiteClasses.OPEN_HELPER_MANAGER).staticInvoke("getHelper").arg(holder().getContextRef()).arg(dbHelperClass));
 
 		return databaseHelperRef;

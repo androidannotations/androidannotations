@@ -97,7 +97,7 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 
 	@Override
 	public JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData) {
-		return getInitBody();
+		return getInitBodyInjectionBlock();
 	}
 
 	@Override

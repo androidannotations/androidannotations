@@ -75,7 +75,7 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 		boolean useCustomKeyStore = keyStoreRawIdRef != null;
 
 		String fieldName = element.getSimpleName().toString();
-		JBlock methodBody = holder.getInitBody();
+		JBlock methodBody = holder.getInitBodyInjectionBlock();
 
 		ProcessHolder.Classes classes = getClasses();
 

@@ -59,7 +59,7 @@ public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponen
 
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, resInnerClass, true);
 
-		JBlock methodBody = holder.getInitBody();
+		JBlock methodBody = holder.getInitBodyInjectionBlock();
 
 		makeCall(fieldName, holder, methodBody, idRef);
 	}

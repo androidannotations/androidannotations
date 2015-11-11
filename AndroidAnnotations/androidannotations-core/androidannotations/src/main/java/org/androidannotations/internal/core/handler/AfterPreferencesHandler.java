@@ -49,6 +49,6 @@ public class AfterPreferencesHandler extends BaseAnnotationHandler<HasPreference
 	@Override
 	public void process(Element element, HasPreferences holder) {
 		String methodName = element.getSimpleName().toString();
-		holder.getAddPreferencesFromResourceBlock().invoke(methodName);
+		holder.getAddPreferencesFromResourceAfterInjectionBlock().invoke(methodName);
 	}
 }

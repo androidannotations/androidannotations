@@ -23,7 +23,9 @@ public interface HasPreferences extends GeneratedClassHolder {
 
 	JBlock getPreferenceScreenInitializationBlock();
 
-	JBlock getAddPreferencesFromResourceBlock();
+	JBlock getAddPreferencesFromResourceInjectionBlock();
+
+	JBlock getAddPreferencesFromResourceAfterInjectionBlock();
 
 	void assignFindPreferenceByKey(JFieldRef idRef, AbstractJClass preferenceClass, JFieldRef fieldRef);
 
