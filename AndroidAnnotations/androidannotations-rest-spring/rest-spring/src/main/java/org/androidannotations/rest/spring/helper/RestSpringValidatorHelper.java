@@ -583,7 +583,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		}
 	}
 
-	public void hasValidBodyParameter(ExecutableElement element, ElementValidation validation) {
+	public void hasOneOrZeroBodyParameter(ExecutableElement element, ElementValidation validation) {
 		if (validation.isValid() && numberOfBodyAnnotatedParameter(element) > 1) {
 			validation.addError(element, "%s parameters must not have more than one @Body annotation.");
 		}
