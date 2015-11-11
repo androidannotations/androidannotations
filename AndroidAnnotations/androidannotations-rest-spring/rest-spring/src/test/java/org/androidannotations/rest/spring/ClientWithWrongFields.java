@@ -26,7 +26,7 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 @Rest(converters = FormHttpMessageConverter.class)
 public interface ClientWithWrongFields {
 
-	@Post("/duplicateField/{v1}/{v2}")
+	@Post("/duplicateField")
 	void duplicateField(@Field("v1") int v1, @Field("v1") int v2);
 
 	@Post("/conflictWithPathParam")
