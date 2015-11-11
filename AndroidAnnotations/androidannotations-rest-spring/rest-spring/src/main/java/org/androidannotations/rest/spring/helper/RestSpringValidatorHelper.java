@@ -189,7 +189,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 							} else {
 								valid.addError(enclosedElement,
 										"The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class)
-										+ " annotated interface");
+												+ " annotated interface");
 
 							}
 						} else if (parameters.size() == 2) {
@@ -216,7 +216,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 								} else {
 									valid.addError(enclosedElement,
 											"Only one getCookie(String) and one getHeader(String) method are allowed on a " + TargetAnnotationHelper.annotationName(Rest.class)
-											+ " annotated interface");
+													+ " annotated interface");
 								}
 							} else {
 								valid.addError(enclosedElement,
