@@ -31,12 +31,12 @@ import org.androidannotations.logger.formatter.Formatter;
 
 public final class LoggerContext {
 
-	public static final Option OPTION_LOG_LEVEL = new Option("logLevel", "DEBUG");
+	public static final Option OPTION_LOG_LEVEL = new Option("logLevel", "WARN");
 	public static final Option OPTION_LOG_APPENDER_CONSOLE = new Option("logAppenderConsole", "false");
 	public static final Option OPTION_LOG_APPENDER_FILE = new Option("logAppenderFile", "true");
 
 	private static LoggerContext instance = null;
-	private static final Level DEFAULT_LEVEL = Level.DEBUG;
+	private static final Level DEFAULT_LEVEL = Level.WARN;
 
 	private Level currentLevel = DEFAULT_LEVEL;
 	private List<Appender> appenders = new ArrayList<>();
