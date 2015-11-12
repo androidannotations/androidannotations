@@ -171,4 +171,11 @@ public class RestTest extends AAProcessorTestHelper {
 		assertCompilationErrorOn(ClientWithPatch.class, "@Patch(\"/\")", result);
 		assertCompilationErrorCount(1, result);
 	}
+
+	@Test
+	public void clientWithWrongRequiresCookieInUrl() throws IOException {
+		CompileResult result = compileFiles(ClientWithWrongRequiresCookieInUrl.class);
+		assertCompilationErrorOn(ClientWithWrongRequiresCookieInUrl.class, "@Post(\"/badNamedRequiresCookieInUrl/?myCookieInUrl={myCookieInUrl}\")", result);
+		assertCompilationErrorOn(ClientWithWrongRequiresCookieInUrl.class, "@Post(\"/noPlaceholderRequiresCookieInUrl\")", result);
+	}
 }
