@@ -24,8 +24,13 @@ import org.androidannotations.annotations.ResId;
 
 /**
  * <p>
- * Use on methods in {@link SharedPref} annotated class. The generated method
- * will return an empty {@link java.util.Set} of Strings by default.
+ * Use on methods in {@link SharedPref} annotated class to specified the default
+ * value of this preference.
+ * </p>
+ * <p>
+ * The annotation value must be a <code>String[]</code>. The generated method
+ * will return a {@link java.util.Set Set&lt;String&gt;} containing the values of the
+ * given array.
  * </p>
  * <p>
  * The key of the preference will be the method name by default. This can be
