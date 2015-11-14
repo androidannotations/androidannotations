@@ -264,11 +264,15 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 				Set<String> arrayValues = new HashSet<>(Arrays.asList((String[]) value));
 				value = arrayValues;
 
-				JInvocation arrayAsList = getClasses().ARRAYS.staticInvoke("asList");
-				for (String arrayValue : arrayValues) {
-					arrayAsList.arg(lit(arrayValue));
+				if (arrayValues.isEmpty()) {
+					defaultValueExpr = newEmptyStringHashSet();
+				} else {
+					JInvocation arrayAsList = getClasses().ARRAYS.staticInvoke("asList");
+					for (String arrayValue : arrayValues) {
+						arrayAsList.arg(lit(arrayValue));
+					}
+					defaultValueExpr = JExpr._new(getClasses().HASH_SET.narrow(getClasses().STRING)).arg(arrayAsList);
 				}
-				defaultValueExpr = JExpr._new(getClasses().HASH_SET.narrow(getClasses().STRING)).arg(arrayAsList);
 			} else {
 				defaultValueExpr = newEmptyStringHashSet();
 			}

@@ -54,4 +54,10 @@ public interface SomePrefs {
 
 	@DefaultStringSet({"a", "b", "c"})
 	Set<String> setWithDefault();
+
+	@DefaultStringSet("")
+	Set<String> emtpyString();
+
+	@DefaultStringSet({})
+	Set<String> emtpyStringSet();
 }
