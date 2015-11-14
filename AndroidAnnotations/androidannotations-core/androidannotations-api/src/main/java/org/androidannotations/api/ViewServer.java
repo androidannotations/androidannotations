@@ -352,11 +352,21 @@ public class ViewServer implements Runnable {
 	 * @see #addWindow(View, String)
 	 */
 	public void removeWindow(View view) {
+		View rootView;
 		mWindowsLock.writeLock().lock();
 		try {
-			mWindows.remove(view.getRootView());
+			rootView = view.getRootView();
+			mWindows.remove(rootView);
 		} finally {
 			mWindowsLock.writeLock().unlock();
+		}
+		mFocusLock.writeLock().lock();
+		try {
+			if (mFocusedWindow == rootView) {
+				mFocusedWindow = null;
+			}
+		} finally {
+			mFocusLock.writeLock().unlock();
 		}
 		fireWindowsChangedEvent();
 	}
@@ -471,10 +481,10 @@ public class ViewServer implements Runnable {
 		void focusChanged();
 	}
 
-	private static class UncloseableOuputStream extends OutputStream {
+	private static class UncloseableOutputStream extends OutputStream {
 		private final OutputStream mStream;
 
-		UncloseableOuputStream(OutputStream stream) {
+		UncloseableOutputStream(OutputStream stream) {
 			mStream = stream;
 		}
 
@@ -667,7 +677,7 @@ public class ViewServer implements Runnable {
 				// call stuff
 				final Method dispatch = ViewDebug.class.getDeclaredMethod("dispatchCommand", View.class, String.class, String.class, OutputStream.class);
 				dispatch.setAccessible(true);
-				dispatch.invoke(null, window, command, parameters, new UncloseableOuputStream(client.getOutputStream()));
+				dispatch.invoke(null, window, command, parameters, new UncloseableOutputStream(client.getOutputStream()));
 
 				if (!client.isOutputShutdown()) {
 					out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
