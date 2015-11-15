@@ -96,7 +96,7 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 			put("int", new DefaultPrefInfo<>(DefaultInt.class, IntPrefField.class, IRClass.Res.INTEGER, 0, "intField"));
 			put("long", new DefaultPrefInfo<>(DefaultLong.class, LongPrefField.class, IRClass.Res.INTEGER, 0L, "longField"));
 			put(CanonicalNameConstants.STRING, new DefaultPrefInfo<>(DefaultString.class, StringPrefField.class, IRClass.Res.STRING, "", "stringField"));
-			put(CanonicalNameConstants.STRING_SET, new DefaultPrefInfo<Set<String>>(DefaultStringSet.class, StringSetPrefField.class, null, null, "stringSetField"));
+			put(CanonicalNameConstants.STRING_SET, new DefaultPrefInfo<Set<String>>(DefaultStringSet.class, StringSetPrefField.class, IRClass.Res.ARRAY, null, "stringSetField"));
 		}
 	};
 
@@ -322,10 +322,21 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 		case STRING:
 			resourceGetMethodName = "getString";
 			break;
+		case ARRAY:
+			resourceGetMethodName = "getStringArray";
+			break;
 		default:
 			break;
 		}
-		return holder.getContextField().invoke("getResources").invoke(resourceGetMethodName).arg(idRef);
+
+		JInvocation resourceInvocation = holder.getContextField().invoke("getResources").invoke(resourceGetMethodName).arg(idRef);
+
+		if (IRClass.Res.ARRAY.equals(res)) {
+			JInvocation asList = getClasses().ARRAYS.staticInvoke("asList");
+			JInvocation newHashMap = JExpr._new(getClasses().HASH_SET.narrow(getClasses().STRING));
+			resourceInvocation = newHashMap.arg(asList.arg(resourceInvocation));
+		}
+		return resourceInvocation;
 	}
 
 	private IJExpression newEmptyStringHashSet() {

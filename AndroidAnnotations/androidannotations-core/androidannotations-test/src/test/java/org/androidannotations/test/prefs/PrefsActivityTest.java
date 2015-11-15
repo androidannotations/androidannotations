@@ -238,4 +238,19 @@ public class PrefsActivityTest {
 
 		assertThat(somePrefs.types().get()).isEmpty();
 	}
+
+	@Test
+	public void getStringSetEmptyWithDefaultValue() {
+		sharedPref.edit().clear().commit();
+
+		assertThat(somePrefs.emtpyStringSet().get()).isEmpty();
+	}
+
+	@Test
+	public void getStringSetWithDefaultRes() {
+		sharedPref.edit().clear().commit();
+
+		assertThat(somePrefs.planetsStringSet().get().size()).isEqualTo(8);
+		assertThat(somePrefs.planetsStringSet().get()).contains("Earth");
+	}
 }
