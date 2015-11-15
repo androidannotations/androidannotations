@@ -604,5 +604,16 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		if (urlVariableNames.size() != numberOfNotAnnotatedElementParameter(element) + numberOfPathAnnotatedParameter(element) + numberOfRequiresCookieInUrl(element)) {
 			validation.addError(element, "%s parameters must add annotations or define as @Path placeholders");
 		}
+
+		for (VariableElement variableElement : element.getParameters()) {
+			List<? extends AnnotationMirror> annotationMirrors = variableElement.getAnnotationMirrors();
+			if (annotationMirrors.size() == 0) {
+				if (!urlVariableNames.contains(variableElement.getSimpleName().toString())) {
+					validation.addError(element, "%s method parameters '" + variableElement + "' must be annotated");
+				}
+			} else if (!restAnnotationHelper.hasRequestParameterAnnotation(variableElement)) {
+				validation.addError(element, "%s method parameters '" + variableElement + "' must be annotated");
+			}
+		}
 	}
 }

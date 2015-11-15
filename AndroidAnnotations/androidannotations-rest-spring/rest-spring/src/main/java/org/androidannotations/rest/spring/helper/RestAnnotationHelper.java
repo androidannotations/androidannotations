@@ -601,4 +601,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	public boolean hasPostParameterAnnotation(VariableElement variableElement) {
 		return hasOneOfClassAnnotations(variableElement, Arrays.asList(Field.class, Part.class, Body.class));
 	}
+
+	public boolean hasRequestParameterAnnotation(VariableElement variableElement) {
+		return hasOneOfClassAnnotations(variableElement, Arrays.asList(Field.class, Part.class, Body.class, Path.class));
+	}
 }
