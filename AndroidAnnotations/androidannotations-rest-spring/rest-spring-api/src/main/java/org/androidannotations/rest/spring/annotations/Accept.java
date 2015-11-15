@@ -45,7 +45,7 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;Post(&quot;/entity&quot;)
  * 	&#064;Accept(<b>MediaType.APPLICATION_XML</b>)
- * 	Event addEvent(Event event);
+ * 	Event addEvent(&#064;Body Event event);
  * }
  * </pre>
  * 

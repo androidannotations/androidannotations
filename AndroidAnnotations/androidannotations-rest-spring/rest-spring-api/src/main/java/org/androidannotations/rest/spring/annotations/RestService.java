@@ -49,7 +49,7 @@ import java.lang.annotation.Target;
  * 	Event getEvent(long id);
  * 
  * 	&#064;Post(&quot;/events/new&quot;)
- * 	void newEvent(Event event);
+ * 	void newEvent(&#064;Body Event event);
  * }
  * 
  * &#064;EBean

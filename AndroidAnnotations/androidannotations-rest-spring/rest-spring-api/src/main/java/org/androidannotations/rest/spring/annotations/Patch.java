@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  * 	Event updateEvent();
  * 
  * 	&#064;Patch(&quot;/events/update/<b>{id}</b>&quot;)
- * 	void updateEvent(Event <i>event</i>, int <b>id</b>);
+ * 	void updateEvent(&#064;Body Event <i>event</i>, int <b>id</b>);
  * }
  * </pre>
  * 
@@ -53,6 +53,7 @@ import java.lang.annotation.Target;
  * @see Delete
  * @see Head
  * @see Options
+ * @see Body
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
