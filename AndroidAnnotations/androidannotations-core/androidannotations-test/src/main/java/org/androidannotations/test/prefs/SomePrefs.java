@@ -21,6 +21,7 @@ import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
+import org.androidannotations.annotations.sharedpreferences.DefaultRes;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.DefaultStringSet;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
@@ -60,4 +61,7 @@ public interface SomePrefs {
 
 	@DefaultStringSet({})
 	Set<String> emtpyStringSet();
+
+	@DefaultRes(R.array.planets_array)
+	Set<String> planetsStringSet();
 }
