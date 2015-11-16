@@ -15,32 +15,30 @@
  */
 package org.androidannotations.rest.spring.handler;
 
+import java.util.Arrays;
+
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.rest.spring.annotations.Body;
 import org.androidannotations.rest.spring.annotations.Delete;
+import org.androidannotations.rest.spring.annotations.Patch;
+import org.androidannotations.rest.spring.annotations.Post;
+import org.androidannotations.rest.spring.annotations.Put;
 
-public class DeleteHandler extends RestMethodHandler {
+public class BodyHandler extends AbstractParamHandler {
 
-	public DeleteHandler(AndroidAnnotationsEnvironment environment) {
-		super(Delete.class, environment);
+	public BodyHandler(AndroidAnnotationsEnvironment environment) {
+		super(Body.class, environment);
 	}
 
 	@Override
-	public void validate(Element element, ElementValidation validation) {
-		super.validate(element, validation);
-
-		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
-		restSpringValidatorHelper.hasOneOrZeroBodyParameter((ExecutableElement) element, validation);
-		restSpringValidatorHelper.doesNotHavePartAnnotatedParameter((ExecutableElement) element, validation);
-		restSpringValidatorHelper.doesNotHaveFieldAnnotatedParameter((ExecutableElement) element, validation);
+	protected void validate(Element element, ElementValidation validation) {
+		validatorHelper.enclosingElementHasOneOfAnnotations(element, Arrays.asList(Post.class, Put.class, Patch.class, Delete.class), validation);
+		restSpringValidatorHelper.doesNotHavePathAnnotation(element, validation);
+		restSpringValidatorHelper.doesNotHaveFieldAnnotation(element, validation);
+		restSpringValidatorHelper.doesNotHavePartAnnotation(element, validation);
 	}
 
-	@Override
-	protected String getUrlSuffix(Element element) {
-		Delete annotation = element.getAnnotation(Delete.class);
-		return annotation.value();
-	}
 }

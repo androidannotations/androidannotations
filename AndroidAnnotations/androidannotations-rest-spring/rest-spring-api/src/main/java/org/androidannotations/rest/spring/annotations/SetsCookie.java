@@ -48,7 +48,7 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;Put(&quot;/events/update/&quot;)
  * 	&#064;RequiresCookie(<b>&quot;token&quot;</b>)
- * 	void updateEvent(Event event);
+ * 	void updateEvent(&#064;Body Event event);
  * }
  * </pre>
  * 

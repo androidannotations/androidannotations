@@ -21,6 +21,7 @@ import static org.androidannotations.rest.spring.helper.RestSpringClasses.RESPON
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -68,8 +69,10 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 		validatorHelper.notAlreadyValidated(element, validation);
 
 		restSpringValidatorHelper.enclosingElementHasRestAnnotation(element, validation);
-
 		restSpringValidatorHelper.throwsOnlyRestClientException((ExecutableElement) element, validation);
+		Set<String> variableNames = restAnnotationHelper.extractUrlVariableNames((ExecutableElement) element);
+		restSpringValidatorHelper.urlVariableNamesExistInParameters((ExecutableElement) element, variableNames, validation);
+		restSpringValidatorHelper.hasAnnotatedAllParameters((ExecutableElement) element, validation);
 	}
 
 	@Override

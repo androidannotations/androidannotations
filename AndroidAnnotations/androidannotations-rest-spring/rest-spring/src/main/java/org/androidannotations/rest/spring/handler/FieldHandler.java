@@ -32,5 +32,6 @@ public class FieldHandler extends AbstractParamHandler {
 		super.validate(element, validation);
 
 		restSpringValidatorHelper.doesNotHavePartAnnotation(element, validation);
+		restSpringValidatorHelper.doesNotHaveBodyAnnotation(element, validation);
 	}
 }

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.androidannotations.rest.spring.annotations.Accept;
+import org.androidannotations.rest.spring.annotations.Body;
 import org.androidannotations.rest.spring.annotations.Delete;
 import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Get;
@@ -141,94 +142,92 @@ public interface MyService {
 	@Post("http://company.com/client/ping")
 	void ping();
 
-	// There should be max 1 parameter that is not mapped to an attribute. This
-	// parameter will be used as the post entity.
 	@Post("/events/")
 	@Accept(MediaType.APPLICATION_JSON)
-	Event addEvent(Event event);
+	Event addEvent(@Body String event);
 
 	@Post("/events/{year}/")
-	Event addEvent(Event event, int year);
+	Event addEvent(@Body Event event, int year);
 
 	@Post("/events/{year}/")
 	Event addEvent(int year);
 
 	@Post("/events/")
-	ResponseEntity<Event> addEvent2(Event event);
+	ResponseEntity<Event> addEvent2(@Body Event event);
 
-	@Post("/events/{date}")
+	@Post("/events/{date}?myCookieInUrl={myCookieInUrl}")
 	@RequiresHeader("SomeFancyHeader")
 	@RequiresCookie("myCookie")
 	@RequiresCookieInUrl("myCookieInUrl")
 	void addEventWithParameters(String date, @Field String parameter, @Field String otherParameter);
 
-	@Post("/events/{date}")
+	@Post("/events/{date}?myCookieInUrl={myCookieInUrl}")
 	@RequiresHeader("SomeFancyHeader")
 	@RequiresCookie("myCookie")
 	@RequiresCookieInUrl("myCookieInUrl")
 	void addEventWithParts(String date, @Part String parameter, @Part String otherParameter);
 
-	@Post("/events/{date}")
+	@Post("/events/{date}?myCookieInUrl={myCookieInUrl}")
 	@RequiresHeader("SomeFancyHeader")
 	@RequiresCookie("myCookie")
 	@RequiresCookieInUrl("myCookieInUrl")
 	void addEventWithPathParameters(@Path("date") String pathParam, @Field String parameter);
 
-	@Post("/events/{date}")
+	@Post("/events/{date}?myCookieInUrl={myCookieInUrl}")
 	@RequiresHeader("SomeFancyHeader")
 	@Header(name = "SomeFancyHeader", value = "fancy")
 	@RequiresCookie("myCookie")
 	@RequiresCookieInUrl("myCookieInUrl")
-	void addEventWithHeaders(String date, String parameter);
+	void addEventWithHeaders(String date, @Body String parameter);
 
-	@Post("/events/{date}")
+	@Post("/events/{date}?myCookieInUrl={myCookieInUrl}")
 	@Headers(@Header(name = "SomeFancyHeader", value = "fancy"))
 	@RequiresCookie("myCookie")
 	@RequiresCookieInUrl("myCookieInUrl")
-	void addEventWithHeadersHeadersAnnotation(String date, String parameter);
+	void addEventWithHeadersHeadersAnnotation(String date, @Body String parameter);
 
 	/**
 	 * Output different then input
 	 */
 	@Post("/events/")
-	ResponseEntity<String> addEvent3(Event event);
+	ResponseEntity<String> addEvent3(@Body Event event);
 
 	@Post("/events/")
-	List<? extends Event> addEventGenericsListWildcardExtends(Event event);
+	List<? extends Event> addEventGenericsListWildcardExtends(@Body Event event);
 
 	@Post("/events/")
-	List<Event> addEventGenericsList(Event event);
+	List<Event> addEventGenericsList(@Body Event event);
 
 	// TODO: Handle generics in params
 	// @Post("/events/")
 	// List<Event> addEventGenericsList(List<Event> events);
 
 	@Post("/events/")
-	Set<Event> addEventGenericsSet(Event event);
+	Set<Event> addEventGenericsSet(@Body Event event);
 
 	@Post("/events/")
-	GenericEvent<GenericEvent<GenericEvent<String>>> addEventGenericsInception(Event event);
+	GenericEvent<GenericEvent<GenericEvent<String>>> addEventGenericsInception(@Body Event event);
 
 	@Post("/events/")
-	Map<String, Event> addEventGenericsMap(Event event);
+	Map<String, Event> addEventGenericsMap(@Body Event event);
 
 	/**
 	 * Output different then input
 	 */
 	@Post("/events/")
-	String addEvent4(Event event);
+	String addEvent4(@Body Event event);
 
 	@Post("/events/")
-	void addEvent5(Event event);
+	void addEvent5(@Body Event event);
 
 	@Post("/events/{year}/")
 	@Accept(MediaType.APPLICATION_JSON)
-	ResponseEntity<Event> addEvent2(Event event, int year);
+	ResponseEntity<Event> addEvent2(@Body Event event, int year);
 
 	// *** PUT ***
 
 	@Put("/events/{id}")
-	void updateEvent(Event event, int id);
+	void updateEvent(@Body Event event, int id);
 
 	@Put("/events/{date}")
 	void updateEvent(long date);
@@ -236,7 +235,7 @@ public interface MyService {
 	@Put("/events/{date}")
 	Event updateEventWithResponse(long date);
 
-	@Put("/events/{date}")
+	@Put("/events/{date}?myCookieInUrl={myCookieInUrl}")
 	@RequiresHeader("SomeFancyHeader")
 	@RequiresCookie("myCookie")
 	@RequiresCookieInUrl("myCookieInUrl")

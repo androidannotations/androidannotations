@@ -34,7 +34,7 @@ public class GetHandler extends RestMethodHandler {
 
 		validatorHelper.doesNotReturnPrimitive((ExecutableElement) element, validation);
 
-		restSpringValidatorHelper.urlVariableNamesExistInParametersAndHasNoOneMoreParameter((ExecutableElement) element, validation);
+		restSpringValidatorHelper.doesNotHaveRequestEntityAnnotatedParameters((ExecutableElement) element, validation);
 	}
 
 	@Override

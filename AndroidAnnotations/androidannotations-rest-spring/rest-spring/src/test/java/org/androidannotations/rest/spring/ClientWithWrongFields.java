@@ -15,6 +15,7 @@
  */
 package org.androidannotations.rest.spring;
 
+import org.androidannotations.rest.spring.annotations.Body;
 import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Part;
 import org.androidannotations.rest.spring.annotations.Path;
@@ -38,10 +39,13 @@ public interface ClientWithWrongFields {
 	void conflictElementNameWithPathParam(@Field int conflict, @Path("conflict") int v2);
 
 	@Post("/pathParamAndEntity")
-	void fieldAndEntity(@Field int v1, String entity);
+	void fieldAndEntity(@Field int v1, @Body String entity);
 
 	void missingPostAnnotation(@Field("missingPost") int v1);
 
 	@Post("/fieldAndPartOnSameMethod")
 	void fieldAndPartOnSameMethod(@Field String field, @Part String part);
+
+	@Post("/fieldAndBodyOnSameMethod")
+	void fieldAndBodyOnSameMethod(@Field String field, @Body String part);
 }

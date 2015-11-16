@@ -15,16 +15,19 @@
  */
 package org.androidannotations.rest.spring;
 
-import org.androidannotations.rest.spring.annotations.Field;
-import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
+import org.androidannotations.rest.spring.annotations.RequiresCookieInUrl;
 import org.androidannotations.rest.spring.annotations.Rest;
-import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 
-@Rest(converters = FormHttpMessageConverter.class)
-public interface FieldPathParamOnSameArgument {
+@Rest(converters = { MappingJacksonHttpMessageConverter.class })
+public interface ClientWithWrongRequiresCookieInUrl {
 
-	@Post("/fieldPathParamOnSameArgument/{string}")
-	void postParamPathParamOnSameArgument(@Field @Path int string);
+	@Post("/badNamedRequiresCookieInUrl/?myCookieInUrl={myCookieInUrl}")
+	@RequiresCookieInUrl("badNamed")
+	void badNamedRequiresCookieInUrl();
 
+	@Post("/noPlaceholderRequiresCookieInUrl")
+	@RequiresCookieInUrl("myCookieInUrl")
+	void noPlaceholderRequiresCookieInUrl();
 }
