@@ -66,6 +66,8 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 		if (CanonicalNameConstants.APP_WIDGET_MANAGER.equals(fieldTypeQualifiedName)) {
 			createSpecialInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody, 21, "LOLLIPOP", getClasses().APP_WIDGET_MANAGER, "getInstance", true);
+		} else if (CanonicalNameConstants.WIFI_MANAGER.equals(fieldTypeQualifiedName)) {
+			methodBody.add(createApplicationContextInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		} else {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		}
@@ -73,7 +75,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 	@SuppressWarnings("checkstyle:parameternumber")
 	private void createSpecialInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody, int apiLevel, String apiLevelName,
-										AbstractJClass serviceClass, String injectionMethodName, boolean contextNeeded) {
+			AbstractJClass serviceClass, String injectionMethodName, boolean contextNeeded) {
 		if (getEnvironment().getAndroidManifest().getMinSdkVersion() >= apiLevel) {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		} else {
@@ -91,6 +93,10 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 				methodBody.add(oldInjection);
 			}
 		}
+	}
+
+	private IJStatement createApplicationContextInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
+		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getApplicationContext").invoke("getSystemService").arg(serviceRef)));
 	}
 
 	private IJStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
