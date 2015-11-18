@@ -33,28 +33,25 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 public interface ClientWithPathVariable {
 
 	@Delete("/test/{v1}/{v2}")
-	void deleteWithParameterEntity(int v1, String v2);
+	void deleteWithParameterEntity(@Path int v1, @Path String v2);
 
 	@Get("/test/{v1}/{v2}")
-	void getWithParameterEntity(int v1, String v2);
+	void getWithParameterEntity(@Path int v1, @Path String v2);
 
 	@Head("/test/{v1}/{v2}")
-	HttpHeaders headWithParameterEntity(int v1, String v2);
+	HttpHeaders headWithParameterEntity(@Path int v1, @Path String v2);
 
 	@Options("/test/{v1}/{v2}")
-	Set<HttpMethod> optionsWithParameterEntity(int v1, String v2);
+	Set<HttpMethod> optionsWithParameterEntity(@Path int v1, @Path String v2);
 
 	@Post("/test/{v1}/{v2}")
-	void postWithParameterEntity(int v1, String v2);
+	void postWithParameterEntity(@Path int v1, @Path String v2);
 
 	@Put("/test/{v1}/{v2}")
-	void putWithParameterEntity(int v1, String v2);
+	void putWithParameterEntity(@Path int v1, @Path String v2);
 
 	@Get("/test/{v1}")
 	void getWithPathAnnotation(@Path("v1") int version);
-
-	@Get("/test/{v1}/{v2}")
-	void getWithPathAnnotationAndParam(@Path("v1") int v1, String v2);
 
 	@Get("/test/{v1}/{v2}")
 	void getWithCrossParamAnnotations(@Path("v1") int v2, @Path("v2") int v1);

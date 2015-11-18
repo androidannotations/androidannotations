@@ -16,6 +16,7 @@
 package org.androidannotations.rest.spring;
 
 import org.androidannotations.rest.spring.annotations.Field;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.springframework.core.io.ClassPathResource;
@@ -46,7 +47,7 @@ public interface ClientWithPostParameters {
 	void twoFieldssOneWithName(@Field String a, @Field("c") String b);
 
 	@Post("/{url}")
-	void fieldAndUrlVariable(@Field String a, String url);
+	void fieldAndUrlVariable(@Field String a, @Path String url);
 
 	@Post("/")
 	void fieldClassPathResource(@Field ClassPathResource res);

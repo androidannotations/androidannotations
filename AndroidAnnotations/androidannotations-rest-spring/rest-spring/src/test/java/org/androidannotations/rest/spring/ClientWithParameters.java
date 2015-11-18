@@ -16,6 +16,7 @@
 package org.androidannotations.rest.spring;
 
 import org.androidannotations.rest.spring.annotations.Field;
+import org.androidannotations.rest.spring.annotations.Path;
 import org.androidannotations.rest.spring.annotations.Put;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -33,6 +34,6 @@ public interface ClientWithParameters {
 	void moreParameter(@Field int id, @Field String str);
 
 	@Put("/{url}")
-	void oneParameterWithUrl(@Field int id, String url);
+	void oneParameterWithUrl(@Field int id, @Path String url);
 
 }
