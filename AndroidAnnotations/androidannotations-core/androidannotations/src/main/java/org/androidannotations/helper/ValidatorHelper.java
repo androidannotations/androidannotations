@@ -330,16 +330,6 @@ public class ValidatorHelper {
 		return count;
 	}
 
-	public int numberOfNotAnnotatedElementParameter(ExecutableElement element) {
-		int count = 0;
-		for (VariableElement parameter : element.getParameters()) {
-			if (parameter.getAnnotationMirrors().size() == 0) {
-				count++;
-			}
-		}
-		return count;
-	}
-
 	public void doesntThrowException(Element element, ElementValidation valid) {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		if (executableElement.getThrownTypes().size() > 0) {

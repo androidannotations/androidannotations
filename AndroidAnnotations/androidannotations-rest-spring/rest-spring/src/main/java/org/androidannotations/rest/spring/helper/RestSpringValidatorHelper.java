@@ -366,7 +366,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 		Set<String> parametersName = new HashSet<>();
 		for (VariableElement parameter : parameters) {
-			if (restAnnotationHelper.hasPostParameterAnnotation(parameter)) {
+			if (parameter.getAnnotation(Path.class) == null) {
 				continue;
 			}
 
@@ -441,8 +441,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 		Set<String> urlVariableNames = restAnnotationHelper.extractUrlVariableNames(url);
 
-		String annotationValue = restAnnotationHelper.extractAnnotationValueParameter(element);
-		String expectedUrlVariableName = !annotationValue.equals("") ? annotationValue : element.getSimpleName().toString();
+		String expectedUrlVariableName = restAnnotationHelper.getUrlVariableCorrespondingTo((VariableElement) element);
 
 		if (!urlVariableNames.contains(expectedUrlVariableName)) {
 			validation.addError(element, "%s annotated parameter is has no corresponding url variable");
@@ -601,17 +600,12 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 		}
 
 		Set<String> urlVariableNames = restAnnotationHelper.extractUrlVariableNames(element);
-		if (urlVariableNames.size() != numberOfNotAnnotatedElementParameter(element) + numberOfPathAnnotatedParameter(element) + numberOfRequiresCookieInUrl(element)) {
-			validation.addError(element, "%s parameters must add annotations or define as @Path placeholders");
+		if (urlVariableNames.size() != numberOfPathAnnotatedParameter(element) + numberOfRequiresCookieInUrl(element)) {
+			validation.addError(element, "%s must have url variables corresponding to the @Path or @RequiresCookieInUrl annotation");
 		}
 
 		for (VariableElement variableElement : element.getParameters()) {
-			List<? extends AnnotationMirror> annotationMirrors = variableElement.getAnnotationMirrors();
-			if (annotationMirrors.size() == 0) {
-				if (!urlVariableNames.contains(variableElement.getSimpleName().toString())) {
-					validation.addError(element, "%s method parameters '" + variableElement + "' must be annotated");
-				}
-			} else if (!restAnnotationHelper.hasRequestParameterAnnotation(variableElement)) {
+			if (!restAnnotationHelper.hasRestApiMethodParameterAnnotation(variableElement)) {
 				validation.addError(element, "%s method parameters '" + variableElement + "' must be annotated");
 			}
 		}
