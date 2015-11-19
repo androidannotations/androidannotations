@@ -25,5 +25,5 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 public interface PathRestService extends RestClientSupport {
 
 	@Get(value = "{hello}{bye}{parameterName}")
-	void get(@Path("hello") String bye, @Path("bye") String hello, String parameterName);
+	void get(@Path("hello") String bye, @Path("bye") String hello, @Path String parameterName);
 }
