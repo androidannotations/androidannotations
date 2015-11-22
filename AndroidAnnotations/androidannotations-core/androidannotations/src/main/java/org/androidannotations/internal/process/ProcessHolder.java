@@ -123,6 +123,8 @@ public class ProcessHolder {
 		public final AbstractJClass ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ACTIVITY_COMPAT);
 		public final AbstractJClass CONTEXT_COMPAT = refClass(CanonicalNameConstants.CONTEXT_COMPAT);
 		public final AbstractJClass APP_WIDGET_MANAGER = refClass(CanonicalNameConstants.APP_WIDGET_MANAGER);
+		public final AbstractJClass VIEW_PAGER = refClass(CanonicalNameConstants.VIEW_PAGER);
+		public final AbstractJClass PAGE_CHANGE_LISTENER = refClass(CanonicalNameConstants.PAGE_CHANGE_LISTENER);
 
 		public final AbstractJClass PREFERENCE = refClass(CanonicalNameConstants.PREFERENCE);
 		public final AbstractJClass SUPPORT_V7_PREFERENCE = refClass(CanonicalNameConstants.SUPPORT_V7_PREFERENCE);

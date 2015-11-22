@@ -671,11 +671,19 @@ public class ValidatorHelper {
 		extendsOneOfTypes(element.getEnclosingElement(), VALID_PREFERENCE_CLASSES, valid);
 	}
 
-	public void isPreferenceFragmentClassPresent(Element element, ElementValidation valid) {
-		TypeElement preferenceFragmentElement = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.PREFERENCE_FRAGMENT);
+	public boolean isClassPresent(String className) {
+		return annotationHelper.getElementUtils().getTypeElement(className) != null;
+	}
 
-		if (preferenceFragmentElement == null) {
+	public void isPreferenceFragmentClassPresent(Element element, ElementValidation valid) {
+		if (!isClassPresent(CanonicalNameConstants.PREFERENCE_FRAGMENT)) {
 			valid.addError("The class " + CanonicalNameConstants.PREFERENCE_FRAGMENT + " cannot be found. You have to use at least API 11");
+		}
+	}
+
+	public void isViewPagerClassPresent(ElementValidation validation) {
+		if (!isClassPresent(CanonicalNameConstants.VIEW_PAGER)) {
+			validation.addError("The class " + CanonicalNameConstants.VIEW_PAGER + " cannot be found. You have to include support v4 library");
 		}
 	}
 }
