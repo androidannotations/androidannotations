@@ -19,10 +19,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
 
 import android.app.Activity;
+import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 
 @EActivity
 public class ActivityWithApplicationContextSystemServices extends Activity {
 	@SystemService
 	WifiManager wifiManager;
+
+	@SystemService
+	AudioManager audioManager;
 }

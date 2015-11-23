@@ -25,6 +25,7 @@ import org.junit.Test;
 public class SystemServiceHandlerContextTest extends AAProcessorTestHelper {
 
 	private static final String WIFI_MANAGER_SIGNATURE = ".*wifiManager = \\(\\(WifiManager\\) this\\.getApplicationContext\\(\\)\\.getSystemService\\(Context\\.WIFI_SERVICE\\)\\);.*";
+	private static final String AUDIO_MANAGER_SIGNATURE = ".*audioManager = \\(\\(AudioManager\\) this\\.getApplicationContext\\(\\)\\.getSystemService\\(Context\\.AUDIO_SERVICE\\)\\);.*";
 
 	@Before
 	public void setUp() {
@@ -40,5 +41,16 @@ public class SystemServiceHandlerContextTest extends AAProcessorTestHelper {
 
 		assertCompilationSuccessful(result);
 		assertGeneratedClassMatches(generatedFile, WIFI_MANAGER_SIGNATURE);
+	}
+
+	@Test
+	public void activityRetrievesAudioManagerViaApplicationContext() {
+		addManifestProcessorParameter(SystemServiceHandlerContextTest.class, "AndroidManifestForApplicationContextSystemServices.xml");
+
+		CompileResult result = compileFiles(ActivityWithApplicationContextSystemServices.class);
+		File generatedFile = toGeneratedFile(ActivityWithApplicationContextSystemServices.class);
+
+		assertCompilationSuccessful(result);
+		assertGeneratedClassMatches(generatedFile, AUDIO_MANAGER_SIGNATURE);
 	}
 }

@@ -32,6 +32,7 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidSystemServices;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.IJStatement;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JConditional;
@@ -66,8 +67,6 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 		if (CanonicalNameConstants.APP_WIDGET_MANAGER.equals(fieldTypeQualifiedName)) {
 			createSpecialInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody, 21, "LOLLIPOP", getClasses().APP_WIDGET_MANAGER, "getInstance", true);
-		} else if (CanonicalNameConstants.WIFI_MANAGER.equals(fieldTypeQualifiedName)) {
-			methodBody.add(createApplicationContextInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		} else {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		}
@@ -75,7 +74,7 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 	@SuppressWarnings("checkstyle:parameternumber")
 	private void createSpecialInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody, int apiLevel, String apiLevelName,
-			AbstractJClass serviceClass, String injectionMethodName, boolean contextNeeded) {
+										AbstractJClass serviceClass, String injectionMethodName, boolean contextNeeded) {
 		if (getEnvironment().getAndroidManifest().getMinSdkVersion() >= apiLevel) {
 			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
 		} else {
@@ -95,12 +94,16 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 		}
 	}
 
-	private IJStatement createApplicationContextInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
-		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getApplicationContext").invoke("getSystemService").arg(serviceRef)));
+	private IJStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
+		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), getAppropriateContextRef(holder, fieldTypeQualifiedName).invoke("getSystemService").arg(serviceRef)));
 	}
 
-	private IJStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
-		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
+	private IJExpression getAppropriateContextRef(EComponentHolder holder, String fieldTypeQualifiedName) {
+		if (CanonicalNameConstants.WIFI_MANAGER.equals(fieldTypeQualifiedName) || CanonicalNameConstants.AUDIO_MANAGER.equals(fieldTypeQualifiedName)) {
+			return holder.getContextRef().invoke("getApplicationContext");
+		}
+
+		return holder.getContextRef();
 	}
 
 	private boolean isApiOnClasspath(String apiName) {
