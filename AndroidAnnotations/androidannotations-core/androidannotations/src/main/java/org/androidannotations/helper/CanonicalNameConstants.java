@@ -135,6 +135,8 @@ public final class CanonicalNameConstants {
 	public static final String SUPPORT_V7_PREFERENCE_CLICK_LISTENER = "android.support.v7.preference.Preference.OnPreferenceClickListener";
 	public static final String PREFERENCE_ACTIVITY_HEADER = "android.preference.PreferenceActivity.Header";
 	public static final String APP_WIDGET_MANAGER = "android.appwidget.AppWidgetManager";
+	public static final String WIFI_MANAGER = "android.net.wifi.WifiManager";
+	public static final String AUDIO_MANAGER = "android.media.AudioManager";
 	public static final String ACTIONBAR_ACTIVITY = "android.support.v7.app.ActionBarActivity";
 	public static final String APPCOMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
 

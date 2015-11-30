@@ -32,6 +32,7 @@ import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidSystemServices;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.IJStatement;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JConditional;
@@ -94,7 +95,15 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 	}
 
 	private IJStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
-		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), holder.getContextRef().invoke("getSystemService").arg(serviceRef)));
+		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), getAppropriateContextRef(holder, fieldTypeQualifiedName).invoke("getSystemService").arg(serviceRef)));
+	}
+
+	private IJExpression getAppropriateContextRef(EComponentHolder holder, String fieldTypeQualifiedName) {
+		if (CanonicalNameConstants.WIFI_MANAGER.equals(fieldTypeQualifiedName) || CanonicalNameConstants.AUDIO_MANAGER.equals(fieldTypeQualifiedName)) {
+			return holder.getContextRef().invoke("getApplicationContext");
+		}
+
+		return holder.getContextRef();
 	}
 
 	private boolean isApiOnClasspath(String apiName) {
