@@ -76,6 +76,9 @@ import org.androidannotations.internal.core.handler.OnActivityResultHandler;
 import org.androidannotations.internal.core.handler.OptionsItemHandler;
 import org.androidannotations.internal.core.handler.OptionsMenuHandler;
 import org.androidannotations.internal.core.handler.OptionsMenuItemHandler;
+import org.androidannotations.internal.core.handler.PageScrollStateChangedHandler;
+import org.androidannotations.internal.core.handler.PageScrolledHandler;
+import org.androidannotations.internal.core.handler.PageSelectedHandler;
 import org.androidannotations.internal.core.handler.PrefHandler;
 import org.androidannotations.internal.core.handler.PreferenceByKeyHandler;
 import org.androidannotations.internal.core.handler.PreferenceChangeHandler;
@@ -199,6 +202,9 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new ReceiverHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ReceiverActionHandler(androidAnnotationEnv));
 		annotationHandlers.add(new OnActivityResultHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PageScrolledHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PageScrollStateChangedHandler(androidAnnotationEnv));
+		annotationHandlers.add(new PageSelectedHandler(androidAnnotationEnv));
 
 		annotationHandlers.add(new IgnoredWhenDetachedHandler(androidAnnotationEnv));
 

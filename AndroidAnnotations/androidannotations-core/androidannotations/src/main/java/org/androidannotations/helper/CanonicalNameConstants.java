@@ -139,6 +139,8 @@ public final class CanonicalNameConstants {
 	public static final String AUDIO_MANAGER = "android.media.AudioManager";
 	public static final String ACTIONBAR_ACTIVITY = "android.support.v7.app.ActionBarActivity";
 	public static final String APPCOMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
+	public static final String VIEW_PAGER = "android.support.v4.view.ViewPager";
+	public static final String PAGE_CHANGE_LISTENER = "android.support.v4.view.ViewPager.OnPageChangeListener";
 
 	/*
 	 * Android permission

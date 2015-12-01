@@ -15,8 +15,13 @@
  */
 package org.androidannotations.handler;
 
+import java.util.List;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
@@ -32,11 +37,10 @@ import com.helger.jcodemodel.JCodeModel;
 public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> implements AnnotationHandler<T> {
 
 	private final String target;
-	private AndroidAnnotationsEnvironment environment;
-
 	protected IdAnnotationHelper annotationHelper;
 	protected IdValidatorHelper validatorHelper;
 	protected APTCodeModelHelper codeModelHelper;
+	private AndroidAnnotationsEnvironment environment;
 
 	public BaseAnnotationHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
 		this(targetClass.getCanonicalName(), environment);
@@ -86,5 +90,19 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 
 	protected AbstractJClass getJClass(Class<?> clazz) {
 		return environment.getJClass(clazz);
+	}
+
+	protected boolean hasTargetMethod(TypeElement type, String methodName) {
+		if (type == null) {
+			return false;
+		}
+
+		List<? extends Element> allMembers = getProcessingEnvironment().getElementUtils().getAllMembers(type);
+		for (ExecutableElement element : ElementFilter.methodsIn(allMembers)) {
+			if (element.getSimpleName().contentEquals(methodName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

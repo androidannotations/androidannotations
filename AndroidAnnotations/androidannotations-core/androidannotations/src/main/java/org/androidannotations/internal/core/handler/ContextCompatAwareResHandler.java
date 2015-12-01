@@ -18,12 +18,7 @@ package org.androidannotations.internal.core.handler;
 import static com.helger.jcodemodel.JExpr.invoke;
 import static com.helger.jcodemodel.JExpr.ref;
 
-import java.util.List;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.ElementFilter;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.helper.CanonicalNameConstants;
@@ -68,7 +63,7 @@ abstract class ContextCompatAwareResHandler extends AbstractResHandler {
 	private boolean hasTargetMethodInContext() {
 		TypeElement context = getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT);
 
-		return hasTargetMethod(context);
+		return hasTargetMethod(context, androidRes.getResourceMethodName());
 	}
 
 	private void createCallWithIfGuard(EComponentHolder holder, JFieldRef ref, JBlock methodBody, JFieldRef idRef) {
@@ -79,20 +74,6 @@ abstract class ContextCompatAwareResHandler extends AbstractResHandler {
 
 		JBlock elseBlock = guardIf._else();
 		elseBlock.assign(ref, resourcesRef.invoke(androidRes.getResourceMethodName()).arg(idRef));
-	}
-
-	private boolean hasTargetMethod(TypeElement type) {
-		if (type == null) {
-			return false;
-		}
-
-		List<? extends Element> allMembers = getProcessingEnvironment().getElementUtils().getAllMembers(type);
-		for (ExecutableElement element : ElementFilter.methodsIn(allMembers)) {
-			if (element.getSimpleName().contentEquals(androidRes.getResourceMethodName())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	protected boolean hasContextCompatInClasspath() {
