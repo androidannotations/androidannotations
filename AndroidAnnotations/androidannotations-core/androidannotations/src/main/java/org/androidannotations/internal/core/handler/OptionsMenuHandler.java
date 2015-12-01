@@ -25,6 +25,7 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasOptionsMenu;
+import org.androidannotations.holder.OnCreateOptionMenuDelegate;
 import org.androidannotations.rclass.IRClass;
 
 import com.helger.jcodemodel.JBlock;
@@ -46,10 +47,16 @@ public class OptionsMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
 	@Override
 	public void process(Element element, HasOptionsMenu holder) {
-		JBlock body = holder.getOnCreateOptionsMenuMethodBody();
-		JVar menuInflater = holder.getOnCreateOptionsMenuMenuInflaterVar();
-		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
-
+		Boolean overrideParent = false;
+		Boolean cleanBeforeInflate = false;
+		if (holder.getAnnotatedElement().getAnnotation(OptionsMenu.class) != null) {
+			overrideParent = annotationHelper.extractAnnotationParameter(holder.getAnnotatedElement(), "overrideParent");
+			cleanBeforeInflate = annotationHelper.extractAnnotationParameter(holder.getAnnotatedElement(), "cleanBeforeInflate");
+		}
+		OnCreateOptionMenuDelegate.CreateOptionAnnotationData createOptionAnnotationData = new OnCreateOptionMenuDelegate.CreateOptionAnnotationData(overrideParent, cleanBeforeInflate);
+		JBlock body = holder.getOnCreateOptionsMenuMethodBody(createOptionAnnotationData);
+		JVar menuInflater = holder.getOnCreateOptionsMenuMenuInflaterVar(createOptionAnnotationData);
+		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam(createOptionAnnotationData);
 		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.MENU, false);
 		for (JFieldRef optionsMenuRefId : fieldRefs) {
 			body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam);
