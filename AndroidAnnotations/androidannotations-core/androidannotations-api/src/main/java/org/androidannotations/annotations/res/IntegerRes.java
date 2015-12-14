@@ -24,12 +24,13 @@ import org.androidannotations.annotations.ResId;
 
 /**
  * <p>
- * Use on {@link java.lang.Integer} or <code>int</code> fields in any enhanced
- * classes that should be injected with this specific integer resource.
+ * Use on {@link java.lang.Integer} or <code>int</code> fields or methods with
+ * applicable parameters in any enhanced classes that should be injected with
+ * this specific integer resource.
  * </p>
  * <p>
  * The annotation value must be one of R.integer.* fields. If the value is not
- * set, the field name will be used as the R.integer.* field name.
+ * set, the field or method name will be used as the R.integer.* field name.
  * </p>
  */
 @Retention(RetentionPolicy.CLASS)

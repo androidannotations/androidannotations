@@ -29,7 +29,7 @@ import org.androidannotations.annotations.ResId;
  * </p>
  * <p>
  * The annotation value must be one of R.bool.* fields. If the value is not set,
- * the field name will be used as the R.bool.* field name.
+ * the field or method name will be used as the R.bool.* field name.
  * </p>
  */
 @Retention(RetentionPolicy.CLASS)

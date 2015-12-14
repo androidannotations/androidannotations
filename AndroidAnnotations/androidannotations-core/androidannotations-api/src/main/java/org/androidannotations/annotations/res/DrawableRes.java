@@ -24,12 +24,13 @@ import org.androidannotations.annotations.ResId;
 
 /**
  * <p>
- * Use on {@link android.graphics.drawable.Drawable} fields in any enhanced
- * classes that should be injected with this specific drawable resource.
+ * Use on {@link android.graphics.drawable.Drawable} fields or methods with
+ * applicable parameters in any enhanced classes that should be injected with
+ * this specific drawable resource.
  * </p>
  * <p>
  * The annotation value must be one of R.drawable.* fields. If the value is not
- * set, the field name will be used as the R.drawable.* field name.
+ * set, the field or method name will be used as the R.drawable.* field name.
  * </p>
  */
 @Retention(RetentionPolicy.CLASS)

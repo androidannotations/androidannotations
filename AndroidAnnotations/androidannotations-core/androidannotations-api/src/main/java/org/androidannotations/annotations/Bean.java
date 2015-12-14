@@ -42,6 +42,24 @@ import java.lang.annotation.Target;
  * 	&#064;Bean(MyBean2.class)
  * 	MyBean myBean2;
  * 
+ * 	&#064;Bean
+ * 	void singleInjection(MyBean bean) {
+ * 		// do stuff
+ * 	}
+ * 
+ * 	&#064;Bean(MyBean2.class)
+ * 	void singleInjection2(MyBean bean) {
+ * 		// do stuff
+ * 	}
+ * 
+ * 	void multiInjection(&#064;Bean MyBean bean1, &#064;Bean MyBean bean2) {
+ * 		// do stuff
+ * 	}
+ * 
+ * 	void multiInjection2(&#064;Bean(MyBean2.class) MyBean bean1, &#064;Bean(MyBean2.class) MyBean bean2) {
+ * 		// do stuff
+ * 	}
+ * 
  * }
  * 
  * &#064;EBean

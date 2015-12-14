@@ -42,6 +42,12 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;App
  * 	MyApplication myApp;
+ * 
+ * 	&#064;App
+ * 	void methodInjection(MyApplication app) {
+ * 		// do stuff
+ * 	}
+ * 
  * }
  * </pre>
  * 

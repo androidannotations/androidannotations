@@ -22,12 +22,13 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on android.app.Fragment or android.support.v4.app.Fragment fields in
- * activity classes to retrieve and inject a fragment.
+ * Use it on android.app.Fragment or android.support.v4.app.Fragment fields or
+ * methods with applicable parameters in activity classes to retrieve and inject
+ * a fragment.
  * </p>
  * <p>
- * The annotation value should be one of R.id.* fields. If not set, the field
- * name will be used as the R.id.* field name.
+ * The annotation value should be one of R.id.* fields. If not set, the field or
+ * method name will be used as the R.id.* field name.
  * </p>
  * <p>
  * <b>Note:</b> This can only inject an existing fragment, not create them.
@@ -59,6 +60,15 @@ import java.lang.annotation.Target;
  * 	
  * 	&#064;FragmentById(R.id.<b>myFragment</b>)
  * 	public MyFragment myFragment2;
+ * 
+ * 	&#064;FragmentById
+ * 	void singleInjection(MyFragment myFragment) {
+ * 		// do stuff	
+ * 	}	
+ *
+ * 	void multiInjection(&#064;FragmentById MyFragment myFragment, &#064;FragmentById(R.id.<b>myFragment</b>) MyFragment myFragment2) {
+ * 		// do stuff	
+ * 	}
  * }
  * </pre>
  * 

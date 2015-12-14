@@ -23,12 +23,12 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * Use it on {@link android.view.View} or {@link android.view.View} subtype
- * fields in a view related (ie {@link EActivity}, {@link EFragment},
- * {@link EViewGroup}, ...) annotated class.
+ * fields or method parameters in a view related (ie {@link EActivity},
+ * {@link EFragment}, {@link EViewGroup}, ...) annotated class.
  * </p>
  * <p>
- * The annotation value should be one of R.id.* fields. If not set, the field
- * name will be used as the R.id.* field name.
+ * The annotation value should be one of R.id.* fields. If not set, the field or
+ * method name will be used as the R.id.* field name.
  * </p>
  * <p>
  * Your code related to injected views should go in an {@link AfterViews}
@@ -48,6 +48,15 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;ViewById(R.id.myTextView)
  * 	TextView textView;
+ * 
+ * 	&#064;ViewById
+ * 	void singleInjection(EditText myEditText) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;ViewById EditText myEditText, &#064;ViewById(R.id.myTextView) TextView textView) {
+ * 		// do stuff
+ * 	}
  * 
  * 	&#064;AfterViews
  * 	void updateTextWithDate() {
