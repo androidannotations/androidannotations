@@ -169,7 +169,9 @@ public class BundleHelper {
 				restoreCallNeedCastStatement = true;
 				restoreCallNeedsSuppressWarning = true;
 			}
-
+		} else if (typeString.startsWith(CanonicalNameConstants.SPARSE_ARRAY)) {
+			methodNameToSave = "put" + "SparseParcelableArray";
+			methodNameToRestore = "get" + "SparseParcelableArray";
 		} else {
 
 			boolean hasTypeArguments = element.getKind() == TypeKind.DECLARED && hasTypeArguments(element) || //
