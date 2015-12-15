@@ -88,6 +88,7 @@
         <activity android:name=".preference.PreferenceEventsHandledActivity_" />
         <activity android:name=".afterextras.AfterExtrasActivity_" />
         <activity android:name=".FullscreenActivity_" />
+        <activity android:name=".PageChangeListenerActivity_" />
 
         <receiver android:name=".ereceiver.MyReceiver_" />
 
