@@ -513,8 +513,13 @@ public class ValidatorHelper {
 	}
 
 	public void androidService(Element element, ElementValidation valid) {
+		Element targetElement = findTargetElement(element, valid);
+		if (targetElement == null) {
+			return;
+		}
+
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices(environment());
-		TypeMirror serviceType = element.asType();
+		TypeMirror serviceType = targetElement.asType();
 		if (!androidSystemServices.contains(serviceType)) {
 			valid.addError("Unknown service type: " + serviceType.toString());
 		}

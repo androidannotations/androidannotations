@@ -48,6 +48,6 @@ import java.lang.annotation.Target;
  *      >List of SystemService managers</a>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface SystemService {
 }
