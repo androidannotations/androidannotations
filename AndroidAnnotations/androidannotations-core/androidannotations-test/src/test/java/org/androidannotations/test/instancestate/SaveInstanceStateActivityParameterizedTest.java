@@ -94,6 +94,8 @@ public class SaveInstanceStateActivityParameterizedTest {
 				{ "myParcelableBeanArrayList", Lists.newArrayList(new MyParcelableBean(1), new MyParcelableBean(2), new MyParcelableBean(3)) }, //
 				{ "myGenericParcelableBeanArrayList", myGenericParcelableBeanArrayList }, //
 				{ "mySerializableBeanArrayList", Lists.newArrayList(new MySerializableBean(1), new MySerializableBean(2), new MySerializableBean(3)) }, //
+				{ "myCharSequenceArray", new CharSequence[] { "C1", "C2" } }, //
+				{ "myCharSequenceArrayList", Lists.newArrayList("C1", "C2") }, //
 				{ "nullWrappedLong", null }, //
 		};
 		// CHECKSTYLE:ON

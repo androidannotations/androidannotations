@@ -24,6 +24,7 @@ import org.androidannotations.test.parceler.ParcelerBean;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.SparseArray;
 
 @EActivity(R.layout.main)
 public class SaveInstanceStateActivity extends Activity {
@@ -69,6 +70,12 @@ public class SaveInstanceStateActivity extends Activity {
 
 	@InstanceState
 	CharSequence myCharSequence;
+
+	@InstanceState
+	CharSequence[] myCharSequenceArray;
+
+	@InstanceState
+	ArrayList<CharSequence> myCharSequenceArrayList;
 
 	@InstanceState
 	double myDouble;
@@ -183,4 +190,14 @@ public class SaveInstanceStateActivity extends Activity {
 
 	@InstanceState
 	ParcelerBean parcelerBean;
+
+	/**
+	 * This member is not tested at SaveInstanceStateActivityParameterizedTest.
+	 *
+	 * The parameters are generating using the system classloader, but the test
+	 * is ran using the special Robolectric classloader which does not contains
+	 * SparseArray.
+	 */
+	@InstanceState
+	SparseArray<MyGenericParcelableBean<Integer>> mySparseParcelableArray;
 }
