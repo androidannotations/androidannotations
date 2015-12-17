@@ -39,6 +39,16 @@
 			<artifactId>androidannotations</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.androidannotations</groupId>
+			<artifactId>androidannotations-testutils</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup</groupId>
+			<artifactId>otto</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.helger</groupId>
 			<artifactId>jcodemodel</artifactId>
 		</dependency>

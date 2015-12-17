@@ -36,16 +36,11 @@ public abstract class AbstractOttoHandler extends BaseAnnotationHandler<ECompone
 	@Override
 	public void validate(Element element, ElementValidation valid) {
 		if (!annotationHelper.enclosingElementHasEnhancedComponentAnnotation(element)) {
-			valid.invalidate();
+			// do nothing when otto annotations are used in non-enhanced classes
 			return;
 		}
 
 		ExecutableElement executableElement = (ExecutableElement) element;
-
-		/*
-		 * We check that twice to skip invalid annotated elements
-		 */
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(executableElement, valid);
 
 		validateReturnType(executableElement, valid);
 
@@ -64,6 +59,10 @@ public abstract class AbstractOttoHandler extends BaseAnnotationHandler<ECompone
 
 	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
+		if (!annotationHelper.enclosingElementHasEnhancedComponentAnnotation(element)) {
+			// do nothing when otto annotations are used in non-enhanced classes
+			return;
+		}
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		JMethod method = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
