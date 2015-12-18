@@ -60,7 +60,7 @@ import org.androidannotations.internal.core.handler.FullscreenHandler;
 import org.androidannotations.internal.core.handler.HierarchyViewerSupportHandler;
 import org.androidannotations.internal.core.handler.HtmlResHandler;
 import org.androidannotations.internal.core.handler.HttpsClientHandler;
-import org.androidannotations.internal.core.handler.IgnoredWhenDetachedHandler;
+import org.androidannotations.internal.core.handler.IgnoreWhenHandler;
 import org.androidannotations.internal.core.handler.InjectMenuHandler;
 import org.androidannotations.internal.core.handler.InstanceStateHandler;
 import org.androidannotations.internal.core.handler.ItemClickHandler;
@@ -206,7 +206,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new PageScrollStateChangedHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PageSelectedHandler(androidAnnotationEnv));
 
-		annotationHandlers.add(new IgnoredWhenDetachedHandler(androidAnnotationEnv));
+		annotationHandlers.add(new IgnoreWhenHandler(androidAnnotationEnv));
 
 		annotationHandlers.add(new AfterInjectHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AfterExtrasHandler(androidAnnotationEnv));
@@ -231,7 +231,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 
 		/*
 		 * UIThreadHandler and BackgroundHandler must be after TraceHandler and
-		 * IgnoredWhenDetached
+		 * IgnoreWhen
 		 */
 		annotationHandlers.add(new UiThreadHandler(androidAnnotationEnv));
 		annotationHandlers.add(new BackgroundHandler(androidAnnotationEnv));

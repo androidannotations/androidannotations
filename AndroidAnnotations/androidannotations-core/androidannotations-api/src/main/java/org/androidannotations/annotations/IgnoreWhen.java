@@ -47,13 +47,13 @@ import java.lang.annotation.Target;
  * ...
  * 
  * 	&#064;UiThread
- * 	&#064;IgnoredWhenDetached
+ * 	&#064;IgnoreWhen
  * 	void killActivity() {
  * 		getActivity().finish();
  * 	}
  * 
  * 
- * 	&#064;IgnoredWhenDetached
+ * 	&#064;IgnoreWhen
  * 	void updateTitle(String title) {
  * 		getActivity().setTitle(title);
  * 	}
@@ -69,6 +69,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-public @interface IgnoredWhenDetached {
+public @interface IgnoreWhen {
 
 }

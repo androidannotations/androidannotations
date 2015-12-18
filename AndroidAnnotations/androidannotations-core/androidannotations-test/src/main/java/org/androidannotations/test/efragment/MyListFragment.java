@@ -17,7 +17,7 @@ package org.androidannotations.test.efragment;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.IgnoredWhenDetached;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -58,7 +58,7 @@ public class MyListFragment extends ListFragment {
 	}
 
 	@UiThread(propagation = UiThread.Propagation.REUSE)
-	@IgnoredWhenDetached
+	@IgnoreWhen
 	void uiThreadIgnored() {
 		didExecute = true;
 	}
@@ -74,12 +74,12 @@ public class MyListFragment extends ListFragment {
 	}
 
 	@Background
-	@IgnoredWhenDetached
+	@IgnoreWhen
 	void backgroundThreadIgnored() {
 		didExecute = true;
 	}
 
-	@IgnoredWhenDetached
+	@IgnoreWhen
 	void ignored() {
 		didExecute = true;
 	}

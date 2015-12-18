@@ -23,17 +23,17 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
-import org.androidannotations.annotations.IgnoredWhenDetached;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EFragmentHolder;
 
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JMethod;
 
-public class IgnoredWhenDetachedHandler extends BaseAnnotationHandler<EFragmentHolder> {
+public class IgnoreWhenHandler extends BaseAnnotationHandler<EFragmentHolder> {
 
-	public IgnoredWhenDetachedHandler(AndroidAnnotationsEnvironment environment) {
-		super(IgnoredWhenDetached.class, environment);
+	public IgnoreWhenHandler(AndroidAnnotationsEnvironment environment) {
+		super(IgnoreWhen.class, environment);
 	}
 
 	@Override
