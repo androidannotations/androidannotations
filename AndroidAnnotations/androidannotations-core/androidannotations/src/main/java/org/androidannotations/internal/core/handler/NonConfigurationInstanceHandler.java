@@ -26,6 +26,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.NonConfigurationInstance;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EActivityHolder;
@@ -86,7 +87,12 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 			String typeQualifiedName = elementType.toString();
 			AbstractJClass fieldGeneratedBeanClass = getJClass(typeQualifiedName + classSuffix());
 
-			initIfNonConfigurationNotNullBlock.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
+			// do not generate rebind call for singleton beans
+			Element eBeanTypeElement = annotationHelper.getTypeUtils().asElement(elementType);
+			EBean eBean = eBeanTypeElement.getAnnotation(EBean.class);
+			if (eBean != null && eBean.scope() != EBean.Scope.Singleton) {
+				initIfNonConfigurationNotNullBlock.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
+			}
 		}
 	}
 }

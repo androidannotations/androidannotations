@@ -15,24 +15,8 @@
  */
 package org.androidannotations.ebean;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.NonConfigurationInstance;
+import org.androidannotations.annotations.EBean;
 
-import android.app.Activity;
-
-@EActivity
-public class SomeActivity extends Activity {
-
-	@NonConfigurationInstance
-	@Bean(SomeImplementation.class)
-	SomeInterface someInterface;
-
-	@Bean
-	@NonConfigurationInstance
-	SingletonBean maintainedSingeltonDependency;
-
-	@Bean
-	SomeGenericBean<Object> objectSomeGenericBean;
-
+@EBean(scope = EBean.Scope.Singleton)
+public class SingletonBean {
 }
