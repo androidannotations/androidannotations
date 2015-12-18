@@ -52,4 +52,14 @@ public class OrmLiteActivityTest {
 	public void daoInBeanIsInjected() {
 		assertThat((Object) activity.ormLiteBean.userDao).isNotNull();
 	}
+
+	@Test
+	public void methodInjectedOrmLiteDao() {
+		assertThat((Object) activity.ormLiteBean.methodInjectedOrmLiteDao).isNotNull();
+	}
+
+	@Test
+	public void multiInjectedOrmLiteDao() {
+		assertThat((Object) activity.ormLiteBean.multiInjectedOrmLiteDao).isNotNull();
+	}
 }
