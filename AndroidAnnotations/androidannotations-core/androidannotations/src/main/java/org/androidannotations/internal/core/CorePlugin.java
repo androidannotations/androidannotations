@@ -173,6 +173,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new FragmentArgHandler(androidAnnotationEnv));
 		annotationHandlers.add(new SystemServiceHandler(androidAnnotationEnv));
 
+		annotationHandlers.add(new NonConfigurationInstanceHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AppHandler(androidAnnotationEnv));
 		annotationHandlers.add(new BeanHandler(androidAnnotationEnv));
 		annotationHandlers.add(new InjectMenuHandler(androidAnnotationEnv));
@@ -182,7 +183,6 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new CustomTitleHandler(androidAnnotationEnv));
 		annotationHandlers.add(new FullscreenHandler(androidAnnotationEnv));
 		annotationHandlers.add(new RootContextHandler(androidAnnotationEnv));
-		annotationHandlers.add(new NonConfigurationInstanceHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ExtraHandler(androidAnnotationEnv));
 		annotationHandlers.add(new BeforeTextChangeHandler(androidAnnotationEnv));
 		annotationHandlers.add(new TextChangeHandler(androidAnnotationEnv));
