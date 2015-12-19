@@ -58,7 +58,7 @@ public class MyListFragment extends ListFragment {
 	}
 
 	@UiThread(propagation = UiThread.Propagation.REUSE)
-	@IgnoreWhen
+	@IgnoreWhen(IgnoreWhen.State.DETACHED)
 	void uiThreadIgnored() {
 		didExecute = true;
 	}
@@ -74,13 +74,18 @@ public class MyListFragment extends ListFragment {
 	}
 
 	@Background
-	@IgnoreWhen
+	@IgnoreWhen(IgnoreWhen.State.DETACHED)
 	void backgroundThreadIgnored() {
 		didExecute = true;
 	}
 
-	@IgnoreWhen
+	@IgnoreWhen(IgnoreWhen.State.DETACHED)
 	void ignored() {
+		didExecute = true;
+	}
+
+	@IgnoreWhen(IgnoreWhen.State.VIEW_DESTROYED)
+	void ignoreWhenViewDestroyed() {
 		didExecute = true;
 	}
 

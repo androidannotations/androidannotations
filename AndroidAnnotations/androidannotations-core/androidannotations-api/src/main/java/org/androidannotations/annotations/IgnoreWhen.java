@@ -25,7 +25,9 @@ import java.lang.annotation.Target;
  * When used standalone in an {@link EFragment} or in conjunction with the
  * {@link UiThread} or {@link Background} annotations, the annotated method will
  * be wrapped in an 'if attached' block such that no code will be executed if
- * the {@link EFragment} is no longer bound to its parent activity.
+ * the {@link EFragment} is no longer bound to its parent activity or
+ * <code>DETACHED</code>the {@link EFragment} views are destroyed
+ * <code>VIEW_DESTROYED</code>.
  * </p>
  * <p>
  * Should be used on method that must meet the following criteria
@@ -47,13 +49,13 @@ import java.lang.annotation.Target;
  * ...
  * 
  * 	&#064;UiThread
- * 	&#064;IgnoreWhen
+ * 	&#064;IgnoreWhen(IgnoreWhen.State.DETACHED)
  * 	void killActivity() {
  * 		getActivity().finish();
  * 	}
  * 
  * 
- * 	&#064;IgnoreWhen
+ * 	&#064;IgnoreWhen(IgnoreWhen.State.VIEW_DESTROYED)
  * 	void updateTitle(String title) {
  * 		getActivity().setTitle(title);
  * 	}
@@ -71,4 +73,27 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface IgnoreWhen {
 
+	/**
+	 * The lifecycle state after the method should not be executed.
+	 *
+	 * @return the state that skips method execution
+	 */
+	State value();
+
+	/**
+	 * The lifecycle state after the method should not be executed.
+	 */
+	enum State {
+
+		/**
+		 * Skip execution if the {@link EFragment} is no longer bound to its
+		 * parent activity.
+		 */
+		DETACHED,
+
+		/**
+		 * Skip execution if the {@link EFragment} views are destroyed.
+		 */
+		VIEW_DESTROYED
+	}
 }
