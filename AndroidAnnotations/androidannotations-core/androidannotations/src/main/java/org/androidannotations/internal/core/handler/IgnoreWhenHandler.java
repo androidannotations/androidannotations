@@ -28,6 +28,7 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EFragmentHolder;
 
 import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JConditional;
 import com.helger.jcodemodel.JMethod;
 
 public class IgnoreWhenHandler extends BaseAnnotationHandler<EFragmentHolder> {
@@ -53,6 +54,17 @@ public class IgnoreWhenHandler extends BaseAnnotationHandler<EFragmentHolder> {
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
 		JBlock previousMethodBody = codeModelHelper.removeBody(delegatingMethod);
 
-		delegatingMethod.body()._if(invoke(holder.getGeneratedClass().staticRef("this"), "getActivity").ne(_null()))._then().add(previousMethodBody);
+		IgnoreWhen ignoreWhen = element.getAnnotation(IgnoreWhen.class);
+		JBlock methodBody = delegatingMethod.body();
+		JConditional conditional = null;
+		switch (ignoreWhen.value()) {
+		case VIEW_DESTROYED:
+			conditional = methodBody._if(holder.getViewDestroyedField().not());
+			break;
+		case DETACHED:
+			conditional = methodBody._if(invoke(holder.getGeneratedClass().staticRef("this"), "getActivity").ne(_null()));
+			break;
+		}
+		conditional._then().add(previousMethodBody);
 	}
 }
