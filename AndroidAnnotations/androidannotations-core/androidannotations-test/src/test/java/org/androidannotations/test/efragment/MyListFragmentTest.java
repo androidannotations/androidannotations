@@ -123,6 +123,46 @@ public class MyListFragmentTest {
 	}
 
 	@Test
+	public void notIgnoredAfterOnCreateView() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.onCreateView(null, null, null);
+		assertFalse(myListFragment.didExecute);
+		myListFragment.ignoreWhenViewDestroyed();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void ignoredWhenViewDestroyedForIgnoredMethod() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.onDestroyView();
+		myListFragment.ignoreWhenViewDestroyed();
+		assertFalse(myListFragment.didExecute);
+	}
+
+	@Test
+	public void notIgnoredAfterFragmentRecreate() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.onDestroyView();
+		myListFragment.onCreateView(null, null, null);
+		myListFragment.ignoreWhenViewDestroyed();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void notIgnoredBeforeDetached() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.ignored();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
+	public void notIgnoredBeforeViewDestroyed() {
+		assertFalse(myListFragment.didExecute);
+		myListFragment.ignoreWhenViewDestroyed();
+		assertTrue(myListFragment.didExecute);
+	}
+
+	@Test
 	public void layoutNotInjectedWithoutForce() {
 		View buttonInInjectedLayout = myListFragment.getView().findViewById(R.id.conventionButton);
 
