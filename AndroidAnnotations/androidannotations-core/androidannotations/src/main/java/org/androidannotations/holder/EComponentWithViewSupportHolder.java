@@ -37,6 +37,7 @@ import org.androidannotations.api.view.OnViewChangedNotifier;
 import org.androidannotations.internal.helper.ViewNotifierHelper;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JDefinedClass;
@@ -127,16 +128,20 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 	}
 
 	public FoundViewHolder getFoundViewHolder(JFieldRef idRef, AbstractJClass viewClass) {
+		return getFoundViewHolder(idRef, viewClass, null);
+	}
+
+	public FoundViewHolder getFoundViewHolder(JFieldRef idRef, AbstractJClass viewClass, IJAssignmentTarget fieldRef) {
 		String idRefString = idRef.name();
 		FoundViewHolder foundViewHolder = (FoundViewHolder) foundHolders.get(idRefString);
 		if (foundViewHolder == null) {
-			foundViewHolder = createFoundViewAndIfNotNullBlock(idRef, viewClass);
+			foundViewHolder = createFoundViewAndIfNotNullBlock(idRef, viewClass, fieldRef);
 			foundHolders.put(idRefString, foundViewHolder);
 		}
 		return foundViewHolder;
 	}
 
-	protected FoundViewHolder createFoundViewAndIfNotNullBlock(JFieldRef idRef, AbstractJClass viewClass) {
+	protected FoundViewHolder createFoundViewAndIfNotNullBlock(JFieldRef idRef, AbstractJClass viewClass, IJAssignmentTarget fieldRef) {
 		IJExpression findViewExpression = findViewById(idRef);
 		JBlock block = getOnViewChangedBodyBeforeInjectionBlock();
 
@@ -146,11 +151,17 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 			findViewExpression = cast(viewClass, findViewExpression);
 		}
 
-		JVar view = block.decl(viewClass, "view_" + idRef.name(), findViewExpression);
-		if (viewClass.isParameterized()) {
-			codeModelHelper.addSuppressWarnings(view, "unchecked");
+		IJAssignmentTarget foundView = fieldRef;
+		if (foundView == null) {
+			JVar view = block.decl(viewClass, "view_" + idRef.name(), findViewExpression);
+			if (viewClass.isParameterized()) {
+				codeModelHelper.addSuppressWarnings(view, "unchecked");
+			}
+			foundView = view;
+		} else {
+			block.add(foundView.assign(findViewExpression));
 		}
-		return new FoundViewHolder(this, viewClass, view, getOnViewChangedBodyInjectionBlock());
+		return new FoundViewHolder(this, viewClass, foundView, getOnViewChangedBodyInjectionBlock());
 	}
 
 	public JMethod getFindNativeFragmentById() {

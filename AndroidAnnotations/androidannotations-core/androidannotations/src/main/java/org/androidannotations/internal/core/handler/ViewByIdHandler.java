@@ -18,6 +18,7 @@ package org.androidannotations.internal.core.handler;
 import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
@@ -29,6 +30,7 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.EFragmentHolder;
+import org.androidannotations.holder.FoundViewHolder;
 import org.androidannotations.rclass.IRClass;
 
 import com.helger.jcodemodel.AbstractJClass;
@@ -80,7 +82,14 @@ public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSup
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
 		AbstractJClass viewClass = codeModelHelper.typeMirrorToJClass(uiFieldTypeMirror);
 
-		targetBlock.add(fieldRef.assign(holder.getFoundViewHolder(idRef, viewClass).getOrCastRef(viewClass)));
+		IJAssignmentTarget viewHolderTarget = null;
+		if (element.getKind() == ElementKind.FIELD) {
+			viewHolderTarget = fieldRef;
+		}
+		FoundViewHolder viewHolder = holder.getFoundViewHolder(idRef, viewClass, viewHolderTarget);
+		if (!viewHolder.getRef().equals(viewHolderTarget)) {
+			targetBlock.add(fieldRef.assign(viewHolder.getOrCastRef(viewClass)));
+		}
 	}
 
 	@Override
