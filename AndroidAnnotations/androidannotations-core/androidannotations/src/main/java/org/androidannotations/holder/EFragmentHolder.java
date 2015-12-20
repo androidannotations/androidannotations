@@ -36,6 +36,7 @@ import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JClassAlreadyExistsException;
 import com.helger.jcodemodel.JDefinedClass;
@@ -263,13 +264,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		return onDestroyViewAfterSuperBlock;
 	}
 
-	@Override
-	public void processViewById(JFieldRef idRef, AbstractJClass viewClass, JFieldRef fieldRef) {
-		super.processViewById(idRef, viewClass, fieldRef);
-		clearInjectedView(fieldRef);
-	}
-
-	private void clearInjectedView(JFieldRef fieldRef) {
+	public void clearInjectedView(JFieldRef fieldRef) {
 		JBlock block = getOnDestroyViewAfterSuperBlock();
 		block.assign(fieldRef, _null());
 	}
@@ -571,13 +566,13 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
-	public void assignFindPreferenceByKey(JFieldRef idRef, AbstractJClass preferenceClass, JFieldRef fieldRef) {
-		preferencesDelegate.assignFindPreferenceByKey(idRef, preferenceClass, fieldRef);
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass) {
+		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass);
 	}
 
 	@Override
-	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass) {
-		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass);
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass, IJAssignmentTarget fieldRef) {
+		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass, fieldRef);
 	}
 
 	@Override

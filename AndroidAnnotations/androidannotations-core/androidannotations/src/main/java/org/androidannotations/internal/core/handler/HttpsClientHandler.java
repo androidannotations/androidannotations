@@ -21,7 +21,6 @@ import static com.helger.jcodemodel.JExpr._super;
 import static com.helger.jcodemodel.JExpr.cast;
 import static com.helger.jcodemodel.JExpr.invoke;
 import static com.helger.jcodemodel.JExpr.lit;
-import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 
@@ -29,11 +28,14 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.HttpsClient;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.MethodInjectionHandler;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRInnerClass;
 
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JCatchBlock;
@@ -45,15 +47,18 @@ import com.helger.jcodemodel.JMod;
 import com.helger.jcodemodel.JTryBlock;
 import com.helger.jcodemodel.JVar;
 
-public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> {
+public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+
+	private final InjectHelper<EComponentHolder> injectHelper;
 
 	public HttpsClientHandler(AndroidAnnotationsEnvironment environment) {
 		super(HttpsClient.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
+		injectHelper.validate(HttpsClient.class, element, validation);
 
 		validatorHelper.annotationParameterIsOptionalValidResId(element, IRClass.Res.RAW, "keyStore", validation);
 		validatorHelper.annotationParameterIsOptionalValidResId(element, IRClass.Res.RAW, "trustStore", validation);
@@ -63,6 +68,16 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 
 	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
+		injectHelper.process(element, holder);
+	}
+
+	@Override
+	public JBlock getInvocationBlock(EComponentHolder holder) {
+		return holder.getInitBodyInjectionBlock();
+	}
+
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, EComponentHolder holder, Element element, Element param) {
 		IRInnerClass rInnerClass = getEnvironment().getRClass().get(IRClass.Res.RAW);
 		HttpsClient annotation = element.getAnnotation(HttpsClient.class);
 		JFieldRef trustStoreRawIdRef = annotationHelper.extractOneAnnotationFieldRef(element, getTarget(), rInnerClass, false, "trustStore", "trustStoreResName");
@@ -73,9 +88,6 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 		boolean allowAllHostnames = annotation.allowAllHostnames();
 		boolean useCustomTrustStore = trustStoreRawIdRef != null;
 		boolean useCustomKeyStore = keyStoreRawIdRef != null;
-
-		String fieldName = element.getSimpleName().toString();
-		JBlock methodBody = holder.getInitBodyInjectionBlock();
 
 		ProcessHolder.Classes classes = getClasses();
 
@@ -177,6 +189,11 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 		jCatchBlock.body().add(jVarExceptionParam.invoke("printStackTrace"));
 		jCatchBlock.body()._return(_super().invoke("createClientConnectionManager"));
 
-		methodBody.assign(ref(fieldName), _new(jAnonClass));
+		targetBlock.add(fieldRef.assign(_new(jAnonClass)));
+	}
+
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, valid);
 	}
 }

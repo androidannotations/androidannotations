@@ -29,9 +29,9 @@ public class ContextCompatColorTest extends AAProcessorTestHelper {
 	private static final String COLOR_VIA_CONTEXT_ON_MARSHMALLOW = ".*myColor = this\\.getColor\\(R\\.color\\.myColor\\);.*";
 	private static final String[] COLOR_CONDITIONAL_WITHOUT_CONTEXT_COMPAT =  new String[] {
 		"        if (VERSION.SDK_INT >= VERSION_CODES.M) {",
-		"            myColor = this.getColor(R.color.myColor);",
+		"            this.myColor = this.getColor(R.color.myColor);",
 		"        } else {",
-		"            myColor = resources_.getColor(R.color.myColor);",
+		"            this.myColor = resources_.getColor(R.color.myColor);",
 		"        }",
 	};
 
@@ -63,7 +63,7 @@ public class ContextCompatColorTest extends AAProcessorTestHelper {
 		assertCompilationSuccessful(result);
 		assertGeneratedClassMatches(generatedFile, COLOR_VIA_SUPPORT_SIGNATURE);
 	}
-	
+
 	@Test
 	public void activityCompilesOnMinSdk23WithoutContextCompat() throws Exception {
 		addManifestProcessorParameter(ContextCompatColorTest.class, "AndroidManifestForColorMinSdk23.xml");
@@ -74,18 +74,16 @@ public class ContextCompatColorTest extends AAProcessorTestHelper {
 		assertCompilationSuccessful(result);
 		assertGeneratedClassMatches(generatedFile, COLOR_VIA_CONTEXT_ON_MARSHMALLOW);
 	}
-	
+
 	@Test
 	public void activityCompilesOnMinSdkLower23CompileSdkHigher22WithoutContextCompat() throws Exception {
 		addManifestProcessorParameter(ContextCompatColorTest.class, "AndroidManifestForColorMinSdk22.xml");
 
-		CompileResult result = compileFiles(toPath(ContextCompatColorTest.class, "Context.java"),
-				toPath(ContextCompatColorTest.class, "Build.java"),
-				ActivityWithGetColorMethod.class);
+		CompileResult result = compileFiles(toPath(ContextCompatColorTest.class, "Context.java"), toPath(ContextCompatColorTest.class, "Build.java"), ActivityWithGetColorMethod.class);
 		File generatedFile = toGeneratedFile(ActivityWithGetColorMethod.class);
-		
+
 		assertCompilationSuccessful(result);
 		assertGeneratedClassContains(generatedFile, COLOR_CONDITIONAL_WITHOUT_CONTEXT_COMPAT);
 	}
-	
+
 }

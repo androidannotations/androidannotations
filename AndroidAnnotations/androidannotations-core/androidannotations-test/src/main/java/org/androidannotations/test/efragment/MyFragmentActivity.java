@@ -22,24 +22,46 @@ import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.test.R;
 
 import android.app.Activity;
-
+import android.app.Fragment;
 
 @EActivity(R.layout.fragments)
 public class MyFragmentActivity extends Activity {
-	
+
 	@FragmentById
 	public MyFragment myFragment;
-	
+
 	@FragmentById(R.id.myFragment)
 	public MyFragment myFragment2;
 
 	@FragmentByTag
 	public MyFragment myFragmentTag;
-	
+
 	@FragmentByTag("myFragmentTag")
 	public MyFragment myFragmentTag2;
-	
+
 	@Bean
 	public BeanWithFragments beanWithFragments;
 
+	Fragment methodInjectedFragmentByTag;
+	Fragment multiInjectedFragmentByTag;
+	Fragment methodInjectedFragmentById;
+	Fragment multiInjectedFragmentById;
+
+	@FragmentByTag("myFragmentTag")
+	void methodInjectedFragmentByTag(Fragment methodInjectedFragmentByTag) {
+		this.methodInjectedFragmentByTag = methodInjectedFragmentByTag;
+	}
+
+	void multiInjectedFragmentByTag(@FragmentByTag("myFragmentTag") Fragment multiInjectedFragmentByTag, @FragmentByTag("myFragmentTag") Fragment multiInjectedFragmentByTag2) {
+		this.multiInjectedFragmentByTag = multiInjectedFragmentByTag;
+	}
+
+	@FragmentById(R.id.myFragment)
+	void methodInjectedFragmentById(Fragment methodInjectedFragmentById) {
+		this.methodInjectedFragmentById = methodInjectedFragmentById;
+	}
+
+	void multiInjectedFragmentById(@FragmentById(R.id.myFragment) Fragment multiInjectedFragmentById, @FragmentById(R.id.myFragment) Fragment multiInjectedFragmentById2) {
+		this.multiInjectedFragmentById = multiInjectedFragmentById;
+	}
 }

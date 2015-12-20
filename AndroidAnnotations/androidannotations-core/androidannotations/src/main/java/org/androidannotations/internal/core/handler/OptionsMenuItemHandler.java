@@ -15,35 +15,40 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.helger.jcodemodel.JExpr._this;
-
 import javax.lang.model.element.Element;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.MethodInjectionHandler;
 import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.HasOptionsMenu;
 import org.androidannotations.rclass.IRClass;
 
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JVar;
 
-public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu> {
+public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu>implements MethodInjectionHandler<HasOptionsMenu> {
+
+	private final InjectHelper<HasOptionsMenu> injectHelper;
 
 	public OptionsMenuItemHandler(AndroidAnnotationsEnvironment environment) {
 		super(OptionsMenuItem.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
+		injectHelper.validate(OptionsMenuItem.class, element, validation);
 
-		validatorHelper.isDeclaredType(element, validation);
+		Element param = injectHelper.getParam(element);
+		validatorHelper.isDeclaredType(param, validation);
 
-		validatorHelper.extendsMenuItem(element, validation);
+		validatorHelper.extendsMenuItem(param, validation);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.USE_ELEMENT_NAME, validation);
 
@@ -52,11 +57,23 @@ public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu
 
 	@Override
 	public void process(Element element, HasOptionsMenu holder) {
-		String fieldName = element.getSimpleName().toString();
-		JBlock body = holder.getOnCreateOptionsMenuMethodBody();
-		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
+		injectHelper.process(element, holder);
+	}
 
+	@Override
+	public JBlock getInvocationBlock(HasOptionsMenu holder) {
+		return holder.getOnCreateOptionsMenuMethodBody();
+	}
+
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, HasOptionsMenu holder, Element element, Element param) {
+		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
 		JFieldRef idsRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.ID, true);
-		body.assign(_this().ref(fieldName), menuParam.invoke("findItem").arg(idsRef));
+		targetBlock.add(fieldRef.assign(menuParam.invoke("findItem").arg(idsRef)));
+	}
+
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, valid);
 	}
 }

@@ -24,23 +24,28 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+import org.androidannotations.handler.MethodInjectionHandler;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JExpr;
-import com.helger.jcodemodel.JFieldRef;
 
-public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder> {
+public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+
+	private final InjectHelper<EComponentHolder> injectHelper;
 
 	public PrefHandler(AndroidAnnotationsEnvironment environment) {
 		super(Pref.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
+		injectHelper.validate(Pref.class, element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
 
@@ -49,9 +54,17 @@ public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder> {
 
 	@Override
 	public void process(Element element, EComponentHolder holder) {
+		injectHelper.process(element, holder);
+	}
 
-		String fieldName = element.getSimpleName().toString();
-		TypeMirror fieldTypeMirror = element.asType();
+	@Override
+	public JBlock getInvocationBlock(EComponentHolder holder) {
+		return holder.getInitBodyInjectionBlock();
+	}
+
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, EComponentHolder holder, Element element, Element param) {
+		TypeMirror fieldTypeMirror = param.asType();
 		AbstractJClass prefClass = getJClass(fieldTypeMirror.toString());
 
 		String elementTypeName = fieldTypeMirror.toString();
@@ -71,8 +84,11 @@ public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder> {
 			}
 		}
 
-		JBlock methodBody = holder.getInitBodyInjectionBlock();
-		JFieldRef field = JExpr.ref(fieldName);
-		methodBody.assign(field, JExpr._new(prefClass).arg(holder.getContextRef()));
+		targetBlock.add(fieldRef.assign(JExpr._new(prefClass).arg(holder.getContextRef())));
+	}
+
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, valid);
 	}
 }

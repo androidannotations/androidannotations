@@ -22,12 +22,13 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on android.app.Fragment or android.support.v4.app.Fragment fields in
- * activity classes to retrieve and inject a fragment.
+ * Use it on android.app.Fragment or android.support.v4.app.Fragment fields or
+ * methods with applicable parameters in activity classes to retrieve and inject
+ * a fragment.
  * </p>
  * <p>
- * The annotation value should be one of fragment tag. If not set, the field
- * name will be used as the tag name.
+ * The annotation value should be one of fragment tag. If not set, the field or
+ * method name will be used as the tag name.
  * </p>
  * <p>
  * <b>Note:</b> This can only inject an existing fragment, not create them.
@@ -60,6 +61,15 @@ import java.lang.annotation.Target;
  * 	
  * 	&#064;FragmentByTag(<b>"myFragmentTag"</b>)
  * 	public MyFragment myFragmentTag2;
+ * 
+ * 	&#064;FragmentByTag
+ * 	void singleInjection(MyFragment myFragmentTag) {
+ * 		// do stuff	
+ * 	}	
+ *
+ * 	void multiInjection(&#064;FragmentByTag MyFragment myFragmentTag, &#064;FragmentById("myFragmentTag") MyFragment myFragment2) {
+ * 		// do stuff	
+ * 	}
  * }
  * </pre>
  * 
@@ -108,7 +118,7 @@ import java.lang.annotation.Target;
  * @see FragmentById
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface FragmentByTag {
 
 	/**

@@ -39,6 +39,10 @@ public class PreferencesInjectedActivity extends PreferenceActivity {
 
 	boolean afterPreferencesCalled;
 
+
+	CheckBoxPreference methodInjectedPref;
+	EditTextPreference multiInjectedPref;
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(android.os.Bundle savedInstanceState) {
@@ -48,6 +52,15 @@ public class PreferencesInjectedActivity extends PreferenceActivity {
 	@AfterPreferences
 	void afterPreferences() {
 		afterPreferencesCalled = true;
+	}
+
+	@PreferenceByKey(R.string.checkBoxPrefKey)
+	void methodInjectedPref(CheckBoxPreference somePref) {
+		methodInjectedPref = somePref;
+	}
+
+	void multiInjectedPref(@PreferenceByKey EditTextPreference conventionKey, @PreferenceByKey(R.string.listPreferenceKey) Preference activityPrefs) {
+		multiInjectedPref = conventionKey;
 	}
 
 }

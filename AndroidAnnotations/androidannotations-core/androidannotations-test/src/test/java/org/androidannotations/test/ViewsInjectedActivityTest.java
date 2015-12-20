@@ -71,4 +71,25 @@ public class ViewsInjectedActivityTest {
 		assertThat(activity.textViews).hasSize(2);
 	}
 
+	@Test
+	public void methodInjectedViewNotNull() {
+		assertThat(activity.methodInjectedView).isNotNull();
+	}
+
+	@Test
+	public void multiInjectedViewNotNull() {
+		assertThat(activity.multiInjectedView).isNotNull();
+	}
+
+	@Test
+	public void methodInjectedViewsNotNullAndHasTwoElements() {
+		assertThat(activity.methodInjectedViews).isNotNull();
+		assertThat(activity.methodInjectedViews).hasSize(2);
+	}
+
+	@Test
+	public void multiInjectedViewsNotNullAndHasTwoElements() {
+		assertThat(activity.multiInjectedViews).isNotNull();
+		assertThat(activity.multiInjectedViews).hasSize(2);
+	}
 }

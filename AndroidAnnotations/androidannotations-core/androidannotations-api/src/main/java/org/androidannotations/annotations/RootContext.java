@@ -53,12 +53,21 @@ import java.lang.annotation.Target;
  * 	// Only injected if the root context is an instance of MyActivity
  * 	&#064;RootContext
  * 	MyActivity myActivity;
+ * 
+ * 	&#064;RootContext
+ * 	void singleInjection(Context context) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;RootContext Context context, &#064;RootContext Activity activity) {
+ * 		// do stuff
+ * 	}
  * }
  * </pre>
  *
  * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface RootContext {
 }

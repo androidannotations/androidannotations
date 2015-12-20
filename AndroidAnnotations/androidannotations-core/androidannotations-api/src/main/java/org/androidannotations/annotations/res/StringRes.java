@@ -24,16 +24,17 @@ import org.androidannotations.annotations.ResId;
 
 /**
  * <p>
- * Use on {@link java.lang.String} fields in any enhanced classes that should be
- * injected with this specific string resource.
+ * Use on {@link java.lang.String} fields or methods with applicable parameters
+ * in any enhanced classes that should be injected with this specific string
+ * resource.
  * </p>
  * <p>
  * The annotation value must be one of R.string.* fields. If the value is not
- * set, the field name will be used as the R.string.* field name.
+ * set, the field or method name will be used as the R.string.* field name.
  * </p>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface StringRes {
 
 	/**

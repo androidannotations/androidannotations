@@ -29,9 +29,9 @@ public class ContextCompatColorStateListTest extends AAProcessorTestHelper {
 	private static final String COLOR_STATE_LIST_VIA_CONTEXT_ON_MARSHMALLOW = ".*myColorStateList = this\\.getColorStateList\\(R\\.color\\.myColorStateList\\);.*";
 	private static final String[] COLOR_STATE_LIST_CONDITIONAL_WITHOUT_CONTEXT_COMPAT =  new String[] {
 		"        if (VERSION.SDK_INT >= VERSION_CODES.M) {",
-		"            myColorStateList = this.getColorStateList(R.color.myColorStateList);",
+		"            this.myColorStateList = this.getColorStateList(R.color.myColorStateList);",
 		"        } else {",
-		"            myColorStateList = resources_.getColorStateList(R.color.myColorStateList);",
+		"            this.myColorStateList = resources_.getColorStateList(R.color.myColorStateList);",
 		"        }",
 	};
 
@@ -79,8 +79,7 @@ public class ContextCompatColorStateListTest extends AAProcessorTestHelper {
 	public void activityCompilesOnMinSdkLower23CompileSdkHigher22WithoutContextCompat() throws Exception {
 		addManifestProcessorParameter(ContextCompatColorStateListTest.class, "AndroidManifestForColorStateListMinSdk22.xml");
 
-		CompileResult result = compileFiles(toPath(ContextCompatColorStateListTest.class, "Context.java"),
-				toPath(ContextCompatColorStateListTest.class, "Build.java"),
+		CompileResult result = compileFiles(toPath(ContextCompatColorStateListTest.class, "Context.java"), toPath(ContextCompatColorStateListTest.class, "Build.java"),
 				ActivityWithGetColorStateListMethod.class);
 		File generatedFile = toGeneratedFile(ActivityWithGetColorStateListMethod.class);
 

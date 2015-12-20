@@ -54,13 +54,22 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;OrmLiteDao(helper = DatabaseHelper.class)
  * 	Dao&lt;Car, Long&gt; carDao;
+ *
+ * 	&#064;OrmLiteDao(helper = DatabaseHelper.class)
+ * 	void singleInjection2(UserDao userDao) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;OrmLiteDao(helper = DatabaseHelper.class) UserDao userDao, &#064;OrmLiteDao(helper = DatabaseHelper.class) Dao&lt;Car, Long&gt; carDao;) {
+ * 		// do stuff
+ * 	}
  * }
  * </pre>
  * 
  * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface OrmLiteDao {
 
 	/**

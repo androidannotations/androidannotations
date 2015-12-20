@@ -36,4 +36,16 @@ public class SSLConnection extends Activity {
 	@HttpsClient(trustStoreResName = "cacerts", keyStoreResName = "cacerts")
 	HttpClient mHttpsClientTest4;
 
+	HttpClient methodInjectedHttpsClient;
+	HttpClient multiInjectedHttpsClient;
+
+	@HttpsClient
+	void methodInjectedHttpsClient(HttpClient httpsClient) {
+		methodInjectedHttpsClient = httpsClient;
+	}
+
+	void multiInjectedHttpsClient(@HttpsClient HttpClient httpsClient, @HttpsClient HttpClient httpsClient2) {
+		multiInjectedHttpsClient = httpsClient;
+	}
+
 }

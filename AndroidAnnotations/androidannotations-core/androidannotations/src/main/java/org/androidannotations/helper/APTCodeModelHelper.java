@@ -35,6 +35,7 @@ import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -550,22 +551,36 @@ public class APTCodeModelHelper {
 		}
 	}
 
-	// TODO it would be nice to cache the result map for better performance
 	public TypeMirror getActualType(Element element, GeneratedClassHolder holder) {
+		DeclaredType enclosingClassType = (DeclaredType) element.getEnclosingElement().asType();
+		return getActualType(element, enclosingClassType, holder);
+	}
+
+	// TODO it would be nice to cache the result map for better performance
+	public TypeMirror getActualType(Element element, DeclaredType enclosingClassType, GeneratedClassHolder holder) {
 		Types types = environment.getProcessingEnvironment().getTypeUtils();
-		DeclaredType typeMirror = (DeclaredType) element.getEnclosingElement().asType();
 		TypeMirror annotatedClass = holder.getAnnotatedElement().asType();
 
-		Map<String, TypeMirror> actualTypes = getActualTypes(types, typeMirror, annotatedClass);
+		Map<String, TypeMirror> actualTypes = getActualTypes(types, enclosingClassType, annotatedClass);
 
 		TypeMirror type = actualTypes.get(element.asType().toString());
 		return type == null ? element.asType() : type;
 	}
 
+	public TypeMirror getActualTypeOfEnclosingElementOfInjectedElement(GeneratedClassHolder holder, Element param) {
+		DeclaredType enclosingClassType;
+		if (param.getKind() == ElementKind.PARAMETER) {
+			enclosingClassType = (DeclaredType) param.getEnclosingElement().getEnclosingElement().asType();
+		} else {
+			enclosingClassType = (DeclaredType) param.getEnclosingElement().asType();
+		}
+		return getActualType(param, enclosingClassType, holder);
+	}
+
 	public void addSuppressWarnings(IJAnnotatable generatedElement, String annotationValue) {
 		Collection<JAnnotationUse> annotations = generatedElement.annotations();
 		for (JAnnotationUse annotationUse : annotations) {
-			if (annotationUse.getAnnotationClass().fullName().equals(SuppressWarnings.class.getCanonicalName())) {
+			if (SuppressWarnings.class.getCanonicalName().equals(annotationUse.getAnnotationClass().fullName())) {
 				AbstractJAnnotationValue value = annotationUse.getParam("value");
 				StringWriter code = new StringWriter();
 				JFormatter formatter = new JFormatter(code);

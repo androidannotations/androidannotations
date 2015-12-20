@@ -48,4 +48,17 @@ public class PrefsActivity extends Activity {
 	@Pref
 	InnerPrefs_.InnerSharedPrefs_ innerPrefs;
 
+	SomePrefs_ methodInjectedPref;
+	SomePrefs_ firstMultiInjectedPref;
+	ActivityPrefs_ secondMultiInjectedPref;
+
+	@Pref
+	void methodInjectedPref(SomePrefs_ somePrefs) {
+		methodInjectedPref = somePrefs;
+	}
+
+	void methodInjectedPref(@Pref SomePrefs_ somePrefs, @Pref ActivityPrefs_ activityPrefs) {
+		firstMultiInjectedPref = somePrefs;
+		secondMultiInjectedPref = activityPrefs;
+	}
 }

@@ -29,11 +29,11 @@ import org.androidannotations.annotations.ResId;
  * </p>
  * <p>
  * The annotation value must be one of R.color.* fields. If the value is not
- * set, the field name will be used as the R.color.* field name.
+ * set, the field or method name will be used as the R.color.* field name.
  * </p>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface ColorStateListRes {
 
 	/**

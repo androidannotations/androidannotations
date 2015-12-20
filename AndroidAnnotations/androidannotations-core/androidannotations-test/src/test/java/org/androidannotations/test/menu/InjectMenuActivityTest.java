@@ -47,4 +47,18 @@ public class InjectMenuActivityTest {
 		injectMenuActivity.onCreateOptionsMenu(menu);
 		assertThat(injectMenuActivity.menu).isSameAs(menu);
 	}
+
+	@Test
+	public void methodInjectedMenu() {
+		Menu menu = mock(Menu.class);
+		injectMenuActivity.onCreateOptionsMenu(menu);
+		assertThat(injectMenuActivity.methodInjectedMenu).isSameAs(menu);
+	}
+
+	@Test
+	public void multiInjectedMenu() {
+		Menu menu = mock(Menu.class);
+		injectMenuActivity.onCreateOptionsMenu(menu);
+		assertThat(injectMenuActivity.multiInjectedMenu).isSameAs(menu);
+	}
 }

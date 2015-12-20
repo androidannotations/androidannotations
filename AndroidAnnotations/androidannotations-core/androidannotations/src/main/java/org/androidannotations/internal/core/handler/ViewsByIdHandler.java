@@ -16,11 +16,11 @@
 package org.androidannotations.internal.core.handler;
 
 import static com.helger.jcodemodel.JExpr._new;
-import static com.helger.jcodemodel.JExpr.ref;
 
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -29,28 +29,37 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.ViewsById;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.MethodInjectionHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.helper.IdValidatorHelper;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 import org.androidannotations.holder.FoundViewHolder;
 import org.androidannotations.rclass.IRClass;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
+import com.helger.jcodemodel.IJExpression;
+import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 
-public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> {
+public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder>implements MethodInjectionHandler<EComponentWithViewSupportHolder> {
+
+	private final InjectHelper<EComponentWithViewSupportHolder> injectHelper;
 
 	public ViewsByIdHandler(AndroidAnnotationsEnvironment environment) {
 		super(ViewsById.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
+		injectHelper.validate(ViewsById.class, element, validation);
 
-		validatorHelper.isDeclaredType(element, validation);
+		Element param = injectHelper.getParam(element);
+		validatorHelper.isDeclaredType(param, validation);
 
-		validatorHelper.extendsListOfView(element, validation);
+		validatorHelper.extendsListOfView(param, validation);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.ID, IdValidatorHelper.FallbackStrategy.NEED_RES_ID, validation);
 
@@ -59,27 +68,51 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 
 	@Override
 	public void process(Element element, EComponentWithViewSupportHolder holder) {
-		JFieldRef elementRef = ref(element.getSimpleName().toString());
+		injectHelper.process(element, holder);
+	}
 
-		TypeMirror viewType = extractViewClass(element);
+	@Override
+	public JBlock getInvocationBlock(EComponentWithViewSupportHolder holder) {
+		return holder.getOnViewChangedBodyInjectionBlock();
+	}
+
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, EComponentWithViewSupportHolder holder, Element element, Element param) {
+		TypeMirror viewType = extractViewClass(param);
 		AbstractJClass viewClass = codeModelHelper.typeMirrorToJClass(viewType);
 
-		instantiateArrayList(elementRef, viewType, holder);
-		clearList(elementRef, holder);
+		String listName = getListName(element, param);
+		IJExpression arrayList = instantiateArrayList(viewType, holder, "list_" + listName);
 
 		List<JFieldRef> idsRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.ID, true);
 		for (JFieldRef idRef : idsRefs) {
-			addViewToListIfNotNull(elementRef, viewClass, idRef, holder);
-
+			addViewToListIfNotNull(arrayList, viewClass, idRef, holder);
 		}
+
+		targetBlock.add(fieldRef.assign(arrayList));
 	}
 
-	private void instantiateArrayList(JFieldRef elementRef, TypeMirror viewType, EComponentWithViewSupportHolder holder) {
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, valid);
+	}
+
+	private String getListName(Element element, Element param) {
+		String listName = param.getSimpleName().toString();
+		if (element.getKind() == ElementKind.PARAMETER) {
+			listName = element.getEnclosingElement().getSimpleName().toString() + "_" + listName;
+		} else if (element.getKind() == ElementKind.METHOD) {
+			listName = element.getSimpleName().toString() + "_" + listName;
+		}
+		return listName;
+	}
+
+	private IJExpression instantiateArrayList(TypeMirror viewType, EComponentWithViewSupportHolder holder, String name) {
 		TypeElement arrayListTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ARRAYLIST);
 		DeclaredType arrayListType = getProcessingEnvironment().getTypeUtils().getDeclaredType(arrayListTypeElement, viewType);
 		AbstractJClass arrayListClass = codeModelHelper.typeMirrorToJClass(arrayListType);
 
-		holder.getInitBodyInjectionBlock().assign(elementRef, _new(arrayListClass));
+		return holder.getOnViewChangedBodyBeforeInjectionBlock().decl(arrayListClass, name, _new(arrayListClass));
 	}
 
 	private TypeMirror extractViewClass(Element element) {
@@ -93,11 +126,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 		return viewType;
 	}
 
-	private void clearList(JFieldRef elementRef, EComponentWithViewSupportHolder holder) {
-		holder.getOnViewChangedBodyBeforeInjectionBlock().add(elementRef.invoke("clear"));
-	}
-
-	private void addViewToListIfNotNull(JFieldRef elementRef, AbstractJClass viewClass, JFieldRef idRef, EComponentWithViewSupportHolder holder) {
+	private void addViewToListIfNotNull(IJExpression elementRef, AbstractJClass viewClass, JFieldRef idRef, EComponentWithViewSupportHolder holder) {
 		FoundViewHolder foundViewHolder = holder.getFoundViewHolder(idRef, viewClass);
 		foundViewHolder.getIfNotNullBlock().invoke(elementRef, "add").arg(foundViewHolder.getOrCastRef(viewClass));
 	}

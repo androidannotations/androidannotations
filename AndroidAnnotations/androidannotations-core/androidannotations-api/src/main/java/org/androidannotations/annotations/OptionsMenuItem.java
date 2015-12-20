@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * activity classes to inject a menu item.
  * </p>
  * <p>
- * The field MUST be of type {@link android.view.MenuItem}
+ * The field or method parameter MUST be of type {@link android.view.MenuItem}
  * </p>
  * <p>
  * The annotation value should be one or several of R.id.* fields. If not set,
@@ -47,13 +47,22 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;OptionsMenuItem(R.id.menu_search)
  * 	MenuItem menuItemSearch;
+ * 
+ * 	&#064;OptionsMenuItem
+ * 	void singleInjection(MenuItem menuRefresh) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;OptionsMenuItem MenuItem menuRefresh, &#064;OptionsMenuItem(R.id.menu_search) MenuItem menuItemSearch) {
+ * 		// do stuff
+ * 	}
  * }
  * </pre>
  * 
  * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface OptionsMenuItem {
 
 	/**

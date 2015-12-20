@@ -24,15 +24,15 @@ import java.lang.annotation.Target;
  * <p>
  * Use on any native, {@link android.os.Parcelable Parcelable} or
  * {@link java.io.Serializable Serializable} field in an {@link EActivity}
- * annotated class to bind it with Android's arguments.
- * If <a href="http://parceler.org">Parceler</a> is on the classpath, extras
+ * annotated class to bind it with Android's arguments. If
+ * <a href="http://parceler.org">Parceler</a> is on the classpath, extras
  * annotated with &#064;Parcel, or collections supported by Parceler will be
  * automatically marshaled using a {@link android.os.Parcelable Parcelable}
  * through the Parcels utility class.
  * </p>
  * <p>
- * The annotation value is the key used for extra. If not set, the field name
- * will be used as the key.
+ * The annotation value is the key used for extra. If not set, the field or
+ * method name will be used as the key.
  * </p>
  * <p>
  * When {@link Extra} is used, the intent builder will hold dedicated methods
@@ -68,6 +68,15 @@ import java.lang.annotation.Target;
  * 	&#064;Extra
  * 	String myMessage;
  * 
+ * 	&#064;Extra
+ * 	void singleInjection(String myMessage) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;Extra String myMessage, &#064;Extra String myMessage2) {
+ * 		// do stuff
+ * 	}
+ * 
  * 	&#064;AfterInject
  * 	void init() {
  * 		Log.d(&quot;AA&quot;, &quot;extra myMessage = &quot; + myMessage);
@@ -81,7 +90,7 @@ import java.lang.annotation.Target;
  * @see EActivity
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface Extra {
 
 	/**

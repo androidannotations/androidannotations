@@ -228,6 +228,17 @@ public class ValidatorHelper {
 		doesNotHaveOneOfAnnotations(element, Collections.<Class<? extends Annotation>> singletonList(annotation), validation);
 	}
 
+	public void doesNotHaveAnyOfSupportedAnnotations(Element element, ElementValidation validation) {
+		Set<String> supportedAnnotationTypes = environment().getSupportedAnnotationTypes();
+		for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+			if (supportedAnnotationTypes.contains(annotationMirror.getAnnotationType().toString())) {
+				validation.addError(element,
+						"method injection does only allow the annotation to be placed on the method OR on each parameter.");
+				break;
+			}
+		}
+	}
+
 	private void checkAnnotations(Element reportElement, Element element, List<Class<? extends Annotation>> validAnnotations, boolean shouldFind, ElementValidation validation) {
 
 		boolean foundAnnotation = false;
@@ -297,17 +308,40 @@ public class ValidatorHelper {
 	}
 
 	public void typeOrTargetValueHasAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid) {
+		Element targetElement = findTargetElement(element, valid);
+		if (targetElement == null) {
+			return;
+		}
+
 		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
 
 		if (targetAnnotationClassValue != null) {
 			typeHasAnnotation(annotation, targetAnnotationClassValue, valid);
 
-			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, element.asType())) {
+			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, targetElement.asType())) {
 				valid.addError("The value of %s must be assignable into the annotated field");
 			}
 		} else {
-			typeHasAnnotation(annotation, element, valid);
+			typeHasAnnotation(annotation, targetElement, valid);
 		}
+	}
+
+	Element findTargetElement(Element element, ElementValidation valid) {
+		if (element instanceof ExecutableElement) {
+			ExecutableElement executableElement = (ExecutableElement) element;
+			returnTypeIsVoid(executableElement, valid);
+			if (!valid.isValid()) {
+				return null;
+			}
+
+			List<? extends VariableElement> parameters = executableElement.getParameters();
+			if (parameters.size() != 1) {
+				valid.addError("The method can only have 1 parameter");
+				return null;
+			}
+			return parameters.get(0);
+		}
+		return element;
 	}
 
 	private boolean elementHasAnnotationSafe(Class<? extends Annotation> annotation, Element element) {
@@ -471,16 +505,31 @@ public class ValidatorHelper {
 		return false;
 	}
 
-	public void allowedType(TypeMirror fieldTypeMirror, List<String> allowedTypes, ElementValidation valid) {
-		String qualifiedName = fieldTypeMirror.toString();
+	public void allowedType(Element element, List<String> allowedTypes, ElementValidation valid) {
+		String qualifiedName;
+		Element enclosingElement = element.getEnclosingElement();
+		if (element instanceof VariableElement && enclosingElement instanceof ExecutableElement) {
+			qualifiedName = element.asType().toString();
+		} else if (element instanceof ExecutableElement) {
+			element = ((ExecutableElement) element).getParameters().get(0);
+			qualifiedName = element.asType().toString();
+		} else {
+			qualifiedName = element.asType().toString();
+		}
+
 		if (!allowedTypes.contains(qualifiedName)) {
 			valid.addError("%s can only be used on a field which is a " + allowedTypes.toString() + ", not " + qualifiedName);
 		}
 	}
 
 	public void androidService(Element element, ElementValidation valid) {
+		Element targetElement = findTargetElement(element, valid);
+		if (targetElement == null) {
+			return;
+		}
+
 		AndroidSystemServices androidSystemServices = new AndroidSystemServices(environment());
-		TypeMirror serviceType = element.asType();
+		TypeMirror serviceType = targetElement.asType();
 		if (!androidSystemServices.contains(serviceType)) {
 			valid.addError("Unknown service type: " + serviceType.toString());
 		}

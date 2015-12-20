@@ -21,35 +21,51 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.InjectMenu;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.MethodInjectionHandler;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.HasOptionsMenu;
 
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JExpr;
-import com.helger.jcodemodel.JVar;
 
-public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
+public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu>implements MethodInjectionHandler<HasOptionsMenu> {
+
+	private final InjectHelper<HasOptionsMenu> injectHelper;
 
 	public InjectMenuHandler(AndroidAnnotationsEnvironment environment) {
 		super(InjectMenu.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation valid) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, valid);
+		injectHelper.validate(InjectMenu.class, element, valid);
 
-		validatorHelper.isDeclaredType(element, valid);
+		Element param = injectHelper.getParam(element);
+		validatorHelper.isDeclaredType(param, valid);
 
-		validatorHelper.extendsMenu(element, valid);
+		validatorHelper.extendsMenu(param, valid);
 
 		validatorHelper.isNotPrivate(element, valid);
 	}
 
 	@Override
 	public void process(Element element, HasOptionsMenu holder) {
-		String fieldName = element.getSimpleName().toString();
-		JBlock body = holder.getOnCreateOptionsMenuMethodBody();
-		JVar menuParam = holder.getOnCreateOptionsMenuMenuParam();
+		injectHelper.process(element, holder);
+	}
 
-		body.assign(JExpr._this().ref(fieldName), menuParam);
+	@Override
+	public JBlock getInvocationBlock(HasOptionsMenu holder) {
+		return holder.getOnCreateOptionsMenuMethodBody();
+	}
+
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, HasOptionsMenu holder, Element element, Element param) {
+		targetBlock.add(fieldRef.assign(holder.getOnCreateOptionsMenuMenuParam()));
+	}
+
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEActivityOrEFragment(element, valid);
 	}
 }

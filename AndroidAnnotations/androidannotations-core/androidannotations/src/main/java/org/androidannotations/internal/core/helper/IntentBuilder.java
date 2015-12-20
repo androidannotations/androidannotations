@@ -27,9 +27,11 @@ import static org.androidannotations.helper.CanonicalNameConstants.SERIALIZABLE;
 import static org.androidannotations.helper.CanonicalNameConstants.STRING;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -41,7 +43,6 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.Pair;
 import org.androidannotations.helper.ParcelerHelper;
 import org.androidannotations.holder.HasIntentBuilder;
 import org.androidannotations.internal.process.ProcessHolder;
@@ -67,7 +68,6 @@ public abstract class IntentBuilder {
 	protected JFieldRef intentField;
 	protected AbstractJClass contextClass;
 	protected AbstractJClass intentClass;
-	protected Map<Pair<TypeMirror, String>, JMethod> putExtraMethods = new HashMap<>();
 
 	protected Elements elementUtils;
 	protected Types typeUtils;
@@ -115,25 +115,34 @@ public abstract class IntentBuilder {
 		method.body()._return(_new(holder.getIntentBuilderClass()).arg(contextParam));
 	}
 
-	public JMethod getPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField, String docComment) {
-		Pair<TypeMirror, String> signature = new Pair<>(elementType, parameterName);
-		JMethod putExtraMethod = putExtraMethods.get(signature);
-		if (putExtraMethod == null) {
-			putExtraMethod = addPutExtraMethod(elementType, parameterName, extraKeyField, docComment);
-			putExtraMethods.put(signature, putExtraMethod);
-		}
-		return putExtraMethod;
+	public JMethod getPutExtraMethod(Element element, IntentExtra intentExtra) {
+		return addPutExtraMethod(element, Collections.singletonList(intentExtra));
 	}
 
-	private JMethod addPutExtraMethod(TypeMirror elementType, String parameterName, JFieldVar extraKeyField, String docComment) {
-		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), parameterName);
-		AbstractJClass parameterClass = codeModelHelper.typeMirrorToJClass(elementType);
-		JVar extraParameterVar = method.param(parameterClass, parameterName);
-		JInvocation superCall = getSuperPutExtraInvocation(elementType, extraParameterVar, extraKeyField);
-		method.body()._return(superCall);
-		codeModelHelper.addTrimmedDocComment(method, docComment);
-		method.javadoc().addParam(parameterName).append("the extra value");
+	public JMethod getPutExtraMethod(Element element, List<IntentExtra> intentExtra) {
+		return addPutExtraMethod(element, intentExtra);
+	}
+
+	private JMethod addPutExtraMethod(Element element, List<IntentExtra> intentExtras) {
+		String docComment = elementUtils.getDocComment(element);
+
+		JMethod method = holder.getIntentBuilderClass().method(PUBLIC, holder.getIntentBuilderClass(), element.getSimpleName().toString());
 		method.javadoc().addReturn().append("the IntentBuilder to chain calls");
+		codeModelHelper.addTrimmedDocComment(method, docComment);
+
+		int paramCount = intentExtras.size();
+		for (int i = 0; i < paramCount; i++) {
+			IntentExtra intentExtra = intentExtras.get(i);
+			method.javadoc().addParam(intentExtra.parameterName).append("the value for this extra");
+			AbstractJClass parameterClass = codeModelHelper.typeMirrorToJClass(intentExtra.type);
+			JVar extraParameterVar = method.param(parameterClass, intentExtra.parameterName);
+			JInvocation superCall = getSuperPutExtraInvocation(intentExtra.type, extraParameterVar, intentExtra.keyField);
+			if (i + 1 == paramCount) {
+				method.body()._return(superCall);
+			} else {
+				method.body().add(superCall);
+			}
+		}
 		return method;
 	}
 
@@ -168,5 +177,46 @@ public abstract class IntentBuilder {
 
 	protected AbstractJClass getJClass(Class<?> clazz) {
 		return environment.getJClass(clazz);
+	}
+
+	public static class IntentExtra {
+		private final TypeMirror type;
+		private final String parameterName;
+		private final JFieldVar keyField;
+
+		public IntentExtra(TypeMirror type, String parameterName, JFieldVar keyField) {
+			this.type = type;
+			this.parameterName = parameterName;
+			this.keyField = keyField;
+		}
+
+		public TypeMirror getType() {
+			return type;
+		}
+
+		public String getParameterName() {
+			return parameterName;
+		}
+
+		public JFieldVar getKeyField() {
+			return keyField;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			IntentExtra that = (IntentExtra) o;
+			return Objects.equals(type, that.type) && Objects.equals(parameterName, that.parameterName) && Objects.equals(keyField, that.keyField);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(type, parameterName, keyField);
+		}
 	}
 }

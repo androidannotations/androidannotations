@@ -13,30 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test.menu;
+package org.androidannotations.generation;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.InjectMenu;
+import org.androidannotations.annotations.Extra;
 
 import android.app.Activity;
-import android.view.Menu;
 
 @EActivity
-public class InjectMenuActivity extends Activity {
+public class ActivityWithInvalidMethodInjection extends Activity {
 
-	@InjectMenu
-	Menu menu;
-
-	Menu methodInjectedMenu;
-	Menu multiInjectedMenu;
-
-	@InjectMenu
-	void methodInjectedExtra(Menu methodInjectedMenu) {
-		this.methodInjectedMenu = methodInjectedMenu;
+	@Extra
+	void failHere(@Extra String fail) {
 	}
 
-	void multiInjectedMenu(@InjectMenu Menu multiInjectedMenu, @InjectMenu Menu multiInjectedMenu2) {
-		this.multiInjectedMenu = multiInjectedMenu;
+	void failHere(@Extra String extra, String fail) {
 	}
-
 }

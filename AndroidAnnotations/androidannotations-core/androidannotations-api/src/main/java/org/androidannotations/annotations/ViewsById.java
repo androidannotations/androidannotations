@@ -23,7 +23,8 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * Use it on a {@link java.util.List} of {@link android.view.View} or
- * {@link android.view.View} subtype fields in a view related (ie
+ * {@link android.view.View} subtype fields or methods with applicable
+ * parameters in a view related (ie
  * {@link org.androidannotations.annotations.EActivity},
  * {@link org.androidannotations.annotations.EFragment},
  * {@link org.androidannotations.annotations.EViewGroup}, ...) annotated class.
@@ -50,6 +51,15 @@ import java.lang.annotation.Target;
  * 	&#064;ViewsById({ R.id.myTextView1, R.id.myOtherTextView })
  * 	List&lt;TextView&gt; textViews;
  * 
+ * 	&#064;ViewsById({ R.id.edit1, R.id.edit2 })
+ * 	void singleInjection(List&lt;EditText&gt; myEditTexts) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;ViewsById({ R.id.edit1, R.id.edit2 }) List&lt;EditText&gt; myEditTexts, &#064;ViewsById({ R.id.myTextView1, R.id.myOtherTextView }) List&lt;TextView&gt; textViews) {
+ * 		// do stuff
+ * 	}
+ * 
  * 	&#064;AfterViews
  * 	void updateTextWithDate() {
  * 		for (TextView textView : textViews) {
@@ -64,7 +74,7 @@ import java.lang.annotation.Target;
  * @see org.androidannotations.annotations.AfterViews
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface ViewsById {
 
 	/**

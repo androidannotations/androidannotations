@@ -33,6 +33,8 @@ public class ApplicationInjectedActivityTest {
 		ApplicationInjectedActivity_ activity = Robolectric.buildActivity(ApplicationInjectedActivity_.class).create().get();
 
 		assertThat(activity.customApplication).isNotNull();
+		assertThat(activity.methodInjectedApplication).isNotNull();
+		assertThat(activity.multiInjectedApplication).isNotNull();
 	}
 
 	@Test
@@ -44,6 +46,8 @@ public class ApplicationInjectedActivityTest {
 		ApplicationInjectedActivity_ activity = Robolectric.buildActivity(ApplicationInjectedActivity_.class).create().get();
 
 		assertThat(activity.customApplication).isSameAs(testApp);
+		assertThat(activity.methodInjectedApplication).isSameAs(testApp);
+		assertThat(activity.multiInjectedApplication).isSameAs(testApp);
 	}
 
 }

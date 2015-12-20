@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Use it on a {@link android.preference.Preference Preference} or
  * {@link android.preference.Preference Preference} subtype or
  * <code>android.support.v7.preference.Preference</code> or
- * <code>android.support.v7.preference.Preference</code> subtype fields in a
+ * <code>android.support.v7.preference.Preference</code> subtype fields or methods with applicable parameters in a
  * {@link org.androidannotations.annotations.EActivity EActivity} or
  * {@link org.androidannotations.annotations.EFragment EFragment} annotated
  * class, which is a subclass of {@link android.preference.PreferenceActivity
@@ -53,6 +53,15 @@ import java.lang.annotation.Target;
  * 	&#064;PreferenceByKey(R.string.checkBoxPref)
  * 	CheckBoxPreference checkBoxPref;
  * 
+ * 	&#064;PreferenceByKey
+ * 	void singleInjection(Preference myPreference1) {
+ * 		// do stuff	
+ * 	}	
+ *
+ * 	void multiInjection(&#064;PreferenceByKey Preference myPreference1, &#064;PreferenceByKey(R.string.checkBoxPref) CheckBoxPreference checkBoxPref) {
+ * 		// do stuff	
+ * 	}
+ * 
  * 	&#064;AfterPreferences
  * 	void initPrefs() {
  * 		checkBoxPref.setChecked(false);
@@ -65,7 +74,7 @@ import java.lang.annotation.Target;
  * @see org.androidannotations.annotations.AfterPreferences AfterPreferences
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface PreferenceByKey {
 
 	int value() default ResId.DEFAULT_VALUE;

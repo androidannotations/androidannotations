@@ -26,4 +26,16 @@ public class ApplicationInjectedActivity extends Activity {
 	@App
 	SampleRoboApplication customApplication;
 
+	SampleRoboApplication methodInjectedApplication;
+	SampleRoboApplication multiInjectedApplication;
+
+	@App
+	void methodInjectedApplication(SampleRoboApplication customApplication) {
+		methodInjectedApplication = customApplication;
+	}
+
+	void multiInjectedApplication(@App SampleRoboApplication app, @App SampleRoboApplication application) {
+		multiInjectedApplication = app;
+	}
+
 }

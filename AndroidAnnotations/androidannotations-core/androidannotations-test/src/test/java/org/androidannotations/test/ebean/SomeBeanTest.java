@@ -50,4 +50,17 @@ public class SomeBeanTest {
 		assertThat(bean.context).isSameAs(context2);
 	}
 
+	@Test
+	public void methodInjectedExtra() {
+		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
+		SomeBean_ bean = SomeBean_.getInstance_(context);
+		assertThat(bean.methodInjectedContext).isSameAs(context);
+	}
+
+	@Test
+	public void multiInjectedExtra() {
+		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
+		SomeBean_ bean = SomeBean_.getInstance_(context);
+		assertThat(bean.multiInjectedContext).isSameAs(context);
+	}
 }

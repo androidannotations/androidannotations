@@ -38,16 +38,25 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;SystemService
  * 	AlarmManager alarmManager;
+ * 
+ * 	&#064;SystemService
+ * 	void singleInjection(NotificationManager notificationManager) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;SystemService NotificationManager notificationManager, &#064;SystemService AlarmManager alarmManager) {
+ * 		// do stuff
+ * 	}
  * }
  * </pre>
  * 
  * </blockquote>
  * 
- * @see <a
- *      href="https://developer.android.com/reference/android/content/Context.html#getSystemService%28java.lang.String%29"
+ * @see <a href=
+ *      "https://developer.android.com/reference/android/content/Context.html#getSystemService%28java.lang.String%29"
  *      >List of SystemService managers</a>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface SystemService {
 }

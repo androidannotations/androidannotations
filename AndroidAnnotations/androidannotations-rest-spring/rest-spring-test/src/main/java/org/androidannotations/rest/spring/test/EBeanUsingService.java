@@ -30,4 +30,10 @@ public class EBeanUsingService {
 		myService.updateEvent(event, id);
 	}
 
+	@RestService
+	void methodInjectedRestService(MyService myService) {
+	}
+
+	void multiInjectedRestService(@RestService MyService myService, @RestService MyService myService2) {
+	}
 }

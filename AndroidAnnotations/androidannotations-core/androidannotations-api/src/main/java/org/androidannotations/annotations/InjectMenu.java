@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * inject the menu.
  * </p>
  * <p>
- * The field MUST be of type {@link android.view.Menu}.
+ * The field or method parameter MUST be of type {@link android.view.Menu}.
  * </p>
  *
  * <blockquote>
@@ -39,6 +39,11 @@ import java.lang.annotation.Target;
  *
  * 	&#064;InjectMenu
  * 	Menu menu;
+ * 
+ * 	&#064;InjectMenu
+ * 	void methodInjection(Menu menu) {
+ * 		// do stuff
+ * 	}
  *
  * }
  * </pre>
@@ -46,6 +51,6 @@ import java.lang.annotation.Target;
  * </blockquote>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface InjectMenu {
 }

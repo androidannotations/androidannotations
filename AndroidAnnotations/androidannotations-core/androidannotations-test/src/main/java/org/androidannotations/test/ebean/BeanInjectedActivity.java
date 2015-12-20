@@ -31,5 +31,55 @@ public class BeanInjectedActivity extends Activity {
 	
 	@Bean
 	public SomeSingleton singletonDependency;
-	
+
+	public EmptyDependency methodInjectedDependency;
+	public SomeSingleton methodInjectedSingleton;
+	public SomeInterface methodInjectedInterface;
+
+	public EmptyDependency annotatedParamDependency;
+	public SomeSingleton annotatedParamSingleton;
+	public SomeInterface annotatedParamInterface;
+
+	public EmptyDependency multiDependency;
+	public SomeSingleton multiDependencySingleton;
+	public SomeInterface multiDependencyInterface;
+
+	@Bean
+	protected void injectDependency(EmptyDependency methodInjectedDependency) {
+		this.methodInjectedDependency = methodInjectedDependency;
+	}
+
+	@Bean(SomeImplementation.class)
+	protected void injectInterface(SomeInterface methodInjectedInterface) {
+		this.methodInjectedInterface = methodInjectedInterface;
+	}
+
+	@Bean
+	protected void injectSingleton(SomeSingleton methodInjectedSingleton) {
+		this.methodInjectedSingleton = methodInjectedSingleton;
+	}
+
+	protected void injectDependencyAnnotatedParam(
+			@Bean EmptyDependency annotatedParamDependency) {
+		this.annotatedParamDependency = annotatedParamDependency;
+	}
+
+	protected void injectInterfaceAnnotatedParam(
+			@Bean(SomeImplementation.class) SomeInterface annotatedParamInterface) {
+		this.annotatedParamInterface = annotatedParamInterface;
+	}
+
+	protected void injectSingletonAnnotatedParam(
+			@Bean SomeSingleton annotatedParamSingleton) {
+		this.annotatedParamSingleton = annotatedParamSingleton;
+	}
+
+	protected void injectMultipleDependencies(
+			@Bean EmptyDependency multiDependency,
+			@Bean(SomeImplementation.class) SomeInterface multiDependencyInterface,
+			@Bean SomeSingleton multiDependencySingleton) {
+		this.multiDependency = multiDependency;
+		this.multiDependencyInterface = multiDependencyInterface;
+		this.multiDependencySingleton = multiDependencySingleton;
+	}
 }

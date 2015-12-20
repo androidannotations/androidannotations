@@ -29,11 +29,11 @@ import org.androidannotations.annotations.ResId;
  * </p>
  * <p>
  * The annotation value must be one of R.anim.* fields. If the value is not set,
- * the field name will be used as the R.anim.* field name.
+ * the field or method name will be used as the R.anim.* field name.
  * </p>
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface AnimationRes {
 
 	/**

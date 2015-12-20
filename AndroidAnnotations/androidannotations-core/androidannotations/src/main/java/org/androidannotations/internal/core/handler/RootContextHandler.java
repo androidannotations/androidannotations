@@ -17,7 +17,6 @@ package org.androidannotations.internal.core.handler;
 
 import static com.helger.jcodemodel.JExpr.cast;
 import static com.helger.jcodemodel.JExpr.lit;
-import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -26,55 +25,72 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.MethodInjectionHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.EBeanHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JConditional;
 import com.helger.jcodemodel.JInvocation;
 
-public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> {
+public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder>implements MethodInjectionHandler<EBeanHolder> {
+
+	private final InjectHelper<EBeanHolder> injectHelper;
 
 	public RootContextHandler(AndroidAnnotationsEnvironment environment) {
 		super(RootContext.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEBeanAnnotation(element, validation);
+		injectHelper.validate(RootContext.class, element, validation);
 
-		validatorHelper.extendsContext(element, validation);
+		Element param = injectHelper.getParam(element);
+		validatorHelper.extendsContext(param, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
 	}
 
 	@Override
 	public void process(Element element, EBeanHolder holder) {
-		String fieldName = element.getSimpleName().toString();
+		injectHelper.process(element, holder);
+	}
 
-		TypeMirror elementType = element.asType();
+	@Override
+	public JBlock getInvocationBlock(EBeanHolder holder) {
+		return holder.getInitBodyInjectionBlock();
+	}
+
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, EBeanHolder holder, Element element, Element param) {
+		TypeMirror elementType = param.asType();
 		String typeQualifiedName = elementType.toString();
 
-		JBlock body = holder.getInitBodyInjectionBlock();
 		IJExpression contextRef = holder.getContextRef();
 
 		if (CanonicalNameConstants.CONTEXT.equals(typeQualifiedName)) {
-			body.assign(ref(fieldName), contextRef);
+			targetBlock.add(fieldRef.assign(contextRef));
 		} else {
 			AbstractJClass extendingContextClass = getEnvironment().getJClass(typeQualifiedName);
-			JConditional cond = body._if(holder.getContextRef()._instanceof(extendingContextClass));
-			cond._then() //
-					.assign(ref(fieldName), cast(extendingContextClass, holder.getContextRef()));
+
+			JConditional cond = getInvocationBlock(holder)._if(holder.getContextRef()._instanceof(extendingContextClass));
+			cond._then().add(fieldRef.assign(cast(extendingContextClass, holder.getContextRef())));
 
 			JInvocation warningInvoke = getClasses().LOG.staticInvoke("w");
 			warningInvoke.arg(holder.getGeneratedClass().name());
-			IJExpression expr = lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName")).plus(
-					lit(", the @RootContext " + extendingContextClass.name() + " won't be populated"));
-			warningInvoke.arg(expr);
-			cond._else() //
-					.add(warningInvoke);
+			warningInvoke.arg(lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName"))
+					.plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated")));
+			cond._else().add(warningInvoke);
 		}
+	}
+
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEBeanAnnotation(element, valid);
 	}
 }

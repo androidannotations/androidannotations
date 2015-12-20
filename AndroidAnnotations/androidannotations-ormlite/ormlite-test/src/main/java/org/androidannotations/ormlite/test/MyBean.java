@@ -33,4 +33,15 @@ public class MyBean {
 	@OrmLiteDao(helper = DatabaseHelper.class)
 	RuntimeExceptionDao<Car, Long> runtimeExceptionDao;
 
+	Dao<Car, Long> methodInjectedOrmLiteDao;
+	RuntimeExceptionDao<Car, Long> multiInjectedOrmLiteDao;
+
+	@OrmLiteDao(helper = DatabaseHelper.class)
+	void methodInjectedOrmLiteDao(Dao<Car, Long> userDao) {
+		methodInjectedOrmLiteDao = userDao;
+	}
+
+	void multiInjectedOrmLiteDao(@OrmLiteDao(helper = DatabaseHelper.class) UserDao userDao, @OrmLiteDao(helper = DatabaseHelper.class) RuntimeExceptionDao<Car, Long> runtimeExceptionDao) {
+		multiInjectedOrmLiteDao = runtimeExceptionDao;
+	}
 }

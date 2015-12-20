@@ -15,12 +15,12 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.helger.jcodemodel.JExpr.ref;
-
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidRes;
 
+import com.helger.jcodemodel.IJAssignmentTarget;
+import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 
@@ -31,7 +31,7 @@ public class HtmlResHandler extends AbstractResHandler {
 	}
 
 	@Override
-	protected void makeCall(String fieldName, EComponentHolder holder, JBlock methodBody, JFieldRef idRef) {
-		methodBody.assign(ref(fieldName), getClasses().HTML.staticInvoke("fromHtml").arg(holder.getResourcesRef().invoke(AndroidRes.HTML.getResourceMethodName()).arg(idRef)));
+	protected IJExpression getInstanceInvocation(EComponentHolder holder, JFieldRef idRef, IJAssignmentTarget fieldRef, JBlock targetBlock) {
+		return getClasses().HTML.staticInvoke("fromHtml").arg(holder.getResourcesRef().invoke(AndroidRes.HTML.getResourceMethodName()).arg(idRef));
 	}
 }

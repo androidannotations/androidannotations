@@ -15,9 +15,7 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.helger.jcodemodel.JExpr.assign;
 import static com.helger.jcodemodel.JExpr.cast;
-import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -27,27 +25,32 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.handler.BaseAnnotationHandler;
+import org.androidannotations.handler.MethodInjectionHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.EComponentHolder;
 import org.androidannotations.internal.core.model.AndroidSystemServices;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.IJExpression;
-import com.helger.jcodemodel.IJStatement;
 import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JConditional;
 import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JInvocation;
+import com.helger.jcodemodel.JOp;
 
-public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder> {
+public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+
+	private final InjectHelper<EComponentHolder> injectHelper;
 
 	public SystemServiceHandler(AndroidAnnotationsEnvironment environment) {
 		super(SystemService.class, environment);
+		injectHelper = new InjectHelper<>(validatorHelper, this);
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
+		injectHelper.validate(SystemService.class, element, validation);
 
 		validatorHelper.androidService(element, validation);
 
@@ -56,46 +59,49 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 
 	@Override
 	public void process(Element element, EComponentHolder holder) {
-		String fieldName = element.getSimpleName().toString();
+		injectHelper.process(element, holder);
+	}
 
-		TypeMirror serviceType = element.asType();
+	@Override
+	public JBlock getInvocationBlock(EComponentHolder holder) {
+		return holder.getInitBodyInjectionBlock();
+	}
+
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, EComponentHolder holder, Element element, Element param) {
+		TypeMirror serviceType = param.asType();
 		String fieldTypeQualifiedName = serviceType.toString();
 
 		JFieldRef serviceRef = new AndroidSystemServices(getEnvironment()).getServiceConstantRef(serviceType);
-
-		JBlock methodBody = holder.getInitBodyInjectionBlock();
-
 		if (CanonicalNameConstants.APP_WIDGET_MANAGER.equals(fieldTypeQualifiedName)) {
-			createSpecialInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody, 21, "LOLLIPOP", getClasses().APP_WIDGET_MANAGER, "getInstance", true);
+			targetBlock.add(fieldRef.assign(createSpecialInjection(holder, fieldTypeQualifiedName, serviceRef, 21, "LOLLIPOP", getClasses().APP_WIDGET_MANAGER, "getInstance", true)));
 		} else {
-			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
+			targetBlock.add(fieldRef.assign(createNormalInjection(holder, fieldTypeQualifiedName, serviceRef)));
 		}
 	}
 
 	@SuppressWarnings("checkstyle:parameternumber")
-	private void createSpecialInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody, int apiLevel, String apiLevelName,
-										AbstractJClass serviceClass, String injectionMethodName, boolean contextNeeded) {
+	private IJExpression createSpecialInjection(EComponentHolder holder, String fieldTypeQualifiedName, JFieldRef serviceRef, int apiLevel, String apiLevelName, AbstractJClass serviceClass,
+			String injectionMethodName, boolean invocationRequiresContext) {
 		if (getEnvironment().getAndroidManifest().getMinSdkVersion() >= apiLevel) {
-			methodBody.add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
+			return createNormalInjection(holder, fieldTypeQualifiedName, serviceRef);
 		} else {
-			JInvocation injectionMethodInvokation = serviceClass.staticInvoke(injectionMethodName);
-			if (contextNeeded) {
-				injectionMethodInvokation.arg(holder.getContextRef());
+			JInvocation serviceClassInvocation = serviceClass.staticInvoke(injectionMethodName);
+			if (invocationRequiresContext) {
+				serviceClassInvocation.arg(holder.getContextRef());
 			}
-			IJStatement oldInjection = assign(ref(fieldName), injectionMethodInvokation);
-
 			if (isApiOnClasspath(apiLevelName)) {
-				JConditional conditional = methodBody._if(getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef(apiLevelName)));
-				conditional._then().add(createNormalInjection(holder, fieldName, fieldTypeQualifiedName, serviceRef, methodBody));
-				conditional._else().add(oldInjection);
+				IJExpression condition = getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef(apiLevelName));
+				IJExpression normalInjection = createNormalInjection(holder, fieldTypeQualifiedName, serviceRef);
+				return JOp.cond(condition, normalInjection, serviceClassInvocation);
 			} else {
-				methodBody.add(oldInjection);
+				return serviceClassInvocation;
 			}
 		}
 	}
 
-	private IJStatement createNormalInjection(EComponentHolder holder, String fieldName, String fieldTypeQualifiedName, JFieldRef serviceRef, JBlock methodBody) {
-		return assign(ref(fieldName), cast(getJClass(fieldTypeQualifiedName), getAppropriateContextRef(holder, fieldTypeQualifiedName).invoke("getSystemService").arg(serviceRef)));
+	private IJExpression createNormalInjection(EComponentHolder holder, String fieldTypeQualifiedName, JFieldRef serviceRef) {
+		return cast(getJClass(fieldTypeQualifiedName), getAppropriateContextRef(holder, fieldTypeQualifiedName).invoke("getSystemService").arg(serviceRef));
 	}
 
 	private IJExpression getAppropriateContextRef(EComponentHolder holder, String fieldTypeQualifiedName) {
@@ -114,5 +120,10 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void validateEnclosingElement(Element element, ElementValidation valid) {
+		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, valid);
 	}
 }

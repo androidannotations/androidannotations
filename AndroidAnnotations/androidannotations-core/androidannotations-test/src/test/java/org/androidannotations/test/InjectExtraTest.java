@@ -113,4 +113,15 @@ public class InjectExtraTest {
 		assertThat(bean.getAge()).isEqualTo(1337);
 	}
 
+	@Test
+	public void methodInjectedExtra() {
+		controller.withIntent(ExtraInjectedActivity_.intent(context).methodInjectedExtra("Hello!").get()).create();
+		assertThat(activity.methodInjectedExtra).isEqualTo("Hello!");
+	}
+
+	@Test
+	public void multiInjectedExtra() {
+		controller.withIntent(ExtraInjectedActivity_.intent(context).multiInjectedExtra("Hello!", "World").get()).create();
+		assertThat(activity.multiInjectedExtra).isEqualTo("Hello!");
+	}
 }

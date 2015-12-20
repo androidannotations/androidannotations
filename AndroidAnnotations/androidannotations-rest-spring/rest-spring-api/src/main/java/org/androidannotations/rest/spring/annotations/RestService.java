@@ -57,7 +57,16 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;RestService
  * 	MyRestClient myRestClient;
- * 
+ *
+ * 	&#064;RestService
+ * 	void singleInjection2(MyRestClient myRestClient) {
+ * 		// do stuff
+ * 	}
+ *
+ * 	void multiInjection(&#064;RestService MyRestClient myRestClient, &#064;RestService AnotherRestClient anotherRestClient) {
+ * 		// do stuff
+ * 	}
+ *
  * 	public void getEvent(long id) {
  * 		return myRestClient.getEvent(id);
  * 	}
@@ -69,6 +78,6 @@ import java.lang.annotation.Target;
  * @see Rest
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface RestService {
 }

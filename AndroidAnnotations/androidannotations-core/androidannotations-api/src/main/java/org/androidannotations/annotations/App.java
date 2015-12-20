@@ -42,6 +42,12 @@ import java.lang.annotation.Target;
  * 
  * 	&#064;App
  * 	MyApplication myApp;
+ * 
+ * 	&#064;App
+ * 	void methodInjection(MyApplication app) {
+ * 		// do stuff
+ * 	}
+ * 
  * }
  * </pre>
  * 
@@ -50,6 +56,6 @@ import java.lang.annotation.Target;
  * @see EApplication
  */
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface App {
 }

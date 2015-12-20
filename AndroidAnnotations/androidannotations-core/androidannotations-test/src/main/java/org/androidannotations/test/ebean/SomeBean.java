@@ -22,8 +22,19 @@ import android.content.Context;
 
 @EBean
 public class SomeBean {
-	
+
 	@RootContext
 	public Context context;
-	
+
+	Context methodInjectedContext;
+	Context multiInjectedContext;
+
+	@RootContext
+	void methodInjectedContext(Context methodInjectedContext) {
+		this.methodInjectedContext = methodInjectedContext;
+	}
+
+	void multiInjectedContext(@RootContext Context multiInjectedContext, @RootContext Context multiInjectedContext2) {
+		this.multiInjectedContext = multiInjectedContext;
+	}
 }
