@@ -117,7 +117,7 @@ public class InjectHelper<T extends GeneratedClassHolder> {
 				JVar fieldRef = targetBlock.decl(type, param.getSimpleName().toString(), getDefault(param.asType()));
 
 				handler.assignValue(targetBlock, fieldRef, holder, param, param);
-				parameterList.add(new ParamHelper(fieldRef, paramIndex));
+				parameterList.add(new ParamHelper(fieldRef, paramIndex, param));
 			}
 		}
 
@@ -131,6 +131,10 @@ public class InjectHelper<T extends GeneratedClassHolder> {
 				invocation.arg(parameter.beanInstance);
 			}
 			targetBlock.add(invocation);
+
+			if (handler instanceof MethodInjectionHandler.AfterAllParametersInjectedHandler<?>) {
+				((MethodInjectionHandler.AfterAllParametersInjectedHandler<T>) handler).afterAllParametersInjected(holder, method, parameterList);
+			}
 
 			methodParameterMap.remove(method);
 		}
@@ -187,13 +191,27 @@ public class InjectHelper<T extends GeneratedClassHolder> {
 		}
 	}
 
-	private static class ParamHelper implements Comparable<ParamHelper> {
+	public static class ParamHelper implements Comparable<ParamHelper> {
 		private final int argumentOrder;
+		private final Element parameterElement;
 		private final IJExpression beanInstance;
 
-		ParamHelper(IJExpression beanInstance, int argumentOrder) {
+		ParamHelper(IJExpression beanInstance, int argumentOrder, Element parameterElement) {
 			this.beanInstance = beanInstance;
 			this.argumentOrder = argumentOrder;
+			this.parameterElement = parameterElement;
+		}
+
+		public int getArgumentOrder() {
+			return argumentOrder;
+		}
+
+		public Element getParameterElement() {
+			return parameterElement;
+		}
+
+		public IJExpression getBeanInstance() {
+			return beanInstance;
 		}
 
 		@Override

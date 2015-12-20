@@ -21,9 +21,12 @@ import static com.helger.jcodemodel.JMod.FINAL;
 import static com.helger.jcodemodel.JMod.PUBLIC;
 import static com.helger.jcodemodel.JMod.STATIC;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.type.DeclaredType;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
@@ -34,8 +37,8 @@ import org.androidannotations.handler.MethodInjectionHandler;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.helper.InjectHelper;
-import org.androidannotations.holder.HasExtras;
-import org.androidannotations.holder.HasIntentBuilder;
+import org.androidannotations.holder.EActivityHolder;
+import org.androidannotations.internal.core.helper.IntentBuilder;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJAssignmentTarget;
@@ -46,9 +49,9 @@ import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JVar;
 
-public class ExtraHandler extends BaseAnnotationHandler<HasExtras>implements MethodInjectionHandler<HasExtras> {
+public class ExtraHandler extends BaseAnnotationHandler<EActivityHolder>implements MethodInjectionHandler<EActivityHolder>, MethodInjectionHandler.AfterAllParametersInjectedHandler<EActivityHolder> {
 
-	private final InjectHelper<HasExtras> injectHelper;
+	private final InjectHelper<EActivityHolder> injectHelper;
 
 	public ExtraHandler(AndroidAnnotationsEnvironment environment) {
 		super(Extra.class, environment);
@@ -71,41 +74,32 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras>implements Met
 	}
 
 	@Override
-	public void process(Element element, HasExtras holder) {
+	public void process(Element element, EActivityHolder holder) {
 		injectHelper.process(element, holder);
 	}
 
 	@Override
-	public JBlock getInvocationBlock(HasExtras holder) {
+	public JBlock getInvocationBlock(EActivityHolder holder) {
 		return holder.getInjectExtrasBlock();
 	}
 
-	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, HasExtras holder, Element element, Element param) {
-		Extra annotation = element.getAnnotation(Extra.class);
-		String extraKey = annotation.value();
+	@Override
+	public void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, EActivityHolder holder, Element element, Element param) {
 		String fieldName = element.getSimpleName().toString();
-		if (extraKey.isEmpty()) {
-			extraKey = fieldName;
+		String extraKey = extractExtraKey(element, fieldName);
+
+		TypeMirror actualType = codeModelHelper.getActualTypeOfEnclosingElementOfInjectedElement(holder, param);
+		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), actualType);
+
+		JFieldVar extraKeyStaticField = getOrCreateStaticExtraField(holder, extraKey, fieldName);
+		if (element.getKind() != ElementKind.PARAMETER) {
+			holder.getIntentBuilder().getPutExtraMethod(element, new IntentBuilder.IntentExtra(param.asType(), fieldName, extraKeyStaticField));
 		}
 
-		JFieldVar extraKeyStaticField = createStaticExtraField(holder, extraKey, fieldName);
-		if (holder instanceof HasIntentBuilder) {
-			String docComment = getProcessingEnvironment().getElementUtils().getDocComment(element);
-			createIntentInjectionMethod(param, (HasIntentBuilder) holder, extraKeyStaticField, fieldName, docComment);
-		}
+		AbstractJClass elementClass = codeModelHelper.typeMirrorToJClass(param.asType());
 
 		JMethod injectExtrasMethod = holder.getInjectExtrasMethod();
 		JVar extras = holder.getInjectExtras();
-
-		DeclaredType enclosingClassType;
-		if (param.getKind() == ElementKind.PARAMETER) {
-			enclosingClassType = (DeclaredType) param.getEnclosingElement().getEnclosingElement().asType();
-		} else {
-			enclosingClassType = (DeclaredType) param.getEnclosingElement().asType();
-		}
-		TypeMirror type = codeModelHelper.getActualType(param, enclosingClassType, holder);
-		AbstractJClass elementClass = codeModelHelper.typeMirrorToJClass(param.asType());
-		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), type);
 
 		IJExpression intent = invoke("getIntent");
 		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(elementClass, intent, extras, extraKeyStaticField, injectExtrasMethod);
@@ -119,16 +113,34 @@ public class ExtraHandler extends BaseAnnotationHandler<HasExtras>implements Met
 		validatorHelper.enclosingElementHasEActivity(element, valid);
 	}
 
-	private JFieldVar createStaticExtraField(HasExtras holder, String extraKey, String fieldName) {
+	@Override
+	public void afterAllParametersInjected(EActivityHolder holder, ExecutableElement method, List<InjectHelper.ParamHelper> parameterList) {
+		List<IntentBuilder.IntentExtra> params = new ArrayList<>();
+		for (InjectHelper.ParamHelper paramHelper : parameterList) {
+			Element param = paramHelper.getParameterElement();
+			String fieldName = param.getSimpleName().toString();
+			String extraKey = extractExtraKey(param, fieldName);
+			JFieldVar extraKeyStaticField = getOrCreateStaticExtraField(holder, extraKey, fieldName);
+			params.add(new IntentBuilder.IntentExtra(param.asType(), fieldName, extraKeyStaticField));
+		}
+		holder.getIntentBuilder().getPutExtraMethod(method, params);
+	}
+
+	private String extractExtraKey(Element element, String fieldName) {
+		Extra annotation = element.getAnnotation(Extra.class);
+		String extraKey = annotation.value();
+		if (extraKey.isEmpty()) {
+			extraKey = fieldName;
+		}
+		return extraKey;
+	}
+
+	private JFieldVar getOrCreateStaticExtraField(EActivityHolder holder, String extraKey, String fieldName) {
 		String staticFieldName = CaseHelper.camelCaseToUpperSnakeCase(null, fieldName, "Extra");
 		JFieldVar staticExtraField = holder.getGeneratedClass().fields().get(staticFieldName);
 		if (staticExtraField == null) {
 			staticExtraField = holder.getGeneratedClass().field(PUBLIC | STATIC | FINAL, getClasses().STRING, staticFieldName, lit(extraKey));
 		}
 		return staticExtraField;
-	}
-
-	private void createIntentInjectionMethod(Element element, HasIntentBuilder holder, JFieldVar extraKeyStaticField, String fieldName, String docComment) {
-		holder.getIntentBuilder().getPutExtraMethod(element.asType(), fieldName, extraKeyStaticField, docComment);
 	}
 }

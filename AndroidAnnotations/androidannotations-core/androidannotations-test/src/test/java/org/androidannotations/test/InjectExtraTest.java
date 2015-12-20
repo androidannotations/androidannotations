@@ -121,7 +121,7 @@ public class InjectExtraTest {
 
 	@Test
 	public void multiInjectedExtra() {
-		controller.withIntent(ExtraInjectedActivity_.intent(context).multiInjectedExtra("Hello!").get()).create();
+		controller.withIntent(ExtraInjectedActivity_.intent(context).multiInjectedExtra("Hello!", "World").get()).create();
 		assertThat(activity.multiInjectedExtra).isEqualTo("Hello!");
 	}
 }

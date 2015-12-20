@@ -62,7 +62,7 @@ public class FragmentArgsTest {
 
 	@Test
 	public void multiInjectedExtra() {
-		FragmentArguments fragment = FragmentArguments_.builder().multiInjectedExtra("Hello!").build();
+		FragmentArguments fragment = FragmentArguments_.builder().multiInjectedExtra("Hello!", "World!").build();
 		assertThat(fragment.methodInjectedExtra).isNull();
 		fragment.onCreate(null);
 		assertThat(fragment.multiInjectedExtra).isEqualTo("Hello!");

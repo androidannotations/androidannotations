@@ -15,9 +15,13 @@
  */
 package org.androidannotations.handler;
 
+import java.util.List;
+
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.ElementValidation;
+import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.GeneratedClassHolder;
 
 import com.helger.jcodemodel.IJAssignmentTarget;
@@ -29,4 +33,8 @@ public interface MethodInjectionHandler<T extends GeneratedClassHolder> {
 	void assignValue(JBlock targetBlock, IJAssignmentTarget fieldRef, T holder, Element element, Element param);
 
 	void validateEnclosingElement(Element element, ElementValidation valid);
+
+	interface AfterAllParametersInjectedHandler<T extends GeneratedClassHolder> {
+		void afterAllParametersInjected(T holder, ExecutableElement method, List<InjectHelper.ParamHelper> parameterList);
+	}
 }
