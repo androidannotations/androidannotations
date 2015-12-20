@@ -26,6 +26,7 @@ import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.handler.MethodInjectionHandler;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.helper.InjectHelper;
+import org.androidannotations.holder.FoundPreferenceHolder;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.rclass.IRClass;
 
@@ -81,7 +82,14 @@ public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences
 		JFieldRef idRef = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.STRING, true);
 		AbstractJClass preferenceClass = getJClass(typeQualifiedName);
 
-		targetBlock.add(fieldRef.assign(holder.getFoundPreferenceHolder(idRef, preferenceClass).getOrCastRef(preferenceClass)));
+		IJAssignmentTarget preferenceHolderTarget = null;
+		if (element.getKind() == ElementKind.FIELD) {
+			preferenceHolderTarget = fieldRef;
+		}
+		FoundPreferenceHolder preferenceHolder = holder.getFoundPreferenceHolder(idRef, preferenceClass, preferenceHolderTarget);
+		if (!preferenceHolder.getRef().equals(preferenceHolderTarget)) {
+			targetBlock.add(fieldRef.assign(preferenceHolder.getOrCastRef(preferenceClass)));
+		}
 	}
 
 	@Override

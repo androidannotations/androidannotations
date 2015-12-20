@@ -36,6 +36,7 @@ import org.androidannotations.annotations.Receiver.RegisterAt;
 import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JClassAlreadyExistsException;
 import com.helger.jcodemodel.JDefinedClass;
@@ -567,6 +568,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass) {
 		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass);
+	}
+
+	@Override
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass, IJAssignmentTarget fieldRef) {
+		return preferencesDelegate.getFoundPreferenceHolder(idRef, preferenceClass, fieldRef);
 	}
 
 	@Override

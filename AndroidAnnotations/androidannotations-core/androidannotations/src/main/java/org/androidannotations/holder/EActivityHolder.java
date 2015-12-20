@@ -40,6 +40,7 @@ import org.androidannotations.internal.core.helper.IntentBuilder;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.AbstractJType;
+import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JClassAlreadyExistsException;
@@ -743,6 +744,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 	@Override
 	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass) {
 		return preferencesHolder.getFoundPreferenceHolder(idRef, preferenceClass);
+	}
+
+	@Override
+	public FoundPreferenceHolder getFoundPreferenceHolder(JFieldRef idRef, AbstractJClass preferenceClass, IJAssignmentTarget fieldRef) {
+		return preferencesHolder.getFoundPreferenceHolder(idRef, preferenceClass, fieldRef);
 	}
 
 	@Override
