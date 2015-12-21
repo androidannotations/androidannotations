@@ -45,11 +45,11 @@ abstract class ContextCompatAwareResHandler extends AbstractResHandler {
 
 	@Override
 	protected IJExpression getInstanceInvocation(EComponentHolder holder, JFieldRef idRef, IJAssignmentTarget fieldRef, JBlock targetBlock) {
-		if (hasContextCompatInClasspath()) {
+		if (hasTargetMethodInContextCompat()) {
 			return getClasses().CONTEXT_COMPAT.staticInvoke(androidRes.getResourceMethodName()).arg(holder.getContextRef()).arg(idRef);
-		} else if (shouldUseContextMethod() && !hasContextCompatInClasspath()) {
+		} else if (shouldUseContextMethod()) {
 			return holder.getContextRef().invoke(androidRes.getResourceMethodName()).arg(idRef);
-		} else if (!shouldUseContextMethod() && hasTargetMethodInContext() && !hasContextCompatInClasspath()) {
+		} else if (!shouldUseContextMethod() && hasTargetMethodInContext()) {
 			return createCallWithIfGuard(holder, idRef, fieldRef, targetBlock);
 		} else {
 			return invoke(holder.getResourcesRef(), androidRes.getResourceMethodName()).arg(idRef);
@@ -66,6 +66,12 @@ abstract class ContextCompatAwareResHandler extends AbstractResHandler {
 		return hasTargetMethod(context, androidRes.getResourceMethodName());
 	}
 
+	private boolean hasTargetMethodInContextCompat() {
+		TypeElement contextCompat = getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT);
+
+		return hasTargetMethod(contextCompat, androidRes.getResourceMethodName());
+	}
+
 	private IJExpression createCallWithIfGuard(EComponentHolder holder, JFieldRef idRef, IJAssignmentTarget fieldRef, JBlock targetBlock) {
 		JVar resourcesRef = holder.getResourcesRef();
 		IJExpression buildVersionCondition = getClasses().BUILD_VERSION.staticRef("SDK_INT").gte(getClasses().BUILD_VERSION_CODES.staticRef(minSdkPlatformName));
@@ -75,9 +81,5 @@ abstract class ContextCompatAwareResHandler extends AbstractResHandler {
 		conditional._else().add(fieldRef.assign(resourcesRef.invoke(androidRes.getResourceMethodName()).arg(idRef)));
 
 		return null;
-	}
-
-	protected boolean hasContextCompatInClasspath() {
-		return getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.CONTEXT_COMPAT) != null;
 	}
 }

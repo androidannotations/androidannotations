@@ -86,4 +86,16 @@ public class ContextCompatColorTest extends AAProcessorTestHelper {
 		assertGeneratedClassContains(generatedFile, COLOR_CONDITIONAL_WITHOUT_CONTEXT_COMPAT);
 	}
 
+	@Test
+	public void activityCompilesWithOldContextCompat() throws Exception {
+		addManifestProcessorParameter(ContextCompatColorTest.class, "AndroidManifestForColorMinSdk23.xml");
+
+		CompileResult result = compileFiles(ActivityWithGetColorMethod.class,
+				toPath(FragmentByChildFragmentManagerTest.class, "support/old/ContextCompat.java"));
+		File generatedFile = toGeneratedFile(ActivityWithGetColorMethod.class);
+
+		assertCompilationSuccessful(result);
+		assertGeneratedClassMatches(generatedFile, COLOR_VIA_CONTEXT_ON_MARSHMALLOW);
+	}
+
 }
