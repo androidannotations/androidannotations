@@ -54,7 +54,7 @@ public class AndroidManifestFinderTest {
 	public static Iterable<Object[]> createTestData() {
 
 		Object[] gradleManifestFoundInManifests = { GRADLE_GEN_FOLDER, "build/intermediates/manifests/full/debug", true };
-		Object[] gradleManifestFoundInBundles = { GRADLE_GEN_FOLDER, "build/bundles/debug", true };
+		Object[] gradleManifestFoundInBundles = { GRADLE_GEN_FOLDER, "build/intermediates/bundles/debug", true };
 
 		Object[] mavenManifestFoundInTarget = { MAVEN_GEN_FOLDER, "target", true };
 		Object[] mavenManifestFoundInSrc = { MAVEN_GEN_FOLDER, "src/main", true };
