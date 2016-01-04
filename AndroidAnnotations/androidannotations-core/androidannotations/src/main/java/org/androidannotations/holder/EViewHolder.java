@@ -31,6 +31,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.helper.AnnotationHelper;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.JBlock;
@@ -58,8 +60,12 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
+	private boolean hasAfterViews;
+
 	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
+		AnnotationHelper annotationHelper = new AnnotationHelper(getEnvironment());
+		hasAfterViews = annotationHelper.hasAnnotationInEnclosedElement(annotatedElement, AfterViews.class);
 		addSuppressWarning();
 		createConstructorAndBuilder();
 	}
@@ -98,10 +104,14 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 				newInvocation.arg(JExpr.ref(paramName));
 			}
 
-			JVar newCall = staticHelper.body().decl(narrowedGeneratedClass, "instance", newInvocation);
-			staticHelper.body().invoke(newCall, getOnFinishInflate());
-			staticHelper.body()._return(newCall);
-			body.invoke(getInit());
+			if (hasAfterViews) {
+				JVar newCall = staticHelper.body().decl(narrowedGeneratedClass, "instance", newInvocation);
+				staticHelper.body().invoke(newCall, getOnFinishInflate());
+				staticHelper.body()._return(newCall);
+				body.invoke(getInit());
+			} else {
+				staticHelper.body()._return(newInvocation);
+			}
 		}
 	}
 
