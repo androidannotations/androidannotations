@@ -452,4 +452,14 @@ public class AnnotationHelper {
 		}
 		return false;
 	}
+
+	public boolean hasAnnotationInEnclosedElement(Element element, Class<? extends Annotation> validAnnotation) {
+		List<? extends Element> enclosedElements = element.getEnclosedElements();
+		for (Element enclosedElement : enclosedElements) {
+			if (enclosedElement.getAnnotation(validAnnotation) != null) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
