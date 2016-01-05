@@ -21,10 +21,6 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-    <application>
-        <activity android:name="org.androidannotations.eview.SomeView_"/>
-        <activity
-            android:name="org.androidannotations.eview.SomeViewWithAfterView_"/>
-    </application>
+    <application/>
 
 </manifest>
