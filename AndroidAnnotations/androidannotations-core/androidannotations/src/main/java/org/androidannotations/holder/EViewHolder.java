@@ -58,8 +58,11 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
+	private List<OnFinishInflateCallBlock> onFinishInflateCallBlock;
+
 	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
+		onFinishInflateCallBlock = new ArrayList<>();
 		addSuppressWarning();
 		createConstructorAndBuilder();
 	}
@@ -99,9 +102,9 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			}
 
 			JVar newCall = staticHelper.body().decl(narrowedGeneratedClass, "instance", newInvocation);
-			staticHelper.body().invoke(newCall, getOnFinishInflate());
+			OnFinishInflateCallBlock callBlock = new OnFinishInflateCallBlock(staticHelper.body().blockSimple(), body.blockSimple(), newCall);
 			staticHelper.body()._return(newCall);
-			body.invoke(getInit());
+			onFinishInflateCallBlock.add(callBlock);
 		}
 	}
 
@@ -158,5 +161,29 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 
 	private void setAlreadyInflated() {
 		alreadyInflated = generatedClass.field(PRIVATE, getCodeModel().BOOLEAN, "alreadyInflated" + generationSuffix(), JExpr.FALSE);
+	}
+
+	@Override
+	public JBlock getOnViewChangedBodyAfterInjectionBlock() {
+		JBlock onViewChangedBodyAfterInjectionBlock = super.getOnViewChangedBodyAfterInjectionBlock();
+
+		for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlock) {
+			callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInsanceVar, getOnFinishInflate());
+			callBlock.copyConstructorBodyBlock.invoke(getInit());
+		}
+
+		return onViewChangedBodyAfterInjectionBlock;
+	}
+
+	static class OnFinishInflateCallBlock {
+		JBlock buildAfterNewInstanceBlock;
+		JBlock copyConstructorBodyBlock;
+		JVar newInsanceVar;
+
+		OnFinishInflateCallBlock(JBlock buildAfterNewInstanceBlock, JBlock copyConstructorBodyBlock, JVar newInsanceVar) {
+			this.buildAfterNewInstanceBlock = buildAfterNewInstanceBlock;
+			this.copyConstructorBodyBlock = copyConstructorBodyBlock;
+			this.newInsanceVar = newInsanceVar;
+		}
 	}
 }
