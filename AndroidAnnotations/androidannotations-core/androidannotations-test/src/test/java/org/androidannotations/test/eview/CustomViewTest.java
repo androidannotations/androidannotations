@@ -32,7 +32,7 @@ public class CustomViewTest {
 	public void customViewWithoutAfterViewsDoesNotCallOnFinishInflate() {
 		Context context = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
 		CustomView customView = CustomView_.build(context);
-		assertThat(customView.isOnFinishInflateCall).isFalse();
+		assertThat(customView.onFinishInflateCalled).isFalse();
 	}
 
 	@Test

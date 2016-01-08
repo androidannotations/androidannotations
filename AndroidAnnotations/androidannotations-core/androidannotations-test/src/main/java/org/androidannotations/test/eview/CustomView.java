@@ -24,7 +24,7 @@ import android.view.View;
 @EView
 public class CustomView extends View {
 
-	public boolean isOnFinishInflateCall;
+	public boolean onFinishInflateCalled;
 
 	public CustomView(Context context) {
 		super(context);
@@ -42,6 +42,6 @@ public class CustomView extends View {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
-		isOnFinishInflateCall = true;
+		onFinishInflateCalled = true;
 	}
 }
