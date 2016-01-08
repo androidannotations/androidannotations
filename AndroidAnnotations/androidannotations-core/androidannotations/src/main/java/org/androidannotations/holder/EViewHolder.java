@@ -58,11 +58,10 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
-	private List<OnFinishInflateCallBlock> onFinishInflateCallBlock;
+	private List<OnFinishInflateCallBlock> onFinishInflateCallBlock = new ArrayList<>();
 
 	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
-		onFinishInflateCallBlock = new ArrayList<>();
 		addSuppressWarning();
 		createConstructorAndBuilder();
 	}
