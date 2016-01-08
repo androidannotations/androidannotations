@@ -58,6 +58,8 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
+	private JBlock onViewChangedBodyAfterInjectionBlock;
+
 	private List<OnFinishInflateCallBlock> onFinishInflateCallBlocks = new ArrayList<>();
 
 	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
@@ -164,13 +166,13 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 
 	@Override
 	public JBlock getOnViewChangedBodyAfterInjectionBlock() {
-		JBlock onViewChangedBodyAfterInjectionBlock = super.getOnViewChangedBodyAfterInjectionBlock();
-
-		for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
-			callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInsanceVar, getOnFinishInflate());
-			callBlock.copyConstructorBodyBlock.invoke(getInit());
+		if (onViewChangedBodyAfterInjectionBlock == null) {
+			onViewChangedBodyAfterInjectionBlock = super.getOnViewChangedBodyAfterInjectionBlock();
+			for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
+				callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInsanceVar, getOnFinishInflate());
+				callBlock.copyConstructorBodyBlock.invoke(getInit());
+			}
 		}
-
 		return onViewChangedBodyAfterInjectionBlock;
 	}
 
