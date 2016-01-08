@@ -103,7 +103,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			}
 
 			JVar newCall = staticHelper.body().decl(narrowedGeneratedClass, "instance", newInvocation);
-			OnFinishInflateCallBlock callBlock = new OnFinishInflateCallBlock(staticHelper.body().blockSimple(), body.blockSimple(), newCall);
+			OnFinishInflateCallBlock callBlock = new OnFinishInflateCallBlock(staticHelper.body().blockVirtual(), body.blockVirtual(), newCall);
 			staticHelper.body()._return(newCall);
 			onFinishInflateCallBlocks.add(callBlock);
 		}
