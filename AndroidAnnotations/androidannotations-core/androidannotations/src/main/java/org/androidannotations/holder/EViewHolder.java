@@ -169,7 +169,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 		if (onViewChangedBodyAfterInjectionBlock == null) {
 			onViewChangedBodyAfterInjectionBlock = super.getOnViewChangedBodyAfterInjectionBlock();
 			for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
-				callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInsanceVar, getOnFinishInflate());
+				callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInstanceVar, getOnFinishInflate());
 				callBlock.copyConstructorBodyBlock.invoke(getInit());
 			}
 		}
@@ -179,12 +179,12 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	static class OnFinishInflateCallBlock {
 		JBlock buildAfterNewInstanceBlock;
 		JBlock copyConstructorBodyBlock;
-		JVar newInsanceVar;
+		JVar newInstanceVar;
 
-		OnFinishInflateCallBlock(JBlock buildAfterNewInstanceBlock, JBlock copyConstructorBodyBlock, JVar newInsanceVar) {
+		OnFinishInflateCallBlock(JBlock buildAfterNewInstanceBlock, JBlock copyConstructorBodyBlock, JVar newInstanceVar) {
 			this.buildAfterNewInstanceBlock = buildAfterNewInstanceBlock;
 			this.copyConstructorBodyBlock = copyConstructorBodyBlock;
-			this.newInsanceVar = newInsanceVar;
+			this.newInstanceVar = newInstanceVar;
 		}
 	}
 }
