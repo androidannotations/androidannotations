@@ -58,7 +58,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
-	private List<OnFinishInflateCallBlock> onFinishInflateCallBlock = new ArrayList<>();
+	private List<OnFinishInflateCallBlock> onFinishInflateCallBlocks = new ArrayList<>();
 
 	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
@@ -103,7 +103,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			JVar newCall = staticHelper.body().decl(narrowedGeneratedClass, "instance", newInvocation);
 			OnFinishInflateCallBlock callBlock = new OnFinishInflateCallBlock(staticHelper.body().blockSimple(), body.blockSimple(), newCall);
 			staticHelper.body()._return(newCall);
-			onFinishInflateCallBlock.add(callBlock);
+			onFinishInflateCallBlocks.add(callBlock);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	public JBlock getOnViewChangedBodyAfterInjectionBlock() {
 		JBlock onViewChangedBodyAfterInjectionBlock = super.getOnViewChangedBodyAfterInjectionBlock();
 
-		for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlock) {
+		for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
 			callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInsanceVar, getOnFinishInflate());
 			callBlock.copyConstructorBodyBlock.invoke(getInit());
 		}
