@@ -42,4 +42,18 @@ public class CustomViewTest {
 		assertThat(customView.isOnFinishInflateCall).isTrue();
 	}
 
+	@Test
+	public void customViewWithViewsByIdInjectViewsAfterBuild() {
+		Context context = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
+		CustomViewWithViewsById customView = CustomViewWithViewsById_.build(context);
+		assertThat(customView.onFinishInflateCalled).isTrue();
+	}
+
+	@Test
+	public void customViewWithViewByIdInjectViewAfterBuild() {
+		Context context = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
+		CustomViewWithViewById customView = CustomViewWithViewById_.build(context);
+		assertThat(customView.onFinishInflateCalled).isTrue();
+	}
+
 }
