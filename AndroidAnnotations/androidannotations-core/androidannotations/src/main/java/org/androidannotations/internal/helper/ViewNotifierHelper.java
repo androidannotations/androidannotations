@@ -41,17 +41,22 @@ public class ViewNotifierHelper {
 		this.holder = holder;
 	}
 
+	private JFieldVar getNotifier() {
+		if (notifier == null) {
+			AbstractJClass notifierClass = holder.getEnvironment().getJClass(OnViewChangedNotifier.class);
+			notifier = holder.getGeneratedClass().field(PRIVATE | FINAL, notifierClass, "onViewChangedNotifier" + generationSuffix(), _new(notifierClass));
+			holder.getGeneratedClass()._implements(HasViews.class);
+		}
+		return notifier;
+	}
+
 	public void invokeViewChanged(JBlock block) {
-		block.invoke(notifier, "notifyViewChanged").arg(_this());
+		block.invoke(getNotifier(), "notifyViewChanged").arg(_this());
 	}
 
 	public JVar replacePreviousNotifier(JBlock block) {
 		AbstractJClass notifierClass = holder.getEnvironment().getJClass(OnViewChangedNotifier.class);
-		if (notifier == null) {
-			notifier = holder.getGeneratedClass().field(PRIVATE | FINAL, notifierClass, "onViewChangedNotifier" + generationSuffix(), _new(notifierClass));
-			holder.getGeneratedClass()._implements(HasViews.class);
-		}
-		return block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(notifier));
+		return block.decl(notifierClass, "previousNotifier", notifierClass.staticInvoke("replaceNotifier").arg(getNotifier()));
 	}
 
 	public JVar replacePreviousNotifierWithNull(JBlock block) {
@@ -65,10 +70,11 @@ public class ViewNotifierHelper {
 	}
 
 	public void wrapInitWithNotifier() {
-		JBlock initBlock = holder.getInit().body();
+		JBlock initBlock = holder.getInitBodyInjectionBlock();
 		JVar previousNotifier = replacePreviousNotifier(initBlock);
-		((EViewHolder) holder).setInitBody(holder.getInit().body().blockSimple());
-		resetPreviousNotifier(initBlock.blockSimple(), previousNotifier);
+		JBlock block = holder.getInit().body().blockSimple();
+		((EViewHolder) holder).setInitBody(block);
+		resetPreviousNotifier(block, previousNotifier);
 	}
 
 }

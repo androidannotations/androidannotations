@@ -58,8 +58,6 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
-	private JBlock onViewChangedBodyAfterInjectionBlock;
-
 	private List<OnFinishInflateCallBlock> onFinishInflateCallBlocks = new ArrayList<>();
 
 	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
@@ -103,9 +101,10 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			}
 
 			JVar newCall = staticHelper.body().decl(narrowedGeneratedClass, "instance", newInvocation);
-			OnFinishInflateCallBlock callBlock = new OnFinishInflateCallBlock(staticHelper.body().blockVirtual(), body.blockVirtual(), newCall);
-			staticHelper.body()._return(newCall);
+			OnFinishInflateCallBlock callBlock = new OnFinishInflateCallBlock(staticHelper.body().blockVirtual(), newCall);
 			onFinishInflateCallBlocks.add(callBlock);
+			staticHelper.body()._return(newCall);
+			body.invoke(getInit());
 		}
 	}
 
@@ -117,7 +116,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	@Override
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
-		viewNotifierHelper.wrapInitWithNotifier();
+		setInitBody(init.body().blockSimple());
 	}
 
 	@Override
@@ -170,7 +169,6 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			onViewChangedBodyAfterInjectionBlock = super.getOnViewChangedBodyAfterInjectionBlock();
 			for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
 				callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInstanceVar, getOnFinishInflate());
-				callBlock.copyConstructorBodyBlock.invoke(getInit());
 			}
 		}
 		return onViewChangedBodyAfterInjectionBlock;
@@ -178,12 +176,10 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 
 	static class OnFinishInflateCallBlock {
 		JBlock buildAfterNewInstanceBlock;
-		JBlock copyConstructorBodyBlock;
 		JVar newInstanceVar;
 
-		OnFinishInflateCallBlock(JBlock buildAfterNewInstanceBlock, JBlock copyConstructorBodyBlock, JVar newInstanceVar) {
+		OnFinishInflateCallBlock(JBlock buildAfterNewInstanceBlock, JVar newInstanceVar) {
 			this.buildAfterNewInstanceBlock = buildAfterNewInstanceBlock;
-			this.copyConstructorBodyBlock = copyConstructorBodyBlock;
 			this.newInstanceVar = newInstanceVar;
 		}
 	}
