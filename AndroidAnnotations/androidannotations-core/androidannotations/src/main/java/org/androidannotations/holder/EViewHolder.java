@@ -131,7 +131,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 		this.initBody = initBody;
 	}
 
-	public JMethod getOnFinishInflate() {
+	private JMethod getOnFinishInflate() {
 		if (onFinishInflate == null) {
 			setOnFinishInflate();
 		}
@@ -164,14 +164,14 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	}
 
 	@Override
-	public JBlock getOnViewChangedBodyAfterInjectionBlock() {
-		if (onViewChangedBodyAfterInjectionBlock == null) {
-			onViewChangedBodyAfterInjectionBlock = super.getOnViewChangedBodyAfterInjectionBlock();
-			for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
-				callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInstanceVar, getOnFinishInflate());
-			}
+	protected void setOnViewChanged() {
+		viewNotifierHelper.wrapInitWithNotifier();
+
+		super.setOnViewChanged();
+
+		for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
+			callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInstanceVar, getOnFinishInflate());
 		}
-		return onViewChangedBodyAfterInjectionBlock;
 	}
 
 	static class OnFinishInflateCallBlock {
