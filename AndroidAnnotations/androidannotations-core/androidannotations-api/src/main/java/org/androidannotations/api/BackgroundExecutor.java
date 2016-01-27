@@ -158,7 +158,7 @@ public final class BackgroundExecutor {
 	 *             {@link #setExecutor(Executor)} has been called with such an
 	 *             executor)
 	 */
-	public static void execute(final Runnable runnable, String id, int delay, String serial) {
+	public static void execute(final Runnable runnable, String id, long delay, String serial) {
 		execute(new Task(id, delay, serial) {
 			@Override
 			public void execute() {
@@ -180,7 +180,7 @@ public final class BackgroundExecutor {
 	 *             {@link #setExecutor(Executor)} has been called with such an
 	 *             executor)
 	 */
-	public static void execute(Runnable runnable, int delay) {
+	public static void execute(Runnable runnable, long delay) {
 		directExecute(runnable, delay);
 	}
 
@@ -198,7 +198,7 @@ public final class BackgroundExecutor {
 	 * Execute a task after all tasks added with the same non-null
 	 * <code>serial</code> (if any) have completed execution.
 	 * 
-	 * Equivalent to {@link #execute(Runnable, String, int, String)
+	 * Equivalent to {@link #execute(Runnable, String, long, String)
 	 * execute(runnable, id, 0, serial)}.
 	 * 
 	 * @param runnable
@@ -380,7 +380,7 @@ public final class BackgroundExecutor {
 		 */
 		private AtomicBoolean managed = new AtomicBoolean();
 
-		public Task(String id, int delay, String serial) {
+		public Task(String id, long delay, String serial) {
 			if (!"".equals(id)) {
 				this.id = id;
 			}

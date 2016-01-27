@@ -191,7 +191,7 @@ public @interface Background {
 	 *
 	 * @return the delay of the execution
 	 */
-	int delay() default 0;
+	long delay() default 0;
 
 	/**
 	 * Serial execution group.

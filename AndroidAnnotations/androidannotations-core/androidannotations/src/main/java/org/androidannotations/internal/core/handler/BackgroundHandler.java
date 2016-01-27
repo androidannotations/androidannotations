@@ -70,7 +70,7 @@ public class BackgroundHandler extends AbstractRunnableHandler {
 
 		Background annotation = element.getAnnotation(Background.class);
 		String id = annotation.id();
-		int delay = annotation.delay();
+		long delay = annotation.delay();
 		String serial = annotation.serial();
 
 		AbstractJClass backgroundExecutorClass = getJClass(BackgroundExecutor.class);
