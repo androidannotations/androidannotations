@@ -93,7 +93,7 @@ public final class BackgroundExecutor {
 	 *             if the current executor set by {@link #setExecutor(Executor)}
 	 *             does not support scheduling
 	 */
-	private static Future<?> directExecute(Runnable runnable, int delay) {
+	private static Future<?> directExecute(Runnable runnable, long delay) {
 		Future<?> future = null;
 		if (delay > 0) {
 			/* no serial, but a delay: schedule the task */
@@ -360,7 +360,7 @@ public final class BackgroundExecutor {
 	public static abstract class Task implements Runnable {
 
 		private String id;
-		private int remainingDelay;
+		private long remainingDelay;
 		private long targetTimeMillis; /* since epoch */
 		private String serial;
 		private boolean executionAsked;
@@ -426,7 +426,7 @@ public final class BackgroundExecutor {
 					if (next != null) {
 						if (next.remainingDelay != 0) {
 							/* the delay may not have elapsed yet */
-							next.remainingDelay = Math.max(0, (int) (targetTimeMillis - System.currentTimeMillis()));
+							next.remainingDelay = Math.max(0L, targetTimeMillis - System.currentTimeMillis());
 						}
 						/* a task having the same serial was queued, execute it */
 						BackgroundExecutor.execute(next);
