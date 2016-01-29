@@ -1,4 +1,5 @@
 # Fast Android Development. Easy maintenance.
+[![Badge](http://www.libtastic.com/static/osbadges/261.png)](http://www.libtastic.com/technology/261/)
 
 [![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/Home) 
 
