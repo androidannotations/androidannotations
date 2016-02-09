@@ -56,6 +56,11 @@ public abstract class IntentBuilder<I extends IntentBuilder<I>> extends Builder 
 		return (I) this;
 	}
 
+	public I type(String type) {
+		intent.setType(type);
+		return (I) this;
+	}
+
 	public I extra(String name, boolean value) {
 		intent.putExtra(name, value);
 		return (I) this;
