@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -53,6 +54,21 @@ public abstract class IntentBuilder<I extends IntentBuilder<I>> extends Builder 
 
 	public I action(String action) {
 		intent.setAction(action);
+		return (I) this;
+	}
+
+	public I type(String type) {
+		intent.setType(type);
+		return (I) this;
+	}
+
+	public I category(String category) {
+		intent.addCategory(category);
+		return (I) this;
+	}
+
+	public I data(Uri data) {
+		intent.setData(data);
 		return (I) this;
 	}
 
