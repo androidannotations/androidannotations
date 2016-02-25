@@ -362,6 +362,10 @@ public class APTCodeModelHelper {
 			superCall.arg(param);
 		}
 
+		if (superMethod.hasVarArgs()) {
+			superCall.arg(superMethod.varParam());
+		}
+
 		return superCall;
 	}
 
