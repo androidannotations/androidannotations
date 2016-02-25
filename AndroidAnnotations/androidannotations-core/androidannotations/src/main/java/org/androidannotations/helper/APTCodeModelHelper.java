@@ -309,7 +309,7 @@ public class APTCodeModelHelper {
 	private void addParamToMethod(JMethod method, VariableElement parameter, int mod, Map<String, TypeMirror> actualTypes, boolean varParam) {
 		String parameterName = parameter.getSimpleName().toString();
 		AbstractJClass parameterClass = typeMirrorToJClass(parameter.asType(), actualTypes);
-		JVar param = varParam ? method.varParam(parameterClass.elementType(), parameterName) : method.param(mod, parameterClass, parameterName);
+		JVar param = varParam ? method.varParam(mod, parameterClass.elementType(), parameterName) : method.param(mod, parameterClass, parameterName);
 		copyNonAAAnnotations(param, parameter.getAnnotationMirrors());
 	}
 
@@ -360,6 +360,10 @@ public class APTCodeModelHelper {
 
 		for (JVar param : superMethod.params()) {
 			superCall.arg(param);
+		}
+
+		if (superMethod.hasVarArgs()) {
+			superCall.arg(superMethod.varParam());
 		}
 
 		return superCall;
