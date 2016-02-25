@@ -36,6 +36,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.Option;
 import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.internal.exception.AndroidManifestNotFoundException;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
@@ -259,7 +260,12 @@ public class AndroidManifestFinder {
 			Node applicationNode = applicationNodes.item(0);
 			Node nameAttribute = applicationNode.getAttributes().getNamedItem("android:name");
 
-			applicationClassQualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
+			if (!hasInstantRunApplication(nameAttribute)) {
+				applicationClassQualifiedName = manifestNameToValidQualifiedName(applicationPackage, nameAttribute);
+			} else {
+				Node plainNameAttribute = applicationNode.getAttributes().getNamedItem("name");
+				applicationClassQualifiedName = manifestNameToValidQualifiedName(applicationPackage, plainNameAttribute);
+			}
 
 			if (applicationClassQualifiedName == null) {
 				if (nameAttribute != null) {
@@ -390,6 +396,10 @@ public class AndroidManifestFinder {
 			usesPermissionQualifiedNames.add(nameAttribute.getNodeValue());
 		}
 		return usesPermissionQualifiedNames;
+	}
+
+	private boolean hasInstantRunApplication(Node nameAttribute) {
+		return nameAttribute != null && CanonicalNameConstants.INSTANT_RUN_APPLICATION.equals(nameAttribute.getNodeValue());
 	}
 
 }

@@ -141,6 +141,7 @@ public final class CanonicalNameConstants {
 	public static final String APPCOMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
 	public static final String VIEW_PAGER = "android.support.v4.view.ViewPager";
 	public static final String PAGE_CHANGE_LISTENER = "android.support.v4.view.ViewPager.OnPageChangeListener";
+	public static final String INSTANT_RUN_APPLICATION = "com.android.tools.fd.runtime.BootstrapApplication";
 
 	/*
 	 * Android permission
