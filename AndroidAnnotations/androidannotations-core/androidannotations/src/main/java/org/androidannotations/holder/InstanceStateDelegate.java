@@ -82,14 +82,10 @@ public class InstanceStateDelegate extends GeneratedClassHolderDelegate<ECompone
 	private void setRestoreStateMethod() {
 		restoreStateMethod = getGeneratedClass().method(PRIVATE, codeModel().VOID, "restoreSavedInstanceState" + generationSuffix());
 		restoreStateBundleParam = restoreStateMethod.param(getClasses().BUNDLE, "savedInstanceState");
-		getInit().body().invoke(restoreStateMethod).arg(restoreStateBundleParam);
+		holder.getInitBodyInjectionBlock().invoke(restoreStateMethod).arg(restoreStateBundleParam);
 
 		restoreStateMethod.body() //
 				._if(ref("savedInstanceState").eq(_null())) //
 				._then()._return();
-	}
-
-	public JMethod getInit() {
-		return holder.getInit();
 	}
 }
