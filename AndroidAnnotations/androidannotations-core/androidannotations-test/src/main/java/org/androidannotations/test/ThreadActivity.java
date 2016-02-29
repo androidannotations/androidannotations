@@ -34,6 +34,9 @@ import android.os.Bundle;
 @EActivity
 public class ThreadActivity extends Activity {
 
+	public static final long SERIAL_DELAY = 1000L;
+	public boolean calledDelayed = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -150,5 +153,16 @@ public class ThreadActivity extends Activity {
 	@UiThread
 	void uiThreadThrowException() {
 		throw new RuntimeException();
+	}
+
+	@Background(serial = "foo")
+	protected void callDelayedSerial(Runnable callback) {
+		delayedSerial(System.currentTimeMillis(), callback);
+	}
+
+	@Background(serial = "foo", id = "delayedTask", delay = SERIAL_DELAY)
+	protected void delayedSerial(final long execTime, Runnable callback) {
+		calledDelayed = System.currentTimeMillis() - execTime >= SERIAL_DELAY;
+		callback.run();
 	}
 }

@@ -364,6 +364,22 @@ public class ThreadActivityTest {
 		Assert.assertTrue("Exception should have been caught in the DefaultUncaughtExceptionHandler during @Background call.", propagatedExceptionToGlobalExceptionHandler);
 	}
 
+	@Test
+	public void testDelayedSerial() {
+		BackgroundExecutor.setExecutor(Executors.newScheduledThreadPool(1));
+
+		final Object LOCK = new Object();
+		activity.callDelayedSerial(new Runnable() {
+			@Override
+			public void run() {
+				LOCK.notify();
+			}
+		});
+		Assert.assertFalse(activity.calledDelayed);
+		waitOn(LOCK, ThreadActivity.SERIAL_DELAY * 2);
+		Assert.assertTrue(activity.calledDelayed);
+	}
+
 	/**
 	 * Call wait() on the given object with the specified timeout. Avoid
 	 * boilerplate code like synchronized or try..catch.
