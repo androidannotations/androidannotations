@@ -426,7 +426,7 @@ public final class BackgroundExecutor {
 					if (next != null) {
 						if (next.remainingDelay != 0) {
 							/* the delay may not have elapsed yet */
-							next.remainingDelay = Math.max(0L, targetTimeMillis - System.currentTimeMillis());
+							next.remainingDelay = Math.max(0L, next.targetTimeMillis - System.currentTimeMillis());
 						}
 						/* a task having the same serial was queued, execute it */
 						BackgroundExecutor.execute(next);
