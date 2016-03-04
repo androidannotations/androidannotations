@@ -131,7 +131,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 
 			if (extraParamClass.equals(getClasses().CONTEXT)) {
 				callActionInvocation.arg(holder.getOnReceiveContext());
-			} else if (extraParamClass.equals(getClasses().INTENT)) {
+			} else if (extraParamClass.equals(getClasses().INTENT) && param.getAnnotation(ReceiverAction.Extra.class) == null) {
 				callActionInvocation.arg(intent);
 			} else if (param.getAnnotation(ReceiverAction.Extra.class) != null) {
 				if (extras == null) {
