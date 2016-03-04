@@ -19,6 +19,8 @@ import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.ReceiverAction;
 import org.androidannotations.api.support.content.AbstractBroadcastReceiver;
 
+import android.content.Intent;
+
 @EReceiver
 public class ReceiverWithActions extends AbstractBroadcastReceiver {
 
@@ -28,6 +30,7 @@ public class ReceiverWithActions extends AbstractBroadcastReceiver {
 	public static final String ACTION_MULTIPLE_TEST_1 = "ACTION_MULTIPLE_TEST_1";
 	public static final String ACTION_MULTIPLE_TEST_2 = "ACTION_MULTIPLE_TEST_2";
 	public static final String ACTION_EXTRA_PARAMETER_TEST = "ACTION_EXTRA_PARAMETER_TEST";
+	public static final String ACTION_EXTRA_INTENT_PARAMETERS_TEST = "ACTION_EXTRA_INTENT_PARAMETERS_TEST";
 	public static final String EXTRA_ARG_NAME1 = "thisExtraHasAnotherName";
 	public static final String EXTRA_ARG_NAME2 = "thisIsMyParameter";
 	public static final String DATA_SCHEME = "http";
@@ -42,6 +45,9 @@ public class ReceiverWithActions extends AbstractBroadcastReceiver {
 	public String extraParameterActionValue = null;
 
 	public int multipleActionCall = 0;
+
+	public Intent originalIntent;
+	public Intent extraIntent;
 
 	@ReceiverAction(actions = ACTION_SIMPLE_TEST)
 	public void onSimpleAction() {
@@ -68,5 +74,11 @@ public class ReceiverWithActions extends AbstractBroadcastReceiver {
 	@ReceiverAction(actions = { ACTION_MULTIPLE_TEST_1, ACTION_MULTIPLE_TEST_2 })
 	public void onMultipleActions() {
 		multipleActionCall++;
+	}
+
+	@ReceiverAction(actions = ACTION_EXTRA_INTENT_PARAMETERS_TEST)
+	public void onIntentParametersAction(Intent originalIntent, @ReceiverAction.Extra Intent extraIntent) {
+		this.originalIntent = originalIntent;
+		this.extraIntent = extraIntent;
 	}
 }

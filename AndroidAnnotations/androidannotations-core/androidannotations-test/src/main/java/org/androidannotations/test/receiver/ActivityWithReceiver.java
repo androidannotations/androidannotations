@@ -33,6 +33,9 @@ public class ActivityWithReceiver extends Activity {
 
 	public String wifiSsid = null;
 
+	Intent originalIntent;
+	Intent extraIntent;
+
 	@Receiver(actions = WifiManager.NETWORK_STATE_CHANGED_ACTION, registerAt = Receiver.RegisterAt.OnResumeOnPause)
 	protected void onWifiStateChanged(Intent intent, @Receiver.Extra(WifiManager.EXTRA_BSSID) String ssid) {
 		wifiChangeIntentReceived = true;
@@ -57,5 +60,11 @@ public class ActivityWithReceiver extends Activity {
 		} else if (action.equals("org.androidannotations.ACTION_2")) {
 			action2Fired = true;
 		}
+	}
+
+	@Receiver(actions = "org.androidannotations.ACTION_1")
+	protected void onBroadcastWithExtras(Intent originalIntent, @Receiver.Extra Intent extraIntent) {
+		this.originalIntent = originalIntent;
+		this.extraIntent = extraIntent;
 	}
 }

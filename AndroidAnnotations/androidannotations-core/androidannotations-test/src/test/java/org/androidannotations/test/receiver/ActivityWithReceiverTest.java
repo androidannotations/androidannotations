@@ -15,6 +15,7 @@
  */
 package org.androidannotations.test.receiver;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -89,6 +90,18 @@ public class ActivityWithReceiverTest {
 		activity.sendBroadcast(intent2);
 		assertTrue(activity.action1Fired);
 		assertTrue(activity.action2Fired);
+	}
+
+	@Test
+	public void onBroadcastWithExtrasTest() {
+		Intent intent = new Intent("org.androidannotations.ACTION_1");
+		Intent extraIntent = new Intent("someAction");
+		intent.putExtra("extraIntent", extraIntent);
+
+		activity.sendBroadcast(intent);
+
+		assertEquals(intent, activity.originalIntent);
+		assertEquals(extraIntent, activity.extraIntent);
 	}
 
 }

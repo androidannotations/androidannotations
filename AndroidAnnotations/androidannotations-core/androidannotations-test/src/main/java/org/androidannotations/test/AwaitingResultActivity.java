@@ -31,6 +31,7 @@ public class AwaitingResultActivity extends Activity {
 	static final int SECOND_REQUEST = 22;
 	static final int THIRD_REQUEST = 33;
 	static final int FORTH_REQUEST = 44;
+	static final int FIFTH_REQUEST = 55;
 	boolean onResultCalled = false;
 	boolean onResultWithDataCalled = false;
 	boolean onActivityResultWithResultCodeAndDataCalled = false;
@@ -38,6 +39,8 @@ public class AwaitingResultActivity extends Activity {
 	boolean onResultWithIntResultCodeCalled = false;
 	boolean onResultWithIntegerResultCodeCalled = false;
 	boolean onResultWithResultExtraCodeCalled = false;
+	Intent originalIntent;
+	Intent extraIntent;
 
 	@OnActivityResult(FIRST_REQUEST)
 	void onResult() {
@@ -77,4 +80,10 @@ public class AwaitingResultActivity extends Activity {
 	}
 
 	// CHECKSTYLE:ON
+
+	@OnActivityResult(FIFTH_REQUEST)
+	void onResultWithIntentExtras(Intent originalIntent, @OnActivityResult.Extra Intent extraIntent) {
+		this.originalIntent = originalIntent;
+		this.extraIntent = extraIntent;
+	}
 }

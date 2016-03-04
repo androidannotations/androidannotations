@@ -21,6 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import android.content.Intent;
+
 @RunWith(RobolectricTestRunner.class)
 public class AwaitingResultActivityTest {
 
@@ -91,5 +93,19 @@ public class AwaitingResultActivityTest {
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithResultExtraCodeCalled).isTrue();
+	}
+
+	@Test
+	public void onResultWithIntentExtrasPassed() {
+		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
+
+		Intent intent = new Intent();
+		Intent extraIntent = new Intent("someAction");
+		intent.putExtra("extraIntent", extraIntent);
+
+		activity.onActivityResult(AwaitingResultActivity.FIFTH_REQUEST, 0, intent);
+
+		assertThat(activity.originalIntent).isEqualTo(intent);
+		assertThat(activity.extraIntent).isEqualTo(extraIntent);
 	}
 }

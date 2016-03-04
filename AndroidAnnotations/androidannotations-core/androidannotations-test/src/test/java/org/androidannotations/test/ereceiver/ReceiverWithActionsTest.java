@@ -85,4 +85,16 @@ public class ReceiverWithActionsTest {
 		receiver.onReceive(Robolectric.application, intent);
 		assertEquals(2, receiver.multipleActionCall);
 	}
+
+	@Test
+	public void onIntentParametersActionTest() {
+		Intent intent = new Intent(ReceiverWithActions.ACTION_EXTRA_INTENT_PARAMETERS_TEST);
+		Intent extraIntent = new Intent("someAction");
+		intent.putExtra("extraIntent", extraIntent);
+
+		receiver.onReceive(Robolectric.application, intent);
+
+		assertEquals(intent, receiver.originalIntent);
+		assertEquals(extraIntent, receiver.extraIntent);
+	}
 }
