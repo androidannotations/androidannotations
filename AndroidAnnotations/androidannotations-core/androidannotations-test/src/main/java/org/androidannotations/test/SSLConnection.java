@@ -21,6 +21,7 @@ import org.apache.http.client.HttpClient;
 
 import android.app.Activity;
 
+@SuppressWarnings("deprecation")
 @EActivity
 public class SSLConnection extends Activity {
 
