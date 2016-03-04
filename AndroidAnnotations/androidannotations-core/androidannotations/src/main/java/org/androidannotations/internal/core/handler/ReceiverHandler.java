@@ -119,7 +119,7 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 
 			if (extraParamClass.equals(getClasses().CONTEXT)) {
 				methodCall.arg(contextVar);
-			} else if (extraParamClass.equals(getClasses().INTENT)) {
+			} else if (extraParamClass.equals(getClasses().INTENT) && param.getAnnotation(Receiver.Extra.class) == null) {
 				methodCall.arg(intentVar);
 			} else if (param.getAnnotation(Receiver.Extra.class) != null) {
 				if (extras == null) {

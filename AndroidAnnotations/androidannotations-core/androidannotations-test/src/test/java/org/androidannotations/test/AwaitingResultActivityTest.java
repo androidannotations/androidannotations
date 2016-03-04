@@ -17,17 +17,26 @@ package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+
+import android.content.Intent;
 
 @RunWith(RobolectricTestRunner.class)
 public class AwaitingResultActivityTest {
 
+	private AwaitingResultActivity_ activity;
+
+	@Before
+	public void setUp() {
+		activity = Robolectric.setupActivity(AwaitingResultActivity_.class);
+	}
+
 	@Test
 	public void onlyFirstRequestAnnotatedMethodAreCalled() {
-		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
-
 		activity.onActivityResult(AwaitingResultActivity.FIRST_REQUEST, 0, null);
 
 		assertThat(activity.onResultCalled).isTrue();
@@ -43,8 +52,6 @@ public class AwaitingResultActivityTest {
 
 	@Test
 	public void onlySecondRequestAnnotatedMethodAreCalled() {
-		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
-
 		activity.onActivityResult(AwaitingResultActivity.SECOND_REQUEST, 0,
 				null);
 
@@ -61,8 +68,6 @@ public class AwaitingResultActivityTest {
 
 	@Test
 	public void onlyThirdRequestAnnotatedMethodAreCalled() {
-		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
-
 		activity.onActivityResult(AwaitingResultActivity.THIRD_REQUEST, 0, null);
 
 		assertThat(activity.onResultCalled).isFalse();
@@ -78,8 +83,6 @@ public class AwaitingResultActivityTest {
 
 	@Test
 	public void onlyForthRequestAnnotatedMethodAreCalled() {
-		AwaitingResultActivity_ activity = new AwaitingResultActivity_();
-
 		activity.onActivityResult(AwaitingResultActivity.FORTH_REQUEST, 0, null);
 
 		assertThat(activity.onResultCalled).isFalse();
@@ -91,5 +94,17 @@ public class AwaitingResultActivityTest {
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithResultExtraCodeCalled).isTrue();
+	}
+
+	@Test
+	public void onResultWithIntentExtrasPassed() {
+		Intent intent = new Intent();
+		Intent extraIntent = new Intent("someAction");
+		intent.putExtra("extraIntent", extraIntent);
+
+		activity.onActivityResult(AwaitingResultActivity.FIFTH_REQUEST, 0, intent);
+
+		assertThat(activity.originalIntent).isEqualTo(intent);
+		assertThat(activity.extraIntent).isEqualTo(extraIntent);
 	}
 }
