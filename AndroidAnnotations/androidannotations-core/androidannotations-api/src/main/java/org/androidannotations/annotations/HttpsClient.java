@@ -85,9 +85,12 @@ import java.lang.annotation.Target;
  * </pre>
  * 
  * </blockquote>
+ *
+ * @deprecated See https://developer.android.com/about/versions/marshmallow/android-6.0-changes.html#behavior-apache-http-client
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
+@Deprecated
 public @interface HttpsClient {
 
 	/**
