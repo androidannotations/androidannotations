@@ -62,13 +62,13 @@ public class ActivityWithReceiverTest {
 
 	@Test
 	public void onDataShemeHttpTest() {
-		Intent intentFtp = new Intent("CUSTOM_HTTP_ACTION");
+		Intent intentFtp = new Intent(ActivityWithReceiver.CUSTOM_HTTP_ACTION);
 		intentFtp.setData(Uri.parse("ftp://androidannotations.org"));
 		activity.sendBroadcast(intentFtp);
 
 		assertFalse(activity.dataSchemeHttpIntentReceived);
 
-		Intent intentHttp = new Intent("CUSTOM_HTTP_ACTION");
+		Intent intentHttp = new Intent(ActivityWithReceiver.CUSTOM_HTTP_ACTION);
 		intentHttp.setData(Uri.parse("http://androidannotations.org"));
 		activity.sendBroadcast(intentHttp);
 
@@ -77,8 +77,8 @@ public class ActivityWithReceiverTest {
 
 	@Test
 	public void onBroadcastWithTwoActionsTest() {
-		Intent intent1 = new Intent("org.androidannotations.ACTION_1");
-		Intent intent2 = new Intent("org.androidannotations.ACTION_2");
+		Intent intent1 = new Intent(ActivityWithReceiver.ACTION_1);
+		Intent intent2 = new Intent(ActivityWithReceiver.ACTION_2);
 
 		assertFalse(activity.action1Fired);
 		assertFalse(activity.action2Fired);
@@ -94,7 +94,7 @@ public class ActivityWithReceiverTest {
 
 	@Test
 	public void onBroadcastWithExtrasTest() {
-		Intent intent = new Intent("org.androidannotations.ACTION_1");
+		Intent intent = new Intent(ActivityWithReceiver.ACTION_1);
 		Intent extraIntent = new Intent("someAction");
 		intent.putExtra("extraIntent", extraIntent);
 
