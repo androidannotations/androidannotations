@@ -1,7 +1,7 @@
 package org.androidannotations.roboguiceexample;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.RoboGuice;
+import org.androidannotations.roboguice.annotations.RoboGuice;
 
 import android.app.Activity;
 

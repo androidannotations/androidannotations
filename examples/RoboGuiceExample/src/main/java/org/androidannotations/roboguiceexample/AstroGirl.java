@@ -2,9 +2,10 @@ package org.androidannotations.roboguiceexample;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.RoboGuice;
+
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.roboguiceexample.R;
+import org.androidannotations.roboguice.annotations.RoboGuice;
+
 import android.app.Activity;
 import android.widget.EditText;
 import com.google.inject.Inject;

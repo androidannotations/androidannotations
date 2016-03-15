@@ -27,10 +27,10 @@ dependencies {
 apt {
     arguments {
         androidManifestFile variant.outputs[0].processResources.manifestFile
-		// if you have multiple outputs (when using splits), you may want to have other index than 0
+        // if you have multiple outputs (when using splits), you may want to have other index than 0
 
-        // If you're using flavors you should use the following line instead of hard-coded packageName
-        // resourcePackageName android.defaultConfig.packageName
+        // If you are using different applicationId than your manifest package name, add the manifest package name here
+        // resourcePackageName "org.androidannotations.sample"
 
         // You can set optional annotation processing options here, like these commented options:
         // logLevel 'INFO'

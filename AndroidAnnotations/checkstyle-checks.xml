@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2010-2015 eBusiness Information, Excilys Group
+    Copyright (C) 2010-2016 eBusiness Information, Excilys Group
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,15 @@
 		<property name="tabWidth" value="4" />
 		<module name="FileContentsHolder" />
 		<module name="SuppressWarningsHolder" />
+		<module name="LineLength">
+            <property name="max" value="200"/>
+        </module>
+        <module name="IllegalInstantiation" />
+        <module name="OneTopLevelClass" />
 		<module name="AnnotationUseStyle" />
+		<module name="AnnotationLocation" >
+			<property name="allowSamelineSingleParameterlessAnnotation" value="false" />
+		</module>
 		<module name="ClassTypeParameterName" />
 		<module name="ConstantName" />
 		<module name="LocalVariableName" />
@@ -39,10 +47,13 @@
 		<module name="MissingOverride" />
 		<module name="AvoidStarImport" />
 		<module name="IllegalImport" />
-		<!-- unfortunetaly could not synchronize with eclipse -->
-		<!-- <module name="ImportOrder"> <property name="separated" value="true"/> 
-			<property name="groups" value="java,javax,/com\..*/,/org\..*/,android"/> 
-			<property name="option" value="top"/> </module> -->
+		<module name="ImportOrder">
+			<property name="groups" value="/^javax?\./,org"/>
+			<property name="ordered" value="true"/>
+			<property name="separated" value="true"/>
+			<property name="option" value="top"/>
+			<property name="sortStaticImportsAlphabetically" value="true"/>
+		</module>
 		<module name="RedundantImport" />
 		<module name="UnusedImports" />
 
@@ -71,13 +82,17 @@
 			<property name="allowInSwitchCase" value="true" />
 		</module>
 		<module name="LeftCurly">
-			<property name="maxLineLength" value="130" />
+			<property name="maxLineLength" value="200" />
 		</module>
 		<module name="NeedBraces" />
 		<module name="RightCurly" />
 		<module name="CovariantEquals" />
 		<module name="DefaultComesLast" />
 		<module name="EmptyStatement" />
+        <module name="EmptyCatchBlock" />
+        <module name="EmptyBlock" >
+            <property name="option" value="text"/>
+        </module>
 		<module name="EqualsHashCode" />
 		<module name="FallThrough" />
 		<module name="IllegalThrows" />
@@ -86,7 +101,7 @@
 				value="java.util.GregorianCalendar, java.util.Hashtable, java.util.HashSet, java.util.HashMap, java.util.LinkedList, java.util.LinkedHashMap, java.util.LinkedHashSet, java.util.TreeSet, java.util.TreeMap, java.util.Vector" />
 		</module>
 		<module name="InnerAssignment" />
-		<module name="JUnitTestCase" />
+<!-- 		<module name="JUnitTestCase" /> -->
 		<module name="ModifiedControlVariable" />
 		<module name="MultipleVariableDeclarations" />
 		<module name="NestedForDepth">
@@ -106,6 +121,7 @@
 		<module name="UnnecessaryParentheses" />
 		<module name="OneStatementPerLine" />
 		<module name="HideUtilityClassConstructor" />
+		<module name="FinalClass" />
 		<module name="InterfaceIsType" />
 		<module name="MutableException" />
 		<module name="ThrowsCount">
@@ -117,6 +133,7 @@
 		<module name="ArrayTypeStyle" />
 		<module name="Indentation">
 			<property name="caseIndent" value="0" />
+			<property name="lineWrappingIndentation" value="2" />
 		</module>
 
 		<module name="RegexpSinglelineJava">
@@ -133,8 +150,18 @@
         <!-- <module name="JavadocMethod" /> -->
 		<module name="JavadocVariable" />
 		<module name="JavadocStyle" />
+		<!-- github.com/checkstyle/checkstyle/issues/1064 -->
+        <!-- <module name="JavadocTagContinuationIndentation" /> -->
+        <!-- <module name="AtclauseOrder" /> -->
+        <!-- <module name="NonEmptyAtclauseDescription" /> -->
+        <!-- <module name="SingleLineJavadoc" /> -->
+		<module name="CommentsIndentation" />
 	</module>
 	<module name="FileLength" />
 	<module name="SuppressionCommentFilter" />
 	<module name="SuppressWarningsFilter" />
+	<module name="SuppressionFilter">
+        <property name="file" value="${checkstyle.suppressions.file}"/>
+    </module>
+	<module name="NewlineAtEndOfFile"/>
 </module>

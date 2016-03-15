@@ -1,0 +1,10 @@
+gen
+target
+.apt_generated
+.project
+.classpath
+tmp
+bin
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.m2e.core.prefs
+.settings/org.eclipse.jdt.ui.prefs
