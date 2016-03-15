@@ -30,7 +30,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 @EActivity(R.layout.my_activity)
 public class MyActivity extends Activity {
@@ -55,13 +54,6 @@ public class MyActivity extends Activity {
 
 	@SystemService
 	WindowManager windowManager;
-
-	/**
-	 * AndroidAnnotations gracefully handles support for onBackPressed, whether you use ECLAIR (2.0), or pre ECLAIR android version.
-	 */
-	public void onBackPressed() {
-		Toast.makeText(this, "Back key pressed!", Toast.LENGTH_SHORT).show();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
