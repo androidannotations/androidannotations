@@ -27,7 +27,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>4.0-SNAPSHOT</version>
+	<version>4.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
