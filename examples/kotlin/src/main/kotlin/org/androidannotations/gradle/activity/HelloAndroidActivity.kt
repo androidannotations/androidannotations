@@ -15,18 +15,18 @@ import java.util.Date
 open public class HelloAndroidActivity : Activity() {
 
     @StringRes
-    lateinit var hello: String
+    protected lateinit var hello: String
 
     @ViewById
-    lateinit var helloTextView: TextView
+    protected lateinit var helloTextView: TextView
 
     @AfterViews
-    fun afterViews(): Unit {
+    protected fun afterViews(): Unit {
         computeDateBackground()
     }
 
     @Background
-    open fun computeDateBackground(): Unit {
+    protected open fun computeDateBackground(): Unit {
         val now = Date()
         val helloMessage = String.format(hello, now.toString())
 
@@ -34,7 +34,7 @@ open public class HelloAndroidActivity : Activity() {
     }
 
     @UiThread
-    open fun updateHelloTextView(helloMessage: String): Unit {
+    protected open fun updateHelloTextView(helloMessage: String): Unit {
         helloTextView.text = helloMessage
     }
 }
