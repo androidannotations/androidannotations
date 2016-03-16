@@ -13,10 +13,10 @@ jdk:
 
 android:
   components:
-    - android-22
-    - build-tools-22.0.1
-  licenses:
-    - android-sdk-license-5be876d5
+    - platform-tools
+    - tools
+    - android-23
+    - build-tools-23.0.2
 
 before_script:
   - export TERM=dumb

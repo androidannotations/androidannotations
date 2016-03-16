@@ -16,12 +16,14 @@ import org.androidannotations.annotations.res.BooleanRes;
 import org.androidannotations.annotations.res.ColorRes;
 import org.androidannotations.annotations.res.StringRes;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -91,11 +93,18 @@ public class MyActivity extends Activity {
 		textView.setTextColor(color);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@UiThread(delay = 2000)
 	void showNotificationsDelayed() {
-		Notification notification = new Notification(R.drawable.icon, "Hello !", 0);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
-		notification.setLatestEventInfo(getApplicationContext(), "My notification", "Hello World!", contentIntent);
+
+		Notification notification = new Notification.Builder(this)
+				.setSmallIcon(R.drawable.icon)
+				.setContentTitle("My notification")
+				.setContentText("Hello, World!")
+				.setContentIntent(contentIntent)
+				.getNotification();
+
 		notificationManager.notify(1, notification);
 	}
 
