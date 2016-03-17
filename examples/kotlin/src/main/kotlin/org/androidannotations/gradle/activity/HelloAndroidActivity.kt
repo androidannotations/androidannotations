@@ -21,12 +21,12 @@ open public class HelloAndroidActivity : Activity() {
     protected lateinit var helloTextView: TextView
 
     @AfterViews
-    protected fun afterViews(): Unit {
+    protected fun afterViews() {
         computeDateBackground()
     }
 
     @Background
-    protected open fun computeDateBackground(): Unit {
+    protected open fun computeDateBackground() {
         val now = Date()
         val helloMessage = String.format(hello, now.toString())
 
@@ -34,7 +34,7 @@ open public class HelloAndroidActivity : Activity() {
     }
 
     @UiThread
-    protected open fun updateHelloTextView(helloMessage: String): Unit {
+    protected open fun updateHelloTextView(helloMessage: String) {
         helloTextView.text = helloMessage
     }
 }
