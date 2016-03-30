@@ -23,6 +23,7 @@ import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.LogHelper;
 import org.androidannotations.holder.EComponentHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
@@ -34,6 +35,8 @@ import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JTryBlock;
 import com.helger.jcodemodel.JVar;
+
+import static org.androidannotations.helper.LogHelper.trimLogTagToSize;
 
 public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder> {
 
@@ -102,7 +105,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JInvocation errorInvoke = catchBody.staticInvoke(getClasses().LOG, "e");
 
-		errorInvoke.arg(holder.getGeneratedClass().name());
+		errorInvoke.arg(trimLogTagToSize(holder.getGeneratedClass().name()));
 		errorInvoke.arg("Error in transaction");
 		errorInvoke.arg(exceptionParam);
 
