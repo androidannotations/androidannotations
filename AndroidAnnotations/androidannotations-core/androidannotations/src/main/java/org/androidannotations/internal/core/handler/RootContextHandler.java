@@ -82,7 +82,8 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder>implem
 			cond._then().add(fieldRef.assign(cast(extendingContextClass, holder.getContextRef())));
 
 			JInvocation warningInvoke = getClasses().LOG.staticInvoke("w");
-			warningInvoke.arg(holder.getGeneratedClass().name());
+			String generatedClassName = holder.getGeneratedClass().name();
+			warningInvoke.arg(generatedClassName.substring(0, Math.min(generatedClassName.length(), 23)));
 			warningInvoke.arg(lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName"))
 					.plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated")));
 			cond._else().add(warningInvoke);
