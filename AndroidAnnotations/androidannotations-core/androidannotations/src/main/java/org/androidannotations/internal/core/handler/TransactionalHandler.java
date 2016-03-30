@@ -23,7 +23,6 @@ import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.Transactional;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.helper.CanonicalNameConstants;
-import org.androidannotations.helper.LogHelper;
 import org.androidannotations.holder.EComponentHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
