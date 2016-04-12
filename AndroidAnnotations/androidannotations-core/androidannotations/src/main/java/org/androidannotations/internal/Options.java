@@ -25,6 +25,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import org.androidannotations.Option;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.BaseGeneratedClassHolder;
+import org.androidannotations.internal.generation.CodeModelGenerator;
 import org.androidannotations.internal.helper.AndroidManifestFinder;
 import org.androidannotations.internal.rclass.ProjectRClassFinder;
 import org.androidannotations.logger.LoggerContext;
@@ -46,6 +47,7 @@ public class Options {
 		addSupportedOption(LoggerContext.OPTION_LOG_APPENDER_CONSOLE);
 		addSupportedOption(LoggerContext.OPTION_LOG_APPENDER_FILE);
 		addSupportedOption(BaseGeneratedClassHolder.OPTION_GENERATE_FINAL_CLASSES);
+		addSupportedOption(CodeModelGenerator.OPTION_ENCODING);
 	}
 
 	public void addAllSupportedOptions(List<Option> options) {
