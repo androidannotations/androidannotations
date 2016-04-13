@@ -17,6 +17,7 @@ package org.androidannotations.internal.generation;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
@@ -44,8 +45,8 @@ public class SourceCodeWriter extends AbstractCodeWriter {
 		}
 	}
 
-	public SourceCodeWriter(Filer filer, OriginatingElements originatingElements) {
-		super(null);
+	public SourceCodeWriter(Filer filer, OriginatingElements originatingElements, Charset charset) {
+		super(charset);
 		this.filer = filer;
 		this.originatingElements = originatingElements;
 	}
