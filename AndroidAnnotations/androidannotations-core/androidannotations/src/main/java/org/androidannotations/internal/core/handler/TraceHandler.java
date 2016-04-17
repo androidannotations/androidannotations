@@ -48,12 +48,20 @@ import com.helger.jcodemodel.JVar;
 
 public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public TraceHandler(AndroidAnnotationsEnvironment environment) {
+	private boolean enabled;
+
+	public TraceHandler(AndroidAnnotationsEnvironment environment, boolean enabled) {
 		super(Trace.class, environment);
+		this.enabled = enabled;
 	}
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
+		if (!enabled) {
+			return;
+		}
+
+
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
@@ -63,6 +71,10 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
+		if (!enabled) {
+			return;
+		}
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		String tag = extractTag(executableElement);

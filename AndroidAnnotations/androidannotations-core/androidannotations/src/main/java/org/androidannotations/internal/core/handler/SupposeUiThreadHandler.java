@@ -31,12 +31,16 @@ public class SupposeUiThreadHandler extends SupposeThreadHandler {
 
 	private static final String METHOD_CHECK_UI_THREAD = "checkUiThread";
 
-	public SupposeUiThreadHandler(AndroidAnnotationsEnvironment environment) {
-		super(SupposeUiThread.class, environment);
+	public SupposeUiThreadHandler(AndroidAnnotationsEnvironment environment, boolean enabled) {
+		super(SupposeUiThread.class, environment, enabled);
 	}
 
 	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
+		if (!enabled) {
+			return;
+		}
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);

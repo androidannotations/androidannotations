@@ -34,12 +34,16 @@ public class SupposeBackgroundHandler extends SupposeThreadHandler {
 
 	private static final String METHOD_CHECK_BG_THREAD = "checkBgThread";
 
-	public SupposeBackgroundHandler(AndroidAnnotationsEnvironment environment) {
-		super(SupposeBackground.class, environment);
+	public SupposeBackgroundHandler(AndroidAnnotationsEnvironment environment, boolean enabled) {
+		super(SupposeBackground.class, environment, enabled);
 	}
 
 	@Override
 	public void process(Element element, EComponentHolder holder) throws Exception {
+		if (!enabled) {
+			return;
+		}
+
 		ExecutableElement executableElement = (ExecutableElement) element;
 
 		JMethod delegatingMethod = codeModelHelper.overrideAnnotatedMethod(executableElement, holder);
