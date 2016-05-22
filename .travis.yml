@@ -20,7 +20,7 @@ android:
     - tools # https://github.com/travis-ci/travis-ci/issues/6059
     - platform-tools
     - android-23
-    - build-tools-23.0.2
+    - build-tools-23.0.3
 
 before_script:
   - export TERM=dumb
