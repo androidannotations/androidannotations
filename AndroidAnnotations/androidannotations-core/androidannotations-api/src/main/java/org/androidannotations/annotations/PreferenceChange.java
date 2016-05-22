@@ -95,7 +95,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface PreferenceChange {
 
+	/**
+	 * The R.string.* fields which refer to the Preferences.
+	 * @return the keys of the Preferences
+	 */
 	int[] value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource names which refer to the Preferences.
+	 * @return the keys of the Preferences
+	 */
 	String[] resName() default "";
 }

@@ -77,7 +77,15 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface PreferenceByKey {
 
+	/**
+	 * The R.string.* field which refers to the injected Preference.
+	 * @return the key of the Preference
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the injected Preference.
+	 * @return the key of the Preference
+	 */
 	String resName() default "";
 }

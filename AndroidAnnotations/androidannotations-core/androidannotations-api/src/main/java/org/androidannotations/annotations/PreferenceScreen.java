@@ -64,7 +64,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface PreferenceScreen {
 
+	/**
+	 * The R.xml.* field which refers to the Preference Screen.
+	 * @return the identifier of the Preference Screen
+	 */
 	int value() default ResId.DEFAULT_VALUE;
 
+	/**
+	 * The resource name which refers to the Preference Screen.
+	 * @return the identifier of the Preference Screen
+	 */
 	String resName() default "";
 }

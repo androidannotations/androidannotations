@@ -368,7 +368,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>6.10.1</version>
+						<version>6.18</version>
 						<exclusions>
 							<exclusion>
 								<groupId>com.sun</groupId>
