@@ -1,9 +1,12 @@
 sudo: false
 
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
   directories:
-  - $HOME/.gradle
-  - $HOME/.m2
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.m2
 
 language: android
 
@@ -13,8 +16,9 @@ jdk:
 
 android:
   components:
-    - platform-tools
     - tools
+    - tools # https://github.com/travis-ci/travis-ci/issues/6059
+    - platform-tools
     - android-23
     - build-tools-23.0.2
 
