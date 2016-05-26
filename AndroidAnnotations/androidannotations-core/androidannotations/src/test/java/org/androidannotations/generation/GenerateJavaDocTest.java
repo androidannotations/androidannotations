@@ -81,7 +81,6 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 				"     * The Age!", //
 				"     *  @return the age as int", //
 				"     *  @deprecated use {@link #ageLong()}", //
-				"     * ", //
 				"     */", //
 				"    public IntPrefField age() {", //
 		};
@@ -89,7 +88,6 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 				"         * The Age!", //
 				"         *  @return the age as int", //
 				"         *  @deprecated use {@link #ageLong()}", //
-				"         * ", //
 				"         */", //
 				"        public IntPrefEditorField<SharedPrefWithJavaDoc_.SharedPrefWithJavaDocEditor_> age() {", //
 		};

@@ -33,7 +33,7 @@
 		<main.basedir>${project.parent.parent.basedir}</main.basedir>
 		<android-rome-version>1.0.0-r2</android-rome-version>
 		<checkstyle.excludes>**/R.java,**/BuildConfig.java,</checkstyle.excludes>
-		<parceler.version>1.0.3</parceler.version>
+		<parceler.version>1.1.4</parceler.version>
 	</properties>
 
 	<dependencies>

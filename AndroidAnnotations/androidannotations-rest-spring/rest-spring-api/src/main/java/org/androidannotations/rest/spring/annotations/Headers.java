@@ -47,5 +47,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface Headers {
+
+	/**
+	 * The set of added HTTP headers.
+	 *
+	 * @return the headers
+	 */
 	Header[] value();
 }

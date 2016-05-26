@@ -167,7 +167,7 @@
 			<dependency>
 				<groupId>com.helger</groupId>
 				<artifactId>jcodemodel</artifactId>
-				<version>2.8.0</version>
+				<version>2.8.5</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -215,7 +215,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>1.10.8</version>
+				<version>1.10.19</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -227,7 +227,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5.2</version>
+					<version>2.5.3</version>
 					<configuration>
 						<mavenExecutorId>forked-path</mavenExecutorId>
 					</configuration>
@@ -235,7 +235,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
+					<version>3.5.1</version>
 					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
@@ -244,7 +244,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.7</version>
+					<version>3.0.0</version>
 					<configuration>
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
@@ -271,8 +271,9 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.4</version>
+					<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -282,7 +283,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.16</version>
+					<version>2.17</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -297,7 +298,7 @@
 				<plugin>
 					<groupId>com.simpligility.maven.plugins</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>4.3.0</version>
+					<version>4.4.1</version>
 					<configuration>
 						<sdk>
 							<platform>16</platform>
@@ -367,7 +368,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>6.10.1</version>
+						<version>6.18</version>
 						<exclusions>
 							<exclusion>
 								<groupId>com.sun</groupId>
