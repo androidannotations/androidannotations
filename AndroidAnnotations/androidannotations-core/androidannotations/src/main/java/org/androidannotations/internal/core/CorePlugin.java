@@ -219,9 +219,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new PreferenceClickHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AfterPreferencesHandler(androidAnnotationEnv));
 
-		if (androidAnnotationEnv.getOptionBooleanValue(OPTION_TRACE)) {
-			annotationHandlers.add(new TraceHandler(androidAnnotationEnv));
-		}
+		annotationHandlers.add(new TraceHandler(androidAnnotationEnv, androidAnnotationEnv.getOptionBooleanValue(OPTION_TRACE)));
 
 		/*
 		 * WakeLockHandler must be after TraceHandler but before UiThreadHandler
@@ -240,10 +238,8 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		 * SupposeUiThreadHandler and SupposeBackgroundHandler must be after all
 		 * handlers that modifies generated method body
 		 */
-		if (androidAnnotationEnv.getOptionBooleanValue(OPTION_THREAD_CONTROL)) {
-			annotationHandlers.add(new SupposeUiThreadHandler(androidAnnotationEnv));
-			annotationHandlers.add(new SupposeBackgroundHandler(androidAnnotationEnv));
-		}
+		annotationHandlers.add(new SupposeUiThreadHandler(androidAnnotationEnv, androidAnnotationEnv.getOptionBooleanValue(OPTION_THREAD_CONTROL)));
+		annotationHandlers.add(new SupposeBackgroundHandler(androidAnnotationEnv, androidAnnotationEnv.getOptionBooleanValue(OPTION_THREAD_CONTROL)));
 
 		return annotationHandlers;
 	}

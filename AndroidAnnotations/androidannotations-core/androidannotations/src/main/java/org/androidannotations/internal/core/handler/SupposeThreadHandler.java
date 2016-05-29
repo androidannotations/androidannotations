@@ -24,12 +24,19 @@ import org.androidannotations.holder.EComponentHolder;
 
 public abstract class SupposeThreadHandler extends BaseAnnotationHandler<EComponentHolder> {
 
-	public SupposeThreadHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
+	boolean enabled;
+
+	public SupposeThreadHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment, boolean enabled) {
 		super(targetClass, environment);
+		this.enabled = enabled;
 	}
 
 	@Override
 	protected void validate(Element element, ElementValidation valid) {
+		if (!enabled) {
+			return;
+		}
+
 		validatorHelper.enclosingElementHasEnhancedComponentAnnotation(element, valid);
 		validatorHelper.isNotPrivate(element, valid);
 		validatorHelper.isNotFinal(element, valid);
