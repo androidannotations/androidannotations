@@ -27,4 +27,6 @@ public interface AnnotationHandler<T extends GeneratedClassHolder> {
 	ElementValidation validate(Element element);
 
 	void process(Element element, T holder) throws Exception;
+
+	boolean isEnabled();
 }
