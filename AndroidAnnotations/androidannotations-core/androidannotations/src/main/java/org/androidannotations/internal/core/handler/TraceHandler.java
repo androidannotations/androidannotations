@@ -30,6 +30,7 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.Option;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
@@ -48,8 +49,15 @@ import com.helger.jcodemodel.JVar;
 
 public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
+	public static final Option OPTION_TRACE = new Option("trace", "false");
+
 	public TraceHandler(AndroidAnnotationsEnvironment environment) {
 		super(Trace.class, environment);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return getEnvironment().getOptionBooleanValue(OPTION_TRACE);
 	}
 
 	@Override
