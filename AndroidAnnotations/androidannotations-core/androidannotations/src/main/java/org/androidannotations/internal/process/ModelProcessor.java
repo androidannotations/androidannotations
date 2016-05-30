@@ -79,6 +79,9 @@ public class ModelProcessor {
 		LOGGER.info("Processing enclosed elements");
 
 		for (AnnotationHandler annotationHandler : environment.getDecoratingHandlers()) {
+			if (!annotationHandler.isEnabled()) {
+				continue;
+			}
 			String annotationName = annotationHandler.getTarget();
 
 			/*
@@ -167,6 +170,9 @@ public class ModelProcessor {
 	private boolean generateElements(AnnotationElements validatedModel, ProcessHolder processHolder) throws Exception {
 		boolean isElementRemaining = false;
 		for (GeneratingAnnotationHandler generatingAnnotationHandler : environment.getGeneratingHandlers()) {
+			if (!generatingAnnotationHandler.isEnabled()) {
+				continue;
+			}
 			String annotationName = generatingAnnotationHandler.getTarget();
 			Set<? extends Element> annotatedElements = validatedModel.getRootAnnotatedElements(annotationName);
 
