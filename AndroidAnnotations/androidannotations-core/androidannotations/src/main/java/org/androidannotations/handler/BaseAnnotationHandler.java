@@ -66,6 +66,10 @@ public abstract class BaseAnnotationHandler<T extends GeneratedClassHolder> impl
 		return validation;
 	}
 
+	public boolean isEnabled() {
+		return true;
+	}
+
 	protected abstract void validate(Element element, ElementValidation validation);
 
 	protected AndroidAnnotationsEnvironment getEnvironment() {
