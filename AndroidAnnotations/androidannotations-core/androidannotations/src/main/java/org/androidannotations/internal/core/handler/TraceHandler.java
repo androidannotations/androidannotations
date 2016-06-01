@@ -84,7 +84,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		JBlock methodBody = method.body();
 
 		JInvocation isLoggableInvocation = getClasses().LOG.staticInvoke("isLoggable");
-		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, getClasses().LOG));
+		isLoggableInvocation.arg(tag).arg(logLevelFromInt(level, getClasses().LOG));
 
 		JConditional ifStatement = methodBody._if(isLoggableInvocation);
 
