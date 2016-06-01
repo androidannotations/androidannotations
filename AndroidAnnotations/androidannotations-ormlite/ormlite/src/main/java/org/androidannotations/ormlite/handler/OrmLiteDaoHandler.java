@@ -17,6 +17,7 @@ package org.androidannotations.ormlite.handler;
 
 import static com.helger.jcodemodel.JExpr._new;
 import static com.helger.jcodemodel.JExpr.cast;
+import static org.androidannotations.helper.LogHelper.logTagForClassHolder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -108,7 +109,7 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder>im
 		String fieldName = param.getSimpleName().toString();
 		catchBlock.body() //
 				.staticInvoke(getClasses().LOG, "e") //
-				.arg(holder.getGeneratedClass().name()) //
+				.arg(logTagForClassHolder(holder))//
 				.arg("Could not create DAO " + fieldName) //
 				.arg(exception);
 	}
