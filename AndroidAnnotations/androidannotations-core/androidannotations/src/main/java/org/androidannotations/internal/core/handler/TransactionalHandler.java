@@ -35,6 +35,8 @@ import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JTryBlock;
 import com.helger.jcodemodel.JVar;
 
+import static org.androidannotations.helper.LogHelper.trimLogTagToSize;
+
 public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder> {
 
 	public TransactionalHandler(AndroidAnnotationsEnvironment environment) {
@@ -102,7 +104,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JInvocation errorInvoke = catchBody.staticInvoke(getClasses().LOG, "e");
 
-		errorInvoke.arg(holder.getGeneratedClass().name());
+		errorInvoke.arg(trimLogTagToSize(holder.getGeneratedClass().name()));
 		errorInvoke.arg("Error in transaction");
 		errorInvoke.arg(exceptionParam);
 
