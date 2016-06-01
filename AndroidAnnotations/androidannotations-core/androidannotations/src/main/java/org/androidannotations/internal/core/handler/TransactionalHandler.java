@@ -15,6 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
+import static org.androidannotations.helper.LogHelper.logTagForClassHolder;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
@@ -102,7 +104,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JInvocation errorInvoke = catchBody.staticInvoke(getClasses().LOG, "e");
 
-		errorInvoke.arg(holder.getGeneratedClass().name());
+		errorInvoke.arg(logTagForClassHolder(holder));
 		errorInvoke.arg("Error in transaction");
 		errorInvoke.arg(exceptionParam);
 
