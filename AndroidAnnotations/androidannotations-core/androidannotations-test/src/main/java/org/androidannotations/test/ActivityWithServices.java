@@ -97,6 +97,10 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// CaptioningManager captioningManager;
 
+	// TODO API 23
+	// @SystemService
+	// CarrierConfigManager carrierConfigManager;
+
 	@SystemService
 	android.content.ClipboardManager contentClipboardManager;
 
@@ -129,8 +133,9 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// EthernetManager ethernetManager; // hidden API
 
+	// TODO API 23
 	// @SystemService
-	// FingerprintManager fingerprintManager; // hidden API
+	// FingerprintManager fingerprintManager;
 
 	// @SystemService
 	// HdmiControlManager hdmiControlManager; // hidden API
@@ -169,6 +174,10 @@ public class ActivityWithServices extends Activity {
 	// TODO API 21
 	// @SystemService
 	// MediaSessionManager mediaSessionManager;
+
+	// TODO API 23
+	// @SystemService
+	// MidiManager midiManager;
 	
 	// @SystemService
 	// NetworkScoreManager networkScoreManager; // hidden API
@@ -179,8 +188,9 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// NetworkPolicyManager networkPolicyManager; // hidden API
 
+	// TODO API 23
 	// @SystemService
-	// NetworkStatsService networkStatsService; // hidden API
+	// NetworkStatsManager networkStatsManager;
 
 	@SystemService
 	NfcManager nfcManager;
@@ -240,6 +250,9 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// ThrottleManager throttleManager; // hidden API
 
+	// @SystemService
+	// TrustManager trustManager; // hidden API
+
 	// TODO API 21
 	// @SystemService
 	// TvInputManager tvInputManager;
@@ -275,6 +288,9 @@ public class ActivityWithServices extends Activity {
 
 	@SystemService
 	WifiP2pManager wifiP2pManager;
+
+	// @SystemService
+	// RttManager rttManager; // hidden API
 
 	@SystemService
 	WindowManager windowManager;

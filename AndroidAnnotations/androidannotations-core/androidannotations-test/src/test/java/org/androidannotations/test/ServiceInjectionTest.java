@@ -49,6 +49,7 @@ public class ServiceInjectionTest {
 		// assertThat(activity.bluetoothManager).isNotNull(); // TODO API 18
 		// assertThat(activity.cameraManager).isNotNull(); // hidden API
 		// assertThat(activity.captioningManager).isNotNull(); // TODO API 19
+		// assertThat(activity.carrierConfigManager).isNotNull(); // TODO API 23
 		assertThat(activity.contentClipboardManager).isNotNull();
 		assertThat(activity.textClipboardManager).isNotNull();
 		assertThat(activity.connectivityManager).isNotNull();
@@ -59,7 +60,7 @@ public class ServiceInjectionTest {
 		assertThat(activity.downloadManager).isNotNull();
 		assertThat(activity.dropBoxManager).isNotNull();
 		// assertThat(activity.ethernetManager).isNotNull(); // hidden API
-		// assertThat(activity.fingerprintManager).isNotNull(); // hidden API
+		// assertThat(activity.fingerprintManager).isNotNull(); // TODO API 23
 		// assertThat(activity.hdmiControlManager).isNotNull(); // hidden API
 		// assertThat(activity.inputManager).isNotNull(); // TODO no support yet in Robolectric
 		assertThat(activity.inputMethodManager).isNotNull();
@@ -71,10 +72,11 @@ public class ServiceInjectionTest {
 		// assertThat(activity.mediaProjectionManager).isNotNull(); // TODO API 21
 		assertThat(activity.mediaRouter).isNotNull();
 		// assertThat(activity.mediaSessionManager).isNotNull(); // TODO API 21
+		// assertThat(activity.midiManager).isNotNull(); // TODO API 23
 		// assertThat(activity.networkScoreManager).isNotNull(); // hidden API
 		// assertThat(activity.networkManagementService).isNotNull(); // hidden API
 		// assertThat(activity.networkPolicyManager).isNotNull(); // hidden API
-		// assertThat(activity.networkStatsService).isNotNull(); // hidden API
+		// assertThat(activity.networkStatsManager).isNotNull(); // TODO API 23
 		// assertThat(activity.nfcManager).isNotNull(); // TODO no support yet in Robolectric
 		assertThat(activity.notificationManager).isNotNull();
 		// assertThat(activity.nsdManager).isNotNull(); // TODO no support yet in Robolectric
@@ -93,6 +95,7 @@ public class ServiceInjectionTest {
 		assertThat(activity.telephonyManager).isNotNull();
 		assertThat(activity.textServicesManager).isNotNull();
 		// assertThat(activity.throttleManager).isNotNull(); // hidden API
+		// assertThat(activity.trustManager).isNotNull(); // hidden API
 		// assertThat(activity.tvInputManager).isNotNull(); // TODO API 21
 		assertThat(activity.uiModeManager).isNotNull();
 		// assertThat(activity.updateLock).isNotNull(); // hidden API
@@ -104,6 +107,7 @@ public class ServiceInjectionTest {
 		assertThat(activity.wifiManager).isNotNull();
 		// assertThat(activity.wifiPasspointManager).isNotNull(); // hidden API
 		// assertThat(activity.wifiP2pManager).isNotNull(); // TODO no support yet in Robolectric
+		// assertThat(activity.rttManager).isNotNull(); // hidden API
 		assertThat(activity.windowManager).isNotNull();
 	}
 

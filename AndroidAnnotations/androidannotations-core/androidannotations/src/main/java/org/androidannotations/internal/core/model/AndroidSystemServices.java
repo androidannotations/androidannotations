@@ -44,6 +44,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.bluetooth.BluetoothManager", "android.content.Context.BLUETOOTH_SERVICE");
 		registeredServices.put("android.hardware.camera2.CameraManager", "android.content.Context.CAMERA_SERVICE");
 		registeredServices.put("android.view.accessibility.CaptioningManager", "android.content.Context.CAPTIONING_SERVICE");
+		registeredServices.put("android.telephony.CarrierConfigManager", "android.content.Context.CARRIER_CONFIG_SERVICE");
 		registeredServices.put("android.content.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE");
 		registeredServices.put("android.text.ClipboardManager", "android.content.Context.CLIPBOARD_SERVICE");
 		registeredServices.put("android.net.ConnectivityManager", "android.content.Context.CONNECTIVITY_SERVICE");
@@ -54,7 +55,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.app.DownloadManager", "android.content.Context.DOWNLOAD_SERVICE");
 		registeredServices.put("android.os.DropBoxManager", "android.content.Context.DROPBOX_SERVICE");
 		registeredServices.put("android.net.EthernetManager", "android.content.Context.ETHERNET_SERVICE");
-		registeredServices.put("android.service.fingerprint.FingerprintManager", "android.content.Context.FINGERPRINT_SERVICE");
+		registeredServices.put("android.hardware.fingerprint.FingerprintManager", "android.content.Context.FINGERPRINT_SERVICE");
 		registeredServices.put("android.hardware.hdmi.HdmiControlManager", "android.content.Context.HDMI_CONTROL_SERVICE");
 		registeredServices.put("android.hardware.input.InputManager", "android.content.Context.INPUT_SERVICE");
 		registeredServices.put("android.view.inputmethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
@@ -66,10 +67,11 @@ public class AndroidSystemServices {
 		registeredServices.put("android.media.projection.MediaProjectionManager", "android.content.Context.MEDIA_PROJECTION_SERVICE");
 		registeredServices.put("android.media.MediaRouter", "android.content.Context.MEDIA_ROUTER_SERVICE");
 		registeredServices.put("android.media.session.MediaSessionManager", "android.content.Context.MEDIA_SESSION_SERVICE");
+		registeredServices.put("android.media.midi.MidiManager", "android.content.Context.MIDI_SERVICE");
 		registeredServices.put("android.net.NetworkScoreManager", "android.content.Context.NETWORK_SCORE_SERVICE");
 		registeredServices.put("android.net.NetworkManagementService", "android.content.Context.NETWORKMANAGEMENT_SERVICE");
 		registeredServices.put("android.net.NetworkPolicyManager", "android.content.Context.NETWORK_POLICY_SERVICE");
-		registeredServices.put("android.net.NetworkStatsService", "android.content.Context.NETWORK_STATS_SERVICE");
+		registeredServices.put("android.app.usage.NetworkStatsManager", "android.content.Context.NETWORK_STATS_SERVICE");
 		registeredServices.put("android.nfc.NfcManager", "android.content.Context.NFC_SERVICE");
 		registeredServices.put("android.app.NotificationManager", "android.content.Context.NOTIFICATION_SERVICE");
 		registeredServices.put("android.net.nsd.NsdManager", "android.content.Context.NSD_SERVICE");
@@ -88,6 +90,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.telephony.TelephonyManager", "android.content.Context.TELEPHONY_SERVICE");
 		registeredServices.put("android.view.textservice.TextServicesManager", "android.content.Context.TEXT_SERVICES_MANAGER_SERVICE");
 		registeredServices.put("android.net.ThrottleManager", "android.content.Context.THROTTLE_SERVICE");
+		registeredServices.put("android.app.trust.TrustManager", "android.content.Context.TRUST_SERVICE");
 		registeredServices.put("android.media.tv.TvInputManager", "android.content.Context.TV_INPUT_SERVICE");
 		registeredServices.put("android.app.UiModeManager", "android.content.Context.UI_MODE_SERVICE");
 		registeredServices.put("android.os.IUpdateLock", "android.content.Context.UPDATE_LOCK_SERVICE");
@@ -99,6 +102,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.net.wifi.WifiManager", "android.content.Context.WIFI_SERVICE");
 		registeredServices.put("android.net.wifi.passpoint.WifiPasspointManager", "android.content.Context.WIFI_PASSPOINT_SERVICE");
 		registeredServices.put("android.net.wifi.p2p.WifiP2pManager", "android.content.Context.WIFI_P2P_SERVICE");
+		registeredServices.put("android.net.wifi.RttManager", "android.content.Context.WIFI_RTT_SERVICE");
 		registeredServices.put("android.view.WindowManager", "android.content.Context.WINDOW_SERVICE");
 	}
 
