@@ -45,6 +45,9 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder>implement
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(App.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.isNotPrivate(element, validation);
 

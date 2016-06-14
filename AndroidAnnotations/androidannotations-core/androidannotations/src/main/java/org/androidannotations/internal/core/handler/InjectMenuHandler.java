@@ -40,6 +40,9 @@ public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu>impl
 	@Override
 	public void validate(Element element, ElementValidation valid) {
 		injectHelper.validate(InjectMenu.class, element, valid);
+		if (!valid.isValid()) {
+			return;
+		}
 
 		Element param = injectHelper.getParam(element);
 		validatorHelper.isDeclaredType(param, valid);

@@ -51,6 +51,9 @@ public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(SystemService.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.androidService(element, validation);
 

@@ -46,6 +46,9 @@ public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder>impl
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(Pref.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.isNotPrivate(element, validation);
 

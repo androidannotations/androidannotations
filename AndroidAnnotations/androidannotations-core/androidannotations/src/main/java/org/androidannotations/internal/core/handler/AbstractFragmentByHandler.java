@@ -55,6 +55,9 @@ public abstract class AbstractFragmentByHandler extends CoreBaseAnnotationHandle
 	@Override
 	protected void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(targetClass, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		Element param = element;
 		if (element instanceof ExecutableElement) {
