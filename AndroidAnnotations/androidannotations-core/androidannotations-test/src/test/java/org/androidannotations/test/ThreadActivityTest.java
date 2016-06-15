@@ -163,6 +163,31 @@ public class ThreadActivityTest {
 		}
 	}
 
+	@Test
+	public void serializedBackgroundTasksAsynchronous() throws InterruptedException {
+		/* set an executor with 4 threads */
+		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
+
+		testSerializedBackgroundTasks();
+	}
+
+	@Test
+	public void serializedBackgroundTasksSynchronous() throws InterruptedException {
+		/* set a synchronous executor */
+		BackgroundExecutor.setExecutor(new Executor() {
+			@Override
+			public void execute(Runnable command) {
+				try {
+					command.run();
+				} catch (RuntimeException ignored) {
+					// ignored
+				}
+			}
+		});
+
+		testSerializedBackgroundTasks();
+	}
+
 	/**
 	 * Verify that serialized background tasks are correctly serialized.
 	 *
@@ -173,13 +198,9 @@ public class ThreadActivityTest {
 	 * Once all tasks have completed execution, verify that the items in the
 	 * list are ordered.
 	 */
-	@Test
-	public void serializedBackgroundTasks() {
+	private void testSerializedBackgroundTasks() {
 		/* number of items to add to the list */
 		final int NB_ADD = 10;
-
-		/* set an executor with 4 threads */
-		BackgroundExecutor.setExecutor(Executors.newFixedThreadPool(4));
 
 		/*
 		 * the calls are serialized, but not necessarily on the same thread, so
