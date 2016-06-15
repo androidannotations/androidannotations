@@ -133,7 +133,7 @@ public final class BackgroundExecutor {
 			task.executionAsked = true;
 			future = directExecute(task, task.remainingDelay);
 		}
-		if ((task.id != null || task.serial != null) && !task.managed.get()) {
+		if (task.id != null || task.serial != null) {
 			/* keep task */
 			task.future = future;
 			TASKS.add(task);
