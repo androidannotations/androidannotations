@@ -137,6 +137,10 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// FingerprintManager fingerprintManager;
 
+	// TODO API 24
+	// @SystemService
+	// HardwarePropertiesManager hardwarePropertiesManager;
+
 	// @SystemService
 	// HdmiControlManager hdmiControlManager; // hidden API
 
@@ -236,6 +240,10 @@ public class ActivityWithServices extends Activity {
 	// TODO API 22
 	// @SystemService
 	// SubscriptionManager subscriptionManager;
+
+	// TODO API 24
+	// @SystemService
+	// SystemHealthManager systemHealthManager;
 	
 	// TODO API 21
 	// @SystemService

@@ -56,6 +56,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.os.DropBoxManager", "android.content.Context.DROPBOX_SERVICE");
 		registeredServices.put("android.net.EthernetManager", "android.content.Context.ETHERNET_SERVICE");
 		registeredServices.put("android.hardware.fingerprint.FingerprintManager", "android.content.Context.FINGERPRINT_SERVICE");
+		registeredServices.put("android.os.HardwarePropertiesManager", "android.content.Context.HARDWARE_PROPERTIES_SERVICE");
 		registeredServices.put("android.hardware.hdmi.HdmiControlManager", "android.content.Context.HDMI_CONTROL_SERVICE");
 		registeredServices.put("android.hardware.input.InputManager", "android.content.Context.INPUT_SERVICE");
 		registeredServices.put("android.view.inputmethod.InputMethodManager", "android.content.Context.INPUT_METHOD_SERVICE");
@@ -86,6 +87,7 @@ public class AndroidSystemServices {
 		registeredServices.put("android.app.StatusBarManager", "android.content.Context.STATUS_BAR_SERVICE");
 		registeredServices.put("android.os.storage.StorageManager", "android.content.Context.STORAGE_SERVICE");
 		registeredServices.put("android.telephony.SubscriptionManager", "android.content.Context.TELEPHONY_SUBSCRIPTION_SERVICE");
+		registeredServices.put("android.os.health.SystemHealthManager", "android.content.Context.SYSTEM_HEALTH_SERVICE");
 		registeredServices.put("android.telecom.TelecomManager", "android.content.Context.TELECOM_SERVICE");
 		registeredServices.put("android.telephony.TelephonyManager", "android.content.Context.TELEPHONY_SERVICE");
 		registeredServices.put("android.view.textservice.TextServicesManager", "android.content.Context.TEXT_SERVICES_MANAGER_SERVICE");
