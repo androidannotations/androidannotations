@@ -66,6 +66,9 @@ public class ExtraHandler extends BaseAnnotationHandler<EActivityHolder>implemen
 		 */
 
 		injectHelper.validate(Extra.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.isNotPrivate(element, validation);
 

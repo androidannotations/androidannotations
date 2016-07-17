@@ -60,6 +60,9 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder>im
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(OrmLiteDao.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.isNotPrivate(element, validation);
 

@@ -48,6 +48,9 @@ public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponen
 	@Override
 	public final void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(androidRes.getAnnotationClass(), element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.allowedType(element, androidRes.getAllowedTypes(), validation);
 

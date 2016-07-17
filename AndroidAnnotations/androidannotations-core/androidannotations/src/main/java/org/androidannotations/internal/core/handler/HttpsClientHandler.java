@@ -60,6 +60,9 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder>i
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(HttpsClient.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.annotationParameterIsOptionalValidResId(element, IRClass.Res.RAW, "keyStore", validation);
 		validatorHelper.annotationParameterIsOptionalValidResId(element, IRClass.Res.RAW, "trustStore", validation);

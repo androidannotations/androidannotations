@@ -55,6 +55,9 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(ViewsById.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		Element param = injectHelper.getParam(element);
 		validatorHelper.isDeclaredType(param, validation);

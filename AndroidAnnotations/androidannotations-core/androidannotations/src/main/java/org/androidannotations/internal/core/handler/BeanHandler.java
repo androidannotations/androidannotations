@@ -51,6 +51,9 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder>implemen
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(Bean.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.typeOrTargetValueHasAnnotation(EBean.class, element, validation);
 

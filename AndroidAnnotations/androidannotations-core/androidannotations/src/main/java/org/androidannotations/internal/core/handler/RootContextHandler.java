@@ -50,6 +50,9 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder>implem
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(RootContext.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		Element param = injectHelper.getParam(element);
 		validatorHelper.extendsContext(param, validation);
