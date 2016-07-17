@@ -128,15 +128,13 @@ public final class BackgroundExecutor {
 	 *             executor)
 	 */
 	public static synchronized void execute(Task task) {
-		Future<?> future = null;
+		if (task.id != null || task.serial != null) {
+			/* keep task */
+			TASKS.add(task);
+		}
 		if (task.serial == null || !hasSerialRunning(task.serial)) {
 			task.executionAsked = true;
-			future = directExecute(task, task.remainingDelay);
-		}
-		if ((task.id != null || task.serial != null) && !task.managed.get()) {
-			/* keep task */
-			task.future = future;
-			TASKS.add(task);
+			task.future = directExecute(task, task.remainingDelay);
 		}
 	}
 
