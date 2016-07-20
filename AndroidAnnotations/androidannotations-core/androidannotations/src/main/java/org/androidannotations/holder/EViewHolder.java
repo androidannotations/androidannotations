@@ -15,6 +15,7 @@
  */
 package org.androidannotations.holder;
 
+import static com.helger.jcodemodel.JExpr._super;
 import static com.helger.jcodemodel.JExpr.invoke;
 import static com.helger.jcodemodel.JMod.PRIVATE;
 import static com.helger.jcodemodel.JMod.PUBLIC;
@@ -38,9 +39,10 @@ import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JMod;
 import com.helger.jcodemodel.JVar;
 
-public class EViewHolder extends EComponentWithViewSupportHolder {
+public class EViewHolder extends EComponentWithViewSupportHolder implements HasReceiverRegistration {
 
 	protected static final String ALREADY_INFLATED_COMMENT = "" // +
 			+ "The alreadyInflated_ hack is needed because of an Android bug\n" // +
@@ -54,6 +56,11 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			+ "to import OnXXXListeners from View as we already\n" //
 			+ "are in a View.";
 
+	private JMethod onAttachedToWindowMethod;
+	private JBlock onAttachedToWindowAfterSuperBlock;
+	private JMethod onDetachedFromWindowMethod;
+	private JBlock onDetachedFromWindowBeforeSuperBlock;
+	private ReceiverRegistrationDelegate<EViewHolder> receiverRegistrationDelegate;
 	protected JBlock initBody;
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
@@ -62,6 +69,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 		super(environment, annotatedElement);
 		addSuppressWarning();
 		createConstructorAndBuilder();
+		receiverRegistrationDelegate = new ReceiverRegistrationDelegate<>(this);
 	}
 
 	private void addSuppressWarning() {
@@ -156,7 +164,88 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 		return alreadyInflated;
 	}
 
+	@Override
+	public JBlock getOnCreateAfterSuperBlock() {
+		return receiverRegistrationDelegate.getOnCreateAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnDestroyBeforeSuperBlock() {
+		return receiverRegistrationDelegate.getOnDestroyBeforeSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnStartAfterSuperBlock() {
+		return receiverRegistrationDelegate.getOnStartAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnStopBeforeSuperBlock() {
+		return receiverRegistrationDelegate.getOnStopBeforeSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnResumeAfterSuperBlock() {
+		return receiverRegistrationDelegate.getOnResumeAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnPauseBeforeSuperBlock() {
+		return receiverRegistrationDelegate.getOnPauseBeforeSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnAttachAfterSuperBlock() {
+		return getOnAttachedToWindowAfterSuperBlock();
+	}
+
+	@Override
+	public JBlock getOnDetachBeforeSuperBlock() {
+		return getOnDetachedToWindowBeforeSuperBlock();
+	}
+
+	@Override
+	public JFieldVar getIntentFilterField(ReceiverRegistrationDelegate.IntentFilterData intentFilterData) {
+		return receiverRegistrationDelegate.getIntentFilterField(intentFilterData);
+	}
+
+	@Override
+	public JBlock getIntentFilterInitializationBlock(ReceiverRegistrationDelegate.IntentFilterData intentFilterData) {
+		return getInitBodyInjectionBlock();
+	}
+
+	protected JBlock getOnAttachedToWindowAfterSuperBlock() {
+		if (onAttachedToWindowAfterSuperBlock == null) {
+			setOnAttachedToWindow();
+		}
+		return onAttachedToWindowAfterSuperBlock;
+	}
+
+	protected JBlock getOnDetachedToWindowBeforeSuperBlock() {
+		if (onDetachedFromWindowBeforeSuperBlock == null) {
+			setOnDetachedFromWindow();
+		}
+		return onDetachedFromWindowBeforeSuperBlock;
+	}
+
 	private void setAlreadyInflated() {
 		alreadyInflated = generatedClass.field(PRIVATE, getCodeModel().BOOLEAN, "alreadyInflated" + generationSuffix(), JExpr.FALSE);
 	}
+
+	private void setOnAttachedToWindow() {
+		onAttachedToWindowMethod = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onAttachedToWindow");
+		onAttachedToWindowMethod.annotate(Override.class);
+		JBlock body = onAttachedToWindowMethod.body();
+		body.invoke(_super(), onAttachedToWindowMethod);
+		onAttachedToWindowAfterSuperBlock = body.blockSimple();
+	}
+
+	private void setOnDetachedFromWindow() {
+		onDetachedFromWindowMethod = generatedClass.method(JMod.PUBLIC, getCodeModel().VOID, "onDetachedFromWindow");
+		onDetachedFromWindowMethod.annotate(Override.class);
+		JBlock body = onDetachedFromWindowMethod.body();
+		onDetachedFromWindowBeforeSuperBlock = body.blockSimple();
+		body.invoke(_super(), onAttachedToWindowMethod);
+	}
+
 }

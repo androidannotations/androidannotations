@@ -65,7 +65,7 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 
 	@Override
 	protected void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(element, validation);
+		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentServiceOrEViewOrEViewGroup(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
 
