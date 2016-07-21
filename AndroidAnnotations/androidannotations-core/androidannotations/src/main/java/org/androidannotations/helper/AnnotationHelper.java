@@ -40,6 +40,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.annotations.EditorAction;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ResId;
@@ -364,6 +365,9 @@ public class AnnotationHelper {
 		}
 		if (SeekBarTouchStop.class.getName().equals(annotationName)) {
 			return "SeekBarTouchStopped";
+		}
+		if (EditorAction.class.getName().equals(annotationName)) {
+			return EditorAction.class.getSimpleName();
 		}
 		String annotationSimpleName = annotationName.substring(annotationName.lastIndexOf('.') + 1);
 		if (annotationSimpleName.endsWith("e")) {
