@@ -44,7 +44,7 @@ import java.lang.annotation.Target;
  * 	Event newEvent();
  * 
  * 	&#064;Post(&quot;/events/new/<b>{id}</b>&quot;)
- * 	void newEvent(&#064;Body Event <i>event</i>, int <b>id</b>);
+ * 	void newEvent(&#064;Body Event <i>event</i>, &#064;Path int <b>id</b>);
  * }
  * </pre>
  * 
