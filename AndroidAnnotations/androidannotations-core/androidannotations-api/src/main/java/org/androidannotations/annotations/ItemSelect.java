@@ -46,17 +46,17 @@ import java.lang.annotation.Target;
  * 
  * <pre>
  * &#064;ItemSelect(R.id.myList)
- * public void itemSelectedOnMyList() {
+ * public void itemSelectedOnMyList(boolean selected) {
  * 	// ...
  * }
  * 
  * &#064;ItemSelect(R.id.myList)
- * public void myListItemPositionSelected(int position) {
+ * public void myListItemPositionSelected(boolean selected, int position) {
  * 	// ...
  * }
  * 
  * &#064;ItemSelect
- * public void myListItemSelect(MyItem clickedItem) {
+ * public void myListItemSelect(boolean selected, MyItem clickedItem) {
  * 	// ...
  * }
  * 
