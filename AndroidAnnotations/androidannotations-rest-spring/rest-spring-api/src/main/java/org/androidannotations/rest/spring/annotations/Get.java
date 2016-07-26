@@ -56,10 +56,10 @@ import java.lang.annotation.Target;
  * 	EventList getEvents();
  * 
  * 	&#064;Get(&quot;/events/<b>{max}</b>&quot;)
- * 	ResponseEntity&lt;EventList&gt; getEvents(int <b>max</b>);
+ * 	ResponseEntity&lt;EventList&gt; getEvents(&#064;Path int <b>max</b>);
  * 
  * 	&#064;Get(&quot;/events/<b>{max}</b>/<b>{filter}</b>&quot;)
- * 	ArrayList&lt;Event&gt; getEvents(int <b>max</b>, String <b>filter</b>);
+ * 	ArrayList&lt;Event&gt; getEvents(&#064;Path int <b>max</b>, &#064;Path String <b>filter</b>);
  * }
  * </pre>
  * 
