@@ -42,6 +42,11 @@ public class ViewListenerCompilationTest extends AAProcessorTestHelper {
 	}
 
 	@Test
+	public void ensureTextViewListenerCompilationError() throws IOException {
+		assertCompilationError(compileFiles(BadEditorActionViewListenerActivity.class));
+	}
+
+	@Test
 	public void ensureCompundButtonListenerCompilationSuccessful() throws IOException {
 		assertCompilationSuccessful(compileFiles(CompoundButtonListenerActivity.class));
 	}
