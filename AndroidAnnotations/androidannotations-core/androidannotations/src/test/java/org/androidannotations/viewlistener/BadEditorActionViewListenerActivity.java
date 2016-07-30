@@ -17,17 +17,12 @@ package org.androidannotations.viewlistener;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EditorAction;
-import org.androidannotations.viewbyid.R;
 
 @EActivity
-public class TextViewListenerActivity extends AbstractViewListenerActivity {
+public class BadEditorActionViewListenerActivity {
 
-	@EditorAction(R.id.view)
-	protected void onEditorAction() {
-	}
-	
 	@EditorAction
-	void view2EditorAction() {
+	void viewEditorActioned() {
 	}
 
 }

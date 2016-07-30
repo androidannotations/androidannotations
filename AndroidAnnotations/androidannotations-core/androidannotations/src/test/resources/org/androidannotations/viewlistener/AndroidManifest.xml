@@ -25,6 +25,7 @@
         <activity android:name="org.androidannotations.viewlistener.CompoundButtonListenerActivity_" />
         <activity android:name="org.androidannotations.viewlistener.AdapterViewListenerActivity_" />
         <activity android:name="org.androidannotations.viewlistener.TextViewListenerActivity_" />
+        <activity android:name="org.androidannotations.viewlistener.BadEditorActionViewListenerActivity_" />
     </application>
 
 </manifest>
