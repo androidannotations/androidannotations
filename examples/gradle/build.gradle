@@ -17,7 +17,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-def AAVersion = '4.1.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.0.0
+def AAVersion = '4.2.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.1.0
 
 dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
