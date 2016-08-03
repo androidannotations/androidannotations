@@ -15,7 +15,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-def AAVersion = '4.1.0'
+def AAVersion = '4.2.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.1.0
 
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"
