@@ -66,6 +66,7 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 	private static final List<Receiver.RegisterAt> VALID_SERVICE_REGISTER_AT = Collections.singletonList(Receiver.RegisterAt.OnCreateOnDestroy);
 	private static final List<Receiver.RegisterAt> VALID_FRAGMENT_REGISTER_AT = Arrays.asList(Receiver.RegisterAt.OnCreateOnDestroy, Receiver.RegisterAt.OnResumeOnPause,
 			Receiver.RegisterAt.OnStartOnStop, Receiver.RegisterAt.OnAttachOnDetach);
+	private static final List<Receiver.RegisterAt> VALID_VIEW_REGISTER_AT = Collections.singletonList(Receiver.RegisterAt.OnAttachOnDetach);
 
 	public CoreValidatorHelper(IdAnnotationHelper idAnnotationHelper) {
 		super(idAnnotationHelper);
@@ -377,6 +378,7 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 		validRegisterAts.put(CanonicalNameConstants.ACTIVITY, VALID_ACTIVITY_REGISTER_AT);
 		validRegisterAts.put(CanonicalNameConstants.SERVICE, VALID_SERVICE_REGISTER_AT);
 		validRegisterAts.put(CanonicalNameConstants.FRAGMENT, VALID_FRAGMENT_REGISTER_AT);
+		validRegisterAts.put(CanonicalNameConstants.VIEW, VALID_VIEW_REGISTER_AT);
 
 		for (Map.Entry<String, List<Receiver.RegisterAt>> validRegisterAt : validRegisterAts.entrySet()) {
 			String enclosingType = validRegisterAt.getKey();

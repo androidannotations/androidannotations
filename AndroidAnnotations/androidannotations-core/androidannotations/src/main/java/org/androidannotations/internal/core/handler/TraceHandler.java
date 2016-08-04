@@ -20,6 +20,7 @@ import static org.androidannotations.helper.AndroidConstants.LOG_ERROR;
 import static org.androidannotations.helper.AndroidConstants.LOG_INFO;
 import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
+import static org.androidannotations.helper.LogHelper.trimLogTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import javax.lang.model.element.ExecutableElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.Option;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
@@ -48,8 +50,15 @@ import com.helger.jcodemodel.JVar;
 
 public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 
+	public static final Option OPTION_TRACE = new Option("trace", "false");
+
 	public TraceHandler(AndroidAnnotationsEnvironment environment) {
 		super(Trace.class, environment);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return getEnvironment().getOptionBooleanValue(OPTION_TRACE);
 	}
 
 	@Override
@@ -75,7 +84,7 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		JBlock methodBody = method.body();
 
 		JInvocation isLoggableInvocation = getClasses().LOG.staticInvoke("isLoggable");
-		isLoggableInvocation.arg(JExpr.lit(tag)).arg(logLevelFromInt(level, getClasses().LOG));
+		isLoggableInvocation.arg(tag).arg(logLevelFromInt(level, getClasses().LOG));
 
 		JConditional ifStatement = methodBody._if(isLoggableInvocation);
 
@@ -235,9 +244,6 @@ public class TraceHandler extends BaseAnnotationHandler<EComponentHolder> {
 		if (Trace.DEFAULT_TAG.equals(tag)) {
 			tag = element.getEnclosingElement().getSimpleName().toString();
 		}
-		if (tag.length() > 23) {
-			tag = tag.substring(0, 23);
-		}
-		return tag;
+		return trimLogTag(tag);
 	}
 }

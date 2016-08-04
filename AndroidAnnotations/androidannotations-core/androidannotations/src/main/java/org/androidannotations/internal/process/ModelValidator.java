@@ -53,6 +53,9 @@ public class ModelValidator {
 		 */
 
 		for (AnnotationHandler annotationHandler : environment.getHandlers()) {
+			if (!annotationHandler.isEnabled()) {
+				continue;
+			}
 			String validatorSimpleName = annotationHandler.getClass().getSimpleName();
 			String annotationName = annotationHandler.getTarget();
 

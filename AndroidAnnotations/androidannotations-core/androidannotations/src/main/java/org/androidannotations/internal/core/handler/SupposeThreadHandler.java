@@ -19,13 +19,21 @@ import javax.lang.model.element.Element;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.Option;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.holder.EComponentHolder;
 
 public abstract class SupposeThreadHandler extends BaseAnnotationHandler<EComponentHolder> {
 
+	public static final Option OPTION_THREAD_CONTROL = new Option("threadControl", "true");
+
 	public SupposeThreadHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
 		super(targetClass, environment);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return getEnvironment().getOptionBooleanValue(OPTION_THREAD_CONTROL);
 	}
 
 	@Override

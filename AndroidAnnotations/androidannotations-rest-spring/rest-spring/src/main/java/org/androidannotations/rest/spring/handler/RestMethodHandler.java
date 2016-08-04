@@ -203,7 +203,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			JForEach innerForEach = forLoopBody.forEach(getClasses().STRING, "thisCookieName", requestedCookiesVar);
 			JBlock innerBody = innerForEach.body();
-			JBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var()))._then();
+			JBlock thenBlock = innerBody._if(JExpr.invoke(rawCookieVar, "startsWith").arg(innerForEach.var().plus("=")))._then();
 
 			// where does the cookie VALUE end?
 			JInvocation valueEnd = rawCookieVar.invoke("indexOf").arg(JExpr.lit(';'));

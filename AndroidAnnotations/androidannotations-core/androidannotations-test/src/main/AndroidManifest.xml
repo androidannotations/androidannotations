@@ -61,6 +61,7 @@
 		<activity android:name=".innerclasses.ActivityWithInnerEnhancedClasses_" />
         <activity android:name=".MultiFindViewActivity_" />
         <activity android:name=".receiver.ActivityWithReceiver_" />
+        <activity android:name=".receiver.EViewAndEViewGroupWithReceiverActivity_" />
         <activity android:name=".menu.OptionsMenuActivity_" />
         <activity android:name=".menu.OptionsMenuSubActivity_" />
         <activity android:name=".menu.InjectMenuActivity_" />

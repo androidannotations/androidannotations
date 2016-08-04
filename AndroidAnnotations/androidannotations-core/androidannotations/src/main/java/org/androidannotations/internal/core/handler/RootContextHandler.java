@@ -17,6 +17,7 @@ package org.androidannotations.internal.core.handler;
 
 import static com.helger.jcodemodel.JExpr.cast;
 import static com.helger.jcodemodel.JExpr.lit;
+import static org.androidannotations.helper.LogHelper.logTagForClassHolder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -49,6 +50,9 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder>implem
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(RootContext.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		Element param = injectHelper.getParam(element);
 		validatorHelper.extendsContext(param, validation);
@@ -82,7 +86,7 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder>implem
 			cond._then().add(fieldRef.assign(cast(extendingContextClass, holder.getContextRef())));
 
 			JInvocation warningInvoke = getClasses().LOG.staticInvoke("w");
-			warningInvoke.arg(holder.getGeneratedClass().name());
+			warningInvoke.arg(logTagForClassHolder(holder));
 			warningInvoke.arg(lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName"))
 					.plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated")));
 			cond._else().add(warningInvoke);

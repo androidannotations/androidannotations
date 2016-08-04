@@ -24,6 +24,10 @@ import android.app.Activity;
 public class ActivityWithInvalidMethodInjection extends Activity {
 
 	@Extra
+	void failHere() {
+	}
+
+	@Extra
 	void failHere(@Extra String fail) {
 	}
 

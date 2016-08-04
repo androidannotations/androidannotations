@@ -65,6 +65,9 @@ public class FragmentArgHandler extends BaseAnnotationHandler<EFragmentHolder>
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		injectHelper.validate(FragmentArg.class, element, validation);
+		if (!validation.isValid()) {
+			return;
+		}
 
 		validatorHelper.isNotPrivate(element, validation);
 

@@ -143,6 +143,8 @@ public @interface Receiver {
 		OnResumeOnPause, //
 		/**
 		 * Register in the onAttach method, unregister in the onDetach method.
+		 * Except for View which will register in the onAttachedToWindow and
+		 * unregister in the onDetachedFromWindow.
 		 */
 		OnAttachOnDetach
 	}

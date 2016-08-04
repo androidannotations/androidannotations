@@ -125,7 +125,7 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 
 	@Override
 	public JBlock getOnResumeAfterSuperBlock() {
-		return receiverRegistrationDelegate.getOnAttachAfterSuperBlock();
+		return receiverRegistrationDelegate.getOnResumeAfterSuperBlock();
 	}
 
 	@Override

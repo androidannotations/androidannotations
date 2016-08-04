@@ -86,6 +86,18 @@ public class ReceiverRegistrationDelegate<T extends EComponentHolder & HasReceiv
 		throw illegalStateException;
 	}
 
+	public JBlock getOnResumeAfterSuperBlock() {
+		throw illegalStateException;
+	}
+
+	public JBlock getOnCreateAfterSuperBlock() {
+		throw illegalStateException;
+	}
+
+	public JBlock getOnDestroyBeforeSuperBlock() {
+		throw illegalStateException;
+	}
+
 	public static class IntentFilterData {
 
 		private final RegisterAt registerAt;

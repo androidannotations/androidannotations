@@ -94,6 +94,7 @@ import org.androidannotations.internal.core.handler.SeekBarTouchStopHandler;
 import org.androidannotations.internal.core.handler.ServiceActionHandler;
 import org.androidannotations.internal.core.handler.SharedPrefHandler;
 import org.androidannotations.internal.core.handler.SupposeBackgroundHandler;
+import org.androidannotations.internal.core.handler.SupposeThreadHandler;
 import org.androidannotations.internal.core.handler.SupposeUiThreadHandler;
 import org.androidannotations.internal.core.handler.SystemServiceHandler;
 import org.androidannotations.internal.core.handler.TextChangeHandler;
@@ -112,9 +113,6 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 
 	private static final String NAME = "AndroidAnnotations";
 
-	private static final Option OPTION_TRACE = new Option("trace", "false");
-	private static final Option OPTION_THREAD_CONTROL = new Option("threadControl", "true");
-
 	@Override
 	public String getName() {
 		return NAME;
@@ -122,7 +120,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 
 	@Override
 	public List<Option> getSupportedOptions() {
-		return Arrays.asList(OPTION_TRACE, OPTION_THREAD_CONTROL);
+		return Arrays.asList(TraceHandler.OPTION_TRACE, SupposeThreadHandler.OPTION_THREAD_CONTROL);
 	}
 
 	@Override
@@ -219,9 +217,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new PreferenceClickHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AfterPreferencesHandler(androidAnnotationEnv));
 
-		if (androidAnnotationEnv.getOptionBooleanValue(OPTION_TRACE)) {
-			annotationHandlers.add(new TraceHandler(androidAnnotationEnv));
-		}
+		annotationHandlers.add(new TraceHandler(androidAnnotationEnv));
 
 		/*
 		 * WakeLockHandler must be after TraceHandler but before UiThreadHandler
@@ -240,10 +236,8 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		 * SupposeUiThreadHandler and SupposeBackgroundHandler must be after all
 		 * handlers that modifies generated method body
 		 */
-		if (androidAnnotationEnv.getOptionBooleanValue(OPTION_THREAD_CONTROL)) {
-			annotationHandlers.add(new SupposeUiThreadHandler(androidAnnotationEnv));
-			annotationHandlers.add(new SupposeBackgroundHandler(androidAnnotationEnv));
-		}
+		annotationHandlers.add(new SupposeUiThreadHandler(androidAnnotationEnv));
+		annotationHandlers.add(new SupposeBackgroundHandler(androidAnnotationEnv));
 
 		return annotationHandlers;
 	}
