@@ -58,6 +58,8 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	protected JMethod onFinishInflate;
 	protected JFieldVar alreadyInflated;
 
+	private List<OnFinishInflateCallBlock> onFinishInflateCallBlocks = new ArrayList<>();
+
 	public EViewHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
 		addSuppressWarning();
@@ -99,7 +101,8 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 			}
 
 			JVar newCall = staticHelper.body().decl(narrowedGeneratedClass, "instance", newInvocation);
-			staticHelper.body().invoke(newCall, getOnFinishInflate());
+			OnFinishInflateCallBlock callBlock = new OnFinishInflateCallBlock(staticHelper.body().blockVirtual(), newCall);
+			onFinishInflateCallBlocks.add(callBlock);
 			staticHelper.body()._return(newCall);
 			body.invoke(getInit());
 		}
@@ -113,7 +116,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 	@Override
 	protected void setInit() {
 		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
-		viewNotifierHelper.wrapInitWithNotifier();
+		setInitBody(init.body().blockSimple());
 	}
 
 	@Override
@@ -128,7 +131,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 		this.initBody = initBody;
 	}
 
-	public JMethod getOnFinishInflate() {
+	private JMethod getOnFinishInflate() {
 		if (onFinishInflate == null) {
 			setOnFinishInflate();
 		}
@@ -158,5 +161,26 @@ public class EViewHolder extends EComponentWithViewSupportHolder {
 
 	private void setAlreadyInflated() {
 		alreadyInflated = generatedClass.field(PRIVATE, getCodeModel().BOOLEAN, "alreadyInflated" + generationSuffix(), JExpr.FALSE);
+	}
+
+	@Override
+	protected void setOnViewChanged() {
+		viewNotifierHelper.wrapInitWithNotifier();
+
+		super.setOnViewChanged();
+
+		for (OnFinishInflateCallBlock callBlock : onFinishInflateCallBlocks) {
+			callBlock.buildAfterNewInstanceBlock.invoke(callBlock.newInstanceVar, getOnFinishInflate());
+		}
+	}
+
+	static class OnFinishInflateCallBlock {
+		JBlock buildAfterNewInstanceBlock;
+		JVar newInstanceVar;
+
+		OnFinishInflateCallBlock(JBlock buildAfterNewInstanceBlock, JVar newInstanceVar) {
+			this.buildAfterNewInstanceBlock = buildAfterNewInstanceBlock;
+			this.newInstanceVar = newInstanceVar;
+		}
 	}
 }
