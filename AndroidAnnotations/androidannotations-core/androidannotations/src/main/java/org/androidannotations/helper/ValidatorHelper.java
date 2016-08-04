@@ -56,6 +56,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.internal.core.model.AndroidSystemServices;
@@ -168,8 +170,8 @@ public class ValidatorHelper {
 		enclosingElementHasOneOfAnnotations(element, validAnnotations, valid);
 	}
 
-	public void enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentService(Element element, ElementValidation valid) {
-		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class, EIntentService.class);
+	public void enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentServiceOrEViewOrEViewGroup(Element element, ElementValidation valid) {
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class, EIntentService.class, EView.class, EViewGroup.class);
 		enclosingElementHasOneOfAnnotations(element, validAnnotations, valid);
 	}
 

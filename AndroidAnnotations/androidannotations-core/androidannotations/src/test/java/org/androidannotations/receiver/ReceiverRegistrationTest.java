@@ -67,4 +67,17 @@ public class ReceiverRegistrationTest extends AAProcessorTestHelper {
 		assertCompilationErrorCount(3, result);
 	}
 
+	@Test
+	public void viewWithValidReceiverAnnotationCompiles() throws IOException {
+		CompileResult result = compileFiles(ViewWithValidReceiver.class);
+		assertCompilationSuccessful(result);
+	}
+
+	@Test
+	public void viewWithInvalidRegisterAtDoesNotCompile() throws IOException {
+		CompileResult result = compileFiles(ViewWithInvalidReceiver.class);
+		assertCompilationErrorOn(ViewWithInvalidReceiver.class, "@Receiver", result);
+		assertCompilationErrorCount(2, result);
+	}
+
 }
