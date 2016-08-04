@@ -22,7 +22,7 @@
 	<parent>
 		<groupId>org.androidannotations</groupId>
 		<artifactId>androidannotations-otto</artifactId>
-		<version>4.1.0-SNAPSHOT</version>
+		<version>4.1.0</version>
 	</parent>
 
 	<artifactId>otto</artifactId>
