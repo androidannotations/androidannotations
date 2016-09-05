@@ -43,7 +43,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEActivityOrEFragment(element, validation);
+		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEViewOrEViewGroup(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
 

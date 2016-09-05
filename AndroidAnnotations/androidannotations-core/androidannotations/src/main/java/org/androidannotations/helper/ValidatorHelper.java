@@ -170,6 +170,11 @@ public class ValidatorHelper {
 		enclosingElementHasOneOfAnnotations(element, validAnnotations, valid);
 	}
 
+	public void enclosingElementHasEActivityOrEFragmentOrEViewOrEViewGroup(Element element, ElementValidation valid) {
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EView.class, EViewGroup.class);
+		enclosingElementHasOneOfAnnotations(element, validAnnotations, valid);
+	}
+
 	public void enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentServiceOrEViewOrEViewGroup(Element element, ElementValidation valid) {
 		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EService.class, EIntentService.class, EView.class, EViewGroup.class);
 		enclosingElementHasOneOfAnnotations(element, validAnnotations, valid);
