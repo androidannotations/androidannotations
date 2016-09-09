@@ -34,6 +34,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
 	protected IJExpression contextRef;
 	protected JMethod init;
+	private JBlock initBodyBeforeInjectionBlock;
 	private JBlock initBodyInjectionBlock;
 	private JBlock initBodyAfterInjectionBlock;
 	private JVar resourcesRef;
@@ -81,7 +82,16 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 		return initBodyAfterInjectionBlock;
 	}
 
+	public JBlock getInitBodyBeforeInjectionBlock() {
+		if (initBodyBeforeInjectionBlock == null) {
+			setInitBodyBlocks();
+		}
+
+		return initBodyBeforeInjectionBlock;
+	}
+
 	private void setInitBodyBlocks() {
+		initBodyBeforeInjectionBlock = getInitBody().blockVirtual();
 		initBodyInjectionBlock = getInitBody().blockVirtual();
 		initBodyAfterInjectionBlock = getInitBody().blockVirtual();
 	}
