@@ -104,7 +104,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	}
 
 	private void setResourcesRef() {
-		resourcesRef = getInitBodyInjectionBlock().decl(getClasses().RESOURCES, "resources" + generationSuffix(), getContextRef().invoke("getResources"));
+		resourcesRef = getInitBodyBeforeInjectionBlock().decl(getClasses().RESOURCES, "resources" + generationSuffix(), getContextRef().invoke("getResources"));
 	}
 
 	public JFieldVar getPowerManagerRef() {
