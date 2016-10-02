@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -291,13 +293,16 @@ public class AndroidManifestFinder {
 		componentQualifiedNames.addAll(receiverQualifiedNames);
 		componentQualifiedNames.addAll(providerQualifiedNames);
 
+		NodeList metaDataNodes = documentElement.getElementsByTagName("meta-data");
+		Map<String, String> metaDataQualifiedNames = extractMetaDataQualifiedNames(metaDataNodes);
+
 		NodeList usesPermissionNodes = documentElement.getElementsByTagName("uses-permission");
 		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(usesPermissionNodes);
 
 		List<String> permissionQualifiedNames = new ArrayList<>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
 
-		return AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, permissionQualifiedNames,
+		return AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, metaDataQualifiedNames, permissionQualifiedNames,
 				minSdkVersion, maxSdkVersion, targetSdkVersion, applicationDebuggableMode);
 	}
 
@@ -337,6 +342,28 @@ public class AndroidManifestFinder {
 		}
 		return componentQualifiedNames;
 	}
+	
+	private Map<String, String> extractMetaDataQualifiedNames(NodeList metaDataNodes) {
+		Map<String, String> metaDataQualifiedNames = new HashMap<String, String>();
+		
+		for (int i = 0; i < metaDataNodes.getLength(); i++) {
+			Node node = metaDataNodes.item(i);
+			Node nameAttribute = node.getAttributes().getNamedItem("android:name");
+			Node valueAttribute = node.getAttributes().getNamedItem("android:value");
+
+			if (nameAttribute == null || valueAttribute == null) {
+				if (nameAttribute != null) {
+					LOGGER.warn("A malformed <meta-data> has been found in the manifest with name {}", nameAttribute.getNodeValue());
+				} else {
+					LOGGER.warn("A malformed <meta-data> has been found in the manifest");
+				}
+			} else {
+				metaDataQualifiedNames.put(nameAttribute.getNodeValue(), valueAttribute.getNodeValue());
+			}
+		}
+		
+		return metaDataQualifiedNames;
+	}
 
 	private String manifestNameToValidQualifiedName(String applicationPackage, Node nameAttribute) {
 		if (nameAttribute != null) {
@@ -375,7 +402,7 @@ public class AndroidManifestFinder {
 			return null;
 		}
 	}
-
+	
 	private List<String> extractUsesPermissionNames(NodeList usesPermissionNodes) {
 		List<String> usesPermissionQualifiedNames = new ArrayList<>();
 

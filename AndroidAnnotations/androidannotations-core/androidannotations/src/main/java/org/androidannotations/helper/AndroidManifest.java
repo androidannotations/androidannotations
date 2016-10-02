@@ -16,12 +16,15 @@
 package org.androidannotations.helper;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class AndroidManifest {
 
 	private final String applicationPackage;
 	private final List<String> componentQualifiedNames;
+	private final Map<String, String> metaDataQualifiedNames;
 	private final List<String> permissionQualifiedNames;
 	private final String applicationClassName;
 	private final boolean libraryProject;
@@ -32,28 +35,28 @@ public final class AndroidManifest {
 
 	@Override
 	public String toString() {
-		return "AndroidManifest [applicationPackage=" + applicationPackage + ", componentQualifiedNames=" + componentQualifiedNames + ", permissionQualifiedNames=" + permissionQualifiedNames
-				+ ", applicationClassName=" + applicationClassName + ", libraryProject=" + libraryProject + ", debugabble=" + debugabble + ", minSdkVersion=" + minSdkVersion + ", maxSdkVersion="
-				+ maxSdkVersion + ", targetSdkVersion=" + targetSdkVersion + "]";
+		return "AndroidManifest [applicationPackage=" + applicationPackage + ", componentQualifiedNames=" + componentQualifiedNames 
+				+ ", metaDataQualifiedNames=" + metaDataQualifiedNames + ", permissionQualifiedNames=" + permissionQualifiedNames 
+				+ ", applicationClassName=" + applicationClassName + ", libraryProject=" + libraryProject + ", debugabble=" + debugabble 
+				+ ", minSdkVersion=" + minSdkVersion + ", maxSdkVersion=" + maxSdkVersion + ", targetSdkVersion=" + targetSdkVersion + "]";
 	}
 
 	// CHECKSTYLE:OFF
 
-	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames,
-			int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debugabble) {
-		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, debugabble);
+	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, Map<String, String> metaDataQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debugabble) {
+		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, metaDataQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, debugabble);
 	}
 
 	public static AndroidManifest createLibraryManifest(String applicationPackage, int minSdkVersion, int maxSdkVersion, int targetSdkVersion) {
-		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList(), Collections.<String> emptyList(), minSdkVersion, maxSdkVersion, targetSdkVersion, false);
+		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList(), new HashMap<String, String>(), Collections.<String> emptyList(), minSdkVersion, maxSdkVersion, targetSdkVersion, false);
 	}
 
-	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, List<String> permissionQualifiedNames,
-			int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debuggable) {
+	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, Map<String, String> metaDataQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debuggable) {
 		this.libraryProject = libraryProject;
 		this.applicationPackage = applicationPackage;
 		this.applicationClassName = applicationClassName;
 		this.componentQualifiedNames = componentQualifiedNames;
+		this.metaDataQualifiedNames = metaDataQualifiedNames;
 		this.permissionQualifiedNames = permissionQualifiedNames;
 		this.minSdkVersion = minSdkVersion;
 		this.maxSdkVersion = maxSdkVersion;
@@ -69,6 +72,10 @@ public final class AndroidManifest {
 
 	public List<String> getComponentQualifiedNames() {
 		return Collections.unmodifiableList(componentQualifiedNames);
+	}
+
+	public Map<String, String> getMetaDataQualifiedNames() {
+		return Collections.unmodifiableMap(metaDataQualifiedNames);
 	}
 
 	public List<String> getPermissionQualifiedNames() {
