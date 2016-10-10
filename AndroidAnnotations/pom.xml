@@ -316,6 +316,7 @@
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
+					<skip>true</skip>
 					<header>${main.basedir}/src/etc/header.txt</header>
 					<excludes>
 						<exclude>.idea/**</exclude>
