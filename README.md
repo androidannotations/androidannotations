@@ -1,5 +1,7 @@
 # Fast Android Development. Easy maintenance.
 
+[![Join the chat at https://gitter.im/androidannotations/androidannotations](https://badges.gitter.im/androidannotations/androidannotations.svg)](https://gitter.im/androidannotations/androidannotations?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Android Annotations Logo](https://github.com/excilys/androidannotations/wiki/img/aa-logo.png)](https://github.com/excilys/androidannotations/wiki/Home) 
 
 **AndroidAnnotations** is an Open Source framework that **speeds up** Android development.
