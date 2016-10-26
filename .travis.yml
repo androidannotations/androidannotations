@@ -36,7 +36,7 @@ after_success:
 notifications:
   webhooks:
     urls:
-      - secure: "aiAYnuvIz4XGgyvXdg7OZk8A2OKDRABUHJX6U4aszTYDOETWxwjRtmTdUisztH2+4dvB3BFGuwTuYXbC3h4vpqM2eUb584R2TVDmgloZ9263jN74uaJ04u8fbL+2mXtSbAGjBluDhEOBmGI5NZjlDYkAkguqzF6M9cT/yAIOW6g="
+      secure: BOoKIc3qLKIx4efsNqg3Z6ErgBIF6xKKljozg5/GxaSPr9R58W/rOfyNJKtVpzfGlD0Z0e8psTb5FPGs/CNRprUJwCANGJ72FIc+NuEdO0+kLpvsvkl0yWJc5WHuOzqTTlsuPjfATB820AFTboIoV9tQ9wNhHB4vpyRqKPErdjg=
     on_success: change
     on_failure: always
     on_start: false
