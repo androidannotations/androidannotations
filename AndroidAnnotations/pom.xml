@@ -316,11 +316,14 @@
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<skip>true</skip>
-					<header>${main.basedir}/src/etc/header.txt</header>
+					<header>${main.basedir}/src/etc/header_new.txt</header>
+					<validHeaders>
+						<validHeader>${main.basedir}/src/etc/header.txt</validHeader>
+						<validHeader>${main.basedir}/src/etc/header_both.txt</validHeader>
+					</validHeaders>
 					<excludes>
 						<exclude>.idea/**</exclude>
-						<exclude>src/etc/HOW-TO.txt</exclude>
+						<exclude>src/etc/header*.txt</exclude>
 						<exclude>LICENSE.txt</exclude>
 						<exclude>.gitignore</exclude>
 						<exclude>**/R.java</exclude>
