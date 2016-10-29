@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -95,4 +96,42 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		assertGeneratedClassContains(generatedFile, fieldDoc);
 		assertGeneratedClassContains(generatedFile, editorDoc);
 	}
+
+	@Test
+	public void generateJavaDocForEmptySharedPrefStringFields() throws IOException {
+		CompileResult result = compileFiles(SharedPrefWithJavaDoc.class);
+		File generatedFile = toGeneratedFile(SharedPrefWithJavaDoc.class);
+
+		assertCompilationSuccessful(result);
+
+		// CHECKSTYLE:OFF
+		String[] fieldDoc = { //
+				"     * <p><b>Defaults to</b>: \"\"</p>", //
+				"     * ", //
+				"     */", //
+				"    public StringPrefField title() {", //
+		};
+		// CHECKSTYLE:ON
+		assertGeneratedClassContains(generatedFile, fieldDoc);
+	}
+
+
+	@Test
+	public void generateJavaDocForNonEmptySharedPrefStringFields() throws IOException {
+		CompileResult result = compileFiles(SharedPrefWithJavaDoc.class);
+		File generatedFile = toGeneratedFile(SharedPrefWithJavaDoc.class);
+
+		assertCompilationSuccessful(result);
+
+		// CHECKSTYLE:OFF
+		String[] fieldDoc = { //
+				"     * <p><b>Defaults to</b>: \"something\"</p>", //
+				"     * ", //
+				"     */", //
+				"    public StringPrefField something() {", //
+		};
+		// CHECKSTYLE:ON
+		assertGeneratedClassContains(generatedFile, fieldDoc);
+	}
+
 }
