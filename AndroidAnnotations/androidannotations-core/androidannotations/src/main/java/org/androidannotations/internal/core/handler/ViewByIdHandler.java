@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +20,7 @@ import static com.helger.jcodemodel.JExpr.ref;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
@@ -67,10 +69,15 @@ public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSup
 	@Override
 	public void process(Element element, EComponentWithViewSupportHolder holder) {
 		injectHelper.process(element, holder);
-		if (holder instanceof EFragmentHolder) {
+		if (holder instanceof EFragmentHolder && isFieldInjection(element)) {
 			String fieldName = element.getSimpleName().toString();
 			((EFragmentHolder) holder).clearInjectedView(ref(fieldName));
 		}
+	}
+
+	private boolean isFieldInjection(Element element) {
+		Element enclosingElement = element.getEnclosingElement();
+		return !((element instanceof ExecutableElement) || (enclosingElement instanceof ExecutableElement));
 	}
 
 	@Override
