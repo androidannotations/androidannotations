@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -80,10 +81,7 @@ public class BundleHelper {
 
 	private AndroidAnnotationsEnvironment environment;
 	private AnnotationHelper annotationHelper;
-	private ParcelerHelper parcelerHelper;
 	private APTCodeModelHelper codeModelHelper;
-
-	private TypeMirror element;
 
 	private boolean restoreCallNeedCastStatement = false;
 	private boolean restoreCallNeedsSuppressWarning = false;
@@ -98,8 +96,6 @@ public class BundleHelper {
 		this.environment = environment;
 		annotationHelper = new AnnotationHelper(environment);
 		codeModelHelper = new APTCodeModelHelper(environment);
-		parcelerHelper = new ParcelerHelper(environment);
-		this.element = element;
 
 		String typeString = element.toString();
 		TypeMirror type = element;
@@ -177,6 +173,8 @@ public class BundleHelper {
 			boolean hasTypeArguments = element.getKind() == TypeKind.DECLARED && hasTypeArguments(element) || //
 					element.getKind() == TypeKind.TYPEVAR && hasTypeArguments(getUpperBound(element));
 
+			ParcelerHelper parcelerHelper = new ParcelerHelper(environment);
+
 			if (isTypeParcelable(type)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
@@ -196,10 +194,6 @@ public class BundleHelper {
 		}
 	}
 
-	public String getMethodNameToSave() {
-		return methodNameToSave;
-	}
-
 	private boolean isTypeParcelable(TypeMirror typeMirror) {
 		TypeMirror parcelableType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.PARCELABLE).asType();
 		return annotationHelper.isSubtype(typeMirror, parcelableType);
@@ -213,14 +207,6 @@ public class BundleHelper {
 	private boolean hasTypeArguments(TypeMirror type) {
 		DeclaredType declaredType = (DeclaredType) type;
 		return declaredType.getTypeArguments().size() > 0;
-	}
-
-	public IJExpression getExpressionToRestoreFromIntentOrBundle(AbstractJClass variableClass, IJExpression intent, IJExpression extras, IJExpression extraKey, JMethod method) {
-		if ("byte[]".equals(element.toString())) {
-			return intent.invoke("getByteArrayExtra").arg(extraKey);
-		} else {
-			return getExpressionToRestoreFromBundle(variableClass, extras, extraKey, method);
-		}
 	}
 
 	public IJExpression getExpressionToRestoreFromBundle(AbstractJClass variableClass, IJExpression bundle, IJExpression extraKey, JMethod method) {

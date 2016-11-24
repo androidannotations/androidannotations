@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -61,11 +62,11 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 		// Don't do anything here.
 	}
 
-	public IJExpression getExtraValue(VariableElement parameter, JVar intent, JVar extras, JBlock block, JMethod annotatedMethod, GeneratedClassHolder holder) {
-		return getExtraValue(parameter, intent, extras, block, annotatedMethod, holder.getGeneratedClass());
+	public IJExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, JMethod annotatedMethod, GeneratedClassHolder holder) {
+		return getExtraValue(parameter, extras, block, annotatedMethod, holder.getGeneratedClass());
 	}
 
-	public IJExpression getExtraValue(VariableElement parameter, JVar intent, JVar extras, JBlock block, JMethod annotatedMethod, JDefinedClass generatedClass) {
+	public IJExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, JMethod annotatedMethod, JDefinedClass generatedClass) {
 		String parameterName = parameter.getSimpleName().toString();
 		AbstractJClass parameterClass = codeModelHelper.typeMirrorToJClass(parameter.asType());
 
@@ -75,7 +76,7 @@ public abstract class ExtraParameterHandler extends BaseAnnotationHandler<Genera
 		}
 
 		BundleHelper bundleHelper = new BundleHelper(getEnvironment(), parameter.asType());
-		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(parameterClass, intent, extras, getStaticExtraField(generatedClass, extraKey), annotatedMethod);
+		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(parameterClass, extras, getStaticExtraField(generatedClass, extraKey), annotatedMethod);
 
 		return block.decl(parameterClass, parameterName, restoreMethodCall);
 	}
