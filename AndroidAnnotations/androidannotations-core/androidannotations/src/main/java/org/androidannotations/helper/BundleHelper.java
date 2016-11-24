@@ -209,10 +209,6 @@ public class BundleHelper {
 		return declaredType.getTypeArguments().size() > 0;
 	}
 
-	public IJExpression getExpressionToRestoreFromIntentOrBundle(AbstractJClass variableClass, IJExpression intent, IJExpression extras, IJExpression extraKey, JMethod method) {
-		return getExpressionToRestoreFromBundle(variableClass, extras, extraKey, method);
-	}
-
 	public IJExpression getExpressionToRestoreFromBundle(AbstractJClass variableClass, IJExpression bundle, IJExpression extraKey, JMethod method) {
 		IJExpression expressionToRestore;
 		if (methodNameToRestore.equals("getParcelableArray")) {
