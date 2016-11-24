@@ -81,10 +81,7 @@ public class BundleHelper {
 
 	private AndroidAnnotationsEnvironment environment;
 	private AnnotationHelper annotationHelper;
-	private ParcelerHelper parcelerHelper;
 	private APTCodeModelHelper codeModelHelper;
-
-	private TypeMirror element;
 
 	private boolean restoreCallNeedCastStatement = false;
 	private boolean restoreCallNeedsSuppressWarning = false;
@@ -99,8 +96,6 @@ public class BundleHelper {
 		this.environment = environment;
 		annotationHelper = new AnnotationHelper(environment);
 		codeModelHelper = new APTCodeModelHelper(environment);
-		parcelerHelper = new ParcelerHelper(environment);
-		this.element = element;
 
 		String typeString = element.toString();
 		TypeMirror type = element;
@@ -178,6 +173,8 @@ public class BundleHelper {
 			boolean hasTypeArguments = element.getKind() == TypeKind.DECLARED && hasTypeArguments(element) || //
 					element.getKind() == TypeKind.TYPEVAR && hasTypeArguments(getUpperBound(element));
 
+			ParcelerHelper parcelerHelper = new ParcelerHelper(environment);
+
 			if (isTypeParcelable(type)) {
 				methodNameToSave = "put" + "Parcelable";
 				methodNameToRestore = "get" + "Parcelable";
@@ -195,10 +192,6 @@ public class BundleHelper {
 				}
 			}
 		}
-	}
-
-	public String getMethodNameToSave() {
-		return methodNameToSave;
 	}
 
 	private boolean isTypeParcelable(TypeMirror typeMirror) {
