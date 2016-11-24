@@ -26,12 +26,15 @@ before_script:
   - export TERM=dumb
 
 script:
-  - mvn -f AndroidAnnotations/pom.xml install -P travis
-  - mvn -f examples/maven/pom.xml install
+  - cd $TRAVIS_BUILD_DIR/AndroidAnnotations
+  - ./mvnw install -P travis
+  - cd $TRAVIS_BUILD_DIR/examples/maven
+  - ./mvnw install
+  - cd $TRAVIS_BUILD_DIR
   - ./examples/gradle/gradlew assembleDebug --build-file examples/gradle/build.gradle
 
 after_success:
-  - if [[ $TRAVIS_REPO_SLUG == 'androidannotations/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk7' ]]; then mvn -f AndroidAnnotations/pom.xml -DskipTests -Dquiet -s settings.xml deploy ; fi
+  - if [[ $TRAVIS_REPO_SLUG == 'androidannotations/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk7' ]]; then cd $TRAVIS_BUILD_DIR/AndroidAnnotations && ./mvnw -DskipTests -Dquiet -s settings.xml deploy ; fi
 
 notifications:
   webhooks:
