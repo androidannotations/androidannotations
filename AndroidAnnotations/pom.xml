@@ -335,6 +335,8 @@
 						<exclude>**/*.bks</exclude>
 						<exclude>**/org.robolectric.Config.properties</exclude>
 						<exclude>**/*.importorder</exclude>
+						<exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+						<exclude>mvnw.cmd</exclude>
 					</excludes>
 					<strictCheck>true</strictCheck>
 				</configuration>
