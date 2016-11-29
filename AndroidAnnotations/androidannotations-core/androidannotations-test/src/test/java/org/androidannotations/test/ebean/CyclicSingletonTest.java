@@ -16,6 +16,7 @@
 package org.androidannotations.test.ebean;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.robolectric.Robolectric.setupActivity;
 
 import org.androidannotations.test.EmptyActivityWithoutLayout_;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class CyclicSingletonTest {
 
 	@Test
 	public void cyclicSingleton() {
-		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
+		EmptyActivityWithoutLayout_ context = setupActivity(EmptyActivityWithoutLayout_.class);
 		SomeCyclicSingletonA_ singletonA = SomeCyclicSingletonA_.getInstance_(context);
 		SomeCyclicSingletonB_ singletonB = SomeCyclicSingletonB_.getInstance_(context);
 		assertThat(singletonA.singletonB).isSameAs(singletonB);

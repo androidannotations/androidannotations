@@ -111,12 +111,12 @@ public class ResActivityTest {
 
 	@Test
 	public void htmlResCorrectlySet() {
-		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.helloHtml);
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)).toString(), activity.helloHtml.toString());
 	}
 
 	@Test
 	public void htmlInjectedCorrectlySet() {
-		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.htmlInjected);
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)).toString(), activity.htmlInjected.toString());
 	}
 
 	@Test

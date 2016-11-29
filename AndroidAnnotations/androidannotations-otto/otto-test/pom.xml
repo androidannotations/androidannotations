@@ -64,6 +64,10 @@
 			<artifactId>robolectric</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.robolectric</groupId>
+			<artifactId>android-all</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.squareup</groupId>
 			<artifactId>fest-android</artifactId>
 		</dependency>

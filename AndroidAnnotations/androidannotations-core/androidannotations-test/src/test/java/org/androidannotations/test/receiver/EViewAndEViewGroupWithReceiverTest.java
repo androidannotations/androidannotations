@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -64,7 +65,7 @@ public class EViewAndEViewGroupWithReceiverTest {
 		Intent extraIntent = new Intent("someAction");
 		intent.putExtra("extra", extraIntent);
 
-		LocalBroadcastManager.getInstance(Robolectric.application).sendBroadcast(intent);
+		LocalBroadcastManager.getInstance(RuntimeEnvironment.application).sendBroadcast(intent);
 
 		assertTrue(activity.viewWithReceiver.action2Received);
 		assertTrue(activity.viewWithReceiver.action2Extra.equals(extraIntent));

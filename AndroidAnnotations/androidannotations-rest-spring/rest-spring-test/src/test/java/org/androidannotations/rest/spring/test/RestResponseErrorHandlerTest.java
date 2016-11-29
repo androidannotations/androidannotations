@@ -19,8 +19,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.springframework.web.client.ResponseErrorHandler;
 
 @RunWith(RobolectricTestRunner.class)
@@ -28,16 +28,16 @@ public class RestResponseErrorHandlerTest {
 
 	@Test
 	public void testSameAsSingletonBeanResponseErrorHandler() {
-		RestWithSingletonBeanResponseErrorHandler restClient = new RestWithSingletonBeanResponseErrorHandler_(Robolectric.application);
+		RestWithSingletonBeanResponseErrorHandler restClient = new RestWithSingletonBeanResponseErrorHandler_(RuntimeEnvironment.application);
 		ResponseErrorHandler errorHandler = restClient.getRestTemplate().getErrorHandler();
-		MyResponseErrorHandlerBean errorHandlerBean = MyResponseErrorHandlerBean_.getInstance_(Robolectric.application);
+		MyResponseErrorHandlerBean errorHandlerBean = MyResponseErrorHandlerBean_.getInstance_(RuntimeEnvironment.application);
 
 		assertThat(errorHandler).isSameAs(errorHandlerBean);
 	}
 
 	@Test
 	public void testInstanceCreatedFromNonBeanClassAsResponseErrorHandler() {
-		new RestWithSimpleClassResponseErrorHandler_(Robolectric.application);
+		new RestWithSimpleClassResponseErrorHandler_(RuntimeEnvironment.application);
 
 		assertThat(MyResponseErrorHandler.instanceCreated).isTrue();
 	}

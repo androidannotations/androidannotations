@@ -17,6 +17,7 @@ package org.androidannotations.test.ebean;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.robolectric.Robolectric.setupActivity;
 
 import java.lang.reflect.Field;
 
@@ -41,7 +42,7 @@ public class SomeSingletonTest {
 
 	@Test
 	public void getInstanceReturnsSameInstance() {
-		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
+		EmptyActivityWithoutLayout_ context = setupActivity(EmptyActivityWithoutLayout_.class);
 		SomeSingleton_ firstInstance = SomeSingleton_.getInstance_(context);
 		SomeSingleton_ secondInstance = SomeSingleton_.getInstance_(context);
 		assertThat(firstInstance).isSameAs(secondInstance);

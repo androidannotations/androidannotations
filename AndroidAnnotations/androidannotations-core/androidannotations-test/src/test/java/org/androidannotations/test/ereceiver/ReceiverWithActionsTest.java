@@ -92,7 +92,7 @@ public class ReceiverWithActionsTest {
 		Intent extraIntent = new Intent("someAction");
 		intent.putExtra("extraIntent", extraIntent);
 
-		receiver.onReceive(Robolectric.application, intent);
+		receiver.onReceive(RuntimeEnvironment.application, intent);
 
 		assertEquals(intent, receiver.originalIntent);
 		assertEquals(extraIntent, receiver.extraIntent);
