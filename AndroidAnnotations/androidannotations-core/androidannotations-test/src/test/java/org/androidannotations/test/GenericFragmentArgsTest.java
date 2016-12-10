@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,12 +25,10 @@ import java.io.Serializable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import android.accounts.Account;
 import android.os.Bundle;
 
-@Config(shadows = CustomShadowBundle.class)
 @RunWith(RobolectricTestRunner.class)
 public class GenericFragmentArgsTest {
 

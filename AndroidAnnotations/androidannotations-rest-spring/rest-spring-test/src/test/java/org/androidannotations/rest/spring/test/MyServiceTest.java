@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,8 +33,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.httpclient.FakeHttp;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,8 @@ public class MyServiceTest {
 		for (int i = 0, j = 1; i < cookies.length - 1; i += 2, j++) {
 			headers[j] = new BasicHeader("set-cookie", cookies[i] + "=" + cookies[i + 1]);
 		}
-		Robolectric.addPendingHttpResponse(HttpStatus.OK.value(), jsonResponse.replaceAll("'", "\""), headers);
+
+		FakeHttp.addPendingHttpResponse(HttpStatus.OK.value(), jsonResponse.replaceAll("'", "\""), headers);
 	}
 
 	@Test

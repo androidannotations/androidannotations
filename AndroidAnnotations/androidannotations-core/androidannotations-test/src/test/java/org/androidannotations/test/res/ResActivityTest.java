@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -58,11 +59,7 @@ public class ResActivityTest {
 		assertNotNull(activity.multiInjectedString);
 	}
 
-	/**
-	 * Cannot be tested right now, because there is no Robolectric shadow class
-	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
-	 */
-	// @Test
+	@Test
 	public void animNotNull() {
 		assertThat(activity.fadein).isNotNull();
 	}
@@ -78,20 +75,12 @@ public class ResActivityTest {
 		assertThat(activity.fade_in).isNotNull();
 	}
 
-	/**
-	 * Cannot be tested right now, because there is no Robolectric shadow class
-	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
-	 */
-	// @Test
+	@Test
 	public void methodInjectedAnimationNotNull() {
 		assertNotNull(activity.methodInjectedAnimation);
 	}
 
-	/**
-	 * Cannot be tested right now, because there is no Robolectric shadow class
-	 * for {@link android.view.animation.AnimationUtils AnimationUtils}.
-	 */
-	// @Test
+	@Test
 	public void multiInjectedAnimationNotNull() {
 		assertNotNull(activity.multiInjectedAnimation);
 	}
@@ -123,12 +112,12 @@ public class ResActivityTest {
 
 	@Test
 	public void htmlResCorrectlySet() {
-		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.helloHtml);
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)).toString(), activity.helloHtml.toString());
 	}
 
 	@Test
 	public void htmlInjectedCorrectlySet() {
-		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)), activity.htmlInjected);
+		assertEquals(Html.fromHtml(activity.getString(R.string.hello_html)).toString(), activity.htmlInjected.toString());
 	}
 
 	@Test

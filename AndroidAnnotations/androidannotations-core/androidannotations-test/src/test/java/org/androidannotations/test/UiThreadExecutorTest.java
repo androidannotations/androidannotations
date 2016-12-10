@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,8 +26,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.androidannotations.api.UiThreadExecutor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowLooper;
 
 @RunWith(RobolectricTestRunner.class)
 public class UiThreadExecutorTest {
@@ -40,7 +41,7 @@ public class UiThreadExecutorTest {
 				done.set(true);
 			}
 		}, 10);
-		Robolectric.runUiThreadTasksIncludingDelayedTasks();
+		ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
 		assertTrue("Task is still under execution", done.get());
 	}
 
@@ -54,7 +55,7 @@ public class UiThreadExecutorTest {
 			}
 		}, 10);
 		UiThreadExecutor.cancelAll("test");
-		Robolectric.runUiThreadTasksIncludingDelayedTasks();
+		ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
 		assertFalse("Task is not cancelled", done.get());
 	}
 
@@ -73,7 +74,7 @@ public class UiThreadExecutorTest {
 					}
 				}, 10);
 				taskStartedLatch.countDown();
-				Robolectric.runUiThreadTasksIncludingDelayedTasks();
+				ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
 			}
 		}.start();
 		await(taskFinishedLatch);

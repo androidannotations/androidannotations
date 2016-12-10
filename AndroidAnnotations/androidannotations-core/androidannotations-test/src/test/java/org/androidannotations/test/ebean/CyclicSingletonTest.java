@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +17,7 @@
 package org.androidannotations.test.ebean;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.robolectric.Robolectric.setupActivity;
 
 import org.androidannotations.test.EmptyActivityWithoutLayout_;
 import org.junit.Test;
@@ -27,7 +29,7 @@ public class CyclicSingletonTest {
 
 	@Test
 	public void cyclicSingleton() {
-		EmptyActivityWithoutLayout_ context = new EmptyActivityWithoutLayout_();
+		EmptyActivityWithoutLayout_ context = setupActivity(EmptyActivityWithoutLayout_.class);
 		SomeCyclicSingletonA_ singletonA = SomeCyclicSingletonA_.getInstance_(context);
 		SomeCyclicSingletonB_ singletonB = SomeCyclicSingletonB_.getInstance_(context);
 		assertThat(singletonA.singletonB).isSameAs(singletonB);

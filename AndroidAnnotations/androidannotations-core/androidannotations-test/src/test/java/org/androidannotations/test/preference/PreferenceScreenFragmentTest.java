@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,10 +19,13 @@ package org.androidannotations.test.preference;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.util.FragmentTestUtil;
 
-// @RunWith(RobolectricTestRunner.class)
-public class PreferenceScreenFragmentTestSkipped {
+@RunWith(RobolectricTestRunner.class)
+public class PreferenceScreenFragmentTest {
 
 	private PreferenceScreenFragment_ fragment;
 
@@ -31,8 +35,7 @@ public class PreferenceScreenFragmentTestSkipped {
 		FragmentTestUtil.startFragment(fragment);
 	}
 
-	// TODO not yet implemented in Robolectric
-	// @Test
+	@Test
 	public void testPreferenceScreenInjected() {
 		assertThat(fragment.getPreferenceScreen()).isNotNull();
 	}

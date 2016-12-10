@@ -131,6 +131,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.basedir>${project.basedir}</main.basedir>
+		<robolectric.version>3.1.4</robolectric.version>
 	</properties>
 
 
@@ -185,15 +186,14 @@
 			<dependency>
 				<groupId>org.robolectric</groupId>
 				<artifactId>robolectric</artifactId>
-				<version>2.4</version>
+				<version>${robolectric.version}</version>
 				<scope>test</scope>
-
-				<exclusions>
-					<exclusion>
-						<groupId>com.android.support</groupId>
-						<artifactId>support-v4</artifactId>
-					</exclusion>
-				</exclusions>
+			</dependency>
+			<dependency> <!-- TODO https://github.com/robolectric/robolectric/issues/2562#issuecomment-263086503 -->
+				<groupId>org.robolectric</groupId>
+				<artifactId>android-all</artifactId>
+				<version>6.0.0_r1-robolectric-0</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup</groupId>

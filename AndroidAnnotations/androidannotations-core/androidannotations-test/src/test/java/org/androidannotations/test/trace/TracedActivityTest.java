@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -118,7 +119,7 @@ public class TracedActivityTest {
 	public void noReturnIntentParam() {
 		activity.noReturnIntentParam(new Intent("TEST", Uri.parse("http://www.androidannotations.org")));
 
-		assertTrue(logContains("Entering [void noReturnIntentParam(param = Intent{action=TEST, extras=Bundle[{}], data=http://www.androidannotations.org})]"));
+		assertTrue(logContains("Entering [void noReturnIntentParam(param = Intent { act=TEST dat=http://www.androidannotations.org })]"));
 		assertTrue(logContains("Exiting [void noReturnIntentParam(Intent)], duration in ms: "));
 	}
 

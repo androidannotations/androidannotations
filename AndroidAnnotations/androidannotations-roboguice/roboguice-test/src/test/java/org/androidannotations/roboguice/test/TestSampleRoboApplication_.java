@@ -2,7 +2,7 @@ package org.androidannotations.roboguice.test;
 
 import java.lang.reflect.Method;
 
-import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.TestLifecycleApplication;
 
 import android.app.Application;
@@ -25,7 +25,7 @@ public class TestSampleRoboApplication_ extends Application implements TestLifec
 
 	@Override
 	public void prepareTest(Object test) {
-		TestSampleRoboApplication_ application = (TestSampleRoboApplication_) Robolectric.application;
+		TestSampleRoboApplication_ application = (TestSampleRoboApplication_) RuntimeEnvironment.application;
 
 		RoboGuice.overrideApplicationInjector(application, RoboGuice.newDefaultRoboModule(application), new RobolectricSampleTestModule());
 
