@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -89,6 +90,7 @@ public class ServiceInjectionTest {
 		assertThat(activity.sensorManager).isNotNull();
 		// assertThat(activity.serialManager).isNotNull(); // hidden API
 		// assertThat(activity.sipManager).isNotNull(); // hidden API
+		// assertThat(activity.shortcutManager).isNotNull(); // TODO API 25
 		// assertThat(activity.statusBarManager).isNotNull(); // hidden API
 		assertThat(activity.storageManager).isNotNull();
 		// assertThat(activity.subscriptionManager).isNotNull(); // TODO API 22
