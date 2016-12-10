@@ -49,7 +49,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 			+ "The alreadyInflated_ hack is needed because of an Android bug\n" // +
 			+ "which leads to infinite calls of onFinishInflate()\n" //
 			+ "when inflating a layout with a parent and using\n" //
-			+ "the <merge /> tag.";
+			+ "the <code>&lt;merge /&gt;</code> tag.";
 
 	private static final String SUPPRESS_WARNING_COMMENT = "" //
 			+ "We use @SuppressWarning here because our java code\n" //
