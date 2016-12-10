@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +16,6 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.helger.jcodemodel.JExpr.invoke;
 import static com.helger.jcodemodel.JExpr.lit;
 import static com.helger.jcodemodel.JMod.FINAL;
 import static com.helger.jcodemodel.JMod.PUBLIC;
@@ -104,8 +104,7 @@ public class ExtraHandler extends BaseAnnotationHandler<EActivityHolder>implemen
 		JMethod injectExtrasMethod = holder.getInjectExtrasMethod();
 		JVar extras = holder.getInjectExtras();
 
-		IJExpression intent = invoke("getIntent");
-		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromIntentOrBundle(elementClass, intent, extras, extraKeyStaticField, injectExtrasMethod);
+		IJExpression restoreMethodCall = bundleHelper.getExpressionToRestoreFromBundle(elementClass, extras, extraKeyStaticField, injectExtrasMethod);
 
 		JBlock ifContainsKey = targetBlock._if(JExpr.invoke(extras, "containsKey").arg(extraKeyStaticField))._then();
 		ifContainsKey.assign(fieldRef, restoreMethodCall);

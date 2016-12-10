@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +17,7 @@
 package org.androidannotations.test.eintentservice;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.robolectric.Robolectric.setupActivity;
 
 import org.androidannotations.test.EmptyActivityWithoutLayout;
 import org.androidannotations.test.EmptyActivityWithoutLayout_;
@@ -33,7 +35,7 @@ public class MyIntentServiceTest {
 		IntentServiceHandledAction.actionForTestHandled = null;
 
 		// Simulate call to intent builder and retrieve the configured Intent
-		EmptyActivityWithoutLayout context = new EmptyActivityWithoutLayout_();
+		EmptyActivityWithoutLayout context = setupActivity(EmptyActivityWithoutLayout_.class);
 		Intent intent = IntentServiceHandledAction_.intent(context) //
 				.myActionOneParam("test") //
 				.get();

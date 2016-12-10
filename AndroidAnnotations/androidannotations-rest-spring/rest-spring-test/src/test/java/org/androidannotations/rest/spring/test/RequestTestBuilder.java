@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,7 +29,7 @@ import org.apache.http.message.BasicHeader;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.robolectric.Robolectric;
+import org.robolectric.shadows.httpclient.FakeHttp;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -113,7 +114,7 @@ public class RequestTestBuilder {
 
 		String responseBody = responseContent != null ? responseContent.replaceAll("'", "\"") : "";
 
-		Robolectric.addPendingHttpResponse(HttpStatus.OK.value(), responseBody, headers);
+		FakeHttp.addPendingHttpResponse(HttpStatus.OK.value(), responseBody, headers);
 	}
 
 	private void checkRequest() {

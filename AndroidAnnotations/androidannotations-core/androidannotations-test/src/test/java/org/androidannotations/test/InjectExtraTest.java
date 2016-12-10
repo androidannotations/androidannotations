@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,13 +27,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
 import android.app.Activity;
 import android.content.Context;
 
-@Config(shadows = CustomShadowBundle.class)
 @RunWith(RobolectricTestRunner.class)
 public class InjectExtraTest {
 
@@ -42,7 +41,7 @@ public class InjectExtraTest {
 
 	@Before
 	public void setUp() {
-		controller = ActivityController.of(ExtraInjectedActivity_.class);
+		controller = Robolectric.buildActivity(ExtraInjectedActivity_.class);
 		activity = controller.get();
 	}
 

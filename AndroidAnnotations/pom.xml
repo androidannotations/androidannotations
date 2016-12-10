@@ -2,6 +2,7 @@
 <!--
 
     Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+    Copyright (C) 2016 the AndroidAnnotations project
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -27,7 +28,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>4.1.0</version>
+	<version>4.2.0</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -130,6 +131,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.basedir>${project.basedir}</main.basedir>
+		<robolectric.version>3.1.4</robolectric.version>
 	</properties>
 
 
@@ -184,15 +186,14 @@
 			<dependency>
 				<groupId>org.robolectric</groupId>
 				<artifactId>robolectric</artifactId>
-				<version>2.4</version>
+				<version>${robolectric.version}</version>
 				<scope>test</scope>
-
-				<exclusions>
-					<exclusion>
-						<groupId>com.android.support</groupId>
-						<artifactId>support-v4</artifactId>
-					</exclusion>
-				</exclusions>
+			</dependency>
+			<dependency> <!-- TODO https://github.com/robolectric/robolectric/issues/2562#issuecomment-263086503 -->
+				<groupId>org.robolectric</groupId>
+				<artifactId>android-all</artifactId>
+				<version>6.0.0_r1-robolectric-0</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup</groupId>
@@ -315,10 +316,14 @@
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<header>${main.basedir}/src/etc/header.txt</header>
+					<header>${main.basedir}/src/etc/header_new.txt</header>
+					<validHeaders>
+						<validHeader>${main.basedir}/src/etc/header.txt</validHeader>
+						<validHeader>${main.basedir}/src/etc/header_both.txt</validHeader>
+					</validHeaders>
 					<excludes>
 						<exclude>.idea/**</exclude>
-						<exclude>src/etc/HOW-TO.txt</exclude>
+						<exclude>src/etc/header*.txt</exclude>
 						<exclude>LICENSE.txt</exclude>
 						<exclude>.gitignore</exclude>
 						<exclude>**/R.java</exclude>
@@ -330,6 +335,8 @@
 						<exclude>**/*.bks</exclude>
 						<exclude>**/org.robolectric.Config.properties</exclude>
 						<exclude>**/*.importorder</exclude>
+						<exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+						<exclude>mvnw.cmd</exclude>
 					</excludes>
 					<strictCheck>true</strictCheck>
 				</configuration>
@@ -406,10 +413,10 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:git@github.com:excilys/androidannotations.git</connection>
-		<developerConnection>scm:git:git@github.com:excilys/androidannotations.git</developerConnection>
-		<url>https://github.com/excilys/androidannotations</url>
-		<tag>androidannotations-4.1.0</tag>
+		<connection>scm:git:git@github.com:androidannotations/androidannotations.git</connection>
+		<developerConnection>scm:git:git@github.com:androidannotations/androidannotations.git</developerConnection>
+		<url>https://github.com/androidannotations/androidannotations</url>
+		<tag>androidannotations-4.2.0</tag>
 	</scm>
 
 	<profiles>

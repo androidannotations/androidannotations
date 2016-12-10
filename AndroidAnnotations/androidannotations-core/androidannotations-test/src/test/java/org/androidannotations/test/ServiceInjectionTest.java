@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -63,7 +64,7 @@ public class ServiceInjectionTest {
 		// assertThat(activity.fingerprintManager).isNotNull(); // TODO API 23
 		// assertThat(activity.hardwarePropertiesManager).isNotNull(); // TODO API 24
 		// assertThat(activity.hdmiControlManager).isNotNull(); // hidden API
-		// assertThat(activity.inputManager).isNotNull(); // TODO no support yet in Robolectric
+		// assertThat(activity.inputManager).isNotNull();
 		assertThat(activity.inputMethodManager).isNotNull();
 		// assertThat(activity.jobScheduler).isNotNull(); // TODO API 21
 		assertThat(activity.keyguardManager).isNotNull();
@@ -78,7 +79,7 @@ public class ServiceInjectionTest {
 		// assertThat(activity.networkManagementService).isNotNull(); // hidden API
 		// assertThat(activity.networkPolicyManager).isNotNull(); // hidden API
 		// assertThat(activity.networkStatsManager).isNotNull(); // TODO API 23
-		// assertThat(activity.nfcManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.nfcManager).isNotNull();
 		assertThat(activity.notificationManager).isNotNull();
 		// assertThat(activity.nsdManager).isNotNull(); // TODO no support yet in Robolectric
 		// assertThat(activity.persistentDataBlockManager).isNotNull(); // hidden API
@@ -89,6 +90,7 @@ public class ServiceInjectionTest {
 		assertThat(activity.sensorManager).isNotNull();
 		// assertThat(activity.serialManager).isNotNull(); // hidden API
 		// assertThat(activity.sipManager).isNotNull(); // hidden API
+		// assertThat(activity.shortcutManager).isNotNull(); // TODO API 25
 		// assertThat(activity.statusBarManager).isNotNull(); // hidden API
 		assertThat(activity.storageManager).isNotNull();
 		// assertThat(activity.subscriptionManager).isNotNull(); // TODO API 22
