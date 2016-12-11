@@ -220,9 +220,9 @@ public class MyServiceTest {
 		ArgumentMatcher<HttpEntity<Void>> matcher = new ArgumentMatcher<HttpEntity<Void>>() {
 
 			@Override
-			public boolean matches(Object argument) {
+			public boolean matches(HttpEntity<Void> argument) {
 				final String expected = "sjsaid=" + sjsaidValue + ";";
-				return expected.equals(((HttpEntity<?>) argument).getHeaders().get("Cookie").get(0));
+				return expected.equals(argument.getHeaders().get("Cookie").get(0));
 			}
 		};
 

@@ -34,7 +34,7 @@
 		<main.basedir>${project.parent.parent.basedir}</main.basedir>
 		<android-rome-version>1.0.0-r2</android-rome-version>
 		<checkstyle.excludes>**/R.java,**/BuildConfig.java,</checkstyle.excludes>
-		<parceler.version>1.1.4</parceler.version>
+		<parceler.version>1.1.6</parceler.version>
 	</properties>
 
 	<dependencies>
@@ -118,7 +118,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<showWarnings>true</showWarnings>
 					<compilerArgs>
 						<arg>-Atrace=true</arg>
 						<arg>-AlogFile=${project.build.directory}/functional-test.log</arg>

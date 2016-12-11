@@ -83,7 +83,7 @@ public class ThreadActivityTest {
 				.in(BackgroundExecutor.class) //
 				.get();
 
-		if (new MockUtil().isMock(executor) || !(executor instanceof ExecutorService)) {
+		if (MockUtil.isMock(executor) || !(executor instanceof ExecutorService)) {
 			return;
 		}
 
