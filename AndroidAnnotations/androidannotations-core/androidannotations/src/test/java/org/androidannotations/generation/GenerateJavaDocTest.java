@@ -80,14 +80,15 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		String[] fieldDoc = { //
 				"     * <p><b>Defaults to</b>: 42</p>", //
 				"     * The Age!", //
-				"     *  @return the age as int", //
 				"     *  @deprecated use {@link #ageLong()}", //
+				"     * ", //
+				"     * @return", //
+				"     *     a {@link IntPrefField} instance to retrieve or write the pref value", //
 				"     */", //
 				"    public IntPrefField age() {", //
 		};
 		String[] editorDoc = { //
 				"         * The Age!", //
-				"         *  @return the age as int", //
 				"         *  @deprecated use {@link #ageLong()}", //
 				"         */", //
 				"        public IntPrefEditorField<SharedPrefWithJavaDoc_.SharedPrefWithJavaDocEditor_> age() {", //
@@ -108,6 +109,9 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		String[] fieldDoc = { //
 				"     * <p><b>Defaults to</b>: \"\"</p>", //
 				"     * ", //
+				"     * ", //
+				"     * @return", //
+				"     *     a {@link StringPrefField} instance to retrieve or write the pref value", //
 				"     */", //
 				"    public StringPrefField title() {", //
 		};
@@ -127,6 +131,9 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		String[] fieldDoc = { //
 				"     * <p><b>Defaults to</b>: \"something\"</p>", //
 				"     * ", //
+				"     * ", //
+				"     * @return", //
+				"     *     a {@link StringPrefField} instance to retrieve or write the pref value", //
 				"     */", //
 				"    public StringPrefField something() {", //
 		};

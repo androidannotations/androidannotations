@@ -30,7 +30,6 @@ public interface SharedPrefWithJavaDoc {
 
 	/**
 	 * The Age!
-	 * @return the age as int
 	 * @deprecated use {@link #ageLong()}
 	 */
 	@Deprecated
