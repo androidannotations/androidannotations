@@ -134,6 +134,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 			fieldMethod.javadoc().append("<p><b>Defaults to</b>: " + defaultValueJavaDoc + "</p>\n");
 		}
 		codeModelHelper.addTrimmedDocComment(fieldMethod, docComment);
+		fieldMethod.javadoc().addReturn().append("a {@link " + prefFieldHelperClass.getSimpleName() + "} instance to retrieve or write the pref value");
 		fieldMethod.body()._return(JExpr.invoke(fieldHelperMethodName).arg(keyExpression).arg(defaultValue));
 	}
 
