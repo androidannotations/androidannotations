@@ -141,11 +141,10 @@ public class RequestTestBuilder {
 		}
 	}
 
-	public class HttpEntityArgumentMatcher extends ArgumentMatcher<HttpEntity<Void>> {
+	public class HttpEntityArgumentMatcher implements ArgumentMatcher<HttpEntity<Void>> {
 		@Override
-		public boolean matches(Object argument) {
-			HttpEntity<?> httpEntity = (HttpEntity<?>) argument;
-			HttpHeaders httpHeaders = httpEntity.getHeaders();
+		public boolean matches(HttpEntity<Void> argument) {
+			HttpHeaders httpHeaders = argument.getHeaders();
 
 			// Check that cookies set earlier are sent in the request
 			if (requestCookies.size() > 0) {

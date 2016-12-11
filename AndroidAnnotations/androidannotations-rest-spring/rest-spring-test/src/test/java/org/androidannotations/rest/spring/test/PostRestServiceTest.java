@@ -75,9 +75,8 @@ public class PostRestServiceTest {
 		return new ArgumentMatcher<HttpEntity<T>>() {
 
 			@Override
-			public boolean matches(Object argument) {
-				HttpEntity<?> actual = (HttpEntity<?>) argument;
-				return expected.getBody().equals(actual.getBody());
+			public boolean matches(HttpEntity<T> argument) {
+				return expected.getBody().equals(argument.getBody());
 			}
 		};
 	}
