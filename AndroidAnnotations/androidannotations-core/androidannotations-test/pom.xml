@@ -118,7 +118,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-					<showWarnings>true</showWarnings>
 					<compilerArgs>
 						<arg>-Atrace=true</arg>
 						<arg>-AlogFile=${project.build.directory}/functional-test.log</arg>
