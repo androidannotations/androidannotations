@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -105,6 +106,14 @@ public @interface SharedPref {
 	 * @return the scope of the preferences
 	 */
 	Scope value() default Scope.ACTIVITY;
+
+	/**
+	 * The name of the preferences. To be used with {@link Scope#ACTIVITY} or
+	 * {@link Scope#UNIQUE}. If empty the interface name is used.
+	 *
+	 * @return the name of the preferences
+	 */
+	String name() default "";
 
 	/**
 	 * The operating mode.
