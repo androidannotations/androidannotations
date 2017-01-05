@@ -12,7 +12,7 @@ import org.androidannotations.gradle.R
 import java.util.Date
 
 @EActivity(R.layout.main)
-open public class HelloAndroidActivity : Activity() {
+open class HelloAndroidActivity : Activity() {
 
     @StringRes
     protected lateinit var hello: String
