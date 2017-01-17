@@ -50,9 +50,9 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, validation);
 
-		validatorHelper.param.anyOrder() //
-				.extendsType(CanonicalNameConstants.COMPOUND_BUTTON).optional() //
-				.primitiveOrWrapper(TypeKind.BOOLEAN).optional() //
+		validatorHelper.param.inOrder() //
+				.extendsAnyOfTypes(CanonicalNameConstants.COMPOUND_BUTTON, CanonicalNameConstants.RADIO_GROUP).optional() //
+				.anyOfPrimitiveOrWrapper(TypeKind.BOOLEAN, TypeKind.INT).optional() //
 				.validate(executableElement, validation);
 	}
 

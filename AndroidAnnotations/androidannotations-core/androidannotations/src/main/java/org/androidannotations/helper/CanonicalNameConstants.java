@@ -75,6 +75,7 @@ public final class CanonicalNameConstants {
 	public static final String TEXT_VIEW_ON_EDITOR_ACTION_LISTENER = "android.widget.TextView.OnEditorActionListener";
 	public static final String COMPOUND_BUTTON = "android.widget.CompoundButton";
 	public static final String COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER = "android.widget.CompoundButton.OnCheckedChangeListener";
+	public static final String RADIO_GROUP = "android.widget.RadioGroup";
 	public static final String VIEW = "android.view.View";
 	public static final String VIEW_ON_CLICK_LISTENER = "android.view.View.OnClickListener";
 	public static final String VIEW_ON_TOUCH_LISTENER = "android.view.View.OnTouchListener";
