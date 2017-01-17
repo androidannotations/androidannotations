@@ -79,6 +79,8 @@ public class ProcessHolder {
 		public final AbstractJClass TEXT_VIEW_ON_EDITOR_ACTION_LISTENER = refClass(CanonicalNameConstants.TEXT_VIEW_ON_EDITOR_ACTION_LISTENER);
 		public final AbstractJClass COMPOUND_BUTTON = refClass(CanonicalNameConstants.COMPOUND_BUTTON);
 		public final AbstractJClass COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER = refClass(CanonicalNameConstants.COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER);
+		public final AbstractJClass RADIO_GROUP = refClass(CanonicalNameConstants.RADIO_GROUP);
+		public final AbstractJClass RADIO_GROUP_ON_CHECKED_CHANGE_LISTENER = refClass(CanonicalNameConstants.RADIO_GROUP_ON_CHECKED_CHANGE_LISTENER);
 		public final AbstractJClass VIEW = refClass(CanonicalNameConstants.VIEW);
 		public final AbstractJClass VIEW_ON_CLICK_LISTENER = refClass(CanonicalNameConstants.VIEW_ON_CLICK_LISTENER);
 		public final AbstractJClass VIEW_ON_TOUCH_LISTENER = refClass(CanonicalNameConstants.VIEW_ON_TOUCH_LISTENER);
