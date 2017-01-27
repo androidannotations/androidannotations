@@ -221,7 +221,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setViewDestroyedField() {
-		viewDestroyedField = generatedClass.field(PRIVATE | VOLATILE, getCodeModel().BOOLEAN, "viewDestroyed" + generationSuffix());
+		viewDestroyedField = generatedClass.field(PRIVATE | VOLATILE, getCodeModel().BOOLEAN, "viewDestroyed" + generationSuffix(), TRUE);
 		getSetContentViewBlock().assign(viewDestroyedField, FALSE);
 		getOnDestroyViewAfterSuperBlock().assign(viewDestroyedField, TRUE);
 	}
