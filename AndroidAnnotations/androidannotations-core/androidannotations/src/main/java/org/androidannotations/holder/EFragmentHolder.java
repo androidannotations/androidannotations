@@ -402,6 +402,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
+	public JBlock getRestoreStateMethodBody() {
+		return instanceStateDelegate.getRestoreStateMethodBody();
+	}
+
+	@Override
 	public JVar getRestoreStateBundleParam() {
 		return instanceStateDelegate.getRestoreStateBundleParam();
 	}
