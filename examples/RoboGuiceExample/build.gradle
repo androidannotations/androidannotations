@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath "com.android.tools.build:gradle:2.3.0"
     }
 }
 
@@ -13,15 +13,15 @@ repositories {
     mavenLocal()
 }
 
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
 
-def AAVersion = '4.3.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.2.0
+def AAVersion = "4.3.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.2.0
 dependencies {
     annotationProcessor "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     annotationProcessor "org.androidannotations:roboguice:$AAVersion"
     compile "org.androidannotations:roboguice-api:$AAVersion"
-    compile 'org.roboguice:roboguice:3.0.1'
+    compile "org.roboguice:roboguice:3.0.1"
 }
 
 android {
