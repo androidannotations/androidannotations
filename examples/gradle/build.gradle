@@ -5,8 +5,6 @@ buildscript {
     dependencies {
         // replace with the current version of the Android plugin
         classpath 'com.android.tools.build:gradle:2.3.0'
-        // the latest version of the android-apt plugin
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 
@@ -16,11 +14,10 @@ repositories {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
-def AAVersion = '4.3.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.2.0
 
+def AAVersion = '4.3.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.2.0
 dependencies {
-    apt "org.androidannotations:androidannotations:$AAVersion"
+    annotationProcessor "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
 
@@ -31,5 +28,12 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 25
+
+        // If you have different applicationIds for buildTypes or productFlavors uncomment this block.
+        //javaCompileOptions {
+        //    annotationProcessorOptions {
+        //        arguments = ['resourcePackageName': android.defaultConfig.applicationId]
+        //    }
+        //}
     }
 }
