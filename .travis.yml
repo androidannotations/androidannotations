@@ -12,15 +12,14 @@ language: android
 
 jdk:
   - oraclejdk8
-  - oraclejdk7
 
 android:
   components:
     - tools
     - tools # https://github.com/travis-ci/travis-ci/issues/6059
     - platform-tools
-    - android-23
-    - build-tools-23.0.3
+    - android-25
+    - build-tools-25.0.2
 
 before_script:
   - export TERM=dumb

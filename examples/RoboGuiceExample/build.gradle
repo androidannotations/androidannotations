@@ -4,9 +4,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:2.1.0'
-        // the latest version of the android-apt plugin
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath "com.android.tools.build:gradle:2.3.0"
     }
 }
 
@@ -15,33 +13,35 @@ repositories {
     mavenLocal()
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
-def AAVersion = '4.3.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.2.0
+apply plugin: "com.android.application"
 
+def AAVersion = "4.3.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.2.0
 dependencies {
-    apt "org.androidannotations:androidannotations:$AAVersion"
+    annotationProcessor "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
-    apt "org.androidannotations:roboguice:$AAVersion"
+    annotationProcessor "org.androidannotations:roboguice:$AAVersion"
     compile "org.androidannotations:roboguice-api:$AAVersion"
-    compile 'org.roboguice:roboguice:3.0.1'
-    // apt 'org.roboguice:roboblender:3.0.1'
-    // RoboBlender does not work with android-apt currently, so unfortunately we have to turn it off
+    compile "org.roboguice:roboguice:3.0.1"
 }
 
-
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 25
+
+        // If you have different applicationIds for buildTypes or productFlavors uncomment this block.
+        //javaCompileOptions {
+        //    annotationProcessorOptions {
+        //        arguments = ['resourcePackageName': android.defaultConfig.applicationId]
+        //    }
+        //}
     }
 
     lintOptions {
         abortOnError false
         // see https://github.com/roboguice/roboguice/issues/295
     }
-
 }

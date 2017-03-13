@@ -1,11 +1,12 @@
 buildscript {
-    ext.kotlin_version = '1.0.6'
+    ext.kotlin_version = "1.1.0"
     
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        // replace with the current version of the Android plugin
+        classpath "com.android.tools.build:gradle:2.3.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -15,9 +16,9 @@ repositories {
     mavenCentral()
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
 
 android {
     compileSdkVersion 25
@@ -28,7 +29,7 @@ android {
         targetSdkVersion 25
     }
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += "src/main/kotlin"
     }
 }
 
@@ -38,7 +39,7 @@ kapt {
     }
 }
 
-def AAVersion = '4.3.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.2.0
+def AAVersion = "4.3.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.2.0
 
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"
