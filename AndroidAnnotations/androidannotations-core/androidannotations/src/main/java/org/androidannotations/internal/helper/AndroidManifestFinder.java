@@ -189,7 +189,8 @@ public class AndroidManifestFinder {
 		Iterable<String> possibleLocations() {
 			String gradleVariant = matcher.group(2);
 
-			return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant);
+			return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant,
+					"build/intermediates/manifests/aapt" + gradleVariant);
 		}
 	}
 
