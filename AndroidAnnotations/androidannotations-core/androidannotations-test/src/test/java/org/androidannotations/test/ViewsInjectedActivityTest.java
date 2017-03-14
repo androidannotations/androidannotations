@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -85,6 +86,13 @@ public class ViewsInjectedActivityTest {
 	public void methodInjectedViewsNotNullAndHasTwoElements() {
 		assertThat(activity.methodInjectedViews).isNotNull();
 		assertThat(activity.methodInjectedViews).hasSize(2);
+	}
+
+	@Test
+	public void methodInjectedViewsNotNullAndHasTwoElements2() {
+		ViewsInjectionOrderActivity_ inOrderActivity = Robolectric.buildActivity(ViewsInjectionOrderActivity_.class).create().get();
+		assertThat(inOrderActivity.methodInjectedViews).isNotNull();
+		assertThat(inOrderActivity.methodInjectedViews).hasSize(2);
 	}
 
 	@Test
