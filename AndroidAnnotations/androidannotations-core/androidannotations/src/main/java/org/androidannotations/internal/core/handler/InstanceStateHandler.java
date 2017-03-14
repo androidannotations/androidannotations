@@ -59,7 +59,7 @@ public class InstanceStateHandler extends BaseAnnotationHandler<HasInstanceState
 		JBlock saveStateBody = holder.getSaveStateMethodBody();
 		JVar saveStateBundleParam = holder.getSaveStateBundleParam();
 		JMethod restoreStateMethod = holder.getRestoreStateMethod();
-		JBlock restoreStateBody = restoreStateMethod.body();
+		JBlock restoreStateBody = holder.getRestoreStateMethodBody();
 		JVar restoreStateBundleParam = holder.getRestoreStateBundleParam();
 
 		TypeMirror type = codeModelHelper.getActualType(element, holder);

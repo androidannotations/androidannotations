@@ -1,5 +1,4 @@
 /**
- * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
  * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,20 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.holder;
+package org.androidannotations.test.instancestate;
 
-import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JMethod;
-import com.helger.jcodemodel.JVar;
+import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.InstanceState;
 
-public interface HasInstanceState extends GeneratedClassHolder {
-	JBlock getSaveStateMethodBody();
+import android.content.Context;
+import android.os.Parcelable;
+import android.view.View;
 
-	JVar getSaveStateBundleParam();
+@EView
+public class InstanceStateView extends View {
 
-	JMethod getRestoreStateMethod();
+	@InstanceState
+	int instanceField = -1;
 
-	JBlock getRestoreStateMethodBody();
+	int restoredInRestoreInstanceState = -2;
 
-	JVar getRestoreStateBundleParam();
+	public InstanceStateView(Context context) {
+		super(context);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Parcelable state) {
+		super.onRestoreInstanceState(state);
+		restoredInRestoreInstanceState = instanceField;
+	}
 }

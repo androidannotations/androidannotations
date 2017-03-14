@@ -35,6 +35,7 @@ public class ViewInstanceStateDelegate extends GeneratedClassHolderDelegate<ECom
 	private JBlock saveStateMethodBody;
 	private JVar saveStateBundleParam;
 	private JMethod restoreStateMethod;
+	private JBlock restoreStateMethodBody;
 	private JVar restoreStateBundleParam;
 
 	public ViewInstanceStateDelegate(EComponentHolder holder) {
@@ -85,6 +86,14 @@ public class ViewInstanceStateDelegate extends GeneratedClassHolderDelegate<ECom
 	}
 
 	@Override
+	public JBlock getRestoreStateMethodBody() {
+		if (restoreStateMethodBody == null) {
+			setRestoreStateMethod();
+		}
+		return restoreStateMethodBody;
+	}
+
+	@Override
 	public JVar getRestoreStateBundleParam() {
 		if (restoreStateBundleParam == null) {
 			setRestoreStateMethod();
@@ -97,10 +106,13 @@ public class ViewInstanceStateDelegate extends GeneratedClassHolderDelegate<ECom
 		restoreStateMethod.annotate(Override.class);
 		JVar state = restoreStateMethod.param(getClasses().PARCELABLE, "state");
 
-		JBlock restoreStateMethodBody = restoreStateMethod.body();
-		restoreStateBundleParam = restoreStateMethodBody.decl(getClasses().BUNDLE, "bundle" + generationSuffix(), cast(getClasses().BUNDLE, state));
-		JVar instanceState = restoreStateMethodBody.decl(getClasses().PARCELABLE, "instanceState", restoreStateBundleParam.invoke("getParcelable").arg(getInstanceStateKey()));
-		restoreStateMethodBody.invoke(_super(), "onRestoreInstanceState").arg(instanceState);
+		JBlock body = restoreStateMethod.body();
+		restoreStateBundleParam = body.decl(getClasses().BUNDLE, "bundle" + generationSuffix(), cast(getClasses().BUNDLE, state));
+		JVar instanceState = body.decl(getClasses().PARCELABLE, "instanceState", restoreStateBundleParam.invoke("getParcelable").arg(getInstanceStateKey()));
+
+		restoreStateMethodBody = body.blockSimple();
+
+		body.invoke(_super(), "onRestoreInstanceState").arg(instanceState);
 	}
 
 	private JVar getInstanceStateKey() {
