@@ -15,6 +15,9 @@
  */
 package org.androidannotations.logger.appender;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -25,11 +28,13 @@ import org.androidannotations.logger.formatter.FormatterSimple;
 
 public class MessagerAppender extends Appender {
 
+	private static List<Message> errors = new LinkedList<>();
+
+	private Messager messager;
+
 	public MessagerAppender() {
 		super(new FormatterSimple());
 	}
-
-	private Messager messager;
 
 	@Override
 	public void open() {
@@ -37,17 +42,30 @@ public class MessagerAppender extends Appender {
 	}
 
 	@Override
-	public void append(Level level, Element element, AnnotationMirror annotationMirror, String message) {
+	public void append(Level level, Element element,
+			AnnotationMirror annotationMirror, String message) {
+		
 		if (messager == null) {
 			return;
 		}
 
 		Kind kind = resolveKind(level);
-		messager.printMessage(kind, message, element, annotationMirror);
+		if (!kind.equals(Kind.ERROR)) {
+			messager.printMessage(kind, message, element, annotationMirror);
+		} else {
+			errors.add(new Message(kind, message, element, annotationMirror));
+		}
 	}
 
 	@Override
-	public void close() {
+	public synchronized void close(boolean lastRound) {
+		if (lastRound) {
+			for (Message error : errors) {
+				messager.printMessage(error.kind, error.message,
+						error.element, error.annotationMirror);
+			}
+			errors.clear();
+		}
 	}
 
 	private Kind resolveKind(Level level) {
@@ -64,6 +82,23 @@ public class MessagerAppender extends Appender {
 			return Kind.ERROR;
 		}
 		return Kind.OTHER;
+	}
+
+	private class Message {
+		Kind kind;
+		String message;
+		Element element;
+		AnnotationMirror annotationMirror;
+
+		Message(Kind kind, String message, Element element,
+				AnnotationMirror annotationMirror) {
+			super();
+			this.kind = kind;
+			this.message = message;
+			this.element = element;
+			this.annotationMirror = annotationMirror;
+		}
+
 	}
 
 }
