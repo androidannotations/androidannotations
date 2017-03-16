@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +22,9 @@ import java.util.List;
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic.Kind;
 
 import org.androidannotations.logger.Level;
@@ -42,9 +46,7 @@ public class MessagerAppender extends Appender {
 	}
 
 	@Override
-	public void append(Level level, Element element,
-			AnnotationMirror annotationMirror, String message) {
-		
+	public void append(Level level, Element element, AnnotationMirror annotationMirror, String message) {
 		if (messager == null) {
 			return;
 		}
@@ -61,8 +63,8 @@ public class MessagerAppender extends Appender {
 	public synchronized void close(boolean lastRound) {
 		if (lastRound) {
 			for (Message error : errors) {
-				messager.printMessage(error.kind, error.message,
-						error.element, error.annotationMirror);
+				ElementDetails elementDetails = error.getElementDetails();
+				messager.printMessage(error.kind, error.message, elementDetails.getElement(), elementDetails.getAnnotationMirror());
 			}
 			errors.clear();
 		}
@@ -85,20 +87,90 @@ public class MessagerAppender extends Appender {
 	}
 
 	private class Message {
-		Kind kind;
-		String message;
-		Element element;
-		AnnotationMirror annotationMirror;
+		private final Kind kind;
+		private final String message;
+		private final String annotationMirrorString;
+		private final List<String> elements = new LinkedList<>();
 
-		Message(Kind kind, String message, Element element,
-				AnnotationMirror annotationMirror) {
-			super();
+		Message(Kind kind, String message, Element element, AnnotationMirror annotationMirror) {
 			this.kind = kind;
 			this.message = message;
+			this.annotationMirrorString = annotationMirror == null ? null : annotationMirror.toString();
+
+			if (element != null) {
+				Element enclosingElement = element;
+				do {
+					elements.add(0, enclosingElement.toString());
+					enclosingElement = enclosingElement.getEnclosingElement();
+				} while (!enclosingElement.getKind().equals(ElementKind.PACKAGE));
+			}
+		}
+
+		private AnnotationMirror getAnnotationMirror(Element element) {
+			if (element == null) {
+				return null;
+			}
+
+			for (AnnotationMirror mirror : element.getAnnotationMirrors()) {
+				if (mirror.toString().equals(annotationMirrorString)) {
+					return mirror;
+				}
+			}
+			return null;
+		}
+
+		private Element getElement() {
+			if (elements.isEmpty()) {
+				return null;
+			}
+
+			List<String> localElements = new LinkedList<>(elements);
+			Element element = processingEnv.getElementUtils().getTypeElement(localElements.remove(0));
+			while (localElements.size() > 0) {
+				if (element instanceof ExecutableElement) {
+					ExecutableElement method = (ExecutableElement) element;
+					for (VariableElement param : method.getParameters()) {
+						if (param.toString().equals(localElements.get(0))) {
+							localElements.remove(0);
+							element = param;
+							break;
+						}
+					}
+				} else {
+					for (Element elem : element.getEnclosedElements()) {
+						if (elem.toString().equals(localElements.get(0))) {
+							localElements.remove(0);
+							element = elem;
+							break;
+						}
+					}
+				}
+			}
+
+			return element;
+		}
+
+		private ElementDetails getElementDetails() {
+			Element element = getElement();
+			return new ElementDetails(element, getAnnotationMirror(element));
+		}
+	}
+
+	private static class ElementDetails {
+		private final Element element;
+		private final AnnotationMirror annotationMirror;
+
+		ElementDetails(Element element, AnnotationMirror annotationMirror) {
 			this.element = element;
 			this.annotationMirror = annotationMirror;
 		}
 
-	}
+		public Element getElement() {
+			return element;
+		}
 
+		public AnnotationMirror getAnnotationMirror() {
+			return annotationMirror;
+		}
+	}
 }
