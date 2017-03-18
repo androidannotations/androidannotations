@@ -17,11 +17,16 @@ package org.androidannotations.test.menu;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InjectMenu;
+import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.test.R;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.Menu;
+import android.view.MenuInflater;
 
 @EActivity
+@OptionsMenu(R.menu.my_menu)
 public class InjectMenuActivity extends Activity {
 
 	@InjectMenu
@@ -30,13 +35,31 @@ public class InjectMenuActivity extends Activity {
 	Menu methodInjectedMenu;
 	Menu multiInjectedMenu;
 
+	boolean menuIsInflated;
+
 	@InjectMenu
 	void methodInjectedExtra(Menu methodInjectedMenu) {
+		this.menuIsInflated = mockMenuInflater.menuInflated;
 		this.methodInjectedMenu = methodInjectedMenu;
 	}
 
 	void multiInjectedMenu(@InjectMenu Menu multiInjectedMenu, @InjectMenu Menu multiInjectedMenu2) {
+		this.menuIsInflated = mockMenuInflater.menuInflated;
 		this.multiInjectedMenu = multiInjectedMenu;
 	}
 
+	MockMenuInflater mockMenuInflater;
+
+	@Override
+	public MenuInflater getMenuInflater() {
+		return mockMenuInflater;
+	}
+
+	class MockMenuInflater extends MenuInflater {
+		boolean menuInflated = false;
+
+		MockMenuInflater(Context context) {
+			super(context);
+		}
+	}
 }

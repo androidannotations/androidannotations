@@ -16,11 +16,16 @@
 package org.androidannotations.test.menu;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -34,6 +39,7 @@ public class InjectMenuActivityTest {
 	@Before
 	public void setUp() {
 		injectMenuActivity = Robolectric.buildActivity(InjectMenuActivity_.class).create().get();
+		injectMenuActivity.mockMenuInflater = createMenuInflater();
 	}
 
 	@Test
@@ -49,6 +55,14 @@ public class InjectMenuActivityTest {
 	}
 
 	@Test
+	public void methodInjectionComesAfterInflation() {
+		Menu menu = mock(Menu.class);
+		assertThat(injectMenuActivity.menuIsInflated).isFalse();
+		injectMenuActivity.onCreateOptionsMenu(menu);
+		assertThat(injectMenuActivity.menuIsInflated).isTrue();
+	}
+
+	@Test
 	public void methodInjectedMenu() {
 		Menu menu = mock(Menu.class);
 		injectMenuActivity.onCreateOptionsMenu(menu);
@@ -61,4 +75,16 @@ public class InjectMenuActivityTest {
 		injectMenuActivity.onCreateOptionsMenu(menu);
 		assertThat(injectMenuActivity.multiInjectedMenu).isSameAs(menu);
 	}
+
+	private InjectMenuActivity.MockMenuInflater createMenuInflater() {
+		final InjectMenuActivity.MockMenuInflater menuInflater = mock(InjectMenuActivity.MockMenuInflater.class);
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				menuInflater.menuInflated = true;
+				return null;
+			}
+		}).when(menuInflater).inflate(anyInt(), any(Menu.class));
+		return menuInflater;
+	}
+
 }
