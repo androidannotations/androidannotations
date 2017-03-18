@@ -33,7 +33,7 @@ script:
   - ./examples/gradle/gradlew assembleDebug --build-file examples/gradle/build.gradle
 
 after_success:
-  - if [[ $TRAVIS_REPO_SLUG == 'androidannotations/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk8' ]]; then cd $TRAVIS_BUILD_DIR/AndroidAnnotations && ./mvnw -DskipTests -Dquiet -s settings.xml deploy ; fi
+  - if [[ $TRAVIS_REPO_SLUG == 'androidannotations/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk8' ]]; then cd $TRAVIS_BUILD_DIR/AndroidAnnotations && ./mvnw -DskipTests -Dquiet -s ../settings.xml deploy ; fi
 
 notifications:
   webhooks:
