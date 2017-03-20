@@ -1,10 +1,13 @@
 buildscript {
+    ext.kotlin_version = "1.1.0"
+    
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.2'
+        // replace with the current version of the Android plugin
+        classpath "com.android.tools.build:gradle:2.3.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -13,30 +16,34 @@ repositories {
     mavenCentral()
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-def AAVersion = '4.2.0-SNAPSHOT' // change this to your desired version, for example the latest stable: 4.1.0
-
-dependencies {
-    kapt "org.androidannotations:androidannotations:$AAVersion"
-    compile "org.androidannotations:androidannotations-api:$AAVersion"
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.2'
-}
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 25
+    }
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
     }
 }
 
 kapt {
-    generateStubs = true
-
     arguments {
         arg("androidManifestFile", variant.outputs[0].processResourcesTask.manifestFile)
     }
 }
+
+def AAVersion = "4.3.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.2.0
+
+dependencies {
+    kapt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+

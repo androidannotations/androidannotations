@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016 the AndroidAnnotations project
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -80,14 +80,15 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		String[] fieldDoc = { //
 				"     * <p><b>Defaults to</b>: 42</p>", //
 				"     * The Age!", //
-				"     *  @return the age as int", //
 				"     *  @deprecated use {@link #ageLong()}", //
+				"     * ", //
+				"     * @return", //
+				"     *     a {@link IntPrefField} instance to retrieve or write the pref value", //
 				"     */", //
 				"    public IntPrefField age() {", //
 		};
 		String[] editorDoc = { //
 				"         * The Age!", //
-				"         *  @return the age as int", //
 				"         *  @deprecated use {@link #ageLong()}", //
 				"         */", //
 				"        public IntPrefEditorField<SharedPrefWithJavaDoc_.SharedPrefWithJavaDocEditor_> age() {", //
@@ -108,6 +109,9 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		String[] fieldDoc = { //
 				"     * <p><b>Defaults to</b>: \"\"</p>", //
 				"     * ", //
+				"     * ", //
+				"     * @return", //
+				"     *     a {@link StringPrefField} instance to retrieve or write the pref value", //
 				"     */", //
 				"    public StringPrefField title() {", //
 		};
@@ -127,6 +131,9 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		String[] fieldDoc = { //
 				"     * <p><b>Defaults to</b>: \"something\"</p>", //
 				"     * ", //
+				"     * ", //
+				"     * @return", //
+				"     *     a {@link StringPrefField} instance to retrieve or write the pref value", //
 				"     */", //
 				"    public StringPrefField something() {", //
 		};

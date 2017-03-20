@@ -55,6 +55,7 @@ public class AndroidManifestFinderTest {
 
 		Object[] gradleManifestFoundInManifests = { GRADLE_GEN_FOLDER, "build/intermediates/manifests/full/debug", true };
 		Object[] gradleManifestFoundInBundles = { GRADLE_GEN_FOLDER, "build/intermediates/bundles/debug", true };
+		Object[] gradleManifestFoundInManifestsAapt = { GRADLE_GEN_FOLDER, "build/intermediates/manifests/aapt/debug", true };
 
 		Object[] mavenManifestFoundInTarget = { MAVEN_GEN_FOLDER, "target", true };
 		Object[] mavenManifestFoundInSrc = { MAVEN_GEN_FOLDER, "src/main", true };
@@ -70,7 +71,8 @@ public class AndroidManifestFinderTest {
 
 		Object[] noGeneratedFolderFound = { "", "", false };
 
-		return Arrays.asList(gradleManifestFoundInManifests, gradleManifestFoundInBundles, mavenManifestFoundInTarget, mavenManifestFoundInSrc, mavenManifestFoundInRoot, eclipseManifestFound,
+		return Arrays.asList(gradleManifestFoundInManifests, gradleManifestFoundInBundles, gradleManifestFoundInManifestsAapt,
+				mavenManifestFoundInTarget, mavenManifestFoundInSrc, mavenManifestFoundInRoot, eclipseManifestFound,
 				gradleManifestNotFound, mavenManifestNotFound, eclipseManifestNotFound, noGeneratedFolderFound);
 	}
 

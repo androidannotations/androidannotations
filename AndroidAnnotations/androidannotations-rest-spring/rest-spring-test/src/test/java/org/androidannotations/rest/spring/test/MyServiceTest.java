@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016 the AndroidAnnotations project
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -220,9 +220,9 @@ public class MyServiceTest {
 		ArgumentMatcher<HttpEntity<Void>> matcher = new ArgumentMatcher<HttpEntity<Void>>() {
 
 			@Override
-			public boolean matches(Object argument) {
+			public boolean matches(HttpEntity<Void> argument) {
 				final String expected = "sjsaid=" + sjsaidValue + ";";
-				return expected.equals(((HttpEntity<?>) argument).getHeaders().get("Cookie").get(0));
+				return expected.equals(argument.getHeaders().get("Cookie").get(0));
 			}
 		};
 

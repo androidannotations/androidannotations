@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -293,8 +294,8 @@ public class APTCodeModelHelper {
 			if (method.name().equals(methodName) && method.params().size() == parameters.size()) {
 				int i = 0;
 				for (JVar param : method.params()) {
-					String searchedParamType = typeMirrorToJClass(parameters.get(i).asType()).name();
-					if (!param.type().name().equals(searchedParamType)) {
+					String searchedParamType = typeMirrorToJClass(parameters.get(i).asType()).fullName();
+					if (!param.type().fullName().equals(searchedParamType)) {
 						continue method;
 					}
 					i++;

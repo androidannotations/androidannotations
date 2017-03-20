@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,6 +32,7 @@ public class InstanceStateDelegate extends GeneratedClassHolderDelegate<ECompone
 	private JBlock saveStateMethodBody;
 	private JVar saveStateBundleParam;
 	private JMethod restoreStateMethod;
+	private JBlock restoreStateMethodBody;
 	private JVar restoreStateBundleParam;
 
 	public InstanceStateDelegate(EComponentHolder holder) {
@@ -72,6 +74,14 @@ public class InstanceStateDelegate extends GeneratedClassHolderDelegate<ECompone
 	}
 
 	@Override
+	public JBlock getRestoreStateMethodBody() {
+		if (restoreStateMethodBody == null) {
+			setRestoreStateMethod();
+		}
+		return restoreStateMethodBody;
+	}
+
+	@Override
 	public JVar getRestoreStateBundleParam() {
 		if (restoreStateBundleParam == null) {
 			setRestoreStateMethod();
@@ -84,7 +94,8 @@ public class InstanceStateDelegate extends GeneratedClassHolderDelegate<ECompone
 		restoreStateBundleParam = restoreStateMethod.param(getClasses().BUNDLE, "savedInstanceState");
 		holder.getInitBodyInjectionBlock().invoke(restoreStateMethod).arg(restoreStateBundleParam);
 
-		restoreStateMethod.body() //
+		restoreStateMethodBody = restoreStateMethod.body();
+		restoreStateMethodBody //
 				._if(ref("savedInstanceState").eq(_null())) //
 				._then()._return();
 	}

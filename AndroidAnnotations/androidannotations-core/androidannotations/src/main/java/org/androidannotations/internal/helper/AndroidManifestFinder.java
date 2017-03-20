@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -188,7 +189,8 @@ public class AndroidManifestFinder {
 		Iterable<String> possibleLocations() {
 			String gradleVariant = matcher.group(2);
 
-			return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant);
+			return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant,
+					"build/intermediates/manifests/aapt" + gradleVariant);
 		}
 	}
 
@@ -294,7 +296,7 @@ public class AndroidManifestFinder {
 		componentQualifiedNames.addAll(providerQualifiedNames);
 
 		NodeList metaDataNodes = documentElement.getElementsByTagName("meta-data");
-		Map<String, String> metaDataQualifiedNames = extractMetaDataQualifiedNames(metaDataNodes);
+		Map<String, AndroidManifest.MetaDataInfo> metaDataQualifiedNames = extractMetaDataQualifiedNames(metaDataNodes);
 
 		NodeList usesPermissionNodes = documentElement.getElementsByTagName("uses-permission");
 		List<String> usesPermissionQualifiedNames = extractUsesPermissionNames(usesPermissionNodes);
@@ -343,22 +345,26 @@ public class AndroidManifestFinder {
 		return componentQualifiedNames;
 	}
 	
-	private Map<String, String> extractMetaDataQualifiedNames(NodeList metaDataNodes) {
-		Map<String, String> metaDataQualifiedNames = new HashMap<String, String>();
+	private Map<String, AndroidManifest.MetaDataInfo> extractMetaDataQualifiedNames(NodeList metaDataNodes) {
+		Map<String, AndroidManifest.MetaDataInfo> metaDataQualifiedNames = new HashMap<String, AndroidManifest.MetaDataInfo>();
 		
 		for (int i = 0; i < metaDataNodes.getLength(); i++) {
 			Node node = metaDataNodes.item(i);
 			Node nameAttribute = node.getAttributes().getNamedItem("android:name");
 			Node valueAttribute = node.getAttributes().getNamedItem("android:value");
+			Node resourceAttribute = node.getAttributes().getNamedItem("android:resource");
 
-			if (nameAttribute == null || valueAttribute == null) {
+			if (nameAttribute == null || (valueAttribute == null && resourceAttribute == null)) {
 				if (nameAttribute != null) {
 					LOGGER.warn("A malformed <meta-data> has been found in the manifest with name {}", nameAttribute.getNodeValue());
 				} else {
 					LOGGER.warn("A malformed <meta-data> has been found in the manifest");
 				}
 			} else {
-				metaDataQualifiedNames.put(nameAttribute.getNodeValue(), valueAttribute.getNodeValue());
+				String name = nameAttribute.getNodeValue();
+				String value = valueAttribute != null ? valueAttribute.getNodeValue() : null;
+				String resource = resourceAttribute != null ? resourceAttribute.getNodeValue() : null;
+				metaDataQualifiedNames.put(name, new AndroidManifest.MetaDataInfo(name, value, resource));
 			}
 		}
 		

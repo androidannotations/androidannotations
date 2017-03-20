@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +25,7 @@ public final class AndroidManifest {
 
 	private final String applicationPackage;
 	private final List<String> componentQualifiedNames;
-	private final Map<String, String> metaDataQualifiedNames;
+	private final Map<String, MetaDataInfo> metaDataQualifiedNames;
 	private final List<String> permissionQualifiedNames;
 	private final String applicationClassName;
 	private final boolean libraryProject;
@@ -43,15 +44,15 @@ public final class AndroidManifest {
 
 	// CHECKSTYLE:OFF
 
-	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, Map<String, String> metaDataQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debugabble) {
+	public static AndroidManifest createManifest(String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, Map<String, MetaDataInfo> metaDataQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debugabble) {
 		return new AndroidManifest(false, applicationPackage, applicationClassName, componentQualifiedNames, metaDataQualifiedNames, permissionQualifiedNames, minSdkVersion, maxSdkVersion, targetSdkVersion, debugabble);
 	}
 
 	public static AndroidManifest createLibraryManifest(String applicationPackage, int minSdkVersion, int maxSdkVersion, int targetSdkVersion) {
-		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList(), new HashMap<String, String>(), Collections.<String> emptyList(), minSdkVersion, maxSdkVersion, targetSdkVersion, false);
+		return new AndroidManifest(true, applicationPackage, "", Collections.<String> emptyList(), new HashMap<String, MetaDataInfo>(), Collections.<String> emptyList(), minSdkVersion, maxSdkVersion, targetSdkVersion, false);
 	}
 
-	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, Map<String, String> metaDataQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debuggable) {
+	private AndroidManifest(boolean libraryProject, String applicationPackage, String applicationClassName, List<String> componentQualifiedNames, Map<String, MetaDataInfo> metaDataQualifiedNames, List<String> permissionQualifiedNames, int minSdkVersion, int maxSdkVersion, int targetSdkVersion, boolean debuggable) {
 		this.libraryProject = libraryProject;
 		this.applicationPackage = applicationPackage;
 		this.applicationClassName = applicationClassName;
@@ -74,7 +75,7 @@ public final class AndroidManifest {
 		return Collections.unmodifiableList(componentQualifiedNames);
 	}
 
-	public Map<String, String> getMetaDataQualifiedNames() {
+	public Map<String, MetaDataInfo> getMetaDataQualifiedNames() {
 		return Collections.unmodifiableMap(metaDataQualifiedNames);
 	}
 
@@ -106,4 +107,33 @@ public final class AndroidManifest {
 		return targetSdkVersion;
 	}
 
+	public static final class MetaDataInfo {
+
+		private final String name;
+		private final String value;
+		private final String resource;
+
+		public MetaDataInfo(String name, String value, String resource) {
+			this.name = name;
+			this.value = value;
+			this.resource = resource;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public String getResource() {
+			return resource;
+		}
+
+		@Override
+		public String toString() {
+			return "{" + "name='" + name + '\'' + ", value='" + value + '\'' + ", resource='" + resource + '\'' + '}';
+		}
+	}
 }

@@ -2,7 +2,7 @@
 <!--
 
     Copyright (C) 2010-2016 eBusiness Information, Excilys Group
-    Copyright (C) 2016 the AndroidAnnotations project
+    Copyright (C) 2016-2017 the AndroidAnnotations project
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -28,7 +28,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>4.2.0</version>
+	<version>4.3.0</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -47,6 +47,22 @@
 
 	<developers>
 		<developer>
+			<id>WonderCsabo</id>
+			<name>Csaba Kozák</name>
+			<email>kozakcsabi@gmail.com</email>
+			<roles>
+				<role>Owner</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>dodgex</id>
+			<name>Kay-Uwe Janssen</name>
+			<email>androidannotations@kujanssen.de</email>
+			<roles>
+				<role>Owner</role>
+			</roles>
+		</developer>
+		<developer>
 			<id>py.ricau</id>
 			<name>Pierre-Yves Ricau</name>
 			<email>py.ricau@gmail.com</email>
@@ -54,7 +70,7 @@
 			<organization>Square, Inc</organization>
 			<organizationUrl>http://squareup.com</organizationUrl>
 			<roles>
-				<role>Owner</role>
+				<role>Former owner</role>
 			</roles>
 		</developer>
 		<developer>
@@ -65,7 +81,7 @@
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
-				<role>Committer</role>
+				<role>Former committer</role>
 			</roles>
 		</developer>
 		<developer>
@@ -76,7 +92,7 @@
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
-				<role>Committer</role>
+				<role>Former committer</role>
 			</roles>
 		</developer>
 		<developer>
@@ -87,7 +103,7 @@
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
-				<role>Committer</role>
+				<role>Former committer</role>
 			</roles>
 		</developer>
 		<developer>
@@ -97,7 +113,7 @@
 			<organization>eBusiness Information</organization>
 			<organizationUrl>http://www.ebusinessinformation.fr</organizationUrl>
 			<roles>
-				<role>Committer</role>
+				<role>Former committer</role>
 			</roles>
 		</developer>
 		<developer>
@@ -107,15 +123,7 @@
 			<organization>Excilys</organization>
 			<organizationUrl>http://excilys.com</organizationUrl>
 			<roles>
-				<role>Committer</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>WonderCsabo</id>
-			<name>Csaba Kozák</name>
-			<email>kozakcsabi@gmail.com</email>
-			<roles>
-				<role>Committer</role>
+				<role>Former committer</role>
 			</roles>
 		</developer>
 		<developer>
@@ -123,7 +131,7 @@
 			<name>Yoann Delouis</name>
 			<email>ydelouis@gmail.com</email>
 			<roles>
-				<role>Committer</role>
+				<role>Former committer</role>
 			</roles>
 		</developer>
 	</developers>
@@ -169,7 +177,7 @@
 			<dependency>
 				<groupId>com.helger</groupId>
 				<artifactId>jcodemodel</artifactId>
-				<version>2.8.5</version>
+				<version>2.8.6</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -216,7 +224,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>1.10.19</version>
+				<version>2.3.0</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -236,16 +244,17 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.5.1</version>
+					<version>3.6.0</version>
 					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
+						<showWarnings>true</showWarnings>
 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.0.2</version>
 					<configuration>
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
@@ -253,11 +262,11 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.6</version>
+					<version>3.0.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.3</version>
+					<version>2.10.4</version>
 					<configuration>
 						<locale>en_US</locale>
 						<quiet>true</quiet>
@@ -274,7 +283,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -294,12 +303,12 @@
 				<plugin>
 					<groupId>com.mycila</groupId>
 					<artifactId>license-maven-plugin</artifactId>
-					<version>2.11</version>
+					<version>3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>com.simpligility.maven.plugins</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>4.4.1</version>
+					<version>4.4.3</version>
 					<configuration>
 						<sdk>
 							<platform>16</platform>
@@ -416,7 +425,7 @@
 		<connection>scm:git:git@github.com:androidannotations/androidannotations.git</connection>
 		<developerConnection>scm:git:git@github.com:androidannotations/androidannotations.git</developerConnection>
 		<url>https://github.com/androidannotations/androidannotations</url>
-		<tag>androidannotations-4.2.0</tag>
+		<tag>androidannotations-4.3.0</tag>
 	</scm>
 
 	<profiles>

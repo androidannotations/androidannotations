@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -65,6 +66,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	private ReceiverRegistrationDelegate<EFragmentHolder> receiverRegistrationDelegate;
 	private PreferencesDelegate preferencesDelegate;
 	private JBlock onCreateOptionsMenuMethodBody;
+	private JBlock onCreateOptionsMenuMethodInflateBody;
 	private JVar onCreateOptionsMenuMenuInflaterVar;
 	private JVar onCreateOptionsMenuMenuParam;
 	private JVar onOptionsItemSelectedItem;
@@ -168,6 +170,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		JBlock methodBody = method.body();
 		onCreateOptionsMenuMenuParam = method.param(getClasses().MENU, "menu");
 		onCreateOptionsMenuMenuInflaterVar = method.param(getClasses().MENU_INFLATER, "inflater");
+		onCreateOptionsMenuMethodInflateBody = methodBody.blockSimple();
 		onCreateOptionsMenuMethodBody = methodBody.blockSimple();
 		methodBody.invoke(_super(), method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar);
 
@@ -221,7 +224,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	private void setViewDestroyedField() {
-		viewDestroyedField = generatedClass.field(PRIVATE | VOLATILE, getCodeModel().BOOLEAN, "viewDestroyed" + generationSuffix());
+		viewDestroyedField = generatedClass.field(PRIVATE | VOLATILE, getCodeModel().BOOLEAN, "viewDestroyed" + generationSuffix(), TRUE);
 		getSetContentViewBlock().assign(viewDestroyedField, FALSE);
 		getOnDestroyViewAfterSuperBlock().assign(viewDestroyedField, TRUE);
 	}
@@ -401,6 +404,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 	}
 
 	@Override
+	public JBlock getRestoreStateMethodBody() {
+		return instanceStateDelegate.getRestoreStateMethodBody();
+	}
+
+	@Override
 	public JVar getRestoreStateBundleParam() {
 		return instanceStateDelegate.getRestoreStateBundleParam();
 	}
@@ -411,6 +419,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 			setOnCreateOptionsMenu();
 		}
 		return onCreateOptionsMenuMethodBody;
+	}
+
+	@Override
+	public JBlock getOnCreateOptionsMenuMethodInflateBody() {
+		if (onCreateOptionsMenuMethodInflateBody == null) {
+			setOnCreateOptionsMenu();
+		}
+		return onCreateOptionsMenuMethodInflateBody;
 	}
 
 	@Override

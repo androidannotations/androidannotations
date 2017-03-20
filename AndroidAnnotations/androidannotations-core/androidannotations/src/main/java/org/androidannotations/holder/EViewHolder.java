@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016 the AndroidAnnotations project
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 			+ "The alreadyInflated_ hack is needed because of an Android bug\n" // +
 			+ "which leads to infinite calls of onFinishInflate()\n" //
 			+ "when inflating a layout with a parent and using\n" //
-			+ "the <merge /> tag.";
+			+ "the <code>&lt;merge /&gt;</code> tag.";
 
 	private static final String SUPPRESS_WARNING_COMMENT = "" //
 			+ "We use @SuppressWarning here because our java code\n" //
@@ -264,6 +264,11 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 	@Override
 	public JMethod getRestoreStateMethod() {
 		return instanceStateDelegate.getRestoreStateMethod();
+	}
+
+	@Override
+	public JBlock getRestoreStateMethodBody() {
+		return instanceStateDelegate.getRestoreStateMethodBody();
 	}
 
 	@Override

@@ -12,15 +12,14 @@ language: android
 
 jdk:
   - oraclejdk8
-  - oraclejdk7
 
 android:
   components:
     - tools
     - tools # https://github.com/travis-ci/travis-ci/issues/6059
     - platform-tools
-    - android-23
-    - build-tools-23.0.3
+    - android-25
+    - build-tools-25.0.2
 
 before_script:
   - export TERM=dumb
@@ -30,11 +29,11 @@ script:
   - ./mvnw install -P travis
   - cd $TRAVIS_BUILD_DIR/examples/maven
   - ./mvnw install
-  - cd $TRAVIS_BUILD_DIR
-  - ./examples/gradle/gradlew assembleDebug --build-file examples/gradle/build.gradle
+  - cd $TRAVIS_BUILD_DIR/examples/gradle
+  - ./gradlew assembleDebug
 
 after_success:
-  - if [[ $TRAVIS_REPO_SLUG == 'androidannotations/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk7' ]]; then cd $TRAVIS_BUILD_DIR/AndroidAnnotations && ./mvnw -DskipTests -Dquiet -s settings.xml deploy ; fi
+  - if [[ $TRAVIS_REPO_SLUG == 'androidannotations/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk8' ]]; then cd $TRAVIS_BUILD_DIR/AndroidAnnotations && ./mvnw -DskipTests -Dquiet -s ../settings.xml deploy ; fi
 
 notifications:
   webhooks:

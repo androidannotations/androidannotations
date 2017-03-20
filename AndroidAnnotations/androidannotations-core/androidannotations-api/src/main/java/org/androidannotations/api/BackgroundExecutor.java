@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 
 public final class BackgroundExecutor {
@@ -384,7 +386,7 @@ public final class BackgroundExecutor {
 			}
 			if (delay > 0) {
 				remainingDelay = delay;
-				targetTimeMillis = System.currentTimeMillis() + delay;
+				targetTimeMillis = SystemClock.elapsedRealtime() + delay;
 			}
 			if (!"".equals(serial)) {
 				this.serial = serial;
@@ -424,7 +426,7 @@ public final class BackgroundExecutor {
 					if (next != null) {
 						if (next.remainingDelay != 0) {
 							/* the delay may not have elapsed yet */
-							next.remainingDelay = Math.max(0L, next.targetTimeMillis - System.currentTimeMillis());
+							next.remainingDelay = Math.max(0L, next.targetTimeMillis - SystemClock.elapsedRealtime());
 						}
 						/* a task having the same serial was queued, execute it */
 						BackgroundExecutor.execute(next);
