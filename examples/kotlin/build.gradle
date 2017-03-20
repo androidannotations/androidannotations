@@ -39,7 +39,7 @@ kapt {
     }
 }
 
-def AAVersion = "4.3.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.2.0
+def AAVersion = "4.4.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.3.0
 
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"
