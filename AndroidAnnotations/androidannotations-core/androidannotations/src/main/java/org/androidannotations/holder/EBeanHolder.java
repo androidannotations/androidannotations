@@ -39,6 +39,7 @@ import com.helger.jcodemodel.JVar;
 public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + generationSuffix();
+	public static final String SET_INSTANCE_MOCK_METHOD_NAME = "setMock" + generationSuffix();
 
 	private JFieldVar contextField;
 	private JMethod constructor;
@@ -85,6 +86,12 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 	public void createFactoryMethod(boolean hasSingletonScope) {
 
 		AbstractJClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType());
+		
+		JFieldVar mockInstance = generatedClass.field(PRIVATE | STATIC, generatedClass, "mockInstance" + generationSuffix());
+		JMethod setMockMethod = generatedClass.method(PUBLIC | STATIC, getCodeModel().VOID, SET_INSTANCE_MOCK_METHOD_NAME);
+		JBlock setMockBody = setMockMethod.body();
+		JVar param = setMockMethod.param(generatedClass, "mock");
+		setMockBody.assign(mockInstance, param);
 
 		JMethod factoryMethod = generatedClass.method(PUBLIC | STATIC, narrowedGeneratedClass, GET_INSTANCE_METHOD_NAME);
 
@@ -92,8 +99,11 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 		JVar factoryMethodContextParam = factoryMethod.param(getClasses().CONTEXT, "context");
 
-		JBlock factoryMethodBody = factoryMethod.body();
-
+		JBlock rawMethodBody = factoryMethod.body();
+		// we use the default body only in case of that the mock is null
+		JBlock factoryMethodBody = rawMethodBody._if(mockInstance.eq(_null()))._then();
+		// otherwise we just return the mock
+		rawMethodBody._return(mockInstance);
 		/*
 		 * Singletons are bound to the application context
 		 */
