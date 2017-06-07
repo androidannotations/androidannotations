@@ -179,7 +179,7 @@ public class AndroidManifestFinder {
 
 	private static class GradleAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
 
-		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/]apt(.*)$");
+		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/]k?apt(.*)$");
 
 		GradleAndroidManifestFinderStrategy(String sourceFolder) {
 			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
