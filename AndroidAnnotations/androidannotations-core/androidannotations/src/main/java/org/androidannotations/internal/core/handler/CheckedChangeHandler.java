@@ -30,6 +30,7 @@ import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.holder.EComponentWithViewSupportHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
+import com.helger.jcodemodel.AbstractJType;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JDefinedClass;
 import com.helger.jcodemodel.JInvocation;
@@ -38,6 +39,8 @@ import com.helger.jcodemodel.JMod;
 import com.helger.jcodemodel.JVar;
 
 public class CheckedChangeHandler extends AbstractViewListenerHandler {
+
+	private String viewElement;
 
 	public CheckedChangeHandler(AndroidAnnotationsEnvironment environment) {
 		super(CheckedChange.class, environment);
@@ -50,9 +53,9 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 		ExecutableElement executableElement = (ExecutableElement) element;
 		validatorHelper.returnTypeIsVoid(executableElement, validation);
 
-		validatorHelper.param.anyOrder() //
-				.extendsType(CanonicalNameConstants.COMPOUND_BUTTON).optional() //
-				.primitiveOrWrapper(TypeKind.BOOLEAN).optional() //
+		validatorHelper.param.inOrder() //
+				.extendsAnyOfTypes(CanonicalNameConstants.COMPOUND_BUTTON, CanonicalNameConstants.RADIO_GROUP).optional() //
+				.anyOfPrimitiveOrWrapper(TypeKind.BOOLEAN, TypeKind.INT).optional() //
 				.validate(executableElement, validation);
 	}
 
@@ -63,15 +66,25 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected void processParameters(EComponentWithViewSupportHolder holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> parameters) {
-		JVar btnParam = listenerMethod.param(getClasses().COMPOUND_BUTTON, "buttonView");
-		JVar isCheckedParam = listenerMethod.param(getCodeModel().BOOLEAN, "isChecked");
-
 		for (VariableElement parameter : parameters) {
-			String parameterType = parameter.asType().toString();
 			if (isTypeOrSubclass(CanonicalNameConstants.COMPOUND_BUTTON, parameter)) {
+				viewElement = CanonicalNameConstants.COMPOUND_BUTTON;
+				JVar btnParam = listenerMethod.param(getClasses().COMPOUND_BUTTON, "buttonView");
 				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.COMPOUND_BUTTON, btnParam, parameter));
-			} else if (parameterType.equals(CanonicalNameConstants.BOOLEAN) || parameter.asType().getKind() == TypeKind.BOOLEAN) {
-				call.arg(isCheckedParam);
+				if (listenerMethod.hasSignature(new AbstractJType[] { getClasses().COMPOUND_BUTTON, getCodeModel().BOOLEAN })) {
+					JVar isCheckedParam = listenerMethod.param(getCodeModel().BOOLEAN, "isChecked");
+					call.arg(isCheckedParam);
+					break;
+				}
+			} else if (isTypeOrSubclass(CanonicalNameConstants.RADIO_GROUP, parameter)) {
+				viewElement = CanonicalNameConstants.RADIO_GROUP;
+				JVar radioGroup = listenerMethod.param(getClasses().RADIO_GROUP, "radioGroup");
+				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.RADIO_GROUP, radioGroup, parameter));
+				if (listenerMethod.hasSignature(new AbstractJType[] { getClasses().RADIO_GROUP, getCodeModel().INT })) {
+					JVar checkedId = listenerMethod.param(getCodeModel().INT, "checkedId");
+					call.arg(checkedId);
+					break;
+				}
 			}
 		}
 	}
@@ -88,11 +101,17 @@ public class CheckedChangeHandler extends AbstractViewListenerHandler {
 
 	@Override
 	protected AbstractJClass getListenerClass(EComponentWithViewSupportHolder holder) {
+		if (CanonicalNameConstants.RADIO_GROUP.equals(viewElement)) {
+			return getClasses().RADIO_GROUP_ON_CHECKED_CHANGE_LISTENER;
+		}
 		return getClasses().COMPOUND_BUTTON_ON_CHECKED_CHANGE_LISTENER;
 	}
 
 	@Override
 	protected AbstractJClass getListenerTargetClass(EComponentWithViewSupportHolder holder) {
+		if (CanonicalNameConstants.RADIO_GROUP.equals(viewElement)) {
+			return getClasses().RADIO_GROUP;
+		}
 		return getClasses().COMPOUND_BUTTON;
 	}
 }
