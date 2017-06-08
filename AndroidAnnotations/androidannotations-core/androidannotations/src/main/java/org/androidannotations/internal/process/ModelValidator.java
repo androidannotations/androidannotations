@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +16,7 @@
  */
 package org.androidannotations.internal.process;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -26,7 +25,6 @@ import javax.lang.model.element.Element;
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
 import org.androidannotations.handler.AnnotationHandler;
-import org.androidannotations.internal.exception.ValidationException;
 import org.androidannotations.internal.model.AnnotationElements;
 import org.androidannotations.internal.model.AnnotationElementsHolder;
 import org.androidannotations.logger.Logger;
@@ -41,10 +39,9 @@ public class ModelValidator {
 		this.environment = environment;
 	}
 
-	public AnnotationElements validate(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) throws ValidationException {
+	public AnnotationElements validate(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) {
 
 		LOGGER.info("Validating elements");
-		List<ElementValidation> failedValidations = new ArrayList<>();
 
 		/*
 		 * We currently do not validate the elements on the ancestors, assuming
@@ -84,14 +81,9 @@ public class ModelValidator {
 				if (elementValidation.isValid()) {
 					validatedAnnotatedElements.add(annotatedElement);
 				} else {
-					failedValidations.add(elementValidation);
 					LOGGER.warn("Element {} invalidated by {}", annotatedElement, annotatedElement, validatorSimpleName);
 				}
 			}
-		}
-
-		if (!failedValidations.isEmpty()) {
-			throw new ValidationException(failedValidations);
 		}
 
 		return validatingHolder;
