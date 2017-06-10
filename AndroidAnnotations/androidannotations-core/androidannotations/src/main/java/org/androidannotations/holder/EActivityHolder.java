@@ -394,6 +394,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return method;
 	}
 
+	@Override
+	public IJExpression getFindViewByIdExpression(JVar idParam) {
+		return JExpr._this().invoke("findViewById").arg(idParam);
+	}
+
 	public JVar getInitSavedInstanceParam() {
 		return initSavedInstanceParam;
 	}

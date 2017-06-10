@@ -58,8 +58,8 @@ public class SomeSingletonTest {
 		notifier.notifyViewChanged(new HasViews() {
 
 			@Override
-			public View findViewById(int id) {
-				return mock(View.class);
+			public <T extends View> T internalFindViewById(int id) {
+				return (T) mock(View.class);
 			}
 		});
 
