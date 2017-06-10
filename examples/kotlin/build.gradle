@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = "1.1.0"
-    
+
     repositories {
         jcenter()
     }
@@ -39,11 +39,10 @@ kapt {
     }
 }
 
-def AAVersion = "4.4.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.3.0
+def AAVersion = "4.4.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.3.1
 
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
-
