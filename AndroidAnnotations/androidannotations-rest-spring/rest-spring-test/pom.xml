@@ -23,7 +23,7 @@
 	<parent>
 		<artifactId>androidannotations-rest-spring</artifactId>
 		<groupId>org.androidannotations</groupId>
-		<version>4.3.0</version>
+		<version>4.3.1</version>
 	</parent>
 
 	<artifactId>rest-spring-test</artifactId>

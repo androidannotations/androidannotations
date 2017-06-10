@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,6 +34,7 @@ import org.junit.runners.Parameterized;
 public class AndroidManifestFinderTest {
 
 	private static final String GRADLE_GEN_FOLDER = "build/generated/source/apt/debug";
+	private static final String GRADLE_KOTLIN_GEN_FOLDER = "build/generated/source/kapt/debug";
 
 	private static final String MAVEN_GEN_FOLDER = "target/generated-sources/annotations";
 
@@ -57,6 +59,10 @@ public class AndroidManifestFinderTest {
 		Object[] gradleManifestFoundInBundles = { GRADLE_GEN_FOLDER, "build/intermediates/bundles/debug", true };
 		Object[] gradleManifestFoundInManifestsAapt = { GRADLE_GEN_FOLDER, "build/intermediates/manifests/aapt/debug", true };
 
+		Object[] gradleKotlinManifestFoundInManifests = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/manifests/full/debug", true };
+		Object[] gradleKotlinManifestFoundInBundles = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/bundles/debug", true };
+		Object[] gradleKotlinManifestFoundInManifestsAapt = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/manifests/aapt/debug", true };
+
 		Object[] mavenManifestFoundInTarget = { MAVEN_GEN_FOLDER, "target", true };
 		Object[] mavenManifestFoundInSrc = { MAVEN_GEN_FOLDER, "src/main", true };
 		Object[] mavenManifestFoundInRoot = { MAVEN_GEN_FOLDER, "", true };
@@ -65,6 +71,8 @@ public class AndroidManifestFinderTest {
 
 		Object[] gradleManifestNotFound = { GRADLE_GEN_FOLDER, "", false };
 
+		Object[] gradleKotlinManifestNotFound = { GRADLE_KOTLIN_GEN_FOLDER, "", false };
+
 		Object[] mavenManifestNotFound = { MAVEN_GEN_FOLDER, "something", false };
 
 		Object[] eclipseManifestNotFound = { ECLIPSE_GEN_FOLDER, "something", false };
@@ -72,8 +80,10 @@ public class AndroidManifestFinderTest {
 		Object[] noGeneratedFolderFound = { "", "", false };
 
 		return Arrays.asList(gradleManifestFoundInManifests, gradleManifestFoundInBundles, gradleManifestFoundInManifestsAapt,
+				gradleKotlinManifestFoundInManifests, gradleKotlinManifestFoundInBundles, gradleKotlinManifestFoundInManifestsAapt,
 				mavenManifestFoundInTarget, mavenManifestFoundInSrc, mavenManifestFoundInRoot, eclipseManifestFound,
-				gradleManifestNotFound, mavenManifestNotFound, eclipseManifestNotFound, noGeneratedFolderFound);
+				gradleManifestNotFound, gradleKotlinManifestNotFound, mavenManifestNotFound, eclipseManifestNotFound,
+				noGeneratedFolderFound);
 	}
 
 	@Test

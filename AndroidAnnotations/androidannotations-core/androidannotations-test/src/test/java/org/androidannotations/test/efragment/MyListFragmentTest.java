@@ -55,7 +55,7 @@ public class MyListFragmentTest {
 	@Test
 	public void isItemClickAvailableFromListFragment() {
 		startFragment(myListFragment);
-		ListView listView = (ListView) myListFragment.findViewById(android.R.id.list);
+		ListView listView = (ListView) myListFragment.internalFindViewById(android.R.id.list);
 		long itemId = listView.getAdapter().getItemId(TESTED_CLICKED_INDEX);
 		View view = listView.getChildAt(TESTED_CLICKED_INDEX);
 
