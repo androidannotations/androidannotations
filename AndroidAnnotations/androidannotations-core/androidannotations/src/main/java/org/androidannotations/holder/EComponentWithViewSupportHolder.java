@@ -161,8 +161,6 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 
 		if (viewClass == null) {
 			viewClass = getClasses().VIEW;
-		} else if (viewClass != getClasses().VIEW) {
-			findViewExpression = cast(viewClass, findViewExpression);
 		}
 
 		IJAssignmentTarget foundView = fieldRef;
