@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +16,7 @@
  */
 package org.androidannotations.internal.core.helper;
 
+import static java.util.Arrays.asList;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import java.lang.annotation.Annotation;
@@ -39,6 +41,10 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 
 import org.androidannotations.ElementValidation;
+import org.androidannotations.annotations.DataBound;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
@@ -468,5 +474,26 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 			}
 		}
 		return false;
+	}
+
+	public void checkDataBoundAnnotation(Element element, ElementValidation validation) {
+		if (element.getAnnotation(DataBound.class) != null && !isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL)) {
+			validation.invalidate();
+		}
+	}
+
+	public void hasDataBindingOnClasspath(ElementValidation validation) {
+		if (!isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL)) {
+			validation.addError("Data binding is not found on classpath, be sure to enable data binding for the project.");
+		}
+	}
+
+	public void hasEActivityOrEFragmentOrEViewGroup(Element element, Element reportElement, ElementValidation valid) {
+		List<Class<? extends Annotation>> validAnnotations = asList(EActivity.class, EFragment.class, EViewGroup.class);
+		hasOneOfAnnotations(reportElement, element, validAnnotations, valid);
+	}
+
+	public void enclosingElementHasDataBoundAnnotation(Element element, ElementValidation validation) {
+		enclosingElementHasAnnotation(DataBound.class, element, validation);
 	}
 }

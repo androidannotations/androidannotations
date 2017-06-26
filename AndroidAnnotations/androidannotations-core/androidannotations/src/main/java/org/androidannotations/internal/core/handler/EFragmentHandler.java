@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +24,8 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.annotations.DataBound;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EFragmentHolder;
 import org.androidannotations.rclass.IRClass;
@@ -34,7 +35,7 @@ import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JVar;
 
-public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentHolder> {
+public class EFragmentHandler extends CoreBaseGeneratingAnnotationHandler<EFragmentHolder> {
 
 	public EFragmentHandler(AndroidAnnotationsEnvironment environment) {
 		super(EFragment.class, environment);
@@ -56,6 +57,8 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 		validatorHelper.isAbstractOrHasEmptyConstructor(element, validation);
 
 		validatorHelper.extendsFragment(element, validation);
+
+		coreValidatorHelper.checkDataBoundAnnotation(element, validation);
 	}
 
 	@Override
@@ -63,25 +66,35 @@ public class EFragmentHandler extends BaseGeneratingAnnotationHandler<EFragmentH
 
 		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.LAYOUT, false);
 
-		if (contentViewId != null) {
-
-			JBlock block = holder.getSetContentViewBlock();
-			JVar inflater = holder.getInflater();
-			JVar container = holder.getContainer();
-
-			JFieldVar contentView = holder.getContentView();
-
-			boolean forceInjection = element.getAnnotation(EFragment.class).forceLayoutInjection();
-
-			if (!forceInjection) {
-				block._if(contentView.eq(_null())) //
-						._then() //
-						.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
-			} else {
-				block.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
-			}
-
+		if (contentViewId == null) {
+			return;
 		}
 
+		JBlock block = holder.getSetContentViewBlock();
+		JVar inflater = holder.getInflater();
+		JVar container = holder.getContainer();
+
+		JFieldVar contentView = holder.getContentView();
+
+		boolean forceInjection = element.getAnnotation(EFragment.class).forceLayoutInjection();
+
+		JBlock inflationBlock;
+
+		if (!forceInjection) {
+			inflationBlock = block._if(contentView.eq(_null())) //
+					._then();
+		} else {
+			inflationBlock = block;
+		}
+
+		if (element.getAnnotation(DataBound.class) != null) {
+			JFieldVar bindingField = holder.getDataBindingField();
+			inflationBlock.assign(bindingField, holder.getDataBindingInflationExpression(contentViewId, container, false));
+			inflationBlock.assign(contentView, bindingField.invoke("getRoot"));
+			holder.getOnDestroyViewAfterSuperBlock().invoke(bindingField, "unbind");
+			holder.clearInjectedView(bindingField);
+		} else {
+			inflationBlock.assign(contentView, inflater.invoke("inflate").arg(contentViewId).arg(container).arg(FALSE));
+		}
 	}
 }

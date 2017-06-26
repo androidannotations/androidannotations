@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -164,6 +165,9 @@ public final class CanonicalNameConstants {
 	 */
 	public static final String PARCEL_ANNOTATION = "org.parceler.Parcel";
 	public static final String PARCELS_UTILITY_CLASS = "org.parceler.Parcels";
+
+	public static final String DATA_BINDING_UTIL = "android.databinding.DataBindingUtil";
+	public static final String VIEW_DATA_BINDING = "android.databinding.ViewDataBinding";
 
 	private CanonicalNameConstants() {
 	}
