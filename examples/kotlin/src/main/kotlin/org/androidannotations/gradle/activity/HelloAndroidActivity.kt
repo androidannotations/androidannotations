@@ -4,6 +4,7 @@ import android.app.Activity
 import android.widget.TextView
 import org.androidannotations.annotations.AfterViews
 import org.androidannotations.annotations.EActivity
+import org.androidannotations.annotations.Extra
 import org.androidannotations.annotations.UiThread
 import org.androidannotations.annotations.Background
 import org.androidannotations.annotations.ViewById
@@ -19,6 +20,10 @@ open class HelloAndroidActivity : Activity() {
 
     @ViewById
     protected lateinit var helloTextView: TextView
+
+    @Extra
+    @JvmField
+    protected var myIntExtra: Int = 0
 
     @AfterViews
     protected fun afterViews() {
