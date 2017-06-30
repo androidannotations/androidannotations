@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,11 +33,13 @@ import org.androidannotations.internal.core.handler.AppHandler;
 import org.androidannotations.internal.core.handler.BackgroundHandler;
 import org.androidannotations.internal.core.handler.BeanHandler;
 import org.androidannotations.internal.core.handler.BeforeTextChangeHandler;
+import org.androidannotations.internal.core.handler.BindingObjectHandler;
 import org.androidannotations.internal.core.handler.CheckedChangeHandler;
 import org.androidannotations.internal.core.handler.ClickHandler;
 import org.androidannotations.internal.core.handler.ColorResHandler;
 import org.androidannotations.internal.core.handler.ColorStateListResHandler;
 import org.androidannotations.internal.core.handler.CustomTitleHandler;
+import org.androidannotations.internal.core.handler.DataBoundHandler;
 import org.androidannotations.internal.core.handler.DefaultResHandler;
 import org.androidannotations.internal.core.handler.DrawableResHandler;
 import org.androidannotations.internal.core.handler.EActivityHandler;
@@ -182,6 +185,7 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new FullscreenHandler(androidAnnotationEnv));
 		annotationHandlers.add(new RootContextHandler(androidAnnotationEnv));
 		annotationHandlers.add(new ExtraHandler(androidAnnotationEnv));
+		annotationHandlers.add(new BindingObjectHandler(androidAnnotationEnv));
 		annotationHandlers.add(new BeforeTextChangeHandler(androidAnnotationEnv));
 		annotationHandlers.add(new TextChangeHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AfterTextChangeHandler(androidAnnotationEnv));
@@ -216,6 +220,8 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new PreferenceChangeHandler(androidAnnotationEnv));
 		annotationHandlers.add(new PreferenceClickHandler(androidAnnotationEnv));
 		annotationHandlers.add(new AfterPreferencesHandler(androidAnnotationEnv));
+
+		annotationHandlers.add(new DataBoundHandler(androidAnnotationEnv));
 
 		annotationHandlers.add(new TraceHandler(androidAnnotationEnv));
 

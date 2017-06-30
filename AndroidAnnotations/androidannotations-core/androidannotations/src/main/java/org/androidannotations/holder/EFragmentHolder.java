@@ -252,14 +252,14 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		onDestroyViewAfterSuperBlock = body.blockSimple();
 	}
 
-	private JBlock getOnDestroyViewAfterSuperBlock() {
+	public JBlock getOnDestroyViewAfterSuperBlock() {
 		if (onDestroyViewAfterSuperBlock == null) {
 			setContentViewRelatedMethods();
 		}
 		return onDestroyViewAfterSuperBlock;
 	}
 
-	public void clearInjectedView(JFieldRef fieldRef) {
+	public void clearInjectedView(IJAssignmentTarget fieldRef) {
 		JBlock block = getOnDestroyViewAfterSuperBlock();
 		block.assign(fieldRef, _null());
 	}

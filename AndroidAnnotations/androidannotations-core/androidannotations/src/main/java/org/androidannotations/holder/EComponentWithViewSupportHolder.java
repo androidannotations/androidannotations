@@ -44,6 +44,7 @@ import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JDefinedClass;
 import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JSwitch;
@@ -60,6 +61,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 	private JBlock onViewChangedBodyBeforeInjectionBlock;
 	private JVar onViewChangedHasViewsParam;
 	protected Map<String, FoundHolder> foundHolders = new HashMap<>();
+	protected DataBindingDelegate dataBindingDelegate;
 	protected JMethod findNativeFragmentById;
 	protected JMethod findSupportFragmentById;
 	protected JMethod findNativeFragmentByTag;
@@ -73,6 +75,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		super(environment, annotatedElement);
 		viewNotifierHelper = new ViewNotifierHelper(this, environment);
 		keyEventCallbackMethodsDelegate = new KeyEventCallbackMethodsDelegate<>(this);
+		dataBindingDelegate = new DataBindingDelegate(this);
 	}
 
 	public IJExpression getFindViewByIdExpression(JVar idParam) {
@@ -371,6 +374,14 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 	@Override
 	public JVar getOnKeyUpKeyEventParam() {
 		return keyEventCallbackMethodsDelegate.getOnKeyUpKeyEventParam();
+	}
+
+	public JFieldVar getDataBindingField() {
+		return dataBindingDelegate.getDataBindingField();
+	}
+
+	public IJExpression getDataBindingInflationExpression(IJExpression contentViewId, IJExpression container, boolean attachToRoot) {
+		return dataBindingDelegate.getDataBindingInflationExpression(contentViewId, container, attachToRoot);
 	}
 
 }
