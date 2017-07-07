@@ -41,6 +41,7 @@ public class Options {
 		addSupportedOption(AndroidManifestFinder.OPTION_MANIFEST);
 		addSupportedOption(AndroidManifestFinder.OPTION_LIBRARY);
 		addSupportedOption(ProjectRClassFinder.OPTION_RESOURCE_PACKAGE_NAME);
+		addSupportedOption(ProjectRClassFinder.OPTION_USE_R2);
 		addSupportedOption(ModelConstants.OPTION_CLASS_SUFFIX);
 		addSupportedOption(FileAppender.OPTION_LOG_FILE);
 		addSupportedOption(LoggerContext.OPTION_LOG_LEVEL);
