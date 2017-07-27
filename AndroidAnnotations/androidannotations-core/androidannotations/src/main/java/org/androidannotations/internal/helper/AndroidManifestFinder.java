@@ -179,7 +179,7 @@ public class AndroidManifestFinder {
 
 	private static class GradleAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
 
-		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/]k?apt(.*)$");
+		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/](k?apt)(.*)$");
 
 		GradleAndroidManifestFinderStrategy(String sourceFolder) {
 			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
@@ -187,10 +187,43 @@ public class AndroidManifestFinder {
 
 		@Override
 		Iterable<String> possibleLocations() {
-			String gradleVariant = matcher.group(2);
+			String path = matcher.group(1);
+			String mode = matcher.group(2);
+			String gradleVariant = matcher.group(3);
+			String variantPart = gradleVariant.substring(1);
 
-			return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant,
-					"build/intermediates/manifests/aapt" + gradleVariant);
+			if ("apt".equals(mode)) {
+				return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant, "build/intermediates/manifests/aapt" + gradleVariant);
+			}
+
+			ArrayList<String> possibleLocations = new ArrayList<>();
+
+			for (String directory : Arrays.asList("build/intermediates/manifests/full", "build/intermediates/bundles", "build/intermediates/manifests/aapt")) {
+				findPossibleLocations(path, directory, variantPart, possibleLocations);
+			}
+
+			return possibleLocations;
+		}
+
+		private void findPossibleLocations(String basePath, String targetPath, String variantPart, List<String> possibleLocations) {
+			String[] directories = new File(basePath + targetPath).list();
+
+			if (directories == null) {
+				return;
+			}
+
+			for (String directory : directories) {
+				String possibleLocation = targetPath + "/" + directory;
+				File variantDir = new File(basePath + possibleLocation);
+				if (variantDir.isDirectory() && variantPart.toLowerCase().startsWith(directory.toLowerCase())) {
+					String remainingPart = variantPart.substring(directory.length());
+					if (remainingPart.length() == 0) {
+						possibleLocations.add(possibleLocation);
+					} else {
+						findPossibleLocations(basePath, possibleLocation, remainingPart, possibleLocations);
+					}
+				}
+			}
 		}
 	}
 
