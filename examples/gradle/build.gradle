@@ -1,16 +1,16 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath "com.android.tools.build:gradle:2.3.0"
+        classpath "com.android.tools.build:gradle:2.3.3"
     }
 }
 
 repositories {
-    mavenCentral()
     mavenLocal()
+    mavenCentral()
 }
 
 apply plugin: "com.android.application"
@@ -23,7 +23,7 @@ dependencies {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.0"
 
     defaultConfig {
         minSdkVersion 9
@@ -32,7 +32,7 @@ android {
         // If you have different applicationIds for buildTypes or productFlavors uncomment this block.
         //javaCompileOptions {
         //    annotationProcessorOptions {
-        //        arguments = ['resourcePackageName': android.defaultConfig.applicationId]
+        //        arguments = ['resourcePackageName': "org.androidannotations.sample"]
         //    }
         //}
     }
