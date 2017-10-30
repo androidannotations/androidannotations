@@ -328,7 +328,7 @@ public class APTCodeModelHelper {
 	public void copyAnnotation(IJAnnotatable annotatable, AnnotationMirror annotationMirror) {
 		Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = annotationMirror.getElementValues();
 
-		if (!hasAnnotation(annotatable, annotationMirror)) {
+		if (!hasAnnotation(annotatable, annotationMirror) || annotatable instanceof JAnnotationArrayMember) {
 			AbstractJClass annotation = typeMirrorToJClass(annotationMirror.getAnnotationType());
 			JAnnotationUse annotate = annotatable.annotate(annotation);
 
