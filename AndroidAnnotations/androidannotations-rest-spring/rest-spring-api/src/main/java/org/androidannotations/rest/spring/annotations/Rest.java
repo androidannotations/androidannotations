@@ -259,9 +259,9 @@ import java.lang.annotation.Target;
  * 
  * <h2>Bundle interfaces</h2>
  * <p>
- * Since 3.0, we're also providing some bundle interface your RestClient can
- * extends of. Each of them provide handled methods subset and let you clean
- * your code by using extends composition instead of writing methods.
+ * Since 3.0, we provide some bundle interfaces, which declare the magic methods
+ * listed above. You can extend from these interfaces, so you do not have to
+ * write them directly in your {@link Rest} annotated interface.
  * </p>
  * <p>
  * Available bundle interfaces :
