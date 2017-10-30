@@ -181,6 +181,9 @@ public class AndroidManifestFinder {
 
 		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/](k?apt)(.*)$");
 
+		private static final List<String> SUPPORTED_ABI_SPLITS = Arrays.asList("arm64-v8a", "armeabi", "armeabi-v7a", "mips", "mips64", "x86", "x86_64");
+		private static final List<String> SUPPORTED_DENSITY_SPLITS = Arrays.asList("hdpi", "ldpi", "mdpi", "xhdpi", "xxhdpi", "xxxhdpi");
+
 		GradleAndroidManifestFinderStrategy(String sourceFolder) {
 			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
 		}
@@ -191,10 +194,6 @@ public class AndroidManifestFinder {
 			String mode = matcher.group(2);
 			String gradleVariant = matcher.group(3);
 			String variantPart = gradleVariant.substring(1);
-
-			if ("apt".equals(mode)) {
-				return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant, "build/intermediates/manifests/aapt" + gradleVariant);
-			}
 
 			ArrayList<String> possibleLocations = new ArrayList<>();
 
@@ -212,6 +211,10 @@ public class AndroidManifestFinder {
 				return;
 			}
 
+			if (variantPart.startsWith("/") || variantPart.startsWith("\\")) {
+				variantPart = variantPart.substring(1);
+			}
+
 			for (String directory : directories) {
 				String possibleLocation = targetPath + "/" + directory;
 				File variantDir = new File(basePath + possibleLocation);
@@ -219,9 +222,31 @@ public class AndroidManifestFinder {
 					String remainingPart = variantPart.substring(directory.length());
 					if (remainingPart.length() == 0) {
 						possibleLocations.add(possibleLocation);
+						addPossibleSplitLocations(basePath, possibleLocation, possibleLocations);
 					} else {
 						findPossibleLocations(basePath, possibleLocation, remainingPart, possibleLocations);
 					}
+				}
+			}
+		}
+
+		private void addPossibleSplitLocations(String basePath, String possibleLocation, List<String> possibleLocations) {
+			for (String abiSplit : SUPPORTED_ABI_SPLITS) {
+				File splitDir = new File(basePath + possibleLocation + "/" + abiSplit);
+				if (splitDir.isDirectory()) {
+					possibleLocations.add(possibleLocation + "/" + abiSplit);
+					for (String densitySplit : SUPPORTED_DENSITY_SPLITS) {
+						File splitSubDir = new File(basePath + possibleLocation + "/" + abiSplit + "/" + densitySplit);
+						if (splitSubDir.isDirectory()) {
+							possibleLocations.add(possibleLocation + "/" + abiSplit + "/" + densitySplit);
+						}
+					}
+				}
+			}
+			for (String densitySplit : SUPPORTED_DENSITY_SPLITS) {
+				File splitDir = new File(basePath + possibleLocation + "/" + densitySplit);
+				if (splitDir.isDirectory()) {
+					possibleLocations.add(possibleLocation + "/" + densitySplit);
 				}
 			}
 		}
