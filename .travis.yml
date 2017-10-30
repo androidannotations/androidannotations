@@ -18,6 +18,7 @@ android:
     - tools
     - tools # https://github.com/travis-ci/travis-ci/issues/6059
     - platform-tools
+    - android-16
     - android-25
     - build-tools-26.0.0
 
