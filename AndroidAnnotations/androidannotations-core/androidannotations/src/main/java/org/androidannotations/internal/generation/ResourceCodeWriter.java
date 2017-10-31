@@ -31,7 +31,7 @@ public class ResourceCodeWriter extends AbstractCodeWriter {
 	private final Filer filer;
 
 	public ResourceCodeWriter(Filer filer, Charset charset) {
-		super(charset);
+		super(charset, getDefaultNewLine());
 		this.filer = filer;
 	}
 
