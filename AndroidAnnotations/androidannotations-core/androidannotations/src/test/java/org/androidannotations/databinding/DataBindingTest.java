@@ -27,8 +27,8 @@ import org.junit.Test;
 public class DataBindingTest extends AAProcessorTestHelper {
 
 	private static final String[] DATA_BINDING_EXPRESSIONS = new String[] {
-		"        ViewGroup contentView = internalFindViewById(R.id.content);",
-		"        viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(this), org.androidannotations.databinding.R.layout.activity_main, contentView, false);",
+		"        ViewGroup contentView = internalFindViewById(android.R.id.content);",
+		"        viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_main, contentView, false);",
 		"        setContentView(viewDataBinding_.getRoot(), viewDataBinding_.getRoot().getLayoutParams());",
 	};
 
