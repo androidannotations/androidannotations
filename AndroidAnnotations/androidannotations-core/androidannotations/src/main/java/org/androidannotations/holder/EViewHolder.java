@@ -254,7 +254,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 		onDetachedFromWindowMethod.annotate(Override.class);
 		JBlock body = onDetachedFromWindowMethod.body();
 		onDetachedFromWindowBeforeSuperBlock = body.blockSimple();
-		body.invoke(_super(), onAttachedToWindowMethod);
+		body.invoke(_super(), onDetachedFromWindowMethod);
 	}
 
 	@Override
