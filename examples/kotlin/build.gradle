@@ -8,6 +8,7 @@ buildscript {
         // replace with the current version of the Android plugin
         classpath "com.android.tools.build:gradle:2.3.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
     }
 }
 
@@ -18,6 +19,7 @@ repositories {
 
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
+apply plugin: "kotlin-allopen"
 apply plugin: "kotlin-kapt"
 
 android {
@@ -31,6 +33,10 @@ android {
     sourceSets {
         main.java.srcDirs += "src/main/kotlin"
     }
+}
+
+allOpen {
+    annotation("org.androidannotations.api.KotlinOpen")
 }
 
 // If you have different applicationIds for buildTypes or productFlavors uncomment this block.
