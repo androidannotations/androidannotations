@@ -1,5 +1,4 @@
 /**
- * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
  * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,45 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.annotations;
+package org.androidannotations.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 /**
- * <p>
- * Should be used on {@link android.content.ContentProvider} classes to enable
- * usage of AndroidAnnotations.
- * </p>
- * <p>
- * Your code related to injected beans should go in an {@link AfterInject}
- * annotated method.
- * </p>
- * <p>
- * If the class is abstract, the enhanced activity will not be generated.
- * Otherwise, it will be generated as a final class. You can use
- * AndroidAnnotations to create Abstract classes that handle common code.
- * </p>
- * <blockquote>
- * 
- * Example :
- * 
- * <pre>
- * &#064;EProvider
- * public class MyProvider extends ContentProvider {
- * 
- * }
- * </pre>
- * </blockquote>
- * 
- * @see AfterInject
+ * Utility annotation to easily support kotlin-allopen plugin
+ *
+ * @see "https://github.com/androidannotations/androidannotations/wiki/Kotlin"
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-@KotlinOpen
-public @interface EProvider {
+public @interface KotlinOpen {
 }
