@@ -4,6 +4,7 @@ import android.app.Activity
 import android.widget.TextView
 import org.androidannotations.annotations.AfterViews
 import org.androidannotations.annotations.EActivity
+import org.androidannotations.annotations.EBean
 import org.androidannotations.annotations.Extra
 import org.androidannotations.annotations.UiThread
 import org.androidannotations.annotations.Background
@@ -41,5 +42,21 @@ open class HelloAndroidActivity : Activity() {
     @UiThread
     protected open fun updateHelloTextView(helloMessage: String) {
         helloTextView.text = helloMessage
+    }
+}
+
+/**
+ * As of Kotlin 1.0.6+ and AndroidAnnotations 4.4.0, you can use the kotlin-allopen plugin
+ * to remove the need to explicitly declare enhanced classes or methods as <code>open</code>.
+ *
+ * See the build.gradle file or [our wiki](https://github.com/androidannotations/androidannotations/wiki/Kotlin)
+ * for details on how to use the plugin.
+ */
+@EBean
+public class EnhancedBean {
+
+    @Background
+    protected fun computeDateBackground() {
+        // do stuff ;)
     }
 }
