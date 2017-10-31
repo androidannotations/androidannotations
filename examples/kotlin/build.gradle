@@ -45,5 +45,5 @@ def AAVersion = "4.4.0-SNAPSHOT" // change this to your desired version, for exa
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
