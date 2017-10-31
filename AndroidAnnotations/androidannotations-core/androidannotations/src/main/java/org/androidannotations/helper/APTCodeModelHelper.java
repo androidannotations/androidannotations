@@ -127,7 +127,7 @@ public class APTCodeModelHelper {
 		if (bound == null) {
 			bound = wildcardType.getSuperBound();
 			if (bound == null) {
-				return environment.getClasses().OBJECT.wildcard();
+				return environment.getClasses().OBJECT.wildcardExtends();
 			}
 			return typeMirrorToJClass(bound, substitute).wildcardSuper();
 		}
@@ -135,9 +135,9 @@ public class APTCodeModelHelper {
 		TypeMirror extendsBound = wildcardType.getExtendsBound();
 
 		if (extendsBound == null) {
-			return environment.getClasses().OBJECT.wildcard();
+			return environment.getClasses().OBJECT.wildcardExtends();
 		} else {
-			return typeMirrorToJClass(extendsBound, substitute).wildcard();
+			return typeMirrorToJClass(extendsBound, substitute).wildcardExtends();
 		}
 	}
 

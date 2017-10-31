@@ -167,6 +167,7 @@ public class ProcessHolder {
 	public ProcessHolder(ProcessingEnvironment processingEnvironment) {
 		this.processingEnvironment = processingEnvironment;
 		codeModel = new JCodeModel();
+		codeModel.addDontImportClass(refClass("android.R"));
 		classes = new Classes();
 	}
 

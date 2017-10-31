@@ -46,7 +46,7 @@ public class SourceCodeWriter extends AbstractCodeWriter {
 	}
 
 	public SourceCodeWriter(Filer filer, OriginatingElements originatingElements, Charset charset) {
-		super(charset);
+		super(charset, getDefaultNewLine());
 		this.filer = filer;
 		this.originatingElements = originatingElements;
 	}
