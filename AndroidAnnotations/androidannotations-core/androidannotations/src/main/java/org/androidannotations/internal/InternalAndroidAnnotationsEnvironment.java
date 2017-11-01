@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,6 +49,8 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 	private IRClass rClass;
 	private AndroidManifest androidManifest;
 
+	private AnnotationElements extractedElements;
+
 	private AnnotationElements validatedElements;
 
 	private ProcessHolder processHolder;
@@ -71,6 +74,10 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 	public void setAndroidEnvironment(IRClass rClass, AndroidManifest androidManifest) {
 		this.rClass = rClass;
 		this.androidManifest = androidManifest;
+	}
+
+	public void setExtractedElements(AnnotationElements extractedElements) {
+		this.extractedElements = extractedElements;
 	}
 
 	public void setValidatedElements(AnnotationElements validatedElements) {
@@ -139,6 +146,11 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 	@Override
 	public AndroidManifest getAndroidManifest() {
 		return androidManifest;
+	}
+
+	@Override
+	public AnnotationElements getExtractedElements() {
+		return extractedElements;
 	}
 
 	@Override

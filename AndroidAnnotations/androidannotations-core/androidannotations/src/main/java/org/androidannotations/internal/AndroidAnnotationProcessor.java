@@ -154,6 +154,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
+		androidAnnotationsEnv.setExtractedElements(extractedModel);
+
 		AnnotationElementsHolder validatingHolder = extractedModel.validatingHolder();
 		androidAnnotationsEnv.setValidatedElements(validatingHolder);
 
