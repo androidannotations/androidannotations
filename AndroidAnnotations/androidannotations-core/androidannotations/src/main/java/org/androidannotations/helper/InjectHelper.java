@@ -71,6 +71,7 @@ public class InjectHelper<T extends GeneratedClassHolder> {
 
 		} else {
 			handler.validateEnclosingElement(element, valid);
+			validatorHelper.isNotFinal(element, valid);
 		}
 	}
 
