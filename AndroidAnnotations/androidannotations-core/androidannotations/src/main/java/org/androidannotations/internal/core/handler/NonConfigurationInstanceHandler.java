@@ -49,6 +49,8 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 		validatorHelper.enclosingElementHasEActivity(element, validation);
 
 		validatorHelper.isNotPrivate(element, validation);
+
+		validatorHelper.isNotFinal(element, validation);
 	}
 
 	@Override
