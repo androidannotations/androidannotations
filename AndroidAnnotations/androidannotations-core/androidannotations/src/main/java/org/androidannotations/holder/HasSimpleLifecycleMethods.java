@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,17 +17,8 @@ package org.androidannotations.holder;
 
 import com.helger.jcodemodel.JBlock;
 
-public interface HasLifecycleMethods extends GeneratedClassHolder {
+public interface HasSimpleLifecycleMethods extends GeneratedClassHolder {
 
-	JBlock getOnCreateAfterSuperBlock();
-	JBlock getOnDestroyBeforeSuperBlock();
-
-	JBlock getOnStartAfterSuperBlock();
-	JBlock getOnStopBeforeSuperBlock();
-
-	JBlock getOnResumeAfterSuperBlock();
-	JBlock getOnPauseBeforeSuperBlock();
-
-	JBlock getOnAttachAfterSuperBlock();
-	JBlock getOnDetachBeforeSuperBlock();
+	JBlock getStartLifecycleAfterSuperBlock();
+	JBlock getEndLifecycleBeforeSuperBlock();
 }

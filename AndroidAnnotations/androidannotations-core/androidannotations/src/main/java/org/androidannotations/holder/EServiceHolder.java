@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,6 +40,7 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	private ServiceIntentBuilder intentBuilder;
 	private JDefinedClass intentBuilderClass;
 	private ReceiverRegistrationDelegate<EServiceHolder> receiverRegistrationDelegate;
+	private JBlock onCreateAfterSuperBlock;
 	private JBlock onDestroyBeforeSuperBlock;
 
 	public EServiceHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement, AndroidManifest androidManifest) throws Exception {
@@ -70,6 +72,7 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 		JBlock onCreateBody = onCreate.body();
 		onCreateBody.invoke(getInit());
 		onCreateBody.invoke(JExpr._super(), onCreate);
+		onCreateAfterSuperBlock = onCreateBody.blockVirtual();
 	}
 
 	private void setOnDestroy() {
@@ -101,45 +104,16 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	}
 
 	@Override
-	public JBlock getOnCreateAfterSuperBlock() {
-		return getInitBody();
+	public JBlock getStartLifecycleAfterSuperBlock() {
+		return onCreateAfterSuperBlock;
 	}
 
 	@Override
-	public JBlock getOnDestroyBeforeSuperBlock() {
+	public JBlock getEndLifecycleBeforeSuperBlock() {
 		if (onDestroyBeforeSuperBlock == null) {
 			setOnDestroy();
 		}
+
 		return onDestroyBeforeSuperBlock;
-	}
-
-	@Override
-	public JBlock getOnStartAfterSuperBlock() {
-		return receiverRegistrationDelegate.getOnStartAfterSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnStopBeforeSuperBlock() {
-		return receiverRegistrationDelegate.getOnStopBeforeSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnResumeAfterSuperBlock() {
-		return receiverRegistrationDelegate.getOnResumeAfterSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnPauseBeforeSuperBlock() {
-		return receiverRegistrationDelegate.getOnPauseBeforeSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnAttachAfterSuperBlock() {
-		return receiverRegistrationDelegate.getOnAttachAfterSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnDetachBeforeSuperBlock() {
-		return receiverRegistrationDelegate.getOnDetachBeforeSuperBlock();
 	}
 }

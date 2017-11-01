@@ -16,17 +16,16 @@
  */
 package org.androidannotations.holder;
 
-import org.androidannotations.holder.ReceiverRegistrationDelegate.IntentFilterData;
-
-import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JFieldVar;
 
-public interface HasReceiverRegistration extends HasSimpleLifecycleMethods {
+public interface HasActivityLifecycleMethods extends GeneratedClassHolder {
 
-	IJExpression getContextRef();
+	JBlock getOnCreateAfterSuperBlock();
+	JBlock getOnDestroyBeforeSuperBlock();
 
-	JFieldVar getIntentFilterField(IntentFilterData intentFilterData);
+	JBlock getOnStartAfterSuperBlock();
+	JBlock getOnStopBeforeSuperBlock();
 
-	JBlock getIntentFilterInitializationBlock(IntentFilterData intentFilterData);
+	JBlock getOnResumeAfterSuperBlock();
+	JBlock getOnPauseBeforeSuperBlock();
 }
