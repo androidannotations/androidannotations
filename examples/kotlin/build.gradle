@@ -2,11 +2,12 @@ buildscript {
     ext.kotlin_version = "1.1.51"
 
     repositories {
+        google()
         jcenter()
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath "com.android.tools.build:gradle:2.3.0"
+        classpath "com.android.tools.build:gradle:3.0.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
     }
@@ -23,12 +24,12 @@ apply plugin: "kotlin-allopen"
 apply plugin: "kotlin-kapt"
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 25
+        minSdkVersion 14
+        targetSdkVersion 26
     }
     sourceSets {
         main.java.srcDirs += "src/main/kotlin"
@@ -50,6 +51,6 @@ def AAVersion = "4.4.0-SNAPSHOT" // change this to your desired version, for exa
 
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"
-    compile "org.androidannotations:androidannotations-api:$AAVersion"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.androidannotations:androidannotations-api:$AAVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
