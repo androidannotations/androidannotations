@@ -24,7 +24,7 @@ open class HelloAndroidActivity : Activity() {
 
     @Extra
     @JvmField
-    protected var myIntExtra: Int = 0
+    protected final var myIntExtra: Int = 0
 
     @AfterViews
     protected fun afterViews() {
