@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 /**
  * Utility annotation to easily support kotlin-allopen plugin
  *
- * @see "https://github.com/androidannotations/androidannotations/wiki/Kotlin"
+ * @see "https://github.com/androidannotations/androidannotations/wiki/Kotlin-support"
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
