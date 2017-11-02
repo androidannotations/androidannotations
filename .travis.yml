@@ -33,6 +33,10 @@ script:
   - ./mvnw install
   - cd $TRAVIS_BUILD_DIR/examples/gradle
   - ./gradlew assembleDebug
+  - cd $TRAVIS_BUILD_DIR/examples/kotlin
+  - ./gradlew assembleDebug
+  - cd $TRAVIS_BUILD_DIR/examples/RoboGuiceExample
+  - ./gradlew assembleDebug
   - set +e
 
 after_success:
