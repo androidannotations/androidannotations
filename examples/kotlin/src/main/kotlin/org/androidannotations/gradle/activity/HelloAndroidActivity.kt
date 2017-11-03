@@ -3,9 +3,10 @@ package org.androidannotations.gradle.activity
 import android.app.Activity
 import android.widget.TextView
 import org.androidannotations.annotations.AfterViews
-import org.androidannotations.annotations.EActivity
-import org.androidannotations.annotations.UiThread
 import org.androidannotations.annotations.Background
+import org.androidannotations.annotations.EActivity
+import org.androidannotations.annotations.Extra
+import org.androidannotations.annotations.UiThread
 import org.androidannotations.annotations.ViewById
 import org.androidannotations.annotations.res.StringRes
 import org.androidannotations.gradle.R
@@ -19,6 +20,10 @@ open class HelloAndroidActivity : Activity() {
 
     @ViewById
     protected lateinit var helloTextView: TextView
+
+    @Extra
+    @JvmField
+    protected final var myIntExtra: Int = 0
 
     @AfterViews
     protected fun afterViews() {

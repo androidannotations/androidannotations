@@ -18,19 +18,26 @@ android:
     - tools
     - tools # https://github.com/travis-ci/travis-ci/issues/6059
     - platform-tools
-    - android-25
-    - build-tools-25.0.2
+    - android-16
+    - android-26
+    - build-tools-26.0.2
 
 before_script:
   - export TERM=dumb
 
 script:
+  - set -e
   - cd $TRAVIS_BUILD_DIR/AndroidAnnotations
   - ./mvnw install -P travis
   - cd $TRAVIS_BUILD_DIR/examples/maven
   - ./mvnw install
   - cd $TRAVIS_BUILD_DIR/examples/gradle
   - ./gradlew assembleDebug
+  - cd $TRAVIS_BUILD_DIR/examples/kotlin
+  - ./gradlew assembleDebug
+  - cd $TRAVIS_BUILD_DIR/examples/RoboGuiceExample
+  - ./gradlew assembleDebug
+  - set +e
 
 after_success:
   - if [[ $TRAVIS_REPO_SLUG == 'androidannotations/androidannotations' && $TRAVIS_BRANCH == 'develop' && $TRAVIS_PULL_REQUEST == 'false' && $TRAVIS_JDK_VERSION == 'oraclejdk8' ]]; then cd $TRAVIS_BUILD_DIR/AndroidAnnotations && ./mvnw -DskipTests -Dquiet -s ../settings.xml deploy ; fi

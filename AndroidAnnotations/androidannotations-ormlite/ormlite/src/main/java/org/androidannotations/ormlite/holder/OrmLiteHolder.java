@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,7 +27,7 @@ import javax.lang.model.type.TypeMirror;
 import org.androidannotations.helper.CaseHelper;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.holder.EComponentHolder;
-import org.androidannotations.holder.HasLifecycleMethods;
+import org.androidannotations.holder.HasSimpleLifecycleMethods;
 import org.androidannotations.ormlite.helper.OrmLiteClasses;
 import org.androidannotations.plugin.PluginClassHolder;
 
@@ -47,7 +48,7 @@ public class OrmLiteHolder extends PluginClassHolder<EComponentHolder> {
 		JFieldVar databaseHelperRef = databaseHelperRefs.get(databaseHelperTypeMirror);
 		if (databaseHelperRef == null) {
 			databaseHelperRef = setDatabaseHelperRef(databaseHelperTypeMirror);
-			injectReleaseInOnDestroy(databaseHelperRef);
+			injectReleaseAtEndLifecycle(databaseHelperRef);
 		}
 		return databaseHelperRef;
 	}
@@ -65,12 +66,12 @@ public class OrmLiteHolder extends PluginClassHolder<EComponentHolder> {
 		return databaseHelperRef;
 	}
 
-	private void injectReleaseInOnDestroy(JFieldVar databaseHelperRef) {
-		if (holder() instanceof HasLifecycleMethods) {
-			JBlock destroyBody = ((HasLifecycleMethods) holder()).getOnDestroyBeforeSuperBlock();
+	private void injectReleaseAtEndLifecycle(JFieldVar databaseHelperRef) {
+		if (holder() instanceof HasSimpleLifecycleMethods) {
+			JBlock endLifecycleBody = ((HasSimpleLifecycleMethods) holder()).getEndLifecycleBeforeSuperBlock();
 
-			destroyBody.staticInvoke(getJClass(OrmLiteClasses.OPEN_HELPER_MANAGER), "releaseHelper");
-			destroyBody.assign(databaseHelperRef, _null());
+			endLifecycleBody.staticInvoke(getJClass(OrmLiteClasses.OPEN_HELPER_MANAGER), "releaseHelper");
+			endLifecycleBody.assign(databaseHelperRef, _null());
 		}
 	}
 

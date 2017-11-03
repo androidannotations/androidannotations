@@ -129,6 +129,10 @@ public class RInnerClass implements IRInnerClass {
 			String rClassQualifiedName = rInnerClassName.substring(0, innerClassSuffix);
 			String innerClassSimpleName = rInnerClassName.substring(innerClassSuffix + 1);
 
+			if (rClassQualifiedName.endsWith("R2")) {
+				rClassQualifiedName = rClassQualifiedName.substring(0, rClassQualifiedName.length() - 1);
+			}
+
 			JDirectClass rClass = (JDirectClass) environment.getJClass(rClassQualifiedName);
 
 			AbstractJClass innerClass = null;

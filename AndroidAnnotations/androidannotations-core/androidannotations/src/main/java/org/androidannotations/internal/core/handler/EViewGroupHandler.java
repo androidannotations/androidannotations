@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,8 +21,8 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.annotations.DataBound;
 import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EViewGroupHolder;
 import org.androidannotations.rclass.IRClass;
@@ -29,7 +30,7 @@ import org.androidannotations.rclass.IRClass;
 import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
 
-public class EViewGroupHandler extends BaseGeneratingAnnotationHandler<EViewGroupHolder> {
+public class EViewGroupHandler extends CoreBaseGeneratingAnnotationHandler<EViewGroupHolder> {
 
 	public EViewGroupHandler(AndroidAnnotationsEnvironment environment) {
 		super(EViewGroup.class, environment);
@@ -47,12 +48,20 @@ public class EViewGroupHandler extends BaseGeneratingAnnotationHandler<EViewGrou
 		validatorHelper.extendsViewGroup(element, validation);
 
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, validation);
+
+		coreValidatorHelper.checkDataBoundAnnotation(element, validation);
 	}
 
 	@Override
 	public void process(Element element, EViewGroupHolder holder) {
 		JFieldRef contentViewId = annotationHelper.extractOneAnnotationFieldRef(element, IRClass.Res.LAYOUT, false);
-		if (contentViewId != null) {
+		if (contentViewId == null) {
+			return;
+		}
+
+		if (element.getAnnotation(DataBound.class) != null) {
+			holder.getSetContentViewBlock().assign(holder.getDataBindingField(), holder.getDataBindingInflationExpression(contentViewId, JExpr._this(), true));
+		} else {
 			holder.getSetContentViewBlock().invoke("inflate").arg(holder.getContextRef()).arg(contentViewId).arg(JExpr._this());
 		}
 	}

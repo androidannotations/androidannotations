@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,17 +23,20 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.ElementValidation;
+import org.androidannotations.annotations.DataBound;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.handler.BaseGeneratingAnnotationHandler;
 import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.rclass.IRClass;
 
 import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JMethod;
+import com.helger.jcodemodel.JVar;
 
-public class EActivityHandler extends BaseGeneratingAnnotationHandler<EActivityHolder> {
+public class EActivityHandler extends CoreBaseGeneratingAnnotationHandler<EActivityHolder> {
 
 	public EActivityHandler(AndroidAnnotationsEnvironment environment) {
 		super(EActivity.class, environment);
@@ -52,6 +56,8 @@ public class EActivityHandler extends BaseGeneratingAnnotationHandler<EActivityH
 		validatorHelper.resIdsExist(element, IRClass.Res.LAYOUT, IdValidatorHelper.FallbackStrategy.ALLOW_NO_RES_ID, valid);
 
 		validatorHelper.componentRegistered(element, getEnvironment().getAndroidManifest(), valid);
+
+		coreValidatorHelper.checkDataBoundAnnotation(element, valid);
 	}
 
 	@Override
@@ -64,9 +70,21 @@ public class EActivityHandler extends BaseGeneratingAnnotationHandler<EActivityH
 			contentViewId = fieldRefs.get(0);
 		}
 
-		if (contentViewId != null) {
-			JBlock onCreateBody = holder.getOnCreate().body();
-			JMethod setContentView = holder.getSetContentViewLayout();
+		if (contentViewId == null) {
+			return;
+		}
+
+		JBlock onCreateBody = holder.getOnCreate().body();
+		JMethod setContentView = holder.getSetContentViewLayout();
+
+		if (element.getAnnotation(DataBound.class) != null) {
+			JFieldRef androidContentResId = getEnvironment().getRClass().get(IRClass.Res.ID).getIdStaticRef(android.R.id.content, getEnvironment());
+			JVar contentView = onCreateBody.decl(getClasses().VIEW_GROUP, "contentView", JExpr.invoke("internalFindViewById").arg(androidContentResId));
+			JFieldVar bindingField = holder.getDataBindingField();
+			onCreateBody.assign(bindingField, holder.getDataBindingInflationExpression(contentViewId, contentView, false));
+			onCreateBody.invoke(setContentView).arg(bindingField.invoke("getRoot")).arg(bindingField.invoke("getRoot").invoke("getLayoutParams"));
+			holder.getOnDestroyBeforeSuperBlock().invoke(bindingField, "unbind");
+		} else {
 			onCreateBody.invoke(setContentView).arg(contentViewId);
 		}
 	}

@@ -127,7 +127,7 @@ public class APTCodeModelHelper {
 		if (bound == null) {
 			bound = wildcardType.getSuperBound();
 			if (bound == null) {
-				return environment.getClasses().OBJECT.wildcard();
+				return environment.getClasses().OBJECT.wildcardExtends();
 			}
 			return typeMirrorToJClass(bound, substitute).wildcardSuper();
 		}
@@ -135,9 +135,9 @@ public class APTCodeModelHelper {
 		TypeMirror extendsBound = wildcardType.getExtendsBound();
 
 		if (extendsBound == null) {
-			return environment.getClasses().OBJECT.wildcard();
+			return environment.getClasses().OBJECT.wildcardExtends();
 		} else {
-			return typeMirrorToJClass(extendsBound, substitute).wildcard();
+			return typeMirrorToJClass(extendsBound, substitute).wildcardExtends();
 		}
 	}
 
@@ -328,7 +328,7 @@ public class APTCodeModelHelper {
 	public void copyAnnotation(IJAnnotatable annotatable, AnnotationMirror annotationMirror) {
 		Map<? extends ExecutableElement, ? extends AnnotationValue> parameters = annotationMirror.getElementValues();
 
-		if (!hasAnnotation(annotatable, annotationMirror)) {
+		if (!hasAnnotation(annotatable, annotationMirror) || annotatable instanceof JAnnotationArrayMember) {
 			AbstractJClass annotation = typeMirrorToJClass(annotationMirror.getAnnotationType());
 			JAnnotationUse annotate = annotatable.annotate(annotation);
 

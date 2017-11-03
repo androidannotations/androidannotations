@@ -179,7 +179,10 @@ public class AndroidManifestFinder {
 
 	private static class GradleAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
 
-		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/]k?apt(.*)$");
+		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/](k?apt)(.*)$");
+
+		private static final List<String> SUPPORTED_ABI_SPLITS = Arrays.asList("arm64-v8a", "armeabi", "armeabi-v7a", "mips", "mips64", "x86", "x86_64");
+		private static final List<String> SUPPORTED_DENSITY_SPLITS = Arrays.asList("hdpi", "ldpi", "mdpi", "xhdpi", "xxhdpi", "xxxhdpi");
 
 		GradleAndroidManifestFinderStrategy(String sourceFolder) {
 			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
@@ -187,10 +190,65 @@ public class AndroidManifestFinder {
 
 		@Override
 		Iterable<String> possibleLocations() {
-			String gradleVariant = matcher.group(2);
+			String path = matcher.group(1);
+			String mode = matcher.group(2);
+			String gradleVariant = matcher.group(3);
+			String variantPart = gradleVariant.substring(1);
 
-			return Arrays.asList("build/intermediates/manifests/full" + gradleVariant, "build/intermediates/bundles" + gradleVariant,
-					"build/intermediates/manifests/aapt" + gradleVariant);
+			ArrayList<String> possibleLocations = new ArrayList<>();
+
+			for (String directory : Arrays.asList("build/intermediates/manifests/full", "build/intermediates/bundles", "build/intermediates/manifests/aapt")) {
+				findPossibleLocations(path, directory, variantPart, possibleLocations);
+			}
+
+			return possibleLocations;
+		}
+
+		private void findPossibleLocations(String basePath, String targetPath, String variantPart, List<String> possibleLocations) {
+			String[] directories = new File(basePath + targetPath).list();
+
+			if (directories == null) {
+				return;
+			}
+
+			if (variantPart.startsWith("/") || variantPart.startsWith("\\")) {
+				variantPart = variantPart.substring(1);
+			}
+
+			for (String directory : directories) {
+				String possibleLocation = targetPath + "/" + directory;
+				File variantDir = new File(basePath + possibleLocation);
+				if (variantDir.isDirectory() && variantPart.toLowerCase().startsWith(directory.toLowerCase())) {
+					String remainingPart = variantPart.substring(directory.length());
+					if (remainingPart.length() == 0) {
+						possibleLocations.add(possibleLocation);
+						addPossibleSplitLocations(basePath, possibleLocation, possibleLocations);
+					} else {
+						findPossibleLocations(basePath, possibleLocation, remainingPart, possibleLocations);
+					}
+				}
+			}
+		}
+
+		private void addPossibleSplitLocations(String basePath, String possibleLocation, List<String> possibleLocations) {
+			for (String abiSplit : SUPPORTED_ABI_SPLITS) {
+				File splitDir = new File(basePath + possibleLocation + "/" + abiSplit);
+				if (splitDir.isDirectory()) {
+					possibleLocations.add(possibleLocation + "/" + abiSplit);
+					for (String densitySplit : SUPPORTED_DENSITY_SPLITS) {
+						File splitSubDir = new File(basePath + possibleLocation + "/" + abiSplit + "/" + densitySplit);
+						if (splitSubDir.isDirectory()) {
+							possibleLocations.add(possibleLocation + "/" + abiSplit + "/" + densitySplit);
+						}
+					}
+				}
+			}
+			for (String densitySplit : SUPPORTED_DENSITY_SPLITS) {
+				File splitDir = new File(basePath + possibleLocation + "/" + densitySplit);
+				if (splitDir.isDirectory()) {
+					possibleLocations.add(possibleLocation + "/" + densitySplit);
+				}
+			}
 		}
 	}
 

@@ -169,42 +169,12 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 	}
 
 	@Override
-	public JBlock getOnCreateAfterSuperBlock() {
-		return receiverRegistrationDelegate.getOnCreateAfterSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnDestroyBeforeSuperBlock() {
-		return receiverRegistrationDelegate.getOnDestroyBeforeSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnStartAfterSuperBlock() {
-		return receiverRegistrationDelegate.getOnStartAfterSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnStopBeforeSuperBlock() {
-		return receiverRegistrationDelegate.getOnStopBeforeSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnResumeAfterSuperBlock() {
-		return receiverRegistrationDelegate.getOnResumeAfterSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnPauseBeforeSuperBlock() {
-		return receiverRegistrationDelegate.getOnPauseBeforeSuperBlock();
-	}
-
-	@Override
-	public JBlock getOnAttachAfterSuperBlock() {
+	public JBlock getStartLifecycleAfterSuperBlock() {
 		return getOnAttachedToWindowAfterSuperBlock();
 	}
 
 	@Override
-	public JBlock getOnDetachBeforeSuperBlock() {
+	public JBlock getEndLifecycleBeforeSuperBlock() {
 		return getOnDetachedToWindowBeforeSuperBlock();
 	}
 
@@ -254,7 +224,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 		onDetachedFromWindowMethod.annotate(Override.class);
 		JBlock body = onDetachedFromWindowMethod.body();
 		onDetachedFromWindowBeforeSuperBlock = body.blockSimple();
-		body.invoke(_super(), onAttachedToWindowMethod);
+		body.invoke(_super(), onDetachedFromWindowMethod);
 	}
 
 	@Override

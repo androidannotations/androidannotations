@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +36,6 @@ import com.helger.jcodemodel.JFieldVar;
 public class ReceiverRegistrationDelegate<T extends EComponentHolder & HasReceiverRegistration> extends GeneratedClassHolderDelegate<T> {
 
 	private Map<IntentFilterData, JFieldVar> intentFilterFields = new HashMap<>();
-	private IllegalStateException illegalStateException = new IllegalStateException("This shouldn't happen unless the validation is bad");
 
 	public ReceiverRegistrationDelegate(T holder) {
 		super(holder);
@@ -64,38 +64,6 @@ public class ReceiverRegistrationDelegate<T extends EComponentHolder & HasReceiv
 		}
 
 		return intentFilterField;
-	}
-
-	public JBlock getOnStartAfterSuperBlock() {
-		throw illegalStateException;
-	}
-
-	public JBlock getOnStopBeforeSuperBlock() {
-		throw illegalStateException;
-	}
-
-	public JBlock getOnPauseBeforeSuperBlock() {
-		throw illegalStateException;
-	}
-
-	public JBlock getOnAttachAfterSuperBlock() {
-		throw illegalStateException;
-	}
-
-	public JBlock getOnDetachBeforeSuperBlock() {
-		throw illegalStateException;
-	}
-
-	public JBlock getOnResumeAfterSuperBlock() {
-		throw illegalStateException;
-	}
-
-	public JBlock getOnCreateAfterSuperBlock() {
-		throw illegalStateException;
-	}
-
-	public JBlock getOnDestroyBeforeSuperBlock() {
-		throw illegalStateException;
 	}
 
 	public static class IntentFilterData {
