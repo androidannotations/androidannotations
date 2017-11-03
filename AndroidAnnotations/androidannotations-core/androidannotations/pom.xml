@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.androidannotations</groupId>
 		<artifactId>androidannotations-core</artifactId>
-		<version>4.4.0-SNAPSHOT</version>
+		<version>4.5.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>androidannotations</artifactId>
