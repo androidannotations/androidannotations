@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.util.ActivityController;
+import org.robolectric.android.controller.ActivityController;
 
 import android.content.Intent;
 
@@ -59,7 +59,8 @@ public class AfterExtrasActivityTest {
 		assertThat(activity.extraDataSet).isFalse();
 		assertThat(activity.afterExtrasCalled).isFalse();
 
-		activityController.withIntent(intent).create();
+		activity = Robolectric.buildActivity(AfterExtrasActivity_.class, intent).setup().get();
+
 		assertThat(activity.extraDataSet).isTrue();
 		assertThat(activity.afterExtrasCalled).isTrue();
 	}

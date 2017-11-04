@@ -64,7 +64,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.robolectric</groupId>
-			<artifactId>shadows-support-v4</artifactId>
+			<artifactId>shadows-supportv4</artifactId>
 			<version>${robolectric.version}</version>
 			<scope>test</scope>
 		</dependency>

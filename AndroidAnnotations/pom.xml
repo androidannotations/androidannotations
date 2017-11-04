@@ -139,13 +139,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<main.basedir>${project.basedir}</main.basedir>
-		<robolectric.version>3.1.4</robolectric.version>
+		<robolectric.version>3.5.1</robolectric.version>
 	</properties>
-
-
-	<prerequisites>
-		<maven>3.2.1</maven>
-	</prerequisites>
 
 	<modules>
 		<module>androidannotations-core</module>
@@ -200,7 +195,7 @@
 			<dependency> <!-- TODO https://github.com/robolectric/robolectric/issues/2562#issuecomment-263086503 -->
 				<groupId>org.robolectric</groupId>
 				<artifactId>android-all</artifactId>
-				<version>6.0.0_r1-robolectric-0</version>
+				<version>8.1.0-robolectric-4402310</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -224,7 +219,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
-				<version>2.3.0</version>
+				<version>2.11.0</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -244,7 +239,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.7.0</version>
 					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
@@ -308,7 +303,7 @@
 				<plugin>
 					<groupId>com.simpligility.maven.plugins</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>4.4.3</version>
+					<version>4.5.0</version>
 					<configuration>
 						<sdk>
 							<platform>16</platform>

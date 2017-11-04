@@ -17,7 +17,7 @@
 package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.robolectric.internal.ShadowExtractor.extract;
+import static org.robolectric.shadow.api.Shadow.extract;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
 import org.junit.Before;
@@ -46,7 +46,7 @@ public class AwaitingResultFragmentTest {
 	public void testOnResultCalledInFragment() {
 		FragmentStartedActivity_.intent(fragment).startForResult(AwaitingResultFragment.FIRST_REQUEST);
 
-		ShadowActivity a = (ShadowActivity) extract(fragment.getActivity());
+		ShadowActivity a = extract(fragment.getActivity());
 		a.receiveResult(FragmentStartedActivity_.intent(fragment).get(), Activity.RESULT_OK, new Intent());
 
 		assertThat(fragment.onResultCalled).isTrue();
