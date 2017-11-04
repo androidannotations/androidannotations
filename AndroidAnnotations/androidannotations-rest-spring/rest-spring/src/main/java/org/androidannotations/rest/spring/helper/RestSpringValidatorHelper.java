@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2017 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -263,6 +264,8 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 							if (!hasPublicWithNoArgumentConstructor) {
 								valid.addError("The converter class must have a public no argument constructor");
 							}
+						} else {
+							typeIsValid(EBean.class, converterType, valid);
 						}
 					} else {
 						valid.addError("The converter class must not be abstract");
@@ -300,6 +303,8 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 							if (!hasPublicWithNoArgumentConstructor) {
 								valid.addError("The interceptor class must have a public no argument constructor or be annotated with @EBean");
 							}
+						} else {
+							typeIsValid(EBean.class, interceptorType, valid);
 						}
 					} else {
 						valid.addError("The interceptor class must not be abstract");
@@ -322,6 +327,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 				if (parameterElement.getKind().isClass()) {
 					if (!annotationHelper.isAbstract(parameterElement)) {
 						if (parameterElement.getAnnotation(EBean.class) != null) {
+							typeIsValid(EBean.class, paramterType, validation);
 							return;
 						}
 						List<ExecutableElement> constructors = ElementFilter.constructorsIn(parameterElement.getEnclosedElements());

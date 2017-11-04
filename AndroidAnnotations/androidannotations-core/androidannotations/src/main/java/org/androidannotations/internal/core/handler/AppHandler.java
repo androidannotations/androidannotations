@@ -52,7 +52,7 @@ public class AppHandler extends BaseAnnotationHandler<EComponentHolder>implement
 		validatorHelper.isNotPrivate(element, validation);
 
 		Element param = injectHelper.getParam(element);
-		validatorHelper.typeHasAnnotation(EApplication.class, param, validation);
+		validatorHelper.typeHasValidAnnotation(EApplication.class, param, validation);
 	}
 
 	@Override

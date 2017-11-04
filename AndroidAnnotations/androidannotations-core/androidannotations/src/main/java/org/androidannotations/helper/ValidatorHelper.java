@@ -308,6 +308,14 @@ public class ValidatorHelper {
 		typeHasAnnotation(annotation, elementType, valid);
 	}
 
+	public void typeHasValidAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid) {
+		typeHasAnnotation(annotation, element, valid);
+
+		if (valid.isValid()) {
+			typeIsValid(annotation, element.asType(), valid);
+		}
+	}
+
 	public void typeHasAnnotation(Class<? extends Annotation> annotation, TypeMirror elementType, ElementValidation valid) {
 		Element typeElement = annotationHelper.getTypeUtils().asElement(elementType);
 		if (!elementHasAnnotationSafe(annotation, typeElement)) {
@@ -324,14 +332,14 @@ public class ValidatorHelper {
 		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
 
 		if (targetAnnotationClassValue != null) {
-			typeHasAnnotation(annotation, targetAnnotationClassValue, valid);
+			targetElement = targetAnnotationClassValue.asElement();
 
 			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, targetElement.asType())) {
 				valid.addError("The value of %s must be assignable into the annotated field");
 			}
-		} else {
-			typeHasAnnotation(annotation, targetElement, valid);
 		}
+
+		typeHasValidAnnotation(annotation, targetElement, valid);
 	}
 
 	Element findTargetElement(Element element, ElementValidation valid) {
@@ -350,6 +358,20 @@ public class ValidatorHelper {
 			return parameters.get(0);
 		}
 		return element;
+	}
+
+	public void typeIsValid(Class<? extends Annotation> annotation, TypeMirror elementType, ElementValidation elementValidation) {
+		Set<? extends Element> validElements = validatedModel().getRootAnnotatedElements(annotation.getName());
+
+		Set<? extends Element> extractedElements = environment().getExtractedElements().getRootAnnotatedElements(annotation.getName());
+
+		Element typeElement = annotationHelper.getTypeUtils().asElement(elementType);
+
+		if (!extractedElements.contains(typeElement) || validElements.contains(typeElement)) {
+			return;
+		}
+
+		elementValidation.addError("The type " + typeElement.getSimpleName() + " is invalid, " + "please check the messages on that type.");
 	}
 
 	private boolean elementHasAnnotationSafe(Class<? extends Annotation> annotation, Element element) {
