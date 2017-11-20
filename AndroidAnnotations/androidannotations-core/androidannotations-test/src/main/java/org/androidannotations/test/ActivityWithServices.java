@@ -32,6 +32,7 @@ import android.app.WallpaperManager;
 import android.app.admin.DevicePolicyManager;
 import android.appwidget.AppWidgetManager;
 import android.hardware.SensorManager;
+import android.hardware.input.InputManager;
 import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
 import android.media.AudioManager;
@@ -145,9 +146,8 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// HdmiControlManager hdmiControlManager; // hidden API
 
-	// TODO no support yet in Robolectric
-	// @SystemService
-	// InputManager inputManager;
+	@SystemService
+	InputManager inputManager;
 
 	@SystemService
 	InputMethodManager inputMethodManager;
