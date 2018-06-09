@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -169,6 +170,7 @@ public class ModelProcessor {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private boolean generateElements(AnnotationElements validatedModel, ProcessHolder processHolder) throws Exception {
 		boolean isElementRemaining = false;
+		Set<? extends Element> validatedElements = validatedModel.getAllElements();
 		for (GeneratingAnnotationHandler generatingAnnotationHandler : environment.getGeneratingHandlers()) {
 			if (!generatingAnnotationHandler.isEnabled()) {
 				continue;
@@ -192,7 +194,11 @@ public class ModelProcessor {
 						Element enclosingElement = annotatedElement.getEnclosingElement();
 
 						if (typeElement.getNestingKind() == NestingKind.MEMBER && processHolder.getGeneratedClassHolder(enclosingElement) == null) {
-							isElementRemaining = true;
+							if (validatedElements.contains(enclosingElement)) {
+								isElementRemaining = true;
+							} else {
+								LOGGER.error("Enclosing element {} has not been successfully validated", annotatedElement, enclosingElement);
+							}
 						} else {
 							GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(environment, typeElement);
 							processHolder.put(annotatedElement, generatedClassHolder);
