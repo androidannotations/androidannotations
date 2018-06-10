@@ -34,11 +34,7 @@ public class Logger {
 	}
 
 	public void debug(String message, Object... args) {
-		debug(message, null, args);
-	}
-
-	public void debug(String message, Element element, Object... args) {
-		log(Level.DEBUG, message, element, null, null, args);
+		log(Level.DEBUG, message, null, null, null, args);
 	}
 
 	public void info(String message, Object... args) {
