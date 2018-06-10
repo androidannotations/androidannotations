@@ -784,6 +784,11 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		return preferencesHolder.usingSupportV7Preference();
 	}
 
+	@Override
+	public boolean usingAndroidxPreference() {
+		return preferencesHolder.usingAndroidxPreference();
+	}
+
 	public AbstractJClass getBasePreferenceClass() {
 		return preferencesHolder.getBasePreferenceClass();
 	}

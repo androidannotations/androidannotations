@@ -34,5 +34,7 @@ public interface HasPreferences extends GeneratedClassHolder {
 
 	boolean usingSupportV7Preference();
 
+	boolean usingAndroidxPreference();
+
 	AbstractJClass getBasePreferenceClass();
 }

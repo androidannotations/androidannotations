@@ -55,7 +55,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
 		validatorHelper.param.anyOrder() //
-				.extendsAnyOfTypes(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE).optional() //
+				.extendsAnyOfTypes(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE, CanonicalNameConstants.ANDROIDX_PREFERENCE).optional() //
 				.anyOfTypes(CanonicalNameConstants.OBJECT, CanonicalNameConstants.STRING_SET, CanonicalNameConstants.STRING, //
 						CanonicalNameConstants.BOOLEAN, boolean.class.getName(), //
 						CanonicalNameConstants.INTEGER, int.class.getName(), //
@@ -78,15 +78,17 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 	@Override
 	protected void processParameters(HasPreferences holder, JMethod listenerMethod, JInvocation call, List<? extends VariableElement> userParameters) {
 		JVar preferenceParam = listenerMethod.param(holder.getBasePreferenceClass(), "preference");
-		
+
 		JVar newValueParam = listenerMethod.param(getClasses().OBJECT, "newValue");
 
 		for (VariableElement variableElement : userParameters) {
 			String type = variableElement.asType().toString();
 			if (isTypeOrSubclass(CanonicalNameConstants.PREFERENCE, variableElement)) {
 				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.PREFERENCE, preferenceParam, variableElement));
-			} else if (isTypeOrSubclass(CanonicalNameConstants.SUPPORT_V7_PREFERENCE, variableElement))  {
+			} else if (isTypeOrSubclass(CanonicalNameConstants.SUPPORT_V7_PREFERENCE, variableElement)) {
 				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.SUPPORT_V7_PREFERENCE, preferenceParam, variableElement));
+			} else if (isTypeOrSubclass(CanonicalNameConstants.ANDROIDX_PREFERENCE, variableElement)) {
+				call.arg(castArgumentIfNecessary(holder, CanonicalNameConstants.ANDROIDX_PREFERENCE, preferenceParam, variableElement));
 			} else if (type.equals(CanonicalNameConstants.OBJECT)) {
 				call.arg(newValueParam);
 			} else if (type.equals(CanonicalNameConstants.INTEGER) || type.equals(int.class.getName()) || //
@@ -117,6 +119,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected AbstractJClass getListenerClass(HasPreferences holder) {
-		return holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CHANGE_LISTENER : getClasses().PREFERENCE_CHANGE_LISTENER;
+		return holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CHANGE_LISTENER
+				: holder.usingAndroidxPreference() ? getClasses().ANDROIDX_PREFERENCE_CHANGE_LISTENER : getClasses().PREFERENCE_CHANGE_LISTENER;
 	}
 }
