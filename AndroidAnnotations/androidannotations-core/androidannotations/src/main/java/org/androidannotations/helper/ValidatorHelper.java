@@ -67,7 +67,7 @@ import org.androidannotations.internal.model.AnnotationElements;
 @SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
 
-	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT, CanonicalNameConstants.ANDROIDX_FRAGMENT);
 
 	private static final Collection<Integer> VALID_LOG_LEVELS = asList(LOG_VERBOSE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR);
 

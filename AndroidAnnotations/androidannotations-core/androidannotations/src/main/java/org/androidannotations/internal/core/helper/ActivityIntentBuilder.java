@@ -86,6 +86,12 @@ public class ActivityIntentBuilder extends IntentBuilder {
 			JVar fragmentParam = method.param(getClasses().SUPPORT_V4_FRAGMENT, "supportFragment");
 			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
 		}
+		if (hasAndroidxFragmentInClasspath()) {
+			// intent() with androidx.fragment.app.Fragment param
+			JMethod method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
+			JVar fragmentParam = method.param(getClasses().ANDROIDX_FRAGMENT, "supportFragment");
+			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
+		}
 	}
 
 	@Override
@@ -100,6 +106,9 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		}
 		if (hasFragmentSupportInClasspath()) {
 			fragmentSupportField = addFragmentConstructor(getClasses().SUPPORT_V4_FRAGMENT, "fragmentSupport" + generationSuffix());
+		}
+		if (hasAndroidxFragmentInClasspath()) {
+			fragmentSupportField = addFragmentConstructor(getClasses().ANDROIDX_FRAGMENT, "fragmentSupport" + generationSuffix());
 		}
 	}
 
@@ -215,6 +224,10 @@ public class ActivityIntentBuilder extends IntentBuilder {
 
 	protected boolean hasFragmentSupportInClasspath() {
 		return elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
+	}
+
+	protected boolean hasAndroidxFragmentInClasspath() {
+		return elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_FRAGMENT) != null;
 	}
 
 	protected boolean hasActivityOptionsInFragment() {
