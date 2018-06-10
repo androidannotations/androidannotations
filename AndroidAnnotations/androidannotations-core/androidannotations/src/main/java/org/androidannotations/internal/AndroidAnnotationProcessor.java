@@ -91,7 +91,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			plugins.add(0, corePlugin);
 			androidAnnotationsEnv.setPlugins(plugins);
 		} catch (Exception e) {
-			LOGGER.error("Can't load plugins", e);
+			LOGGER.error(e, "Can't load plugins");
 		}
 	}
 

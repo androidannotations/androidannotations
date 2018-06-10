@@ -61,7 +61,7 @@ public class Logger {
 		error(message, element, null, args);
 	}
 
-	public void error(String message, Throwable thr, Object... args) {
+	public void error(Throwable thr, String message, Object... args) {
 		error(message, null, thr, args);
 	}
 
