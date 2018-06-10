@@ -766,8 +766,9 @@ public class ValidatorHelper {
 	}
 
 	public void isViewPagerClassPresent(ElementValidation validation) {
-		if (!isClassPresent(CanonicalNameConstants.VIEW_PAGER)) {
-			validation.addError("The class " + CanonicalNameConstants.VIEW_PAGER + " cannot be found. You have to include support v4 library");
+		if (!isClassPresent(CanonicalNameConstants.VIEW_PAGER) && !isClassPresent(CanonicalNameConstants.ANDROIDX_VIEW_PAGER)) {
+			validation.addError("The classes " + CanonicalNameConstants.VIEW_PAGER + " and " + CanonicalNameConstants.ANDROIDX_VIEW_PAGER
+					+ " cannot be found. You have to include support-v4 or androidx.viewpager library");
 		}
 	}
 }
