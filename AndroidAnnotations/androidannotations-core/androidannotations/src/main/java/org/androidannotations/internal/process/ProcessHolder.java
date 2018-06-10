@@ -144,6 +144,7 @@ public class ProcessHolder {
 		public final AbstractJClass ANDROIDX_ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ANDROIDX_ACTIVITY_COMPAT);
 		public final AbstractJClass ANDROIDX_FRAGMENT_ACTIVITY = refClass(CanonicalNameConstants.ANDROIDX_FRAGMENT_ACTIVITY);
 		public final AbstractJClass ANDROIDX_LOCAL_BROADCAST_MANAGER = refClass(CanonicalNameConstants.ANDROIDX_LOCAL_BROADCAST_MANAGER);
+		public final AbstractJClass ANDROIDX_CONTEXT_COMPAT = refClass(CanonicalNameConstants.ANDROIDX_CONTEXT_COMPAT);
 
 		/*
 		 * HttpClient
