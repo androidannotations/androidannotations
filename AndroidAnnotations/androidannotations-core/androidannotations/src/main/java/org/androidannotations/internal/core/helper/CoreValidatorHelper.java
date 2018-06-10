@@ -399,8 +399,9 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 		boolean local = element.getAnnotation(Receiver.class).local();
 		if (local) {
 			Elements elementUtils = annotationHelper.getElementUtils();
-			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null) {
-				valid.addError("To use the LocalBroadcastManager, you MUST include the android-support-v4 jar");
+			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null
+					&& elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_LOCAL_BROADCAST_MANAGER) == null) {
+				valid.addError("To use the LocalBroadcastManager, you MUST include the android-support-v4 or androidx.localbroadcastmanager jar");
 			}
 		}
 	}
