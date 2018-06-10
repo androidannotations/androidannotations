@@ -163,8 +163,9 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		JBlock thenBlock = activityCondition._then();
 		JVar activityVar = thenBlock.decl(getClasses().ACTIVITY, "activity", JExpr.cast(getClasses().ACTIVITY, contextField));
 
-		if (hasActivityCompatInClasspath() && hasActivityOptionsInActivityCompat()) {
-			thenBlock.staticInvoke(getClasses().ACTIVITY_COMPAT, "startActivityForResult") //
+		AbstractJClass activityCompat = getActivityCompat();
+		if (activityCompat != null) {
+			thenBlock.staticInvoke(activityCompat, "startActivityForResult") //
 					.arg(activityVar).arg(intentField).arg(requestCode).arg(optionsField);
 		} else if (hasActivityOptionsInFragment()) {
 			JBlock startForResultInvocationBlock;
@@ -175,7 +176,7 @@ public class ActivityIntentBuilder extends IntentBuilder {
 			}
 
 			startForResultInvocationBlock.invoke(activityVar, "startActivityForResult") //
-				.arg(intentField).arg(requestCode).arg(optionsField);
+					.arg(intentField).arg(requestCode).arg(optionsField);
 		} else {
 			thenBlock.invoke(activityVar, "startActivityForResult").arg(intentField).arg(requestCode);
 		}
@@ -216,10 +217,6 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		return elementUtils.getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT) != null;
 	}
 
-	protected boolean hasActivityCompatInClasspath() {
-		return elementUtils.getTypeElement(CanonicalNameConstants.ACTIVITY_COMPAT) != null;
-	}
-
 	protected boolean hasActivityOptionsInFragment() {
 		if (!hasFragmentInClasspath()) {
 			return false;
@@ -230,10 +227,18 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		return hasActivityOptions(fragment, 1);
 	}
 
-	protected boolean hasActivityOptionsInActivityCompat() {
+	private AbstractJClass getActivityCompat() {
 		TypeElement activityCompat = elementUtils.getTypeElement(CanonicalNameConstants.ACTIVITY_COMPAT);
+		if (hasActivityOptions(activityCompat, 2)) {
+			return getClasses().ACTIVITY_COMPAT;
+		}
 
-		return hasActivityOptions(activityCompat, 2);
+		TypeElement androidxActivityCompat = elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_ACTIVITY_COMPAT);
+		if (hasActivityOptions(androidxActivityCompat, 2)) {
+			return getClasses().ANDROIDX_ACTIVITY_COMPAT;
+		}
+
+		return null;
 	}
 
 	private boolean hasActivityOptions(TypeElement type, int optionsParamPosition) {

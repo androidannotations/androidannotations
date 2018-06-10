@@ -139,6 +139,11 @@ public class ProcessHolder {
 		public final AbstractJClass DATA_BINDING_UTIL = refClass(CanonicalNameConstants.DATA_BINDING_UTIL);
 
 		/*
+		 * Android X
+		 */
+		public final AbstractJClass ANDROIDX_ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ANDROIDX_ACTIVITY_COMPAT);
+
+		/*
 		 * HttpClient
 		 */
 		public final AbstractJClass CLIENT_CONNECTION_MANAGER = refClass(CanonicalNameConstants.CLIENT_CONNECTION_MANAGER);
