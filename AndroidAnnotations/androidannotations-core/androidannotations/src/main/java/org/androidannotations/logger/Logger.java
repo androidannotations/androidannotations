@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,11 +30,7 @@ public class Logger {
 	}
 
 	public void trace(String message, Object... args) {
-		trace(message, null, args);
-	}
-
-	public void trace(String message, Element element, Object... args) {
-		log(Level.TRACE, message, element, null, null, args);
+		log(Level.TRACE, message, null, null, null, args);
 	}
 
 	public void debug(String message, Object... args) {
