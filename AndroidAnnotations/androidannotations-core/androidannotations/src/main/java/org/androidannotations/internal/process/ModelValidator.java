@@ -81,7 +81,7 @@ public class ModelValidator {
 				if (elementValidation.isValid()) {
 					validatedAnnotatedElements.add(annotatedElement);
 				} else {
-					LOGGER.warn("Element {} invalidated by {}", annotatedElement, annotatedElement, validatorSimpleName);
+					LOGGER.warn(annotatedElement, "Element {} invalidated by {}", annotatedElement, validatorSimpleName);
 				}
 			}
 		}
