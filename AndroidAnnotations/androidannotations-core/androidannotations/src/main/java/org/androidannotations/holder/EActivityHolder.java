@@ -583,7 +583,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setGetLastNonConfigurationInstance() throws JClassAlreadyExistsException {
 		AnnotationHelper annotationHelper = new AnnotationHelper(getEnvironment());
-		TypeElement fragmentActivityTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
+		TypeElement fragmentActivityTypeElement = getFragmentActivity(annotationHelper);
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(generatedClass._extends().fullName());
 		String getLastNonConfigurationInstanceName = "getLastNonConfigurationInstance";
 		if (fragmentActivityTypeElement != null && annotationHelper.isSubtype(typeElement.asType(), fragmentActivityTypeElement.asType())) {
@@ -618,7 +618,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 
 	private void setOnRetainNonConfigurationInstance() throws JClassAlreadyExistsException {
 		AnnotationHelper annotationHelper = new AnnotationHelper(getEnvironment());
-		TypeElement fragmentActivityTypeElement = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
+		TypeElement fragmentActivityTypeElement = getFragmentActivity(annotationHelper);
 		TypeElement typeElement = annotationHelper.typeElementFromQualifiedName(generatedClass._extends().fullName());
 
 		String onRetainNonConfigurationInstanceName = "onRetainNonConfigurationInstance";
@@ -637,6 +637,14 @@ public class EActivityHolder extends EComponentWithViewSupportHolder implements 
 		methodBody.assign(onRetainNonConfigurationInstance.ref(ncHolder.getSuperNonConfigurationInstanceField()), superCall);
 		onRetainNonConfigurationInstanceBindBlock = methodBody.blockSimple();
 		methodBody._return(onRetainNonConfigurationInstance);
+	}
+
+	private TypeElement getFragmentActivity(AnnotationHelper annotationHelper) {
+		TypeElement supportFragmentActivity = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.FRAGMENT_ACTIVITY);
+		if (supportFragmentActivity == null) {
+			return annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ANDROIDX_FRAGMENT_ACTIVITY);
+		}
+		return supportFragmentActivity;
 	}
 
 	@Override

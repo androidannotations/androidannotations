@@ -30,11 +30,13 @@ import java.util.Map;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
 import org.androidannotations.api.view.OnViewChangedNotifier;
+import org.androidannotations.helper.CanonicalNameConstants;
 import org.androidannotations.internal.helper.ViewNotifierHelper;
 
 import com.helger.jcodemodel.AbstractJClass;
@@ -212,11 +214,21 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 
 		JBlock body = findSupportFragmentById.body();
 
-		body._if(getContextRef()._instanceof(getClasses().FRAGMENT_ACTIVITY).not())._then()._return(_null());
+		AbstractJClass fragmentActivity = getFragmentActivity();
+		body._if(getContextRef()._instanceof(fragmentActivity).not())._then()._return(_null());
 
-		JVar activityVar = body.decl(getClasses().FRAGMENT_ACTIVITY, "activity_", cast(getClasses().FRAGMENT_ACTIVITY, getContextRef()));
+		JVar activityVar = body.decl(fragmentActivity, "activity_", cast(fragmentActivity, getContextRef()));
 
 		body._return(activityVar.invoke("getSupportFragmentManager").invoke("findFragmentById").arg(idParam));
+	}
+
+	private AbstractJClass getFragmentActivity() {
+		Elements elementUtils = getProcessingEnvironment().getElementUtils();
+		if (elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_FRAGMENT_ACTIVITY) != null) {
+			return getClasses().ANDROIDX_FRAGMENT_ACTIVITY;
+		} else {
+			return getClasses().FRAGMENT_ACTIVITY;
+		}
 	}
 
 	public JMethod getFindNativeFragmentByTag() {
@@ -252,9 +264,10 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 
 		JBlock body = findSupportFragmentByTag.body();
 
-		body._if(getContextRef()._instanceof(getClasses().FRAGMENT_ACTIVITY).not())._then()._return(_null());
+		AbstractJClass fragmentActivity = getFragmentActivity();
+		body._if(getContextRef()._instanceof(fragmentActivity).not())._then()._return(_null());
 
-		JVar activityVar = body.decl(getClasses().FRAGMENT_ACTIVITY, "activity_", cast(getClasses().FRAGMENT_ACTIVITY, getContextRef()));
+		JVar activityVar = body.decl(fragmentActivity, "activity_", cast(fragmentActivity, getContextRef()));
 
 		body._return(activityVar.invoke("getSupportFragmentManager").invoke("findFragmentByTag").arg(tagParam));
 	}
@@ -279,7 +292,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		JBlock onViewChangedBody = getOnViewChangedBodyInjectionBlock().blockSimple();
 		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));
 		onViewChangedBody._if(viewVariable.ne(JExpr._null()))._then() //
-		.invoke(viewVariable, "addTextChangedListener").arg(_new(onTextChangeListenerClass));
+				.invoke(viewVariable, "addTextChangedListener").arg(_new(onTextChangeListenerClass));
 
 		return new TextWatcherHolder(this, viewVariable, onTextChangeListenerClass);
 	}
