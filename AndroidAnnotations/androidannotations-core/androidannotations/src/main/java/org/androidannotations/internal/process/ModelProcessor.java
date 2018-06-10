@@ -197,7 +197,7 @@ public class ModelProcessor {
 							if (validatedElements.contains(enclosingElement)) {
 								isElementRemaining = true;
 							} else {
-								LOGGER.error("Enclosing element {} has not been successfully validated", annotatedElement, enclosingElement);
+								LOGGER.error(annotatedElement, "Enclosing element {} has not been successfully validated", enclosingElement);
 							}
 						} else {
 							GeneratedClassHolder generatedClassHolder = generatingAnnotationHandler.createGeneratedClassHolder(environment, typeElement);

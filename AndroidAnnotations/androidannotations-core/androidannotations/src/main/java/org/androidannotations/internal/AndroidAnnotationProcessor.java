@@ -246,7 +246,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		Iterator<? extends TypeElement> iterator = annotations.iterator();
 		if (iterator.hasNext()) {
 			Element element = roundEnv.getElementsAnnotatedWith(iterator.next()).iterator().next();
-			LOGGER.error("Something went wrong: {}", element, errorMessage);
+			LOGGER.error(element, "Something went wrong: {}", errorMessage);
 		} else {
 			LOGGER.error("Something went wrong: {}", errorMessage);
 		}
