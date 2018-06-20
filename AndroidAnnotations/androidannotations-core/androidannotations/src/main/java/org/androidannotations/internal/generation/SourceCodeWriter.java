@@ -70,7 +70,7 @@ public class SourceCodeWriter extends AbstractCodeWriter {
 
 			return sourceFile.openOutputStream();
 		} catch (FilerException e) {
-			LOGGER.error("Could not generate source file for {}", qualifiedClassName, e.getMessage());
+			LOGGER.error("Could not generate source file for {} due to error: {}", qualifiedClassName, e.getMessage());
 			/*
 			 * This exception is expected, when some files are created twice. We
 			 * cannot delete existing files, unless using a dirty hack. Files a

@@ -91,7 +91,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			plugins.add(0, corePlugin);
 			androidAnnotationsEnv.setPlugins(plugins);
 		} catch (Exception e) {
-			LOGGER.error("Can't load plugins", e);
+			LOGGER.error(e, "Can't load plugins");
 		}
 	}
 
@@ -246,7 +246,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		Iterator<? extends TypeElement> iterator = annotations.iterator();
 		if (iterator.hasNext()) {
 			Element element = roundEnv.getElementsAnnotatedWith(iterator.next()).iterator().next();
-			LOGGER.error("Something went wrong: {}", element, errorMessage);
+			LOGGER.error(element, "Something went wrong: {}", errorMessage);
 		} else {
 			LOGGER.error("Something went wrong: {}", errorMessage);
 		}

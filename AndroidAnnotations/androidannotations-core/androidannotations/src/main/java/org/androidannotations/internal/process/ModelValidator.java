@@ -71,17 +71,17 @@ public class ModelValidator {
 
 				AnnotationMirror annotationMirror = elementValidation.getAnnotationMirror();
 				for (ElementValidation.Error error : elementValidation.getErrors()) {
-					LOGGER.error(error.getMessage(), error.getElement(), annotationMirror);
+					LOGGER.error(error.getElement(), annotationMirror, error.getMessage());
 				}
 
 				for (String warning : elementValidation.getWarnings()) {
-					LOGGER.warn(warning, elementValidation.getElement(), annotationMirror);
+					LOGGER.warn(elementValidation.getElement(), annotationMirror, warning);
 				}
 
 				if (elementValidation.isValid()) {
 					validatedAnnotatedElements.add(annotatedElement);
 				} else {
-					LOGGER.warn("Element {} invalidated by {}", annotatedElement, annotatedElement, validatorSimpleName);
+					LOGGER.warn(annotatedElement, "Element {} invalidated by {}", annotatedElement, validatorSimpleName);
 				}
 			}
 		}
