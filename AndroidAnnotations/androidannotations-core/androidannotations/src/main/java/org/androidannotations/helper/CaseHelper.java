@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -68,6 +69,15 @@ public final class CaseHelper {
 			return string.toLowerCase();
 		}
 		String first = string.substring(0, 1).toLowerCase();
+		String end = string.substring(1, string.length());
+		return first + end;
+	}
+
+	public static String upperCaseFirst(String string) {
+		if (string.length() < 2) {
+			return string.toUpperCase();
+		}
+		String first = string.substring(0, 1).toUpperCase();
 		String end = string.substring(1, string.length());
 		return first + end;
 	}
