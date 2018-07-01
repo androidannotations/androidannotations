@@ -487,13 +487,13 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 	}
 
 	public void checkDataBoundAnnotation(Element element, ElementValidation validation) {
-		if (element.getAnnotation(DataBound.class) != null && !isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL)) {
+		if (element.getAnnotation(DataBound.class) != null && !isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL) && !isClassPresent(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL)) {
 			validation.invalidate();
 		}
 	}
 
 	public void hasDataBindingOnClasspath(ElementValidation validation) {
-		if (!isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL)) {
+		if (!isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL) && !isClassPresent(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL)) {
 			validation.addError("Data binding is not found on classpath, be sure to enable data binding for the project.");
 		}
 	}

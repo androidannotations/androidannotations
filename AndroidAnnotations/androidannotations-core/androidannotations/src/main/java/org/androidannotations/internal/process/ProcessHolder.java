@@ -151,6 +151,8 @@ public class ProcessHolder {
 		public final AbstractJClass ANDROIDX_PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PREFERENCE_CHANGE_LISTENER);
 		public final AbstractJClass ANDROIDX_VIEW_PAGER = refClass(CanonicalNameConstants.ANDROIDX_VIEW_PAGER);
 		public final AbstractJClass ANDROIDX_PAGE_CHANGE_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PAGE_CHANGE_LISTENER);
+		public final AbstractJClass ANDROIDX_VIEW_DATA_BINDING = refClass(CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING);
+		public final AbstractJClass ANDROIDX_DATA_BINDING_UTIL = refClass(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL);
 
 		/*
 		 * HttpClient

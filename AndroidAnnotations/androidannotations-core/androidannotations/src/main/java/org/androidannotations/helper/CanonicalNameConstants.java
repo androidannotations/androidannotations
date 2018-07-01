@@ -159,6 +159,8 @@ public final class CanonicalNameConstants {
 	public static final String ANDROIDX_APPCOMPAT_ACTIVITY = "androidx.appcompat.app.AppCompatActivity";
 	public static final String ANDROIDX_VIEW_PAGER = "androidx.viewpager.widget.ViewPager";
 	public static final String ANDROIDX_PAGE_CHANGE_LISTENER = "androidx.viewpager.widget.ViewPager.OnPageChangeListener";
+	public static final String ANDROIDX_DATA_BINDING_UTIL = "androidx.databinding.DataBindingUtil";
+	public static final String ANDROIDX_VIEW_DATA_BINDING = "androidx.databinding.ViewDataBinding";
 
 	/*
 	 * Android permission
