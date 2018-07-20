@@ -194,7 +194,7 @@ public class AndroidManifestFinder {
 		@Override
 		Iterable<String> possibleLocations() {
 			String path = matcher.group(1);
-			String mode = matcher.group(2);
+//			String mode = matcher.group(2); not used
 			String gradleVariant = matcher.group(3);
 			String variantPart = gradleVariant.substring(1);
 
