@@ -17,6 +17,9 @@ package org.androidannotations.holder;
 
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
+import org.androidannotations.helper.CanonicalNameConstants;
+
+import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JMod;
@@ -38,11 +41,19 @@ class DataBindingDelegate extends GeneratedClassHolderDelegate<EComponentWithVie
 	}
 
 	private void setDataBindingField() {
-		dataBindingField = holder.generatedClass.field(JMod.PRIVATE, getClasses().VIEW_DATA_BINDING, "viewDataBinding" + generationSuffix());
+		AbstractJClass viewDataBinding = getClasses().VIEW_DATA_BINDING;
+		if (getEnvironment().getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING) != null) {
+			viewDataBinding = getClasses().ANDROIDX_VIEW_DATA_BINDING;
+		}
+		dataBindingField = holder.generatedClass.field(JMod.PRIVATE, viewDataBinding, "viewDataBinding" + generationSuffix());
 	}
 
 	IJExpression getDataBindingInflationExpression(IJExpression contentViewId, IJExpression container, boolean attachToRoot) {
-		return getClasses().DATA_BINDING_UTIL.staticInvoke("inflate") //
+		AbstractJClass dataBindingUtil = getClasses().DATA_BINDING_UTIL;
+		if (getEnvironment().getProcessingEnvironment().getElementUtils().getTypeElement(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL) != null) {
+			dataBindingUtil = getClasses().ANDROIDX_DATA_BINDING_UTIL;
+		}
+		return dataBindingUtil.staticInvoke("inflate") //
 				.arg(getClasses().LAYOUT_INFLATER.staticInvoke("from").arg(holder.getContextRef())) //
 				.arg(contentViewId) //
 				.arg(container) //

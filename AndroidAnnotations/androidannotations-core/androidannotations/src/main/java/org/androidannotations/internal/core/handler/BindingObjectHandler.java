@@ -15,6 +15,8 @@
  */
 package org.androidannotations.internal.core.handler;
 
+import static java.util.Arrays.asList;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -49,7 +51,7 @@ public class BindingObjectHandler extends CoreBaseAnnotationHandler<EComponentWi
 		if (element.getKind() == ElementKind.METHOD || element.getKind() == ElementKind.PARAMETER) {
 			ExecutableElement methodElement = (ExecutableElement) (element.getKind() == ElementKind.METHOD ? element : element.getEnclosingElement());
 
-			validatorHelper.param.extendsType(CanonicalNameConstants.VIEW_DATA_BINDING).validate(methodElement, validation);
+			validatorHelper.param.extendsAnyOfTypes(CanonicalNameConstants.VIEW_DATA_BINDING, CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING).validate(methodElement, validation);
 
 			if (!validation.isValid()) {
 				return;
@@ -60,7 +62,7 @@ public class BindingObjectHandler extends CoreBaseAnnotationHandler<EComponentWi
 
 		if (validation.isValid()) {
 			validatorHelper.isNotPrivate(element, validation);
-			validatorHelper.extendsType(injectHelper.getParam(element), CanonicalNameConstants.VIEW_DATA_BINDING, validation);
+			validatorHelper.extendsOneOfTypes(injectHelper.getParam(element), asList(CanonicalNameConstants.VIEW_DATA_BINDING, CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING), validation);
 		}
 	}
 

@@ -222,7 +222,7 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 	}
 
 	private <T extends Annotation> void checkDefaultAnnotation(ExecutableElement method, Class<T> annotationClass, String expectedReturnType, DefaultAnnotationCondition condition,
-																ElementValidation valid) {
+			ElementValidation valid) {
 		T defaultAnnotation = method.getAnnotation(annotationClass);
 		if (defaultAnnotation != null) {
 			if (!condition.correctReturnType(method.getReturnType())) {
@@ -399,8 +399,9 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 		boolean local = element.getAnnotation(Receiver.class).local();
 		if (local) {
 			Elements elementUtils = annotationHelper.getElementUtils();
-			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null) {
-				valid.addError("To use the LocalBroadcastManager, you MUST include the android-support-v4 jar");
+			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null
+					&& elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_LOCAL_BROADCAST_MANAGER) == null) {
+				valid.addError("To use the LocalBroadcastManager, you MUST include the android-support-v4 or androidx.localbroadcastmanager jar");
 			}
 		}
 	}
@@ -427,6 +428,7 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 		if (childFragment) {
 			TypeElement fragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.FRAGMENT);
 			TypeElement supportFragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+			TypeElement androidxFragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.ANDROIDX_FRAGMENT);
 
 			boolean enclosingElementIsFragment = false;
 
@@ -436,11 +438,13 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 				enclosingElementIsFragment = true;
 			} else if (supportFragment != null && annotationHelper.isSubtype(enclosingElement, supportFragment)) {
 				enclosingElementIsFragment = true;
+			} else if (androidxFragment != null && annotationHelper.isSubtype(enclosingElement, androidxFragment)) {
+				enclosingElementIsFragment = true;
 			}
 
 			if (!enclosingElementIsFragment) {
 				validation.addError(element, "The 'childFragmentManager' parameter only can be used if the class containing the annotated field is either subclass of "
-						+ CanonicalNameConstants.FRAGMENT + " or " + CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+						+ CanonicalNameConstants.FRAGMENT + ", " + CanonicalNameConstants.SUPPORT_V4_FRAGMENT + " or " + CanonicalNameConstants.ANDROIDX_FRAGMENT);
 			}
 		}
 	}
@@ -453,15 +457,21 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 
 			TypeElement fragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.FRAGMENT);
 			TypeElement supportFragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+			TypeElement androidxFragment = annotationHelper.getElementUtils().getTypeElement(CanonicalNameConstants.ANDROIDX_FRAGMENT);
 
 			if (supportFragment != null && annotationHelper.isSubtype(enclosingElement, supportFragment)) {
 				if (!methodIsAvailableIn(supportFragment, "getChildFragmentManager")) {
 					validation.addError(element, "The 'childFragmentManager' parameter only can be used if the getChildFragmentManager() method is available in "
 							+ CanonicalNameConstants.SUPPORT_V4_FRAGMENT + ", update your support library version.");
 				}
+			} else if (androidxFragment != null && annotationHelper.isSubtype(enclosingElement, androidxFragment)) {
+				if (!methodIsAvailableIn(androidxFragment, "getChildFragmentManager")) {
+					validation.addError(element, "The 'childFragmentManager' parameter only can be used if the getChildFragmentManager() method is available in "
+							+ CanonicalNameConstants.ANDROIDX_FRAGMENT + ", update your support library version.");
+				}
 			} else if (fragment != null && annotationHelper.isSubtype(enclosingElement, fragment) && environment().getAndroidManifest().getMinSdkVersion() < 17) {
-				validation.addError(element, "The 'childFragmentManager' parameter only can be used if the getChildFragmentManager() method is available in "
-						+ CanonicalNameConstants.FRAGMENT + " (from API 17). Increment 'minSdkVersion' or use " + CanonicalNameConstants.SUPPORT_V4_FRAGMENT + ".");
+				validation.addError(element, "The 'childFragmentManager' parameter only can be used if the getChildFragmentManager() method is available in " + CanonicalNameConstants.FRAGMENT
+						+ " (from API 17). Increment 'minSdkVersion' or use " + CanonicalNameConstants.SUPPORT_V4_FRAGMENT + " or " + CanonicalNameConstants.ANDROIDX_FRAGMENT + ".");
 			}
 
 		}
@@ -477,13 +487,13 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 	}
 
 	public void checkDataBoundAnnotation(Element element, ElementValidation validation) {
-		if (element.getAnnotation(DataBound.class) != null && !isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL)) {
+		if (element.getAnnotation(DataBound.class) != null && !isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL) && !isClassPresent(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL)) {
 			validation.invalidate();
 		}
 	}
 
 	public void hasDataBindingOnClasspath(ElementValidation validation) {
-		if (!isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL)) {
+		if (!isClassPresent(CanonicalNameConstants.DATA_BINDING_UTIL) && !isClassPresent(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL)) {
 			validation.addError("Data binding is not found on classpath, be sure to enable data binding for the project.");
 		}
 	}

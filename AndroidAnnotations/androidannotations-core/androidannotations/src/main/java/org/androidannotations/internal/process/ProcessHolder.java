@@ -139,6 +139,22 @@ public class ProcessHolder {
 		public final AbstractJClass DATA_BINDING_UTIL = refClass(CanonicalNameConstants.DATA_BINDING_UTIL);
 
 		/*
+		 * Android X
+		 */
+		public final AbstractJClass ANDROIDX_ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ANDROIDX_ACTIVITY_COMPAT);
+		public final AbstractJClass ANDROIDX_FRAGMENT = refClass(CanonicalNameConstants.ANDROIDX_FRAGMENT);
+		public final AbstractJClass ANDROIDX_FRAGMENT_ACTIVITY = refClass(CanonicalNameConstants.ANDROIDX_FRAGMENT_ACTIVITY);
+		public final AbstractJClass ANDROIDX_LOCAL_BROADCAST_MANAGER = refClass(CanonicalNameConstants.ANDROIDX_LOCAL_BROADCAST_MANAGER);
+		public final AbstractJClass ANDROIDX_CONTEXT_COMPAT = refClass(CanonicalNameConstants.ANDROIDX_CONTEXT_COMPAT);
+		public final AbstractJClass ANDROIDX_PREFERENCE = refClass(CanonicalNameConstants.ANDROIDX_PREFERENCE);
+		public final AbstractJClass ANDROIDX_PREFERENCE_CLICK_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PREFERENCE_CLICK_LISTENER);
+		public final AbstractJClass ANDROIDX_PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PREFERENCE_CHANGE_LISTENER);
+		public final AbstractJClass ANDROIDX_VIEW_PAGER = refClass(CanonicalNameConstants.ANDROIDX_VIEW_PAGER);
+		public final AbstractJClass ANDROIDX_PAGE_CHANGE_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PAGE_CHANGE_LISTENER);
+		public final AbstractJClass ANDROIDX_VIEW_DATA_BINDING = refClass(CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING);
+		public final AbstractJClass ANDROIDX_DATA_BINDING_UTIL = refClass(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL);
+
+		/*
 		 * HttpClient
 		 */
 		public final AbstractJClass CLIENT_CONNECTION_MANAGER = refClass(CanonicalNameConstants.CLIENT_CONNECTION_MANAGER);

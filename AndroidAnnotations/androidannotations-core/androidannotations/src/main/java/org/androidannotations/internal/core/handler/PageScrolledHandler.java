@@ -48,7 +48,7 @@ public class PageScrolledHandler extends AbstractPageChangeHandler {
 		super.validate(element, validation);
 
 		validatorHelper.param.inOrder() //
-				.type(CanonicalNameConstants.VIEW_PAGER).optional() //
+				.anyOfTypes(CanonicalNameConstants.VIEW_PAGER, CanonicalNameConstants.ANDROIDX_VIEW_PAGER).optional() //
 				.primitiveOrWrapper(TypeKind.INT).optional() //
 				.primitiveOrWrapper(TypeKind.FLOAT).optional() //
 				.primitiveOrWrapper(TypeKind.INT).optional() //
@@ -83,8 +83,7 @@ public class PageScrolledHandler extends AbstractPageChangeHandler {
 			} else if (parameterType.getKind() == TypeKind.FLOAT || CanonicalNameConstants.FLOAT.equals(parameterType.toString())) {
 				positionOffsetParameterPosition = i;
 			} else {
-				TypeMirror viewPagerType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW_PAGER).asType();
-				if (annotationHelper.isSubtype(parameterType, viewPagerType)) {
+				if (isViewPagerParameter(parameterType)) {
 					viewPagerParameterPosition = i;
 					viewPagerParameterType = parameterType;
 				}

@@ -67,13 +67,13 @@ import org.androidannotations.internal.model.AnnotationElements;
 @SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
 
-	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT, CanonicalNameConstants.ANDROIDX_FRAGMENT);
 
 	private static final Collection<Integer> VALID_LOG_LEVELS = asList(LOG_VERBOSE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR);
 
 	private static final List<String> VALID_PREFERENCE_CLASSES = asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT,
 			CanonicalNameConstants.SUPPORT_V4_PREFERENCE_FRAGMENT, CanonicalNameConstants.MACHINARIUS_V4_PREFERENCE_FRAGMENT, CanonicalNameConstants.SUPPORT_V7_PREFERENCE_FRAGMENTCOMPAT,
-			CanonicalNameConstants.SUPPORT_V14_PREFERENCE_FRAGMENT);
+			CanonicalNameConstants.SUPPORT_V14_PREFERENCE_FRAGMENT, CanonicalNameConstants.ANDROIDX_PREFERENCE_FRAGMENT, CanonicalNameConstants.ANDROIDX_PREFERENCE_FRAGMENTCOMPAT);
 
 	protected final TargetAnnotationHelper annotationHelper;
 	private final ParcelerHelper parcelerHelper;
@@ -500,7 +500,7 @@ public class ValidatorHelper {
 	}
 
 	public void extendsPreference(Element element, ElementValidation validation) {
-		extendsOneOfTypes(element, asList(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE), validation);
+		extendsOneOfTypes(element, asList(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE, CanonicalNameConstants.ANDROIDX_PREFERENCE), validation);
 	}
 
 	public void extendsOneOfTypes(Element element, List<String> typeQualifiedNames, ElementValidation valid) {
@@ -766,8 +766,9 @@ public class ValidatorHelper {
 	}
 
 	public void isViewPagerClassPresent(ElementValidation validation) {
-		if (!isClassPresent(CanonicalNameConstants.VIEW_PAGER)) {
-			validation.addError("The class " + CanonicalNameConstants.VIEW_PAGER + " cannot be found. You have to include support v4 library");
+		if (!isClassPresent(CanonicalNameConstants.VIEW_PAGER) && !isClassPresent(CanonicalNameConstants.ANDROIDX_VIEW_PAGER)) {
+			validation.addError("The classes " + CanonicalNameConstants.VIEW_PAGER + " and " + CanonicalNameConstants.ANDROIDX_VIEW_PAGER
+					+ " cannot be found. You have to include support-v4 or androidx.viewpager library");
 		}
 	}
 }

@@ -597,6 +597,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder implements 
 		return preferencesDelegate.usingSupportV7Preference();
 	}
 
+	@Override
+	public boolean usingAndroidxPreference() {
+		return preferencesDelegate.usingAndroidxPreference();
+	}
+
 	public AbstractJClass getBasePreferenceClass() {
 		return preferencesDelegate.getBasePreferenceClass();
 	}

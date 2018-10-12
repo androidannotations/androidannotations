@@ -44,11 +44,13 @@ public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder>
 		int[] features = annotation.value();
 
 		TypeElement appCompatActivity = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.APPCOMPAT_ACTIVITY);
+		TypeElement androidxAppCompatActivity = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ANDROIDX_APPCOMPAT_ACTIVITY);
 		TypeElement actionBarActivity = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.ACTIONBAR_ACTIVITY);
 		TypeElement type = (TypeElement) element;
 
 		String methodName;
-		if ((appCompatActivity != null && annotationHelper.isSubtype(type, appCompatActivity)) || (actionBarActivity != null && annotationHelper.isSubtype(type, actionBarActivity))) {
+		if ((appCompatActivity != null && annotationHelper.isSubtype(type, appCompatActivity)) || (androidxAppCompatActivity != null && annotationHelper.isSubtype(type, androidxAppCompatActivity))
+				|| (actionBarActivity != null && annotationHelper.isSubtype(type, actionBarActivity))) {
 			methodName = "supportRequestWindowFeature";
 		} else {
 			methodName = "requestWindowFeature";

@@ -144,6 +144,25 @@ public final class CanonicalNameConstants {
 	public static final String PAGE_CHANGE_LISTENER = "android.support.v4.view.ViewPager.OnPageChangeListener";
 
 	/*
+	 * Android X
+	 */
+	public static final String ANDROIDX_ACTIVITY_COMPAT = "androidx.core.app.ActivityCompat";
+	public static final String ANDROIDX_FRAGMENT = "androidx.fragment.app.Fragment";
+	public static final String ANDROIDX_FRAGMENT_ACTIVITY = "androidx.fragment.app.FragmentActivity";
+	public static final String ANDROIDX_LOCAL_BROADCAST_MANAGER = "androidx.localbroadcastmanager.content.LocalBroadcastManager";
+	public static final String ANDROIDX_CONTEXT_COMPAT = "androidx.core.content.ContextCompat";
+	public static final String ANDROIDX_PREFERENCE = "androidx.preference.Preference";
+	public static final String ANDROIDX_PREFERENCE_FRAGMENT = "androidx.preference.PreferenceFragment";
+	public static final String ANDROIDX_PREFERENCE_FRAGMENTCOMPAT = "androidx.preference.PreferenceFragmentCompat";
+	public static final String ANDROIDX_PREFERENCE_CLICK_LISTENER = "androidx.preference.Preference.OnPreferenceClickListener";
+	public static final String ANDROIDX_PREFERENCE_CHANGE_LISTENER = "androidx.preference.Preference.OnPreferenceChangeListener";
+	public static final String ANDROIDX_APPCOMPAT_ACTIVITY = "androidx.appcompat.app.AppCompatActivity";
+	public static final String ANDROIDX_VIEW_PAGER = "androidx.viewpager.widget.ViewPager";
+	public static final String ANDROIDX_PAGE_CHANGE_LISTENER = "androidx.viewpager.widget.ViewPager.OnPageChangeListener";
+	public static final String ANDROIDX_DATA_BINDING_UTIL = "androidx.databinding.DataBindingUtil";
+	public static final String ANDROIDX_VIEW_DATA_BINDING = "androidx.databinding.ViewDataBinding";
+
+	/*
 	 * Android permission
 	 */
 	public static final String INTERNET_PERMISSION = "android.permission.INTERNET";
