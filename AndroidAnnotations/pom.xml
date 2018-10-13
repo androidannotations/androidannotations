@@ -28,7 +28,7 @@
 
 	<groupId>org.androidannotations</groupId>
 	<artifactId>androidannotations-parent</artifactId>
-	<version>4.5.0-SNAPSHOT</version>
+	<version>4.5.0</version>
 	<packaging>pom</packaging>
 
 	<name>AndroidAnnotations Parent</name>
@@ -420,7 +420,7 @@
 		<connection>scm:git:git@github.com:androidannotations/androidannotations.git</connection>
 		<developerConnection>scm:git:git@github.com:androidannotations/androidannotations.git</developerConnection>
 		<url>https://github.com/androidannotations/androidannotations</url>
-		<tag>HEAD</tag>
+		<tag>androidannotations-4.5.0</tag>
 	</scm>
 
 	<profiles>
