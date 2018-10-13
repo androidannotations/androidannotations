@@ -80,16 +80,15 @@ public class ActivityIntentBuilder extends IntentBuilder {
 			JVar fragmentParam = method.param(getClasses().FRAGMENT, "fragment");
 			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
 		}
-		if (hasFragmentSupportInClasspath()) {
-			// intent() with android.support.v4.app.Fragment param
-			JMethod method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
-			JVar fragmentParam = method.param(getClasses().SUPPORT_V4_FRAGMENT, "supportFragment");
-			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
-		}
 		if (hasAndroidxFragmentInClasspath()) {
 			// intent() with androidx.fragment.app.Fragment param
 			JMethod method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
 			JVar fragmentParam = method.param(getClasses().ANDROIDX_FRAGMENT, "supportFragment");
+			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
+		} else if (hasFragmentSupportInClasspath()) {
+			// intent() with android.support.v4.app.Fragment param
+			JMethod method = holder.getGeneratedClass().method(STATIC | PUBLIC, holder.getIntentBuilderClass(), "intent");
+			JVar fragmentParam = method.param(getClasses().SUPPORT_V4_FRAGMENT, "supportFragment");
 			method.body()._return(_new(holder.getIntentBuilderClass()).arg(fragmentParam));
 		}
 	}
@@ -104,11 +103,10 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		if (hasFragmentInClasspath()) {
 			fragmentField = addFragmentConstructor(getClasses().FRAGMENT, "fragment" + generationSuffix());
 		}
-		if (hasFragmentSupportInClasspath()) {
-			fragmentSupportField = addFragmentConstructor(getClasses().SUPPORT_V4_FRAGMENT, "fragmentSupport" + generationSuffix());
-		}
 		if (hasAndroidxFragmentInClasspath()) {
 			fragmentSupportField = addFragmentConstructor(getClasses().ANDROIDX_FRAGMENT, "fragmentSupport" + generationSuffix());
+		} else if (hasFragmentSupportInClasspath()) {
+			fragmentSupportField = addFragmentConstructor(getClasses().SUPPORT_V4_FRAGMENT, "fragmentSupport" + generationSuffix());
 		}
 	}
 
