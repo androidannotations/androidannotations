@@ -239,14 +239,14 @@ public class ActivityIntentBuilder extends IntentBuilder {
 	}
 
 	private AbstractJClass getActivityCompat() {
-		TypeElement activityCompat = elementUtils.getTypeElement(CanonicalNameConstants.ACTIVITY_COMPAT);
-		if (hasActivityOptions(activityCompat, 2)) {
-			return getClasses().ACTIVITY_COMPAT;
-		}
-
 		TypeElement androidxActivityCompat = elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_ACTIVITY_COMPAT);
 		if (hasActivityOptions(androidxActivityCompat, 2)) {
 			return getClasses().ANDROIDX_ACTIVITY_COMPAT;
+		}
+
+		TypeElement activityCompat = elementUtils.getTypeElement(CanonicalNameConstants.ACTIVITY_COMPAT);
+		if (hasActivityOptions(activityCompat, 2)) {
+			return getClasses().ACTIVITY_COMPAT;
 		}
 
 		return null;
