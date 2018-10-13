@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -104,13 +104,13 @@ public class ServiceInjectionTest {
 		assertThat(activity.uiModeManager).isNotNull();
 		// assertThat(activity.updateLock).isNotNull(); // hidden API
 		// assertThat(activity.usageStatsManager).isNotNull();  // TODO API 21
-		// assertThat(activity.usbManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.usbManager).isNotNull();
 		// assertThat(activity.userManager).isNotNull(); // TODO API 19
 		assertThat(activity.vibrator).isNotNull();
-		// assertThat(activity.wallpaperManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.wallpaperManager).isNotNull();
 		assertThat(activity.wifiManager).isNotNull();
 		// assertThat(activity.wifiPasspointManager).isNotNull(); // hidden API
-		// assertThat(activity.wifiP2pManager).isNotNull(); // TODO no support yet in Robolectric
+		assertThat(activity.wifiP2pManager).isNotNull();
 		// assertThat(activity.rttManager).isNotNull(); // hidden API
 		assertThat(activity.windowManager).isNotNull();
 	}

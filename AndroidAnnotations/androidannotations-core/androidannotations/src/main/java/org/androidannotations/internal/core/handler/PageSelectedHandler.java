@@ -47,7 +47,7 @@ public class PageSelectedHandler extends AbstractPageChangeHandler {
 		super.validate(element, validation);
 
 		validatorHelper.param.anyOrder() //
-				.type(CanonicalNameConstants.VIEW_PAGER).optional() //
+				.anyOfTypes(CanonicalNameConstants.VIEW_PAGER, CanonicalNameConstants.ANDROIDX_VIEW_PAGER).optional() //
 				.primitiveOrWrapper(TypeKind.INT).optional() //
 				.validate((ExecutableElement) element, validation);
 	}
@@ -70,8 +70,7 @@ public class PageSelectedHandler extends AbstractPageChangeHandler {
 			if (parameterType.getKind() == TypeKind.INT || CanonicalNameConstants.INTEGER.equals(parameterType.toString())) {
 				positionParameterPosition = i;
 			} else {
-				TypeMirror viewPagerType = annotationHelper.typeElementFromQualifiedName(CanonicalNameConstants.VIEW_PAGER).asType();
-				if (annotationHelper.isSubtype(parameterType, viewPagerType)) {
+				if (isViewPagerParameter(parameterType)) {
 					viewPagerParameterPosition = i;
 					viewPagerParameterType = parameterType;
 				}

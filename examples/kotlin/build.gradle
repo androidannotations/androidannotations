@@ -47,7 +47,7 @@ allOpen {
 //    }
 //}
 
-def AAVersion = "4.4.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.3.1
+def AAVersion = "4.5.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.4.0
 
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"

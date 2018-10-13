@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package org.androidannotations.internal.core.handler;
+
+import static java.util.Arrays.asList;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -49,7 +51,7 @@ public class BindingObjectHandler extends CoreBaseAnnotationHandler<EComponentWi
 		if (element.getKind() == ElementKind.METHOD || element.getKind() == ElementKind.PARAMETER) {
 			ExecutableElement methodElement = (ExecutableElement) (element.getKind() == ElementKind.METHOD ? element : element.getEnclosingElement());
 
-			validatorHelper.param.extendsType(CanonicalNameConstants.VIEW_DATA_BINDING).validate(methodElement, validation);
+			validatorHelper.param.extendsAnyOfTypes(CanonicalNameConstants.VIEW_DATA_BINDING, CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING).validate(methodElement, validation);
 
 			if (!validation.isValid()) {
 				return;
@@ -60,7 +62,7 @@ public class BindingObjectHandler extends CoreBaseAnnotationHandler<EComponentWi
 
 		if (validation.isValid()) {
 			validatorHelper.isNotPrivate(element, validation);
-			validatorHelper.extendsType(injectHelper.getParam(element), CanonicalNameConstants.VIEW_DATA_BINDING, validation);
+			validatorHelper.extendsOneOfTypes(injectHelper.getParam(element), asList(CanonicalNameConstants.VIEW_DATA_BINDING, CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING), validation);
 		}
 	}
 

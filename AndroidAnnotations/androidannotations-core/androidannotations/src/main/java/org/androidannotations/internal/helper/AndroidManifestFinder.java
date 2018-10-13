@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
  */
 package org.androidannotations.internal.helper;
 
+import static org.androidannotations.helper.CaseHelper.upperCaseFirst;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
 import java.io.File;
@@ -184,6 +185,8 @@ public class AndroidManifestFinder {
 		private static final List<String> SUPPORTED_ABI_SPLITS = Arrays.asList("arm64-v8a", "armeabi", "armeabi-v7a", "mips", "mips64", "x86", "x86_64");
 		private static final List<String> SUPPORTED_DENSITY_SPLITS = Arrays.asList("hdpi", "ldpi", "mdpi", "xhdpi", "xxhdpi", "xxxhdpi");
 
+		private static final String BUILD_TOOLS_V32_MANIFEST_PATH = "build/intermediates/merged_manifests";
+
 		GradleAndroidManifestFinderStrategy(String sourceFolder) {
 			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
 		}
@@ -197,11 +200,42 @@ public class AndroidManifestFinder {
 
 			ArrayList<String> possibleLocations = new ArrayList<>();
 
+			findPossibleLocationsV32(path, variantPart, possibleLocations);
 			for (String directory : Arrays.asList("build/intermediates/manifests/full", "build/intermediates/bundles", "build/intermediates/manifests/aapt")) {
 				findPossibleLocations(path, directory, variantPart, possibleLocations);
 			}
 
 			return possibleLocations;
+		}
+
+		private void findPossibleLocationsV32(String basePath, String variantPart, List<String> possibleLocations) {
+			String[] directories = new File(basePath + BUILD_TOOLS_V32_MANIFEST_PATH).list();
+
+			if (directories == null) {
+				return;
+			}
+
+			if (variantPart.startsWith("/") || variantPart.startsWith("\\")) {
+				variantPart = variantPart.substring(1);
+			}
+
+			String[] variantParts = variantPart.split("[/\\\\]");
+			if (variantParts.length > 1) {
+				StringBuilder sb = new StringBuilder(variantParts[0]);
+				for (int i = 1; i < variantParts.length; i++) {
+					String part = variantParts[i];
+					sb.append(upperCaseFirst(part));
+				}
+				variantPart = sb.toString();
+			}
+
+			String processManifest = "process" + upperCaseFirst(variantPart) + "Manifest";
+			String possibleLocation = BUILD_TOOLS_V32_MANIFEST_PATH + "/" + variantPart + "/" + processManifest + "/merged";
+			File variantDir = new File(basePath + possibleLocation);
+			if (variantDir.isDirectory()) {
+				possibleLocations.add(possibleLocation);
+				addPossibleSplitLocations(basePath, possibleLocation, possibleLocations);
+			}
 		}
 
 		private void findPossibleLocations(String basePath, String targetPath, String variantPart, List<String> possibleLocations) {

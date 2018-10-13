@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Robolectric.setupActivity;
-import static org.robolectric.internal.ShadowExtractor.extract;
+import static org.robolectric.shadow.api.Shadow.extract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class SeekBarChangeListenedActivityTest {
 	public void setUp() {
 		activity = setupActivity(SeekBarChangeListenedActivity_.class);
 		seekBar = (SeekBar) activity.findViewById(R.id.seekBar1);
-		shadowSeekBar = (ShadowSeekBar) extract(seekBar);
+		shadowSeekBar = extract(seekBar);
 	}
 
 	@Test

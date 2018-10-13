@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -67,13 +67,13 @@ import org.androidannotations.internal.model.AnnotationElements;
 @SuppressWarnings("checkstyle:methodcount")
 public class ValidatorHelper {
 
-	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT);
+	private static final List<String> ANDROID_FRAGMENT_QUALIFIED_NAMES = asList(CanonicalNameConstants.FRAGMENT, CanonicalNameConstants.SUPPORT_V4_FRAGMENT, CanonicalNameConstants.ANDROIDX_FRAGMENT);
 
 	private static final Collection<Integer> VALID_LOG_LEVELS = asList(LOG_VERBOSE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR);
 
 	private static final List<String> VALID_PREFERENCE_CLASSES = asList(CanonicalNameConstants.PREFERENCE_ACTIVITY, CanonicalNameConstants.PREFERENCE_FRAGMENT,
 			CanonicalNameConstants.SUPPORT_V4_PREFERENCE_FRAGMENT, CanonicalNameConstants.MACHINARIUS_V4_PREFERENCE_FRAGMENT, CanonicalNameConstants.SUPPORT_V7_PREFERENCE_FRAGMENTCOMPAT,
-			CanonicalNameConstants.SUPPORT_V14_PREFERENCE_FRAGMENT);
+			CanonicalNameConstants.SUPPORT_V14_PREFERENCE_FRAGMENT, CanonicalNameConstants.ANDROIDX_PREFERENCE_FRAGMENT, CanonicalNameConstants.ANDROIDX_PREFERENCE_FRAGMENTCOMPAT);
 
 	protected final TargetAnnotationHelper annotationHelper;
 	private final ParcelerHelper parcelerHelper;
@@ -308,6 +308,14 @@ public class ValidatorHelper {
 		typeHasAnnotation(annotation, elementType, valid);
 	}
 
+	public void typeHasValidAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid) {
+		typeHasAnnotation(annotation, element, valid);
+
+		if (valid.isValid()) {
+			typeIsValid(annotation, element.asType(), valid);
+		}
+	}
+
 	public void typeHasAnnotation(Class<? extends Annotation> annotation, TypeMirror elementType, ElementValidation valid) {
 		Element typeElement = annotationHelper.getTypeUtils().asElement(elementType);
 		if (!elementHasAnnotationSafe(annotation, typeElement)) {
@@ -324,14 +332,14 @@ public class ValidatorHelper {
 		DeclaredType targetAnnotationClassValue = annotationHelper.extractAnnotationClassParameter(element);
 
 		if (targetAnnotationClassValue != null) {
-			typeHasAnnotation(annotation, targetAnnotationClassValue, valid);
+			targetElement = targetAnnotationClassValue.asElement();
 
 			if (!annotationHelper.getTypeUtils().isAssignable(targetAnnotationClassValue, targetElement.asType())) {
 				valid.addError("The value of %s must be assignable into the annotated field");
 			}
-		} else {
-			typeHasAnnotation(annotation, targetElement, valid);
 		}
+
+		typeHasValidAnnotation(annotation, targetElement, valid);
 	}
 
 	Element findTargetElement(Element element, ElementValidation valid) {
@@ -350,6 +358,20 @@ public class ValidatorHelper {
 			return parameters.get(0);
 		}
 		return element;
+	}
+
+	public void typeIsValid(Class<? extends Annotation> annotation, TypeMirror elementType, ElementValidation elementValidation) {
+		Set<? extends Element> validElements = validatedModel().getRootAnnotatedElements(annotation.getName());
+
+		Set<? extends Element> extractedElements = environment().getExtractedElements().getRootAnnotatedElements(annotation.getName());
+
+		Element typeElement = annotationHelper.getTypeUtils().asElement(elementType);
+
+		if (!extractedElements.contains(typeElement) || validElements.contains(typeElement)) {
+			return;
+		}
+
+		elementValidation.addError("The type " + typeElement.getSimpleName() + " is invalid, " + "please check the messages on that type.");
 	}
 
 	private boolean elementHasAnnotationSafe(Class<? extends Annotation> annotation, Element element) {
@@ -478,7 +500,7 @@ public class ValidatorHelper {
 	}
 
 	public void extendsPreference(Element element, ElementValidation validation) {
-		extendsOneOfTypes(element, asList(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE), validation);
+		extendsOneOfTypes(element, asList(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE, CanonicalNameConstants.ANDROIDX_PREFERENCE), validation);
 	}
 
 	public void extendsOneOfTypes(Element element, List<String> typeQualifiedNames, ElementValidation valid) {
@@ -744,8 +766,9 @@ public class ValidatorHelper {
 	}
 
 	public void isViewPagerClassPresent(ElementValidation validation) {
-		if (!isClassPresent(CanonicalNameConstants.VIEW_PAGER)) {
-			validation.addError("The class " + CanonicalNameConstants.VIEW_PAGER + " cannot be found. You have to include support v4 library");
+		if (!isClassPresent(CanonicalNameConstants.VIEW_PAGER) && !isClassPresent(CanonicalNameConstants.ANDROIDX_VIEW_PAGER)) {
+			validation.addError("The classes " + CanonicalNameConstants.VIEW_PAGER + " and " + CanonicalNameConstants.ANDROIDX_VIEW_PAGER
+					+ " cannot be found. You have to include support-v4 or androidx.viewpager library");
 		}
 	}
 }

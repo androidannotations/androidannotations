@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +32,7 @@ import android.app.WallpaperManager;
 import android.app.admin.DevicePolicyManager;
 import android.appwidget.AppWidgetManager;
 import android.hardware.SensorManager;
+import android.hardware.input.InputManager;
 import android.hardware.usb.UsbManager;
 import android.location.LocationManager;
 import android.media.AudioManager;
@@ -145,9 +146,8 @@ public class ActivityWithServices extends Activity {
 	// @SystemService
 	// HdmiControlManager hdmiControlManager; // hidden API
 
-	// TODO no support yet in Robolectric
-	// @SystemService
-	// InputManager inputManager;
+	@SystemService
+	InputManager inputManager;
 
 	@SystemService
 	InputMethodManager inputMethodManager;

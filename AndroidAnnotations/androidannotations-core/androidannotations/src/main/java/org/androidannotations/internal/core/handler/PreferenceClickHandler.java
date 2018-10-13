@@ -54,7 +54,7 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 		validatorHelper.returnTypeIsVoidOrBoolean(executableElement, valid);
 
 		validatorHelper.param //
-				.extendsAnyOfTypes(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE).optional() //
+				.extendsAnyOfTypes(CanonicalNameConstants.PREFERENCE, CanonicalNameConstants.SUPPORT_V7_PREFERENCE, CanonicalNameConstants.ANDROIDX_PREFERENCE).optional() //
 				.validate(executableElement, valid);
 	}
 
@@ -92,7 +92,8 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected AbstractJClass getListenerClass(HasPreferences holder) {
-		return holder.usingSupportV7Preference() ?  getClasses().SUPPORT_V7_PREFERENCE_CLICK_LISTENER : getClasses().PREFERENCE_CLICK_LISTENER;
+		return holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CLICK_LISTENER
+				: holder.usingAndroidxPreference() ? getClasses().ANDROIDX_PREFERENCE_CLICK_LISTENER : getClasses().PREFERENCE_CLICK_LISTENER;
 	}
 
 }

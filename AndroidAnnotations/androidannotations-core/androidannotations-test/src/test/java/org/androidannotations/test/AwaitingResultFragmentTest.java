@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@
 package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.robolectric.internal.ShadowExtractor.extract;
+import static org.robolectric.shadow.api.Shadow.extract;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
 import org.junit.Before;
@@ -46,7 +46,7 @@ public class AwaitingResultFragmentTest {
 	public void testOnResultCalledInFragment() {
 		FragmentStartedActivity_.intent(fragment).startForResult(AwaitingResultFragment.FIRST_REQUEST);
 
-		ShadowActivity a = (ShadowActivity) extract(fragment.getActivity());
+		ShadowActivity a = extract(fragment.getActivity());
 		a.receiveResult(FragmentStartedActivity_.intent(fragment).get(), Activity.RESULT_OK, new Intent());
 
 		assertThat(fragment.onResultCalled).isTrue();

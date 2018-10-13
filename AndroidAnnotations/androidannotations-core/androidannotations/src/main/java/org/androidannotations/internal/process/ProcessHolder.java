@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -137,6 +137,22 @@ public class ProcessHolder {
 
 		public final AbstractJClass VIEW_DATA_BINDING = refClass(CanonicalNameConstants.VIEW_DATA_BINDING);
 		public final AbstractJClass DATA_BINDING_UTIL = refClass(CanonicalNameConstants.DATA_BINDING_UTIL);
+
+		/*
+		 * Android X
+		 */
+		public final AbstractJClass ANDROIDX_ACTIVITY_COMPAT = refClass(CanonicalNameConstants.ANDROIDX_ACTIVITY_COMPAT);
+		public final AbstractJClass ANDROIDX_FRAGMENT = refClass(CanonicalNameConstants.ANDROIDX_FRAGMENT);
+		public final AbstractJClass ANDROIDX_FRAGMENT_ACTIVITY = refClass(CanonicalNameConstants.ANDROIDX_FRAGMENT_ACTIVITY);
+		public final AbstractJClass ANDROIDX_LOCAL_BROADCAST_MANAGER = refClass(CanonicalNameConstants.ANDROIDX_LOCAL_BROADCAST_MANAGER);
+		public final AbstractJClass ANDROIDX_CONTEXT_COMPAT = refClass(CanonicalNameConstants.ANDROIDX_CONTEXT_COMPAT);
+		public final AbstractJClass ANDROIDX_PREFERENCE = refClass(CanonicalNameConstants.ANDROIDX_PREFERENCE);
+		public final AbstractJClass ANDROIDX_PREFERENCE_CLICK_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PREFERENCE_CLICK_LISTENER);
+		public final AbstractJClass ANDROIDX_PREFERENCE_CHANGE_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PREFERENCE_CHANGE_LISTENER);
+		public final AbstractJClass ANDROIDX_VIEW_PAGER = refClass(CanonicalNameConstants.ANDROIDX_VIEW_PAGER);
+		public final AbstractJClass ANDROIDX_PAGE_CHANGE_LISTENER = refClass(CanonicalNameConstants.ANDROIDX_PAGE_CHANGE_LISTENER);
+		public final AbstractJClass ANDROIDX_VIEW_DATA_BINDING = refClass(CanonicalNameConstants.ANDROIDX_VIEW_DATA_BINDING);
+		public final AbstractJClass ANDROIDX_DATA_BINDING_UTIL = refClass(CanonicalNameConstants.ANDROIDX_DATA_BINDING_UTIL);
 
 		/*
 		 * HttpClient

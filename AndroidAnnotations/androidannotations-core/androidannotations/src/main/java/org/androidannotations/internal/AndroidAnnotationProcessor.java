@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +38,6 @@ import org.androidannotations.internal.core.CorePlugin;
 import org.androidannotations.internal.exception.AndroidManifestNotFoundException;
 import org.androidannotations.internal.exception.ProcessingException;
 import org.androidannotations.internal.exception.RClassNotFoundException;
-import org.androidannotations.internal.exception.ValidationException;
 import org.androidannotations.internal.exception.VersionMismatchException;
 import org.androidannotations.internal.exception.VersionNotFoundException;
 import org.androidannotations.internal.generation.CodeModelGenerator;
@@ -91,7 +91,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 			plugins.add(0, corePlugin);
 			androidAnnotationsEnv.setPlugins(plugins);
 		} catch (Exception e) {
-			LOGGER.error("Can't load plugins", e);
+			LOGGER.error(e, "Can't load plugins");
 		}
 	}
 
@@ -124,8 +124,6 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		try {
 			checkApiAndProcessorVersions();
 			processThrowing(annotations, roundEnv);
-		} catch (ValidationException e) {
-			// We do nothing, errors have been printed by ModelValidator
 		} catch (ProcessingException e) {
 			handleException(annotations, roundEnv, e);
 		} catch (Exception e) {
@@ -136,7 +134,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 
 		LOGGER.info("Finish processing");
 
-		LoggerContext.getInstance().close();
+		LoggerContext.getInstance().close(roundEnv.processingOver());
 		return true;
 	}
 
@@ -156,6 +154,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 
 		AnnotationElementsHolder extractedModel = extractAnnotations(annotations, roundEnv);
+		androidAnnotationsEnv.setExtractedElements(extractedModel);
+
 		AnnotationElementsHolder validatingHolder = extractedModel.validatingHolder();
 		androidAnnotationsEnv.setValidatedElements(validatingHolder);
 
@@ -210,7 +210,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		}
 	}
 
-	private AnnotationElements validateAnnotations(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) throws ValidationException {
+	private AnnotationElements validateAnnotations(AnnotationElements extractedModel, AnnotationElementsHolder validatingHolder) {
 		timeStats.start("Validate Annotations");
 		ModelValidator modelValidator = new ModelValidator(androidAnnotationsEnv);
 		AnnotationElements validatedAnnotations = modelValidator.validate(extractedModel, validatingHolder);
@@ -246,7 +246,7 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		Iterator<? extends TypeElement> iterator = annotations.iterator();
 		if (iterator.hasNext()) {
 			Element element = roundEnv.getElementsAnnotatedWith(iterator.next()).iterator().next();
-			LOGGER.error("Something went wrong: {}", element, errorMessage);
+			LOGGER.error(element, "Something went wrong: {}", errorMessage);
 		} else {
 			LOGGER.error("Something went wrong: {}", errorMessage);
 		}

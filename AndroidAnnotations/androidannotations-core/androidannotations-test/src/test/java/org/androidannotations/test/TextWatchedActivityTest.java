@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2017 the AndroidAnnotations project
+ * Copyright (C) 2016-2018 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package org.androidannotations.test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Robolectric.setupActivity;
-import static org.robolectric.internal.ShadowExtractor.extract;
+import static org.robolectric.shadow.api.Shadow.extract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -175,21 +175,21 @@ public class TextWatchedActivityTest {
 	}
 
 	private static void afterTextChanged(TextView textView, Editable s) {
-		ShadowTextView shadowTextView = (ShadowTextView) extract(textView);
+		ShadowTextView shadowTextView = extract(textView);
 		for (TextWatcher textWatcher : shadowTextView.getWatchers()) {
 			textWatcher.afterTextChanged(s);
 		}
 	}
 
 	private static void beforeTextChanged(TextView textView, CharSequence s, int start, int count, int after) {
-		ShadowTextView shadowTextView = (ShadowTextView) extract(textView);
+		ShadowTextView shadowTextView = extract(textView);
 		for (TextWatcher textWatcher : shadowTextView.getWatchers()) {
 			textWatcher.beforeTextChanged(s, start, count, after);
 		}
 	}
 
 	private static void onTextChanged(TextView textView, CharSequence s, int start, int before, int count) {
-		ShadowTextView shadowTextView = (ShadowTextView) extract(textView);
+		ShadowTextView shadowTextView = extract(textView);
 		for (TextWatcher textWatcher : shadowTextView.getWatchers()) {
 			textWatcher.onTextChanged(s, start, before, count);
 		}
