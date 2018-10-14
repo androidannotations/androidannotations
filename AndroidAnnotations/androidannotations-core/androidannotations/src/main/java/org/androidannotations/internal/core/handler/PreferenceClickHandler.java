@@ -92,8 +92,8 @@ public class PreferenceClickHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected AbstractJClass getListenerClass(HasPreferences holder) {
-		return holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CLICK_LISTENER
-				: holder.usingAndroidxPreference() ? getClasses().ANDROIDX_PREFERENCE_CLICK_LISTENER : getClasses().PREFERENCE_CLICK_LISTENER;
+		return holder.usingAndroidxPreference() ? getClasses().ANDROIDX_PREFERENCE_CLICK_LISTENER
+				: holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CLICK_LISTENER : getClasses().PREFERENCE_CLICK_LISTENER;
 	}
 
 }

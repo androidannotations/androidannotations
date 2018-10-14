@@ -119,7 +119,7 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 
 	@Override
 	protected AbstractJClass getListenerClass(HasPreferences holder) {
-		return holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CHANGE_LISTENER
-				: holder.usingAndroidxPreference() ? getClasses().ANDROIDX_PREFERENCE_CHANGE_LISTENER : getClasses().PREFERENCE_CHANGE_LISTENER;
+		return holder.usingAndroidxPreference() ? getClasses().ANDROIDX_PREFERENCE_CHANGE_LISTENER
+				: holder.usingSupportV7Preference() ? getClasses().SUPPORT_V7_PREFERENCE_CHANGE_LISTENER : getClasses().PREFERENCE_CHANGE_LISTENER;
 	}
 }

@@ -57,7 +57,7 @@ public abstract class ModelConstants {
 			throw new IllegalArgumentException("'" + classSuffix + "' may not be an empty string.");
 		}
 
-		if (!SourceVersion.isName(classSuffix) || classSuffix.contains(".")) {
+		if (!SourceVersion.isName("ValidName" + classSuffix) || classSuffix.contains(".")) {
 			throw new IllegalArgumentException("'" + classSuffix + "' may not be a valid Java identifier.");
 		}
 	}

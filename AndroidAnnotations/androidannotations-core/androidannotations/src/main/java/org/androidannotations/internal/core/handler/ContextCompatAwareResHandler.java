@@ -45,10 +45,10 @@ abstract class ContextCompatAwareResHandler extends AbstractResHandler {
 
 	@Override
 	protected IJExpression getInstanceInvocation(EComponentHolder holder, JFieldRef idRef, IJAssignmentTarget fieldRef, JBlock targetBlock) {
-		if (hasTargetMethodInContextCompat()) {
-			return getClasses().CONTEXT_COMPAT.staticInvoke(androidRes.getResourceMethodName()).arg(holder.getContextRef()).arg(idRef);
-		} else if (hasTargetMethodInAndroidxContextCompat()) {
+		if (hasTargetMethodInAndroidxContextCompat()) {
 			return getClasses().ANDROIDX_CONTEXT_COMPAT.staticInvoke(androidRes.getResourceMethodName()).arg(holder.getContextRef()).arg(idRef);
+		} else if (hasTargetMethodInContextCompat()) {
+			return getClasses().CONTEXT_COMPAT.staticInvoke(androidRes.getResourceMethodName()).arg(holder.getContextRef()).arg(idRef);
 		} else if (shouldUseContextMethod()) {
 			return holder.getContextRef().invoke(androidRes.getResourceMethodName()).arg(idRef);
 		} else if (!shouldUseContextMethod() && hasTargetMethodInContext()) {
