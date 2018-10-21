@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.androidannotations</groupId>
 		<artifactId>androidannotations-ormlite</artifactId>
-		<version>4.6.0-SNAPSHOT</version>
+		<version>4.5.2</version>
 	</parent>
 
 	<artifactId>ormlite</artifactId>
