@@ -229,12 +229,15 @@ public class AndroidManifestFinder {
 				variantPart = sb.toString();
 			}
 
-			String processManifest = "process" + upperCaseFirst(variantPart) + "Manifest";
-			String possibleLocation = BUILD_TOOLS_V32_MANIFEST_PATH + "/" + variantPart + "/" + processManifest + "/merged";
-			File variantDir = new File(basePath + possibleLocation);
-			if (variantDir.isDirectory()) {
-				possibleLocations.add(possibleLocation);
-				addPossibleSplitLocations(basePath, possibleLocation, possibleLocations);
+			String possibleLocation = BUILD_TOOLS_V32_MANIFEST_PATH + "/" + variantPart;
+			findPossibleLocations(basePath, possibleLocations, possibleLocation);
+			findPossibleLocations(basePath, possibleLocations, possibleLocation + "/process" + upperCaseFirst(variantPart) + "Manifest/merged");
+		}
+
+		private void findPossibleLocations(String basePath, List<String> possibleLocations, String possibleLocationWithProcessManifest) {
+			if (new File(basePath, possibleLocationWithProcessManifest).isDirectory()) {
+				possibleLocations.add(possibleLocationWithProcessManifest);
+				addPossibleSplitLocations(basePath, possibleLocationWithProcessManifest, possibleLocations);
 			}
 		}
 
