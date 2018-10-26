@@ -41,6 +41,7 @@ public class Options {
 		options = processingEnvironment.getOptions();
 		addSupportedOption(AndroidManifestFinder.OPTION_MANIFEST);
 		addSupportedOption(AndroidManifestFinder.OPTION_LIBRARY);
+		addSupportedOption(AndroidManifestFinder.OPTION_INSTANT_FEATURE);
 		addSupportedOption(ProjectRClassFinder.OPTION_RESOURCE_PACKAGE_NAME);
 		addSupportedOption(ProjectRClassFinder.OPTION_USE_R2);
 		addSupportedOption(ModelConstants.OPTION_CLASS_SUFFIX);
