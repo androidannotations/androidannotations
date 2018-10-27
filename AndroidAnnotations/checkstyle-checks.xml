@@ -160,7 +160,7 @@
 	<module name="SuppressionCommentFilter" />
 	<module name="SuppressWarningsFilter" />
 	<module name="SuppressionFilter">
-        <property name="file" value="${checkstyle.suppressions.file}"/>
-    </module>
+		<property name="file" value="${config_loc}/checkstyle-suppressions.xml"/>
+	</module>
 	<module name="NewlineAtEndOfFile"/>
 </module>
