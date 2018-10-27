@@ -4,5 +4,10 @@
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="100000" />
       <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="100000" />
     </JavaCodeStyleSettings>
+    <codeStyleSettings language="XML">
+      <indentOptions>
+        <option name="USE_TAB_CHARACTER" value="true" />
+      </indentOptions>
+    </codeStyleSettings>
   </code_scheme>
 </component>
