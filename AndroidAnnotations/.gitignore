@@ -3,6 +3,21 @@ target
 *.iml
 *.ipr
 *.iws
-*.idea
 .checkstyle
 .settings
+
+# Ignore everything in .idea, but not the folder itself
+.idea/*
+# Except for these files
+!.idea/externalDependencies.xml
+!.idea/eclipseCodeFormatter.xml
+!.idea/saveactions_settings.xml
+!.idea/checkstyle-idea.xml
+
+# Do not ignore .idea/codeStyles *folder*
+!.idea/codeStyles
+# But its content
+.idea/codeStyles/*
+# Except for these files
+!.idea/codeStyles/codeStyleConfig.xml
+!.idea/codeStyles/Project.xml
