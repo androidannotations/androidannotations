@@ -4,6 +4,9 @@
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="100000" />
       <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="100000" />
     </JavaCodeStyleSettings>
+    <Properties>
+      <option name="KEEP_BLANK_LINES" value="true" />
+    </Properties>
     <codeStyleSettings language="XML">
       <indentOptions>
         <option name="USE_TAB_CHARACTER" value="true" />
