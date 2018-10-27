@@ -48,7 +48,7 @@
 		<module name="AvoidStarImport" />
 		<module name="IllegalImport" />
 		<module name="ImportOrder">
-			<property name="groups" value="/^javax?\./,org"/>
+			<property name="groups" value="/^javax?\./,org,com"/>
 			<property name="ordered" value="true"/>
 			<property name="separated" value="true"/>
 			<property name="option" value="top"/>
