@@ -17,20 +17,20 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.otto.test"
-    android:versionCode="1"
-    android:versionName="2.1-SNAPSHOT" xmlns:tools="http://schemas.android.com/tools">
+		  package="org.androidannotations.otto.test"
+		  android:versionCode="1"
+		  android:versionName="2.1-SNAPSHOT" xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
+	<uses-sdk
+			android:minSdkVersion="14"
+			android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.INTERNET"/>
 
-    <application>
+	<application>
 
-        <activity android:name=".OttoActivity_" />
+		<activity android:name=".OttoActivity_"/>
 
-    </application>
+	</application>
 
 </manifest>

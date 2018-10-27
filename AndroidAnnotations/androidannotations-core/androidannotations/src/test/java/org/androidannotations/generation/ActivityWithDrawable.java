@@ -15,7 +15,6 @@
  */
 package org.androidannotations.generation;
 
-
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.res.DrawableRes;
 

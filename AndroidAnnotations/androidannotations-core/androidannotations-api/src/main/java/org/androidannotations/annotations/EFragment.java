@@ -127,9 +127,9 @@ public @interface EFragment {
 	String resName() default "";
 
 	/**
-	 * We only set the layout if the <code>onCreateView()</code> method returns
-	 * null from the annotated class. If you want to set the layout regardless
-	 * of that return value, pass <b>true</b> to this annotation parameter.
+	 * We only set the layout if the <code>onCreateView()</code> method returns null
+	 * from the annotated class. If you want to set the layout regardless of that
+	 * return value, pass <b>true</b> to this annotation parameter.
 	 * 
 	 * @return <b>true</b>, if the layout must be set, <b>false</b> otherwise
 	 */

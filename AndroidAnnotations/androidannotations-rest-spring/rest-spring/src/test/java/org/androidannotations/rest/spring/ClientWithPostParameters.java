@@ -52,4 +52,3 @@ public interface ClientWithPostParameters {
 	@Post("/")
 	void fieldClassPathResource(@Field ClassPathResource res);
 }
-

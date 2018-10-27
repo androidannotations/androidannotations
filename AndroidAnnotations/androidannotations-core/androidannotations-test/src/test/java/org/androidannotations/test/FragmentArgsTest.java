@@ -30,9 +30,9 @@ public class FragmentArgsTest {
 	private static final int TEST_INT = 42;
 
 	/**
-	 * This test verifies the Fragment argument gets injected. It does not check
-	 * for different types, because we use the same code for every
-	 * Bundle-related operation and types are already tested in
+	 * This test verifies the Fragment argument gets injected. It does not check for
+	 * different types, because we use the same code for every Bundle-related
+	 * operation and types are already tested in
 	 * {@link org.androidannotations.test.instancestate.SaveInstanceStateActivityParameterizedTest
 	 * SaveInstanceStateActivityParameterizedTest} .
 	 */

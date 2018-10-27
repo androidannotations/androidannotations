@@ -15,7 +15,6 @@
  */
 package org.androidannotations.rest.spring;
 
-
 import org.androidannotations.rest.spring.annotations.Patch;
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.springframework.http.converter.StringHttpMessageConverter;

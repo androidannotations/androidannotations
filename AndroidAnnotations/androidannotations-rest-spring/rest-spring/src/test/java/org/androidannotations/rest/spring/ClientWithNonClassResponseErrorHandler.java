@@ -15,7 +15,6 @@
  */
 package org.androidannotations.rest.spring;
 
-
 import org.androidannotations.rest.spring.annotations.Rest;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.ResponseErrorHandler;

@@ -17,14 +17,14 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.androidannotations.keyevents"
-          android:versionCode="1"
-          android:versionName="1.0">
+		  package="org.androidannotations.keyevents"
+		  android:versionCode="1"
+		  android:versionName="1.0">
 
-    <application>
-        <activity android:name="org.androidannotations.keyevents.ActivityWithKeyEvents_"/>
-        <activity android:name="org.androidannotations.keyevents.ActivityWithKeyEventsWithWrongParameter_"/>
-        <activity android:name="org.androidannotations.keyevents.ActivityWithKeyEventsWithNotUniqueKeycode_"/>
-    </application>
+	<application>
+		<activity android:name="org.androidannotations.keyevents.ActivityWithKeyEvents_"/>
+		<activity android:name="org.androidannotations.keyevents.ActivityWithKeyEventsWithWrongParameter_"/>
+		<activity android:name="org.androidannotations.keyevents.ActivityWithKeyEventsWithNotUniqueKeycode_"/>
+	</application>
 
 </manifest>

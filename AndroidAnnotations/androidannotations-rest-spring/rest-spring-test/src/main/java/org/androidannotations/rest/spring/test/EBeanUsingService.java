@@ -21,10 +21,10 @@ import org.androidannotations.rest.spring.annotations.RestService;
 
 @EBean
 public class EBeanUsingService {
-	
+
 	@RestService
 	MyService myService;
-	
+
 	@Background
 	void callSomeService(Event event, int id) {
 		myService.updateEvent(event, id);

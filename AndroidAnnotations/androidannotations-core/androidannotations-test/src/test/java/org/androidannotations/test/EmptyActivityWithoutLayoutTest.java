@@ -29,9 +29,7 @@ public class EmptyActivityWithoutLayoutTest {
 
 	@Test
 	public void shouldHaveNoLayoutAfterCreate() {
-		EmptyActivityWithoutLayout_ activity = Robolectric
-				.buildActivity(EmptyActivityWithoutLayout_.class).create()
-				.get();
+		EmptyActivityWithoutLayout_ activity = Robolectric.buildActivity(EmptyActivityWithoutLayout_.class).create().get();
 		activity.setContentView(new View(activity));
 
 		assertThat(activity.findViewById(R.id.helloTextView)).isNull();

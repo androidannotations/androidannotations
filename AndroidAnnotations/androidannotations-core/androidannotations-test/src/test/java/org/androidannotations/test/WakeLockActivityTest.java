@@ -47,7 +47,7 @@ public class WakeLockActivityTest {
 		WakeLock wakeLock = ShadowPowerManager.getLatestWakeLock();
 		assertThat(wakeLock).isNull();
 	}
-	
+
 	@Test
 	public void testWakeLockIsAquired() {
 		activity.useWakeLockDefaultValues(new Callback() {
@@ -59,7 +59,7 @@ public class WakeLockActivityTest {
 			}
 		});
 	}
-	
+
 	@Test
 	public void testWakeLockIsReleased() {
 		activity.useWakeLockDefaultValues(null);
@@ -72,36 +72,36 @@ public class WakeLockActivityTest {
 		activity.useWakeLockDefaultValues(null);
 		assertThat(CustomShadowPowerManager.lastTag).isEqualTo("WakeLockActivity.useWakeLockDefaultValues");
 	}
-	
+
 	public void testWakeLockCustomFlag() {
 		activity.useWakeLockCustomTag();
 		assertThat(CustomShadowPowerManager.lastTag).isEqualTo("HelloWakeLock");
 	}
-	
+
 	@Test
 	public void testWakeLockIsPartialByDefault() throws IOException {
 		activity.useWakeLockDefaultValues(null);
 		assertThat(CustomShadowPowerManager.lastFlags).isEqualTo(PowerManager.PARTIAL_WAKE_LOCK);
 	}
-	
+
 	@Test
 	public void testWakeLockLevel() {
 		activity.useWakeLockCustomLevel();
 		assertThat(CustomShadowPowerManager.lastFlags).isEqualTo(PowerManager.FULL_WAKE_LOCK);
 	}
-	
+
 	@Test
 	public void testWakeLockFlag() {
 		activity.useWakeLockCustomFlag();
 		assertThat(CustomShadowPowerManager.lastFlags).isEqualTo(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP);
 	}
-	
+
 	@Test
 	public void testWakeLockMultipleFlags() {
 		activity.useWakeLockMultipleFlags();
 		assertThat(CustomShadowPowerManager.lastFlags).isEqualTo(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE);
 	}
-	
+
 	@Test
 	public void testWakeLockCustomFlagAndLevel() {
 		activity.useWakeLockCustomLevelAndFlag();

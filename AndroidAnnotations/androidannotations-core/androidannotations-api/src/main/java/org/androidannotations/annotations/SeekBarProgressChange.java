@@ -38,7 +38,8 @@ import java.lang.annotation.Target;
  * <ul>
  * <li>A {@link android.widget.SeekBar} parameter to determine which view has
  * targeted this event</li>
- * <li>An <code>int</code> parameter to get the progress level of the SeekBar</li>
+ * <li>An <code>int</code> parameter to get the progress level of the
+ * SeekBar</li>
  * <li>A <code>boolean</code> parameter to determine if this event was triggered
  * by the user</li>
  * </ul>

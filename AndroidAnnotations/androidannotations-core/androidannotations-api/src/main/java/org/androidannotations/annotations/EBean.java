@@ -41,9 +41,9 @@ import org.androidannotations.api.KotlinOpen;
  * create Abstract classes that handle common code.
  * </p>
  * <p>
- * {@link EBean} can  only be used on classes and NOT on interfaces.
- * If you want to use an {@link EBean} with interface you must annotate
- * the implementation class and not the interface.
+ * {@link EBean} can only be used on classes and NOT on interfaces. If you want
+ * to use an {@link EBean} with interface you must annotate the implementation
+ * class and not the interface.
  * </p>
  * <p>
  * Most annotations are supported in {@link EBean} classes, except the ones
@@ -111,8 +111,8 @@ public @interface EBean {
 		Default, //
 
 		/**
-		 * A new instance of the bean is created the first time it is needed, it
-		 * is then retained and the same instance is always returned.
+		 * A new instance of the bean is created the first time it is needed, it is then
+		 * retained and the same instance is always returned.
 		 */
 		Singleton, //
 	}

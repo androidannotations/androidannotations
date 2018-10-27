@@ -25,8 +25,8 @@ public interface RestClientErrorHandling {
 	/**
 	 * Sets the error handler called when a rest error occurs.
 	 * 
-	 * @param handler {@link RestErrorHandler}
-	 *      which handle exception from rest service
+	 * @param handler
+	 *            {@link RestErrorHandler} which handle exception from rest service
 	 */
 	void setRestErrorHandler(RestErrorHandler handler);
 }

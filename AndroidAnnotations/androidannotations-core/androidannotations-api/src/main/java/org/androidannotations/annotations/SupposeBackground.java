@@ -64,8 +64,8 @@ import org.androidannotations.api.KotlinOpen;
 public @interface SupposeBackground {
 
 	/**
-	 * Allowed serials to restrict a calling thread. If it is an empty list,
-	 * then any background thread is allowed.
+	 * Allowed serials to restrict a calling thread. If it is an empty list, then
+	 * any background thread is allowed.
 	 *
 	 * @see org.androidannotations.api.BackgroundExecutor#checkBgThread(String...)
 	 * 

@@ -27,7 +27,7 @@ public class ServiceWithInvalidReceiver extends Service {
 
 	@Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnResumeOnPause)
 	protected void onActionOnResume() {
-		
+
 	}
 
 	@Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnStartOnStop)

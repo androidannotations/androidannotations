@@ -49,8 +49,8 @@ public final class UiThreadExecutor {
 	}
 
 	/**
-	 * Store a new task in the map for providing cancellation. This method is
-	 * used by AndroidAnnotations and not intended to be called by clients.
+	 * Store a new task in the map for providing cancellation. This method is used
+	 * by AndroidAnnotations and not intended to be called by clients.
 	 * 
 	 * @param id
 	 *            the identifier of the task

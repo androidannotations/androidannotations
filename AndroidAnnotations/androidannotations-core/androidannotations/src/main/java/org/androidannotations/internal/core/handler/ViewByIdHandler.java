@@ -40,7 +40,7 @@ import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 
-public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder>implements MethodInjectionHandler<EComponentWithViewSupportHolder> {
+public class ViewByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> implements MethodInjectionHandler<EComponentWithViewSupportHolder> {
 
 	private final InjectHelper<EComponentWithViewSupportHolder> injectHelper;
 

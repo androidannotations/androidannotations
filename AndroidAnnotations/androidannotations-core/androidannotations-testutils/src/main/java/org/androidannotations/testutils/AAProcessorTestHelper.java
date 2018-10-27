@@ -43,11 +43,13 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 	}
 
 	/**
-	 * This module cannot depend on androidannotations module, because that would introduce a cycle in the dependency graph.
-	 * That is why we cannot directly reference the <code>classSuffix</code> method.
-	 * We still have to use this method, so we call it reflectively.
+	 * This module cannot depend on androidannotations module, because that would
+	 * introduce a cycle in the dependency graph. That is why we cannot directly
+	 * reference the <code>classSuffix</code> method. We still have to use this
+	 * method, so we call it reflectively.
 	 *
-	 * @return the result of <code>org.androidannotations.helper.ModelConstants.classSuffix()</code>
+	 * @return the result of
+	 *         <code>org.androidannotations.helper.ModelConstants.classSuffix()</code>
 	 */
 	private static String getAndroidAnnotationsClassSuffix() {
 		try {

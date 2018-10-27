@@ -17,39 +17,39 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.ormlite.test"
-    android:versionCode="1"
-    android:versionName="2.1-SNAPSHOT" xmlns:tools="http://schemas.android.com/tools">
+		  package="org.androidannotations.ormlite.test"
+		  android:versionCode="1"
+		  android:versionName="2.1-SNAPSHOT" xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
+	<uses-sdk
+			android:minSdkVersion="14"
+			android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.INTERNET"/>
 
-    <application
-        android:name=".MyApplication_"
-        android:debuggable="true" >
-        <activity android:name=".MyActivity_" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+	<application
+			android:name=".MyApplication_"
+			android:debuggable="true">
+		<activity android:name=".MyActivity_">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
 
-        <activity android:name=".OrmLiteOnDestroyActivity_" />
+		<activity android:name=".OrmLiteOnDestroyActivity_"/>
 
-        <receiver android:name=".MyReceiver_" />
+		<receiver android:name=".MyReceiver_"/>
 
-        <provider
-            android:name=".MyProvider_"
-            android:authorities=""
-            android:exported="false" />
+		<provider
+				android:name=".MyProvider_"
+				android:authorities=""
+				android:exported="false"/>
 
-        <service
-            android:name=".MyService_"
-            android:exported="false" />
-    </application>
+		<service
+				android:name=".MyService_"
+				android:exported="false"/>
+	</application>
 
 </manifest>

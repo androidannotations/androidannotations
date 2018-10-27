@@ -44,8 +44,7 @@ public @interface ColorStateListRes {
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
-	 * The resource name as a string which refers to the ColorStateList
-	 * resource.
+	 * The resource name as a string which refers to the ColorStateList resource.
 	 * 
 	 * @return the resource name of the resource
 	 */

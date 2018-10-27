@@ -60,7 +60,8 @@ public class PreferenceChangeHandler extends AbstractPreferenceListenerHandler {
 						CanonicalNameConstants.BOOLEAN, boolean.class.getName(), //
 						CanonicalNameConstants.INTEGER, int.class.getName(), //
 						CanonicalNameConstants.LONG, long.class.getName(), //
-						CanonicalNameConstants.FLOAT, float.class.getName()).optional() //
+						CanonicalNameConstants.FLOAT, float.class.getName())
+				.optional() //
 				.validate(executableElement, valid);
 	}
 

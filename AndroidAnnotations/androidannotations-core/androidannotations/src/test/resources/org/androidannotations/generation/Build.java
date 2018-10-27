@@ -21,7 +21,7 @@ package android.os;
  */
 @SuppressWarnings("checkstyle:typename")
 public class Build {
-	
+
 	public static class VERSION {
 		public static final int SDK_INT = 20;
 	}

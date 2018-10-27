@@ -43,7 +43,8 @@ import java.lang.annotation.Target;
  * text.</li>
  * <li>An int parameter named before to know the text length before
  * modification.</li>
- * <li>An int parameter named count to know the number of modified characters.</li>
+ * <li>An int parameter named count to know the number of modified
+ * characters.</li>
  * </ul>
  *
  * <blockquote>

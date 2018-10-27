@@ -40,7 +40,6 @@ public class PreferencesInjectedActivity extends PreferenceActivity {
 
 	boolean afterPreferencesCalled;
 
-
 	CheckBoxPreference methodInjectedPref;
 	EditTextPreference multiInjectedPref;
 

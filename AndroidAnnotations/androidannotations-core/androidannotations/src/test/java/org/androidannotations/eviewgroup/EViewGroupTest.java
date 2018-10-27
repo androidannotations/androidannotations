@@ -29,9 +29,7 @@ public class EViewGroupTest extends AAProcessorTestHelper {
 
 	@Test
 	public void viewGroupWithGenericCompiles() {
-		assertCompilationSuccessful(compileFiles(
-				SomeGenericViewGroup.class,
-				SomeGenericViewGroupExt.class));
+		assertCompilationSuccessful(compileFiles(SomeGenericViewGroup.class, SomeGenericViewGroupExt.class));
 	}
 
 }

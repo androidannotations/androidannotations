@@ -15,7 +15,6 @@
  */
 package org.androidannotations.menu;
 
-
 import java.io.IOException;
 
 import org.androidannotations.internal.AndroidAnnotationProcessor;

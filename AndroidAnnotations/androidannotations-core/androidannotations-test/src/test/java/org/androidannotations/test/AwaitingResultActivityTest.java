@@ -41,10 +41,8 @@ public class AwaitingResultActivityTest {
 
 		assertThat(activity.onResultCalled).isTrue();
 		assertThat(activity.onResultWithDataCalled).isFalse();
-		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
-				.isFalse();
-		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
-				.isFalse();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled).isFalse();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithResultExtraCodeCalled).isFalse();
@@ -52,15 +50,12 @@ public class AwaitingResultActivityTest {
 
 	@Test
 	public void onlySecondRequestAnnotatedMethodAreCalled() {
-		activity.onActivityResult(AwaitingResultActivity.SECOND_REQUEST, 0,
-				null);
+		activity.onActivityResult(AwaitingResultActivity.SECOND_REQUEST, 0, null);
 
 		assertThat(activity.onResultCalled).isFalse();
 		assertThat(activity.onResultWithDataCalled).isTrue();
-		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
-				.isTrue();
-		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
-				.isTrue();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled).isTrue();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled).isTrue();
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithResultExtraCodeCalled).isFalse();
@@ -72,10 +67,8 @@ public class AwaitingResultActivityTest {
 
 		assertThat(activity.onResultCalled).isFalse();
 		assertThat(activity.onResultWithDataCalled).isFalse();
-		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
-				.isFalse();
-		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
-				.isFalse();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled).isFalse();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntResultCodeCalled).isTrue();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isTrue();
 		assertThat(activity.onResultWithResultExtraCodeCalled).isFalse();
@@ -87,10 +80,8 @@ public class AwaitingResultActivityTest {
 
 		assertThat(activity.onResultCalled).isFalse();
 		assertThat(activity.onResultWithDataCalled).isFalse();
-		assertThat(activity.onActivityResultWithResultCodeAndDataCalled)
-				.isFalse();
-		assertThat(activity.onActivityResultWithDataAndResultCodeCalled)
-				.isFalse();
+		assertThat(activity.onActivityResultWithResultCodeAndDataCalled).isFalse();
+		assertThat(activity.onActivityResultWithDataAndResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithIntegerResultCodeCalled).isFalse();
 		assertThat(activity.onResultWithResultExtraCodeCalled).isTrue();

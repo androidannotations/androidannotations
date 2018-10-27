@@ -17,21 +17,21 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.roboguice.test"
-    android:versionCode="1"
-    android:versionName="2.1-SNAPSHOT" xmlns:tools="http://schemas.android.com/tools">
+		  package="org.androidannotations.roboguice.test"
+		  android:versionCode="1"
+		  android:versionName="2.1-SNAPSHOT" xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
+	<uses-sdk
+			android:minSdkVersion="14"
+			android:targetSdkVersion="16" tools:ignore="OldTargetApi"/>
 
-    <application
-        android:name=".SampleRoboApplication_"
-        android:debuggable="true" >
+	<application
+			android:name=".SampleRoboApplication_"
+			android:debuggable="true">
 
-        <activity android:name=".MapActivityWithRoboGuice_" />
-        <activity android:name=".ActivityWithRoboGuice_" />
-        <activity android:name=".ApplicationInjectedActivity_" />
-    </application>
+		<activity android:name=".MapActivityWithRoboGuice_"/>
+		<activity android:name=".ActivityWithRoboGuice_"/>
+		<activity android:name=".ApplicationInjectedActivity_"/>
+	</application>
 
 </manifest>

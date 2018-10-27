@@ -17,11 +17,11 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.testprocessor"
-    android:versionCode="1"
-    android:versionName="1.0" >
+		  package="org.androidannotations.testprocessor"
+		  android:versionCode="1"
+		  android:versionName="1.0">
 
-    <application>
-    </application>
+	<application>
+	</application>
 
 </manifest>

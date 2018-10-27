@@ -42,7 +42,8 @@ import java.lang.annotation.Target;
  * <li>Any native, {@link android.os.Parcelable Parcelable} or
  * {@link java.io.Serializable Serializable} parameter annotated with
  * {@link org.androidannotations.annotations.OnActivityResult.Extra
- * OnActivityResult.Extra} to get an object put in the extras of the intent.</li>
+ * OnActivityResult.Extra} to get an object put in the extras of the
+ * intent.</li>
  * </ul>
  *
  * <blockquote>
@@ -89,8 +90,8 @@ public @interface OnActivityResult {
 	 * <p>
 	 * Use on any native, {@link android.os.Parcelable} or
 	 * {@link java.io.Serializable} parameter of an {@link OnActivityResult}
-	 * annotated method to bind it with the value from the Intent.
-	 * If <a href="http://parceler.org">Parceler</a> is on the classpath, extras
+	 * annotated method to bind it with the value from the Intent. If
+	 * <a href="http://parceler.org">Parceler</a> is on the classpath, extras
 	 * annotated with &#064;Parcel, or collections supported by Parceler will be
 	 * automatically marshaled using a {@link android.os.Parcelable Parcelable}
 	 * through the Parcels utility class.
@@ -120,8 +121,7 @@ public @interface OnActivityResult {
 	 *
 	 * </blockquote>
 	 *
-	 * @see android.app.Activity#onActivityResult(int, int,
-	 *      android.content.Intent)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 * @see OnActivityResult
 	 */
 

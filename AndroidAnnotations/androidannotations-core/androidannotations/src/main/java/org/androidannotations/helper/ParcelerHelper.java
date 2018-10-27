@@ -70,7 +70,7 @@ public class ParcelerHelper extends AnnotationHelper {
 		SUPPORTED_PARCEL_TYPES.put(SortedMap.class.getName(), 2);
 		SUPPORTED_PARCEL_TYPES.put(SortedSet.class.getName(), 1);
 		SUPPORTED_PARCEL_TYPES.put(LinkedHashSet.class.getName(), 1);
-	};
+	}
 
 	public ParcelerHelper(AndroidAnnotationsEnvironment environment) {
 		super(environment);
@@ -95,8 +95,7 @@ public class ParcelerHelper extends AnnotationHelper {
 				boolean genericsMatch = true;
 
 				Integer genericsSize = SUPPORTED_PARCEL_TYPES.get(name);
-				if (genericsSize == declaredType.getTypeArguments().size()
-						&& (!root || genericsSize > 0)) {
+				if (genericsSize == declaredType.getTypeArguments().size() && (!root || genericsSize > 0)) {
 					for (int i = 0; i < genericsSize; i++) {
 						genericsMatch &= isParcelType(declaredType.getTypeArguments().get(i), false);
 					}

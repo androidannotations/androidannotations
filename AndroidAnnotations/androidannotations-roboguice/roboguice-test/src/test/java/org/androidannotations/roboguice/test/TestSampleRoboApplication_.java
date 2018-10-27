@@ -6,7 +6,6 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.TestLifecycleApplication;
 
 import android.app.Application;
-
 import roboguice.RoboGuice;
 
 // CHECKSTYLE:OFF

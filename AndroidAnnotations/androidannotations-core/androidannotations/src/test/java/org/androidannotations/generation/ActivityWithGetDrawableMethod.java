@@ -28,7 +28,8 @@ public class ActivityWithGetDrawableMethod extends Activity {
 	Drawable myDrawable;
 
 	// http://developer.android.com/reference/android/content/Context.html#getDrawable(int)
-	// This method was added in API 21 and should be used to get a Drawable which is styled/adjusted for the current theme.
+	// This method was added in API 21 and should be used to get a Drawable which is
+	// styled/adjusted for the current theme.
 	public Drawable getDrawable(int drawableId) {
 		return null;
 	}

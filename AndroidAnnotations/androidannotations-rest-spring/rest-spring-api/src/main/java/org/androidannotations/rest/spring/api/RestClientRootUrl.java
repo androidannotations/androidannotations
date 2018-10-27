@@ -32,7 +32,8 @@ public interface RestClientRootUrl {
 	/**
 	 * Sets the root URL for the rest service.
 	 * 
-	 * @param rootUrl The new root url
+	 * @param rootUrl
+	 *            The new root url
 	 */
 	void setRootUrl(String rootUrl);
 

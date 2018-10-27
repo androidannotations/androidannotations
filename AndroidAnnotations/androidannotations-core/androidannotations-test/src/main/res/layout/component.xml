@@ -27,18 +27,18 @@
 	governing permissions and limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+			  android:layout_width="fill_parent"
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+	<TextView
+			android:id="@+id/title"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/subtitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+	<TextView
+			android:id="@+id/subtitle"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
 </LinearLayout>

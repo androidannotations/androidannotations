@@ -21,8 +21,7 @@ import org.androidannotations.annotations.OptionsMenuItem;
 import android.view.MenuItem;
 
 @EActivity
-public class OptionsMenuItemSubSubSubActivity extends
-		OptionsMenuItemSubSubActivity {
+public class OptionsMenuItemSubSubSubActivity extends OptionsMenuItemSubSubActivity {
 	@OptionsMenuItem
 	MenuItem menu3;
 }

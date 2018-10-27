@@ -119,7 +119,6 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		assertGeneratedClassContains(generatedFile, fieldDoc);
 	}
 
-
 	@Test
 	public void generateJavaDocForNonEmptySharedPrefStringFields() throws IOException {
 		CompileResult result = compileFiles(SharedPrefWithJavaDoc.class);

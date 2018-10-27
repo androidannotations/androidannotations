@@ -90,7 +90,6 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 		return extractUrlVariableNames(uriTemplate);
 	}
 
-
 	public Set<String> extractUrlVariableNames(String uriTemplate) {
 
 		Set<String> variableNames = new HashSet<>();
@@ -436,15 +435,15 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	 * <li>The type is NOT a generics : Directly return the JClass as usual</li>
 	 * <li>The type is a generics and enclosing type is a class C&lt;T&gt; :
 	 * Generate a subclass of C&lt;T&gt; and return it</li>
-	 * <li>The type is a generics and enclosing type is an interface I&lt;T&gt;
-	 * : Looking the inheritance tree, then</li>
+	 * <li>The type is a generics and enclosing type is an interface I&lt;T&gt; :
+	 * Looking the inheritance tree, then</li>
 	 * <ol>
-	 * <li>One of the parent is a {@link java.util.Map Map} : Generate a
-	 * subclass of {@link LinkedHashMap}&lt;T&gt; one and return it</li>
+	 * <li>One of the parent is a {@link java.util.Map Map} : Generate a subclass of
+	 * {@link LinkedHashMap}&lt;T&gt; one and return it</li>
 	 * <li>One of the parent is a {@link Set} : Generate a subclass of
 	 * {@link TreeSet}&lt;T&gt; one and return it</li>
-	 * <li>One of the parent is a {@link java.util.Collection Collection} :
-	 * Generate a subclass of {@link ArrayList}&lt;T&gt; one and return it</li>
+	 * <li>One of the parent is a {@link java.util.Collection Collection} : Generate
+	 * a subclass of {@link ArrayList}&lt;T&gt; one and return it</li>
 	 * <li>Return {@link Object} definition</li>
 	 * </ol>
 	 * </ul>
@@ -569,8 +568,8 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	}
 
 	/**
-	 * Returns the post parameter name to method parameter name mapping, or null
-	 * if duplicate names found.
+	 * Returns the post parameter name to method parameter name mapping, or null if
+	 * duplicate names found.
 	 */
 	public Map<String, String> extractFieldAndPartParameters(ExecutableElement element) {
 		Map<String, String> postParameterNameToElementName = new HashMap<String, String>();

@@ -16,37 +16,38 @@
     the License.
 
 -->
-<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+		"http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
-	<property name="severity" value="error" />
+	<property name="severity" value="error"/>
 	<module name="TreeWalker">
-		<property name="tabWidth" value="4" />
-		<module name="FileContentsHolder" />
-		<module name="SuppressWarningsHolder" />
+		<property name="tabWidth" value="4"/>
+		<module name="FileContentsHolder"/>
+		<module name="SuppressWarningsHolder"/>
 		<module name="LineLength">
-            <property name="max" value="200"/>
-        </module>
-        <module name="IllegalInstantiation" />
-        <module name="OneTopLevelClass" />
-		<module name="AnnotationUseStyle" />
-		<module name="AnnotationLocation" >
-			<property name="allowSamelineSingleParameterlessAnnotation" value="false" />
+			<property name="max" value="200"/>
 		</module>
-		<module name="ClassTypeParameterName" />
-		<module name="ConstantName" />
-		<module name="LocalVariableName" />
-		<module name="MemberName" />
-		<module name="MethodName" />
-		<module name="MethodTypeParameterName" />
-		<module name="PackageName" />
-		<module name="ParameterName" />
-		<module name="StaticVariableName" />
-		<module name="TypeName" />
-		<module name="MissingDeprecated" />
-		<module name="MissingOverride" />
-		<module name="AvoidStarImport" />
-		<module name="IllegalImport" />
+		<module name="IllegalInstantiation"/>
+		<module name="OneTopLevelClass"/>
+		<module name="AnnotationUseStyle"/>
+		<module name="AnnotationLocation">
+			<property name="allowSamelineSingleParameterlessAnnotation" value="false"/>
+		</module>
+		<module name="ClassTypeParameterName"/>
+		<module name="ConstantName"/>
+		<module name="LocalVariableName"/>
+		<module name="MemberName"/>
+		<module name="MethodName"/>
+		<module name="MethodTypeParameterName"/>
+		<module name="PackageName"/>
+		<module name="ParameterName"/>
+		<module name="StaticVariableName"/>
+		<module name="TypeName"/>
+		<module name="MissingDeprecated"/>
+		<module name="MissingOverride"/>
+		<module name="AvoidStarImport"/>
+		<module name="IllegalImport"/>
 		<module name="ImportOrder">
 			<property name="groups" value="/^javax?\./,org,com"/>
 			<property name="ordered" value="true"/>
@@ -54,112 +55,112 @@
 			<property name="option" value="top"/>
 			<property name="sortStaticImportsAlphabetically" value="true"/>
 		</module>
-		<module name="RedundantImport" />
-		<module name="UnusedImports" />
+		<module name="RedundantImport"/>
+		<module name="UnusedImports"/>
 
-		<module name="MethodLength" />
-		<module name="ParameterNumber" />
-		<module name="OuterTypeNumber" />
-		<module name="MethodCount" />
-		<module name="EmptyForInitializerPad" />
-		<module name="EmptyForIteratorPad" />
+		<module name="MethodLength"/>
+		<module name="ParameterNumber"/>
+		<module name="OuterTypeNumber"/>
+		<module name="MethodCount"/>
+		<module name="EmptyForInitializerPad"/>
+		<module name="EmptyForIteratorPad"/>
 		<module name="NoWhitespaceAfter">
 			<property name="tokens"
-				value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS" />
+					  value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS"/>
 		</module>
-		<module name="NoWhitespaceBefore" />
-		<module name="OperatorWrap" />
-		<module name="MethodParamPad" />
-		<module name="ParenPad" />
-		<module name="TypecastParenPad" />
-		<module name="WhitespaceAfter" />
+		<module name="NoWhitespaceBefore"/>
+		<module name="OperatorWrap"/>
+		<module name="MethodParamPad"/>
+		<module name="ParenPad"/>
+		<module name="TypecastParenPad"/>
+		<module name="WhitespaceAfter"/>
 		<module name="WhitespaceAround">
 			<property name="tokens"
-				value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN, DO_WHILE, EQUAL, GE, GT, LAND, LCURLY, LE, LITERAL_ASSERT, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_RETURN, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS, MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, SL, SLIST, SL_ASSIGN, SR, SR_ASSIGN, STAR, STAR_ASSIGN, TYPE_EXTENSION_AND" />
+					  value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN, DO_WHILE, EQUAL, GE, GT, LAND, LCURLY, LE, LITERAL_ASSERT, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_RETURN, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS, MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, SL, SLIST, SL_ASSIGN, SR, SR_ASSIGN, STAR, STAR_ASSIGN, TYPE_EXTENSION_AND"/>
 		</module>
-		<module name="RedundantModifier" />
+		<module name="RedundantModifier"/>
 		<module name="AvoidNestedBlocks">
-			<property name="allowInSwitchCase" value="true" />
+			<property name="allowInSwitchCase" value="true"/>
 		</module>
 		<module name="LeftCurly">
-			<property name="maxLineLength" value="200" />
+			<property name="maxLineLength" value="200"/>
 		</module>
-		<module name="NeedBraces" />
-		<module name="RightCurly" />
-		<module name="CovariantEquals" />
-		<module name="DefaultComesLast" />
-		<module name="EmptyStatement" />
-        <module name="EmptyCatchBlock" />
-        <module name="EmptyBlock" >
-            <property name="option" value="text"/>
-        </module>
-		<module name="EqualsHashCode" />
-		<module name="FallThrough" />
-		<module name="IllegalThrows" />
+		<module name="NeedBraces"/>
+		<module name="RightCurly"/>
+		<module name="CovariantEquals"/>
+		<module name="DefaultComesLast"/>
+		<module name="EmptyStatement"/>
+		<module name="EmptyCatchBlock"/>
+		<module name="EmptyBlock">
+			<property name="option" value="text"/>
+		</module>
+		<module name="EqualsHashCode"/>
+		<module name="FallThrough"/>
+		<module name="IllegalThrows"/>
 		<module name="IllegalType">
 			<property name="illegalClassNames	"
-				value="java.util.GregorianCalendar, java.util.Hashtable, java.util.HashSet, java.util.HashMap, java.util.LinkedList, java.util.LinkedHashMap, java.util.LinkedHashSet, java.util.TreeSet, java.util.TreeMap, java.util.Vector" />
+					  value="java.util.GregorianCalendar, java.util.Hashtable, java.util.HashSet, java.util.HashMap, java.util.LinkedList, java.util.LinkedHashMap, java.util.LinkedHashSet, java.util.TreeSet, java.util.TreeMap, java.util.Vector"/>
 		</module>
-		<module name="InnerAssignment" />
-<!-- 		<module name="JUnitTestCase" /> -->
-		<module name="ModifiedControlVariable" />
-		<module name="MultipleVariableDeclarations" />
+		<module name="InnerAssignment"/>
+		<!-- 		<module name="JUnitTestCase" /> -->
+		<module name="ModifiedControlVariable"/>
+		<module name="MultipleVariableDeclarations"/>
 		<module name="NestedForDepth">
-			<property name="max" value="2" />
+			<property name="max" value="2"/>
 		</module>
 		<module name="NestedIfDepth"> <!-- this is too high, we should refactor those parts -->
-			<property name="max" value="5" />
+			<property name="max" value="5"/>
 		</module>
-		<module name="NestedTryDepth" />
-		<module name="NoClone" />
-		<module name="NoFinalizer" />
-		<module name="PackageDeclaration" />
-		<module name="SimplifyBooleanExpression" />
-		<module name="SimplifyBooleanReturn" />
-		<module name="StringLiteralEquality" />
-		<module name="ArrayTrailingComma" />
-		<module name="UnnecessaryParentheses" />
-		<module name="OneStatementPerLine" />
-		<module name="HideUtilityClassConstructor" />
-		<module name="FinalClass" />
-		<module name="InterfaceIsType" />
-		<module name="MutableException" />
+		<module name="NestedTryDepth"/>
+		<module name="NoClone"/>
+		<module name="NoFinalizer"/>
+		<module name="PackageDeclaration"/>
+		<module name="SimplifyBooleanExpression"/>
+		<module name="SimplifyBooleanReturn"/>
+		<module name="StringLiteralEquality"/>
+		<module name="ArrayTrailingComma"/>
+		<module name="UnnecessaryParentheses"/>
+		<module name="OneStatementPerLine"/>
+		<module name="HideUtilityClassConstructor"/>
+		<module name="FinalClass"/>
+		<module name="InterfaceIsType"/>
+		<module name="MutableException"/>
 		<module name="ThrowsCount">
-			<property name="max" value="2" />
+			<property name="max" value="2"/>
 		</module>
 		<!-- we should really enable the following -->
 		<!-- <module name="VisibilityModifier"> <property name="packageAllowed" 
 			value="true"/> <property name="protectedAllowed" value="true"/> </module> -->
-		<module name="ArrayTypeStyle" />
+		<module name="ArrayTypeStyle"/>
 		<module name="Indentation">
-			<property name="caseIndent" value="0" />
-			<property name="lineWrappingIndentation" value="2" />
+			<property name="caseIndent" value="0"/>
+			<property name="lineWrappingIndentation" value="2"/>
 		</module>
 
 		<module name="RegexpSinglelineJava">
-			<property name="format" value="^\t* +\t*\S" />
+			<property name="format" value="^\t* +\t*\S"/>
 			<property name="message"
-				value="Line has leading space characters; indentation should be performed with tabs only." />
-			<property name="ignoreComments" value="true" />
+					  value="Line has leading space characters; indentation should be performed with tabs only."/>
+			<property name="ignoreComments" value="true"/>
 		</module>
-		<module name="UpperEll" />
-		<module name="OuterTypeFilename" />
-		<module name="OuterTypeNumber" />
-		<module name="JavadocType" />
-		<module name="JavadocMethod" />
-		<module name="JavadocVariable" />
-		<module name="JavadocStyle" />
-        <module name="JavadocTagContinuationIndentation" />
-        <module name="AtclauseOrder" />
-        <module name="NonEmptyAtclauseDescription" />
-        <module name="SingleLineJavadoc" />
-		<module name="CommentsIndentation" />
+		<module name="UpperEll"/>
+		<module name="OuterTypeFilename"/>
+		<module name="OuterTypeNumber"/>
+		<module name="JavadocType"/>
+		<module name="JavadocMethod"/>
+		<module name="JavadocVariable"/>
+		<module name="JavadocStyle"/>
+		<module name="JavadocTagContinuationIndentation"/>
+		<module name="AtclauseOrder"/>
+		<module name="NonEmptyAtclauseDescription"/>
+		<module name="SingleLineJavadoc"/>
+		<module name="CommentsIndentation"/>
 	</module>
-	<module name="FileLength" />
-	<module name="SuppressionCommentFilter" />
-	<module name="SuppressWarningsFilter" />
+	<module name="FileLength"/>
+	<module name="SuppressionCommentFilter"/>
+	<module name="SuppressWarningsFilter"/>
 	<module name="SuppressionFilter">
-        <property name="file" value="${checkstyle.suppressions.file}"/>
-    </module>
+		<property name="file" value="${checkstyle.suppressions.file}"/>
+	</module>
 	<module name="NewlineAtEndOfFile"/>
 </module>

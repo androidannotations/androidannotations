@@ -48,7 +48,7 @@ public class BundleSparseArrayActivityTest extends AAProcessorTestHelper {
 				"        }", //
 				"        sparseArrayWithParcelable = savedInstanceState.getSparseParcelableArray(\"sparseArrayWithParcelable\");", //
 				"        sparseArrayWithExtendParcelable = savedInstanceState.getSparseParcelableArray(\"sparseArrayWithExtendParcelable\");", //
-				"    }"};
+				"    }" };
 		// CHECKSTYLE:ON
 
 		CompileResult result = compileFiles(BundleSparseArrayCompileSuccessActivity.class);

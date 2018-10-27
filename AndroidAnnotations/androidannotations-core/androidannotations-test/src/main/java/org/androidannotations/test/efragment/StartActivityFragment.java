@@ -22,7 +22,8 @@ import android.app.Fragment;
 @EFragment
 public class StartActivityFragment extends Fragment {
 	void startActivity() {
-		// TODO: The only way to test this is to change minSdkVersion to 11 in AndroidManifest.xml but we want to stick on lower verison as possible
+		// TODO: The only way to test this is to change minSdkVersion to 11 in
+		// AndroidManifest.xml but we want to stick on lower verison as possible
 		// ExtraInjectedActivity_.intent(this).start();
 	}
 }

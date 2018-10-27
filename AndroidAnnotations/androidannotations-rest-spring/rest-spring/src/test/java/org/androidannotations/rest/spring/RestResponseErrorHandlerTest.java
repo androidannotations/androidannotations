@@ -53,6 +53,7 @@ public class RestResponseErrorHandlerTest extends AAProcessorTestHelper {
 		CompileResult result = compileFiles(ClientWithAbstractResponseErrorHandler.class);
 		assertCompilationErrorOn(ClientWithAbstractResponseErrorHandler.class, "@Rest", result);
 	}
+
 	@Test
 	public void clientWithNonClassResponseErrorHandlerDoesNotCompile() throws IOException {
 		CompileResult result = compileFiles(ClientWithNonClassResponseErrorHandler.class);

@@ -65,7 +65,6 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 		return Collections.<AnnotationHandler> singleton(extraHandler);
 	}
 
-
 	@Override
 	protected void validate(Element element, ElementValidation validation) {
 		validatorHelper.enclosingElementHasEActivityOrEFragmentOrEServiceOrEIntentServiceOrEViewOrEViewGroup(element, validation);

@@ -25,7 +25,7 @@ import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class OrmLiteActivityTest {
-	
+
 	private MyActivity activity;
 
 	@Before

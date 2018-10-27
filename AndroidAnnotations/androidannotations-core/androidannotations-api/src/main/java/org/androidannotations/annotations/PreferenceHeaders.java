@@ -63,12 +63,14 @@ public @interface PreferenceHeaders {
 
 	/**
 	 * The R.xml.* field which refers to the Preference Header.
+	 * 
 	 * @return the identifier of the Preference Header
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
 	 * The resource name which refers to the Preference Header.
+	 * 
 	 * @return the identifier of the Preference Header
 	 */
 	String resName() default "";

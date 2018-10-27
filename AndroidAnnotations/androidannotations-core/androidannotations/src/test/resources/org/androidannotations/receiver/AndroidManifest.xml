@@ -17,17 +17,17 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.testprocessor"
-    android:versionCode="1"
-    android:versionName="1.0" >
-    
+		  package="org.androidannotations.testprocessor"
+		  android:versionCode="1"
+		  android:versionName="1.0">
 
-    <application>
-        <activity android:name="org.androidannotations.receiver.ActivityWithValidReceiver_" />
-        <activity android:name="org.androidannotations.receiver.ActivityWithInvalidRegisterAt_" />
-        <activity android:name="org.androidannotations.receiver.ActivityWithTwoSameNameMethod_" />
-        <service android:name="org.androidannotations.receiver.ServiceWithValidReceiver_" />
-        <service android:name="org.androidannotations.receiver.ServiceWithInvalidReceiver_" />
-    </application>
+
+	<application>
+		<activity android:name="org.androidannotations.receiver.ActivityWithValidReceiver_"/>
+		<activity android:name="org.androidannotations.receiver.ActivityWithInvalidRegisterAt_"/>
+		<activity android:name="org.androidannotations.receiver.ActivityWithTwoSameNameMethod_"/>
+		<service android:name="org.androidannotations.receiver.ServiceWithValidReceiver_"/>
+		<service android:name="org.androidannotations.receiver.ServiceWithInvalidReceiver_"/>
+	</application>
 
 </manifest>

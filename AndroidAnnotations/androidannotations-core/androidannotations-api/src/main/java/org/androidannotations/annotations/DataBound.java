@@ -22,8 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Can be used on enhanced Activities, Fragments and ViewGroups to mark
- * them to use the Data Binding library to inflate the layout.
+ * Can be used on enhanced Activities, Fragments and ViewGroups to mark them to
+ * use the Data Binding library to inflate the layout.
  * </p>
  * <blockquote>
  *

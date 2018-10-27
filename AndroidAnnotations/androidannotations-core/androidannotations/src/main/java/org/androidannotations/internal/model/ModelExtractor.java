@@ -32,8 +32,8 @@ import javax.lang.model.type.TypeMirror;
 public class ModelExtractor {
 
 	/**
-	 * Extracts annotated elements on elements given to the annotation processor
-	 * as well as annotations in their superclasses
+	 * Extracts annotated elements on elements given to the annotation processor as
+	 * well as annotations in their superclasses
 	 */
 	public AnnotationElementsHolder extract(Set<? extends TypeElement> annotations, Set<String> annotationTypesToCheck, RoundEnvironment roundEnv) {
 
@@ -51,9 +51,9 @@ public class ModelExtractor {
 	}
 
 	/**
-	 * Adds all root elements that are type element, and adds their enclosing
-	 * type if they are not type elements (for annotated elements such as fields
-	 * and methods).
+	 * Adds all root elements that are type element, and adds their enclosing type
+	 * if they are not type elements (for annotated elements such as fields and
+	 * methods).
 	 */
 	private Set<TypeElement> findRootTypeElements(Set<? extends Element> rootElements) {
 		Set<TypeElement> rootTypeElements = new HashSet<>();
@@ -100,11 +100,10 @@ public class ModelExtractor {
 				/*
 				 * rootTypeElement is one of the types that are being compiled
 				 *
-				 * ancestorEnclosedElement is the annotated element in an
-				 * ancestor of rootTypeElement
+				 * ancestorEnclosedElement is the annotated element in an ancestor of
+				 * rootTypeElement
 				 *
-				 * annotation is a type representing the annotation on
-				 * ancestorEnclosedElement
+				 * annotation is a type representing the annotation on ancestorEnclosedElement
 				 */
 
 				extractedModel.putAncestorAnnotatedElement(annotation.getQualifiedName().toString(), ancestorEnclosedElement, rootTypeElement);

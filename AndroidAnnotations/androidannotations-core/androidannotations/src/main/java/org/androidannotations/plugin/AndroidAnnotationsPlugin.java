@@ -36,6 +36,7 @@ public abstract class AndroidAnnotationsPlugin {
 	private String apiVersion;
 
 	public abstract String getName();
+
 	public abstract List<AnnotationHandler<?>> getHandlers(AndroidAnnotationsEnvironment androidAnnotationEnv);
 
 	@Override

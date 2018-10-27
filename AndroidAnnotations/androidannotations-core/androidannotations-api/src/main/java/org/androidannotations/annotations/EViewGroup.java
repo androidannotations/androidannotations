@@ -71,8 +71,8 @@ import org.androidannotations.api.KotlinOpen;
  * @see AfterViews
  * @see ViewById
  * @see android.view.View
- * @see <a
- *      href="http://developer.android.com/guide/topics/ui/custom-components.html"
+ * @see <a href=
+ *      "http://developer.android.com/guide/topics/ui/custom-components.html"
  *      >How to build a custom component.</a>
  */
 @Retention(RetentionPolicy.CLASS)

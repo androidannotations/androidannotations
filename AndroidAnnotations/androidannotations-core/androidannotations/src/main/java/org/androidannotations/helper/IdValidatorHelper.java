@@ -101,8 +101,7 @@ public class IdValidatorHelper extends ValidatorHelper {
 
 							if (annotationQualifiedId.equals(checkQualifiedId)) {
 								String annotationSimpleId = annotationQualifiedId.substring(annotationQualifiedId.lastIndexOf('.') + 1);
-								valid.addError("The resource id " + annotationSimpleId + " is already used on the following " + annotationHelper.annotationName()
-										+ " method: " + uniqueCheckElement);
+								valid.addError("The resource id " + annotationSimpleId + " is already used on the following " + annotationHelper.annotationName() + " method: " + uniqueCheckElement);
 								return;
 							}
 						}

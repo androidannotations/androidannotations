@@ -39,7 +39,7 @@ import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JConditional;
 import com.helger.jcodemodel.JInvocation;
 
-public class BeanHandler extends BaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> implements MethodInjectionHandler<EComponentHolder> {
 
 	private final InjectHelper<EComponentHolder> injectHelper;
 

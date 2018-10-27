@@ -25,8 +25,8 @@ import java.lang.annotation.Target;
  * Injects an {@link SharedPref} annotated class in any enhanced class.
  * </p>
  * <p>
- * The field or method parameter MUST be of a type that is generated using {@link SharedPref} and
- * therefore extends
+ * The field or method parameter MUST be of a type that is generated using
+ * {@link SharedPref} and therefore extends
  * {@link org.androidannotations.api.sharedpreferences.SharedPreferencesHelper
  * SharedPreferencesHelper}.
  * </p>

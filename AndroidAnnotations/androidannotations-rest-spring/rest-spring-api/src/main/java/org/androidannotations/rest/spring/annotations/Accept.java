@@ -26,8 +26,8 @@ import java.lang.annotation.Target;
  * response format expected, and so the converter to use.
  * </p>
  * <p>
- * The annotation {@link #value()} is mandatory and define the <a
- * href="https://en.wikipedia.org/wiki/Internet_media_type">media type</a> to
+ * The annotation {@link #value()} is mandatory and define the
+ * <a href="https://en.wikipedia.org/wiki/Internet_media_type">media type</a> to
  * accept. We provide a {@link org.androidannotations.rest.spring.api.MediaType
  * MediaType} class to help you.
  * </p>

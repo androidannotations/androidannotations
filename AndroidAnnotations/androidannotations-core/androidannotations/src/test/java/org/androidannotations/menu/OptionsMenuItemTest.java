@@ -50,7 +50,7 @@ public class OptionsMenuItemTest extends AAProcessorTestHelper {
 				"        this.menu2 = menu.findItem(R.id.menu2);", //
 				"        this.menu3 = menu.findItem(R.id.menu3);", //
 				"        return super.onCreateOptionsMenu(menu);", //
-				"    }",};
+				"    }", };
 		// CHECKSTYLE:ON
 		assertGeneratedClassContains(toGeneratedFile(OptionsMenuItemSubSubSubActivity.class), codeFragment);
 	}

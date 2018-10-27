@@ -56,7 +56,7 @@ public class KeyCodeHelper extends TargetAnnotationHelper {
 				if (keyCode == KEYCODE_NOT_FOUND) {
 					return value;
 				} else {
-					value = new int[]{keyCode};
+					value = new int[] { keyCode };
 				}
 			}
 		}

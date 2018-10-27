@@ -102,7 +102,6 @@ public final class LoggerContext {
 		setCurrentLevel(level);
 	}
 
-
 	private void addConsoleAppender(AndroidAnnotationsEnvironment environment) {
 		if (environment.getOptionBooleanValue(OPTION_LOG_APPENDER_CONSOLE)) {
 			appenders.add(new ConsoleAppender());

@@ -27,11 +27,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
-import android.content.Context;
-import android.widget.TextView;
-
 import com.google.inject.Inject;
 
+import android.content.Context;
+import android.widget.TextView;
 import roboguice.RoboGuice;
 
 @RunWith(RobolectricTestRunner.class)

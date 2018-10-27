@@ -34,7 +34,7 @@ import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JExpr;
 
-public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+public class PrefHandler extends CoreBaseAnnotationHandler<EComponentHolder> implements MethodInjectionHandler<EComponentHolder> {
 
 	private final InjectHelper<EComponentHolder> injectHelper;
 

@@ -18,10 +18,10 @@ package org.androidannotations.ormlite.test;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
 
-import android.app.Application;
-
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+
+import android.app.Application;
 
 @EApplication
 public class MyApplication extends Application {

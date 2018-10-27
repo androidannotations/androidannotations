@@ -43,7 +43,7 @@ import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 
-public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder>implements MethodInjectionHandler<EComponentWithViewSupportHolder> {
+public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSupportHolder> implements MethodInjectionHandler<EComponentWithViewSupportHolder> {
 
 	private final InjectHelper<EComponentWithViewSupportHolder> injectHelper;
 

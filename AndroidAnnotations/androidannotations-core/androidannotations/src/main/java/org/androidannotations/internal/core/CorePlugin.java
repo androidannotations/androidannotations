@@ -226,8 +226,8 @@ public class CorePlugin extends AndroidAnnotationsPlugin {
 		annotationHandlers.add(new TraceHandler(androidAnnotationEnv));
 
 		/*
-		 * WakeLockHandler must be after TraceHandler but before UiThreadHandler
-		 * and BackgroundHandler
+		 * WakeLockHandler must be after TraceHandler but before UiThreadHandler and
+		 * BackgroundHandler
 		 */
 		annotationHandlers.add(new WakeLockHandler(androidAnnotationEnv));
 
