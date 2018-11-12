@@ -19,9 +19,11 @@ package org.androidannotations.internal.helper;
 import static org.androidannotations.helper.CaseHelper.upperCaseFirst;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +56,7 @@ public class AndroidManifestFinder {
 	public static final Option OPTION_MANIFEST = new Option("androidManifestFile", null);
 
 	public static final Option OPTION_LIBRARY = new Option("library", "false");
+	public static final Option OPTION_INSTANT_FEATURE = new Option("instantAppFeature", "false");
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidManifestFinder.class);
 
@@ -124,7 +127,7 @@ public class AndroidManifestFinder {
 	}
 
 	File findManifestInKnownPathsStartingFromGenFolder(String sourcesGenerationFolder) throws FileNotFoundException {
-		Iterable<AndroidManifestFinderStrategy> strategies = Arrays.asList(new GradleAndroidManifestFinderStrategy(sourcesGenerationFolder),
+		Iterable<AndroidManifestFinderStrategy> strategies = Arrays.asList(new GradleAndroidManifestFinderStrategy(environment, sourcesGenerationFolder),
 				new MavenAndroidManifestFinderStrategy(sourcesGenerationFolder), new EclipseAndroidManifestFinderStrategy(sourcesGenerationFolder));
 
 		AndroidManifestFinderStrategy applyingStrategy = null;
@@ -181,14 +184,18 @@ public class AndroidManifestFinder {
 	private static class GradleAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
 
 		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/](k?apt)(.*)$");
+		static final Pattern OUTPUT_JSON_PATTERN = Pattern.compile(".*,\"path\":\"(.*?)\",.*");
 
 		private static final List<String> SUPPORTED_ABI_SPLITS = Arrays.asList("arm64-v8a", "armeabi", "armeabi-v7a", "mips", "mips64", "x86", "x86_64");
 		private static final List<String> SUPPORTED_DENSITY_SPLITS = Arrays.asList("hdpi", "ldpi", "mdpi", "xhdpi", "xxhdpi", "xxxhdpi");
 
 		private static final String BUILD_TOOLS_V32_MANIFEST_PATH = "build/intermediates/merged_manifests";
 
-		GradleAndroidManifestFinderStrategy(String sourceFolder) {
+		private final AndroidAnnotationsEnvironment environment;
+
+		GradleAndroidManifestFinderStrategy(AndroidAnnotationsEnvironment environment, String sourceFolder) {
 			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
+			this.environment = environment;
 		}
 
 		@Override
@@ -198,14 +205,45 @@ public class AndroidManifestFinder {
 			String gradleVariant = matcher.group(3);
 			String variantPart = gradleVariant.substring(1);
 
-			ArrayList<String> possibleLocations = new ArrayList<>();
-
+			List<String> possibleLocations = new ArrayList<>();
 			findPossibleLocationsV32(path, variantPart, possibleLocations);
 			for (String directory : Arrays.asList("build/intermediates/manifests/full", "build/intermediates/bundles", "build/intermediates/manifests/aapt")) {
 				findPossibleLocations(path, directory, variantPart, possibleLocations);
 			}
 
-			return possibleLocations;
+			return updateLocations(path, possibleLocations);
+		}
+
+		private List<String> updateLocations(String path, List<String> possibleLocations) {
+			List<String> knownLocations = new ArrayList<>();
+			for (String location : possibleLocations) {
+				String expectedLocation = path + "/" + location;
+				File file = new File(expectedLocation + "/output.json");
+				if (file.exists()) {
+					Matcher matcher = OUTPUT_JSON_PATTERN.matcher(readJsonFromFile(file));
+					if (matcher.matches()) {
+						String relativeManifestPath = matcher.group(1);
+						File manifestFile = new File(expectedLocation + "/" + relativeManifestPath);
+						String manifestDirectory = manifestFile.getParentFile().getAbsolutePath();
+						knownLocations.add(manifestDirectory.substring(path.length()));
+					}
+				}
+			}
+
+			if (knownLocations.isEmpty()) {
+				knownLocations.addAll(possibleLocations);
+			}
+
+			return knownLocations;
+		}
+
+		private String readJsonFromFile(File file) {
+			try (BufferedReader fileReader = new BufferedReader(new FileReader(file))) {
+				return fileReader.readLine();
+			} catch (IOException e) {
+				LOGGER.error(e, "unable to read json file: {}", file);
+				return "";
+			}
 		}
 
 		private void findPossibleLocationsV32(String basePath, String variantPart, List<String> possibleLocations) {
@@ -219,6 +257,11 @@ public class AndroidManifestFinder {
 				variantPart = variantPart.substring(1);
 			}
 
+			boolean isFeature = environment.getOptionBooleanValue(OPTION_INSTANT_FEATURE) && (variantPart.startsWith("feature/") || variantPart.startsWith("feature\\"));
+			if (isFeature) {
+				variantPart = variantPart.substring(8);
+			}
+
 			String[] variantParts = variantPart.split("[/\\\\]");
 			if (variantParts.length > 1) {
 				StringBuilder sb = new StringBuilder(variantParts[0]);
@@ -230,6 +273,11 @@ public class AndroidManifestFinder {
 			}
 
 			String possibleLocation = BUILD_TOOLS_V32_MANIFEST_PATH + "/" + variantPart;
+			if (isFeature) {
+				variantPart += "Feature";
+				possibleLocation += "Feature";
+			}
+
 			findPossibleLocations(basePath, possibleLocations, possibleLocation);
 			findPossibleLocations(basePath, possibleLocations, possibleLocation + "/process" + upperCaseFirst(variantPart) + "Manifest/merged");
 		}
