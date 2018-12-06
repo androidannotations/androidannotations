@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 import android.util.Log;
 
 /**
@@ -73,7 +71,6 @@ import android.util.Log;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-@KotlinOpen
 public @interface Trace {
 
 	/**

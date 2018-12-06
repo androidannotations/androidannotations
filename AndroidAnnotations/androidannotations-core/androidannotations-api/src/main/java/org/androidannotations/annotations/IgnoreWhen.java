@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 /**
  * <p>
  * When used standalone in an {@link EFragment} or in conjunction with the
@@ -74,7 +72,6 @@ import org.androidannotations.api.KotlinOpen;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-@KotlinOpen
 public @interface IgnoreWhen {
 
 	/**

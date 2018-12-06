@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 /**
  * <p>
  * Acquires a {@link android.os.PowerManager.WakeLock} for this method call.
@@ -53,7 +51,6 @@ import org.androidannotations.api.KotlinOpen;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-@KotlinOpen
 public @interface WakeLock {
 
 	/**
