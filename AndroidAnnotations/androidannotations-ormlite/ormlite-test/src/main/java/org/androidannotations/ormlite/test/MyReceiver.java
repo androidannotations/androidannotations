@@ -18,12 +18,12 @@ package org.androidannotations.ormlite.test;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 @EReceiver
 public class MyReceiver extends BroadcastReceiver {

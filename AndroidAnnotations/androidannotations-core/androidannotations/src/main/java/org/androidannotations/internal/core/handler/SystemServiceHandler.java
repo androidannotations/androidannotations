@@ -39,7 +39,7 @@ import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JOp;
 
-public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+public class SystemServiceHandler extends BaseAnnotationHandler<EComponentHolder> implements MethodInjectionHandler<EComponentHolder> {
 
 	private final InjectHelper<EComponentHolder> injectHelper;
 

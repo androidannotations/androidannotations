@@ -28,7 +28,7 @@ import org.androidannotations.holder.HasOptionsMenu;
 import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 
-public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu>implements MethodInjectionHandler<HasOptionsMenu> {
+public class InjectMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> implements MethodInjectionHandler<HasOptionsMenu> {
 
 	private final InjectHelper<HasOptionsMenu> injectHelper;
 

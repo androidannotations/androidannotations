@@ -33,8 +33,7 @@ public abstract class ActivityIntentBuilder<I extends ActivityIntentBuilder<I>> 
 	protected Bundle lastOptions;
 
 	/**
-	 * Creates a builder for a given {@link android.app.Activity Activity}
-	 * class.
+	 * Creates a builder for a given {@link android.app.Activity Activity} class.
 	 * 
 	 * @param context
 	 *            A {@link Context} of the application package implementing this

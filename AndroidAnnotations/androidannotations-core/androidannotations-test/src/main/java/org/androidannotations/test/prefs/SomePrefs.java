@@ -30,22 +30,22 @@ import org.androidannotations.test.R;
 
 @SharedPref(Scope.UNIQUE)
 public interface SomePrefs {
-	
+
 	@DefaultString("John")
 	String name();
-	
+
 	@DefaultInt(42)
 	int age();
-	
+
 	@DefaultLong(400000L)
 	long ageLong();
 
 	@DefaultFloat(42f)
 	float ageFloat();
-	
+
 	@DefaultBoolean(true)
 	boolean isAwesome();
-	
+
 	@DefaultInt(value = 42, keyRes = R.string.prefStringKey)
 	int stringResKeyPref();
 
@@ -53,7 +53,7 @@ public interface SomePrefs {
 
 	Set<String> types();
 
-	@DefaultStringSet({"a", "b", "c"})
+	@DefaultStringSet({ "a", "b", "c" })
 	Set<String> setWithDefault();
 
 	@DefaultStringSet("")

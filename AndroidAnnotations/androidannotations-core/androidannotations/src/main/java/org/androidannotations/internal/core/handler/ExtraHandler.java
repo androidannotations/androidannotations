@@ -49,7 +49,7 @@ import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JVar;
 
-public class ExtraHandler extends BaseAnnotationHandler<EActivityHolder>implements MethodInjectionHandler<EActivityHolder>, MethodInjectionHandler.AfterAllParametersInjectedHandler<EActivityHolder> {
+public class ExtraHandler extends BaseAnnotationHandler<EActivityHolder> implements MethodInjectionHandler<EActivityHolder>, MethodInjectionHandler.AfterAllParametersInjectedHandler<EActivityHolder> {
 
 	private final InjectHelper<EActivityHolder> injectHelper;
 
@@ -61,8 +61,8 @@ public class ExtraHandler extends BaseAnnotationHandler<EActivityHolder>implemen
 	@Override
 	public void validate(Element element, ElementValidation validation) {
 		/*
-		 * TODO since we override setIntent(), we should check that the
-		 * setIntent() method can be overridden
+		 * TODO since we override setIntent(), we should check that the setIntent()
+		 * method can be overridden
 		 */
 
 		injectHelper.validate(Extra.class, element, validation);

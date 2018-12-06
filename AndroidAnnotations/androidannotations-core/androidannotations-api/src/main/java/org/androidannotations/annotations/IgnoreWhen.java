@@ -90,8 +90,8 @@ public @interface IgnoreWhen {
 	enum State {
 
 		/**
-		 * Skip execution if the {@link EFragment} is no longer bound to its
-		 * parent activity.
+		 * Skip execution if the {@link EFragment} is no longer bound to its parent
+		 * activity.
 		 */
 		DETACHED,
 

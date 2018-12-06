@@ -45,8 +45,7 @@ public class TouchesHandledActivityTest {
 	public void handlingWithConvention() {
 		assertThat(activity.conventionButtonEventHandled).isFalse();
 
-		activity.findViewById(R.id.conventionButton).dispatchTouchEvent(
-				mockedEvent);
+		activity.findViewById(R.id.conventionButton).dispatchTouchEvent(mockedEvent);
 
 		assertThat(activity.conventionButtonEventHandled).isTrue();
 	}
@@ -55,8 +54,7 @@ public class TouchesHandledActivityTest {
 	public void handlingWithSnakeCase() {
 		assertThat(activity.snakeCaseButtonEventHandled).isFalse();
 
-		activity.findViewById(R.id.snake_case_button).dispatchTouchEvent(
-				mockedEvent);
+		activity.findViewById(R.id.snake_case_button).dispatchTouchEvent(mockedEvent);
 
 		assertThat(activity.snakeCaseButtonEventHandled).isTrue();
 	}
@@ -65,8 +63,7 @@ public class TouchesHandledActivityTest {
 	public void handlingWithExtendedConvention() {
 		assertThat(activity.extendedConventionButtonEventHandled).isFalse();
 
-		activity.findViewById(R.id.extendedConventionButton)
-				.dispatchTouchEvent(mockedEvent);
+		activity.findViewById(R.id.extendedConventionButton).dispatchTouchEvent(mockedEvent);
 
 		assertThat(activity.extendedConventionButtonEventHandled).isTrue();
 	}
@@ -75,16 +72,14 @@ public class TouchesHandledActivityTest {
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonEventHandled).isFalse();
 
-		activity.findViewById(R.id.configurationOverConventionButton)
-				.dispatchTouchEvent(mockedEvent);
+		activity.findViewById(R.id.configurationOverConventionButton).dispatchTouchEvent(mockedEvent);
 
 		assertThat(activity.overridenConventionButtonEventHandled).isTrue();
 	}
 
 	@Test
 	public void unannotatedButtonIsNotHandled() {
-		activity.findViewById(R.id.unboundButton).dispatchTouchEvent(
-				mockedEvent);
+		activity.findViewById(R.id.unboundButton).dispatchTouchEvent(mockedEvent);
 
 		assertThat(activity.unboundButtonEventHandled).isFalse();
 	}
@@ -93,8 +88,7 @@ public class TouchesHandledActivityTest {
 	public void viewArgumentIsGiven() {
 		assertThat(activity.viewArgument).isNull();
 
-		activity.findViewById(R.id.buttonWithViewArgument).dispatchTouchEvent(
-				mockedEvent);
+		activity.findViewById(R.id.buttonWithViewArgument).dispatchTouchEvent(mockedEvent);
 
 		assertThat(activity.viewArgument).hasId(R.id.buttonWithViewArgument);
 	}

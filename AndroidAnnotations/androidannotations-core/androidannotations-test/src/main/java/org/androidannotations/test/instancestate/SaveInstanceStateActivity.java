@@ -194,8 +194,8 @@ public class SaveInstanceStateActivity extends Activity {
 	/**
 	 * This member is not tested at SaveInstanceStateActivityParameterizedTest.
 	 *
-	 * The parameters are generating using the system classloader, but the test
-	 * is ran using the special Robolectric classloader which does not contains
+	 * The parameters are generating using the system classloader, but the test is
+	 * ran using the special Robolectric classloader which does not contains
 	 * SparseArray.
 	 */
 	@InstanceState

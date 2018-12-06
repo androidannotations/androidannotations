@@ -26,34 +26,26 @@ import org.junit.Test;
 
 public class DataBindingTest extends AAProcessorTestHelper {
 
-	private static final String[] DATA_BINDING_EXPRESSIONS = new String[] {
-		"        ViewGroup contentView = internalFindViewById(android.R.id.content);",
-		"        viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_main, contentView, false);",
-		"        setContentView(viewDataBinding_.getRoot(), viewDataBinding_.getRoot().getLayoutParams());",
-	};
+	// CHECKSTYLE:OFF
+	private static final String[] DATA_BINDING_EXPRESSIONS = new String[] { "        ViewGroup contentView = internalFindViewById(android.R.id.content);",
+			"        viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_main, contentView, false);",
+			"        setContentView(viewDataBinding_.getRoot(), viewDataBinding_.getRoot().getLayoutParams());", };
 
-	private static final String[] INJECT_DATA_BINDING_FIELD_EXPRESSIONS = new String[] {
-		"        this.bindingField = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);",
-	};
+	private static final String[] INJECT_DATA_BINDING_FIELD_EXPRESSIONS = new String[] { "        this.bindingField = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);", };
 
-	private static final String[] INJECT_DATA_BINDING_METHOD_EXPRESSIONS = new String[] {
-		"            binding = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);",
-		"            bindingMethod(binding);",
-	};
+	private static final String[] INJECT_DATA_BINDING_METHOD_EXPRESSIONS = new String[] { "            binding = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);",
+			"            bindingMethod(binding);", };
 
-	private static final String[] INJECT_DATA_BINDING_PARAM_EXPRESSIONS = new String[] {
-		"            bindingParam = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);",
-		"            injectBinding(bindingParam);",
-	};
+	private static final String[] INJECT_DATA_BINDING_PARAM_EXPRESSIONS = new String[] { "            bindingParam = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);",
+			"            injectBinding(bindingParam);", };
 
 	private static final String[] DATA_BINDING_EXPRESSIONS_FRAGMENT = new String[] {
-		"            viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.activity_main, container, false);",
-		"            contentView_ = viewDataBinding_.getRoot();",
-	};
+			"            viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.activity_main, container, false);",
+			"            contentView_ = viewDataBinding_.getRoot();", };
 
 	private static final String[] DATA_BINDING_EXPRESSIONS_VIEWGROUP = new String[] {
-		"            viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.activity_main, this, true);",
-	};
+			"            viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.activity_main, this, true);", };
+	// CHECKSTYLE:ON
 
 	@Before
 	public void setUp() {

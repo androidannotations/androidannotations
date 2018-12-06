@@ -23,7 +23,7 @@ import android.app.Fragment;
 
 @EFragment
 public abstract class AbstractFragment extends Fragment {
-	
+
 	@Bean
 	SomeBean someBean;
 

@@ -175,7 +175,7 @@ public class AndroidManifestFinder {
 		}
 
 		boolean applies() {
-			return  matcher.matches();
+			return matcher.matches();
 		}
 
 		abstract Iterable<String> possibleLocations();
@@ -340,7 +340,7 @@ public class AndroidManifestFinder {
 	private static class MavenAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
 
 		static final Pattern MAVEN_GEN_FOLDER = Pattern.compile("^(.*?)target[\\\\/]generated-sources.*$");
-		
+
 		MavenAndroidManifestFinderStrategy(String sourceFolder) {
 			super("Maven", MAVEN_GEN_FOLDER, sourceFolder);
 		}
@@ -354,7 +354,7 @@ public class AndroidManifestFinder {
 	private static class EclipseAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
 
 		static final Pattern ECLIPSE_GEN_FOLDER = Pattern.compile("^(.*?)\\.apt_generated.*$");
-		
+
 		EclipseAndroidManifestFinderStrategy(String sourceFolder) {
 			super("Eclipse", ECLIPSE_GEN_FOLDER, sourceFolder);
 		}
@@ -447,8 +447,8 @@ public class AndroidManifestFinder {
 		List<String> permissionQualifiedNames = new ArrayList<>();
 		permissionQualifiedNames.addAll(usesPermissionQualifiedNames);
 
-		return AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, metaDataQualifiedNames, permissionQualifiedNames,
-				minSdkVersion, maxSdkVersion, targetSdkVersion, applicationDebuggableMode);
+		return AndroidManifest.createManifest(applicationPackage, applicationClassQualifiedName, componentQualifiedNames, metaDataQualifiedNames, permissionQualifiedNames, minSdkVersion,
+				maxSdkVersion, targetSdkVersion, applicationDebuggableMode);
 	}
 
 	private int extractAttributeIntValue(Node node, String attribute, int defaultValue) {
@@ -487,10 +487,10 @@ public class AndroidManifestFinder {
 		}
 		return componentQualifiedNames;
 	}
-	
+
 	private Map<String, AndroidManifest.MetaDataInfo> extractMetaDataQualifiedNames(NodeList metaDataNodes) {
 		Map<String, AndroidManifest.MetaDataInfo> metaDataQualifiedNames = new HashMap<String, AndroidManifest.MetaDataInfo>();
-		
+
 		for (int i = 0; i < metaDataNodes.getLength(); i++) {
 			Node node = metaDataNodes.item(i);
 			Node nameAttribute = node.getAttributes().getNamedItem("android:name");
@@ -510,7 +510,7 @@ public class AndroidManifestFinder {
 				metaDataQualifiedNames.put(name, new AndroidManifest.MetaDataInfo(name, value, resource));
 			}
 		}
-		
+
 		return metaDataQualifiedNames;
 	}
 
@@ -551,7 +551,7 @@ public class AndroidManifestFinder {
 			return null;
 		}
 	}
-	
+
 	private List<String> extractUsesPermissionNames(NodeList usesPermissionNodes) {
 		List<String> usesPermissionQualifiedNames = new ArrayList<>();
 

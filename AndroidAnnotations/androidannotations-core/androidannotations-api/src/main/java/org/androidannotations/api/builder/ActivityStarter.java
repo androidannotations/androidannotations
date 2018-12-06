@@ -26,11 +26,11 @@ public interface ActivityStarter {
 	 * Activity#startActivity(android.content.Intent)} for the previously given
 	 * {@link android.content.Context Context} or Fragment or support Fragment
 	 * objects. It also passes the given extras, the options
-	 * {@link android.os.Bundle Bundle}, if new methods are available which
-	 * accept that.
+	 * {@link android.os.Bundle Bundle}, if new methods are available which accept
+	 * that.
 	 * 
-	 * @return a {@link PostActivityStarter} object to optionally chain
-	 *         additional actions.
+	 * @return a {@link PostActivityStarter} object to optionally chain additional
+	 *         actions.
 	 */
 	PostActivityStarter start();
 
@@ -40,15 +40,15 @@ public interface ActivityStarter {
 	 * Activity#startActivityForResult(android.content.Intent, int)} for the
 	 * previously given {@link android.content.Context Context} or Fragment or
 	 * support Fragment objects. It also passes the given extras, the options
-	 * {@link android.os.Bundle Bundle}, if new methods are available which
-	 * accept that.
+	 * {@link android.os.Bundle Bundle}, if new methods are available which accept
+	 * that.
 	 * 
 	 * @param requestCode
-	 *            this code will be returned in onActivityResult() when the
-	 *            activity exits.
+	 *            this code will be returned in onActivityResult() when the activity
+	 *            exits.
 	 * 
-	 * @return a {@link PostActivityStarter} object to optionally chain
-	 *         additional actions.
+	 * @return a {@link PostActivityStarter} object to optionally chain additional
+	 *         actions.
 	 */
 	PostActivityStarter startForResult(int requestCode);
 }

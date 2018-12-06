@@ -25,5 +25,5 @@ public class MyServiceActivity extends Activity {
 
 	@RestService
 	MyService myService;
-	
+
 }

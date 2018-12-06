@@ -17,15 +17,15 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.viewbyid"
-    android:versionCode="1"
-    android:versionName="1.0" >
+		  package="org.androidannotations.viewbyid"
+		  android:versionCode="1"
+		  android:versionName="1.0">
 
-    <application>
-        <activity android:name="org.androidannotations.viewlistener.CompoundButtonListenerActivity_" />
-        <activity android:name="org.androidannotations.viewlistener.AdapterViewListenerActivity_" />
-        <activity android:name="org.androidannotations.viewlistener.TextViewListenerActivity_" />
-        <activity android:name="org.androidannotations.viewlistener.BadEditorActionViewListenerActivity_" />
-    </application>
+	<application>
+		<activity android:name="org.androidannotations.viewlistener.CompoundButtonListenerActivity_"/>
+		<activity android:name="org.androidannotations.viewlistener.AdapterViewListenerActivity_"/>
+		<activity android:name="org.androidannotations.viewlistener.TextViewListenerActivity_"/>
+		<activity android:name="org.androidannotations.viewlistener.BadEditorActionViewListenerActivity_"/>
+	</application>
 
 </manifest>

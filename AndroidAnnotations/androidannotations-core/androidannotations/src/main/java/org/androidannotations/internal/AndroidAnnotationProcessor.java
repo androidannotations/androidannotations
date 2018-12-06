@@ -142,8 +142,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		for (AndroidAnnotationsPlugin plugin : androidAnnotationsEnv.getPlugins()) {
 			if (plugin.shouldCheckApiAndProcessorVersions() && !plugin.getApiVersion().equals(plugin.getVersion())) {
 				LOGGER.error("{} version for API ({}) and processor ({}) don't match. Please check your classpath", plugin.getName(), plugin.getApiVersion(), plugin.getVersion());
-				throw new VersionMismatchException(plugin.getName() + "version for API (" + plugin.getApiVersion() + ") and core (" + plugin.getVersion()
-						+ ") don't match. Please check your classpath");
+				throw new VersionMismatchException(
+						plugin.getName() + "version for API (" + plugin.getApiVersion() + ") and core (" + plugin.getVersion() + ") don't match. Please check your classpath");
 			}
 		}
 	}
@@ -238,9 +238,8 @@ public class AndroidAnnotationProcessor extends AbstractProcessor {
 		String errorMessage = errorHelper.getErrorMessage(processingEnv, e, coreVersion);
 
 		/*
-		 * Printing exception as an error on a random element. The exception is
-		 * not related to this element, but otherwise it wouldn't show up in
-		 * eclipse.
+		 * Printing exception as an error on a random element. The exception is not
+		 * related to this element, but otherwise it wouldn't show up in eclipse.
 		 */
 
 		Iterator<? extends TypeElement> iterator = annotations.iterator();

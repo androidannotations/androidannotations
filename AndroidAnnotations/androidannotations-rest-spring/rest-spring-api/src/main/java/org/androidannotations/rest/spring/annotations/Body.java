@@ -21,8 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to add a method body to the POST, PUT, or
- * PATCH request from a method parameter.
+ * This annotation can be used to add a method body to the POST, PUT, or PATCH
+ * request from a method parameter.
  *
  * <b>Example :</b>
  *

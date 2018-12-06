@@ -31,15 +31,14 @@ public final class BundleHelper {
 	}
 
 	/**
-	 * This method extracts a {@link Parcelable} array from the {@link Bundle},
-	 * and returns it in an array whose type is the exact {@link Parcelable}
-	 * subclass. This is needed because {@link Bundle#getParcelable(String)}
-	 * returns an array of {@link Parcelable}, and we would get
-	 * {@link ClassCastException} when we assign it to {@link Parcelable}
-	 * subclass arrays.
+	 * This method extracts a {@link Parcelable} array from the {@link Bundle}, and
+	 * returns it in an array whose type is the exact {@link Parcelable} subclass.
+	 * This is needed because {@link Bundle#getParcelable(String)} returns an array
+	 * of {@link Parcelable}, and we would get {@link ClassCastException} when we
+	 * assign it to {@link Parcelable} subclass arrays.
 	 * 
-	 * For more info, see <a
-	 * href="https://github.com/androidannotations/androidannotations/issues/1208">this</a>
+	 * For more info, see <a href=
+	 * "https://github.com/androidannotations/androidannotations/issues/1208">this</a>
 	 * url.
 	 * 
 	 * @param bundle
@@ -51,9 +50,9 @@ public final class BundleHelper {
 	 * @param <T>
 	 *            the element type of the returned array
 	 * @return a {@link Parcelable} subclass typed array which holds the objects
-	 *         from {@link Bundle#getParcelableArray(String)} or
-	 *         <code>null</code> if {@link Bundle#getParcelableArray(String)}
-	 *         returned <code>null</code> for the key
+	 *         from {@link Bundle#getParcelableArray(String)} or <code>null</code>
+	 *         if {@link Bundle#getParcelableArray(String)} returned
+	 *         <code>null</code> for the key
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Parcelable> T[] getParcelableArray(Bundle bundle, String key, Class<T[]> type) {

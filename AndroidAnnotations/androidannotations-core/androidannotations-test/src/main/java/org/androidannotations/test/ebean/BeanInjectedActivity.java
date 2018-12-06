@@ -22,13 +22,13 @@ import android.app.Activity;
 
 @EActivity
 public class BeanInjectedActivity extends Activity {
-	
+
 	@Bean
 	public EmptyDependency dependency;
-	
+
 	@Bean(SomeImplementation.class)
 	public SomeInterface interfaceDependency;
-	
+
 	@Bean
 	public SomeSingleton singletonDependency;
 
@@ -59,24 +59,19 @@ public class BeanInjectedActivity extends Activity {
 		this.methodInjectedSingleton = methodInjectedSingleton;
 	}
 
-	protected void injectDependencyAnnotatedParam(
-			@Bean EmptyDependency annotatedParamDependency) {
+	protected void injectDependencyAnnotatedParam(@Bean EmptyDependency annotatedParamDependency) {
 		this.annotatedParamDependency = annotatedParamDependency;
 	}
 
-	protected void injectInterfaceAnnotatedParam(
-			@Bean(SomeImplementation.class) SomeInterface annotatedParamInterface) {
+	protected void injectInterfaceAnnotatedParam(@Bean(SomeImplementation.class) SomeInterface annotatedParamInterface) {
 		this.annotatedParamInterface = annotatedParamInterface;
 	}
 
-	protected void injectSingletonAnnotatedParam(
-			@Bean SomeSingleton annotatedParamSingleton) {
+	protected void injectSingletonAnnotatedParam(@Bean SomeSingleton annotatedParamSingleton) {
 		this.annotatedParamSingleton = annotatedParamSingleton;
 	}
 
-	protected void injectMultipleDependencies(
-			@Bean EmptyDependency multiDependency,
-			@Bean(SomeImplementation.class) SomeInterface multiDependencyInterface,
+	protected void injectMultipleDependencies(@Bean EmptyDependency multiDependency, @Bean(SomeImplementation.class) SomeInterface multiDependencyInterface,
 			@Bean SomeSingleton multiDependencySingleton) {
 		this.multiDependency = multiDependency;
 		this.multiDependencyInterface = multiDependencyInterface;

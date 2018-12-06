@@ -224,10 +224,10 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 	/**
 	 * Adds the try/catch around the rest execution code.
 	 *
-	 * If an exception is caught, it will first check if the handler is set. If
-	 * the handler is set, it will call the handler and return null (or nothing
-	 * if void). If the handler isn't set, it will re-throw the exception so
-	 * that it behaves as it did previous to this feature.
+	 * If an exception is caught, it will first check if the handler is set. If the
+	 * handler is set, it will call the handler and return null (or nothing if
+	 * void). If the handler isn't set, it will re-throw the exception so that it
+	 * behaves as it did previous to this feature.
 	 */
 	private JBlock surroundWithRestTryCatch(RestHolder holder, JBlock block, boolean methodReturnVoid) {
 		if (holder.getRestErrorHandlerField() != null) {

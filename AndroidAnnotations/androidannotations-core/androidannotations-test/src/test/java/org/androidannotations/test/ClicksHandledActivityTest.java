@@ -76,8 +76,7 @@ public class ClicksHandledActivityTest {
 	public void handlingWithConfigurationOverConvention() {
 		assertThat(activity.overridenConventionButtonEventHandled).isFalse();
 
-		activity.findViewById(R.id.configurationOverConventionButton)
-				.performClick();
+		activity.findViewById(R.id.configurationOverConventionButton).performClick();
 
 		assertThat(activity.overridenConventionButtonEventHandled).isTrue();
 	}

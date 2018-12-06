@@ -43,10 +43,10 @@ public class ViewsInjectedActivity extends Activity {
 	@ViewById
 	TextView myTextView;
 
-	@ViewsById({R.id.my_text_view, R.id.myButton})
+	@ViewsById({ R.id.my_text_view, R.id.myButton })
 	List<View> views;
 
-	@ViewsById({R.id.my_text_view, R.id.someView})
+	@ViewsById({ R.id.my_text_view, R.id.someView })
 	List<TextView> textViews;
 
 	TextView methodInjectedView;

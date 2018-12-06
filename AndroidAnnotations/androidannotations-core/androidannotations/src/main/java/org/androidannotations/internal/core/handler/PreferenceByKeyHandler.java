@@ -35,7 +35,7 @@ import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 
-public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences>implements MethodInjectionHandler<HasPreferences> {
+public class PreferenceByKeyHandler extends BaseAnnotationHandler<HasPreferences> implements MethodInjectionHandler<HasPreferences> {
 
 	private final InjectHelper<HasPreferences> injectHelper;
 

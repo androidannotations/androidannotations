@@ -24,7 +24,8 @@ public interface RestErrorHandler {
 	/**
 	 * Called when an exception occurs within the rest client.
 	 * 
-	 * @param e Exception thrown by the Rest service
+	 * @param e
+	 *            Exception thrown by the Rest service
 	 */
 	void onRestClientExceptionThrown(NestedRuntimeException e);
 }

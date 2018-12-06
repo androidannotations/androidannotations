@@ -16,7 +16,7 @@
 package org.androidannotations.test.receiver;
 
 public abstract class ReceiverActions {
-	
+
 	public static final String ACTION_0 = "org.androidannotations.ACTION_0";
 	public static final String ACTION_1 = "org.androidannotations.ACTION_1";
 	public static final String ACTION_2 = "org.androidannotations.ACTION_2";

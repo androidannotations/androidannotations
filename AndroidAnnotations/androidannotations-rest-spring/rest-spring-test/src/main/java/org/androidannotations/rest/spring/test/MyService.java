@@ -50,8 +50,8 @@ import org.springframework.web.client.RestTemplate;
 
 // if defined, the rootUrl will be added as a prefix to every request
 @Rest(rootUrl = "http://company.com/ajax/services", converters = { MappingJacksonHttpMessageConverter.class, EBeanConverter.class, FormHttpMessageConverter.class }, //
-				interceptors = { RequestInterceptor.class, EBeanInterceptor.class }, //
-				requestFactory = MyRequestFactory.class)
+		interceptors = { RequestInterceptor.class, EBeanInterceptor.class }, //
+		requestFactory = MyRequestFactory.class)
 public interface MyService {
 
 	// *** GET ***
@@ -77,7 +77,8 @@ public interface MyService {
 	// The response can be a ResponseEntity<T>
 	@Get("/events/{year}/{location}")
 	/*
-	 * You may (or may not) declare throwing RestClientException (as a reminder, since it's a RuntimeException), but nothing else.
+	 * You may (or may not) declare throwing RestClientException (as a reminder,
+	 * since it's a RuntimeException), but nothing else.
 	 */
 	ResponseEntity<EventList> getEvents2(@Path String location, @Path int year) throws RestClientException;
 

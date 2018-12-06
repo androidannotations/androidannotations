@@ -20,5 +20,6 @@ import com.helger.jcodemodel.JBlock;
 public interface HasSimpleLifecycleMethods extends GeneratedClassHolder {
 
 	JBlock getStartLifecycleAfterSuperBlock();
+
 	JBlock getEndLifecycleBeforeSuperBlock();
 }

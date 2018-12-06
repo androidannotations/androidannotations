@@ -23,13 +23,13 @@ public class User {
 
 	@DatabaseField(generatedId = true)
 	private long id;
-	
+
 	@DatabaseField
 	private String firstName;
-	
+
 	@DatabaseField
 	private String lastName;
-	
+
 	public User() {
 
 	}
@@ -37,7 +37,7 @@ public class User {
 	public User(long id) {
 		this.id = id;
 	}
-	
+
 	public long getId() {
 		return id;
 	}

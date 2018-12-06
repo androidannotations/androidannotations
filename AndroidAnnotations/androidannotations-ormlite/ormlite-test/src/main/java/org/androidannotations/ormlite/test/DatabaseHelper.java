@@ -17,19 +17,18 @@ package org.androidannotations.ormlite.test;
 
 import java.sql.SQLException;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "aaormlite.db";
 	private static final int DATABASE_VERSION = 2;
-
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,6 +46,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
-	
+
 	}
 }

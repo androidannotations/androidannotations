@@ -38,12 +38,8 @@ public class ActivityIntentFragmentTest extends AAProcessorTestHelper {
 		addManifestProcessorParameter(ActivityIntentFragmentTest.class, "AndroidManifestMinFroyo.xml");
 		// we need android.os.Build in the classpath
 		CompileResult result = compileFiles(ActivityInManifest.class /*
-		 * ,toPath(
-		 * ActivityIntentFragmentTest
-		 * .class,
-		 * "Build.java"
-		 * )
-		 */);
+																		 * ,toPath( ActivityIntentFragmentTest .class, "Build.java" )
+																		 */);
 		File generatedFile = toGeneratedFile(ActivityInManifest.class);
 
 		assertCompilationSuccessful(result);

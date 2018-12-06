@@ -17,14 +17,14 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.testprocessor"
-    android:versionCode="1"
-    android:versionName="1.0" >
-    
-    <application>
-    		<activity android:name="org.androidannotations.generation.ActivityWithOnBackPressedMethod_" />
-    		<activity android:name="org.androidannotations.generation.ActivityWithBackgroundMethod_" />
-    		<activity android:name="org.androidannotations.generation.WindowFeatureAppCompatActivity_" />
-   	</application>
+		  package="org.androidannotations.testprocessor"
+		  android:versionCode="1"
+		  android:versionName="1.0">
+
+	<application>
+		<activity android:name="org.androidannotations.generation.ActivityWithOnBackPressedMethod_"/>
+		<activity android:name="org.androidannotations.generation.ActivityWithBackgroundMethod_"/>
+		<activity android:name="org.androidannotations.generation.WindowFeatureAppCompatActivity_"/>
+	</application>
 
 </manifest>

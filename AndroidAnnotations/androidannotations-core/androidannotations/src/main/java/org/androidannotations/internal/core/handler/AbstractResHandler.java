@@ -34,7 +34,7 @@ import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 
-public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+public abstract class AbstractResHandler extends BaseAnnotationHandler<EComponentHolder> implements MethodInjectionHandler<EComponentHolder> {
 
 	private final InjectHelper<EComponentHolder> injectHelper;
 	protected AndroidRes androidRes;

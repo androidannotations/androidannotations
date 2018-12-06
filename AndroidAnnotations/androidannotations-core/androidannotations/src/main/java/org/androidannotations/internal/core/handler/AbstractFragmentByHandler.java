@@ -38,7 +38,7 @@ import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JMethod;
 
-public abstract class AbstractFragmentByHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder>implements MethodInjectionHandler<EComponentWithViewSupportHolder> {
+public abstract class AbstractFragmentByHandler extends CoreBaseAnnotationHandler<EComponentWithViewSupportHolder> implements MethodInjectionHandler<EComponentWithViewSupportHolder> {
 
 	private final InjectHelper<EComponentWithViewSupportHolder> injectHelper;
 

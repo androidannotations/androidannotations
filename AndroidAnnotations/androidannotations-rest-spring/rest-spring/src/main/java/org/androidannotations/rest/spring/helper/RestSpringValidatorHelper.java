@@ -68,8 +68,8 @@ import org.androidannotations.rest.spring.api.RestClientSupport;
 
 public class RestSpringValidatorHelper extends ValidatorHelper {
 
-	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(),
-			RestClientRootUrl.class.getName(), RestClientSupport.class.getName());
+	private static final List<String> VALID_REST_INTERFACES = asList(RestClientHeaders.class.getName(), RestClientErrorHandling.class.getName(), RestClientRootUrl.class.getName(),
+			RestClientSupport.class.getName());
 	private static final List<Class<? extends Annotation>> REST_ANNOTATION_CLASSES = Arrays.asList(Get.class, Head.class, Options.class, Post.class, Put.class, Patch.class, Delete.class);
 
 	private static final String METHOD_NAME_SET_ROOT_URL = "setRootUrl";
@@ -149,8 +149,8 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 									"The method returning a RestTemplate should not declare any parameter in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 						} else {
 							if (foundGetRestTemplateMethod) {
-								valid.addError(enclosedElement, "Only one method should declare returning a RestTemplate in a " + TargetAnnotationHelper.annotationName(Rest.class)
-										+ " annotated interface");
+								valid.addError(enclosedElement,
+										"Only one method should declare returning a RestTemplate in a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 							} else {
 								foundGetRestTemplateMethod = true;
 							}
@@ -161,8 +161,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 						}
 
 						if (executableElement.getParameters().size() != 0) {
-							valid.addError(enclosedElement, "The method getRootUrl cannot have parameters on a " + TargetAnnotationHelper.annotationName(Rest.class)
-									+ " annotated interface");
+							valid.addError(enclosedElement, "The method getRootUrl cannot have parameters on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 						}
 
 						if (!foundGetRootUrlMethod) {
@@ -178,8 +177,8 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 								if (!foundSetRestTemplateMethod) {
 									foundSetRestTemplateMethod = true;
 								} else {
-									valid.addError(enclosedElement, "You can only have oneRestTemplate setter method on a " + TargetAnnotationHelper.annotationName(Rest.class)
-											+ " annotated interface");
+									valid.addError(enclosedElement,
+											"You can only have oneRestTemplate setter method on a " + TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 								}
 							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_ROOT_URL) && !foundSetRootUrlMethod) {
 								foundSetRootUrlMethod = true;
@@ -188,18 +187,16 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 							} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_SET_BEARER_AUTH) && !foundSetBearerAuthMethod) {
 								foundSetBearerAuthMethod = true;
 							} else {
-								valid.addError(enclosedElement,
-										"The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class)
-												+ " annotated interface");
+								valid.addError(enclosedElement, "The method to set a RestTemplate should have only one RestTemplate parameter on a " + TargetAnnotationHelper.annotationName(Rest.class)
+										+ " annotated interface");
 
 							}
 						} else if (parameters.size() == 2) {
 							VariableElement firstParameter = parameters.get(0);
 							VariableElement secondParameter = parameters.get(1);
 							if (!(firstParameter.asType().toString().equals(CanonicalNameConstants.STRING) && secondParameter.asType().toString().equals(CanonicalNameConstants.STRING))) {
-								valid.addError(enclosedElement,
-										"The method to set headers, cookies, or HTTP Basic Auth should have only String parameters on a " + TargetAnnotationHelper.annotationName(Rest.class)
-												+ " annotated interface");
+								valid.addError(enclosedElement, "The method to set headers, cookies, or HTTP Basic Auth should have only String parameters on a "
+										+ TargetAnnotationHelper.annotationName(Rest.class) + " annotated interface");
 							}
 						} else {
 							valid.addError(enclosedElement,
@@ -215,9 +212,8 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 								} else if (executableElement.getSimpleName().toString().equals(METHOD_NAME_GET_HEADER) && !foundGetHeaderMethod) {
 									foundGetHeaderMethod = true;
 								} else {
-									valid.addError(enclosedElement,
-											"Only one getCookie(String) and one getHeader(String) method are allowed on a " + TargetAnnotationHelper.annotationName(Rest.class)
-													+ " annotated interface");
+									valid.addError(enclosedElement, "Only one getCookie(String) and one getHeader(String) method are allowed on a " + TargetAnnotationHelper.annotationName(Rest.class)
+											+ " annotated interface");
 								}
 							} else {
 								valid.addError(enclosedElement,

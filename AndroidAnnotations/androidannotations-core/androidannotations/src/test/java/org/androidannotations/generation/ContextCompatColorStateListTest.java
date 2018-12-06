@@ -27,13 +27,11 @@ public class ContextCompatColorStateListTest extends AAProcessorTestHelper {
 	private static final String COLOR_STATE_LIST_SIGNATURE = ".*myColorStateList = resources_\\.getColorStateList\\(R\\.color\\.myColorStateList\\);.*";
 	private static final String COLOR_STATE_LIST_VIA_SUPPORT_SIGNATURE = ".*myColorStateList = ContextCompat\\.getColorStateList\\(this, R\\.color\\.myColorStateList\\);.*";
 	private static final String COLOR_STATE_LIST_VIA_CONTEXT_ON_MARSHMALLOW = ".*myColorStateList = this\\.getColorStateList\\(R\\.color\\.myColorStateList\\);.*";
-	private static final String[] COLOR_STATE_LIST_CONDITIONAL_WITHOUT_CONTEXT_COMPAT =  new String[] {
-		"        if (VERSION.SDK_INT >= VERSION_CODES.M) {",
-		"            this.myColorStateList = this.getColorStateList(R.color.myColorStateList);",
-		"        } else {",
-		"            this.myColorStateList = resources_.getColorStateList(R.color.myColorStateList);",
-		"        }",
-	};
+	// CHECKSTYLE:OFF
+	private static final String[] COLOR_STATE_LIST_CONDITIONAL_WITHOUT_CONTEXT_COMPAT = new String[] { "        if (VERSION.SDK_INT >= VERSION_CODES.M) {",
+			"            this.myColorStateList = this.getColorStateList(R.color.myColorStateList);", "        } else {",
+			"            this.myColorStateList = resources_.getColorStateList(R.color.myColorStateList);", "        }", };
+	// CHECKSTYLE:ON
 
 	@Before
 	public void setUp() {

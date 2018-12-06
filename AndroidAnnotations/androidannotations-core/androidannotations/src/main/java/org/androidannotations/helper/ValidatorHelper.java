@@ -240,8 +240,7 @@ public class ValidatorHelper {
 		Set<String> supportedAnnotationTypes = environment().getSupportedAnnotationTypes();
 		for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
 			if (supportedAnnotationTypes.contains(annotationMirror.getAnnotationType().toString())) {
-				validation.addError(element,
-						"method injection does only allow the annotation to be placed on the method OR on each parameter.");
+				validation.addError(element, "method injection does only allow the annotation to be placed on the method OR on each parameter.");
 				break;
 			}
 		}
@@ -260,8 +259,8 @@ public class ValidatorHelper {
 		if (shouldFind != foundAnnotation) {
 			String not = shouldFind ? "" : " not";
 
-			validation.addError(reportElement, "%s can only be used in a " + element.getKind().toString().toLowerCase() + not + " annotated with "
-					+ getFormattedValidEnhancedBeanAnnotationTypes(validAnnotations) + ".");
+			validation.addError(reportElement,
+					"%s can only be used in a " + element.getKind().toString().toLowerCase() + not + " annotated with " + getFormattedValidEnhancedBeanAnnotationTypes(validAnnotations) + ".");
 		}
 	}
 
@@ -301,7 +300,6 @@ public class ValidatorHelper {
 		Set<? extends Element> layoutAnnotatedElements = validatedModel().getRootAnnotatedElements(annotation.getName());
 		return layoutAnnotatedElements.contains(element);
 	}
-
 
 	public void typeHasAnnotation(Class<? extends Annotation> annotation, Element element, ElementValidation valid) {
 		TypeMirror elementType = element.asType();
@@ -688,8 +686,8 @@ public class ValidatorHelper {
 			String simpleName = typeElement.getSimpleName().toString();
 			String generatedSimpleName = simpleName + classSuffix();
 			if (componentQualifiedNames.contains(componentQualifiedName)) {
-				valid.addError("The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register "
-						+ generatedSimpleName + " instead of " + simpleName);
+				valid.addError("The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component. Please register " + generatedSimpleName
+						+ " instead of " + simpleName);
 			} else {
 				if (printWarning) {
 					valid.addWarning("The component " + generatedSimpleName + " is not registered in the AndroidManifest.xml file.");
@@ -735,8 +733,7 @@ public class ValidatorHelper {
 
 			String enclosedElementName = enclosedElement.getSimpleName().toString();
 			if (actionNames.contains(enclosedElementName)) {
-				valid.addError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(annotation)
-						+ " annotated method must have unique name even if the signature is not the same");
+				valid.addError(enclosedElement, "The " + TargetAnnotationHelper.annotationName(annotation) + " annotated method must have unique name even if the signature is not the same");
 			} else {
 				actionNames.add(enclosedElementName);
 			}

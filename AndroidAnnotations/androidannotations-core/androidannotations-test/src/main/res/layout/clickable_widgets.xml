@@ -17,79 +17,79 @@
 
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/conventionButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/buttonWithButtonArgument"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/snake_case_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/extendedConventionButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/overridenConventionButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/configurationOverConventionButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/unboundButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/buttonWithViewArgument"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:orientation="vertical">
 
 	<Button
-		android:id="@+id/buttonWithOnlyViewArgument"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
+			android:id="@+id/conventionButton"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/buttonWithButtonArgument"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/snake_case_button"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/extendedConventionButton"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/overridenConventionButton"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/configurationOverConventionButton"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/unboundButton"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/buttonWithViewArgument"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+
+	<Button
+			android:id="@+id/buttonWithOnlyViewArgument"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
 
 	<Button
-        android:id="@+id/button1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+			android:id="@+id/button1"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+	<Button
+			android:id="@+id/button2"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/stackOverflowProofButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+	<Button
+			android:id="@+id/stackOverflowProofButton"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/libResButton1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+	<Button
+			android:id="@+id/libResButton1"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/libResButton2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+	<Button
+			android:id="@+id/libResButton2"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 
 </LinearLayout>

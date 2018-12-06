@@ -17,16 +17,16 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.testprocessor"
-    android:versionCode="1"
-    android:versionName="1.0" >
+		  package="org.androidannotations.testprocessor"
+		  android:versionCode="1"
+		  android:versionName="1.0">
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+	<uses-sdk
+			android:minSdkVersion="8"
+			android:targetSdkVersion="18"/>
 
-    <application>
-        <activity android:name="org.androidannotations.generation.ActivityInManifest_" />
-    </application>
+	<application>
+		<activity android:name="org.androidannotations.generation.ActivityInManifest_"/>
+	</application>
 
 </manifest>

@@ -17,13 +17,13 @@
 
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.androidannotations.menu"
-    android:versionCode="1"
-    android:versionName="1.0" >
+		  package="org.androidannotations.menu"
+		  android:versionCode="1"
+		  android:versionName="1.0">
 
-    <application>
-        <activity android:name="org.androidannotations.menu.OptionsMenuItemActivity_" />
-        <activity android:name="org.androidannotations.menu.InjectMenuActivity_" />
-    </application>
+	<application>
+		<activity android:name="org.androidannotations.menu.OptionsMenuItemActivity_"/>
+		<activity android:name="org.androidannotations.menu.InjectMenuActivity_"/>
+	</application>
 
 </manifest>

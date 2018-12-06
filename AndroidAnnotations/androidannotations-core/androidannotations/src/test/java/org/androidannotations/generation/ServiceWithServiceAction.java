@@ -29,7 +29,8 @@ public class ServiceWithServiceAction extends AbstractIntentService {
 	/**
 	 * this is a javadoc comment
 	 *
-	 * @param param this is a param
+	 * @param param
+	 *            this is a param
 	 */
 	@ServiceAction
 	void action(String param) {

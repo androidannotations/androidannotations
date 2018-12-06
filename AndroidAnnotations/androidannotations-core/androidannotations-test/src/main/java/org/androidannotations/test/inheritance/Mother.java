@@ -29,7 +29,7 @@ public abstract class Mother {
 	void initMother() {
 		motherInitCalled = true;
 	}
-	
+
 	@AfterViews
 	void initViewsMother() {
 		motherInitViewsCalled = true;

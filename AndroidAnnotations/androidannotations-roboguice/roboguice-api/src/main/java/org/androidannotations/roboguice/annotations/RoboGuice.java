@@ -60,15 +60,15 @@ import java.lang.annotation.Target;
  * 
  * </blockquote>
  * 
- * @see <a
- *      href="https://github.com/androidannotations/androidannotations/wiki/RoboGuiceIntegration">RoboGuiceIntegration</a>
+ * @see <a href=
+ *      "https://github.com/androidannotations/androidannotations/wiki/RoboGuiceIntegration">RoboGuiceIntegration</a>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface RoboGuice {
 	/**
-	 * The RoboGuice listener classes to bind to this activity. Will add an
-	 * injected listener field to the subclass.
+	 * The RoboGuice listener classes to bind to this activity. Will add an injected
+	 * listener field to the subclass.
 	 * 
 	 * @return the RoboGuice listener classes
 	 */

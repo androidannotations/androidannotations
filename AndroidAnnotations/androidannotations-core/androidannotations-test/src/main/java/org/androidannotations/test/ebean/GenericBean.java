@@ -15,7 +15,6 @@
  */
 package org.androidannotations.test.ebean;
 
-
 public class GenericBean<T> {
 
 }

@@ -87,7 +87,7 @@ public class ActivityWithServices extends Activity {
 	// TODO API 21
 	// @SystemService
 	// BatteryManager natteryManager;
-	
+
 	// TODO API 18
 	// @SystemService
 	// BluetoothManager bluetoothManager;
@@ -155,14 +155,14 @@ public class ActivityWithServices extends Activity {
 	// TODO API 21
 	// @SystemService
 	// JobScheduler jobScheduler;
-	
+
 	@SystemService
 	KeyguardManager keyguardManager;
 
 	// TODO API 21
 	// @SystemService
 	// LauncherApps launcherApps;
-	
+
 	@SystemService
 	LayoutInflater layoutInflater;
 
@@ -172,7 +172,7 @@ public class ActivityWithServices extends Activity {
 	// TODO API 21
 	// @SystemService
 	// MediaProjectionManager mediaProjectionManager;
-	
+
 	@SystemService
 	MediaRouter mediaRouter;
 
@@ -183,7 +183,7 @@ public class ActivityWithServices extends Activity {
 	// TODO API 23
 	// @SystemService
 	// MidiManager midiManager;
-	
+
 	// @SystemService
 	// NetworkScoreManager networkScoreManager; // hidden API
 
@@ -219,7 +219,7 @@ public class ActivityWithServices extends Activity {
 	// TODO API 21
 	// @SystemService
 	// RestrictionsManager restrictionsManager;
-	
+
 	@SystemService
 	SearchManager searchManager;
 
@@ -249,11 +249,11 @@ public class ActivityWithServices extends Activity {
 	// TODO API 24
 	// @SystemService
 	// SystemHealthManager systemHealthManager;
-	
+
 	// TODO API 21
 	// @SystemService
 	// TelecomManager telecomManager;
-	
+
 	@SystemService
 	TelephonyManager telephonyManager;
 
@@ -269,7 +269,7 @@ public class ActivityWithServices extends Activity {
 	// TODO API 21
 	// @SystemService
 	// TvInputManager tvInputManager;
-	
+
 	@SystemService
 	UiModeManager uiModeManager;
 
@@ -279,7 +279,7 @@ public class ActivityWithServices extends Activity {
 	// TODO API 21
 	// @SystemService
 	// UsageStatsManager usageStatsManager;
-	
+
 	@SystemService
 	UsbManager usbManager;
 

@@ -44,19 +44,15 @@ import java.lang.annotation.Target;
  * The annotation has four parameters:
  * </p>
  * <ul>
- * <li>
- * {@link #actions()}: One or several {@link java.lang.String} indicating the
- * actions which will spark the method. This parameter is MANDATORY</li>
- * <li>
- * {@link #dataSchemes()}: One or several {@link java.lang.String} indicating
- * the data schemes which should be handled.</li>
- * <li>
- * {@link #registerAt()}: The moment when the
+ * <li>{@link #actions()}: One or several {@link java.lang.String} indicating
+ * the actions which will spark the method. This parameter is MANDATORY</li>
+ * <li>{@link #dataSchemes()}: One or several {@link java.lang.String}
+ * indicating the data schemes which should be handled.</li>
+ * <li>{@link #registerAt()}: The moment when the
  * {@link android.content.BroadcastReceiver} will be registered and
  * unregistered. By default : OnCreate/OnDestroy. The available values depend on
  * the enclosing enhanced component.</li>
- * <li>
- * {@link #local()}: Specify whether
+ * <li>{@link #local()}: Specify whether
  * android.support.v4.content.LocalBroadcastManager should be used. To use
  * android.support.v4.content.LocalBroadcastManager, you MUST have android
  * support-v4 in your classpath. Default value is false.</li>
@@ -119,8 +115,8 @@ public @interface Receiver {
 	/**
 	 * Whether to use LocalBroadcastManager.
 	 * 
-	 * @return <b>true</b>, if LocalBroadcastManager should be used,
-	 *         <b>false</b> otherwise
+	 * @return <b>true</b>, if LocalBroadcastManager should be used, <b>false</b>
+	 *         otherwise
 	 *
 	 */
 	boolean local() default false;
@@ -142,9 +138,9 @@ public @interface Receiver {
 		 */
 		OnResumeOnPause, //
 		/**
-		 * Register in the onAttach method, unregister in the onDetach method.
-		 * Except for View which will register in the onAttachedToWindow and
-		 * unregister in the onDetachedFromWindow.
+		 * Register in the onAttach method, unregister in the onDetach method. Except
+		 * for View which will register in the onAttachedToWindow and unregister in the
+		 * onDetachedFromWindow.
 		 */
 		OnAttachOnDetach
 	}
@@ -154,13 +150,12 @@ public @interface Receiver {
 	 * Should be used on any native, {@link android.os.Parcelable} or
 	 * {@link java.io.Serializable} parameter of a method annotated with
 	 * {@link Receiver} to inject the extra put in the intent parameter of
-	 * {@code void onReceive(Context context, Intent intent)}. The key of this
-	 * extra is the value of the annotation {@link Receiver.Extra} if it
-	 * is set or the name of the parameter.
-	 * If <a href="http://parceler.org">Parceler</a> is on the classpath, extras
-	 * annotated with &#064;Parcel, or collections supported by Parceler will be
-	 * automatically marshaled using a {@link android.os.Parcelable Parcelable}
-	 * through the Parcels utility class.
+	 * {@code void onReceive(Context context, Intent intent)}. The key of this extra
+	 * is the value of the annotation {@link Receiver.Extra} if it is set or the
+	 * name of the parameter. If <a href="http://parceler.org">Parceler</a> is on
+	 * the classpath, extras annotated with &#064;Parcel, or collections supported
+	 * by Parceler will be automatically marshaled using a
+	 * {@link android.os.Parcelable Parcelable} through the Parcels utility class.
 	 * </p>
 	 */
 	@Retention(RetentionPolicy.CLASS)
@@ -168,8 +163,8 @@ public @interface Receiver {
 	public @interface Extra {
 
 		/**
-		 * Defines the extra's name. If this parameter isn't set the annotated
-		 * parameter name will be used.
+		 * Defines the extra's name. If this parameter isn't set the annotated parameter
+		 * name will be used.
 		 * 
 		 * @return the name of the extra
 		 */

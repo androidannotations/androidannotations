@@ -29,8 +29,8 @@ import org.androidannotations.annotations.ResId;
  * </p>
  * <p>
  * The annotation value must be a <code>String[]</code>. The generated method
- * will return a {@link java.util.Set Set&lt;String&gt;} containing the values of the
- * given array.
+ * will return a {@link java.util.Set Set&lt;String&gt;} containing the values
+ * of the given array.
  * </p>
  * <p>
  * The key of the preference will be the method name by default. This can be

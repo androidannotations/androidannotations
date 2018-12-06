@@ -27,7 +27,7 @@ public class CustomShadowPowerManager extends ShadowPowerManager {
 
 	public static int lastFlags;
 	public static String lastTag;
-	
+
 	@Implementation
 	@Override
 	public WakeLock newWakeLock(int flags, String tag) {

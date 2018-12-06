@@ -17,5 +17,5 @@
 
 -->
 <resources>
-    <string name="app_name">ormlite-test</string>
+	<string name="app_name">ormlite-test</string>
 </resources>

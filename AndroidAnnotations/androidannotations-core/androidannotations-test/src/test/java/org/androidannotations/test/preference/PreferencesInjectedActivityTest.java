@@ -54,7 +54,7 @@ public class PreferencesInjectedActivityTest {
 	public void testAfterPreferencesCalled() {
 		assertThat(activity.afterPreferencesCalled).isTrue();
 	}
-	
+
 	@Test
 	public void methodInjectedPrefNotNull() {
 		assertThat(activity.methodInjectedPref).isNotNull();

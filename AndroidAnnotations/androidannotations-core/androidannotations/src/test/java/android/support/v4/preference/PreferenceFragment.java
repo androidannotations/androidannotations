@@ -15,7 +15,7 @@
  */
 package android.support.v4.preference;
 
-import android.app.Fragment; // for the test it is OK to extend normal Fragment
+import android.app.Fragment;
 
 public abstract class PreferenceFragment extends Fragment {
 

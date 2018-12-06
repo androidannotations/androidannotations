@@ -72,12 +72,11 @@ public class SourceCodeWriter extends AbstractCodeWriter {
 		} catch (FilerException e) {
 			LOGGER.error("Could not generate source file for {} due to error: {}", qualifiedClassName, e.getMessage());
 			/*
-			 * This exception is expected, when some files are created twice. We
-			 * cannot delete existing files, unless using a dirty hack. Files a
-			 * created twice when the same file is created from different
-			 * annotation rounds. Happens when renaming classes, and for
-			 * Background executor. It also probably means I didn't fully
-			 * understand how annotation processing works. If anyone can point
+			 * This exception is expected, when some files are created twice. We cannot
+			 * delete existing files, unless using a dirty hack. Files a created twice when
+			 * the same file is created from different annotation rounds. Happens when
+			 * renaming classes, and for Background executor. It also probably means I
+			 * didn't fully understand how annotation processing works. If anyone can point
 			 * me out...
 			 */
 			return VOID_OUTPUT_STREAM;
