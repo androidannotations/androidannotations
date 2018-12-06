@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 /**
  * Ensures that method is called from the UI thread. If it is not, then
  * {@link IllegalStateException} will be thrown (by default).
@@ -49,6 +47,5 @@ import org.androidannotations.api.KotlinOpen;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-@KotlinOpen
 public @interface SupposeUiThread {
 }

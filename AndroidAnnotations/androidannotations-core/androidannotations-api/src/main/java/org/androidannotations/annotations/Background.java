@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 /**
  * <p>
  * Should be used on method that must be run in a background thread.
@@ -174,7 +172,6 @@ import org.androidannotations.api.KotlinOpen;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-@KotlinOpen
 public @interface Background {
 	/**
 	 * Identifier for task cancellation.
