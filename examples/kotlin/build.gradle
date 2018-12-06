@@ -45,6 +45,8 @@ allOpen {
 //    arguments {
 //        arg("resourcePackageName", "org.androidannotations.gradle")
 //    }
+//
+//    correctErrorTypes = true // add this if you use data binding
 //}
 
 def AAVersion = "4.6.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.5.2
