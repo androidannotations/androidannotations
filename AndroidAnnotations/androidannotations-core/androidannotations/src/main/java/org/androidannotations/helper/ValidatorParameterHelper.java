@@ -120,7 +120,7 @@ public class ValidatorParameterHelper {
 		}
 
 		public V extendsAnyOfTypes(String... types) {
-			return  param(new ExtendsAnyOfTypesParameterRequirement(types));
+			return param(new ExtendsAnyOfTypesParameterRequirement(types));
 		}
 
 		public V anyType() {
@@ -168,7 +168,6 @@ public class ValidatorParameterHelper {
 		protected void invalidate(ExecutableElement element, ElementValidation validation) {
 			validation.addError("%s can only have the following parameters: " + createMessage(element));
 		}
-
 
 		protected String createMessage(ExecutableElement element) {
 			StringBuilder builder = new StringBuilder();

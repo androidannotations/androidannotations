@@ -171,7 +171,7 @@ public class APTCodeModelHelper {
 	}
 
 	public List<AbstractJClass> typeBoundsToJClass(List<? extends TypeMirror> bounds) {
-		return typeBoundsToJClass(bounds, Collections.<String, TypeMirror>emptyMap());
+		return typeBoundsToJClass(bounds, Collections.<String, TypeMirror> emptyMap());
 	}
 
 	private List<AbstractJClass> typeBoundsToJClass(List<? extends TypeMirror> bounds, Map<String, TypeMirror> actualTypes) {
@@ -183,7 +183,7 @@ public class APTCodeModelHelper {
 			for (TypeMirror bound : bounds) {
 				jClassBounds.add(typeMirrorToJClass(bound, actualTypes));
 			}
-			return  jClassBounds;
+			return jClassBounds;
 		}
 	}
 

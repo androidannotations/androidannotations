@@ -75,16 +75,11 @@ public class ExtraInjectedActivity extends Activity {
 	void intentWithExtras() {
 		ExtraInjectedActivity_.intent(this).arrayExtra(null).start();
 		ExtraInjectedActivity_.intent(this).intExtra(42).get();
-		ExtraInjectedActivity_.intent(this).stringExtra("hello")
-				.startForResult(42);
-		ExtraInjectedActivity_.intent(this)
-				.parcelerExample(new ParcelerBean("Andy", 42));
+		ExtraInjectedActivity_.intent(this).stringExtra("hello").startForResult(42);
+		ExtraInjectedActivity_.intent(this).parcelerExample(new ParcelerBean("Andy", 42));
 		List<ParcelerBean> parcelerBeans = new ArrayList<ParcelerBean>();
 		parcelerBeans.add(new ParcelerBean("Duke", 1337));
-		ExtraInjectedActivity_.intent(this)
-				.parcelerExampleCollection(parcelerBeans);
-		ExtraInjectedActivity_.intent(this)
-				.parcelableSerializableData(new ParcelableSerializableData())
-				.get();
+		ExtraInjectedActivity_.intent(this).parcelerExampleCollection(parcelerBeans);
+		ExtraInjectedActivity_.intent(this).parcelableSerializableData(new ParcelableSerializableData()).get();
 	}
 }

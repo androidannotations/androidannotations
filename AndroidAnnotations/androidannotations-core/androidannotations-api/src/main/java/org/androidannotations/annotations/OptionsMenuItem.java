@@ -22,8 +22,8 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Use it on {@link android.view.MenuItem MenuItem} fields or methods with applicable
- * parameters in activity classes to inject a menu item.
+ * Use it on {@link android.view.MenuItem MenuItem} fields or methods with
+ * applicable parameters in activity classes to inject a menu item.
  * </p>
  * <p>
  * The field or method parameter MUST be of type {@link android.view.MenuItem}

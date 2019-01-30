@@ -26,9 +26,11 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 
+import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mockito;
 
 @RunWith(Parameterized.class)
 public class AndroidManifestFinderTest {
@@ -80,6 +82,13 @@ public class AndroidManifestFinderTest {
 		Object[] gradleManifestFoundInMergedManifestsWithBothSplit = { GRADLE_GEN_FOLDER, "build/intermediates/merged_manifests/debug/processDebugManifest/merged/x86/hdpi", true };
 		Object[] gradleManifestFoundInMergedManifestsWithBothSplitAndFlavor = { GRADLE_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/processFlavorDebugManifest/merged/x86/hdpi",
 				true };
+		Object[] gradleManifestFoundInMergedManifestsV33 = { GRADLE_GEN_FOLDER, "build/intermediates/merged_manifests/debug/", true };
+		Object[] gradleManifestFoundInMergedManifestsWithAbiSplitV33 = { GRADLE_GEN_FOLDER, "build/intermediates/merged_manifests/debug/x86", true };
+		Object[] gradleManifestFoundInMergedManifestsWithAbiSplitAndFlavorV33 = { GRADLE_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/x86", true };
+		Object[] gradleManifestFoundInMergedManifestsWithDensitySplitV33 = { GRADLE_GEN_FOLDER, "build/intermediates/merged_manifests/debug/hdpi", true };
+		Object[] gradleManifestFoundInMergedManifestsWithDensitySplitAndFlavorV33 = { GRADLE_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/hdpi", true };
+		Object[] gradleManifestFoundInMergedManifestsWithBothSplitV33 = { GRADLE_GEN_FOLDER, "build/intermediates/merged_manifests/debug/x86/hdpi", true };
+		Object[] gradleManifestFoundInMergedManifestsWithBothSplitAndFlavorV33 = { GRADLE_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/x86/hdpi", true };
 
 		Object[] gradleKotlinManifestFoundInManifests = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/manifests/full/debug", true };
 		Object[] gradleKotlinManifestFoundInBundles = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/bundles/debug", true };
@@ -103,6 +112,13 @@ public class AndroidManifestFinderTest {
 		Object[] gradleKotlinManifestFoundInMergedManifestsWithBothSplit = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/merged_manifests/debug/processDebugManifest/merged/x86/hdpi", true };
 		Object[] gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavor = { GRADLE_KOTLIN_FLAVOR_GEN_FOLDER,
 				"build/intermediates/merged_manifests/flavorDebug/processFlavorDebugManifest/merged/x86/hdpi", true };
+		Object[] gradleKotlinManifestFoundInMergedManifestsV33 = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/merged_manifests/debug/", true };
+		Object[] gradleKotlinManifestFoundInMergedManifestsWithAbiSplitV33 = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/merged_manifests/debug/x86", true };
+		Object[] gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavorV33 = { GRADLE_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/x86", true };
+		Object[] gradleKotlinManifestFoundInMergedManifestsWithDensitySplitV33 = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/merged_manifests/debug/hdpi", true };
+		Object[] gradleKotlinManifestFoundInMergedManifestsWithDensitySplitAndFlavorV33 = { GRADLE_KOTLIN_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/hdpi", true };
+		Object[] gradleKotlinManifestFoundInMergedManifestsWithBothSplitV33 = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/merged_manifests/debug/x86/hdpi", true };
+		Object[] gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavorV33 = { GRADLE_KOTLIN_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/x86/hdpi", true };
 		// CHECKSTYLE:ON
 
 		Object[] mavenManifestFoundInTarget = { MAVEN_GEN_FOLDER, "target", true };
@@ -126,20 +142,28 @@ public class AndroidManifestFinderTest {
 				gradleManifestFoundInManifestsWithDensitySplit, gradleManifestFoundInManifestsWithDensitySplitAndFlavor, gradleManifestFoundInManifestsWithBothSplit,
 				gradleManifestFoundInManifestsWithBothSplitAndFlavor, gradleManifestFoundInMergedManifests, gradleManifestFoundInMergedManifestsWithAbiSplit,
 				gradleManifestFoundInMergedManifestsWithAbiSplitAndFlavor, gradleManifestFoundInMergedManifestsWithDensitySplit, gradleManifestFoundInMergedManifestsWithDensitySplitAndFlavor,
-				gradleManifestFoundInMergedManifestsWithBothSplit, gradleManifestFoundInMergedManifestsWithBothSplitAndFlavor, gradleKotlinManifestFoundInManifests, gradleKotlinManifestFoundInBundles,
-				gradleKotlinManifestFoundInManifestsAapt, gradleKotlinManifestFoundInManifestsWithFlavor, gradleKotlinManifestFoundInBundlesWithFlavor,
-				gradleKotlinManifestFoundInManifestsAaptWithFlavor, gradleKotlinManifestFoundInManifestsWithAbiSplit, gradleKotlinManifestFoundInManifestsWithAbiSplitAndFlavor,
-				gradleKotlinManifestFoundInManifestsWithDensitySplit, gradleKotlinManifestFoundInManifestsWithDensitySplitAndFlavor, gradleKotlinManifestFoundInManifestsWithBothSplit,
-				gradleKotlinManifestFoundInManifestsWithBothSplitAndFlavor, gradleKotlinManifestFoundInMergedManifests, gradleKotlinManifestFoundInMergedManifestsWithAbiSplit,
-				gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsWithDensitySplit,
+				gradleManifestFoundInMergedManifestsWithBothSplit, gradleManifestFoundInMergedManifestsWithBothSplitAndFlavor, gradleManifestFoundInMergedManifestsV33,
+				gradleManifestFoundInMergedManifestsWithAbiSplitV33, gradleManifestFoundInMergedManifestsWithAbiSplitAndFlavorV33, gradleManifestFoundInMergedManifestsWithDensitySplitV33,
+				gradleManifestFoundInMergedManifestsWithDensitySplitAndFlavorV33, gradleManifestFoundInMergedManifestsWithBothSplitV33, gradleManifestFoundInMergedManifestsWithBothSplitAndFlavorV33,
+				gradleKotlinManifestFoundInManifests, gradleKotlinManifestFoundInBundles, gradleKotlinManifestFoundInManifestsAapt, gradleKotlinManifestFoundInManifestsWithFlavor,
+				gradleKotlinManifestFoundInBundlesWithFlavor, gradleKotlinManifestFoundInManifestsAaptWithFlavor, gradleKotlinManifestFoundInManifestsWithAbiSplit,
+				gradleKotlinManifestFoundInManifestsWithAbiSplitAndFlavor, gradleKotlinManifestFoundInManifestsWithDensitySplit, gradleKotlinManifestFoundInManifestsWithDensitySplitAndFlavor,
+				gradleKotlinManifestFoundInManifestsWithBothSplit, gradleKotlinManifestFoundInManifestsWithBothSplitAndFlavor, gradleKotlinManifestFoundInMergedManifests,
+				gradleKotlinManifestFoundInMergedManifestsWithAbiSplit, gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsWithDensitySplit,
 				gradleKotlinManifestFoundInMergedManifestsWithDensitySplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsWithBothSplit,
-				gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavor, mavenManifestFoundInTarget, mavenManifestFoundInSrc, mavenManifestFoundInRoot, eclipseManifestFound,
+				gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsV33, gradleKotlinManifestFoundInMergedManifestsWithAbiSplitV33,
+				gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavorV33, gradleKotlinManifestFoundInMergedManifestsWithDensitySplitV33,
+				gradleKotlinManifestFoundInMergedManifestsWithDensitySplitAndFlavorV33, gradleKotlinManifestFoundInMergedManifestsWithBothSplitV33,
+				gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavorV33, mavenManifestFoundInTarget, mavenManifestFoundInSrc, mavenManifestFoundInRoot, eclipseManifestFound,
 				gradleManifestNotFound, gradleKotlinManifestNotFound, mavenManifestNotFound, eclipseManifestNotFound, noGeneratedFolderFound);
 	}
 
 	@Test
 	public void testFindManifestInKnownPathsStartingFromGenFolder() throws IOException {
-		AndroidManifestFinder finder = new AndroidManifestFinder(null);
+		AndroidAnnotationsEnvironment mockEnvironment = Mockito.mock(AndroidAnnotationsEnvironment.class);
+		Mockito.when(mockEnvironment.getOptionBooleanValue(AndroidManifestFinder.OPTION_INSTANT_FEATURE)).thenReturn(false);
+
+		AndroidManifestFinder finder = new AndroidManifestFinder(mockEnvironment);
 		tempDirectory = Files.createTempDirectory("AA");
 
 		File genFolder = createGenFolder(genFolderPath);

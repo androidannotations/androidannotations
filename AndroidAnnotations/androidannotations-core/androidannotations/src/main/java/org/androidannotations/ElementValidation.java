@@ -46,8 +46,9 @@ public class ElementValidation {
 	/**
 	 * Method to call when an annotation is not valid
 	 *
-	 * @param error The message of the message.
-	 *  If it contains %s, it will be replaced by the name of the annotation.
+	 * @param error
+	 *            The message of the message. If it contains %s, it will be replaced
+	 *            by the name of the annotation.
 	 */
 	public void addError(String error) {
 		addError(element, error);

@@ -31,5 +31,5 @@ public class GeneratedApplicationTest {
 		application.onCreate();
 		assertThat(application.someDependency).isNotNull();
 	}
-	
+
 }

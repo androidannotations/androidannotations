@@ -17,8 +17,8 @@
 
 -->
 <lint>
-    <issue id="HardcodedDebugMode">
-        <ignore path="AndroidManifest.xml" />
-    </issue>
-    <issue id="NewApi" severity="ignore" />
+	<issue id="HardcodedDebugMode">
+		<ignore path="AndroidManifest.xml"/>
+	</issue>
+	<issue id="NewApi" severity="ignore"/>
 </lint>

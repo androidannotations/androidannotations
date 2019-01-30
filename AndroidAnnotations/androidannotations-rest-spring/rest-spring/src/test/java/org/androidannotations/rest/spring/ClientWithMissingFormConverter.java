@@ -15,7 +15,6 @@
  */
 package org.androidannotations.rest.spring;
 
-
 import org.androidannotations.rest.spring.annotations.Field;
 import org.androidannotations.rest.spring.annotations.Post;
 import org.androidannotations.rest.spring.annotations.Rest;

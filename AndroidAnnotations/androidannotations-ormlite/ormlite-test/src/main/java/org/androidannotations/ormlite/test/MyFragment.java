@@ -18,10 +18,10 @@ package org.androidannotations.ormlite.test;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.ormlite.annotations.OrmLiteDao;
 
-import android.app.Fragment;
-
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+
+import android.app.Fragment;
 
 @EFragment
 public class MyFragment extends Fragment {

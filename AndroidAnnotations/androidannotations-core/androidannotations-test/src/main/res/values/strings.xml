@@ -18,22 +18,22 @@
 -->
 <resources>
 
-    <string name="hello">Hello android-functional-test-1-5!</string>
-    <string name="hello_html">        <![CDATA[Hello <b>android-functional-test-1-5</b>!]]>
-    </string>
-    <string name="app_name">android-functional-test-1-5</string>
-    <string name="someView">TextView Text</string>
-    <string name="injected_string">test</string>
+	<string name="hello">Hello android-functional-test-1-5!</string>
+	<string name="hello_html">        <![CDATA[Hello <b>android-functional-test-1-5</b>!]]>
+	</string>
+	<string name="app_name">android-functional-test-1-5</string>
+	<string name="someView">TextView Text</string>
+	<string name="injected_string">test</string>
 
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
+	<string-array name="planets_array">
+		<item>Mercury</item>
+		<item>Venus</item>
+		<item>Earth</item>
+		<item>Mars</item>
+		<item>Jupiter</item>
+		<item>Saturn</item>
+		<item>Uranus</item>
+		<item>Neptune</item>
+	</string-array>
 
 </resources>

@@ -44,9 +44,9 @@ public class ModelValidator {
 		LOGGER.info("Validating elements");
 
 		/*
-		 * We currently do not validate the elements on the ancestors, assuming
-		 * they've already been validated. This also means some checks such as
-		 * unique ids might not be check all situations.
+		 * We currently do not validate the elements on the ancestors, assuming they've
+		 * already been validated. This also means some checks such as unique ids might
+		 * not be check all situations.
 		 */
 
 		for (AnnotationHandler annotationHandler : environment.getHandlers()) {

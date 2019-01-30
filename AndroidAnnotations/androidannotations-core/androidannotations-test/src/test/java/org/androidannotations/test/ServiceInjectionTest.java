@@ -37,7 +37,7 @@ public class ServiceInjectionTest {
 	@Test
 	public void servicesAreInjected() {
 		// in alphabetical order
-		
+
 		assertThat(activity.accessibilityManager).isNotNull();
 		assertThat(activity.accountManager).isNotNull();
 		assertThat(activity.activityManager).isNotNull();
@@ -81,7 +81,8 @@ public class ServiceInjectionTest {
 		// assertThat(activity.networkStatsManager).isNotNull(); // TODO API 23
 		assertThat(activity.nfcManager).isNotNull();
 		assertThat(activity.notificationManager).isNotNull();
-		// assertThat(activity.nsdManager).isNotNull(); // TODO no support yet in Robolectric
+		// assertThat(activity.nsdManager).isNotNull(); // TODO no support yet in
+		// Robolectric
 		// assertThat(activity.persistentDataBlockManager).isNotNull(); // hidden API
 		// assertThat(activity.printManager).isNotNull(); // TODO API 19
 		assertThat(activity.powerManager).isNotNull();
@@ -103,7 +104,7 @@ public class ServiceInjectionTest {
 		// assertThat(activity.tvInputManager).isNotNull(); // TODO API 21
 		assertThat(activity.uiModeManager).isNotNull();
 		// assertThat(activity.updateLock).isNotNull(); // hidden API
-		// assertThat(activity.usageStatsManager).isNotNull();  // TODO API 21
+		// assertThat(activity.usageStatsManager).isNotNull(); // TODO API 21
 		assertThat(activity.usbManager).isNotNull();
 		// assertThat(activity.userManager).isNotNull(); // TODO API 19
 		assertThat(activity.vibrator).isNotNull();

@@ -62,7 +62,8 @@ public class ClassFinder {
 	 * @param packageName
 	 *            Name of superclass/interface on which to search
 	 *
-	 * @return the classes which can be found in the package of the superclass/interface
+	 * @return the classes which can be found in the package of the
+	 *         superclass/interface
 	 */
 	public final List<Class<?>> findClassesInPackage(String packageName) {
 		synchronized (classpathLocations) {
@@ -79,13 +80,14 @@ public class ClassFinder {
 	}
 
 	/**
-	 * The result of the last search is cached in this object, along with the
-	 * URL that corresponds to each class returned. This method may be called to
-	 * query the cache for the location at which the given class was found.
-	 * <code>null</code> will be returned if the given class was not found
-	 * during the last search, or if the result cache has been cleared.
+	 * The result of the last search is cached in this object, along with the URL
+	 * that corresponds to each class returned. This method may be called to query
+	 * the cache for the location at which the given class was found.
+	 * <code>null</code> will be returned if the given class was not found during
+	 * the last search, or if the result cache has been cleared.
 	 *
-	 * @param cls the class whose location is queried
+	 * @param cls
+	 *            the class whose location is queried
 	 *
 	 * @return the location where the class is found
 	 */

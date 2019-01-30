@@ -23,7 +23,7 @@ public class Context {
 
 	public void startActivity(Intent intent, Bundle options) {
 	}
-	
+
 	public Drawable getDrawable(int id) {
 		return null;
 	}

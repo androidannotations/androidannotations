@@ -27,13 +27,10 @@ public class ContextCompatColorTest extends AAProcessorTestHelper {
 	private static final String COLOR_SIGNATURE = ".*myColor = resources_\\.getColor\\(R\\.color\\.myColor\\);.*";
 	private static final String COLOR_VIA_SUPPORT_SIGNATURE = ".*myColor = ContextCompat\\.getColor\\(this, R\\.color\\.myColor\\);.*";
 	private static final String COLOR_VIA_CONTEXT_ON_MARSHMALLOW = ".*myColor = this\\.getColor\\(R\\.color\\.myColor\\);.*";
-	private static final String[] COLOR_CONDITIONAL_WITHOUT_CONTEXT_COMPAT =  new String[] {
-		"        if (VERSION.SDK_INT >= VERSION_CODES.M) {",
-		"            this.myColor = this.getColor(R.color.myColor);",
-		"        } else {",
-		"            this.myColor = resources_.getColor(R.color.myColor);",
-		"        }",
-	};
+	// CHECKSTYLE:OFF
+	private static final String[] COLOR_CONDITIONAL_WITHOUT_CONTEXT_COMPAT = new String[] { "        if (VERSION.SDK_INT >= VERSION_CODES.M) {",
+			"            this.myColor = this.getColor(R.color.myColor);", "        } else {", "            this.myColor = resources_.getColor(R.color.myColor);", "        }", };
+	// CHECKSTYLE:ON
 
 	@Before
 	public void setUp() {
@@ -90,8 +87,7 @@ public class ContextCompatColorTest extends AAProcessorTestHelper {
 	public void activityCompilesWithOldContextCompat() throws Exception {
 		addManifestProcessorParameter(ContextCompatColorTest.class, "AndroidManifestForColorMinSdk23.xml");
 
-		CompileResult result = compileFiles(ActivityWithGetColorMethod.class,
-				toPath(FragmentByChildFragmentManagerTest.class, "support/old/ContextCompat.java"));
+		CompileResult result = compileFiles(ActivityWithGetColorMethod.class, toPath(FragmentByChildFragmentManagerTest.class, "support/old/ContextCompat.java"));
 		File generatedFile = toGeneratedFile(ActivityWithGetColorMethod.class);
 
 		assertCompilationSuccessful(result);

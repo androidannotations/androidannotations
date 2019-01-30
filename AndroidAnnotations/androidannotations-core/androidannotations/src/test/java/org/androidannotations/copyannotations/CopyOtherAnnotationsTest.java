@@ -43,7 +43,7 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 				"    @WebServiceRef(type = String.class)", //
 				"})", //
 				"public final class HasOtherAnnotations_", };
-		
+
 		// CHECKSTYLE:ON
 		compileFiles(HasOtherAnnotations.class);
 		assertGeneratedClassContains(toGeneratedFile(HasOtherAnnotations.class), classHeader);
@@ -64,7 +64,7 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 				"        @Deprecated", //
 				"        final Event event) {", };
 		// CHECKSTYLE:ON
-		
+
 		compileFiles(HasOtherAnnotations.class);
 		assertGeneratedClassContains(toGeneratedFile(HasOtherAnnotations.class), methodSignature);
 	}
@@ -73,14 +73,14 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 	public void testOverrideDoesNotAddedTwice() {
 		addProcessorParameter("trace", "true");
 		compileFiles(HasOtherAnnotations.class);
-		
+
 		// CHECKSTYLE:OFF
 		String[] methodSignature = { //
 				"    @java.lang.Override", //
 				"    @java.lang.Override", //
 				"    public String toString() {", };
 		// CHECKSTYLE:ON
-		
+
 		assertGeneratedClassDoesNotContain(toGeneratedFile(HasOtherAnnotations.class), methodSignature);
 	}
 

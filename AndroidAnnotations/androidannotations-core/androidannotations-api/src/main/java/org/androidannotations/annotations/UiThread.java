@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 /**
  * <p>
  * Should be used on method that must be run in the Ui thread
@@ -126,7 +124,6 @@ import org.androidannotations.api.KotlinOpen;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-@KotlinOpen
 public @interface UiThread {
 
 	/**
@@ -137,16 +134,17 @@ public @interface UiThread {
 	long delay() default 0;
 
 	/**
-	 * If propagation is {@link Propagation#REUSE}, the method will check first
-	 * if it is inside the UI thread already. If so, it will directly call the
-	 * method instead of using the handler. The default value is
+	 * If propagation is {@link Propagation#REUSE}, the method will check first if
+	 * it is inside the UI thread already. If so, it will directly call the method
+	 * instead of using the handler. The default value is
 	 * {@link Propagation#ENQUEUE}, which will always call the handler.
 	 *
-	 * When using a non-zero {@link #delay() delay} the propagation parameter is ignored.
+	 * When using a non-zero {@link #delay() delay} the propagation parameter is
+	 * ignored.
 	 * 
 	 * @return {@link Propagation#ENQUEUE} to always call the handler,
-	 *         {@link Propagation#REUSE}, to check whether it is already on the
-	 *         UI thread
+	 *         {@link Propagation#REUSE}, to check whether it is already on the UI
+	 *         thread
 	 */
 	Propagation propagation() default Propagation.ENQUEUE;
 

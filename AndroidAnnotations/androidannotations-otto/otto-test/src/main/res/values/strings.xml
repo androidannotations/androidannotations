@@ -17,5 +17,5 @@
 
 -->
 <resources>
-    <string name="app_name">otto-test</string>
+	<string name="app_name">otto-test</string>
 </resources>

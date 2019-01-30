@@ -159,10 +159,10 @@ public class ViewServer implements Runnable {
 	 * called from the main thread of your application. The server will have the
 	 * same lifetime as your process.
 	 * 
-	 * If your application does not have the <code>android:debuggable</code>
-	 * flag set in its manifest, the server returned by this method will be a
-	 * dummy object that does not do anything. This allows you to use the same
-	 * code in debug and release versions of your application.
+	 * If your application does not have the <code>android:debuggable</code> flag
+	 * set in its manifest, the server returned by this method will be a dummy
+	 * object that does not do anything. This allows you to use the same code in
+	 * debug and release versions of your application.
 	 * 
 	 * @param context
 	 *            A Context used to check whether the application is debuggable,
@@ -195,8 +195,8 @@ public class ViewServer implements Runnable {
 	}
 
 	/**
-	 * Creates a new ViewServer associated with the specified window manager on
-	 * the specified local port. The server is not started by default.
+	 * Creates a new ViewServer associated with the specified window manager on the
+	 * specified local port. The server is not started by default.
 	 * 
 	 * @param port
 	 *            The port for the server to listen to.
@@ -210,8 +210,8 @@ public class ViewServer implements Runnable {
 	/**
 	 * Starts the server.
 	 * 
-	 * @return True if the server was successfully created, or false if it
-	 *         already exists.
+	 * @return True if the server was successfully created, or false if it already
+	 *         exists.
 	 * @throws IOException
 	 *             If the server cannot be created.
 	 * 
@@ -233,8 +233,8 @@ public class ViewServer implements Runnable {
 	/**
 	 * Stops the server.
 	 * 
-	 * @return True if the server was stopped, false if an error occurred or if
-	 *         the server wasn't started.
+	 * @return True if the server was stopped, false if an error occurred or if the
+	 *         server wasn't started.
 	 * 
 	 * @see #start()
 	 * @see #isRunning() see WindowManagerService#stopViewServer()
@@ -386,8 +386,8 @@ public class ViewServer implements Runnable {
 	 * Invoke this method to change the currently focused window.
 	 * 
 	 * @param view
-	 *            A view that belongs to the view hierarchy/window that has
-	 *            focus, or null to remove focus
+	 *            A view that belongs to the view hierarchy/window that has focus,
+	 *            or null to remove focus
 	 */
 	public void setFocusedWindow(View view) {
 		mFocusLock.writeLock().lock();

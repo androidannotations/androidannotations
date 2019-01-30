@@ -16,23 +16,23 @@
     the License.
 
 -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory >
-        <ListPreference
-            android:key="@string/listPreferenceKey"/>
+	<PreferenceCategory>
+		<ListPreference
+				android:key="@string/listPreferenceKey"/>
 
-        <EditTextPreference
-            android:key="@string/conventionKey" />
-        
-        <EditTextPreference
-            android:key="@string/editTextPrefKey" />
-        
-        <CheckBoxPreference android:key="@string/checkBoxPrefKey"/>
-        
-        <CheckBoxPreference android:key="@string/checkBoxWithCastPrefKey"/>
-        
-        <SwitchPreference android:key="@string/switchPrefKey"/>
-    </PreferenceCategory>
+		<EditTextPreference
+				android:key="@string/conventionKey"/>
+
+		<EditTextPreference
+				android:key="@string/editTextPrefKey"/>
+
+		<CheckBoxPreference android:key="@string/checkBoxPrefKey"/>
+
+		<CheckBoxPreference android:key="@string/checkBoxWithCastPrefKey"/>
+
+		<SwitchPreference android:key="@string/switchPrefKey"/>
+	</PreferenceCategory>
 
 </PreferenceScreen>

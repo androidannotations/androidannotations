@@ -28,7 +28,8 @@ public class ActivityWithGetColorStateListMethod extends Activity {
 	ColorStateList myColorStateList;
 
 	// http://developer.android.com/reference/android/content/Context.html#getColorStateList(int)
-	// This method was added in API 23 and should be used to get a ColorStateList which is styled/adjusted for the current theme.
+	// This method was added in API 23 and should be used to get a ColorStateList
+	// which is styled/adjusted for the current theme.
 	public ColorStateList getColorStateList(int id) {
 		return null;
 	}

@@ -23,13 +23,13 @@ public class Car {
 
 	@DatabaseField(generatedId = true)
 	private long id;
-	
+
 	@DatabaseField
 	private String brand;
-	
+
 	@DatabaseField
 	private String model;
-	
+
 	public Car() {
 
 	}
@@ -37,7 +37,7 @@ public class Car {
 	public Car(long id) {
 		this.id = id;
 	}
-	
+
 	public long getId() {
 		return id;
 	}

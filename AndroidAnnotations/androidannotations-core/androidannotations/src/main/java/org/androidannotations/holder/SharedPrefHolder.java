@@ -117,8 +117,8 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		editMethod.body()._return(editMethodEditorInvocation);
 	}
 
-	public void createFieldMethod(Class<?> prefFieldHelperClass, IJExpression keyExpression, String fieldName, String fieldHelperMethodName, IJExpression defaultValue,
-			String docComment, String defaultValueStr) {
+	public void createFieldMethod(Class<?> prefFieldHelperClass, IJExpression keyExpression, String fieldName, String fieldHelperMethodName, IJExpression defaultValue, String docComment,
+			String defaultValueStr) {
 		JMethod fieldMethod = generatedClass.method(PUBLIC, prefFieldHelperClass, fieldName);
 
 		if (defaultValueStr != null) {

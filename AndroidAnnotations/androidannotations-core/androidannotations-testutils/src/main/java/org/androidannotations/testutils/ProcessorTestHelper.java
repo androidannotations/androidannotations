@@ -263,16 +263,15 @@ public class ProcessorTestHelper {
 	}
 
 	/**
-	 * Attempts to compile the given compilation units using the Java Compiler
-	 * API.
+	 * Attempts to compile the given compilation units using the Java Compiler API.
 	 * <p>
-	 * The compilation units and all their dependencies are expected to be on
-	 * the classpath.
+	 * The compilation units and all their dependencies are expected to be on the
+	 * classpath.
 	 *
 	 * @param compilationUnits
 	 *            the classes to compile
-	 * @return the {@link Diagnostic diagnostics} returned by the compilation,
-	 *         as demonstrated in the documentation for {@link JavaCompiler}
+	 * @return the {@link Diagnostic diagnostics} returned by the compilation, as
+	 *         demonstrated in the documentation for {@link JavaCompiler}
 	 */
 	public CompileResult compileFiles(Type... compilationUnits) {
 		assert compilationUnits != null;

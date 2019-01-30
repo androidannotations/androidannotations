@@ -24,12 +24,13 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
 
 @SharedPref(Scope.UNIQUE)
 public interface SharedPrefWithJavaDoc {
-	
+
 	@DefaultString("John")
 	String name();
 
 	/**
 	 * The Age!
+	 * 
 	 * @deprecated use {@link #ageLong()}
 	 */
 	@Deprecated

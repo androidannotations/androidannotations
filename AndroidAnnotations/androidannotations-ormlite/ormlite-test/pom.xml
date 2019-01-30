@@ -23,7 +23,7 @@
 	<parent>
 		<artifactId>androidannotations-ormlite</artifactId>
 		<groupId>org.androidannotations</groupId>
-		<version>4.5.2</version>
+		<version>4.6.0</version>
 	</parent>
 
 	<artifactId>ormlite-test</artifactId>

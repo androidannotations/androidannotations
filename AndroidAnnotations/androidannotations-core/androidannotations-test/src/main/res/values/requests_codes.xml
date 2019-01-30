@@ -18,8 +18,8 @@
 -->
 <resources>
 
-    <item name="first_request" type="id"/>
-    <item name="second_request" type="id"/>
-    <item name="third_request" type="id"/>
+	<item name="first_request" type="id"/>
+	<item name="second_request" type="id"/>
+	<item name="third_request" type="id"/>
 
 </resources>

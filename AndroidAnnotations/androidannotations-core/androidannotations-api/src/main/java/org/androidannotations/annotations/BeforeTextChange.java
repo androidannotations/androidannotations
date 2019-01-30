@@ -42,7 +42,8 @@ import java.lang.annotation.Target;
  * modification.</li>
  * <li>An int parameter named start to get the start position of the modified
  * text.</li>
- * <li>An int parameter named count to know the number of modified characters.</li>
+ * <li>An int parameter named count to know the number of modified
+ * characters.</li>
  * <li>An int parameter named after to know the text length after the text
  * modification.</li>
  * </ul>

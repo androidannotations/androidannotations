@@ -48,12 +48,14 @@ public @interface Header {
 
 	/**
 	 * The name of the header.
+	 * 
 	 * @return the name of the header
 	 */
 	String name();
 
 	/**
 	 * The value of the header.
+	 * 
 	 * @return the value of the header
 	 */
 	String value();

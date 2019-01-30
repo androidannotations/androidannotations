@@ -43,7 +43,7 @@ import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JTryBlock;
 import com.helger.jcodemodel.JVar;
 
-public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> implements MethodInjectionHandler<EComponentHolder> {
 
 	private final InjectHelper<EComponentHolder> injectHelper;
 

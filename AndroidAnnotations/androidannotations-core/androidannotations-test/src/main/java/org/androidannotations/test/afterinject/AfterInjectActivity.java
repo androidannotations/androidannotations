@@ -24,7 +24,7 @@ import android.app.NotificationManager;
 
 @EActivity
 public class AfterInjectActivity extends Activity {
-	
+
 	public boolean afterInjectCalled = false;
 	public boolean notificationManagerNullAfterInject = true;
 

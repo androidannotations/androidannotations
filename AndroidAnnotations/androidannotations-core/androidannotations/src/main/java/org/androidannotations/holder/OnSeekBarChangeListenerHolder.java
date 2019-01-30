@@ -21,7 +21,7 @@ import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JMod;
 import com.helger.jcodemodel.JVar;
 
-public class OnSeekBarChangeListenerHolder  {
+public class OnSeekBarChangeListenerHolder {
 
 	private EComponentWithViewSupportHolder holder;
 	private JDefinedClass listenerClass;

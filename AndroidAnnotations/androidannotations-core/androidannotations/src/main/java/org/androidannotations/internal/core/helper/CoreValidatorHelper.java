@@ -108,8 +108,8 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 
 			if (!typeElement.getModifiers().contains(Modifier.ABSTRACT) && !applicationClassName.equals(generatedComponentQualifiedName)) {
 				if (applicationClassName.equals(componentQualifiedName)) {
-					valid.addError("The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component."
-							+ " Please register " + generatedComponentQualifiedName + " instead of " + componentQualifiedName);
+					valid.addError("The AndroidManifest.xml file contains the original component, and not the AndroidAnnotations generated component." + " Please register "
+							+ generatedComponentQualifiedName + " instead of " + componentQualifiedName);
 				} else {
 					valid.addWarning("The component " + generatedComponentQualifiedName + " is not registered in the AndroidManifest.xml file.");
 				}
@@ -352,8 +352,8 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 				fromUserParameterFound = true;
 				continue;
 			}
-			valid.addError("Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "("
-					+ CanonicalNameConstants.SEEKBAR + " seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
+			valid.addError("Unrecognized parameter '" + parameter.toString() + "'. %s signature should be " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR
+					+ " seekBar, int progress, boolean fromUser). The 'fromUser' and 'progress' parameters are optional.");
 		}
 	}
 
@@ -361,16 +361,16 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 		List<? extends VariableElement> parameters = executableElement.getParameters();
 
 		if (parameters.size() > 1) {
-			valid.addError("Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR
-					+ ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
+			valid.addError("Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName()
+					+ "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
 			return;
 		}
 
 		if (parameters.size() == 1) {
 			String parameterType = parameters.get(0).asType().toString();
 			if (!parameterType.equals(CanonicalNameConstants.SEEKBAR)) {
-				valid.addError("Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR
-						+ ". Try declaring " + executableElement.getSimpleName() + "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
+				valid.addError("Unrecognized parameter declaration. You can only have one parameter of type " + CanonicalNameConstants.SEEKBAR + ". Try declaring " + executableElement.getSimpleName()
+						+ "(" + CanonicalNameConstants.SEEKBAR + " seekBar);");
 			}
 		}
 
@@ -399,8 +399,7 @@ public class CoreValidatorHelper extends IdValidatorHelper {
 		boolean local = element.getAnnotation(Receiver.class).local();
 		if (local) {
 			Elements elementUtils = annotationHelper.getElementUtils();
-			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null
-					&& elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_LOCAL_BROADCAST_MANAGER) == null) {
+			if (elementUtils.getTypeElement(CanonicalNameConstants.LOCAL_BROADCAST_MANAGER) == null && elementUtils.getTypeElement(CanonicalNameConstants.ANDROIDX_LOCAL_BROADCAST_MANAGER) == null) {
 				valid.addError("To use the LocalBroadcastManager, you MUST include the android-support-v4 or androidx.localbroadcastmanager jar");
 			}
 		}

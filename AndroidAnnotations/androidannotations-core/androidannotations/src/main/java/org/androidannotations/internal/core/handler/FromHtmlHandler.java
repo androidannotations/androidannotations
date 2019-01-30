@@ -39,7 +39,7 @@ public class FromHtmlHandler extends BaseAnnotationHandler<EComponentWithViewSup
 
 	@Override
 	public void validate(Element element, ElementValidation validation) {
-		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element,  validation);
+		validatorHelper.enclosingElementHasEnhancedViewSupportAnnotation(element, validation);
 
 		validatorHelper.hasViewByIdAnnotation(element, validation);
 

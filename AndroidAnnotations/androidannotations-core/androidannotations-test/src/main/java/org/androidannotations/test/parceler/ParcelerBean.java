@@ -18,7 +18,6 @@ package org.androidannotations.test.parceler;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
-
 @Parcel
 public class ParcelerBean {
 

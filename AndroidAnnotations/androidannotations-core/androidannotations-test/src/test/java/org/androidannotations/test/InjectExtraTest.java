@@ -39,13 +39,9 @@ public class InjectExtraTest {
 
 	@Test
 	public void simpleStringExtraInjected() {
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.stringExtra("Hello!")
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).stringExtra("Hello!").get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.stringExtra).isEqualTo("Hello!");
 	}
@@ -54,13 +50,9 @@ public class InjectExtraTest {
 	public void arrayExtraInjected() {
 		CustomData[] customData = { new CustomData("42") };
 
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.arrayExtra(customData)
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).arrayExtra(customData).get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.arrayExtra).isEqualTo(customData);
 	}
@@ -70,26 +62,18 @@ public class InjectExtraTest {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("Hello !");
 
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.listExtra(list)
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).listExtra(list).get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.listExtra).isEqualTo(list);
 	}
 
 	@Test
 	public void intExtraInjected() {
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.intExtra(42)
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).intExtra(42).get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.intExtra).isEqualTo(42);
 	}
@@ -98,25 +82,18 @@ public class InjectExtraTest {
 	public void intArrayExtraInjected() {
 		byte[] byteArray = { 0, 2 };
 
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.byteArrayExtra(byteArray)
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).byteArrayExtra(byteArray).get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.byteArrayExtra).isEqualTo(byteArray);
 	}
 
 	@Test
 	public void setIntentReinjectsExtra() {
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.stringExtra("Hello!")
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).stringExtra("Hello!").get();
 
-		ActivityController<ExtraInjectedActivity_> controller = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup();
+		ActivityController<ExtraInjectedActivity_> controller = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup();
 
 		controller.newIntent(ExtraInjectedActivity_.intent(context).stringExtra("Hello Again!").get());
 
@@ -125,26 +102,18 @@ public class InjectExtraTest {
 
 	@Test
 	public void extraWithoutValueInjected() {
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.extraWithoutValue("Hello!")
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).extraWithoutValue("Hello!").get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.extraWithoutValue).isEqualTo("Hello!");
 	}
 
 	@Test
 	public void parcelerExtraInjected() {
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.parcelerExample(new ParcelerBean("Andy", 42))
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).parcelerExample(new ParcelerBean("Andy", 42)).get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.parcelerExample.getName()).isEqualTo("Andy");
 		assertThat(activity.parcelerExample.getAge()).isEqualTo(42);
@@ -155,13 +124,9 @@ public class InjectExtraTest {
 		List<ParcelerBean> parcelerBeans = new ArrayList<ParcelerBean>();
 		parcelerBeans.add(new ParcelerBean("Duke", 1337));
 
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.parcelerExampleCollection(parcelerBeans)
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).parcelerExampleCollection(parcelerBeans).get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.parcelerExampleCollection.size()).isEqualTo(1);
 		ParcelerBean bean = activity.parcelerExampleCollection.iterator().next();
@@ -171,26 +136,18 @@ public class InjectExtraTest {
 
 	@Test
 	public void methodInjectedExtra() {
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.methodInjectedExtra("Hello!")
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).methodInjectedExtra("Hello!").get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.methodInjectedExtra).isEqualTo("Hello!");
 	}
 
 	@Test
 	public void multiInjectedExtra() {
-		Intent intent = ExtraInjectedActivity_.intent(context)
-				.multiInjectedExtra("Hello!", "World")
-				.get();
+		Intent intent = ExtraInjectedActivity_.intent(context).multiInjectedExtra("Hello!", "World").get();
 
-		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent)
-				.setup()
-				.get();
+		ExtraInjectedActivity activity = Robolectric.buildActivity(ExtraInjectedActivity_.class, intent).setup().get();
 
 		assertThat(activity.multiInjectedExtra).isEqualTo("Hello!");
 	}

@@ -21,11 +21,14 @@ import com.helger.jcodemodel.JBlock;
 public interface HasActivityLifecycleMethods extends GeneratedClassHolder {
 
 	JBlock getOnCreateAfterSuperBlock();
+
 	JBlock getOnDestroyBeforeSuperBlock();
 
 	JBlock getOnStartAfterSuperBlock();
+
 	JBlock getOnStopBeforeSuperBlock();
 
 	JBlock getOnResumeAfterSuperBlock();
+
 	JBlock getOnPauseBeforeSuperBlock();
 }

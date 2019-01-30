@@ -28,18 +28,18 @@ import java.lang.annotation.Target;
  * <p>
  * To set the current authentication object to use, you MUST either let your
  * RestClient interface extends of
- * {@link org.androidannotations.rest.spring.api.RestClientHeaders RestClientHeaders}
- * or add the following method to your interface :
+ * {@link org.androidannotations.rest.spring.api.RestClientHeaders
+ * RestClientHeaders} or add the following method to your interface :
  * <code>void setAuthentication(org.springframework.http.HttpAuthentication auth)</code>
  * .
  * </p>
  * <p>
- * You can also add a specific method for <a
- * href="https://en.wikipedia.org/wiki/Basic_access_authentication">Basic
+ * You can also add a specific method for
+ * <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">Basic
  * Authentication</a> :
- * <code>setHttpBasicAuth(String username, String password)</code> or <a
- * href="https://tools.ietf.org/html/rfc6750" >Bearer (OAuth) authentication</a>
- * : <code>setBearerAuth(String token)</code>.
+ * <code>setHttpBasicAuth(String username, String password)</code> or
+ * <a href="https://tools.ietf.org/html/rfc6750" >Bearer (OAuth)
+ * authentication</a> : <code>setBearerAuth(String token)</code>.
  * </p>
  * <blockquote>
  * 

@@ -34,8 +34,8 @@ import java.lang.annotation.Target;
  * </p>
  * <p>
  * The method may return a <code>boolean</code>, <code>void</code>, or a
- * {@link Boolean}. If returning void, it will be considered as
- * returning true (ie: the method has handled the event).
+ * {@link Boolean}. If returning void, it will be considered as returning true
+ * (ie: the method has handled the event).
  * </p>
  * <p>
  * The method MAY have one parameter:
@@ -87,7 +87,8 @@ import java.lang.annotation.Target;
  *
  * @see android.view.KeyEvent
  * @see android.view.KeyEvent.Callback
- * @see android.view.KeyEvent.Callback#onKeyLongPress(int, android.view.KeyEvent)
+ * @see android.view.KeyEvent.Callback#onKeyLongPress(int,
+ *      android.view.KeyEvent)
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)

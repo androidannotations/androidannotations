@@ -16,7 +16,7 @@ repositories {
 
 apply plugin: "com.android.application"
 
-def AAVersion = "4.6.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.5.1
+def AAVersion = "4.6.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.5.2
 dependencies {
     annotationProcessor "org.androidannotations:androidannotations:$AAVersion"
     implementation "org.androidannotations:androidannotations-api:$AAVersion"

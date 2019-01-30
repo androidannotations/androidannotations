@@ -27,7 +27,8 @@ public class ActivityWithGetColorMethod extends Activity {
 	int myColor;
 
 	// http://developer.android.com/reference/android/content/Context.html#getColor(int)
-	// This method was added in API 23 and should be used to get a color which is styled/adjusted for the current theme.
+	// This method was added in API 23 and should be used to get a color which is
+	// styled/adjusted for the current theme.
 	public int getColor(int id) {
 		return 0;
 	}

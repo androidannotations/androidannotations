@@ -27,7 +27,7 @@ import org.androidannotations.rest.spring.holder.RestHolder;
 
 public class HeaderHandler extends BaseAnnotationHandler<RestHolder> {
 
-	private  RestSpringValidatorHelper restValidatorHelper;
+	private RestSpringValidatorHelper restValidatorHelper;
 
 	public HeaderHandler(AndroidAnnotationsEnvironment environment) {
 		super(Header.class, environment);

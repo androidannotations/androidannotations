@@ -38,10 +38,9 @@ public final class FileHelper {
 
 	/**
 	 * We use a dirty trick to find the AndroidManifest.xml file, since it's not
-	 * available in the classpath. The idea is quite simple : create a fake
-	 * class file, retrieve its URI, and start going up in parent folders to
-	 * find the AndroidManifest.xml file. Any better solution will be
-	 * appreciated.
+	 * available in the classpath. The idea is quite simple : create a fake class
+	 * file, retrieve its URI, and start going up in parent folders to find the
+	 * AndroidManifest.xml file. Any better solution will be appreciated.
 	 */
 	public static FileHolder findRootProjectHolder(ProcessingEnvironment processingEnv) throws FileNotFoundException {
 		Filer filer = processingEnv.getFiler();

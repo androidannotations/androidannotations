@@ -32,9 +32,7 @@ import java.lang.annotation.Target;
  * &#064;Rest(converters = MappingJacksonHttpMessageConverter.class)
  * public interface MyRestClient {
  * 
- * 	&#064;Headers({
- * 		&#064;Header(name = &quot;keep-alive&quot;, value = &quot;300&quot;),
- * 		&#064;Header(name = &quot;cache-control&quot;, value = &quot;64000&quot;)})
+ * 	&#064;Headers({ &#064;Header(name = &quot;keep-alive&quot;, value = &quot;300&quot;), &#064;Header(name = &quot;cache-control&quot;, value = &quot;64000&quot;) })
  * 	&#064;Post(&quot;/test&quot;)
  * 	void testRoute();
  * }

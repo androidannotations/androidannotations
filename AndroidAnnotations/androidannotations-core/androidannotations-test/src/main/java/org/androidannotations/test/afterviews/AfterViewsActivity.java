@@ -24,10 +24,10 @@ import android.app.Activity;
 
 @EActivity(R.layout.main)
 public class AfterViewsActivity extends Activity {
-	
+
 	@Bean
 	AfterViewBean afterViewBean;
-	
+
 	public boolean afterViewBeanCalledBefore = false;
 
 	@AfterViews

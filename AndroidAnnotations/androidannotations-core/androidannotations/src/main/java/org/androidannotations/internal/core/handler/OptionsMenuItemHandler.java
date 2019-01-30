@@ -32,7 +32,7 @@ import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JVar;
 
-public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu>implements MethodInjectionHandler<HasOptionsMenu> {
+public class OptionsMenuItemHandler extends BaseAnnotationHandler<HasOptionsMenu> implements MethodInjectionHandler<HasOptionsMenu> {
 
 	private final InjectHelper<HasOptionsMenu> injectHelper;
 

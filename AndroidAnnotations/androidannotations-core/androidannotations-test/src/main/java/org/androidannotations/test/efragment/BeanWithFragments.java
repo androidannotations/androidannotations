@@ -22,17 +22,17 @@ import org.androidannotations.test.R;
 
 @EBean
 public class BeanWithFragments {
-	
+
 	@FragmentById
 	public MyFragment myFragment;
-	
+
 	@FragmentById(R.id.myFragment)
 	public MyFragment myFragment2;
 
 	@FragmentByTag
 	public MyFragment myFragmentTag;
-	
+
 	@FragmentByTag("myFragmentTag")
 	public MyFragment myFragmentTag2;
-	
+
 }

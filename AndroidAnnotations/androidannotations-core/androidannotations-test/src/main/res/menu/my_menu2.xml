@@ -16,14 +16,12 @@
     the License.
 
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/menu_share"
-        android:title="Share"/>
+	<item android:id="@+id/menu_share"
+		android:title="Share"/>
 
-    <item
-        android:id="@+id/menu_add"
-        android:title="Add"/>
+	<item android:id="@+id/menu_add"
+		android:title="Add"/>
 
 </menu>

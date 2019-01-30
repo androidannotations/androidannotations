@@ -72,16 +72,16 @@ import org.androidannotations.annotations.ResId;
 public @interface DefaultRes {
 
 	/**
-	 * The R.id.* field which refers the the resource which is used as the
-	 * default value of the preference.
+	 * The R.id.* field which refers the the resource which is used as the default
+	 * value of the preference.
 	 * 
 	 * @return the default value
 	 */
 	int value() default ResId.DEFAULT_VALUE;
 
 	/**
-	 * The resource name which refers the the resource which is used as the
-	 * default value of the preference.
+	 * The resource name which refers the the resource which is used as the default
+	 * value of the preference.
 	 * 
 	 * @return the resource name of the default value
 	 */

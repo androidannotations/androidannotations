@@ -21,8 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.androidannotations.api.KotlinOpen;
-
 /**
  * <p>
  * Ensures that the method is called from the background thread with
@@ -60,12 +58,11 @@ import org.androidannotations.api.KotlinOpen;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-@KotlinOpen
 public @interface SupposeBackground {
 
 	/**
-	 * Allowed serials to restrict a calling thread. If it is an empty list,
-	 * then any background thread is allowed.
+	 * Allowed serials to restrict a calling thread. If it is an empty list, then
+	 * any background thread is allowed.
 	 *
 	 * @see org.androidannotations.api.BackgroundExecutor#checkBgThread(String...)
 	 * 

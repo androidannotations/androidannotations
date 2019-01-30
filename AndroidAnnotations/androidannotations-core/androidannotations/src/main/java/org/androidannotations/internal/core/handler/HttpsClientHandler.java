@@ -48,7 +48,7 @@ import com.helger.jcodemodel.JTryBlock;
 import com.helger.jcodemodel.JVar;
 
 @SuppressWarnings("deprecation")
-public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder>implements MethodInjectionHandler<EComponentHolder> {
+public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> implements MethodInjectionHandler<EComponentHolder> {
 
 	private final InjectHelper<EComponentHolder> injectHelper;
 

@@ -17,30 +17,30 @@
 
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp" >
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical"
+			  android:paddingLeft="8dp"
+			  android:paddingRight="8dp">
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#00FF00"
-        android:drawSelectorOnTop="false" />
+	<ListView
+			android:id="@android:id/list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:background="#00FF00"
+			android:drawSelectorOnTop="false"/>
 
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FF0000"
-        android:text="No data" />
-    
-    <Button
-        android:id="@+id/conventionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+	<TextView
+			android:id="@android:id/empty"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="#FF0000"
+			android:text="No data"/>
+
+	<Button
+			android:id="@+id/conventionButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
 
 </LinearLayout>

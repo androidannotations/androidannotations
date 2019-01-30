@@ -38,7 +38,7 @@ import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JConditional;
 import com.helger.jcodemodel.JInvocation;
 
-public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder>implements MethodInjectionHandler<EBeanHolder> {
+public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> implements MethodInjectionHandler<EBeanHolder> {
 
 	private final InjectHelper<EBeanHolder> injectHelper;
 

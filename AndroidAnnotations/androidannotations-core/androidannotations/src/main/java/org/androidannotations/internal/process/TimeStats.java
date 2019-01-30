@@ -68,10 +68,10 @@ public class TimeStats {
 		Collections.sort(durations);
 		for (Duration duration : durations) {
 			sb.append("[") //
-				.append(duration.key) //
-				.append(" = ") //
-				.append(duration.durationInMs) //
-				.append(" ms], ");
+					.append(duration.key) //
+					.append(" = ") //
+					.append(duration.durationInMs) //
+					.append(" ms], ");
 		}
 
 		return sb.toString();

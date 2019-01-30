@@ -63,10 +63,18 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		File generatedFile = toGeneratedFile(ServiceWithServiceAction.class);
 
 		assertCompilationSuccessful(result);
+		// CHECKSTYLE:OFF
+		String[] doc = new String[] { //
+				"         * this is a javadoc comment", //
+				"         * ", //
+				"         *  @param param", //
+				"         *             this is a param", //
+				"         * ", //
+				"         * @return", //
+				"         *     the IntentBuilder to chain calls" };
+		// CHECKSTYLE:ON
 
-		assertGeneratedClassMatches(generatedFile, ".*\\* this is a javadoc comment");
-		assertGeneratedClassMatches(generatedFile, ".*\\*  @param param this is a param");
-		assertGeneratedClassMatches(generatedFile, ".*\\* @return");
+		assertGeneratedClassContains(generatedFile, doc);
 	}
 
 	@Test
@@ -80,6 +88,7 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		String[] fieldDoc = { //
 				"     * <p><b>Defaults to</b>: 42</p>", //
 				"     * The Age!", //
+				"     *  ", //
 				"     *  @deprecated use {@link #ageLong()}", //
 				"     * ", //
 				"     * @return", //
@@ -89,6 +98,7 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		};
 		String[] editorDoc = { //
 				"         * The Age!", //
+				"         *  ", //
 				"         *  @deprecated use {@link #ageLong()}", //
 				"         */", //
 				"        public IntPrefEditorField<SharedPrefWithJavaDoc_.SharedPrefWithJavaDocEditor_> age() {", //
@@ -118,7 +128,6 @@ public class GenerateJavaDocTest extends AAProcessorTestHelper {
 		// CHECKSTYLE:ON
 		assertGeneratedClassContains(generatedFile, fieldDoc);
 	}
-
 
 	@Test
 	public void generateJavaDocForNonEmptySharedPrefStringFields() throws IOException {

@@ -81,22 +81,21 @@ public @interface SharedPref {
 		 */
 		APPLICATION_DEFAULT, //
 		/**
-		 * The name of the SharedPreference will contain the name of the
-		 * Activity and the name annotated interface.
+		 * The name of the SharedPreference will contain the name of the Activity and
+		 * the name annotated interface.
 		 */
 		ACTIVITY, //
 
 		/**
-		 * The name of the SharedPreference will contain the name of the
-		 * Activity (also available through activity.getPreferences()).
+		 * The name of the SharedPreference will contain the name of the Activity (also
+		 * available through activity.getPreferences()).
 		 */
 		ACTIVITY_DEFAULT, //
 
 		/**
-		 * The name of the SharedPreference will be the name of the annotated
-		 * interface.
+		 * The name of the SharedPreference will be the name of the annotated interface.
 		 */
-		UNIQUE;
+		UNIQUE
 	}
 
 	/**

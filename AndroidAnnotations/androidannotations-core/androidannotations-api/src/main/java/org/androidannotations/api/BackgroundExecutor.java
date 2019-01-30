@@ -124,8 +124,8 @@ public final class BackgroundExecutor {
 	 * @param task
 	 *            the task to execute
 	 * @throws IllegalArgumentException
-	 *             if <code>task.delay</code> is strictly positive and the
-	 *             current executor does not support scheduling (if
+	 *             if <code>task.delay</code> is strictly positive and the current
+	 *             executor does not support scheduling (if
 	 *             {@link #setExecutor(Executor)} has been called with such an
 	 *             executor)
 	 */
@@ -206,8 +206,8 @@ public final class BackgroundExecutor {
 	 * @param id
 	 *            identifier used for task cancellation
 	 * @param serial
-	 *            the serial queue to use (<code>null</code> or <code>""</code>
-	 *            for no serial execution)
+	 *            the serial queue to use (<code>null</code> or <code>""</code> for
+	 *            no serial execution)
 	 */
 	public static void execute(Runnable runnable, String id, String serial) {
 		execute(runnable, id, 0, serial);
@@ -217,8 +217,8 @@ public final class BackgroundExecutor {
 	 * Change the executor.
 	 * 
 	 * Note that if the given executor is not a {@link ScheduledExecutorService}
-	 * then executing a task after a delay will not be supported anymore. If it
-	 * is not even a {@link ExecutorService} then tasks will not be cancellable
+	 * then executing a task after a delay will not be supported anymore. If it is
+	 * not even a {@link ExecutorService} then tasks will not be cancellable
 	 * anymore.
 	 * 
 	 * @param executor
@@ -229,8 +229,8 @@ public final class BackgroundExecutor {
 	}
 
 	/**
-	 * Changes the default {@link WrongThreadListener}. To restore the default
-	 * one use {@link #DEFAULT_WRONG_THREAD_LISTENER}.
+	 * Changes the default {@link WrongThreadListener}. To restore the default one
+	 * use {@link #DEFAULT_WRONG_THREAD_LISTENER}.
 	 *
 	 * @param listener
 	 *            the new {@link WrongThreadListener}
@@ -246,8 +246,7 @@ public final class BackgroundExecutor {
 	 *            the cancellation identifier
 	 * @param mayInterruptIfRunning
 	 *            <code>true</code> if the thread executing this task should be
-	 *            interrupted; otherwise, in-progress tasks are allowed to
-	 *            complete
+	 *            interrupted; otherwise, in-progress tasks are allowed to complete
 	 */
 	public static synchronized void cancelAll(String id, boolean mayInterruptIfRunning) {
 		for (int i = TASKS.size() - 1; i >= 0; i--) {
@@ -257,9 +256,8 @@ public final class BackgroundExecutor {
 					task.future.cancel(mayInterruptIfRunning);
 					if (!task.managed.getAndSet(true)) {
 						/*
-						 * the task has been submitted to the executor, but its
-						 * execution has not started yet, so that its run()
-						 * method will never call postExecute()
+						 * the task has been submitted to the executor, but its execution has not
+						 * started yet, so that its run() method will never call postExecute()
 						 */
 						task.postExecute();
 					}
@@ -275,8 +273,7 @@ public final class BackgroundExecutor {
 
 	/**
 	 * Checks if the current thread is UI thread and notifies
-	 * {@link BackgroundExecutor.WrongThreadListener#onUiExpected()} if it
-	 * doesn't.
+	 * {@link BackgroundExecutor.WrongThreadListener#onUiExpected()} if it doesn't.
 	 */
 	public static void checkUiThread() {
 		if (Looper.getMainLooper().getThread() != Thread.currentThread()) {
@@ -286,17 +283,16 @@ public final class BackgroundExecutor {
 
 	/**
 	 * Checks if the current thread is a background thread and, optionally,
-	 * restricts it with passed serials. If no serials passed and current thread
-	 * is the UI thread, then
-	 * {@link WrongThreadListener#onBgExpected(String...)} will be called. If
-	 * the current thread is not UI and serials list is empty, then this method
-	 * just returns. Otherwise, if the method was called not during {@link Task}
-	 * execution or the task has no serial, then the
-	 * {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be
-	 * called with null for the first parameter. If task has a serial but passed
-	 * serials don't contain that, then
-	 * {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be
-	 * called with the task's serial for the first parameter.
+	 * restricts it with passed serials. If no serials passed and current thread is
+	 * the UI thread, then {@link WrongThreadListener#onBgExpected(String...)} will
+	 * be called. If the current thread is not UI and serials list is empty, then
+	 * this method just returns. Otherwise, if the method was called not during
+	 * {@link Task} execution or the task has no serial, then the
+	 * {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be called
+	 * with null for the first parameter. If task has a serial but passed serials
+	 * don't contain that, then
+	 * {@link WrongThreadListener#onWrongBgSerial(String, String...)} will be called
+	 * with the task's serial for the first parameter.
 	 *
 	 * @param serials
 	 *            (optional) list of allowed serials
@@ -340,8 +336,8 @@ public final class BackgroundExecutor {
 	}
 
 	/**
-	 * Retrieve and remove the first task having the specified
-	 * <code>serial</code> (if any).
+	 * Retrieve and remove the first task having the specified <code>serial</code>
+	 * (if any).
 	 * 
 	 * @param serial
 	 *            the serial queue
@@ -367,16 +363,15 @@ public final class BackgroundExecutor {
 		private Future<?> future;
 
 		/*
-		 * A task can be cancelled after it has been submitted to the executor
-		 * but before its run() method is called. In that case, run() will never
-		 * be called, hence neither will postExecute(): the tasks with the same
-		 * serial identifier (if any) will never be submitted.
+		 * A task can be cancelled after it has been submitted to the executor but
+		 * before its run() method is called. In that case, run() will never be called,
+		 * hence neither will postExecute(): the tasks with the same serial identifier
+		 * (if any) will never be submitted.
 		 * 
-		 * Therefore, cancelAll() *must* call postExecute() if run() is not
-		 * started.
+		 * Therefore, cancelAll() *must* call postExecute() if run() is not started.
 		 * 
-		 * This flag guarantees that either cancelAll() or run() manages this
-		 * task post execution, but not both.
+		 * This flag guarantees that either cancelAll() or run() manages this task post
+		 * execution, but not both.
 		 */
 		private AtomicBoolean managed = new AtomicBoolean();
 
@@ -438,8 +433,8 @@ public final class BackgroundExecutor {
 	}
 
 	/**
-	 * A callback interface to be notified when a method invocation is expected
-	 * from another thread.
+	 * A callback interface to be notified when a method invocation is expected from
+	 * another thread.
 	 *
 	 * @see #setWrongThreadListener(WrongThreadListener)
 	 * @see #checkUiThread()
@@ -450,8 +445,8 @@ public final class BackgroundExecutor {
 	public interface WrongThreadListener {
 
 		/**
-		 * Will be called, if the method is supposed to be called from the
-		 * UI-thread, but was called from a background thread.
+		 * Will be called, if the method is supposed to be called from the UI-thread,
+		 * but was called from a background thread.
 		 *
 		 * @see org.androidannotations.annotations.SupposeUiThread
 		 * @see #setWrongThreadListener(WrongThreadListener)
@@ -460,12 +455,12 @@ public final class BackgroundExecutor {
 		void onUiExpected();
 
 		/**
-		 * Will be called, if the method is supposed to be called from a
-		 * background thread, but was called from the UI-thread.
+		 * Will be called, if the method is supposed to be called from a background
+		 * thread, but was called from the UI-thread.
 		 *
 		 * @param expectedSerials
-		 *            a list of allowed serials. If any background thread is
-		 *            allowed the list will be empty.
+		 *            a list of allowed serials. If any background thread is allowed the
+		 *            list will be empty.
 		 * @see org.androidannotations.annotations.SupposeBackground
 		 * @see #setWrongThreadListener(WrongThreadListener)
 		 * @see #DEFAULT_WRONG_THREAD_LISTENER
@@ -473,10 +468,10 @@ public final class BackgroundExecutor {
 		void onBgExpected(String... expectedSerials);
 
 		/**
-		 * Will be called, if the method is supposed to be called from a
-		 * background thread with one of {@code expectedSerials}, but was called
-		 * from a {@code currentSerial}. {@code currentSerial} will be null, if
-		 * it is called from a background thread without a serial.
+		 * Will be called, if the method is supposed to be called from a background
+		 * thread with one of {@code expectedSerials}, but was called from a
+		 * {@code currentSerial}. {@code currentSerial} will be null, if it is called
+		 * from a background thread without a serial.
 		 *
 		 * @param currentSerial
 		 *            the serial of caller thread or null if there is no serial

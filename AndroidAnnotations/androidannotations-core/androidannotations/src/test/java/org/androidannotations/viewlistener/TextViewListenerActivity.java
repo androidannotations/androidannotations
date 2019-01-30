@@ -25,7 +25,7 @@ public class TextViewListenerActivity extends AbstractViewListenerActivity {
 	@EditorAction(R.id.view)
 	protected void onEditorAction() {
 	}
-	
+
 	@EditorAction
 	void view2EditorAction() {
 	}

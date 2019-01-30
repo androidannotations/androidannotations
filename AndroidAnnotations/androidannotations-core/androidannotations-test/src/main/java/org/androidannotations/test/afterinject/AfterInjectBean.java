@@ -23,18 +23,17 @@ import android.app.NotificationManager;
 
 @EBean
 public class AfterInjectBean {
-	
+
 	public boolean afterInjectCalled = false;
 	public boolean notificationManagerNullAfterInject = true;
 
 	@SystemService
 	NotificationManager notificationManager;
-	
+
 	@AfterInject
 	void afterInject() {
 		afterInjectCalled = true;
 		notificationManagerNullAfterInject = notificationManager == null;
 	}
-	
-	
+
 }

@@ -23,11 +23,10 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.roboguice.annotations.RoboGuice;
 
-import android.app.Activity;
-import android.widget.TextView;
-
 import com.google.inject.Inject;
 
+import android.app.Activity;
+import android.widget.TextView;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 

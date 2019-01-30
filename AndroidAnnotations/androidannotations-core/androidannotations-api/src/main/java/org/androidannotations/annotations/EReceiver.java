@@ -47,6 +47,7 @@ import org.androidannotations.api.KotlinOpen;
  * 
  * }
  * </pre>
+ * 
  * </blockquote>
  * 
  * @see AfterInject
