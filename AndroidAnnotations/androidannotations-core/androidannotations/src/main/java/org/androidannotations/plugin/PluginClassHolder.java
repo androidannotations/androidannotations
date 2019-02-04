@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2019 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,10 +16,12 @@
  */
 package org.androidannotations.plugin;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
 import org.androidannotations.holder.GeneratedClassHolder;
+import org.androidannotations.internal.process.ProcessHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.JCodeModel;
@@ -59,4 +62,13 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 	protected JCodeModel getCodeModel() {
 		return environment().getCodeModel();
 	}
+
+	protected ProcessingEnvironment getProcessingEnvironment() {
+		return environment().getProcessingEnvironment();
+	}
+
+	protected ProcessHolder.Classes getClasses() {
+		return environment().getClasses();
+	}
+
 }
