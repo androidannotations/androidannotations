@@ -20,6 +20,7 @@ import static com.helger.jcodemodel.JExpr._null;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
@@ -81,6 +82,14 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> impleme
 		String typeQualifiedName = typeMirror.toString();
 		AbstractJClass injectedClass = getJClass(annotationHelper.generatedClassQualifiedNameFromQualifiedName(typeQualifiedName));
 		JInvocation beanInstance = injectedClass.staticInvoke(EBeanHolder.GET_INSTANCE_METHOD_NAME).arg(holder.getContextRef());
+
+		TypeElement declaredEBean = getProcessingEnvironment().getElementUtils().getTypeElement(typeQualifiedName);
+		if (declaredEBean != null) {
+			EBean annotation = declaredEBean.getAnnotation(EBean.class);
+			if (annotation.scope() == EBean.Scope.Default) {
+				beanInstance.arg(holder.getRootFragmentRef());
+			}
+		}
 
 		IJStatement assignment = fieldRef.assign(beanInstance);
 		if (param.getKind() == ElementKind.FIELD) {

@@ -42,15 +42,18 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	public static final String GET_INSTANCE_METHOD_NAME = "getInstance" + generationSuffix();
 
+	private JFieldVar rootFragmentField;
 	private JFieldVar contextField;
+
 	private JMethod constructor;
+	private JMethod overloadedConstructor;
 
 	public EBeanHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
-		setConstructor();
+		setConstructors();
 	}
 
-	private void setConstructor() {
+	private void setConstructors() {
 		constructor = generatedClass.constructor(PRIVATE);
 		JVar constructorContextParam = constructor.param(getClasses().CONTEXT, "context");
 		JBlock constructorBody = constructor.body();
@@ -60,6 +63,16 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 			constructorBody.add(JExpr.invokeSuper().arg(constructorContextParam));
 		}
 		constructorBody.assign(getContextField(), constructorContextParam);
+
+		overloadedConstructor = generatedClass.constructor(PRIVATE);
+		JVar overloadedConstructorContextParam = overloadedConstructor.param(getClasses().CONTEXT, "context");
+		JVar overloadedConstructorRootFragmentParam = overloadedConstructor.param(getClasses().OBJECT, "rootFragment");
+		JBlock overloadedConstructorBody = overloadedConstructor.body();
+		if (superConstructor.getParameters().size() == 1) {
+			overloadedConstructorBody.add(JExpr.invokeSuper().arg(constructorContextParam));
+		}
+		overloadedConstructorBody.assign(getContextField(), overloadedConstructorContextParam);
+		overloadedConstructorBody.assign(getRootFragmentField(), overloadedConstructorRootFragmentParam);
 	}
 
 	public JFieldVar getContextField() {
@@ -69,9 +82,21 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 		return contextField;
 	}
 
+	public JFieldVar getRootFragmentField() {
+		if (rootFragmentField == null) {
+			rootFragmentField = generatedClass.field(PRIVATE, getClasses().OBJECT, "rootFragment" + generationSuffix());
+		}
+		return rootFragmentField;
+	}
+
 	@Override
 	protected void setContextRef() {
 		contextRef = getContextField();
+	}
+
+	@Override
+	protected void setRootFragmentRef() {
+		rootFragmentRef = getRootFragmentField();
 	}
 
 	@Override
@@ -79,9 +104,12 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 	}
 
-	public void invokeInitInConstructor() {
+	public void invokeInitInConstructors() {
 		JBlock constructorBody = constructor.body();
 		constructorBody.invoke(getInit());
+
+		JBlock overloadedConstructorBody = overloadedConstructor.body();
+		overloadedConstructorBody.invoke(getInit());
 	}
 
 	public void createFactoryMethod(boolean hasSingletonScope) {
@@ -114,7 +142,20 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 			factoryMethodBody._return(instanceField);
 		} else {
 			factoryMethodBody._return(_new(narrowedGeneratedClass).arg(factoryMethodContextParam));
+			createOverloadedFactoryMethod();
 		}
+	}
+
+	private void createOverloadedFactoryMethod() {
+		AbstractJClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType());
+		JMethod factoryMethod = generatedClass.method(PUBLIC | STATIC, narrowedGeneratedClass, GET_INSTANCE_METHOD_NAME);
+		codeModelHelper.generify(factoryMethod, annotatedElement);
+
+		JVar factoryMethodContextParam = factoryMethod.param(getClasses().CONTEXT, "context");
+		JVar factoryMethodRootFragmentParam = factoryMethod.param(getClasses().OBJECT, "rootFragment");
+
+		JBlock factoryMethodBody = factoryMethod.body();
+		factoryMethodBody._return(_new(narrowedGeneratedClass).arg(factoryMethodContextParam).arg(factoryMethodRootFragmentParam));
 	}
 
 	public void createRebindMethod() {

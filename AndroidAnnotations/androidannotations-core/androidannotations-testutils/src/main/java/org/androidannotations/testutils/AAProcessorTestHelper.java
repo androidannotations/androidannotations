@@ -43,6 +43,14 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 		return classOfPackagingContainingFile.getResource(filename).getPath();
 	}
 
+	public String[] defPath(String... filesName) {
+		String[] paths = new String[filesName.length];
+		for (int i = 0; i < filesName.length; i++) {
+			paths[i] = toPath(this.getClass(), filesName[i]);
+		}
+		return paths;
+	}
+
 	/**
 	 * This module cannot depend on androidannotations module, because that would
 	 * introduce a cycle in the dependency graph. That is why we cannot directly

@@ -293,6 +293,10 @@ public class ProcessorTestHelper {
 				addCollection(files, (Type) element);
 			} else if (element instanceof String) {
 				files.add(new File((String) element));
+			} else if (element instanceof String[]) {
+				for (String subElement : (String[]) element) {
+					files.add(new File(subElement));
+				}
 			}
 		}
 		return compileFiles(files);
