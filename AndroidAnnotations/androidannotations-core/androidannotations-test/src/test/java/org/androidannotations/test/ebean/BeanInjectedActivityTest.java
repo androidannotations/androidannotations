@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2019 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -79,42 +80,23 @@ public class BeanInjectedActivityTest {
 	}
 
 	@Test
-	public void singletonDependencyIsSameReference() {
-		SomeSingleton initialDependency = activity.singletonDependency;
-
-		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
-
-		assertThat(newActivity.singletonDependency).isSameAs(initialDependency);
-	}
-
-	@Test
-	public void methodInjectedSingletonDependencyIsSameReference() {
-		SomeSingleton initialDependency = activity.methodInjectedSingleton;
-
-		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
-
-		assertThat(newActivity.methodInjectedSingleton).isSameAs(initialDependency);
-	}
-
-	@Test
-	public void methodAnnotatedParamsSingletonDependencyIsSameReference() {
-		SomeSingleton initialDependency = activity.annotatedParamSingleton;
-
-		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
-
-		assertThat(newActivity.annotatedParamSingleton).isSameAs(initialDependency);
-	}
-
-	@Test
 	public void multipleDependenciesInjected() {
 		assertThat(activity.multiDependency).isNotNull();
 		assertThat(activity.multiDependencyInterface).isNotNull();
 		assertThat(activity.multiDependencySingleton).isNotNull();
-
+		assertThat(activity.multiDependencyActivityScopedBean).isNotNull();
+		assertThat(activity.multiDependencyFragmentScopedBean).isNotNull();
 		assertThat(activity.multiDependencyInterface).isInstanceOf(SomeImplementation.class);
 
-		SomeSingleton initialDependency = activity.multiDependencySingleton;
 		BeanInjectedActivity_ newActivity = Robolectric.buildActivity(BeanInjectedActivity_.class).create().get();
-		assertThat(newActivity.multiDependencySingleton).isSameAs(initialDependency);
+
+		SomeSingleton initialSingletonDependency = activity.multiDependencySingleton;
+		assertThat(newActivity.multiDependencySingleton).isSameAs(initialSingletonDependency);
+
+		ActivityScopedBean initialActivityScopedDependency = activity.multiDependencyActivityScopedBean;
+		assertThat(newActivity.multiDependencyActivityScopedBean).isNotSameAs(initialActivityScopedDependency);
+
+		FragmentScopedBean initialFragmentScopedDependency = activity.multiDependencyFragmentScopedBean;
+		assertThat(newActivity.multiDependencyFragmentScopedBean).isNotSameAs(initialFragmentScopedDependency);
 	}
 }

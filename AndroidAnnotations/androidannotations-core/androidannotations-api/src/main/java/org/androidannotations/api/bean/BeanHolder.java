@@ -13,32 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.androidannotations.test.ebean;
+package org.androidannotations.api.bean;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EFragment;
+public interface BeanHolder {
 
-import android.app.Fragment;
+	<T> T getBean(Class<T> key);
 
-@EFragment
-public class CustomFragment extends Fragment {
-
-	@Bean
-	SomeBeanWithRootFragment someBean;
-
-	@Bean
-	SomeBeanWithRootFragmentWithCustomFragment someBeanWithCustomFragment;
-
-	@Bean
-	SomeBeanWithRootFragmentWithDifferentFragment someBeanWithDifferentFragment;
-
-	@Bean
-	ActivityScopedBean activityScopedBean;
-
-	@Bean
-	FragmentScopedBean fragmentScopedBean1;
-
-	@Bean
-	FragmentScopedBean fragmentScopedBean2;
+	<T> void putBean(Class<T> key, T value);
 
 }

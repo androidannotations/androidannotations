@@ -21,24 +21,24 @@ import org.androidannotations.annotations.EFragment;
 import android.app.Fragment;
 
 @EFragment
-public class CustomFragment extends Fragment {
+public class CyclicBeansFragment extends Fragment {
 
 	@Bean
-	SomeBeanWithRootFragment someBean;
+	SomeCyclicSingletonA singletonA;
 
 	@Bean
-	SomeBeanWithRootFragmentWithCustomFragment someBeanWithCustomFragment;
+	SomeCyclicSingletonB singletonB;
 
 	@Bean
-	SomeBeanWithRootFragmentWithDifferentFragment someBeanWithDifferentFragment;
+	SomeCyclicActivityScopedA cyclicActivityScopedA;
 
 	@Bean
-	ActivityScopedBean activityScopedBean;
+	SomeCyclicActivityScopedB cyclicActivityScopedB;
 
 	@Bean
-	FragmentScopedBean fragmentScopedBean1;
+	SomeCyclicFragmentScopedA cyclicFragmentScopedA;
 
 	@Bean
-	FragmentScopedBean fragmentScopedBean2;
+	SomeCyclicFragmentScopedB cyclicFragmentScopedB;
 
 }

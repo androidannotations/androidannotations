@@ -86,7 +86,7 @@ public class BeanHandler extends BaseAnnotationHandler<EComponentHolder> impleme
 		TypeElement declaredEBean = getProcessingEnvironment().getElementUtils().getTypeElement(typeQualifiedName);
 		if (declaredEBean != null) {
 			EBean annotation = declaredEBean.getAnnotation(EBean.class);
-			if (annotation.scope() == EBean.Scope.Default) {
+			if (annotation.scope() != EBean.Scope.Singleton && annotation.scope() != EBean.Scope.Activity) {
 				beanInstance.arg(holder.getRootFragmentRef());
 			}
 		}

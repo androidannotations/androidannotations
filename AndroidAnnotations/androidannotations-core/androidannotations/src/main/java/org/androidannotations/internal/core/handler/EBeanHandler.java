@@ -51,11 +51,11 @@ public class EBeanHandler extends BaseGeneratingAnnotationHandler<EBeanHolder> {
 	public void process(Element element, EBeanHolder holder) {
 		EBean eBeanAnnotation = element.getAnnotation(EBean.class);
 		EBean.Scope eBeanScope = eBeanAnnotation.scope();
-		boolean hasSingletonScope = eBeanScope == EBean.Scope.Singleton;
+		boolean hasDefaultScope = eBeanScope == EBean.Scope.Default;
 
-		holder.createFactoryMethod(hasSingletonScope);
+		holder.createFactoryMethod(eBeanScope);
 
-		if (!hasSingletonScope) {
+		if (hasDefaultScope) {
 			holder.invokeInitInConstructors();
 			holder.createRebindMethod();
 		}

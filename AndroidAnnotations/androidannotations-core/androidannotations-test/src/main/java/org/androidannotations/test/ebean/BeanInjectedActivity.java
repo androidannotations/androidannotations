@@ -33,17 +33,29 @@ public class BeanInjectedActivity extends Activity {
 	@Bean
 	public SomeSingleton singletonDependency;
 
+	@Bean
+	public ActivityScopedBean activityScopedDependency;
+
+	@Bean
+	public FragmentScopedBean fragmentScopedDependency;
+
 	public EmptyDependency methodInjectedDependency;
-	public SomeSingleton methodInjectedSingleton;
 	public SomeInterface methodInjectedInterface;
+	public SomeSingleton methodInjectedSingleton;
+	public ActivityScopedBean methodInjectedActivityScoped;
+	public FragmentScopedBean methodInjectedFragmentScoped;
 
 	public EmptyDependency annotatedParamDependency;
-	public SomeSingleton annotatedParamSingleton;
 	public SomeInterface annotatedParamInterface;
+	public SomeSingleton annotatedParamSingleton;
+	public ActivityScopedBean annotatedParamActivityScoped;
+	public FragmentScopedBean annotatedParamFragmentScoped;
 
 	public EmptyDependency multiDependency;
-	public SomeSingleton multiDependencySingleton;
 	public SomeInterface multiDependencyInterface;
+	public SomeSingleton multiDependencySingleton;
+	public ActivityScopedBean multiDependencyActivityScopedBean;
+	public FragmentScopedBean multiDependencyFragmentScopedBean;
 
 	@Bean
 	protected void injectDependency(EmptyDependency methodInjectedDependency) {
@@ -60,6 +72,16 @@ public class BeanInjectedActivity extends Activity {
 		this.methodInjectedSingleton = methodInjectedSingleton;
 	}
 
+	@Bean
+	protected void injectActivityScope(ActivityScopedBean methodInjectedActivityScoped) {
+		this.methodInjectedActivityScoped = methodInjectedActivityScoped;
+	}
+
+	@Bean
+	protected void injectFragmentScope(FragmentScopedBean methodInjectedFragmentScoped) {
+		this.methodInjectedFragmentScoped = methodInjectedFragmentScoped;
+	}
+
 	protected void injectDependencyAnnotatedParam(@Bean EmptyDependency annotatedParamDependency) {
 		this.annotatedParamDependency = annotatedParamDependency;
 	}
@@ -72,10 +94,20 @@ public class BeanInjectedActivity extends Activity {
 		this.annotatedParamSingleton = annotatedParamSingleton;
 	}
 
+	protected void injectActivityScopedAnnotatedParam(@Bean ActivityScopedBean annotatedParamActivityScoped) {
+		this.annotatedParamActivityScoped = annotatedParamActivityScoped;
+	}
+
+	protected void injectFragmentScopedAnnotatedParam(@Bean FragmentScopedBean annotatedParamFragmentScoped) {
+		this.annotatedParamFragmentScoped = annotatedParamFragmentScoped;
+	}
+
 	protected void injectMultipleDependencies(@Bean EmptyDependency multiDependency, @Bean(SomeImplementation.class) SomeInterface multiDependencyInterface,
-			@Bean SomeSingleton multiDependencySingleton) {
+			@Bean SomeSingleton multiDependencySingleton, @Bean ActivityScopedBean multiDependencyActivityScopedBean, @Bean FragmentScopedBean multiDependecyFragmentScopedBean) {
 		this.multiDependency = multiDependency;
 		this.multiDependencyInterface = multiDependencyInterface;
 		this.multiDependencySingleton = multiDependencySingleton;
+		this.multiDependencyActivityScopedBean = multiDependencyActivityScopedBean;
+		this.multiDependencyFragmentScopedBean = multiDependecyFragmentScopedBean;
 	}
 }

@@ -15,11 +15,18 @@
  */
 package org.androidannotations.test.ebean;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 
 import android.app.Fragment;
 
 @EFragment
 public class DifferentFragment extends Fragment {
+
+	@Bean
+	ActivityScopedBean activityScopedBean;
+
+	@Bean
+	FragmentScopedBean fragmentScopedBean;
 
 }
