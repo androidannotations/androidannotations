@@ -8,6 +8,9 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.m2
 
+git:
+  depth: 9999999
+
 language: android
 
 jdk:
@@ -37,6 +40,8 @@ script:
   - ./gradlew assembleDebug
   - cd $TRAVIS_BUILD_DIR/examples/RoboGuiceExample
   - ./gradlew assembleDebug
+  - cd $TRAVIS_BUILD_DIR
+  - ./check_missing_copyright.sh
   - set +e
 
 after_success:
