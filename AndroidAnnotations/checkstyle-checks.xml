@@ -24,8 +24,8 @@
 	<property name="severity" value="error"/>
 	<module name="TreeWalker">
 		<property name="tabWidth" value="4"/>
-		<module name="FileContentsHolder"/>
 		<module name="SuppressWarningsHolder"/>
+		<module name="SuppressionCommentFilter"/>
 		<module name="LineLength">
 			<property name="max" value="200"/>
 		</module>
@@ -50,7 +50,7 @@
 		<module name="AvoidStarImport"/>
 		<module name="IllegalImport"/>
 		<module name="ImportOrder">
-			<property name="groups" value="/^javax?\./,org,com"/>
+			<property name="groups" value="/^java\./,javax,org,com"/>
 			<property name="ordered" value="true"/>
 			<property name="separated" value="true"/>
 			<property name="option" value="top"/>
@@ -83,9 +83,7 @@
 		<module name="AvoidNestedBlocks">
 			<property name="allowInSwitchCase" value="true"/>
 		</module>
-		<module name="LeftCurly">
-			<property name="maxLineLength" value="200"/>
-		</module>
+		<module name="LeftCurly"/>
 		<module name="NeedBraces"/>
 		<module name="RightCurly"/>
 		<module name="CovariantEquals"/>
@@ -96,6 +94,7 @@
 			<property name="option" value="text"/>
 		</module>
 		<module name="EqualsHashCode"/>
+		<module name="EqualsAvoidNull"/>
 		<module name="FallThrough"/>
 		<module name="IllegalThrows"/>
 		<module name="IllegalType">
@@ -159,7 +158,6 @@
 		<module name="CommentsIndentation"/>
 	</module>
 	<module name="FileLength"/>
-	<module name="SuppressionCommentFilter"/>
 	<module name="SuppressWarningsFilter"/>
 	<module name="SuppressionFilter">
 		<property name="file" value="${config_loc}/checkstyle-suppressions.xml"/>

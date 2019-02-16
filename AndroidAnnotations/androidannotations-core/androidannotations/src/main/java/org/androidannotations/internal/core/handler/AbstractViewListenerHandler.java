@@ -30,6 +30,7 @@ import org.androidannotations.rclass.IRClass.Res;
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.JDefinedClass;
 import com.helger.jcodemodel.JFieldRef;
+import com.helger.jcodemodel.JInvocation;
 
 public abstract class AbstractViewListenerHandler extends AbstractListenerHandler<EComponentWithViewSupportHolder> {
 
@@ -52,7 +53,8 @@ public abstract class AbstractViewListenerHandler extends AbstractListenerHandle
 		for (JFieldRef idRef : idsRefs) {
 			AbstractJClass listenerTargetClass = getListenerTargetClass(holder);
 			FoundViewHolder foundViewHolder = holder.getFoundViewHolder(idRef, listenerTargetClass);
-			foundViewHolder.getIfNotNullBlock().invoke(foundViewHolder.getOrCastRef(listenerTargetClass), getSetterName()).arg(_new(listenerAnonymousClass));
+			JInvocation invocation = foundViewHolder.getOrCastRef(listenerTargetClass).invoke(getSetterName()).arg(_new(listenerAnonymousClass));
+			foundViewHolder.getIfNotNullBlock().add(invocation);
 		}
 	}
 

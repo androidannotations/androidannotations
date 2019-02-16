@@ -27,4 +27,5 @@
 	<suppress files="(com|android)[\\/]" checks="JavadocType|JavadocMethod|JavadocVariable|JavadocStyle"/>
 	<suppress files="R.java" checks=".*"/>
 	<suppress files="generated-sources" checks=".*"/>
+	<suppress files="src/test/resources" checks="PackageDeclaration"/>
 </suppressions>

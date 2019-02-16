@@ -32,6 +32,7 @@ import org.androidannotations.AndroidAnnotationsEnvironment;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JVar;
@@ -55,7 +56,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 		List<ExecutableElement> constructors = ElementFilter.constructorsIn(annotatedElement.getEnclosedElements());
 		ExecutableElement superConstructor = constructors.get(0);
 		if (superConstructor.getParameters().size() == 1) {
-			constructorBody.invoke("super").arg(constructorContextParam);
+			constructorBody.add(JExpr.invokeSuper().arg(constructorContextParam));
 		}
 		constructorBody.assign(getContextField(), constructorContextParam);
 	}

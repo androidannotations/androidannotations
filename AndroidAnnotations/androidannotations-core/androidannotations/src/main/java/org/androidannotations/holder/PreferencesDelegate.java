@@ -92,7 +92,7 @@ public class PreferencesDelegate extends GeneratedClassHolderDelegate<EComponent
 		JMethod method = getGeneratedClass().method(PUBLIC, codeModel().VOID, "addPreferencesFromResource");
 		method.annotate(Override.class);
 		JVar preferencesResIdParam = method.param(int.class, "preferencesResId");
-		method.body().invoke(JExpr._super(), "addPreferencesFromResource").arg(preferencesResIdParam);
+		method.body().add(JExpr._super().invoke("addPreferencesFromResource").arg(preferencesResIdParam));
 		addPreferencesFromResourceInjectionBlock = method.body().blockVirtual();
 		addPreferencesFromResourceAfterInjectionBlock = method.body().blockVirtual();
 	}

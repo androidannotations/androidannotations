@@ -118,7 +118,7 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		JMethod constructor = holder.getIntentBuilderClass().constructor(JMod.PUBLIC);
 		JVar constructorFragmentParam = constructor.param(fragmentClass, "fragment");
 		JBlock constructorBody = constructor.body();
-		constructorBody.invoke("super").arg(constructorFragmentParam.invoke("getActivity")).arg(generatedClass);
+		constructorBody.add(JExpr.invokeSuper().arg(constructorFragmentParam.invoke("getActivity")).arg(generatedClass));
 		constructorBody.assign(fragmentField, constructorFragmentParam);
 
 		return fragmentField;
@@ -136,7 +136,8 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		if (fragmentSupportField != null) {
 			condition = body._if(fragmentSupportField.ne(JExpr._null()));
 			condition._then() //
-					.invoke(fragmentSupportField, "startActivityForResult").arg(intentField).arg(requestCode);
+					.add(fragmentSupportField.invoke("startActivityForResult").arg(intentField).arg(requestCode));
+
 		}
 		if (fragmentField != null) {
 			if (condition == null) {
@@ -152,8 +153,8 @@ public class ActivityIntentBuilder extends IntentBuilder {
 			} else {
 				fragmentStartForResultInvocationBlock = condition._then();
 			}
-			JInvocation invocation = fragmentStartForResultInvocationBlock //
-					.invoke(fragmentField, "startActivityForResult").arg(intentField).arg(requestCode);
+			JInvocation invocation = fragmentField.invoke("startActivityForResult").arg(intentField).arg(requestCode);
+			fragmentStartForResultInvocationBlock.add(invocation);
 			if (hasActivityOptionsInFragment()) {
 				invocation.arg(optionsField);
 			}
@@ -173,8 +174,8 @@ public class ActivityIntentBuilder extends IntentBuilder {
 
 		AbstractJClass activityCompat = getActivityCompat();
 		if (activityCompat != null) {
-			thenBlock.staticInvoke(activityCompat, "startActivityForResult") //
-					.arg(activityVar).arg(intentField).arg(requestCode).arg(optionsField);
+			thenBlock.add(activityCompat.staticInvoke("startActivityForResult") //
+					.arg(activityVar).arg(intentField).arg(requestCode).arg(optionsField));
 		} else if (hasActivityOptionsInFragment()) {
 			JBlock startForResultInvocationBlock;
 			if (shouldGuardActivityOptions()) {
@@ -183,10 +184,10 @@ public class ActivityIntentBuilder extends IntentBuilder {
 				startForResultInvocationBlock = thenBlock;
 			}
 
-			startForResultInvocationBlock.invoke(activityVar, "startActivityForResult") //
-					.arg(intentField).arg(requestCode).arg(optionsField);
+			startForResultInvocationBlock.add(activityVar.invoke("startActivityForResult") //
+					.arg(intentField).arg(requestCode).arg(optionsField));
 		} else {
-			thenBlock.invoke(activityVar, "startActivityForResult").arg(intentField).arg(requestCode);
+			thenBlock.add(activityVar.invoke("startActivityForResult").arg(intentField).arg(requestCode));
 		}
 
 		if (hasActivityOptionsInFragment()) {
@@ -196,9 +197,9 @@ public class ActivityIntentBuilder extends IntentBuilder {
 			} else {
 				startInvocationBlock = activityCondition._else();
 			}
-			startInvocationBlock.invoke(contextField, "startActivity").arg(intentField).arg(optionsField);
+			startInvocationBlock.add(contextField.invoke("startActivity").arg(intentField).arg(optionsField));
 		} else {
-			activityCondition._else().invoke(contextField, "startActivity").arg(intentField);
+			activityCondition._else().add(contextField.invoke("startActivity").arg(intentField));
 		}
 
 		body._return(_new(postActivityStarterClass).arg(contextField));
@@ -209,7 +210,8 @@ public class ActivityIntentBuilder extends IntentBuilder {
 		JBlock startInvocationBlock = guardIf._then();
 		String methodName = requestCode != null ? "startActivityForResult" : "startActivity";
 
-		JInvocation invocation = guardIf._else().invoke(invocationTarget, methodName).arg(intentField);
+		JInvocation invocation = invocationTarget.invoke(methodName).arg(intentField);
+		guardIf._else().add(invocation);
 		if (requestCode != null) {
 			invocation.arg(requestCode);
 		}

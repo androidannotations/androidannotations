@@ -86,7 +86,7 @@ public class AndroidManifestFinder {
 					properties.load(new FileInputStream(projectProperties));
 					if (properties.containsKey("android.library")) {
 						String androidLibraryProperty = properties.getProperty("android.library");
-						libraryProject = androidLibraryProperty.equals("true");
+						libraryProject = "true".equals(androidLibraryProperty);
 
 						LOGGER.debug("Found android.library={} property in project.properties", libraryProject);
 					}

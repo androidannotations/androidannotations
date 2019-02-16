@@ -44,7 +44,6 @@ import com.helger.jcodemodel.JVar;
 
 public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> extends BaseAnnotationHandler<T> {
 
-	private T holder;
 	private String methodName;
 
 	public AbstractListenerHandler(Class<?> targetClass, AndroidAnnotationsEnvironment environment) {
@@ -70,7 +69,6 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 	@Override
 	public void process(Element element, T holder) {
-		this.holder = holder;
 		methodName = element.getSimpleName().toString();
 
 		ExecutableElement executableElement = (ExecutableElement) element;
@@ -128,10 +126,6 @@ public abstract class AbstractListenerHandler<T extends GeneratedClassHolder> ex
 
 	protected String getMethodName() {
 		return methodName;
-	}
-
-	protected final T getHolder() {
-		return holder;
 	}
 
 	protected abstract IRClass.Res getResourceType();

@@ -22,8 +22,8 @@ import org.androidannotations.test.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.util.FragmentTestUtil;
 
 import android.preference.Preference;
 
@@ -34,8 +34,7 @@ public class PreferenceAnnotationsFragmentTest {
 
 	@Before
 	public void setUp() {
-		fragment = new PreferenceAnnotationsFragment_();
-		FragmentTestUtil.startFragment(fragment);
+		fragment = Robolectric.buildFragment(PreferenceAnnotationsFragment_.class).create().start().resume().get();
 	}
 
 	@Test

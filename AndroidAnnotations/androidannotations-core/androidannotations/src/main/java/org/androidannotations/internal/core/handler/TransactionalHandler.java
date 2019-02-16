@@ -86,7 +86,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 			superCall.arg(param);
 		}
 		JBlock tryBody = tryBlock.body();
-		if (returnTypeName.equals("void")) {
+		if ("void".equals(returnTypeName)) {
 			tryBody.add(superCall);
 			tryBody.invoke(db, "setTransactionSuccessful");
 			tryBody._return();
@@ -102,11 +102,12 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 
 		JBlock catchBody = catchBlock.body();
 
-		JInvocation errorInvoke = catchBody.staticInvoke(getClasses().LOG, "e");
+		JInvocation errorInvoke = getClasses().LOG.staticInvoke("e") //
+				.arg(logTagForClassHolder(holder)) //
+				.arg("Error in transaction") //
+				.arg(exceptionParam);
 
-		errorInvoke.arg(logTagForClassHolder(holder));
-		errorInvoke.arg("Error in transaction");
-		errorInvoke.arg(exceptionParam);
+		catchBody.add(errorInvoke);
 
 		catchBody._throw(exceptionParam);
 

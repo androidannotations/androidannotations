@@ -50,6 +50,7 @@ import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JClassAlreadyExistsException;
 import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JInvocation;
@@ -105,7 +106,7 @@ public abstract class IntentBuilder {
 		IJExpression generatedClass = holder.getGeneratedClass().dotclass();
 		JMethod constructor = holder.getIntentBuilderClass().constructor(JMod.PUBLIC);
 		JVar constructorContextParam = constructor.param(getClasses().CONTEXT, "context");
-		constructor.body().invoke("super").arg(constructorContextParam).arg(generatedClass);
+		constructor.body().add(JExpr.invokeSuper().arg(constructorContextParam).arg(generatedClass));
 	}
 
 	private void createIntentMethod() {
@@ -149,7 +150,6 @@ public abstract class IntentBuilder {
 		IJExpression extraParameterArg = extraParam;
 		// Cast to Parcelable, wrap with Parcels.wrap or cast Serializable if needed
 		if (elementType.getKind() == TypeKind.DECLARED) {
-			Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
 			if (typeUtils.isSubtype(elementType, parcelableType)) {
 				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();

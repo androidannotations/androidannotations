@@ -212,10 +212,10 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 
 		JSynchronizedBlock synchronizedBlock = onContentChangedAfterSuperBlock.synchronizedBlock(getJClass(RoboGuiceClasses.CONTEXT_SCOPE).dotclass());
 		JBlock synchronizedBlockBody = synchronizedBlock.body();
-		synchronizedBlockBody.invoke(scope, "enter").arg(_this());
+		synchronizedBlockBody.add(scope.invoke("enter").argThis());
 		JTryBlock tryBlock = synchronizedBlockBody._try();
-		tryBlock.body().staticInvoke(getJClass(RoboGuiceHelper.class), "callInjectViews").arg(_this());
-		tryBlock._finally().invoke(scope, "exit").arg(_this());
+		tryBlock.body().add(getJClass(RoboGuiceHelper.class).staticInvoke("callInjectViews").argThis());
+		tryBlock._finally().add(scope.invoke("exit").argThis());
 		onContentChangedAfterSuperBlock.add(synchronizedBlock);
 
 		fireEvent(eventManager, onContentChangedAfterSuperBlock, getJClass(RoboGuiceClasses.ON_CONTENT_CHANGED_EVENT));
@@ -241,7 +241,7 @@ public class RoboGuiceHandler extends BaseAnnotationHandler<EActivityHolder> {
 		for (IJExpression eventArgument : eventArguments) {
 			newEvent.arg(eventArgument);
 		}
-		body.invoke(eventManager, "fire").arg(newEvent);
+		body.add(eventManager.invoke("fire").arg(newEvent));
 	}
 
 	private void getScopedObjectMap(EActivityHolder holder, JFieldVar scopedObjectMap) {

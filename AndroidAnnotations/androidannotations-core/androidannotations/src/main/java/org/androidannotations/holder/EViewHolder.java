@@ -97,7 +97,8 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 			codeModelHelper.generify(staticHelper, getAnnotatedElement());
 
 			JBlock body = copyConstructor.body();
-			JInvocation superCall = body.invoke("super");
+			JInvocation superCall = JExpr.invokeSuper();
+			body.add(superCall);
 			AbstractJClass narrowedGeneratedClass = narrow(generatedClass);
 
 			JInvocation newInvocation = JExpr._new(narrowedGeneratedClass);

@@ -131,12 +131,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 				String elementName = urlNameToElementName.get(urlVariable);
 				if (elementName != null) {
 					JVar methodParam = methodParams.get(elementName);
-					methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(methodParam);
+					methodBody.add(hashMapVar.invoke("put").arg(urlVariable).arg(methodParam));
 					methodParams.remove(elementName);
 				} else {
 					// cookie from url
 					JInvocation cookieValue = holder.getAvailableCookiesField().invoke("get").arg(JExpr.lit(urlVariable));
-					methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(cookieValue);
+					methodBody.add(hashMapVar.invoke("put").arg(urlVariable).arg(cookieValue));
 				}
 			}
 			return hashMapVar;
@@ -598,7 +598,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	private String extractParameter(VariableElement parameter, Class<? extends Annotation> clazz) {
 		String value = extractAnnotationParameter(parameter, clazz.getCanonicalName(), "value");
 
-		return !value.equals("") ? value : parameter.getSimpleName().toString();
+		return !"".equals(value) ? value : parameter.getSimpleName().toString();
 	}
 
 	public boolean hasRestApiMethodParameterAnnotation(VariableElement variableElement) {

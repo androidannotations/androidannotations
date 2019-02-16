@@ -57,10 +57,10 @@ public class ReceiverRegistrationDelegate<T extends EComponentHolder & HasReceiv
 
 		JBlock intentFilterTarget = holder.getIntentFilterInitializationBlock(intentFilterData);
 		for (String action : intentFilterData.getActionSet()) {
-			intentFilterTarget.invoke(intentFilterField, "addAction").arg(action);
+			intentFilterTarget.add(intentFilterField.invoke("addAction").arg(action));
 		}
 		for (String dataScheme : intentFilterData.getDataSchemeSet()) {
-			intentFilterTarget.invoke(intentFilterField, "addDataScheme").arg(dataScheme);
+			intentFilterTarget.add(intentFilterField.invoke("addDataScheme").arg(dataScheme));
 		}
 
 		return intentFilterField;
