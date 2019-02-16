@@ -177,33 +177,33 @@ public class SharedPrefHandler extends CoreBaseGeneratingAnnotationHandler<Share
 		switch (scope) {
 		case ACTIVITY_DEFAULT: {
 			JMethod getLocalClassName = getLocalClassName(holder);
-			constructorSuperBlock.invoke("super") //
+			constructorSuperBlock.add(JExpr.invokeSuper() //
 					.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam)) //
-							.arg(lit(mode)));
+							.arg(lit(mode))));
 			break;
 		}
 		case ACTIVITY: {
 			JMethod getLocalClassName = getLocalClassName(holder);
-			constructorSuperBlock.invoke("super") //
+			constructorSuperBlock.add(JExpr.invokeSuper() //
 					.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(invoke(getLocalClassName).arg(contextParam) //
 									.plus(lit("_" + name))) //
-							.arg(lit(mode)));
+							.arg(lit(mode))));
 			break;
 		}
 		case UNIQUE: {
-			constructorSuperBlock.invoke("super") //
+			constructorSuperBlock.add(JExpr.invokeSuper() //
 					.arg(contextParam.invoke("getSharedPreferences") //
 							.arg(lit(name)) //
-							.arg(lit(mode)));
+							.arg(lit(mode))));
 			break;
 		}
 		case APPLICATION_DEFAULT: {
 			AbstractJClass preferenceManagerClass = getJClass("android.preference.PreferenceManager");
-			constructorSuperBlock.invoke("super") //
+			constructorSuperBlock.add(JExpr.invokeSuper() //
 					.arg(preferenceManagerClass.staticInvoke("getDefaultSharedPreferences") //
-							.arg(contextParam));
+							.arg(contextParam)));
 			break;
 		}
 		}

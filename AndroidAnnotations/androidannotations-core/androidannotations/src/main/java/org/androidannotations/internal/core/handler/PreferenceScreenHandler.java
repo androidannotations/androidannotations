@@ -25,6 +25,7 @@ import org.androidannotations.helper.IdValidatorHelper;
 import org.androidannotations.holder.HasPreferences;
 import org.androidannotations.rclass.IRClass;
 
+import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
 
 public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreferences> {
@@ -44,6 +45,6 @@ public class PreferenceScreenHandler extends BaseAnnotationHandler<HasPreference
 	public void process(Element element, HasPreferences holder) throws Exception {
 		JFieldRef preferenceId = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.XML, false).get(0);
 
-		holder.getPreferenceScreenInitializationBlock().invoke("addPreferencesFromResource").arg(preferenceId);
+		holder.getPreferenceScreenInitializationBlock().add(JExpr.invoke("addPreferencesFromResource").arg(preferenceId));
 	}
 }

@@ -108,7 +108,7 @@ public class SharedPrefHolder extends BaseGeneratedClassHolder {
 		editorConstructor = editorClass.constructor(JMod.NONE);
 		AbstractJClass sharedPreferencesClass = getJClass("android.content.SharedPreferences");
 		JVar sharedPreferencesParam = editorConstructor.param(sharedPreferencesClass, "sharedPreferences");
-		editorConstructor.body().invoke("super").arg(sharedPreferencesParam);
+		editorConstructor.body().add(JExpr.invokeSuper().arg(sharedPreferencesParam));
 	}
 
 	private void createEditMethod() {

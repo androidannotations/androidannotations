@@ -26,6 +26,7 @@ import static com.helger.jcodemodel.JMod.STATIC;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
 
 import com.helger.jcodemodel.JBlock;
+import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JVar;
 
@@ -70,9 +71,9 @@ public class ViewInstanceStateDelegate extends GeneratedClassHolderDelegate<ECom
 		JVar onSaveSuperInstanceState = methodBody.decl(getClasses().PARCELABLE, "instanceState", _super().invoke("onSaveInstanceState"));
 
 		JVar bundleParam = methodBody.decl(getClasses().BUNDLE, "bundle" + generationSuffix(), _new(getClasses().BUNDLE));
-		methodBody.invoke(bundleParam, "putParcelable").arg(getInstanceStateKey()).arg(onSaveSuperInstanceState);
+		methodBody.add(bundleParam.invoke("putParcelable").arg(getInstanceStateKey()).arg(onSaveSuperInstanceState));
 
-		methodBody.invoke(saveStateMethod).arg(bundleParam);
+		methodBody.add(JExpr.invoke(saveStateMethod).arg(bundleParam));
 
 		methodBody._return(bundleParam);
 	}
@@ -112,7 +113,7 @@ public class ViewInstanceStateDelegate extends GeneratedClassHolderDelegate<ECom
 
 		restoreStateMethodBody = body.blockSimple();
 
-		body.invoke(_super(), "onRestoreInstanceState").arg(instanceState);
+		body.add(_super().invoke("onRestoreInstanceState").arg(instanceState));
 	}
 
 	private JVar getInstanceStateKey() {

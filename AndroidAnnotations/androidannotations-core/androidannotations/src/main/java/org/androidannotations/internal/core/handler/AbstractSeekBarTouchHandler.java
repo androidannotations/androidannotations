@@ -69,7 +69,8 @@ public abstract class AbstractSeekBarTouchHandler extends CoreBaseAnnotationHand
 			JBlock methodBody = getMethodBodyToCall(onSeekBarChangeListenerHolder);
 
 			IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
-			JInvocation textChangeCall = methodBody.invoke(activityRef, methodName);
+			JInvocation textChangeCall = activityRef.invoke(methodName);
+			methodBody.add(textChangeCall);
 
 			ExecutableElement executableElement = (ExecutableElement) element;
 			List<? extends VariableElement> parameters = executableElement.getParameters();

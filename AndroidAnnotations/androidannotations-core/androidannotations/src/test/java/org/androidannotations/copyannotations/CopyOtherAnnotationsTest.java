@@ -61,9 +61,7 @@ public class CopyOtherAnnotationsTest extends AAProcessorTestHelper {
 				"        \"hi\"", //
 				"    })", //
 				"    @Override", //
-				"    public void onEvent(", //
-				"        @Deprecated", //
-				"        final Event event) {", };
+				"    public void onEvent(@Deprecated final Event event) {", };
 		// CHECKSTYLE:ON
 
 		compileFiles(HasOtherAnnotations.class);

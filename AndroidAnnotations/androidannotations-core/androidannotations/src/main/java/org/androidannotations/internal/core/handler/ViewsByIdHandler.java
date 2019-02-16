@@ -132,7 +132,7 @@ public class ViewsByIdHandler extends BaseAnnotationHandler<EComponentWithViewSu
 
 	private void addViewToListIfNotNull(IJExpression elementRef, AbstractJClass viewClass, JFieldRef idRef, EComponentWithViewSupportHolder holder) {
 		FoundViewHolder foundViewHolder = holder.getFoundViewHolder(idRef, viewClass);
-		foundViewHolder.getIfNotNullBlock().invoke(elementRef, "add").arg(foundViewHolder.getOrCastRef(viewClass));
+		foundViewHolder.getIfNotNullBlock().add(elementRef.invoke("add").arg(foundViewHolder.getOrCastRef(viewClass)));
 	}
 
 }

@@ -64,8 +64,8 @@ public class EReceiverHolder extends EComponentHolder {
 		onReceiveIntent = onReceiveMethod.param(getClasses().INTENT, "intent");
 		onReceiveMethod.annotate(Override.class);
 		onReceiveBody = onReceiveMethod.body();
-		onReceiveBody.invoke(getInit()).arg(onReceiveContext);
-		onReceiveBody.invoke(JExpr._super(), onReceiveMethod).arg(onReceiveContext).arg(onReceiveIntent);
+		onReceiveBody.add(JExpr.invoke(getInit()).arg(onReceiveContext));
+		onReceiveBody.add(JExpr._super().invoke(onReceiveMethod).arg(onReceiveContext).arg(onReceiveIntent));
 	}
 
 	private void setOnReceiveIntentAction() {

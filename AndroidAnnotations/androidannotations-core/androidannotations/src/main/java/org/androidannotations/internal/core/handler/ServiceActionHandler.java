@@ -128,7 +128,7 @@ public class ServiceActionHandler extends BaseAnnotationHandler<EIntentServiceHo
 		method.javadoc().addReturn().append("the IntentBuilder to chain calls");
 
 		// setAction
-		body.invoke("action").arg(actionKeyField);
+		body.add(JExpr.invoke("action").arg(actionKeyField));
 
 		for (VariableElement param : executableElement.getParameters()) {
 			String paramName = param.getSimpleName().toString();

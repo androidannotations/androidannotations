@@ -16,10 +16,13 @@
  */
 package org.androidannotations.internal.generation;
 
+import static com.helger.jcodemodel.writer.JCMWriter.getDefaultNewLine;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import javax.annotation.Nonnull;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
 import javax.lang.model.element.Element;
@@ -29,8 +32,8 @@ import org.androidannotations.internal.process.OriginatingElements;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 
-import com.helger.jcodemodel.AbstractCodeWriter;
 import com.helger.jcodemodel.JPackage;
+import com.helger.jcodemodel.writer.AbstractCodeWriter;
 
 public class SourceCodeWriter extends AbstractCodeWriter {
 
@@ -41,19 +44,20 @@ public class SourceCodeWriter extends AbstractCodeWriter {
 
 	private static class VoidOutputStream extends OutputStream {
 		@Override
-		public void write(int arg0) throws IOException {
+		public void write(int arg0) {
 			// Do nothing
 		}
 	}
 
-	public SourceCodeWriter(Filer filer, OriginatingElements originatingElements, Charset charset) {
+	SourceCodeWriter(Filer filer, OriginatingElements originatingElements, Charset charset) {
 		super(charset, getDefaultNewLine());
 		this.filer = filer;
 		this.originatingElements = originatingElements;
 	}
 
+	@Nonnull
 	@Override
-	public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
+	public OutputStream openBinary(@Nonnull JPackage pkg, @Nonnull String fileName) throws IOException {
 		String qualifiedClassName = toQualifiedClassName(pkg, fileName);
 		LOGGER.debug("Generating class: {}", qualifiedClassName);
 
@@ -87,11 +91,10 @@ public class SourceCodeWriter extends AbstractCodeWriter {
 		int suffixPosition = fileName.lastIndexOf('.');
 		String className = fileName.substring(0, suffixPosition);
 
-		String qualifiedClassName = pkg.name() + "." + className;
-		return qualifiedClassName;
+		return pkg.name() + "." + className;
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 	}
 }

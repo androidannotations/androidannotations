@@ -16,7 +16,6 @@
  */
 package org.androidannotations.internal.core.handler;
 
-import static com.helger.jcodemodel.JExpr._this;
 import static com.helger.jcodemodel.JExpr.cast;
 import static com.helger.jcodemodel.JExpr.ref;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
@@ -98,7 +97,7 @@ public class NonConfigurationInstanceHandler extends BaseAnnotationHandler<EActi
 			Element eBeanTypeElement = annotationHelper.getTypeUtils().asElement(elementType);
 			EBean eBean = eBeanTypeElement.getAnnotation(EBean.class);
 			if (eBean != null && eBean.scope() != EBean.Scope.Singleton) {
-				initIfNonConfigurationNotNullBlock.invoke(cast(fieldGeneratedBeanClass, field), "rebind").arg(_this());
+				initIfNonConfigurationNotNullBlock.add(cast(fieldGeneratedBeanClass, field).invoke("rebind").argThis());
 			}
 		}
 	}

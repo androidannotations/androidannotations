@@ -137,7 +137,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		onViewChangedBodyAfterInjectionBlock = onViewChangedBody.blockVirtual();
 		onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
 		AbstractJClass notifierClass = getJClass(OnViewChangedNotifier.class);
-		getInitBodyInjectionBlock().staticInvoke(notifierClass, "registerOnViewChangedListener").arg(_this());
+		getInitBodyInjectionBlock().add(notifierClass.staticInvoke("registerOnViewChangedListener").arg(_this()));
 	}
 
 	public JInvocation findViewById(JFieldRef idRef) {
@@ -300,7 +300,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		JBlock onViewChangedBody = getOnViewChangedBodyInjectionBlock().blockSimple();
 		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));
 		onViewChangedBody._if(viewVariable.ne(JExpr._null()))._then() //
-				.invoke(viewVariable, "addTextChangedListener").arg(_new(onTextChangeListenerClass));
+				.add(viewVariable.invoke("addTextChangedListener").arg(_new(onTextChangeListenerClass)));
 
 		return new TextWatcherHolder(this, viewVariable, onTextChangeListenerClass);
 	}
@@ -320,7 +320,7 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		AbstractJClass viewClass = getClasses().SEEKBAR;
 
 		FoundViewHolder foundViewHolder = getFoundViewHolder(idRef, viewClass);
-		foundViewHolder.getIfNotNullBlock().invoke(foundViewHolder.getRef(), "setOnSeekBarChangeListener").arg(_new(onSeekbarChangeListenerClass));
+		foundViewHolder.getIfNotNullBlock().add(JExpr.invoke(foundViewHolder.getRef(), "setOnSeekBarChangeListener").arg(_new(onSeekbarChangeListenerClass)));
 
 		return new OnSeekBarChangeListenerHolder(this, onSeekbarChangeListenerClass);
 	}
@@ -352,9 +352,9 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		JVar viewVariable = onViewChangedBody.decl(FINAL, viewClass, "view", cast(viewClass, findViewById(idRef)));
 		JBlock block = onViewChangedBody._if(viewVariable.ne(JExpr._null()))._then();
 		if (hasAddOnPageChangeListenerMethod) {
-			block.invoke(viewVariable, "addOnPageChangeListener").arg(_new(onPageChangeListenerClass));
+			block.add(JExpr.invoke(viewVariable, "addOnPageChangeListener").arg(_new(onPageChangeListenerClass)));
 		} else {
-			block.invoke(viewVariable, "setOnPageChangeListener").arg(_new(onPageChangeListenerClass));
+			block.add(JExpr.invoke(viewVariable, "setOnPageChangeListener").arg(_new(onPageChangeListenerClass)));
 		}
 		return new PageChangeHolder(this, viewVariable, onPageChangeListenerClass);
 	}

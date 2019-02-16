@@ -90,7 +90,8 @@ public class SeekBarProgressChangeHandler extends CoreBaseAnnotationHandler<ECom
 			JBlock methodBody = onSeekBarChangeListenerHolder.getOnProgressChangedBody();
 
 			IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
-			JInvocation textChangeCall = methodBody.invoke(activityRef, methodName);
+			JInvocation textChangeCall = activityRef.invoke(methodName);
+			methodBody.add(textChangeCall);
 
 			for (int i = 0; i < parameters.size(); i++) {
 				if (i == seekBarViewParameterPosition) {
