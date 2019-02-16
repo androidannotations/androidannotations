@@ -83,13 +83,13 @@ public class RootContextHandler extends BaseAnnotationHandler<EBeanHolder> imple
 		} else {
 			AbstractJClass extendingContextClass = getEnvironment().getJClass(typeQualifiedName);
 
-			JConditional cond = getInvocationBlock(holder)._if(holder.getContextRef()._instanceof(extendingContextClass));
-			cond._then().add(fieldRef.assign(cast(extendingContextClass, holder.getContextRef())));
+			JConditional cond = targetBlock._if(contextRef._instanceof(extendingContextClass));
+			cond._then().add(fieldRef.assign(cast(extendingContextClass, contextRef)));
 
 			JInvocation warningInvoke = getClasses().LOG.staticInvoke("w");
 			warningInvoke.arg(logTagForClassHolder(holder));
-			warningInvoke.arg(lit("Due to Context class ").plus(holder.getContextRef().invoke("getClass").invoke("getSimpleName"))
-					.plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated")));
+			warningInvoke.arg(
+					lit("Due to Context class ").plus(contextRef.invoke("getClass").invoke("getSimpleName")).plus(lit(", the @RootContext " + extendingContextClass.name() + " won't be populated")));
 			cond._else().add(warningInvoke);
 		}
 	}
