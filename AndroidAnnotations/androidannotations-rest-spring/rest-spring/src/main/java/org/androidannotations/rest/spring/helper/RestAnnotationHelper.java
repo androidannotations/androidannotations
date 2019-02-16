@@ -598,7 +598,7 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 	private String extractParameter(VariableElement parameter, Class<? extends Annotation> clazz) {
 		String value = extractAnnotationParameter(parameter, clazz.getCanonicalName(), "value");
 
-		return !value.equals("") ? value : parameter.getSimpleName().toString();
+		return !"".equals(value) ? value : parameter.getSimpleName().toString();
 	}
 
 	public boolean hasRestApiMethodParameterAnnotation(VariableElement variableElement) {

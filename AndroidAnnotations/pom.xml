@@ -374,7 +374,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>6.18</version>
+						<version>8.17</version>
 						<exclusions>
 							<exclusion>
 								<groupId>com.sun</groupId>

@@ -150,7 +150,6 @@ public abstract class IntentBuilder {
 		IJExpression extraParameterArg = extraParam;
 		// Cast to Parcelable, wrap with Parcels.wrap or cast Serializable if needed
 		if (elementType.getKind() == TypeKind.DECLARED) {
-			Elements elementUtils = environment.getProcessingEnvironment().getElementUtils();
 			TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
 			if (typeUtils.isSubtype(elementType, parcelableType)) {
 				TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();

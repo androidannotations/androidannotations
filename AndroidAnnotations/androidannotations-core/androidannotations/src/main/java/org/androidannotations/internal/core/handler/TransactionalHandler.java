@@ -86,7 +86,7 @@ public class TransactionalHandler extends BaseAnnotationHandler<EComponentHolder
 			superCall.arg(param);
 		}
 		JBlock tryBody = tryBlock.body();
-		if (returnTypeName.equals("void")) {
+		if ("void".equals(returnTypeName)) {
 			tryBody.add(superCall);
 			tryBody.invoke(db, "setTransactionSuccessful");
 			tryBody._return();

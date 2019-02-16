@@ -41,7 +41,7 @@ public class FragmentByTagHandler extends AbstractFragmentByHandler {
 	protected IJExpression getFragmentId(Element element, String fieldName) {
 		FragmentByTag annotation = element.getAnnotation(FragmentByTag.class);
 		String tagValue = annotation.value();
-		if (tagValue.equals("")) {
+		if ("".equals(tagValue)) {
 			tagValue = fieldName;
 		}
 		return lit(tagValue);

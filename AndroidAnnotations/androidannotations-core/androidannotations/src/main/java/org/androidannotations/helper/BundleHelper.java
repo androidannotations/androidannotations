@@ -211,7 +211,7 @@ public class BundleHelper {
 
 	public IJExpression getExpressionToRestoreFromBundle(AbstractJClass variableClass, IJExpression bundle, IJExpression extraKey, JMethod method) {
 		IJExpression expressionToRestore;
-		if (methodNameToRestore.equals("getParcelableArray")) {
+		if ("getParcelableArray".equals(methodNameToRestore)) {
 			AbstractJClass erasure;
 			if (upperBound != null) {
 				erasure = codeModelHelper.typeMirrorToJClass(upperBound).erasure().array();
