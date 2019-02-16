@@ -451,13 +451,6 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-checkstyle-plugin</artifactId>
-						<configuration>
-							<configLocation>${main.basedir}/checkstyle-checks-ci.xml</configLocation>
-						</configuration>
-					</plugin>
-					<plugin>
 						<groupId>com.mycila</groupId>
 						<artifactId>license-maven-plugin</artifactId>
 						<executions>
