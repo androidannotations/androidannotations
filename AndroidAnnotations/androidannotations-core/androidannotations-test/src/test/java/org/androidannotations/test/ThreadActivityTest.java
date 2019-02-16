@@ -37,7 +37,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.internal.util.MockUtil;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -106,7 +106,7 @@ public class ThreadActivityTest {
 
 		activity.emptyBackgroundMethod();
 
-		verify(executor).execute(Matchers.<Runnable> any());
+		verify(executor).execute(ArgumentMatchers.<Runnable> any());
 	}
 
 	/**

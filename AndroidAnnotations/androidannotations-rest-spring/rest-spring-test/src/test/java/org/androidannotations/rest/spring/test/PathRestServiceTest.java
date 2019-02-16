@@ -16,8 +16,8 @@
  */
 package org.androidannotations.rest.spring.test;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.robolectric.RobolectricTestRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -49,7 +49,7 @@ public class PathRestServiceTest {
 		urlVariables.put("parameterName", "last");
 		urlVariables.put("bye", "second");
 
-		verify(restTemplate).exchange(anyString(), eq(HttpMethod.GET), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any(), eq(urlVariables));
+		verify(restTemplate).exchange(anyString(), eq(HttpMethod.GET), ArgumentMatchers.<HttpEntity<?>> any(), ArgumentMatchers.<Class<Object>> any(), eq(urlVariables));
 	}
 
 }

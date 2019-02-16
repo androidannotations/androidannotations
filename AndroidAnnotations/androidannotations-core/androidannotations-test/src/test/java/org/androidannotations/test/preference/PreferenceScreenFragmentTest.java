@@ -21,8 +21,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.util.FragmentTestUtil;
 
 @RunWith(RobolectricTestRunner.class)
 public class PreferenceScreenFragmentTest {
@@ -31,8 +31,7 @@ public class PreferenceScreenFragmentTest {
 
 	@Before
 	public void setUp() {
-		fragment = new PreferenceScreenFragment_();
-		FragmentTestUtil.startFragment(fragment);
+		fragment = Robolectric.buildFragment(PreferenceScreenFragment_.class).create().start().resume().get();
 	}
 
 	@Test

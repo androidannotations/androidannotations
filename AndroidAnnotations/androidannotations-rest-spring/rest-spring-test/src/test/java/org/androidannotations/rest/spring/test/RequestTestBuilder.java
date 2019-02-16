@@ -16,7 +16,7 @@
  */
 package org.androidannotations.rest.spring.test;
 
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import java.util.Set;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.robolectric.shadows.httpclient.FakeHttp;
 import org.springframework.http.HttpEntity;
@@ -119,16 +119,16 @@ public class RequestTestBuilder {
 
 	private void checkRequest() {
 		if (hasUrlVariables) {
-			verify(restTemplate).exchange(Matchers.anyString(), //
-					Matchers.any(HttpMethod.class), //
+			verify(restTemplate).exchange(ArgumentMatchers.anyString(), //
+					ArgumentMatchers.any(HttpMethod.class), //
 					argThat(entityArgumentMatcher), //
-					Matchers.<Class<Object>> any(), //
-					Matchers.<Map<String, Object>> any());
+					ArgumentMatchers.<Class<Object>> any(), //
+					ArgumentMatchers.<Map<String, Object>> any());
 		} else {
-			verify(restTemplate).exchange(Matchers.anyString(), //
-					Matchers.any(HttpMethod.class), //
+			verify(restTemplate).exchange(ArgumentMatchers.anyString(), //
+					ArgumentMatchers.any(HttpMethod.class), //
 					argThat(entityArgumentMatcher), //
-					Matchers.<Class<Object>> any());
+					ArgumentMatchers.<Class<Object>> any());
 		}
 	}
 
