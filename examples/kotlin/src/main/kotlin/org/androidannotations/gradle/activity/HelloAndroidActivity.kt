@@ -13,7 +13,7 @@ import org.androidannotations.gradle.R
 import java.util.Date
 
 @EActivity(R.layout.main)
-open class HelloAndroidActivity : Activity() {
+class HelloAndroidActivity : Activity() {
 
     @StringRes
     protected lateinit var hello: String
@@ -31,7 +31,7 @@ open class HelloAndroidActivity : Activity() {
     }
 
     @Background
-    protected open fun computeDateBackground() {
+    protected fun computeDateBackground() {
         val now = Date()
         val helloMessage = String.format(hello, now.toString())
 
@@ -39,7 +39,7 @@ open class HelloAndroidActivity : Activity() {
     }
 
     @UiThread
-    protected open fun updateHelloTextView(helloMessage: String) {
+    protected fun updateHelloTextView(helloMessage: String) {
         helloTextView.text = helloMessage
     }
 }
