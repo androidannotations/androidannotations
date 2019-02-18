@@ -31,12 +31,23 @@ public class EBeanTest extends AAProcessorTestHelper {
 
 	@Test
 	public void activitySubclassInManifestCompiles() {
-		assertCompilationSuccessful(compileFiles(SomeActivity.class, SomeImplementation.class, SingletonBean.class, SomeGenericBean.class, SomeGenericBeanExt.class));
+		assertCompilationSuccessful(compileFiles(SomeActivity.class, SomeImplementation.class, SomeGenericBean.class, SomeGenericBeanExt.class, SingletonBean.class, SomeBeanWithEmptyConstructor.class,
+				SomeBeanWithContextParamConstructor.class));
 	}
 
 	@Test
 	public void eBeanOnInterfaceDoesNotCompile() {
 		assertCompilationError(compileFiles(InterfaceWithEBean.class));
+	}
+
+	@Test
+	public void eBeanWithContextAndNoParamsConstructorsCompile() {
+		assertCompilationSuccessful(compileFiles(SomeBeanWithEmptyConstructor.class, SomeBeanWithContextParamConstructor.class));
+	}
+
+	@Test
+	public void eBeanWithNonContextOnlyConstructorsDoesNotCompile() {
+		assertCompilationError(compileFiles(SomeBeanWithNonContextConstructors.class, SomeBeanWithContextAndNoParamsConstructors.class));
 	}
 
 }
