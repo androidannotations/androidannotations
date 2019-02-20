@@ -20,8 +20,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.helper.ClassesHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
-import org.androidannotations.internal.process.ProcessHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.JCodeModel;
@@ -67,7 +67,7 @@ public class PluginClassHolder<H extends GeneratedClassHolder> {
 		return environment().getProcessingEnvironment();
 	}
 
-	protected ProcessHolder.Classes getClasses() {
+	protected ClassesHolder.Classes getClasses() {
 		return environment().getClasses();
 	}
 

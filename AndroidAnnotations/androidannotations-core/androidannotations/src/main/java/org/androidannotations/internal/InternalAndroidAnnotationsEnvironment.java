@@ -28,6 +28,7 @@ import org.androidannotations.Option;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.helper.AndroidManifest;
+import org.androidannotations.helper.ClassesHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.internal.model.AnnotationElements;
 import org.androidannotations.internal.process.ProcessHolder;
@@ -54,6 +55,8 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 	private AnnotationElements validatedElements;
 
 	private ProcessHolder processHolder;
+
+	private ClassesHolder classesHolder;
 
 	InternalAndroidAnnotationsEnvironment(ProcessingEnvironment processingEnvironment) {
 		this.processingEnvironment = processingEnvironment;
@@ -86,6 +89,10 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 
 	public void setProcessHolder(ProcessHolder processHolder) {
 		this.processHolder = processHolder;
+	}
+
+	public void setClassesHolder(ClassesHolder classesHolder) {
+		this.classesHolder = classesHolder;
 	}
 
 	@Override
@@ -160,22 +167,22 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 
 	@Override
 	public JCodeModel getCodeModel() {
-		return processHolder.codeModel();
+		return classesHolder.codeModel();
 	}
 
 	@Override
 	public AbstractJClass getJClass(String fullyQualifiedName) {
-		return processHolder.refClass(fullyQualifiedName);
+		return classesHolder.refClass(fullyQualifiedName);
 	}
 
 	@Override
 	public AbstractJClass getJClass(Class<?> clazz) {
-		return processHolder.refClass(clazz);
+		return classesHolder.refClass(clazz);
 	}
 
 	@Override
 	public JDefinedClass getDefinedClass(String fullyQualifiedName) {
-		return processHolder.definedClass(fullyQualifiedName);
+		return classesHolder.definedClass(fullyQualifiedName);
 	}
 
 	@Override
@@ -184,8 +191,8 @@ public class InternalAndroidAnnotationsEnvironment implements AndroidAnnotations
 	}
 
 	@Override
-	public ProcessHolder.Classes getClasses() {
-		return processHolder.classes();
+	public ClassesHolder.Classes getClasses() {
+		return classesHolder.classes();
 	}
 
 	@Override

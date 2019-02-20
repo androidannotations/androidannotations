@@ -43,9 +43,9 @@ import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.AnnotationHelper;
 import org.androidannotations.helper.BundleHelper;
 import org.androidannotations.helper.CanonicalNameConstants;
+import org.androidannotations.helper.ClassesHolder;
 import org.androidannotations.helper.ParcelerHelper;
 import org.androidannotations.holder.HasIntentBuilder;
-import org.androidannotations.internal.process.ProcessHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
@@ -171,7 +171,7 @@ public abstract class IntentBuilder {
 
 	protected abstract AbstractJClass getSuperClass();
 
-	protected ProcessHolder.Classes getClasses() {
+	protected ClassesHolder.Classes getClasses() {
 		return environment.getClasses();
 	}
 
