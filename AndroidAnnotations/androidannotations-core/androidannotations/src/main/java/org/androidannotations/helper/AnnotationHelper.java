@@ -16,8 +16,8 @@
  */
 package org.androidannotations.helper;
 
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
+import static org.androidannotations.helper.ModelConstants.validEnhancedComponentAnnotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -444,7 +444,7 @@ public class AnnotationHelper {
 
 	public boolean enclosingElementHasEnhancedComponentAnnotation(Element element) {
 		Element enclosingElement = element.getEnclosingElement();
-		return hasOneOfClassAnnotations(enclosingElement, VALID_ENHANCED_COMPONENT_ANNOTATIONS);
+		return hasOneOfClassAnnotations(enclosingElement, validEnhancedComponentAnnotations());
 	}
 
 	public boolean hasOneOfClassAnnotations(Element element, List<Class<? extends Annotation>> validAnnotations) {

@@ -24,9 +24,9 @@ import static org.androidannotations.helper.AndroidConstants.LOG_VERBOSE;
 import static org.androidannotations.helper.AndroidConstants.LOG_WARN;
 import static org.androidannotations.helper.CanonicalNameConstants.INTERNET_PERMISSION;
 import static org.androidannotations.helper.CanonicalNameConstants.WAKELOCK_PERMISSION;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_COMPONENT_ANNOTATIONS;
-import static org.androidannotations.helper.ModelConstants.VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS;
 import static org.androidannotations.helper.ModelConstants.classSuffix;
+import static org.androidannotations.helper.ModelConstants.validEnhancedComponentAnnotations;
+import static org.androidannotations.helper.ModelConstants.validEnhancedViewSupportAnnotations;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -203,11 +203,11 @@ public class ValidatorHelper {
 	}
 
 	public void enclosingElementHasEnhancedViewSupportAnnotation(Element element, ElementValidation valid) {
-		enclosingElementHasOneOfAnnotations(element, VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS, valid);
+		enclosingElementHasOneOfAnnotations(element, validEnhancedViewSupportAnnotations(), valid);
 	}
 
 	public void enclosingElementHasEnhancedComponentAnnotation(Element element, ElementValidation valid) {
-		enclosingElementHasOneOfAnnotations(element, VALID_ENHANCED_COMPONENT_ANNOTATIONS, valid);
+		enclosingElementHasOneOfAnnotations(element, validEnhancedComponentAnnotations(), valid);
 	}
 
 	public void enclosingElementHasAndroidAnnotation(Element element, ElementValidation valid) {

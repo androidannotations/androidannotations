@@ -19,6 +19,8 @@ package org.androidannotations.helper;
 import static java.util.Arrays.asList;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.lang.model.SourceVersion;
@@ -43,10 +45,10 @@ public abstract class ModelConstants {
 	private static String generationSuffix = "_";
 	private static String classSuffix;
 
-	public static final List<Class<? extends Annotation>> VALID_ENHANCED_VIEW_SUPPORT_ANNOTATIONS = asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class);
+	private static List<Class<? extends Annotation>> validEnhancedViewSupportAnnotations = new ArrayList<>(asList(EActivity.class, EViewGroup.class, EView.class, EBean.class, EFragment.class));
 
-	public static final List<Class<? extends Annotation>> VALID_ENHANCED_COMPONENT_ANNOTATIONS = asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class,
-			EIntentService.class, EReceiver.class, EProvider.class, EFragment.class);
+	private static List<Class<? extends Annotation>> validEnhancedComponentAnnotations = new ArrayList<>(
+			asList(EApplication.class, EActivity.class, EViewGroup.class, EView.class, EBean.class, EService.class, EIntentService.class, EReceiver.class, EProvider.class, EFragment.class));
 
 	private ModelConstants() {
 	}
@@ -70,4 +72,21 @@ public abstract class ModelConstants {
 	public static String generationSuffix() {
 		return generationSuffix;
 	}
+
+	public static List<Class<? extends Annotation>> validEnhancedViewSupportAnnotations() {
+		return Collections.unmodifiableList(validEnhancedViewSupportAnnotations);
+	}
+
+	public static List<Class<? extends Annotation>> validEnhancedComponentAnnotations() {
+		return Collections.unmodifiableList(validEnhancedComponentAnnotations);
+	}
+
+	public static void addEnhancedViewSupportAnnotation(Class<? extends Annotation> annotation) {
+		validEnhancedViewSupportAnnotations.add(annotation);
+	}
+
+	public static void addEnhancedComponentAnnotation(Class<? extends Annotation> annotation) {
+		validEnhancedComponentAnnotations.add(annotation);
+	}
+
 }
