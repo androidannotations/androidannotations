@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2019 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +19,7 @@ package org.androidannotations.holder;
 import static com.helger.jcodemodel.JExpr._null;
 import static com.helger.jcodemodel.JExpr.cast;
 
-import org.androidannotations.internal.process.ProcessHolder;
+import org.androidannotations.helper.ClassesHolder;
 
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
@@ -66,7 +67,7 @@ public abstract class FoundHolder {
 		return ifNotNullBlock;
 	}
 
-	protected ProcessHolder.Classes getClasses() {
+	protected ClassesHolder.Classes getClasses() {
 		return holder.getEnvironment().getClasses();
 	}
 }
