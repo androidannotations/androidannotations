@@ -21,6 +21,7 @@ import static com.helger.jcodemodel.JExpr.TRUE;
 import static com.helger.jcodemodel.JExpr._new;
 import static com.helger.jcodemodel.JExpr._null;
 import static com.helger.jcodemodel.JExpr._super;
+import static com.helger.jcodemodel.JExpr._this;
 import static com.helger.jcodemodel.JExpr.cond;
 import static com.helger.jcodemodel.JExpr.invoke;
 import static com.helger.jcodemodel.JExpr.ref;
@@ -185,6 +186,11 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder
 	@Override
 	protected void setContextRef() {
 		contextRef = JExpr.invoke("getActivity");
+	}
+
+	@Override
+	protected void setRootFragmentRef() {
+		rootFragmentRef = _this();
 	}
 
 	@Override

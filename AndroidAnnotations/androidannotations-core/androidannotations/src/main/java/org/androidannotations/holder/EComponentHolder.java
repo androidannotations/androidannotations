@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2019 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +16,7 @@
  */
 package org.androidannotations.holder;
 
+import static com.helger.jcodemodel.JExpr._null;
 import static com.helger.jcodemodel.JExpr.cast;
 import static com.helger.jcodemodel.JMod.PRIVATE;
 import static org.androidannotations.helper.ModelConstants.generationSuffix;
@@ -33,6 +35,8 @@ import com.helger.jcodemodel.JVar;
 public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
 	protected IJExpression contextRef;
+	protected IJExpression rootFragmentRef;
+
 	protected JMethod init;
 	private JBlock initBodyBeforeInjectionBlock;
 	private JBlock initBodyInjectionBlock;
@@ -52,6 +56,17 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	}
 
 	protected abstract void setContextRef();
+
+	public IJExpression getRootFragmentRef() {
+		if (rootFragmentRef == null) {
+			setRootFragmentRef();
+		}
+		return rootFragmentRef;
+	}
+
+	protected void setRootFragmentRef() {
+		rootFragmentRef = _null();
+	}
 
 	public JMethod getInit() {
 		if (init == null) {

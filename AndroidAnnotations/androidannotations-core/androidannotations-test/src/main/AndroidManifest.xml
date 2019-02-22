@@ -91,6 +91,7 @@
 		<activity android:name=".afterextras.AfterExtrasActivity_"/>
 		<activity android:name=".FullscreenActivity_"/>
 		<activity android:name=".PageChangeListenerActivity_"/>
+		<activity android:name=".ebean.ActivityWithBeansWithRootFragment_"/>
 
 		<receiver android:name=".ereceiver.MyReceiver_"/>
 
