@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2019 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +31,9 @@ import com.helger.jcodemodel.JMethod;
 
 public class EProviderHolder extends EComponentHolder {
 
+	private JMethod onCreateMethod;
+	private JBlock onCreateBody;
+
 	public EProviderHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
 	}
@@ -41,15 +45,23 @@ public class EProviderHolder extends EComponentHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
+		initMethod = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 		createOnCreate();
 	}
 
 	private void createOnCreate() {
-		JMethod onCreate = generatedClass.method(PUBLIC, getCodeModel().BOOLEAN, "onCreate");
-		onCreate.annotate(Override.class);
-		JBlock onCreateBody = onCreate.body();
+		onCreateMethod = generatedClass.method(PUBLIC, getCodeModel().BOOLEAN, "onCreate");
+		onCreateMethod.annotate(Override.class);
+		onCreateBody = onCreateMethod.body();
 		onCreateBody.invoke(getInit());
-		onCreateBody._return(invoke(_super(), onCreate));
+		onCreateBody._return(invoke(_super(), onCreateMethod));
+	}
+
+	public JMethod getOnCreate() {
+		return onCreateMethod;
+	}
+
+	public JBlock getOnCreateBody() {
+		return onCreateBody;
 	}
 }

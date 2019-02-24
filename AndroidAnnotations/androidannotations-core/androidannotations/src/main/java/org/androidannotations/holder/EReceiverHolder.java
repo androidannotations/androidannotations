@@ -32,12 +32,12 @@ import com.helger.jcodemodel.JVar;
 
 public class EReceiverHolder extends EComponentHolder {
 
+	private JMethod onReceiveMethod;
 	private JBlock onReceiveBody;
 	private JVar onReceiveIntentAction;
 	private JVar onReceiveIntentDataScheme;
 	private JVar onReceiveIntent;
 	private JVar onReceiveContext;
-	private JMethod onReceiveMethod;
 
 	public EReceiverHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
 		super(environment, annotatedElement);
@@ -45,15 +45,15 @@ public class EReceiverHolder extends EComponentHolder {
 
 	@Override
 	protected void setContextRef() {
-		if (init == null) {
+		if (initMethod == null) {
 			setInit();
 		}
 	}
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
-		contextRef = init.param(getClasses().CONTEXT, "context");
+		initMethod = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
+		contextRef = initMethod.param(getClasses().CONTEXT, "context");
 		if (onReceiveMethod == null) {
 			createOnReceive();
 		}

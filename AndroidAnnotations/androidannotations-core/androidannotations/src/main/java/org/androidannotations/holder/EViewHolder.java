@@ -125,7 +125,7 @@ public class EViewHolder extends EComponentWithViewSupportHolder implements HasI
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
+		initMethod = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 		viewNotifierHelper.wrapInitWithNotifier();
 	}
 

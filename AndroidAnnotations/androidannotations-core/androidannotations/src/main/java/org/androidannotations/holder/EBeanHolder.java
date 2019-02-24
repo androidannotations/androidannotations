@@ -51,6 +51,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 	private JFieldVar contextField;
 
 	private JMethod constructor;
+	private JMethod factoryMethod;
 	private JMethod overloadedConstructor;
 
 	public EBeanHolder(AndroidAnnotationsEnvironment environment, TypeElement annotatedElement) throws Exception {
@@ -106,7 +107,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 	@Override
 	protected void setInit() {
-		init = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
+		initMethod = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
 	}
 
 	public void invokeInitInConstructors() {
@@ -121,7 +122,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 
 		AbstractJClass narrowedGeneratedClass = codeModelHelper.narrowGeneratedClass(generatedClass, annotatedElement.asType());
 
-		JMethod factoryMethod = generatedClass.method(PUBLIC | STATIC, narrowedGeneratedClass, GET_INSTANCE_METHOD_NAME);
+		factoryMethod = generatedClass.method(PUBLIC | STATIC, narrowedGeneratedClass, GET_INSTANCE_METHOD_NAME);
 		codeModelHelper.generify(factoryMethod, annotatedElement);
 
 		JVar factoryMethodContextParam = factoryMethod.param(getClasses().CONTEXT, "context");
@@ -162,6 +163,10 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 			factoryMethodBody._return(instanceField);
 			break;
 		}
+	}
+	
+	public JMethod getFactoryMethod() {
+		return factoryMethod;
 	}
 
 	private void createOverloadedFactoryMethod(EBean.Scope scope) {
