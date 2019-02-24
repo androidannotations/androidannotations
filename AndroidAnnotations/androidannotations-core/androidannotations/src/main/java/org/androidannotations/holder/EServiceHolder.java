@@ -41,10 +41,10 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	private JDefinedClass intentBuilderClass;
 	private ReceiverRegistrationDelegate<EServiceHolder> receiverRegistrationDelegate;
 	private JBlock onCreateAfterSuperBlock;
-	
+
 	private JMethod onCreateMethod;
 	private JBlock onCreateBody;
-	
+
 	private JMethod onDestroyMethod;
 	private JBlock onDestroyBody;
 	private JBlock onDestroyBeforeSuperBlock;
@@ -69,17 +69,19 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 	@Override
 	protected void setInit() {
 		initMethod = generatedClass.method(PRIVATE, getCodeModel().VOID, "init" + generationSuffix());
-		setOnCreate();
+		if (onCreateMethod == null) {
+			setOnCreate();
+		}
 	}
 
 	public JMethod getOnCreate() {
 		return onCreateMethod;
 	}
-	
+
 	public JBlock getOnCreateBody() {
 		return onCreateBody;
 	}
-	
+
 	private void setOnCreate() {
 		onCreateMethod = generatedClass.method(PUBLIC, getCodeModel().VOID, "onCreate");
 		onCreateMethod.annotate(Override.class);
@@ -95,14 +97,14 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 		}
 		return onDestroyMethod;
 	}
-	
+
 	public JBlock getOnDestroyBody() {
 		if (onDestroyBody == null) {
 			setOnDestroy();
 		}
 		return onDestroyBody;
 	}
-	
+
 	private void setOnDestroy() {
 		onDestroyMethod = generatedClass.method(PUBLIC, getCodeModel().VOID, "onDestroy");
 		onDestroyMethod.annotate(Override.class);
