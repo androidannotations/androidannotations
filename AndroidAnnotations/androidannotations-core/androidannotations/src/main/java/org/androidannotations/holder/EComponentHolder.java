@@ -36,8 +36,7 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 
 	protected IJExpression contextRef;
 	protected IJExpression rootFragmentRef;
-
-	protected JMethod init;
+	protected JMethod initMethod;
 	private JBlock initBodyBeforeInjectionBlock;
 	private JBlock initBodyInjectionBlock;
 	private JBlock initBodyAfterInjectionBlock;
@@ -69,10 +68,10 @@ public abstract class EComponentHolder extends BaseGeneratedClassHolder {
 	}
 
 	public JMethod getInit() {
-		if (init == null) {
+		if (initMethod == null) {
 			setInit();
 		}
-		return init;
+		return initMethod;
 	}
 
 	protected abstract void setInit();

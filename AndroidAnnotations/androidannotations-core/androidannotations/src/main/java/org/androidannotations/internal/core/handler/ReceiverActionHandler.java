@@ -166,7 +166,7 @@ public class ReceiverActionHandler extends BaseAnnotationHandler<EReceiverHolder
 		}
 
 		public IJExpression getExtraValue(VariableElement parameter, JVar extras, JBlock block, EReceiverHolder holder) {
-			return getExtraValue(parameter, extras, block, holder.getOnReceiveMethod(), holder);
+			return getExtraValue(parameter, extras, block, holder.getOnReceive(), holder);
 		}
 	}
 }
