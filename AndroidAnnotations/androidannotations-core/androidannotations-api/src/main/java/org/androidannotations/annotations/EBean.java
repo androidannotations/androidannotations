@@ -111,6 +111,22 @@ public @interface EBean {
 		Default, //
 
 		/**
+		 * A new instance of the bean is created the first time it is needed in an
+		 * Activity scope, it is then retained and the same instance is always returned
+		 * from within the same Activity. Different Activities hold different copies of
+		 * the bean.
+		 */
+		Activity,
+
+		/**
+		 * A new instance of the bean is created the first time it is needed in a
+		 * Fragment scope, it is then retained and the same instance is always returned
+		 * from within the same Fragment. Different Fragments hold different copies of
+		 * the bean.
+		 */
+		Fragment,
+
+		/**
 		 * A new instance of the bean is created the first time it is needed, it is then
 		 * retained and the same instance is always returned.
 		 */

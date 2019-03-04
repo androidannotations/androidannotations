@@ -96,6 +96,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder
 		setOnCreate();
 		setOnViewCreated();
 		setFragmentBuilder();
+		implementBeanHolder();
 	}
 
 	private void setOnCreate() {

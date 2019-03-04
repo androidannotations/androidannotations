@@ -36,6 +36,11 @@ public class EBeanTest extends AAProcessorTestHelper {
 	}
 
 	@Test
+	public void eBeansWithScopeCompile() {
+		assertCompilationSuccessful(compileFiles(SingletonBean.class, ActivityScopedBean.class, FragmentScopedBean.class));
+	}
+
+	@Test
 	public void eBeanOnInterfaceDoesNotCompile() {
 		assertCompilationError(compileFiles(InterfaceWithEBean.class));
 	}

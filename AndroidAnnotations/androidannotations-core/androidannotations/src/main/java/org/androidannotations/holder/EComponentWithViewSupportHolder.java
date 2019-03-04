@@ -33,6 +33,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 import org.androidannotations.AndroidAnnotationsEnvironment;
+import org.androidannotations.api.bean.BeanHolder;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
 import org.androidannotations.api.view.OnViewChangedNotifier;
@@ -44,6 +45,7 @@ import com.helger.jcodemodel.IJAssignmentTarget;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JDefinedClass;
+import com.helger.jcodemodel.JDirectClass;
 import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JFieldVar;
@@ -138,6 +140,29 @@ public abstract class EComponentWithViewSupportHolder extends EComponentHolder i
 		onViewChangedHasViewsParam = onViewChanged.param(HasViews.class, "hasViews");
 		AbstractJClass notifierClass = getJClass(OnViewChangedNotifier.class);
 		getInitBodyInjectionBlock().add(notifierClass.staticInvoke("registerOnViewChangedListener").arg(_this()));
+	}
+
+	protected void implementBeanHolder() {
+		getGeneratedClass()._implements(BeanHolder.class);
+		JDirectClass genericType = getCodeModel().directClass("T");
+
+		JFieldVar beansField = getGeneratedClass().field(PRIVATE | FINAL, getClasses().MAP.narrow(getClasses().CLASS.narrowAny(), getClasses().OBJECT), "beans_",
+				_new(getClasses().HASH_MAP.narrow(getClasses().CLASS.narrowAny(), getClasses().OBJECT)));
+
+		JMethod getBeanMethod = getGeneratedClass().method(PUBLIC, genericType, "getBean");
+		getBeanMethod.generify("T");
+		getBeanMethod.annotate(Override.class);
+
+		JVar keyParam = getBeanMethod.param(getClasses().CLASS.narrow(genericType), "key");
+		getBeanMethod.body()._return(cast(genericType, beansField.invoke("get").arg(keyParam)));
+
+		JMethod putBeanMethod = getGeneratedClass().method(PUBLIC, getCodeModel().VOID, "putBean");
+		putBeanMethod.generify("T");
+		putBeanMethod.annotate(Override.class);
+
+		keyParam = putBeanMethod.param(getClasses().CLASS.narrow(genericType), "key");
+		JVar valueParam = putBeanMethod.param(genericType, "value");
+		putBeanMethod.body().add(beansField.invoke("put").arg(keyParam).arg(valueParam));
 	}
 
 	public JInvocation findViewById(JFieldRef idRef) {

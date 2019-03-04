@@ -113,6 +113,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder
 		setSetContentView();
 		intentBuilder = new ActivityIntentBuilder(this, androidManifest);
 		intentBuilder.build();
+		implementBeanHolder();
 	}
 
 	@Override

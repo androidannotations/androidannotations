@@ -16,29 +16,12 @@
 package org.androidannotations.test.ebean;
 
 import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EBean;
 
-import android.app.Fragment;
-
-@EFragment
-public class CustomFragment extends Fragment {
+@EBean(scope = EBean.Scope.Fragment)
+public class SomeCyclicFragmentScopedA {
 
 	@Bean
-	SomeBeanWithRootFragment someBean;
-
-	@Bean
-	SomeBeanWithRootFragmentWithCustomFragment someBeanWithCustomFragment;
-
-	@Bean
-	SomeBeanWithRootFragmentWithDifferentFragment someBeanWithDifferentFragment;
-
-	@Bean
-	ActivityScopedBean activityScopedBean;
-
-	@Bean
-	FragmentScopedBean fragmentScopedBean1;
-
-	@Bean
-	FragmentScopedBean fragmentScopedBean2;
+	SomeCyclicFragmentScopedB fragmentScopedB;
 
 }
