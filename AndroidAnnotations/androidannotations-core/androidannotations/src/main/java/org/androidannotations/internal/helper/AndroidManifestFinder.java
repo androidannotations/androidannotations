@@ -220,9 +220,9 @@ public class AndroidManifestFinder {
 				String expectedLocation = path + "/" + location;
 				File file = new File(expectedLocation + "/output.json");
 				if (file.exists()) {
-					Matcher matcher = OUTPUT_JSON_PATTERN.matcher(readJsonFromFile(file));
-					if (matcher.matches()) {
-						String relativeManifestPath = matcher.group(1);
+					Matcher jsonMatcher = OUTPUT_JSON_PATTERN.matcher(readJsonFromFile(file));
+					if (jsonMatcher.matches()) {
+						String relativeManifestPath = jsonMatcher.group(1);
 						File manifestFile = new File(expectedLocation + "/" + relativeManifestPath);
 						String manifestDirectory = manifestFile.getParentFile().getAbsolutePath();
 						knownLocations.add(manifestDirectory.substring(path.length()));
