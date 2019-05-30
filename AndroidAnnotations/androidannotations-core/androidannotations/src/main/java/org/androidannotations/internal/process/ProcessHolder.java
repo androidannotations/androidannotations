@@ -65,6 +65,8 @@ public class ProcessHolder {
 		public final AbstractJClass OBJECT = refClass(Object.class);
 		public final AbstractJClass ARRAYS = refClass(Arrays.class);
 		public final AbstractJClass HASH_SET = refClass(HashSet.class);
+		public final AbstractJClass CLASS = refClass(Class.class);
+		public final AbstractJClass MAP = refClass(Map.class);
 
 		/*
 		 * Android
