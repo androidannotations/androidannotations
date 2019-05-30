@@ -126,7 +126,7 @@ public class AndroidManifestFinder {
 		return findManifestInKnownPathsStartingFromGenFolder(holder.sourcesGenerationFolder.getAbsolutePath());
 	}
 
-	File findManifestInKnownPathsStartingFromGenFolder(String sourcesGenerationFolder) throws FileNotFoundException {
+	File findManifestInKnownPathsStartingFromGenFolder(String sourcesGenerationFolder) {
 		Iterable<AndroidManifestFinderStrategy> strategies = Arrays.asList(new GradleAndroidManifestFinderStrategy(environment, sourcesGenerationFolder),
 				new MavenAndroidManifestFinderStrategy(sourcesGenerationFolder), new EclipseAndroidManifestFinderStrategy(sourcesGenerationFolder));
 
