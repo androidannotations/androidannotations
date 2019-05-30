@@ -128,7 +128,8 @@ public class AndroidManifestFinder {
 
 	File findManifestInKnownPathsStartingFromGenFolder(String sourcesGenerationFolder) {
 		Iterable<AndroidManifestFinderStrategy> strategies = Arrays.asList(new GradleAndroidManifestFinderStrategy(environment, sourcesGenerationFolder),
-				new MavenAndroidManifestFinderStrategy(sourcesGenerationFolder), new EclipseAndroidManifestFinderStrategy(sourcesGenerationFolder));
+				new LegacyGradleAndroidManifestFinderStrategy(environment, sourcesGenerationFolder), new MavenAndroidManifestFinderStrategy(sourcesGenerationFolder),
+				new EclipseAndroidManifestFinderStrategy(sourcesGenerationFolder));
 
 		AndroidManifestFinderStrategy applyingStrategy = null;
 
@@ -181,9 +182,36 @@ public class AndroidManifestFinder {
 		abstract Iterable<String> possibleLocations();
 	}
 
-	private static class GradleAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
+	private static class GradleAndroidManifestFinderStrategy extends AbstractGradleAndroidManifestFinderStrategy {
 
-		static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/](k?apt)(.*)$");
+		private static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]ap_generated_sources[\\\\/](.*)[\\\\/]out(.*)$");
+
+		GradleAndroidManifestFinderStrategy(AndroidAnnotationsEnvironment environment, String sourceFolder) {
+			super(GRADLE_GEN_FOLDER, environment, sourceFolder);
+		}
+
+		@Override
+		protected String getGradleVariant() {
+			return matcher.group(2);
+		}
+	}
+
+	private static class LegacyGradleAndroidManifestFinderStrategy extends AbstractGradleAndroidManifestFinderStrategy {
+
+		private static final Pattern GRADLE_GEN_FOLDER = Pattern.compile("^(.*?)build[\\\\/]generated[\\\\/]source[\\\\/](k?apt)(.*)$");
+
+		LegacyGradleAndroidManifestFinderStrategy(AndroidAnnotationsEnvironment environment, String sourceFolder) {
+			super(GRADLE_GEN_FOLDER, environment, sourceFolder);
+		}
+
+		@Override
+		protected String getGradleVariant() {
+			return matcher.group(3).substring(1);
+		}
+	}
+
+	private static abstract class AbstractGradleAndroidManifestFinderStrategy extends AndroidManifestFinderStrategy {
+
 		static final Pattern OUTPUT_JSON_PATTERN = Pattern.compile(".*,\"path\":\"(.*?)\",.*");
 
 		private static final List<String> SUPPORTED_ABI_SPLITS = Arrays.asList("arm64-v8a", "armeabi", "armeabi-v7a", "mips", "mips64", "x86", "x86_64");
@@ -193,22 +221,26 @@ public class AndroidManifestFinder {
 
 		private final AndroidAnnotationsEnvironment environment;
 
-		GradleAndroidManifestFinderStrategy(AndroidAnnotationsEnvironment environment, String sourceFolder) {
-			super("Gradle", GRADLE_GEN_FOLDER, sourceFolder);
+		AbstractGradleAndroidManifestFinderStrategy(Pattern pattern, AndroidAnnotationsEnvironment environment, String sourceFolder) {
+			super("Gradle", pattern, sourceFolder);
 			this.environment = environment;
 		}
 
+		protected String getPath() {
+			return matcher.group(1);
+		}
+
+		protected abstract String getGradleVariant();
+
 		@Override
 		Iterable<String> possibleLocations() {
-			String path = matcher.group(1);
-			String mode = matcher.group(2);
-			String gradleVariant = matcher.group(3);
-			String variantPart = gradleVariant.substring(1);
+			String path = getPath();
+			String gradleVariant = getGradleVariant();
 
 			List<String> possibleLocations = new ArrayList<>();
-			findPossibleLocationsV32(path, variantPart, possibleLocations);
+			findPossibleLocationsV32(path, gradleVariant, possibleLocations);
 			for (String directory : Arrays.asList("build/intermediates/manifests/full", "build/intermediates/bundles", "build/intermediates/manifests/aapt")) {
-				findPossibleLocations(path, directory, variantPart, possibleLocations);
+				findPossibleLocations(path, directory, gradleVariant, possibleLocations);
 			}
 
 			return updateLocations(path, possibleLocations);
