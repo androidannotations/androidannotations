@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-	<EditText  
-		android:id="@+id/myEditText"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />
-	<Button  
-		android:id="@+id/myButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Click me!"
-	    />        
-	<TextView  
-		android:id="@+id/myTextView"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    />    
-	    
-	 <Button  
-		android:id="@+id/startExtraActivity"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Start extra activity, long click !"
-	    />
-	    
-	 <Button  
-		android:id="@+id/startListActivity"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="Start list activity !"
-	    />
-	    
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/myEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/please_input_your_name"
+        android:inputType="text"
+        tools:ignore="Autofill" />
+
+    <Button
+        android:id="@+id/myButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/click_me" />
+
+    <TextView
+        android:id="@+id/myTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/startExtraActivity"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_extra_activity_long_click" />
+
+    <Button
+        android:id="@+id/startListActivity"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_list_activity" />
+
 </LinearLayout>

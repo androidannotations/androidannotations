@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="please_input_your_name">Please input your name here</string>
+    <string name="click_me">Click me!</string>
+    <string name="start_extra_activity_long_click">Start extra activity, long click !</string>
+    <string name="start_list_activity">Start list activity !</string>
+</resources>
