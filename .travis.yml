@@ -31,7 +31,7 @@ before_script:
 script:
   - set -e
   - cd $TRAVIS_BUILD_DIR/AndroidAnnotations
-  - ./mvnw install -P travis
+  - ./mvnw install -P travis --quiet
   - cd $TRAVIS_BUILD_DIR/examples/maven
   - ./mvnw install
   - cd $TRAVIS_BUILD_DIR/examples/gradle
