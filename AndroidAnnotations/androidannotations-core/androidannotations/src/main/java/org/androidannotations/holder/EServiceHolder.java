@@ -105,9 +105,6 @@ public class EServiceHolder extends EComponentHolder implements HasIntentBuilder
 
 	@Override
 	public JBlock getStartLifecycleAfterSuperBlock() {
-		if (onCreateAfterSuperBlock == null) {
-			setOnCreate();
-		}
 		return onCreateAfterSuperBlock;
 	}
 

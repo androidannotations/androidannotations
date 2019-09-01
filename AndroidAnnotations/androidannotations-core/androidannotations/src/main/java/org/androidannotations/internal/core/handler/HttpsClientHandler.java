@@ -30,9 +30,9 @@ import org.androidannotations.ElementValidation;
 import org.androidannotations.annotations.HttpsClient;
 import org.androidannotations.handler.BaseAnnotationHandler;
 import org.androidannotations.handler.MethodInjectionHandler;
-import org.androidannotations.helper.ClassesHolder;
 import org.androidannotations.helper.InjectHelper;
 import org.androidannotations.holder.EComponentHolder;
+import org.androidannotations.internal.process.ProcessHolder;
 import org.androidannotations.rclass.IRClass;
 import org.androidannotations.rclass.IRInnerClass;
 
@@ -94,7 +94,7 @@ public class HttpsClientHandler extends BaseAnnotationHandler<EComponentHolder> 
 		boolean useCustomTrustStore = trustStoreRawIdRef != null;
 		boolean useCustomKeyStore = keyStoreRawIdRef != null;
 
-		ClassesHolder.Classes classes = getClasses();
+		ProcessHolder.Classes classes = getClasses();
 
 		JDefinedClass jAnonClass = getCodeModel().anonymousClass(classes.DEFAULT_HTTP_CLIENT);
 

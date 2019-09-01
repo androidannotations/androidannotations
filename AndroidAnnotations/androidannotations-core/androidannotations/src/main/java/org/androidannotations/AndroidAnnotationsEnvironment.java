@@ -26,9 +26,9 @@ import javax.lang.model.element.Element;
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
 import org.androidannotations.helper.AndroidManifest;
-import org.androidannotations.helper.ClassesHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.internal.model.AnnotationElements;
+import org.androidannotations.internal.process.ProcessHolder;
 import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.rclass.IRClass;
 
@@ -76,7 +76,7 @@ public interface AndroidAnnotationsEnvironment {
 
 	GeneratedClassHolder getGeneratedClassHolder(Element element);
 
-	ClassesHolder.Classes getClasses();
+	ProcessHolder.Classes getClasses();
 
 	List<Class<? extends Annotation>> getGeneratingAnnotations();
 

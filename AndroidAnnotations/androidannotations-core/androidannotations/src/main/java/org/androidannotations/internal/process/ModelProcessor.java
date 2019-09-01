@@ -27,7 +27,6 @@ import javax.lang.model.element.TypeElement;
 
 import org.androidannotations.handler.AnnotationHandler;
 import org.androidannotations.handler.GeneratingAnnotationHandler;
-import org.androidannotations.helper.ClassesHolder;
 import org.androidannotations.holder.GeneratedClassHolder;
 import org.androidannotations.internal.InternalAndroidAnnotationsEnvironment;
 import org.androidannotations.internal.exception.ProcessingException;
@@ -62,11 +61,9 @@ public class ModelProcessor {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ProcessResult process(AnnotationElements validatedModel) throws Exception {
-		ProcessHolder processHolder = new ProcessHolder();
-		ClassesHolder classesHolder = new ClassesHolder(environment.getProcessingEnvironment());
+		ProcessHolder processHolder = new ProcessHolder(environment.getProcessingEnvironment());
 
 		environment.setProcessHolder(processHolder);
-		environment.setClassesHolder(classesHolder);
 
 		LOGGER.info("Processing root elements");
 
@@ -146,7 +143,7 @@ public class ModelProcessor {
 		}
 
 		return new ProcessResult(//
-				classesHolder.codeModel(), //
+				processHolder.codeModel(), //
 				processHolder.getOriginatingElements());
 	}
 
