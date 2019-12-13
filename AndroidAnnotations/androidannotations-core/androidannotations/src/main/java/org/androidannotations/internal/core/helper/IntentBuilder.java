@@ -51,7 +51,6 @@ import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JClassAlreadyExistsException;
 import com.helger.jcodemodel.JDefinedClass;
-import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JInvocation;
@@ -107,7 +106,7 @@ public abstract class IntentBuilder {
 		IJExpression generatedClass = holder.getGeneratedClass().dotclass();
 		JMethod constructor = holder.getIntentBuilderClass().constructor(JMod.PUBLIC);
 		JVar constructorContextParam = constructor.param(getClasses().CONTEXT, "context");
-		constructor.body().add(JExpr.invokeSuper().arg(constructorContextParam).arg(generatedClass));
+		constructor.body().invoke("super").arg(constructorContextParam).arg(generatedClass);
 	}
 
 	private void createIntentMethod() {

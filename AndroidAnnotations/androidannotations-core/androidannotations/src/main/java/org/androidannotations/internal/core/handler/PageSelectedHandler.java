@@ -85,8 +85,7 @@ public class PageSelectedHandler extends AbstractPageChangeHandler {
 			JBlock methodBody = pageChangeHolder.getPageSelectedBody();
 
 			IJExpression thisRef = holder.getGeneratedClass().staticRef("this");
-			JInvocation methodCall = thisRef.invoke(methodName);
-			methodBody.add(methodCall);
+			JInvocation methodCall = methodBody.invoke(thisRef, methodName);
 
 			for (int i = 0; i < parameters.size(); i++) {
 				if (i == positionParameterPosition) {

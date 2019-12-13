@@ -57,7 +57,7 @@ public class WindowFeatureHandler extends BaseAnnotationHandler<EActivityHolder>
 			methodName = "requestWindowFeature";
 		}
 		for (int feature : features) {
-			holder.getInitBodyInjectionBlock().add(JExpr.invoke(methodName).arg(JExpr.lit(feature)));
+			holder.getInitBodyInjectionBlock().invoke(methodName).arg(JExpr.lit(feature));
 		}
 	}
 }

@@ -53,7 +53,7 @@ public class OptionsMenuHandler extends BaseAnnotationHandler<HasOptionsMenu> {
 
 		List<JFieldRef> fieldRefs = annotationHelper.extractAnnotationFieldRefs(element, IRClass.Res.MENU, false);
 		for (JFieldRef optionsMenuRefId : fieldRefs) {
-			body.add(menuInflater.invoke("inflate").arg(optionsMenuRefId).arg(menuParam));
+			body.invoke(menuInflater, "inflate").arg(optionsMenuRefId).arg(menuParam);
 		}
 	}
 }

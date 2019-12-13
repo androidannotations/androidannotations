@@ -131,12 +131,12 @@ public class RestAnnotationHelper extends TargetAnnotationHelper {
 				String elementName = urlNameToElementName.get(urlVariable);
 				if (elementName != null) {
 					JVar methodParam = methodParams.get(elementName);
-					methodBody.add(hashMapVar.invoke("put").arg(urlVariable).arg(methodParam));
+					methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(methodParam);
 					methodParams.remove(elementName);
 				} else {
 					// cookie from url
 					JInvocation cookieValue = holder.getAvailableCookiesField().invoke("get").arg(JExpr.lit(urlVariable));
-					methodBody.add(hashMapVar.invoke("put").arg(urlVariable).arg(cookieValue));
+					methodBody.invoke(hashMapVar, "put").arg(urlVariable).arg(cookieValue);
 				}
 			}
 			return hashMapVar;

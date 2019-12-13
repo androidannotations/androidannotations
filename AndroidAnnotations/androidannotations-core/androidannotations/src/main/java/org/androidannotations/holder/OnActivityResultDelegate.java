@@ -112,7 +112,7 @@ public class OnActivityResultDelegate extends GeneratedClassHolderDelegate<EComp
 		resultCodeParam = method.param(codeModel().INT, "resultCode");
 		dataParam = method.param(getClasses().INTENT, "data");
 		JBlock body = method.body();
-		body.add(_super().invoke(method).arg(requestCodeParam).arg(resultCodeParam).arg(dataParam));
+		body.invoke(_super(), method).arg(requestCodeParam).arg(resultCodeParam).arg(dataParam);
 		afterSuperBlock = body.blockSimple();
 	}
 }

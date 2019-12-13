@@ -112,10 +112,10 @@ public class OrmLiteDaoHandler extends BaseAnnotationHandler<EComponentHolder> i
 
 		String fieldName = param.getSimpleName().toString();
 		catchBlock.body() //
-				.add(getClasses().LOG.staticInvoke("e") //
-						.arg(logTagForClassHolder(holder))//
-						.arg("Could not create DAO " + fieldName) //
-						.arg(exception));
+				.staticInvoke(getClasses().LOG, "e") //
+				.arg(logTagForClassHolder(holder))//
+				.arg("Could not create DAO " + fieldName) //
+				.arg(exception);
 	}
 
 	@Override

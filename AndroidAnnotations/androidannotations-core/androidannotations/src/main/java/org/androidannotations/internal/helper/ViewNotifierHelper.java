@@ -18,6 +18,7 @@ package org.androidannotations.internal.helper;
 
 import static com.helger.jcodemodel.JExpr._new;
 import static com.helger.jcodemodel.JExpr._null;
+import static com.helger.jcodemodel.JExpr._this;
 import static com.helger.jcodemodel.JMod.FINAL;
 import static com.helger.jcodemodel.JMod.PRIVATE;
 import static com.helger.jcodemodel.JMod.PUBLIC;
@@ -51,7 +52,7 @@ public class ViewNotifierHelper {
 	}
 
 	public void invokeViewChanged(JBlock block) {
-		block.add(notifier.invoke("notifyViewChanged").argThis());
+		block.invoke(notifier, "notifyViewChanged").arg(_this());
 	}
 
 	public JVar replacePreviousNotifier(JBlock block) {
@@ -84,7 +85,7 @@ public class ViewNotifierHelper {
 
 	public void resetPreviousNotifier(JBlock block, JVar previousNotifier) {
 		AbstractJClass notifierClass = holder.getEnvironment().getJClass(OnViewChangedNotifier.class);
-		block.add(notifierClass.staticInvoke("replaceNotifier").arg(previousNotifier));
+		block.staticInvoke(notifierClass, "replaceNotifier").arg(previousNotifier);
 	}
 
 	public void wrapInitWithNotifier() {

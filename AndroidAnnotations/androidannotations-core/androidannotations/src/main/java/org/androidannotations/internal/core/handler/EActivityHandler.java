@@ -82,10 +82,10 @@ public class EActivityHandler extends CoreBaseGeneratingAnnotationHandler<EActiv
 			JVar contentView = onCreateBody.decl(getClasses().VIEW_GROUP, "contentView", JExpr.invoke("internalFindViewById").arg(androidContentResId));
 			JFieldVar bindingField = holder.getDataBindingField();
 			onCreateBody.assign(bindingField, holder.getDataBindingInflationExpression(contentViewId, contentView, false));
-			onCreateBody.add(JExpr.invoke(setContentView).arg(bindingField.invoke("getRoot")).arg(bindingField.invoke("getRoot").invoke("getLayoutParams")));
+			onCreateBody.invoke(setContentView).arg(bindingField.invoke("getRoot")).arg(bindingField.invoke("getRoot").invoke("getLayoutParams"));
 			holder.getOnDestroyBeforeSuperBlock().invoke(bindingField, "unbind");
 		} else {
-			onCreateBody.add(JExpr.invoke(setContentView).arg(contentViewId));
+			onCreateBody.invoke(setContentView).arg(contentViewId);
 		}
 	}
 }

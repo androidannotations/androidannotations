@@ -105,8 +105,7 @@ public class BeforeTextChangeHandler extends CoreBaseAnnotationHandler<EComponen
 			JBlock methodBody = textWatcherHolder.getBeforeTextChangedBody();
 
 			IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
-			JInvocation textChangeCall = activityRef.invoke(methodName);
-			methodBody.add(textChangeCall);
+			JInvocation textChangeCall = methodBody.invoke(activityRef, methodName);
 
 			for (int i = 0; i < parameters.size(); i++) {
 				if (i == startParameterPosition) {

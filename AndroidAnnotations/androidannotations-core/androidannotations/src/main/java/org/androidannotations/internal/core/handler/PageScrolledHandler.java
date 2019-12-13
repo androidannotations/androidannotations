@@ -98,8 +98,7 @@ public class PageScrolledHandler extends AbstractPageChangeHandler {
 			JBlock methodBody = pageChangeHolder.getPageScrolledBody();
 
 			IJExpression activityRef = holder.getGeneratedClass().staticRef("this");
-			JInvocation pageScrollCall = activityRef.invoke(methodName);
-			methodBody.add(pageScrollCall);
+			JInvocation pageScrollCall = methodBody.invoke(activityRef, methodName);
 
 			for (int i = 0; i < parameters.size(); i++) {
 				if (i == positionParameterPosition) {

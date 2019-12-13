@@ -31,11 +31,12 @@ public class DataBindingTest extends AAProcessorTestHelper {
 			"        viewDataBinding_ = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_main, contentView, false);",
 			"        setContentView(viewDataBinding_.getRoot(), viewDataBinding_.getRoot().getLayoutParams());", };
 
-	private static final String[] INJECT_DATA_BINDING_FIELD_EXPRESSIONS = new String[] { "        this.bindingField = ((ActivityBinding) viewDataBinding_);", };
+	private static final String[] INJECT_DATA_BINDING_FIELD_EXPRESSIONS = new String[] { "        this.bindingField = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);", };
 
-	private static final String[] INJECT_DATA_BINDING_METHOD_EXPRESSIONS = new String[] { "            binding = ((ActivityBinding) viewDataBinding_);", "            bindingMethod(binding);", };
+	private static final String[] INJECT_DATA_BINDING_METHOD_EXPRESSIONS = new String[] { "            binding = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);",
+			"            bindingMethod(binding);", };
 
-	private static final String[] INJECT_DATA_BINDING_PARAM_EXPRESSIONS = new String[] { "            bindingParam = ((ActivityBinding) viewDataBinding_);",
+	private static final String[] INJECT_DATA_BINDING_PARAM_EXPRESSIONS = new String[] { "            bindingParam = ((org.androidannotations.databinding.ActivityBinding) viewDataBinding_);",
 			"            injectBinding(bindingParam);", };
 
 	private static final String[] DATA_BINDING_EXPRESSIONS_FRAGMENT = new String[] {

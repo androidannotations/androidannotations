@@ -61,7 +61,6 @@ import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.AbstractJType;
 import com.helger.jcodemodel.IJAnnotatable;
 import com.helger.jcodemodel.IJExpression;
-import com.helger.jcodemodel.IJFormatter;
 import com.helger.jcodemodel.IJGenerifiable;
 import com.helger.jcodemodel.IJStatement;
 import com.helger.jcodemodel.JAnnotationArrayMember;
@@ -70,14 +69,12 @@ import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JCodeModel;
 import com.helger.jcodemodel.JDefinedClass;
 import com.helger.jcodemodel.JExpr;
+import com.helger.jcodemodel.JFormatter;
 import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JMod;
 import com.helger.jcodemodel.JTypeVar;
 import com.helger.jcodemodel.JVar;
-import com.helger.jcodemodel.SourcePrintWriter;
-import com.helger.jcodemodel.writer.JCMWriter;
-import com.helger.jcodemodel.writer.JFormatter;
 
 public class APTCodeModelHelper {
 
@@ -428,7 +425,7 @@ public class APTCodeModelHelper {
 
 		for (Object content : oldBody.getContents()) {
 			StringWriter writer = new StringWriter();
-			IJFormatter formatter = createFormatter(writer);
+			JFormatter formatter = new JFormatter(writer);
 			IJStatement statement = (IJStatement) content;
 			statement.state(formatter);
 			String statementString = writer.getBuffer().toString();
@@ -438,11 +435,6 @@ public class APTCodeModelHelper {
 				newBody.add(statement);
 			}
 		}
-	}
-
-	private static IJFormatter createFormatter(StringWriter writer) {
-		SourcePrintWriter sourcePrintWriter = new SourcePrintWriter(writer, JCMWriter.getDefaultNewLine());
-		return new JFormatter(sourcePrintWriter, JCMWriter.DEFAULT_INDENT_STRING);
 	}
 
 	public JDefinedClass createDelegatingAnonymousRunnableClass(JBlock previousBody) {
@@ -598,7 +590,7 @@ public class APTCodeModelHelper {
 			if (SuppressWarnings.class.getCanonicalName().equals(annotationUse.getAnnotationClass().fullName())) {
 				AbstractJAnnotationValue value = annotationUse.getParam("value");
 				StringWriter code = new StringWriter();
-				IJFormatter formatter = createFormatter(code);
+				JFormatter formatter = new JFormatter(code);
 				formatter.generable(value);
 				if (!code.toString().contains(annotationValue)) {
 					if (value instanceof JAnnotationArrayMember) {

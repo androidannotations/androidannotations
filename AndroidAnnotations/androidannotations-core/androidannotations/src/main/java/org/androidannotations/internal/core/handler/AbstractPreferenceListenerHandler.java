@@ -62,7 +62,7 @@ public abstract class AbstractPreferenceListenerHandler extends AbstractListener
 	protected final void assignListeners(HasPreferences holder, List<JFieldRef> idsRefs, JDefinedClass listenerAnonymousClass) {
 		for (JFieldRef idRef : idsRefs) {
 			FoundPreferenceHolder foundPreferenceHolder = holder.getFoundPreferenceHolder(idRef, getListenerTargetClass(holder));
-			foundPreferenceHolder.getIfNotNullBlock().add(foundPreferenceHolder.getRef().invoke(getSetterName()).arg(_new(listenerAnonymousClass)));
+			foundPreferenceHolder.getIfNotNullBlock().invoke(foundPreferenceHolder.getRef(), getSetterName()).arg(_new(listenerAnonymousClass));
 		}
 	}
 }

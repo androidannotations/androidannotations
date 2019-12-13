@@ -214,7 +214,7 @@ public abstract class RestMethodHandler extends BaseAnnotationHandler<RestHolder
 
 			IJExpression indexOfValue = rawCookieVar.invoke("indexOf").arg("=").plus(JExpr.lit(1));
 			JInvocation cookieValue = rawCookieVar.invoke("substring").arg(indexOfValue).arg(valueEndVar);
-			thenBlock.add(restHolder.getAvailableCookiesField().invoke("put").arg(innerForEach.var()).arg(cookieValue));
+			thenBlock.invoke(restHolder.getAvailableCookiesField(), "put").arg(innerForEach.var()).arg(cookieValue);
 			thenBlock._break();
 
 			return responseEntity;
