@@ -37,7 +37,6 @@ import org.androidannotations.api.bean.BeanHolder;
 import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.IJExpression;
 import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldVar;
 import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JMethod;
@@ -65,7 +64,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 		List<ExecutableElement> constructors = ElementFilter.constructorsIn(annotatedElement.getEnclosedElements());
 		ExecutableElement superConstructor = constructors.get(0);
 		if (superConstructor.getParameters().size() == 1) {
-			constructorBody.add(JExpr.invokeSuper().arg(constructorContextParam));
+			constructorBody.invoke("super").arg(constructorContextParam);
 		}
 		constructorBody.assign(getContextField(), constructorContextParam);
 
@@ -74,7 +73,7 @@ public class EBeanHolder extends EComponentWithViewSupportHolder {
 		JVar overloadedConstructorRootFragmentParam = overloadedConstructor.param(getClasses().OBJECT, "rootFragment");
 		JBlock overloadedConstructorBody = overloadedConstructor.body();
 		if (superConstructor.getParameters().size() == 1) {
-			overloadedConstructorBody.add(JExpr.invokeSuper().arg(constructorContextParam));
+			overloadedConstructorBody.invokeSuper().arg(constructorContextParam);
 		}
 		overloadedConstructorBody.assign(getContextField(), overloadedConstructorContextParam);
 		overloadedConstructorBody.assign(getRootFragmentField(), overloadedConstructorRootFragmentParam);

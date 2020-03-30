@@ -27,7 +27,6 @@ import org.androidannotations.holder.EActivityHolder;
 import org.androidannotations.rclass.IRClass;
 
 import com.helger.jcodemodel.JBlock;
-import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldRef;
 
 public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
@@ -50,7 +49,7 @@ public class CustomTitleHandler extends BaseAnnotationHandler<EActivityHolder> {
 		JFieldRef contentViewId = annotationHelper.extractAnnotationFieldRefs(element, getTarget(), getEnvironment().getRClass().get(IRClass.Res.LAYOUT), false).get(0);
 
 		JFieldRef customTitleFeature = getClasses().WINDOW.staticRef("FEATURE_CUSTOM_TITLE");
-		holder.getInitBodyInjectionBlock().add(JExpr.invoke("requestWindowFeature").arg(customTitleFeature));
+		holder.getInitBodyInjectionBlock().invoke("requestWindowFeature").arg(customTitleFeature);
 		onViewChangedBody.add(holder.getContextRef().invoke("getWindow").invoke("setFeatureInt").arg(customTitleFeature).arg(contentViewId));
 	}
 }

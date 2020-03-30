@@ -62,7 +62,7 @@ public class EViewGroupHandler extends CoreBaseGeneratingAnnotationHandler<EView
 		if (element.getAnnotation(DataBound.class) != null) {
 			holder.getSetContentViewBlock().assign(holder.getDataBindingField(), holder.getDataBindingInflationExpression(contentViewId, JExpr._this(), true));
 		} else {
-			holder.getSetContentViewBlock().add(JExpr.invoke("inflate").arg(holder.getContextRef()).arg(contentViewId).arg(JExpr._this()));
+			holder.getSetContentViewBlock().invoke("inflate").arg(holder.getContextRef()).arg(contentViewId).arg(JExpr._this());
 		}
 	}
 }

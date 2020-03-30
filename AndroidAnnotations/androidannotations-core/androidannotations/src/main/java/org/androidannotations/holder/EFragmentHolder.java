@@ -106,8 +106,8 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder
 		JBlock onCreateBody = onCreate.body();
 
 		JVar previousNotifier = viewNotifierHelper.replacePreviousNotifier(onCreateBody);
-		onCreateBody.add(JExpr.invoke(getInit()).arg(onCreateSavedInstanceState));
-		onCreateBody.add(_super().invoke(onCreate).arg(onCreateSavedInstanceState));
+		onCreateBody.invoke(getInit()).arg(onCreateSavedInstanceState);
+		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 		onCreateAfterSuperBlock = onCreateBody.blockSimple();
 		viewNotifierHelper.resetPreviousNotifier(onCreateBody, previousNotifier);
 	}
@@ -118,7 +118,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder
 		JVar view = onViewCreated.param(getClasses().VIEW, "view");
 		JVar savedInstanceState = onViewCreated.param(getClasses().BUNDLE, "savedInstanceState");
 		JBlock onViewCreatedBody = onViewCreated.body();
-		onViewCreatedBody.add(_super().invoke(onViewCreated).arg(view).arg(savedInstanceState));
+		onViewCreatedBody.invoke(_super(), onViewCreated).arg(view).arg(savedInstanceState);
 		viewNotifierHelper.invokeViewChanged(onViewCreatedBody);
 	}
 
@@ -150,7 +150,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder
 
 		AbstractJClass result = narrow(generatedClass);
 		JVar fragment = body.decl(result, "fragment_", _new(result));
-		body.add(fragment.invoke("setArguments").arg(fragmentArgumentsBuilderField));
+		body.invoke(fragment, "setArguments").arg(fragmentArgumentsBuilderField);
 		body._return(fragment);
 	}
 
@@ -168,9 +168,9 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder
 		onCreateOptionsMenuMenuInflaterVar = method.param(getClasses().MENU_INFLATER, "inflater");
 		onCreateOptionsMenuMethodInflateBody = methodBody.blockSimple();
 		onCreateOptionsMenuMethodBody = methodBody.blockSimple();
-		methodBody.add(_super().invoke(method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar));
+		methodBody.invoke(_super(), method).arg(onCreateOptionsMenuMenuParam).arg(onCreateOptionsMenuMenuInflaterVar);
 
-		getInitBody().add(JExpr.invoke("setHasOptionsMenu").arg(JExpr.TRUE));
+		getInitBody().invoke("setHasOptionsMenu").arg(JExpr.TRUE);
 	}
 
 	private void setOnOptionsItemSelected() {
@@ -286,7 +286,7 @@ public class EFragmentHolder extends EComponentWithViewSupportHolder
 		onAttach.annotate(Override.class);
 		JVar activityParam = onAttach.param(getClasses().ACTIVITY, "activity");
 		JBlock onAttachBody = onAttach.body();
-		onAttachBody.add(_super().invoke(onAttach).arg(activityParam));
+		onAttachBody.invoke(_super(), onAttach).arg(activityParam);
 		onAttachAfterSuperBlock = onAttachBody.blockSimple();
 	}
 

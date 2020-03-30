@@ -181,8 +181,8 @@ public class ReceiverHandler extends CoreBaseAnnotationHandler<HasReceiverRegist
 			broadcastManager = holder.getContextRef();
 		}
 
-		registerBlock.add(broadcastManager.invoke("registerReceiver").arg(receiverField).arg(intentFilterField));
-		unregisterBlock.add(broadcastManager.invoke("unregisterReceiver").arg(receiverField));
+		registerBlock.invoke(broadcastManager, "registerReceiver").arg(receiverField).arg(intentFilterField);
+		unregisterBlock.invoke(broadcastManager, "unregisterReceiver").arg(receiverField);
 	}
 
 	private static class ExtraHandler extends ExtraParameterHandler {

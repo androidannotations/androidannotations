@@ -16,37 +16,33 @@
  */
 package org.androidannotations.internal.generation;
 
-import static com.helger.jcodemodel.writer.JCMWriter.getDefaultNewLine;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import javax.annotation.Nonnull;
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
+import com.helger.jcodemodel.AbstractCodeWriter;
 import com.helger.jcodemodel.JPackage;
-import com.helger.jcodemodel.writer.AbstractCodeWriter;
 
 public class ResourceCodeWriter extends AbstractCodeWriter {
 
 	private final Filer filer;
 
-	ResourceCodeWriter(Filer filer, Charset charset) {
+	public ResourceCodeWriter(Filer filer, Charset charset) {
 		super(charset, getDefaultNewLine());
 		this.filer = filer;
 	}
 
-	@Nonnull
 	@Override
-	public OutputStream openBinary(@Nonnull JPackage pkg, @Nonnull String fileName) throws IOException {
+	public OutputStream openBinary(JPackage pkg, String fileName) throws IOException {
 		FileObject resource = filer.createResource(StandardLocation.SOURCE_OUTPUT, pkg.name(), fileName);
 		return resource.openOutputStream();
 	}
 
 	@Override
-	public void close() {
+	public void close() throws IOException {
 	}
 }

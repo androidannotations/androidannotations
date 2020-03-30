@@ -51,7 +51,7 @@ public class PreferenceHeadersHandler extends BaseAnnotationHandler<HasPreferenc
 
 		JBlock block = holder.getOnBuildHeadersBlock();
 		JVar targetParam = holder.getOnBuildHeadersTargetParam();
-		block.add(JExpr.invoke("loadHeadersFromResource").arg(headerId).arg(targetParam));
-		block.add(JExpr._super().invoke("onBuildHeaders").arg(targetParam));
+		block.invoke("loadHeadersFromResource").arg(headerId).arg(targetParam);
+		block.invoke(JExpr._super(), "onBuildHeaders").arg(targetParam);
 	}
 }

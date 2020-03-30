@@ -27,7 +27,6 @@ import org.androidannotations.internal.process.ModelProcessor;
 import org.androidannotations.logger.Logger;
 import org.androidannotations.logger.LoggerFactory;
 
-import com.helger.jcodemodel.writer.JCMWriter;
 import com.helger.jcodemodel.writer.PrologCodeWriter;
 
 public class CodeModelGenerator {
@@ -54,9 +53,7 @@ public class CodeModelGenerator {
 
 		PrologCodeWriter prologCodeWriter = new PrologCodeWriter(sourceCodeWriter, header);
 
-		JCMWriter jcmWriter = new JCMWriter(processResult.codeModel);
-
-		jcmWriter.build(prologCodeWriter, new ResourceCodeWriter(filer, charset));
+		processResult.codeModel.build(prologCodeWriter, new ResourceCodeWriter(filer, charset));
 	}
 
 	private Charset getCharset() {

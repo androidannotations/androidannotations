@@ -150,8 +150,8 @@ public class EActivityHolder extends EComponentWithViewSupportHolder
 		JVar onCreateSavedInstanceState = onCreate.param(bundleClass, "savedInstanceState");
 		JBlock onCreateBody = onCreate.body();
 		JVar previousNotifier = viewNotifierHelper.replacePreviousNotifier(onCreateBody);
-		onCreateBody.add(JExpr.invoke(getInit()).arg(onCreateSavedInstanceState));
-		onCreateBody.add(_super().invoke(onCreate).arg(onCreateSavedInstanceState));
+		onCreateBody.invoke(getInit()).arg(onCreateSavedInstanceState);
+		onCreateBody.invoke(_super(), onCreate).arg(onCreateSavedInstanceState);
 		viewNotifierHelper.resetPreviousNotifier(onCreateBody, previousNotifier);
 	}
 
@@ -205,7 +205,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder
 		onNewIntentMethod.annotate(Override.class);
 		JVar intent = onNewIntentMethod.param(getClasses().INTENT, "intent");
 		JBlock body = onNewIntentMethod.body();
-		body.add(_super().invoke(onNewIntentMethod).arg(intent));
+		body.invoke(_super(), onNewIntentMethod).arg(intent);
 		onNewIntentAfterSuperBlock = body.blockSimple();
 	}
 
@@ -214,7 +214,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder
 		setIntent.annotate(Override.class);
 		JVar methodParam = setIntent.param(getClasses().INTENT, "newIntent");
 		JBlock setIntentBody = setIntent.body();
-		setIntentBody.add(_super().invoke(setIntent).arg(methodParam));
+		setIntentBody.invoke(_super(), setIntent).arg(methodParam);
 	}
 
 	public JMethod getOnStop() {
@@ -276,7 +276,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder
 		onConfigurationChangedNewConfigParam = method.param(configurationClass, "newConfig");
 		JBlock body = method.body();
 		onConfigurationChangedBeforeSuperBlock = body.blockSimple();
-		body.add(_super().invoke(method).arg(onConfigurationChangedNewConfigParam));
+		body.invoke(_super(), method).arg(onConfigurationChangedNewConfigParam);
 		onConfigurationChangedAfterSuperBlock = body.blockSimple();
 	}
 
@@ -397,8 +397,7 @@ public class EActivityHolder extends EComponentWithViewSupportHolder
 			params.add(param);
 		}
 		JBlock body = method.body();
-		JInvocation superCall = _super().invoke(method);
-		body.add(superCall);
+		JInvocation superCall = body.invoke(JExpr._super(), method);
 		for (JVar arg : params) {
 			superCall.arg(arg);
 		}
