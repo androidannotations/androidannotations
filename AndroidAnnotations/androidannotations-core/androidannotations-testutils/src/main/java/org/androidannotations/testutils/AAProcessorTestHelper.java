@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2020 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,6 +41,14 @@ public class AAProcessorTestHelper extends ProcessorTestHelper {
 
 	public String toPath(Class<?> classOfPackagingContainingFile, String filename) {
 		return classOfPackagingContainingFile.getResource(filename).getPath();
+	}
+
+	public String[] defPath(String... filesName) {
+		String[] paths = new String[filesName.length];
+		for (int i = 0; i < filesName.length; i++) {
+			paths[i] = toPath(this.getClass(), filesName[i]);
+		}
+		return paths;
 	}
 
 	/**

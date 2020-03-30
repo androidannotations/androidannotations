@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2020 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,12 +31,28 @@ public class EBeanTest extends AAProcessorTestHelper {
 
 	@Test
 	public void activitySubclassInManifestCompiles() {
-		assertCompilationSuccessful(compileFiles(SomeActivity.class, SomeImplementation.class, SingletonBean.class, SomeGenericBean.class, SomeGenericBeanExt.class));
+		assertCompilationSuccessful(compileFiles(SomeActivity.class, SomeImplementation.class, SomeGenericBean.class, SomeGenericBeanExt.class, SingletonBean.class, SomeBeanWithEmptyConstructor.class,
+				SomeBeanWithContextParamConstructor.class));
+	}
+
+	@Test
+	public void eBeansWithScopeCompile() {
+		assertCompilationSuccessful(compileFiles(SingletonBean.class, ActivityScopedBean.class, FragmentScopedBean.class));
 	}
 
 	@Test
 	public void eBeanOnInterfaceDoesNotCompile() {
 		assertCompilationError(compileFiles(InterfaceWithEBean.class));
+	}
+
+	@Test
+	public void eBeanWithContextAndNoParamsConstructorsCompile() {
+		assertCompilationSuccessful(compileFiles(SomeBeanWithEmptyConstructor.class, SomeBeanWithContextParamConstructor.class));
+	}
+
+	@Test
+	public void eBeanWithNonContextOnlyConstructorsDoesNotCompile() {
+		assertCompilationError(compileFiles(SomeBeanWithNonContextConstructors.class, SomeBeanWithContextAndNoParamsConstructors.class));
 	}
 
 }

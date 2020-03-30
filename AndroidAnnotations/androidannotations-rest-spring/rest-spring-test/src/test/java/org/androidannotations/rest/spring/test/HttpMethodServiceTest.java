@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
+ * Copyright (C) 2016-2020 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.robolectric.RobolectricTestRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +42,8 @@ public class HttpMethodServiceTest {
 
 		service.delete();
 
-		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.DELETE), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
+		verify(restTemplate).exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.DELETE), ArgumentMatchers.<HttpEntity<?>> any(),
+				ArgumentMatchers.<Class<Object>> any());
 	}
 
 	@Test
@@ -53,7 +55,7 @@ public class HttpMethodServiceTest {
 
 		service.get();
 
-		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.GET), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
+		verify(restTemplate).exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.GET), ArgumentMatchers.<HttpEntity<?>> any(), ArgumentMatchers.<Class<Object>> any());
 	}
 
 	@Test
@@ -63,13 +65,14 @@ public class HttpMethodServiceTest {
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
-		when(restTemplate.exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.HEAD), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any())).thenReturn(response);
+		when(restTemplate.exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.HEAD), ArgumentMatchers.<HttpEntity<?>> any(), ArgumentMatchers.<Class<Object>> any()))
+				.thenReturn(response);
 
 		service.setRestTemplate(restTemplate);
 
 		service.head();
 
-		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.HEAD), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
+		verify(restTemplate).exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.HEAD), ArgumentMatchers.<HttpEntity<?>> any(), ArgumentMatchers.<Class<Object>> any());
 	}
 
 	@Test
@@ -79,7 +82,8 @@ public class HttpMethodServiceTest {
 
 		RestTemplate restTemplate = mock(RestTemplate.class);
 		ResponseEntity<Object> response = mock(ResponseEntity.class);
-		when(restTemplate.exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.OPTIONS), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any())).thenReturn(response);
+		when(restTemplate.exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.OPTIONS), ArgumentMatchers.<HttpEntity<?>> any(), ArgumentMatchers.<Class<Object>> any()))
+				.thenReturn(response);
 		HttpHeaders headers = mock(HttpHeaders.class);
 		when(response.getHeaders()).thenReturn(headers);
 
@@ -87,7 +91,8 @@ public class HttpMethodServiceTest {
 
 		service.options();
 
-		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.OPTIONS), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
+		verify(restTemplate).exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.OPTIONS), ArgumentMatchers.<HttpEntity<?>> any(),
+				ArgumentMatchers.<Class<Object>> any());
 	}
 
 	@Test
@@ -99,7 +104,7 @@ public class HttpMethodServiceTest {
 
 		service.post();
 
-		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.POST), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
+		verify(restTemplate).exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.POST), ArgumentMatchers.<HttpEntity<?>> any(), ArgumentMatchers.<Class<Object>> any());
 	}
 
 	@Test
@@ -111,7 +116,7 @@ public class HttpMethodServiceTest {
 
 		service.put();
 
-		verify(restTemplate).exchange(Matchers.anyString(), Matchers.<HttpMethod> eq(HttpMethod.PUT), Matchers.<HttpEntity<?>> any(), Matchers.<Class<Object>> any());
+		verify(restTemplate).exchange(ArgumentMatchers.anyString(), ArgumentMatchers.<HttpMethod> eq(HttpMethod.PUT), ArgumentMatchers.<HttpEntity<?>> any(), ArgumentMatchers.<Class<Object>> any());
 	}
 
 }

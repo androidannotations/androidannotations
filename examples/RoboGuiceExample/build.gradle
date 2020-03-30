@@ -5,18 +5,19 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath "com.android.tools.build:gradle:3.0.0"
+        classpath "com.android.tools.build:gradle:3.6.1"
     }
 }
 
 repositories {
+    google()
     mavenCentral()
     mavenLocal()
 }
 
 apply plugin: "com.android.application"
 
-def AAVersion = "4.6.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.5.2
+def AAVersion = "4.7.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.6.0
 dependencies {
     annotationProcessor "org.androidannotations:androidannotations:$AAVersion"
     implementation "org.androidannotations:androidannotations-api:$AAVersion"
@@ -26,12 +27,11 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 29
 
         // If you have different applicationIds for buildTypes or productFlavors uncomment this block.
         //javaCompileOptions {

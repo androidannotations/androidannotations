@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2018 the AndroidAnnotations project
+ * Copyright (C) 2016-2020 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +32,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import org.androidannotations.Option;
 import org.androidannotations.helper.AndroidManifest;
 import org.androidannotations.helper.ModelConstants;
 import org.androidannotations.internal.core.CorePlugin;
@@ -60,6 +61,8 @@ import org.androidannotations.plugin.AndroidAnnotationsPlugin;
 import org.androidannotations.rclass.IRClass;
 
 public class AndroidAnnotationProcessor extends AbstractProcessor {
+
+	public static final Option OPTION_INCREMENTAL = new Option("incremental", "false");
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidAnnotationProcessor.class);
 

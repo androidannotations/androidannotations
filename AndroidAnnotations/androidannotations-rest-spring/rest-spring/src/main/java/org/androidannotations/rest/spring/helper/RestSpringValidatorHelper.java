@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2018 the AndroidAnnotations project
+ * Copyright (C) 2016-2020 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -459,7 +459,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 
 	public void hasHttpHeadersReturnType(ExecutableElement element, ElementValidation valid) {
 		String returnType = element.getReturnType().toString();
-		if (!returnType.equals("org.springframework.http.HttpHeaders")) {
+		if (!"org.springframework.http.HttpHeaders".equals(returnType)) {
 			valid.addError("%s annotated methods can only return a HttpHeaders, not " + returnType);
 		}
 	}
@@ -467,7 +467,7 @@ public class RestSpringValidatorHelper extends ValidatorHelper {
 	public void hasSetOfHttpMethodReturnType(ExecutableElement element, ElementValidation valid) {
 		TypeMirror returnType = element.getReturnType();
 		String returnTypeString = returnType.toString();
-		if (!returnTypeString.equals("java.util.Set<org.springframework.http.HttpMethod>")) {
+		if (!"java.util.Set<org.springframework.http.HttpMethod>".equals(returnTypeString)) {
 			valid.addError("%s annotated methods can only return a Set of HttpMethod, not " + returnTypeString);
 		} else {
 			DeclaredType declaredType = (DeclaredType) returnType;

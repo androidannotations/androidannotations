@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2018 the AndroidAnnotations project
+ * Copyright (C) 2016-2020 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -90,6 +90,17 @@ public class AndroidManifestFinderTest {
 		Object[] gradleManifestFoundInMergedManifestsWithBothSplitV33 = { GRADLE_GEN_FOLDER, "build/intermediates/merged_manifests/debug/x86/hdpi", true };
 		Object[] gradleManifestFoundInMergedManifestsWithBothSplitAndFlavorV33 = { GRADLE_FLAVOR_GEN_FOLDER, "build/intermediates/merged_manifests/flavorDebug/x86/hdpi", true };
 
+		Object[] gradleManifestFoundInMergedManifestsV35 = { "build/generated/ap_generated_sources/debug/out", "build/intermediates/merged_manifests/debug/", true };
+		Object[] gradleManifestFoundInMergedManifestsWithAbiSplitV35 = { "build/generated/ap_generated_sources/debug/out", "build/intermediates/merged_manifests/debug/x86", true };
+		Object[] gradleManifestFoundInMergedManifestsWithAbiSplitAndFlavorV35 = { "build/generated/ap_generated_sources/flavorDebug/out", "build/intermediates/merged_manifests/flavorDebug/x86",
+				true };
+		Object[] gradleManifestFoundInMergedManifestsWithDensitySplitV35 = { "build/generated/ap_generated_sources/debug/out", "build/intermediates/merged_manifests/debug/hdpi", true };
+		Object[] gradleManifestFoundInMergedManifestsWithDensitySplitAndFlavorV35 = { "build/generated/ap_generated_sources/flavorDebug/out", "build/intermediates/merged_manifests/flavorDebug/hdpi",
+				true };
+		Object[] gradleManifestFoundInMergedManifestsWithBothSplitV35 = { "build/generated/ap_generated_sources/debug/out", "build/intermediates/merged_manifests/debug/x86/hdpi", true };
+		Object[] gradleManifestFoundInMergedManifestsWithBothSplitAndFlavorV35 = { "build/generated/ap_generated_sources/flavorDebug/out", "build/intermediates/merged_manifests/flavorDebug/x86/hdpi",
+				true };
+
 		Object[] gradleKotlinManifestFoundInManifests = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/manifests/full/debug", true };
 		Object[] gradleKotlinManifestFoundInBundles = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/bundles/debug", true };
 		Object[] gradleKotlinManifestFoundInManifestsAapt = { GRADLE_KOTLIN_GEN_FOLDER, "build/intermediates/manifests/aapt/debug", true };
@@ -145,17 +156,19 @@ public class AndroidManifestFinderTest {
 				gradleManifestFoundInMergedManifestsWithBothSplit, gradleManifestFoundInMergedManifestsWithBothSplitAndFlavor, gradleManifestFoundInMergedManifestsV33,
 				gradleManifestFoundInMergedManifestsWithAbiSplitV33, gradleManifestFoundInMergedManifestsWithAbiSplitAndFlavorV33, gradleManifestFoundInMergedManifestsWithDensitySplitV33,
 				gradleManifestFoundInMergedManifestsWithDensitySplitAndFlavorV33, gradleManifestFoundInMergedManifestsWithBothSplitV33, gradleManifestFoundInMergedManifestsWithBothSplitAndFlavorV33,
-				gradleKotlinManifestFoundInManifests, gradleKotlinManifestFoundInBundles, gradleKotlinManifestFoundInManifestsAapt, gradleKotlinManifestFoundInManifestsWithFlavor,
-				gradleKotlinManifestFoundInBundlesWithFlavor, gradleKotlinManifestFoundInManifestsAaptWithFlavor, gradleKotlinManifestFoundInManifestsWithAbiSplit,
-				gradleKotlinManifestFoundInManifestsWithAbiSplitAndFlavor, gradleKotlinManifestFoundInManifestsWithDensitySplit, gradleKotlinManifestFoundInManifestsWithDensitySplitAndFlavor,
-				gradleKotlinManifestFoundInManifestsWithBothSplit, gradleKotlinManifestFoundInManifestsWithBothSplitAndFlavor, gradleKotlinManifestFoundInMergedManifests,
-				gradleKotlinManifestFoundInMergedManifestsWithAbiSplit, gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsWithDensitySplit,
-				gradleKotlinManifestFoundInMergedManifestsWithDensitySplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsWithBothSplit,
-				gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsV33, gradleKotlinManifestFoundInMergedManifestsWithAbiSplitV33,
-				gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavorV33, gradleKotlinManifestFoundInMergedManifestsWithDensitySplitV33,
-				gradleKotlinManifestFoundInMergedManifestsWithDensitySplitAndFlavorV33, gradleKotlinManifestFoundInMergedManifestsWithBothSplitV33,
-				gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavorV33, mavenManifestFoundInTarget, mavenManifestFoundInSrc, mavenManifestFoundInRoot, eclipseManifestFound,
-				gradleManifestNotFound, gradleKotlinManifestNotFound, mavenManifestNotFound, eclipseManifestNotFound, noGeneratedFolderFound);
+				gradleManifestFoundInMergedManifestsV35, gradleManifestFoundInMergedManifestsWithAbiSplitV35, gradleManifestFoundInMergedManifestsWithAbiSplitAndFlavorV35,
+				gradleManifestFoundInMergedManifestsWithDensitySplitV35, gradleManifestFoundInMergedManifestsWithDensitySplitAndFlavorV35, gradleManifestFoundInMergedManifestsWithBothSplitV35,
+				gradleManifestFoundInMergedManifestsWithBothSplitAndFlavorV35, gradleKotlinManifestFoundInManifests, gradleKotlinManifestFoundInBundles, gradleKotlinManifestFoundInManifestsAapt,
+				gradleKotlinManifestFoundInManifestsWithFlavor, gradleKotlinManifestFoundInBundlesWithFlavor, gradleKotlinManifestFoundInManifestsAaptWithFlavor,
+				gradleKotlinManifestFoundInManifestsWithAbiSplit, gradleKotlinManifestFoundInManifestsWithAbiSplitAndFlavor, gradleKotlinManifestFoundInManifestsWithDensitySplit,
+				gradleKotlinManifestFoundInManifestsWithDensitySplitAndFlavor, gradleKotlinManifestFoundInManifestsWithBothSplit, gradleKotlinManifestFoundInManifestsWithBothSplitAndFlavor,
+				gradleKotlinManifestFoundInMergedManifests, gradleKotlinManifestFoundInMergedManifestsWithAbiSplit, gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavor,
+				gradleKotlinManifestFoundInMergedManifestsWithDensitySplit, gradleKotlinManifestFoundInMergedManifestsWithDensitySplitAndFlavor,
+				gradleKotlinManifestFoundInMergedManifestsWithBothSplit, gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavor, gradleKotlinManifestFoundInMergedManifestsV33,
+				gradleKotlinManifestFoundInMergedManifestsWithAbiSplitV33, gradleKotlinManifestFoundInMergedManifestsWithAbiSplitAndFlavorV33,
+				gradleKotlinManifestFoundInMergedManifestsWithDensitySplitV33, gradleKotlinManifestFoundInMergedManifestsWithDensitySplitAndFlavorV33,
+				gradleKotlinManifestFoundInMergedManifestsWithBothSplitV33, gradleKotlinManifestFoundInMergedManifestsWithBothSplitAndFlavorV33, mavenManifestFoundInTarget, mavenManifestFoundInSrc,
+				mavenManifestFoundInRoot, eclipseManifestFound, gradleManifestNotFound, gradleKotlinManifestNotFound, mavenManifestNotFound, eclipseManifestNotFound, noGeneratedFolderFound);
 	}
 
 	@Test

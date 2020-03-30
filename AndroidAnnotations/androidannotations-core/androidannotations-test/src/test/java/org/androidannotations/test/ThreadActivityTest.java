@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2010-2016 eBusiness Information, Excilys Group
- * Copyright (C) 2016-2018 the AndroidAnnotations project
+ * Copyright (C) 2016-2020 the AndroidAnnotations project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.internal.util.MockUtil;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -106,7 +106,7 @@ public class ThreadActivityTest {
 
 		activity.emptyBackgroundMethod();
 
-		verify(executor).execute(Matchers.<Runnable> any());
+		verify(executor).execute(ArgumentMatchers.<Runnable> any());
 	}
 
 	/**
