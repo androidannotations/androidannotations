@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath "com.android.tools.build:gradle:3.3.1"
+        classpath "com.android.tools.build:gradle:3.6.1"
     }
 }
 
@@ -24,11 +24,11 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         // If you have different applicationIds for buildTypes or productFlavors uncomment this block.
         //javaCompileOptions {
