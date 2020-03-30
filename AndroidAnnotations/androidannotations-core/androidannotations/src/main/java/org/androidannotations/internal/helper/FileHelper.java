@@ -44,6 +44,12 @@ public final class FileHelper {
 	 * AndroidManifest.xml file. Any better solution will be appreciated.
 	 */
 	public static FileHolder findRootProjectHolder(ProcessingEnvironment processingEnv) throws FileNotFoundException {
+		FileHolder rootProjectHolder = findKaptRootProjectHolder(processingEnv);
+
+		if (rootProjectHolder != null) {
+			return rootProjectHolder;
+		}
+
 		Filer filer = processingEnv.getFiler();
 
 		FileObject dummySourceFile;
@@ -73,6 +79,28 @@ public final class FileHelper {
 		File sourcesGenerationFolder = dummyFile.getParentFile();
 		File projectRoot = sourcesGenerationFolder.getParentFile();
 
+		return new FileHolder(dummySourceFilePath, sourcesGenerationFolder, projectRoot);
+	}
+
+	private static FileHolder findKaptRootProjectHolder(ProcessingEnvironment processingEnv) throws FileNotFoundException {
+		String kaptFolderOption = processingEnv.getOptions().get("kapt.kotlin.generated");
+
+		if (kaptFolderOption == null) {
+			return null;
+		}
+
+		File kaptFolder = new File(kaptFolderOption.replace("kaptKotlin", "kapt"));
+		File dummySourceFile = new File(kaptFolder, "dummy");
+
+		String dummySourceFilePath;
+		try {
+			dummySourceFilePath = new URI("file://" + dummySourceFile.getAbsolutePath()).toString();
+		} catch (URISyntaxException e) {
+			throw new FileNotFoundException();
+		}
+
+		File sourcesGenerationFolder = kaptFolder;
+		File projectRoot = kaptFolder.getParentFile();
 		return new FileHolder(dummySourceFilePath, sourcesGenerationFolder, projectRoot);
 	}
 
