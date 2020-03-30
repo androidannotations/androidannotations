@@ -49,7 +49,7 @@ allOpen {
 //    correctErrorTypes = true // add this if you use data binding
 //}
 
-def AAVersion = "4.7.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.6.0
+def AAVersion = "4.8.0-SNAPSHOT" // change this to your desired version, for example the latest stable: 4.7.0
 
 dependencies {
     kapt "org.androidannotations:androidannotations:$AAVersion"
