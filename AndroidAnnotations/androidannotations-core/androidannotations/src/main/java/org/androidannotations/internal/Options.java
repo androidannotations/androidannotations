@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.processing.ProcessingEnvironment;
 
@@ -51,6 +52,7 @@ public class Options {
 		addSupportedOption(LoggerContext.OPTION_LOG_APPENDER_FILE);
 		addSupportedOption(BaseGeneratedClassHolder.OPTION_GENERATE_FINAL_CLASSES);
 		addSupportedOption(CodeModelGenerator.OPTION_ENCODING);
+		addSupportedOption(AndroidAnnotationProcessor.OPTION_INCREMENTAL);
 	}
 
 	public void addAllSupportedOptions(List<Option> options) {
@@ -86,6 +88,12 @@ public class Options {
 	}
 
 	public Set<String> getSupportedOptions() {
+		if (getBoolean(AndroidAnnotationProcessor.OPTION_INCREMENTAL)) {
+			Set<String> withIncremental = new TreeSet<>(supportedOptions.keySet());
+			withIncremental.add("org.gradle.annotation.processing.isolating");
+			return withIncremental;
+		}
+
 		return supportedOptions.keySet();
 	}
 }
