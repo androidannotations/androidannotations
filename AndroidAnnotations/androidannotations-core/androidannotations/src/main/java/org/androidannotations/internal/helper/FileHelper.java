@@ -58,8 +58,11 @@ public final class FileHelper {
 		} catch (IOException ignored) {
 			throw new FileNotFoundException();
 		}
-		String dummySourceFilePath = dummySourceFile.toUri().toString();
 
+		return createFileHolder(dummySourceFile.toUri().toString());
+	}
+
+	private static FileHolder createFileHolder(String dummySourceFilePath) throws FileNotFoundException {
 		if (dummySourceFilePath.startsWith("file:")) {
 			if (!dummySourceFilePath.startsWith("file://")) {
 				dummySourceFilePath = "file://" + dummySourceFilePath.substring("file:".length());
@@ -89,19 +92,10 @@ public final class FileHelper {
 			return null;
 		}
 
-		File kaptFolder = new File(kaptFolderOption.replace("kaptKotlin", "kapt"));
-		File dummySourceFile = new File(kaptFolder, "dummy");
+		String dummySourceFile = kaptFolderOption.replace("kaptKotlin", "kapt") + File.separator + "dummy";
+		String dummySourceFilePath = new File(dummySourceFile).toURI().toString();
 
-		String dummySourceFilePath;
-		try {
-			dummySourceFilePath = new URI("file://" + dummySourceFile.getAbsolutePath()).toString();
-		} catch (URISyntaxException e) {
-			throw new FileNotFoundException();
-		}
-
-		File sourcesGenerationFolder = kaptFolder;
-		File projectRoot = kaptFolder.getParentFile();
-		return new FileHolder(dummySourceFilePath, sourcesGenerationFolder, projectRoot);
+		return createFileHolder(dummySourceFilePath);
 	}
 
 	public static File resolveOutputDirectory(ProcessingEnvironment processingEnv) throws FileNotFoundException {
