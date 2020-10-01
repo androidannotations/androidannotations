@@ -1,4 +1,4 @@
-# Fast Android Development. Easy cost maintenance. advanc android Development
+# Fast Android Development.not very about maintanation
 
 [![Android Annotations Logo](https://github.com/androidannotations/androidannotations/wiki/img/aa-logo.png)](https://github.com/androidannotations/androidannotations/wiki/Home) 
 
