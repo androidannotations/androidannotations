@@ -9,3 +9,5 @@ It takes care of the **plumbing**, and lets you concentrate on what's really imp
 
 [![Build Status](https://travis-ci.org/androidannotations/androidannotations.svg?branch=develop)](https://travis-ci.org/androidannotations/androidannotations/builds) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidAnnotations-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/128)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/androidannotations/androidannotations?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+|Code maintainability|[![QualityGate](https://quality-gate.com/backend/api/timeline?branchName=develop&projectName=androidannotations_androidannotation)](https://quality-gate.com/dashboard/branches/137076#overview)
