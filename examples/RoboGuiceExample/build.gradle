@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath "com.android.tools.build:gradle:3.6.1"
+        classpath "com.android.tools.build:gradle:4.1.1"
     }
 }
 

@@ -239,7 +239,7 @@ public class AndroidManifestFinder {
 
 			List<String> possibleLocations = new ArrayList<>();
 			findPossibleLocationsV32(path, gradleVariant, possibleLocations);
-			for (String directory : Arrays.asList("build/intermediates/manifests/full", "build/intermediates/bundles", "build/intermediates/manifests/aapt")) {
+			for (String directory : Arrays.asList("build/intermediates/manifests/full", "build/intermediates/bundles", "build/intermediates/manifests/aapt", "build/intermediates/library_manifest")) {
 				findPossibleLocations(path, directory, gradleVariant, possibleLocations);
 			}
 
