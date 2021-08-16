@@ -10,7 +10,7 @@ cache:
     - $HOME/.m2
 
 git:
-  depth: 9999999
+  depth: 3
 
 language: android
 
