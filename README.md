@@ -1,3 +1,9 @@
+# DEPRECATED
+
+AndroidAnnotations is deprecated. No more development will be taking place.
+
+Thanks for all your support!
+
 # Fast Android Development. Easy maintenance.
 
 [![Android Annotations Logo](https://github.com/androidannotations/androidannotations/wiki/img/aa-logo.png)](https://github.com/androidannotations/androidannotations/wiki/Home) 
